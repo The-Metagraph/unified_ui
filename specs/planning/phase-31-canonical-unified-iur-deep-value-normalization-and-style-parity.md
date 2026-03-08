@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 - Equivalent canonical struct/map descriptors must remain parity-equivalent across nested prop values, not only top-level props.
 - Style metadata (`UnifiedIUR.Style` structs and style maps) should normalize to the same canonical map shape.
 
-[ ] 31 Phase 31 - Canonical Unified-IUR Deep Value Normalization and Style Parity
+[x] 31 Phase 31 - Canonical Unified-IUR Deep Value Normalization and Style Parity
   Normalize nested canonical prop values so equivalent struct/map descriptors produce deeply parity-equivalent interpreted outputs.
 
   [x] 31.1 Section - Deep Value Normalization Primitives
@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 31.3.1.2 Subtask - Implement matrix updates linking `SCN-036` to service/widget requirement families.
       [x] 31.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 31.
 
-  [ ] 31.4 Section - Phase 31 Integration Tests
+  [x] 31.4 Section - Phase 31 Integration Tests
     Validate deep value/style parity through conformance-tagged runtime flows.
 
-    [ ] 31.4.1 Task - Deep value/style parity conformance scenarios
+    [x] 31.4.1 Task - Deep value/style parity conformance scenarios
       Verify deterministic deep descriptor parity, fail-closed malformed nested payload handling, and repeated-flow stability.
 
-      [ ] 31.4.1.1 Subtask - Verify `SCN-036` equivalent canonical nested struct/map inputs produce identical descriptor and event snapshots.
-      [ ] 31.4.1.2 Subtask - Verify `SCN-036` malformed nested payloads fail closed with typed validation errors.
-      [ ] 31.4.1.3 Subtask - Verify `SCN-036` repeated equivalent interpretation flows produce identical deep snapshots.
+      [x] 31.4.1.1 Subtask - Verify `SCN-036` equivalent canonical nested struct/map inputs produce identical descriptor and event snapshots.
+      [x] 31.4.1.2 Subtask - Verify `SCN-036` malformed nested payloads fail closed with typed validation errors.
+      [x] 31.4.1.3 Subtask - Verify `SCN-036` repeated equivalent interpretation flows produce identical deep snapshots.
