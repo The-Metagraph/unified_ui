@@ -34,7 +34,7 @@ This document catalogs planned runtime services and key libraries used by `web_u
 2. The `mix.exs` dependency for `unified_iur` MUST use an explicit pinned git `ref` (not a floating branch).
 3. Any `unified_iur` ref update MUST include the same change-set updates for:
    1. compatibility tests in `test/web_ui/iur/*`
-   2. conformance mapping for Unified-IUR scenarios (currently `SCN-021`, `SCN-032`, `SCN-033`, `SCN-034`, `SCN-035`, `SCN-036`, `SCN-037`)
+   2. conformance mapping for Unified-IUR scenarios (currently `SCN-021`, `SCN-032`, `SCN-033`, `SCN-034`, `SCN-035`, `SCN-036`, `SCN-037`, `SCN-038`)
    3. phase-planning or ADR notes when behavior/ownership assumptions change
 
 ## Contract Alignment

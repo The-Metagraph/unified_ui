@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 33.2.1.2 Subtask - Implement interpreter parity tests for canonical `expanded_nodes` set/list equivalence.
       [x] 33.2.1.3 Subtask - Implement regression checks preserving existing deep parity and event semantics.
 
-  [ ] 33.3 Section - Scenario and Matrix Mapping
+  [x] 33.3 Section - Scenario and Matrix Mapping
     Register collection normalization parity behavior in conformance coverage.
 
-    [ ] 33.3.1 Task - Implement conformance mappings for collection normalization continuity
+    [x] 33.3.1 Task - Implement conformance mappings for collection normalization continuity
       Add scenario coverage for deterministic collection normalization under canonical struct/map interpretation.
 
-      [ ] 33.3.1.1 Subtask - Implement `SCN-038` scenario-catalog entry for collection normalization parity continuity.
-      [ ] 33.3.1.2 Subtask - Implement matrix updates linking `SCN-038` to service/widget requirement families.
-      [ ] 33.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 33.
+      [x] 33.3.1.1 Subtask - Implement `SCN-038` scenario-catalog entry for collection normalization parity continuity.
+      [x] 33.3.1.2 Subtask - Implement matrix updates linking `SCN-038` to service/widget requirement families.
+      [x] 33.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 33.
 
   [ ] 33.4 Section - Phase 33 Integration Tests
     Validate collection normalization parity through conformance-tagged runtime flows.
