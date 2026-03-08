@@ -41,6 +41,7 @@ The plan aligns to:
 28. [Phase 28 - Canonical Unified-IUR Extended Signal and Container Mapping](./phase-28-canonical-unified-iur-extended-signal-and-container-mapping.md): map canonical menu/table/tabs/tree signals and container child descriptors into deterministic runtime events.
 29. [Phase 29 - Canonical Unified-IUR Signal Coercion and Descriptor Hygiene](./phase-29-canonical-unified-iur-signal-coercion-and-descriptor-hygiene.md): normalize canonical signal payload primitives and prevent signal-config leakage in interpreted widget descriptors.
 30. [Phase 30 - Canonical Unified-IUR Descriptor Parity and Default Normalization](./phase-30-canonical-unified-iur-descriptor-parity-and-default-normalization.md): normalize default descriptor props so equivalent canonical struct/map inputs produce identical interpreted descriptor trees.
+31. [Phase 31 - Canonical Unified-IUR Deep Value Normalization and Style Parity](./phase-31-canonical-unified-iur-deep-value-normalization-and-style-parity.md): normalize nested canonical prop values (including style structs/maps) so equivalent struct/map descriptors remain deeply parity-equivalent.
 
 ## Shared Conventions
 - Numbering:

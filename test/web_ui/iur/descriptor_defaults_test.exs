@@ -1,6 +1,7 @@
 defmodule WebUi.Iur.DescriptorDefaultsTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Style
   alias WebUi.Iur.DescriptorDefaults
 
   test "removes nil and known default values for covered widget kinds" do
@@ -59,6 +60,18 @@ defmodule WebUi.Iur.DescriptorDefaultsTest do
 
     assert DescriptorDefaults.canonicalize_widget_props(props, "custom.example.widget") == %{
              mode: "compact"
+           }
+  end
+
+  test "normalizes nested style structs into canonical style maps" do
+    props = %{
+      label: "Save",
+      style: %Style{fg: :blue, attrs: [:bold]}
+    }
+
+    assert DescriptorDefaults.canonicalize_widget_props(props, "button") == %{
+             label: "Save",
+             style: %{fg: :blue, attrs: [:bold]}
            }
   end
 end

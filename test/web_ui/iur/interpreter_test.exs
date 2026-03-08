@@ -2,6 +2,7 @@ defmodule WebUi.Iur.InterpreterTest do
   use ExUnit.Case, async: true
 
   alias UnifiedIUR.Layouts
+  alias UnifiedIUR.Style
   alias UnifiedIUR.Widgets
   alias WebUi.Iur.Interpreter
   alias WebUi.TypedError
@@ -378,6 +379,42 @@ defmodule WebUi.Iur.InterpreterTest do
           children: [
             %{type: :tree_node, id: :node_1, label: "Node 1", expanded: false}
           ]
+        }
+      ]
+    }
+
+    assert {:ok, interpreted_struct} = Interpreter.interpret(struct_spec)
+    assert {:ok, interpreted_map} = Interpreter.interpret(map_spec)
+
+    assert interpreted_struct.root == interpreted_map.root
+    assert interpreted_struct.widgets == interpreted_map.widgets
+    assert interpreted_struct.signals == interpreted_map.signals
+    assert interpreted_struct.events == interpreted_map.events
+  end
+
+  test "normalizes canonical nested style values from struct and map inputs identically" do
+    struct_spec = %Layouts.VBox{
+      id: :styled_root,
+      children: [
+        %Widgets.Button{
+          id: :save_button,
+          label: "Save",
+          on_click: :save,
+          style: %Style{fg: :blue, attrs: [:bold]}
+        }
+      ]
+    }
+
+    map_spec = %{
+      type: :vbox,
+      id: :styled_root,
+      children: [
+        %{
+          type: :button,
+          id: :save_button,
+          label: "Save",
+          on_click: :save,
+          style: %{"fg" => :blue, "attrs" => [:bold]}
         }
       ]
     }
