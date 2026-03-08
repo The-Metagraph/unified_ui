@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 31.1.1.2 Subtask - Implement struct-to-map canonicalization for nested canonical values.
       [x] 31.1.1.3 Subtask - Implement focused unit tests for deep value normalization primitives.
 
-  [ ] 31.2 Section - Style and Nested-Prop Parity Integration
+  [x] 31.2 Section - Style and Nested-Prop Parity Integration
     Integrate deep value normalization into descriptor default canonicalization and interpreter outputs.
 
-    [ ] 31.2.1 Task - Implement canonical style/nested-prop parity in interpreted descriptors
+    [x] 31.2.1 Task - Implement canonical style/nested-prop parity in interpreted descriptors
       Ensure equivalent nested struct/map props (including style payloads) normalize to identical descriptor values.
 
-      [ ] 31.2.1.1 Subtask - Implement integration of deep value normalization in descriptor default canonicalization flow.
-      [ ] 31.2.1.2 Subtask - Implement interpreter parity tests for canonical style struct/map equivalence.
-      [ ] 31.2.1.3 Subtask - Implement regression checks preserving existing default-prop and event semantics.
+      [x] 31.2.1.1 Subtask - Implement integration of deep value normalization in descriptor default canonicalization flow.
+      [x] 31.2.1.2 Subtask - Implement interpreter parity tests for canonical style struct/map equivalence.
+      [x] 31.2.1.3 Subtask - Implement regression checks preserving existing default-prop and event semantics.
 
   [ ] 31.3 Section - Scenario and Matrix Mapping
     Register deep value/style parity behavior in conformance coverage.

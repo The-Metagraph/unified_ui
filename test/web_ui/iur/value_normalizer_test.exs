@@ -13,16 +13,7 @@ defmodule WebUi.Iur.ValueNormalizerTest do
     normalized = ValueNormalizer.canonicalize(value)
 
     assert normalized == %{
-             style: %{
-               fg: :blue,
-               bg: nil,
-               attrs: [:bold],
-               padding: nil,
-               margin: nil,
-               width: nil,
-               height: nil,
-               align: nil
-             },
+             style: %{fg: :blue, attrs: [:bold]},
              meta: %{depth: 2, tags: ["alpha", "beta"]}
            }
   end
@@ -35,16 +26,7 @@ defmodule WebUi.Iur.ValueNormalizerTest do
 
     assert normalized.nested ==
              {
-               %{
-                 fg: :red,
-                 bg: nil,
-                 attrs: [],
-                 padding: nil,
-                 margin: nil,
-                 width: nil,
-                 height: nil,
-                 align: nil
-               },
+               %{fg: :red, attrs: []},
                %{k: "v"}
              }
   end

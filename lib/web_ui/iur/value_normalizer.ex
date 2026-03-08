@@ -20,7 +20,13 @@ defmodule WebUi.Iur.ValueNormalizer do
   defp canonicalize_map(map) when is_map(map) do
     map
     |> Enum.reduce(%{}, fn {key, value}, acc ->
-      Map.put(acc, normalize_key(key), canonicalize(value))
+      normalized_value = canonicalize(value)
+
+      if is_nil(normalized_value) do
+        acc
+      else
+        Map.put(acc, normalize_key(key), normalized_value)
+      end
     end)
   end
 
