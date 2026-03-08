@@ -36,3 +36,4 @@ Canonical validation scenarios for the current baseline contract layer.
 | `SCN-030` | Replay baseline capture and gate continuity | Replay baseline capture and baseline gate operations preserve deterministic baseline envelopes and stable gate diagnostics for equivalent replay traces. |
 | `SCN-031` | Replay baseline registry continuity | Replay baseline registry upsert/retention/activation flows preserve deterministic active baseline selection and gate resolution under equivalent capture traces. |
 | `SCN-032` | Canonical Unified-IUR dependency continuity | Canonical `unified_iur` schema/source markers and `UnifiedIUR.*` struct interpretation remain deterministic with fail-closed drift handling. |
+| `SCN-033` | Canonical Unified-IUR extended mapping continuity | Canonical menu/table/tabs/tree descriptors preserve deterministic container traversal and extended `unified.*` event mapping with fail-closed malformed signal handling. |

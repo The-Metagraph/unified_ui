@@ -170,4 +170,86 @@ defmodule WebUi.Iur.InterpreterTest do
     assert error.error_code == "iur.interpreter.unsupported_schema_source"
     assert error.correlation_id == "corr-iur-source-001"
   end
+
+  test "maps canonical extended menu/table/tabs/tree signals deterministically" do
+    spec = %Layouts.VBox{
+      id: :extended_root,
+      children: [
+        %Widgets.Menu{
+          id: :main_menu,
+          items: [
+            %Widgets.MenuItem{id: :open_item, label: "Open", action: "open_file"}
+          ]
+        },
+        %Widgets.Table{
+          id: :orders_table,
+          data: [],
+          columns: [],
+          on_row_select: %{row_index: 2},
+          on_sort: %{column: "price", direction: "asc"}
+        },
+        %Widgets.Tabs{
+          id: :main_tabs,
+          active_tab: :overview,
+          on_change: %{tab_id: "details"},
+          tabs: [
+            %Widgets.Tab{id: :overview, label: "Overview"},
+            %Widgets.Tab{id: :details, label: "Details"}
+          ]
+        },
+        %Widgets.TreeView{
+          id: :nav_tree,
+          root_nodes: [
+            %Widgets.TreeNode{id: :node_1, label: "Node 1", expanded: false}
+          ],
+          on_select: %{node_id: "node-1"},
+          on_toggle: %{node_id: "node-1", expanded: true}
+        }
+      ]
+    }
+
+    assert {:ok, interpreted} = Interpreter.interpret(spec)
+
+    assert Enum.map(interpreted.events, & &1.type) == [
+             "unified.menu.action_selected",
+             "unified.table.row_selected",
+             "unified.table.sorted",
+             "unified.tab.changed",
+             "unified.tree.node_selected",
+             "unified.tree.node_toggled"
+           ]
+
+    assert Enum.at(interpreted.events, 0).data.action_id == "open_file"
+    assert Enum.at(interpreted.events, 1).data.row_index == 2
+    assert Enum.at(interpreted.events, 2).data.column == "price"
+    assert Enum.at(interpreted.events, 2).data.direction == "asc"
+    assert Enum.at(interpreted.events, 3).data.tab_id == "details"
+    assert Enum.at(interpreted.events, 4).data.node_id == "node-1"
+    assert Enum.at(interpreted.events, 5).data.expanded == true
+
+    widget_ids = Enum.map(interpreted.widgets, & &1.widget_id)
+    assert "main_menu" in widget_ids
+    assert "open_item" in widget_ids
+    assert "orders_table" in widget_ids
+    assert "main_tabs" in widget_ids
+    assert "overview" in widget_ids
+    assert "details" in widget_ids
+    assert "nav_tree" in widget_ids
+    assert "node_1" in widget_ids
+  end
+
+  test "fails closed for malformed canonical extended signal payloads" do
+    spec = %{
+      type: :vbox,
+      children: [
+        %{type: :table, id: :orders_table, on_sort: %{column: "price", direction: "sideways"}}
+      ]
+    }
+
+    assert {:error, %TypedError{} = error} =
+             Interpreter.interpret(spec, correlation_id: "corr-iur-extended-err")
+
+    assert error.error_code == "iur.interpreter.signal_mapping_failed"
+    assert error.correlation_id == "corr-iur-extended-err"
+  end
 end
