@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 28.3.1.2 Subtask - Implement matrix updates linking `SCN-033` to service/widget requirement families.
       [x] 28.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 28.
 
-  [ ] 28.4 Section - Phase 28 Integration Tests
+  [x] 28.4 Section - Phase 28 Integration Tests
     Validate canonical extended signal/container interpretation through conformance-tagged runtime flows.
 
-    [ ] 28.4.1 Task - Canonical extended IUR conformance scenarios
+    [x] 28.4.1 Task - Canonical extended IUR conformance scenarios
       Verify deterministic extended event mapping outputs, fail-closed malformed signal handling, and equivalent-flow trace stability.
 
-      [ ] 28.4.1.1 Subtask - Verify `SCN-033` equivalent extended canonical IUR inputs produce deterministic event traces.
-      [ ] 28.4.1.2 Subtask - Verify `SCN-033` malformed extended signal payloads fail closed with typed validation errors.
-      [ ] 28.4.1.3 Subtask - Verify `SCN-033` repeated equivalent extended interpretation flows produce equivalent traces.
+      [x] 28.4.1.1 Subtask - Verify `SCN-033` equivalent extended canonical IUR inputs produce deterministic event traces.
+      [x] 28.4.1.2 Subtask - Verify `SCN-033` malformed extended signal payloads fail closed with typed validation errors.
+      [x] 28.4.1.3 Subtask - Verify `SCN-033` repeated equivalent extended interpretation flows produce equivalent traces.
