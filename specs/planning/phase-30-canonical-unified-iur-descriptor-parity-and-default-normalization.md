@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 30.1.1.2 Subtask - Implement deterministic nil/default prop pruning while preserving non-default render fields.
       [x] 30.1.1.3 Subtask - Implement focused unit tests for canonical default-prop normalization primitives.
 
-  [ ] 30.2 Section - Extended Descriptor Parity Integration
+  [x] 30.2 Section - Extended Descriptor Parity Integration
     Integrate default-prop canonicalization into extended canonical struct/map interpretation paths.
 
-    [ ] 30.2.1 Task - Implement full descriptor parity for canonical extended inputs
+    [x] 30.2.1 Task - Implement full descriptor parity for canonical extended inputs
       Ensure extended canonical struct and map inputs normalize to identical root/widgets/signals/events outputs.
 
-      [ ] 30.2.1.1 Subtask - Implement interpreter integration of default-prop canonicalization for widget descriptor output.
-      [ ] 30.2.1.2 Subtask - Implement parity tests across menu/table/tabs/tree canonical struct/map inputs.
-      [ ] 30.2.1.3 Subtask - Implement regression checks preserving existing canonical event output semantics.
+      [x] 30.2.1.1 Subtask - Implement interpreter integration of default-prop canonicalization for widget descriptor output.
+      [x] 30.2.1.2 Subtask - Implement parity tests across menu/table/tabs/tree canonical struct/map inputs.
+      [x] 30.2.1.3 Subtask - Implement regression checks preserving existing canonical event output semantics.
 
   [ ] 30.3 Section - Scenario and Matrix Mapping
     Register canonical descriptor-parity behavior in conformance coverage.

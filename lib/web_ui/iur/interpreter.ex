@@ -4,6 +4,7 @@ defmodule WebUi.Iur.Interpreter do
   """
 
   alias WebUi.Events.ElmBindings
+  alias WebUi.Iur.DescriptorDefaults
   alias WebUi.Iur.Dependency
   alias WebUi.TypedError
 
@@ -123,7 +124,7 @@ defmodule WebUi.Iur.Interpreter do
           type: :widget,
           kind: widget_kind,
           id: id,
-          props: widget_props(node)
+          props: widget_props(node, widget_kind)
         }
         |> maybe_put_widget_children(child_nodes)
 
@@ -444,7 +445,7 @@ defmodule WebUi.Iur.Interpreter do
     }
   end
 
-  defp widget_props(node) when is_map(node) do
+  defp widget_props(node, widget_kind) when is_map(node) and is_binary(widget_kind) do
     node
     |> Map.drop([:__struct__, :type, :children] ++ @widget_signal_fields)
     |> Enum.reduce(%{}, fn {key, value}, acc ->
@@ -453,6 +454,7 @@ defmodule WebUi.Iur.Interpreter do
         _ -> Map.put(acc, key, value)
       end
     end)
+    |> DescriptorDefaults.canonicalize_widget_props(widget_kind)
   end
 
   defp widget_descriptor(id, widget_kind) when is_binary(id) and is_binary(widget_kind) do
