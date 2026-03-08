@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 - Deep parity must include nested descriptor defaults (for example nested column/style defaults), not only top-level descriptor fields.
 - Nested default pruning must preserve non-default nested render values and deterministic event outputs.
 
-[ ] 32 Phase 32 - Canonical Unified-IUR Nested Default Profile Parity
+[x] 32 Phase 32 - Canonical Unified-IUR Nested Default Profile Parity
   Normalize nested canonical default profiles so equivalent struct/map nested descriptors produce identical interpreted deep descriptor trees.
 
   [x] 32.1 Section - Nested Default Profile Primitives
@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 32.3.1.2 Subtask - Implement matrix updates linking `SCN-037` to service/widget requirement families.
       [x] 32.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 32.
 
-  [ ] 32.4 Section - Phase 32 Integration Tests
+  [x] 32.4 Section - Phase 32 Integration Tests
     Validate nested default profile parity through conformance-tagged runtime flows.
 
-    [ ] 32.4.1 Task - Nested default profile parity conformance scenarios
+    [x] 32.4.1 Task - Nested default profile parity conformance scenarios
       Verify deterministic nested parity, fail-closed malformed payload handling, and repeated-flow stability.
 
-      [ ] 32.4.1.1 Subtask - Verify `SCN-037` equivalent canonical nested inputs with default-profile differences produce identical snapshots.
-      [ ] 32.4.1.2 Subtask - Verify `SCN-037` malformed nested payloads fail closed with typed validation errors.
-      [ ] 32.4.1.3 Subtask - Verify `SCN-037` repeated equivalent interpretation flows produce identical snapshots.
+      [x] 32.4.1.1 Subtask - Verify `SCN-037` equivalent canonical nested inputs with default-profile differences produce identical snapshots.
+      [x] 32.4.1.2 Subtask - Verify `SCN-037` malformed nested payloads fail closed with typed validation errors.
+      [x] 32.4.1.3 Subtask - Verify `SCN-037` repeated equivalent interpretation flows produce identical snapshots.
