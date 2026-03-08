@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 28.2.1.2 Subtask - Implement interpreter mappings for `action`, `on_row_select`, `on_sort`, `on_change`, `on_select`, and `on_toggle`.
       [x] 28.2.1.3 Subtask - Implement interpreter tests for extended canonical container/signal behavior.
 
-  [ ] 28.3 Section - Scenario and Matrix Mapping
+  [x] 28.3 Section - Scenario and Matrix Mapping
     Register canonical Unified-IUR extended mapping behavior in conformance coverage.
 
-    [ ] 28.3.1 Task - Implement conformance mappings for extended canonical IUR continuity
+    [x] 28.3.1 Task - Implement conformance mappings for extended canonical IUR continuity
       Add scenario coverage for deterministic extended signal mapping and container descriptor traversal behavior.
 
-      [ ] 28.3.1.1 Subtask - Implement `SCN-033` scenario-catalog entry for canonical extended IUR mapping continuity.
-      [ ] 28.3.1.2 Subtask - Implement matrix updates linking `SCN-033` to service/widget requirement families.
-      [ ] 28.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 28.
+      [x] 28.3.1.1 Subtask - Implement `SCN-033` scenario-catalog entry for canonical extended IUR mapping continuity.
+      [x] 28.3.1.2 Subtask - Implement matrix updates linking `SCN-033` to service/widget requirement families.
+      [x] 28.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 28.
 
   [ ] 28.4 Section - Phase 28 Integration Tests
     Validate canonical extended signal/container interpretation through conformance-tagged runtime flows.
