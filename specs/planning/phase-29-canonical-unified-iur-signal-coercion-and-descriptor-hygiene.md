@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 29.2.1.2 Subtask - Implement unit tests verifying signal fields are excluded from normalized widget `props`.
       [x] 29.2.1.3 Subtask - Implement parity checks confirming event output remains unchanged after prop hygiene updates.
 
-  [ ] 29.3 Section - Scenario and Matrix Mapping
+  [x] 29.3 Section - Scenario and Matrix Mapping
     Register canonical signal coercion and descriptor hygiene behavior in conformance coverage.
 
-    [ ] 29.3.1 Task - Implement conformance mappings for canonical signal coercion continuity
+    [x] 29.3.1 Task - Implement conformance mappings for canonical signal coercion continuity
       Add scenario coverage for deterministic primitive coercion and signal-prop separation behavior.
 
-      [ ] 29.3.1.1 Subtask - Implement `SCN-034` scenario-catalog entry for canonical signal coercion and descriptor hygiene continuity.
-      [ ] 29.3.1.2 Subtask - Implement matrix updates linking `SCN-034` to service/widget requirement families.
-      [ ] 29.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 29.
+      [x] 29.3.1.1 Subtask - Implement `SCN-034` scenario-catalog entry for canonical signal coercion and descriptor hygiene continuity.
+      [x] 29.3.1.2 Subtask - Implement matrix updates linking `SCN-034` to service/widget requirement families.
+      [x] 29.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 29.
 
   [ ] 29.4 Section - Phase 29 Integration Tests
     Validate canonical signal coercion and descriptor hygiene through conformance-tagged runtime flows.
