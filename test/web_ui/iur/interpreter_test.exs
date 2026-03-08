@@ -304,6 +304,93 @@ defmodule WebUi.Iur.InterpreterTest do
     assert Enum.at(interpreted.events, 5).data.expanded == true
   end
 
+  test "normalizes canonical extended struct and map inputs to identical descriptor trees" do
+    struct_spec = %Layouts.VBox{
+      id: :extended_root,
+      children: [
+        %Widgets.Menu{
+          id: :main_menu,
+          items: [
+            %Widgets.MenuItem{id: :open_item, label: "Open", action: "open_file"}
+          ]
+        },
+        %Widgets.Table{
+          id: :orders_table,
+          data: [],
+          columns: [],
+          on_row_select: %{row_index: 2},
+          on_sort: %{column: "price", direction: "asc"}
+        },
+        %Widgets.Tabs{
+          id: :main_tabs,
+          active_tab: :overview,
+          on_change: %{tab_id: "details"},
+          tabs: [
+            %Widgets.Tab{id: :overview, label: "Overview"},
+            %Widgets.Tab{id: :details, label: "Details"}
+          ]
+        },
+        %Widgets.TreeView{
+          id: :nav_tree,
+          root_nodes: [
+            %Widgets.TreeNode{id: :node_1, label: "Node 1", expanded: false}
+          ],
+          on_select: %{node_id: "node-1"},
+          on_toggle: %{node_id: "node-1", expanded: true}
+        }
+      ]
+    }
+
+    map_spec = %{
+      type: :vbox,
+      id: :extended_root,
+      children: [
+        %{
+          type: :menu,
+          id: :main_menu,
+          children: [
+            %{type: :menu_item, id: :open_item, label: "Open", action: "open_file"}
+          ]
+        },
+        %{
+          type: :table,
+          id: :orders_table,
+          data: [],
+          columns: [],
+          on_row_select: %{row_index: 2},
+          on_sort: %{column: "price", direction: "asc"}
+        },
+        %{
+          type: :tabs,
+          id: :main_tabs,
+          active_tab: :overview,
+          on_change: %{tab_id: "details"},
+          children: [
+            %{type: :tab, id: :overview, label: "Overview"},
+            %{type: :tab, id: :details, label: "Details"}
+          ]
+        },
+        %{
+          type: :tree_view,
+          id: :nav_tree,
+          on_select: %{node_id: "node-1"},
+          on_toggle: %{node_id: "node-1", expanded: true},
+          children: [
+            %{type: :tree_node, id: :node_1, label: "Node 1", expanded: false}
+          ]
+        }
+      ]
+    }
+
+    assert {:ok, interpreted_struct} = Interpreter.interpret(struct_spec)
+    assert {:ok, interpreted_map} = Interpreter.interpret(map_spec)
+
+    assert interpreted_struct.root == interpreted_map.root
+    assert interpreted_struct.widgets == interpreted_map.widgets
+    assert interpreted_struct.signals == interpreted_map.signals
+    assert interpreted_struct.events == interpreted_map.events
+  end
+
   test "fails closed for malformed canonical extended signal payloads" do
     spec = %{
       type: :vbox,

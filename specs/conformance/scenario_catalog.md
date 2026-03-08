@@ -38,3 +38,4 @@ Canonical validation scenarios for the current baseline contract layer.
 | `SCN-032` | Canonical Unified-IUR dependency continuity | Canonical `unified_iur` schema/source markers and `UnifiedIUR.*` struct interpretation remain deterministic with fail-closed drift handling. |
 | `SCN-033` | Canonical Unified-IUR extended mapping continuity | Canonical menu/table/tabs/tree descriptors preserve deterministic container traversal and extended `unified.*` event mapping with fail-closed malformed signal handling. |
 | `SCN-034` | Canonical Unified-IUR signal coercion and descriptor hygiene continuity | Canonical atom/string signal primitives normalize deterministically and mapped signal fields stay isolated from interpreted widget props. |
+| `SCN-035` | Canonical Unified-IUR descriptor parity continuity | Equivalent canonical struct/map extended descriptors normalize to identical interpreted descriptor trees after default-prop canonicalization. |
