@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 - `web_ui` MUST interpret canonical Unified-IUR structures and MUST NOT redefine base schema ownership.
 - Schema/source drift and unsupported Unified-IUR inputs must fail closed with typed validation errors.
 
-[ ] 27 Phase 27 - Canonical Unified-IUR Dependency and Contract Alignment
+[x] 27 Phase 27 - Canonical Unified-IUR Dependency and Contract Alignment
   Enforce canonical Unified-IUR dependency authority across runtime interpretation, contracts, and conformance coverage.
 
   [x] 27.1 Section - Dependency and Compatibility Baseline
@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 27.3.1.2 Subtask - Implement matrix updates linking `SCN-032` to service/widget requirement families.
       [x] 27.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 27.
 
-  [ ] 27.4 Section - Phase 27 Integration Tests
+  [x] 27.4 Section - Phase 27 Integration Tests
     Validate canonical Unified-IUR dependency handling through conformance-tagged runtime flows.
 
-    [ ] 27.4.1 Task - Canonical Unified-IUR conformance scenarios
+    [x] 27.4.1 Task - Canonical Unified-IUR conformance scenarios
       Verify deterministic canonical-struct interpretation, source/version guardrails, and equivalent-flow trace stability.
 
-      [ ] 27.4.1.1 Subtask - Verify `SCN-032` equivalent canonical Unified-IUR inputs produce deterministic runtime descriptor trees.
-      [ ] 27.4.1.2 Subtask - Verify `SCN-032` unsupported schema/source inputs fail closed with typed validation errors.
-      [ ] 27.4.1.3 Subtask - Verify `SCN-032` repeated equivalent canonical interpretation flows produce equivalent traces.
+      [x] 27.4.1.1 Subtask - Verify `SCN-032` equivalent canonical Unified-IUR inputs produce deterministic runtime descriptor trees.
+      [x] 27.4.1.2 Subtask - Verify `SCN-032` unsupported schema/source inputs fail closed with typed validation errors.
+      [x] 27.4.1.3 Subtask - Verify `SCN-032` repeated equivalent canonical interpretation flows produce equivalent traces.
