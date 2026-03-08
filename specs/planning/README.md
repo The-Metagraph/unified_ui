@@ -37,6 +37,7 @@ The plan aligns to:
 24. [Phase 24 - Replay Verification Gate Policies](./phase-24-replay-verification-gate-policies.md): evaluate replay verification results against deterministic gate policies for release diagnostics.
 25. [Phase 25 - Replay Baseline Capture and Gate Continuity](./phase-25-replay-baseline-capture-and-gate-continuity.md): capture deterministic replay baselines and evaluate current replay state against baseline gate policies.
 26. [Phase 26 - Replay Baseline Registry and Selection Continuity](./phase-26-replay-baseline-registry-and-selection-continuity.md): persist deterministic baseline registries with retention controls and active-baseline selection for gate evaluation.
+27. [Phase 27 - Canonical Unified-IUR Dependency and Contract Alignment](./phase-27-canonical-unified-iur-dependency-and-contract-alignment.md): consume canonical Unified-IUR schema authority from `unified_iur` with explicit runtime, contract, and conformance guardrails.
 
 ## Shared Conventions
 - Numbering:

@@ -23,9 +23,19 @@ This document catalogs planned runtime services and key libraries used by `web_u
 |---|---|
 | Phoenix | HTTP endpoint, channels, websocket transport |
 | Jido | Agent-based runtime orchestration |
+| [unified_iur](https://github.com/pcharbon70/unified_iur) | Canonical Unified-IUR format/schema authority consumed by interpreter/runtime layers |
 | Elm | Browser-side deterministic UI runtime |
 | Tailwind CSS | Utility-first styling layer |
 | JavaScript runtime | Port-based interop boundary for browser-specific features |
+
+## Unified-IUR Dependency Policy
+
+1. `web_ui` MUST treat `unified_iur` as the authoritative source for base Unified-IUR schema/struct definitions.
+2. The `mix.exs` dependency for `unified_iur` MUST use an explicit pinned git `ref` (not a floating branch).
+3. Any `unified_iur` ref update MUST include the same change-set updates for:
+   1. compatibility tests in `test/web_ui/iur/*`
+   2. conformance mapping for Unified-IUR scenarios (currently `SCN-021`)
+   3. phase-planning or ADR notes when behavior/ownership assumptions change
 
 ## Contract Alignment
 
