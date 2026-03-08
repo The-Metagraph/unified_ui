@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 32.2.1.2 Subtask - Implement interpreter parity tests for nested table column/style default normalization.
       [x] 32.2.1.3 Subtask - Implement regression checks preserving existing deep parity and event semantics.
 
-  [ ] 32.3 Section - Scenario and Matrix Mapping
+  [x] 32.3 Section - Scenario and Matrix Mapping
     Register nested default profile parity behavior in conformance coverage.
 
-    [ ] 32.3.1 Task - Implement conformance mappings for nested default profile parity continuity
+    [x] 32.3.1 Task - Implement conformance mappings for nested default profile parity continuity
       Add scenario coverage for deterministic nested default normalization under canonical struct/map interpretation.
 
-      [ ] 32.3.1.1 Subtask - Implement `SCN-037` scenario-catalog entry for nested default profile parity continuity.
-      [ ] 32.3.1.2 Subtask - Implement matrix updates linking `SCN-037` to service/widget requirement families.
-      [ ] 32.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 32.
+      [x] 32.3.1.1 Subtask - Implement `SCN-037` scenario-catalog entry for nested default profile parity continuity.
+      [x] 32.3.1.2 Subtask - Implement matrix updates linking `SCN-037` to service/widget requirement families.
+      [x] 32.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 32.
 
   [ ] 32.4 Section - Phase 32 Integration Tests
     Validate nested default profile parity through conformance-tagged runtime flows.
