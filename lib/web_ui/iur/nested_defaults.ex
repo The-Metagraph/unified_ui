@@ -6,7 +6,7 @@ defmodule WebUi.Iur.NestedDefaults do
   @style_defaults %{attrs: []}
   @table_column_defaults %{sortable: true, align: :left}
 
-  @spec canonicalize_nested_prop(String.t(), atom(), term()) :: term()
+  @spec canonicalize_nested_prop(String.t(), term(), term()) :: term()
   def canonicalize_nested_prop(_widget_kind, :style, value) when is_map(value) do
     prune_defaults(value, @style_defaults)
   end

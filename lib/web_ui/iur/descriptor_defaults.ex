@@ -3,6 +3,7 @@ defmodule WebUi.Iur.DescriptorDefaults do
   Canonical default-prop normalization for interpreted Unified-IUR widget descriptors.
   """
 
+  alias WebUi.Iur.NestedDefaults
   alias WebUi.Iur.ValueNormalizer
 
   @global_defaults %{
@@ -25,7 +26,12 @@ defmodule WebUi.Iur.DescriptorDefaults do
 
     props
     |> Enum.reduce(%{}, fn {key, value}, acc ->
-      normalized_value = ValueNormalizer.canonicalize(value)
+      normalized_value =
+        NestedDefaults.canonicalize_nested_prop(
+          widget_kind,
+          key,
+          ValueNormalizer.canonicalize(value)
+        )
 
       cond do
         is_nil(normalized_value) ->

@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 32.1.1.2 Subtask - Implement deterministic nested default-pruning helpers preserving non-default values.
       [x] 32.1.1.3 Subtask - Implement focused unit tests for nested default-pruning primitives.
 
-  [ ] 32.2 Section - Nested Default Integration
+  [x] 32.2 Section - Nested Default Integration
     Integrate nested default profiles into descriptor canonicalization and interpreter parity flows.
 
-    [ ] 32.2.1 Task - Implement nested default parity in interpreted descriptors
+    [x] 32.2.1 Task - Implement nested default parity in interpreted descriptors
       Ensure nested canonical struct/map payloads with default-only differences normalize to identical descriptor values.
 
-      [ ] 32.2.1.1 Subtask - Implement descriptor canonicalization integration for nested default profiles.
-      [ ] 32.2.1.2 Subtask - Implement interpreter parity tests for nested table column/style default normalization.
-      [ ] 32.2.1.3 Subtask - Implement regression checks preserving existing deep parity and event semantics.
+      [x] 32.2.1.1 Subtask - Implement descriptor canonicalization integration for nested default profiles.
+      [x] 32.2.1.2 Subtask - Implement interpreter parity tests for nested table column/style default normalization.
+      [x] 32.2.1.3 Subtask - Implement regression checks preserving existing deep parity and event semantics.
 
   [ ] 32.3 Section - Scenario and Matrix Mapping
     Register nested default profile parity behavior in conformance coverage.
