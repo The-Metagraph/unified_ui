@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 31.2.1.2 Subtask - Implement interpreter parity tests for canonical style struct/map equivalence.
       [x] 31.2.1.3 Subtask - Implement regression checks preserving existing default-prop and event semantics.
 
-  [ ] 31.3 Section - Scenario and Matrix Mapping
+  [x] 31.3 Section - Scenario and Matrix Mapping
     Register deep value/style parity behavior in conformance coverage.
 
-    [ ] 31.3.1 Task - Implement conformance mappings for deep value/style parity continuity
+    [x] 31.3.1 Task - Implement conformance mappings for deep value/style parity continuity
       Add scenario coverage for deterministic nested-value parity behavior under canonical struct/map interpretation.
 
-      [ ] 31.3.1.1 Subtask - Implement `SCN-036` scenario-catalog entry for deep value/style parity continuity.
-      [ ] 31.3.1.2 Subtask - Implement matrix updates linking `SCN-036` to service/widget requirement families.
-      [ ] 31.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 31.
+      [x] 31.3.1.1 Subtask - Implement `SCN-036` scenario-catalog entry for deep value/style parity continuity.
+      [x] 31.3.1.2 Subtask - Implement matrix updates linking `SCN-036` to service/widget requirement families.
+      [x] 31.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 31.
 
   [ ] 31.4 Section - Phase 31 Integration Tests
     Validate deep value/style parity through conformance-tagged runtime flows.
