@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 33.1.1.2 Subtask - Implement deterministic ordering rules for normalized set-like collections.
       [x] 33.1.1.3 Subtask - Implement focused unit tests for collection normalization primitives.
 
-  [ ] 33.2 Section - Collection Parity Integration
+  [x] 33.2 Section - Collection Parity Integration
     Integrate collection normalization into descriptor canonicalization and interpreter parity flows.
 
-    [ ] 33.2.1 Task - Implement collection parity for interpreted descriptors
+    [x] 33.2.1 Task - Implement collection parity for interpreted descriptors
       Ensure equivalent struct/map collection payloads (including set-like values) normalize to identical descriptor values.
 
-      [ ] 33.2.1.1 Subtask - Implement descriptor canonicalization integration for collection normalization.
-      [ ] 33.2.1.2 Subtask - Implement interpreter parity tests for canonical `expanded_nodes` set/list equivalence.
-      [ ] 33.2.1.3 Subtask - Implement regression checks preserving existing deep parity and event semantics.
+      [x] 33.2.1.1 Subtask - Implement descriptor canonicalization integration for collection normalization.
+      [x] 33.2.1.2 Subtask - Implement interpreter parity tests for canonical `expanded_nodes` set/list equivalence.
+      [x] 33.2.1.3 Subtask - Implement regression checks preserving existing deep parity and event semantics.
 
   [ ] 33.3 Section - Scenario and Matrix Mapping
     Register collection normalization parity behavior in conformance coverage.

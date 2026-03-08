@@ -470,6 +470,48 @@ defmodule WebUi.Iur.InterpreterTest do
     assert interpreted_struct.events == interpreted_map.events
   end
 
+  test "normalizes canonical expanded_nodes MapSet and list inputs identically" do
+    struct_spec = %Layouts.VBox{
+      id: :tree_root,
+      children: [
+        %Widgets.TreeView{
+          id: :nav_tree,
+          expanded_nodes: MapSet.new([:node_2, :node_1]),
+          root_nodes: [
+            %Widgets.TreeNode{id: :node_1, label: "Node 1"},
+            %Widgets.TreeNode{id: :node_2, label: "Node 2"}
+          ],
+          on_select: %{node_id: "node-1"}
+        }
+      ]
+    }
+
+    map_spec = %{
+      type: :vbox,
+      id: :tree_root,
+      children: [
+        %{
+          type: :tree_view,
+          id: :nav_tree,
+          expanded_nodes: [:node_1, :node_2],
+          children: [
+            %{type: :tree_node, id: :node_1, label: "Node 1"},
+            %{type: :tree_node, id: :node_2, label: "Node 2"}
+          ],
+          on_select: %{node_id: "node-1"}
+        }
+      ]
+    }
+
+    assert {:ok, interpreted_struct} = Interpreter.interpret(struct_spec)
+    assert {:ok, interpreted_map} = Interpreter.interpret(map_spec)
+
+    assert interpreted_struct.root == interpreted_map.root
+    assert interpreted_struct.widgets == interpreted_map.widgets
+    assert interpreted_struct.signals == interpreted_map.signals
+    assert interpreted_struct.events == interpreted_map.events
+  end
+
   test "fails closed for malformed canonical extended signal payloads" do
     spec = %{
       type: :vbox,
