@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 - Signal payloads from canonical descriptors may carry atom/string primitives and must normalize deterministically.
 - Interpreted widget descriptors must separate event-signal configuration from render props.
 
-[ ] 29 Phase 29 - Canonical Unified-IUR Signal Coercion and Descriptor Hygiene
+[x] 29 Phase 29 - Canonical Unified-IUR Signal Coercion and Descriptor Hygiene
   Normalize canonical signal payload primitives and descriptor props so equivalent input semantics produce stable interpreted outputs.
 
   [x] 29.1 Section - Signal Payload Primitive Coercion
@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 29.3.1.2 Subtask - Implement matrix updates linking `SCN-034` to service/widget requirement families.
       [x] 29.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 29.
 
-  [ ] 29.4 Section - Phase 29 Integration Tests
+  [x] 29.4 Section - Phase 29 Integration Tests
     Validate canonical signal coercion and descriptor hygiene through conformance-tagged runtime flows.
 
-    [ ] 29.4.1 Task - Canonical signal coercion and descriptor hygiene conformance scenarios
+    [x] 29.4.1 Task - Canonical signal coercion and descriptor hygiene conformance scenarios
       Verify deterministic coercion/parity behavior, fail-closed invalid primitive handling, and equivalent-flow trace stability.
 
-      [ ] 29.4.1.1 Subtask - Verify `SCN-034` equivalent canonical inputs with atom/string primitives produce deterministic event traces.
-      [ ] 29.4.1.2 Subtask - Verify `SCN-034` invalid primitive payloads fail closed with typed validation errors.
-      [ ] 29.4.1.3 Subtask - Verify `SCN-034` repeated equivalent interpretation flows produce equivalent traces and descriptor props.
+      [x] 29.4.1.1 Subtask - Verify `SCN-034` equivalent canonical inputs with atom/string primitives produce deterministic event traces.
+      [x] 29.4.1.2 Subtask - Verify `SCN-034` invalid primitive payloads fail closed with typed validation errors.
+      [x] 29.4.1.3 Subtask - Verify `SCN-034` repeated equivalent interpretation flows produce equivalent traces and descriptor props.
