@@ -39,6 +39,7 @@ The plan aligns to:
 26. [Phase 26 - Replay Baseline Registry and Selection Continuity](./phase-26-replay-baseline-registry-and-selection-continuity.md): persist deterministic baseline registries with retention controls and active-baseline selection for gate evaluation.
 27. [Phase 27 - Canonical Unified-IUR Dependency and Contract Alignment](./phase-27-canonical-unified-iur-dependency-and-contract-alignment.md): consume canonical Unified-IUR schema authority from `unified_iur` with explicit runtime, contract, and conformance guardrails.
 28. [Phase 28 - Canonical Unified-IUR Extended Signal and Container Mapping](./phase-28-canonical-unified-iur-extended-signal-and-container-mapping.md): map canonical menu/table/tabs/tree signals and container child descriptors into deterministic runtime events.
+29. [Phase 29 - Canonical Unified-IUR Signal Coercion and Descriptor Hygiene](./phase-29-canonical-unified-iur-signal-coercion-and-descriptor-hygiene.md): normalize canonical signal payload primitives and prevent signal-config leakage in interpreted widget descriptors.
 
 ## Shared Conventions
 - Numbering:
