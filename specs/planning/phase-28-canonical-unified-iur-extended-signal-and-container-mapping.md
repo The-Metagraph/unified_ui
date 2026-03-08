@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 28.1.1.2 Subtask - Implement fail-closed validation for required extended signal payload fields.
       [x] 28.1.1.3 Subtask - Implement unit tests for deterministic extended event binding behavior.
 
-  [ ] 28.2 Section - Interpreter Container and Signal Integration
+  [x] 28.2 Section - Interpreter Container and Signal Integration
     Integrate container widget child traversal and extended signal extraction into canonical Unified-IUR interpretation.
 
-    [ ] 28.2.1 Task - Implement container-aware canonical interpreter flow
+    [x] 28.2.1 Task - Implement container-aware canonical interpreter flow
       Normalize canonical container widgets with deterministic child descriptor traversal and map extended signal fields into event envelopes.
 
-      [ ] 28.2.1.1 Subtask - Implement deterministic traversal for canonical container widgets (`menu`, `tabs`, `tree_view`, etc.).
-      [ ] 28.2.1.2 Subtask - Implement interpreter mappings for `action`, `on_row_select`, `on_sort`, `on_change`, `on_select`, and `on_toggle`.
-      [ ] 28.2.1.3 Subtask - Implement interpreter tests for extended canonical container/signal behavior.
+      [x] 28.2.1.1 Subtask - Implement deterministic traversal for canonical container widgets (`menu`, `tabs`, `tree_view`, etc.).
+      [x] 28.2.1.2 Subtask - Implement interpreter mappings for `action`, `on_row_select`, `on_sort`, `on_change`, `on_select`, and `on_toggle`.
+      [x] 28.2.1.3 Subtask - Implement interpreter tests for extended canonical container/signal behavior.
 
   [ ] 28.3 Section - Scenario and Matrix Mapping
     Register canonical Unified-IUR extended mapping behavior in conformance coverage.

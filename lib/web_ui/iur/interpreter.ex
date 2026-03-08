@@ -28,7 +28,11 @@ defmodule WebUi.Iur.Interpreter do
 
   @signal_fields_by_widget %{
     "button" => [:on_click],
-    "text_input" => [:on_change, :on_submit]
+    "text_input" => [:on_change, :on_submit],
+    "menu_item" => [:action],
+    "table" => [:on_row_select, :on_sort],
+    "tabs" => [:on_change],
+    "tree_view" => [:on_select, :on_toggle]
   }
 
   @spec interpret(map() | struct(), keyword()) :: {:ok, map()} | {:error, TypedError.t()}
@@ -54,7 +58,7 @@ defmodule WebUi.Iur.Interpreter do
       if MapSet.member?(@layout_kinds, kind) do
         normalize_layout_node(normalized_map, kind, id, path, correlation_id)
       else
-        normalize_widget_node(normalized_map, kind, id, correlation_id)
+        normalize_widget_node(normalized_map, kind, id, path, correlation_id)
       end
     end
   end
@@ -63,31 +67,17 @@ defmodule WebUi.Iur.Interpreter do
     children = fetch_any(node, :children, [])
 
     if is_list(children) do
-      {children_nodes, widgets, signals} =
-        children
-        |> Enum.with_index()
-        |> Enum.reduce({[], [], []}, fn {child, index}, {acc_nodes, acc_widgets, acc_signals} ->
-          case normalize_node(child, path ++ [index], correlation_id) do
-            {:ok, child_node, child_widgets, child_signals} ->
-              {
-                acc_nodes ++ [child_node],
-                acc_widgets ++ child_widgets,
-                acc_signals ++ child_signals
-              }
-
-            {:error, %TypedError{} = error} ->
-              throw({:normalize_error, error})
-          end
-        end)
-
-      {:ok,
-       %{
-         type: :layout,
-         kind: kind,
-         id: id,
-         props: layout_props(node),
-         children: children_nodes
-       }, widgets, signals}
+      with {:ok, children_nodes, widgets, signals} <-
+             normalize_child_nodes(children, path, correlation_id) do
+        {:ok,
+         %{
+           type: :layout,
+           kind: kind,
+           id: id,
+           props: layout_props(node),
+           children: children_nodes
+         }, widgets, signals}
+      end
     else
       {:error,
        TypedError.new(
@@ -98,12 +88,11 @@ defmodule WebUi.Iur.Interpreter do
          correlation_id
        )}
     end
-  catch
-    {:normalize_error, %TypedError{} = error} -> {:error, error}
   end
 
-  defp normalize_widget_node(node, kind, id, _correlation_id) do
+  defp normalize_widget_node(node, kind, id, path, correlation_id) do
     widget_kind = Map.get(@widget_aliases, kind, kind)
+    raw_children = fetch_any(node, :children, :__missing__)
 
     signals =
       @signal_fields_by_widget
@@ -126,13 +115,20 @@ defmodule WebUi.Iur.Interpreter do
         end
       end)
 
-    {:ok,
-     %{
-       type: :widget,
-       kind: widget_kind,
-       id: id,
-       props: widget_props(node)
-     }, [widget_descriptor(id, widget_kind)], signals}
+    with {:ok, child_nodes, child_widgets, child_signals} <-
+           normalize_widget_children(raw_children, path, correlation_id) do
+      widget_node =
+        %{
+          type: :widget,
+          kind: widget_kind,
+          id: id,
+          props: widget_props(node)
+        }
+        |> maybe_put_widget_children(child_nodes)
+
+      {:ok, widget_node, [widget_descriptor(id, widget_kind)] ++ child_widgets,
+       signals ++ child_signals}
+    end
   end
 
   defp normalize_node_input(spec, correlation_id) do
@@ -215,6 +211,18 @@ defmodule WebUi.Iur.Interpreter do
 
   defp build_event(%{
          source_field: "on_change",
+         widget_kind: "tabs",
+         widget_id: widget_id,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_map(signal_payload) do
+    tab_id = signal_tab_id(signal_payload)
+    data = Map.drop(signal_payload, [:tab_id, "tab_id", :active_tab, "active_tab"])
+    ElmBindings.on_tab_change(widget_id, "tabs", tab_id, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_change",
          widget_id: widget_id,
          widget_kind: widget_kind,
          signal: signal_payload
@@ -234,6 +242,80 @@ defmodule WebUi.Iur.Interpreter do
        })
        when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
     ElmBindings.on_submit(widget_id, widget_kind, signal_payload)
+  end
+
+  defp build_event(%{
+         source_field: "action",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    action_id = signal_action_id(signal_payload)
+    data = Map.drop(signal_payload, [:action_id, "action_id", :action, "action"])
+    ElmBindings.on_menu_action(widget_id, widget_kind, action_id, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_row_select",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    row_index = signal_row_index(signal_payload)
+    data = Map.drop(signal_payload, [:row_index, "row_index", :index, "index"])
+    ElmBindings.on_table_row_select(widget_id, widget_kind, row_index, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_sort",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    column = signal_sort_column(signal_payload)
+    direction = signal_sort_direction(signal_payload)
+
+    data =
+      Map.drop(signal_payload, [
+        :column,
+        "column",
+        :direction,
+        "direction",
+        :sort_column,
+        "sort_column",
+        :sort_direction,
+        "sort_direction"
+      ])
+
+    ElmBindings.on_table_sort(widget_id, widget_kind, column, direction, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_select",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    node_id = signal_node_id(signal_payload)
+    data = Map.drop(signal_payload, [:node_id, "node_id", :id, "id"])
+    ElmBindings.on_tree_node_select(widget_id, widget_kind, node_id, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_toggle",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    node_id = signal_node_id(signal_payload)
+    expanded = signal_expanded(signal_payload)
+    data = Map.drop(signal_payload, [:node_id, "node_id", :id, "id", :expanded, "expanded"])
+    ElmBindings.on_tree_node_toggle(widget_id, widget_kind, node_id, expanded, data)
   end
 
   defp build_event(_signal_binding) do
@@ -263,6 +345,47 @@ defmodule WebUi.Iur.Interpreter do
   end
 
   defp normalize_map(_), do: %{}
+
+  defp normalize_widget_children(:__missing__, _path, _correlation_id),
+    do: {:ok, [], [], []}
+
+  defp normalize_widget_children(children, path, correlation_id) when is_list(children) do
+    normalize_child_nodes(children, path, correlation_id)
+  end
+
+  defp normalize_widget_children(children, _path, correlation_id) do
+    {:error,
+     TypedError.new(
+       "iur.interpreter.invalid_children",
+       "validation",
+       false,
+       %{reason: "children must be a list when provided", children: children},
+       correlation_id
+     )}
+  end
+
+  defp normalize_child_nodes(children, path, correlation_id)
+       when is_list(children) and is_list(path) do
+    children
+    |> Enum.with_index()
+    |> Enum.reduce_while({:ok, [], [], []}, fn {child, index},
+                                               {:ok, acc_nodes, acc_widgets, acc_signals} ->
+      case normalize_node(child, path ++ [index], correlation_id) do
+        {:ok, child_node, child_widgets, child_signals} ->
+          {:cont,
+           {:ok, acc_nodes ++ [child_node], acc_widgets ++ child_widgets,
+            acc_signals ++ child_signals}}
+
+        {:error, %TypedError{} = error} ->
+          {:halt, {:error, error}}
+      end
+    end)
+  end
+
+  defp maybe_put_widget_children(node, []), do: node
+
+  defp maybe_put_widget_children(node, children) when is_map(node) and is_list(children),
+    do: Map.put(node, :children, children)
 
   defp infer_kind(node, correlation_id) when is_map(node) do
     kind =
@@ -355,6 +478,40 @@ defmodule WebUi.Iur.Interpreter do
 
   defp normalize_kind_from_value(value) when is_binary(value), do: normalize_kind_token(value)
   defp normalize_kind_from_value(_value), do: nil
+
+  defp signal_action_id(signal_payload) when is_map(signal_payload) do
+    fetch_string(signal_payload, :action_id) || fetch_string(signal_payload, :action)
+  end
+
+  defp signal_row_index(signal_payload) when is_map(signal_payload) do
+    case fetch_any(signal_payload, :row_index) || fetch_any(signal_payload, :index) do
+      value when is_integer(value) and value >= 0 -> value
+      _ -> -1
+    end
+  end
+
+  defp signal_sort_column(signal_payload) when is_map(signal_payload) do
+    fetch_string(signal_payload, :column) || fetch_string(signal_payload, :sort_column)
+  end
+
+  defp signal_sort_direction(signal_payload) when is_map(signal_payload) do
+    fetch_string(signal_payload, :direction) || fetch_string(signal_payload, :sort_direction)
+  end
+
+  defp signal_tab_id(signal_payload) when is_map(signal_payload) do
+    fetch_string(signal_payload, :tab_id) || fetch_string(signal_payload, :active_tab)
+  end
+
+  defp signal_node_id(signal_payload) when is_map(signal_payload) do
+    fetch_string(signal_payload, :node_id) || fetch_string(signal_payload, :id)
+  end
+
+  defp signal_expanded(signal_payload) when is_map(signal_payload) do
+    case fetch_any(signal_payload, :expanded) do
+      value when is_boolean(value) -> value
+      _ -> nil
+    end
+  end
 
   defp normalize_kind_token(value) when is_binary(value) do
     value
