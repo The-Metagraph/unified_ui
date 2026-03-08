@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 - Equivalent struct/map descriptors must normalize collection values into the same portable representation.
 - Set-like canonical values (for example `MapSet`) must normalize deterministically and avoid runtime-internal structural leakage.
 
-[ ] 33 Phase 33 - Canonical Unified-IUR Collection Normalization and Set Parity
+[x] 33 Phase 33 - Canonical Unified-IUR Collection Normalization and Set Parity
   Normalize canonical collection values into deterministic portable shapes so equivalent struct/map descriptors produce parity-equivalent interpreted outputs.
 
   [x] 33.1 Section - Collection Normalization Primitives
@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 33.3.1.2 Subtask - Implement matrix updates linking `SCN-038` to service/widget requirement families.
       [x] 33.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 33.
 
-  [ ] 33.4 Section - Phase 33 Integration Tests
+  [x] 33.4 Section - Phase 33 Integration Tests
     Validate collection normalization parity through conformance-tagged runtime flows.
 
-    [ ] 33.4.1 Task - Collection normalization parity conformance scenarios
+    [x] 33.4.1 Task - Collection normalization parity conformance scenarios
       Verify deterministic collection parity, fail-closed malformed payload handling, and repeated-flow stability.
 
-      [ ] 33.4.1.1 Subtask - Verify `SCN-038` equivalent canonical set/list inputs produce identical interpreted snapshots.
-      [ ] 33.4.1.2 Subtask - Verify `SCN-038` malformed payloads fail closed with typed validation errors.
-      [ ] 33.4.1.3 Subtask - Verify `SCN-038` repeated equivalent interpretation flows produce identical snapshots.
+      [x] 33.4.1.1 Subtask - Verify `SCN-038` equivalent canonical set/list inputs produce identical interpreted snapshots.
+      [x] 33.4.1.2 Subtask - Verify `SCN-038` malformed payloads fail closed with typed validation errors.
+      [x] 33.4.1.3 Subtask - Verify `SCN-038` repeated equivalent interpretation flows produce identical snapshots.
