@@ -428,6 +428,48 @@ defmodule WebUi.Iur.InterpreterTest do
     assert interpreted_struct.events == interpreted_map.events
   end
 
+  test "normalizes canonical nested table column defaults from struct and map inputs identically" do
+    struct_spec = %Layouts.VBox{
+      id: :nested_defaults_root,
+      children: [
+        %Widgets.Table{
+          id: :orders_table,
+          data: [%{id: 1, total: 99}],
+          columns: [
+            %Widgets.Column{key: :id, header: "ID"}
+          ],
+          on_row_select: %{row_index: 0},
+          on_sort: %{column: "id", direction: "asc"}
+        }
+      ]
+    }
+
+    map_spec = %{
+      type: :vbox,
+      id: :nested_defaults_root,
+      children: [
+        %{
+          type: :table,
+          id: :orders_table,
+          data: [%{"id" => 1, "total" => 99}],
+          columns: [
+            %{"key" => :id, "header" => "ID"}
+          ],
+          on_row_select: %{row_index: 0},
+          on_sort: %{column: "id", direction: "asc"}
+        }
+      ]
+    }
+
+    assert {:ok, interpreted_struct} = Interpreter.interpret(struct_spec)
+    assert {:ok, interpreted_map} = Interpreter.interpret(map_spec)
+
+    assert interpreted_struct.root == interpreted_map.root
+    assert interpreted_struct.widgets == interpreted_map.widgets
+    assert interpreted_struct.signals == interpreted_map.signals
+    assert interpreted_struct.events == interpreted_map.events
+  end
+
   test "fails closed for malformed canonical extended signal payloads" do
     spec = %{
       type: :vbox,

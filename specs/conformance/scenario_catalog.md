@@ -40,3 +40,4 @@ Canonical validation scenarios for the current baseline contract layer.
 | `SCN-034` | Canonical Unified-IUR signal coercion and descriptor hygiene continuity | Canonical atom/string signal primitives normalize deterministically and mapped signal fields stay isolated from interpreted widget props. |
 | `SCN-035` | Canonical Unified-IUR descriptor parity continuity | Equivalent canonical struct/map extended descriptors normalize to identical interpreted descriptor trees after default-prop canonicalization. |
 | `SCN-036` | Canonical Unified-IUR deep value/style parity continuity | Equivalent canonical nested struct/map prop values (including style payloads) normalize to identical deep descriptor value shapes. |
+| `SCN-037` | Canonical Unified-IUR nested default profile parity continuity | Equivalent canonical nested descriptors with default-profile differences (for example table columns) normalize to identical interpreted deep snapshots. |
