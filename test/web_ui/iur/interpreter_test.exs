@@ -238,6 +238,59 @@ defmodule WebUi.Iur.InterpreterTest do
     assert "node_1" in widget_ids
   end
 
+  test "coerces canonical extended signal payload atoms and string indexes deterministically" do
+    spec = %{
+      type: :vbox,
+      id: :extended_root,
+      children: [
+        %{
+          type: :menu,
+          id: :main_menu,
+          children: [
+            %{type: :menu_item, id: :open_item, label: "Open", action: :open_file}
+          ]
+        },
+        %{
+          type: :table,
+          id: :orders_table,
+          on_row_select: %{index: "3"},
+          on_sort: %{column: :price, direction: :DESC}
+        },
+        %{
+          type: :tabs,
+          id: :main_tabs,
+          on_change: %{tab_id: :details}
+        },
+        %{
+          type: :tree_view,
+          id: :nav_tree,
+          on_select: %{node_id: :node_1},
+          on_toggle: %{node_id: :node_1, expanded: "true"}
+        }
+      ]
+    }
+
+    assert {:ok, interpreted} = Interpreter.interpret(spec)
+
+    assert Enum.map(interpreted.events, & &1.type) == [
+             "unified.menu.action_selected",
+             "unified.table.row_selected",
+             "unified.table.sorted",
+             "unified.tab.changed",
+             "unified.tree.node_selected",
+             "unified.tree.node_toggled"
+           ]
+
+    assert Enum.at(interpreted.events, 0).data.action_id == "open_file"
+    assert Enum.at(interpreted.events, 1).data.row_index == 3
+    assert Enum.at(interpreted.events, 2).data.column == "price"
+    assert Enum.at(interpreted.events, 2).data.direction == "desc"
+    assert Enum.at(interpreted.events, 3).data.tab_id == "details"
+    assert Enum.at(interpreted.events, 4).data.node_id == "node_1"
+    assert Enum.at(interpreted.events, 5).data.node_id == "node_1"
+    assert Enum.at(interpreted.events, 5).data.expanded == true
+  end
+
   test "fails closed for malformed canonical extended signal payloads" do
     spec = %{
       type: :vbox,

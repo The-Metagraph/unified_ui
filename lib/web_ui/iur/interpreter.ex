@@ -480,35 +480,44 @@ defmodule WebUi.Iur.Interpreter do
   defp normalize_kind_from_value(_value), do: nil
 
   defp signal_action_id(signal_payload) when is_map(signal_payload) do
-    fetch_string(signal_payload, :action_id) || fetch_string(signal_payload, :action)
+    fetch_string_like(signal_payload, :action_id) || fetch_string_like(signal_payload, :action)
   end
 
   defp signal_row_index(signal_payload) when is_map(signal_payload) do
     case fetch_any(signal_payload, :row_index) || fetch_any(signal_payload, :index) do
       value when is_integer(value) and value >= 0 -> value
+      value when is_binary(value) -> parse_non_negative_integer(value)
       _ -> -1
     end
   end
 
   defp signal_sort_column(signal_payload) when is_map(signal_payload) do
-    fetch_string(signal_payload, :column) || fetch_string(signal_payload, :sort_column)
+    fetch_string_like(signal_payload, :column) || fetch_string_like(signal_payload, :sort_column)
   end
 
   defp signal_sort_direction(signal_payload) when is_map(signal_payload) do
-    fetch_string(signal_payload, :direction) || fetch_string(signal_payload, :sort_direction)
+    case fetch_string_like(signal_payload, :direction) ||
+           fetch_string_like(signal_payload, :sort_direction) do
+      nil -> nil
+      direction -> direction |> String.trim() |> String.downcase()
+    end
   end
 
   defp signal_tab_id(signal_payload) when is_map(signal_payload) do
-    fetch_string(signal_payload, :tab_id) || fetch_string(signal_payload, :active_tab)
+    fetch_string_like(signal_payload, :tab_id) || fetch_string_like(signal_payload, :active_tab)
   end
 
   defp signal_node_id(signal_payload) when is_map(signal_payload) do
-    fetch_string(signal_payload, :node_id) || fetch_string(signal_payload, :id)
+    fetch_string_like(signal_payload, :node_id) || fetch_string_like(signal_payload, :id)
   end
 
   defp signal_expanded(signal_payload) when is_map(signal_payload) do
     case fetch_any(signal_payload, :expanded) do
       value when is_boolean(value) -> value
+      "true" -> true
+      "false" -> false
+      :true -> true
+      :false -> false
       _ -> nil
     end
   end
@@ -568,6 +577,21 @@ defmodule WebUi.Iur.Interpreter do
     case fetch_any(map, key) do
       value when is_binary(value) -> value
       _ -> nil
+    end
+  end
+
+  defp fetch_string_like(map, key) when is_map(map) do
+    case fetch_any(map, key) do
+      value when is_binary(value) -> value
+      value when is_atom(value) and not is_nil(value) -> Atom.to_string(value)
+      _ -> nil
+    end
+  end
+
+  defp parse_non_negative_integer(value) when is_binary(value) do
+    case Integer.parse(String.trim(value)) do
+      {parsed, ""} when parsed >= 0 -> parsed
+      _ -> -1
     end
   end
 
