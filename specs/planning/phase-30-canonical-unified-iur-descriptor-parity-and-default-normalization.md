@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 - Equivalent struct/map canonical inputs should normalize to identical descriptor trees, not only equivalent event traces.
 - Default-only canonical widget props should be normalized to a deterministic minimal descriptor shape.
 
-[ ] 30 Phase 30 - Canonical Unified-IUR Descriptor Parity and Default Normalization
+[x] 30 Phase 30 - Canonical Unified-IUR Descriptor Parity and Default Normalization
   Normalize canonical default widget props to guarantee full descriptor parity for equivalent canonical struct and map interpretation flows.
 
   [x] 30.1 Section - Default-Prop Canonicalization Primitives
@@ -47,12 +47,12 @@ Back to index: [README](./README.md)
       [x] 30.3.1.2 Subtask - Implement matrix updates linking `SCN-035` to service/widget requirement families.
       [x] 30.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 30.
 
-  [ ] 30.4 Section - Phase 30 Integration Tests
+  [x] 30.4 Section - Phase 30 Integration Tests
     Validate canonical descriptor parity and default normalization through conformance-tagged runtime flows.
 
-    [ ] 30.4.1 Task - Canonical descriptor parity conformance scenarios
+    [x] 30.4.1 Task - Canonical descriptor parity conformance scenarios
       Verify deterministic parity across equivalent struct/map inputs, fail-closed malformed payload handling, and repeated-flow stability.
 
-      [ ] 30.4.1.1 Subtask - Verify `SCN-035` equivalent canonical extended struct/map inputs produce identical descriptor and event traces.
-      [ ] 30.4.1.2 Subtask - Verify `SCN-035` malformed extended payloads fail closed with typed validation errors.
-      [ ] 30.4.1.3 Subtask - Verify `SCN-035` repeated equivalent canonical interpretation flows produce identical snapshots.
+      [x] 30.4.1.1 Subtask - Verify `SCN-035` equivalent canonical extended struct/map inputs produce identical descriptor and event traces.
+      [x] 30.4.1.2 Subtask - Verify `SCN-035` malformed extended payloads fail closed with typed validation errors.
+      [x] 30.4.1.3 Subtask - Verify `SCN-035` repeated equivalent canonical interpretation flows produce identical snapshots.
