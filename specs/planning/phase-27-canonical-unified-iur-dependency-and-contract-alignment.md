@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 27.2.1.2 Subtask - Implement fail-closed validation for unsupported schema/source markers.
       [x] 27.2.1.3 Subtask - Implement runtime tests covering canonical struct ingestion and deterministic signal mapping.
 
-  [ ] 27.3 Section - Scenario and Matrix Mapping
+  [x] 27.3 Section - Scenario and Matrix Mapping
     Register canonical Unified-IUR dependency behavior in conformance coverage.
 
-    [ ] 27.3.1 Task - Implement conformance mappings for canonical Unified-IUR continuity
+    [x] 27.3.1 Task - Implement conformance mappings for canonical Unified-IUR continuity
       Add scenario coverage validating external schema authority, deterministic interpretation continuity, and fail-closed drift handling.
 
-      [ ] 27.3.1.1 Subtask - Implement `SCN-032` scenario-catalog entry for canonical Unified-IUR dependency continuity.
-      [ ] 27.3.1.2 Subtask - Implement matrix updates linking `SCN-032` to service/widget requirement families.
-      [ ] 27.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 27.
+      [x] 27.3.1.1 Subtask - Implement `SCN-032` scenario-catalog entry for canonical Unified-IUR dependency continuity.
+      [x] 27.3.1.2 Subtask - Implement matrix updates linking `SCN-032` to service/widget requirement families.
+      [x] 27.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 27.
 
   [ ] 27.4 Section - Phase 27 Integration Tests
     Validate canonical Unified-IUR dependency handling through conformance-tagged runtime flows.
