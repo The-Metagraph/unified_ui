@@ -34,6 +34,7 @@ defmodule WebUi.Iur.Interpreter do
     "tabs" => [:on_change],
     "tree_view" => [:on_select, :on_toggle]
   }
+  @widget_signal_fields @signal_fields_by_widget |> Map.values() |> List.flatten() |> Enum.uniq()
 
   @spec interpret(map() | struct(), keyword()) :: {:ok, map()} | {:error, TypedError.t()}
   def interpret(spec, opts \\ []) when is_list(opts) do
@@ -445,7 +446,7 @@ defmodule WebUi.Iur.Interpreter do
 
   defp widget_props(node) when is_map(node) do
     node
-    |> Map.drop([:__struct__, :type, :children, :on_click, :on_change, :on_submit])
+    |> Map.drop([:__struct__, :type, :children] ++ @widget_signal_fields)
     |> Enum.reduce(%{}, fn {key, value}, acc ->
       case key do
         :id -> acc

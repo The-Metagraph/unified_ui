@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 29.1.1.2 Subtask - Implement canonical coercion for row index and expanded-state primitives used by extended signals.
       [x] 29.1.1.3 Subtask - Implement unit tests for deterministic atom/string primitive coercion in extended signal mappings.
 
-  [ ] 29.2 Section - Descriptor Prop Hygiene
+  [x] 29.2 Section - Descriptor Prop Hygiene
     Prevent event-signal configuration fields from leaking into normalized widget `props` descriptors.
 
-    [ ] 29.2.1 Task - Implement canonical signal-field prop stripping
+    [x] 29.2.1 Task - Implement canonical signal-field prop stripping
       Ensure interpreter output keeps signal definitions in `signals/events` while preserving render-facing widget properties.
 
-      [ ] 29.2.1.1 Subtask - Implement signal-field exclusion for all mapped widget signal keys in widget prop normalization.
-      [ ] 29.2.1.2 Subtask - Implement unit tests verifying signal fields are excluded from normalized widget `props`.
-      [ ] 29.2.1.3 Subtask - Implement parity checks confirming event output remains unchanged after prop hygiene updates.
+      [x] 29.2.1.1 Subtask - Implement signal-field exclusion for all mapped widget signal keys in widget prop normalization.
+      [x] 29.2.1.2 Subtask - Implement unit tests verifying signal fields are excluded from normalized widget `props`.
+      [x] 29.2.1.3 Subtask - Implement parity checks confirming event output remains unchanged after prop hygiene updates.
 
   [ ] 29.3 Section - Scenario and Matrix Mapping
     Register canonical signal coercion and descriptor hygiene behavior in conformance coverage.

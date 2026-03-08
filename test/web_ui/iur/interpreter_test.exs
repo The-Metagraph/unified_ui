@@ -227,6 +227,19 @@ defmodule WebUi.Iur.InterpreterTest do
     assert Enum.at(interpreted.events, 4).data.node_id == "node-1"
     assert Enum.at(interpreted.events, 5).data.expanded == true
 
+    menu_node = Enum.find(interpreted.root.children, &(&1.id == "main_menu"))
+    open_item_node = Enum.find(menu_node.children, &(&1.id == "open_item"))
+    table_node = Enum.find(interpreted.root.children, &(&1.id == "orders_table"))
+    tabs_node = Enum.find(interpreted.root.children, &(&1.id == "main_tabs"))
+    tree_node = Enum.find(interpreted.root.children, &(&1.id == "nav_tree"))
+
+    refute Map.has_key?(open_item_node.props, :action)
+    refute Map.has_key?(table_node.props, :on_row_select)
+    refute Map.has_key?(table_node.props, :on_sort)
+    refute Map.has_key?(tabs_node.props, :on_change)
+    refute Map.has_key?(tree_node.props, :on_select)
+    refute Map.has_key?(tree_node.props, :on_toggle)
+
     widget_ids = Enum.map(interpreted.widgets, & &1.widget_id)
     assert "main_menu" in widget_ids
     assert "open_item" in widget_ids
