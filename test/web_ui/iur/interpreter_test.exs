@@ -1,6 +1,8 @@
 defmodule WebUi.Iur.InterpreterTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Layouts
+  alias UnifiedIUR.Widgets
   alias WebUi.Iur.Interpreter
   alias WebUi.TypedError
 
@@ -121,5 +123,51 @@ defmodule WebUi.Iur.InterpreterTest do
 
     assert {:error, %TypedError{} = error} = Interpreter.interpret(spec)
     assert error.error_code == "iur.interpreter.unknown_element_type"
+  end
+
+  test "normalizes canonical UnifiedIUR structs with deterministic signal mapping" do
+    spec = %Layouts.VBox{
+      id: :root_layout,
+      spacing: 1,
+      children: [
+        %Widgets.Button{id: :save_button, label: "Save", on_click: :save},
+        %Widgets.TextInput{
+          id: :name_input,
+          value: "",
+          on_change: :name_changed,
+          on_submit: {:submit_name, %{source: "profile_form"}}
+        }
+      ]
+    }
+
+    assert {:ok, interpreted} = Interpreter.interpret(spec)
+
+    assert interpreted.root.type == :layout
+    assert interpreted.root.kind == "vbox"
+    assert interpreted.root.id == "root_layout"
+    assert interpreted.root.props.spacing == 1
+    assert Enum.map(interpreted.widgets, & &1.widget_id) == ["save_button", "name_input"]
+
+    assert Enum.map(interpreted.events, & &1.type) == [
+             "unified.button.clicked",
+             "unified.input.changed",
+             "unified.form.submitted"
+           ]
+  end
+
+  test "fails closed for unsupported schema source markers" do
+    spec = %{
+      type: :button,
+      id: :save_button,
+      on_click: :save,
+      schema: "unified_iur",
+      schema_source: "unknown/repo"
+    }
+
+    assert {:error, %TypedError{} = error} =
+             Interpreter.interpret(spec, correlation_id: "corr-iur-source-001")
+
+    assert error.error_code == "iur.interpreter.unsupported_schema_source"
+    assert error.correlation_id == "corr-iur-source-001"
   end
 end

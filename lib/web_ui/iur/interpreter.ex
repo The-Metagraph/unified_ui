@@ -1,9 +1,10 @@
 defmodule WebUi.Iur.Interpreter do
   @moduledoc """
-  Interprets Unified-IUR-like layout trees into deterministic WebUi runtime descriptors.
+  Interprets canonical Unified-IUR layout trees into deterministic WebUi runtime descriptors.
   """
 
   alias WebUi.Events.ElmBindings
+  alias WebUi.Iur.Dependency
   alias WebUi.TypedError
 
   @layout_kinds MapSet.new(["vbox", "hbox"])
@@ -47,9 +48,8 @@ defmodule WebUi.Iur.Interpreter do
   end
 
   defp normalize_node(spec, path, correlation_id) do
-    normalized_map = normalize_map(spec)
-
-    with {:ok, kind} <- infer_kind(normalized_map, correlation_id),
+    with {:ok, normalized_map} <- normalize_node_input(spec, correlation_id),
+         {:ok, kind} <- infer_kind(normalized_map, correlation_id),
          {:ok, id} <- infer_id(normalized_map, kind, path, correlation_id) do
       if MapSet.member?(@layout_kinds, kind) do
         normalize_layout_node(normalized_map, kind, id, path, correlation_id)
@@ -133,6 +133,48 @@ defmodule WebUi.Iur.Interpreter do
        id: id,
        props: widget_props(node)
      }, [widget_descriptor(id, widget_kind)], signals}
+  end
+
+  defp normalize_node_input(spec, correlation_id) do
+    with {:ok, normalized_map} <- normalize_spec_map(spec, correlation_id),
+         :ok <- Dependency.validate_schema_markers(normalized_map, correlation_id) do
+      {:ok, normalized_map}
+    end
+  end
+
+  defp normalize_spec_map(%_{} = spec, correlation_id) do
+    if Dependency.canonical_iur_struct?(spec) do
+      normalize_canonical_struct(spec, correlation_id)
+    else
+      {:ok, normalize_map(spec)}
+    end
+  end
+
+  defp normalize_spec_map(spec, _correlation_id), do: {:ok, normalize_map(spec)}
+
+  defp normalize_canonical_struct(spec, correlation_id) when is_struct(spec) do
+    try do
+      metadata = UnifiedIUR.Element.metadata(spec)
+      children = UnifiedIUR.Element.children(spec)
+
+      normalized_map =
+        metadata
+        |> normalize_map()
+        |> Map.put(:children, children)
+        |> Map.put(:__struct__, spec.__struct__)
+
+      {:ok, normalized_map}
+    rescue
+      Protocol.UndefinedError ->
+        {:error,
+         TypedError.new(
+           "iur.interpreter.unsupported_canonical_struct",
+           "validation",
+           false,
+           %{struct: inspect(spec.__struct__)},
+           correlation_id
+         )}
+    end
   end
 
   defp build_events(signals, correlation_id) when is_list(signals) do

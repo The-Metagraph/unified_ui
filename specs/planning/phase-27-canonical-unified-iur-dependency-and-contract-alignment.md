@@ -27,15 +27,15 @@ Back to index: [README](./README.md)
       [x] 27.1.1.2 Subtask - Implement compatibility checks for canonical Unified-IUR struct/map ingestion.
       [x] 27.1.1.3 Subtask - Implement unit tests for dependency-version and compatibility guard behavior.
 
-  [ ] 27.2 Section - Runtime Interpreter Integration
+  [x] 27.2 Section - Runtime Interpreter Integration
     Integrate canonical Unified-IUR structures directly in runtime interpretation and signal extraction flows.
 
-    [ ] 27.2.1 Task - Implement canonical Unified-IUR runtime integration
+    [x] 27.2.1 Task - Implement canonical Unified-IUR runtime integration
       Ensure interpreter paths consume canonical `UnifiedIUR.*` descriptors deterministically and preserve existing event compatibility.
 
-      [ ] 27.2.1.1 Subtask - Implement explicit normalization paths for canonical `UnifiedIUR.*` structs.
-      [ ] 27.2.1.2 Subtask - Implement fail-closed validation for unsupported schema/source markers.
-      [ ] 27.2.1.3 Subtask - Implement runtime tests covering canonical struct ingestion and deterministic signal mapping.
+      [x] 27.2.1.1 Subtask - Implement explicit normalization paths for canonical `UnifiedIUR.*` structs.
+      [x] 27.2.1.2 Subtask - Implement fail-closed validation for unsupported schema/source markers.
+      [x] 27.2.1.3 Subtask - Implement runtime tests covering canonical struct ingestion and deterministic signal mapping.
 
   [ ] 27.3 Section - Scenario and Matrix Mapping
     Register canonical Unified-IUR dependency behavior in conformance coverage.
