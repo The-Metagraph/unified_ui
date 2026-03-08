@@ -8,10 +8,13 @@ defmodule WebUi.Events.ElmBindings do
 
   @spec on_click(String.t(), String.t(), map()) :: {:ok, map()} | {:error, TypedError.t()}
   def on_click(widget_id, widget_kind, data \\ %{}) do
-    build_event("unified.button.clicked", widget_id, widget_kind, data, %{binding: "Html.Events.onClick"})
+    build_event("unified.button.clicked", widget_id, widget_kind, data, %{
+      binding: "Html.Events.onClick"
+    })
   end
 
-  @spec on_input(String.t(), String.t(), String.t(), map()) :: {:ok, map()} | {:error, TypedError.t()}
+  @spec on_input(String.t(), String.t(), String.t(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
   def on_input(widget_id, widget_kind, value, data \\ %{})
 
   def on_input(widget_id, widget_kind, value, data) when is_binary(value) do
@@ -20,7 +23,9 @@ defmodule WebUi.Events.ElmBindings do
       |> Map.put_new(:value, value)
       |> Map.put_new(:input_id, widget_id)
 
-    build_event("unified.input.changed", widget_id, widget_kind, data, %{binding: "Html.Events.onInput"})
+    build_event("unified.input.changed", widget_id, widget_kind, data, %{
+      binding: "Html.Events.onInput"
+    })
   end
 
   def on_input(widget_id, widget_kind, _value, _data) do
@@ -43,20 +48,276 @@ defmodule WebUi.Events.ElmBindings do
     })
   end
 
+  @spec on_menu_action(String.t(), String.t(), String.t(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
+  def on_menu_action(widget_id, widget_kind, action_id, data \\ %{})
+
+  def on_menu_action(widget_id, widget_kind, action_id, data)
+      when is_binary(action_id) and is_map(data) do
+    trimmed_action_id = String.trim(action_id)
+
+    if trimmed_action_id != "" do
+      action_data = Map.put_new(data, :action_id, trimmed_action_id)
+
+      build_event("unified.menu.action_selected", widget_id, widget_kind, action_data, %{
+        binding: "Html.Events.onClick"
+      })
+    else
+      {:error,
+       TypedError.new(
+         "elm_bindings.invalid_menu_action",
+         "validation",
+         false,
+         %{
+           widget_id: widget_id,
+           widget_kind: widget_kind,
+           reason: "action_id must be a non-empty string"
+         }
+       )}
+    end
+  end
+
+  def on_menu_action(widget_id, widget_kind, _action_id, _data) do
+    {:error,
+     TypedError.new(
+       "elm_bindings.invalid_menu_action",
+       "validation",
+       false,
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason: "action_id must be a non-empty string and data must be a map"
+       }
+     )}
+  end
+
+  @spec on_table_row_select(String.t(), String.t(), non_neg_integer(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
+  def on_table_row_select(widget_id, widget_kind, row_index, data \\ %{})
+
+  def on_table_row_select(widget_id, widget_kind, row_index, data)
+      when is_integer(row_index) and row_index >= 0 and is_map(data) do
+    selection_data = Map.put_new(data, :row_index, row_index)
+
+    build_event("unified.table.row_selected", widget_id, widget_kind, selection_data, %{
+      binding: "Html.Events.onClick"
+    })
+  end
+
+  def on_table_row_select(widget_id, widget_kind, _row_index, _data) do
+    {:error,
+     TypedError.new(
+       "elm_bindings.invalid_row_select_payload",
+       "validation",
+       false,
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason: "row_index must be a non-negative integer and data must be a map"
+       }
+     )}
+  end
+
+  @spec on_table_sort(String.t(), String.t(), String.t(), String.t(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
+  def on_table_sort(widget_id, widget_kind, column, direction, data \\ %{})
+
+  def on_table_sort(widget_id, widget_kind, column, direction, data)
+      when is_binary(column) and is_binary(direction) and is_map(data) do
+    trimmed_column = String.trim(column)
+    normalized_direction = String.downcase(String.trim(direction))
+
+    if trimmed_column != "" and normalized_direction in ["asc", "desc"] do
+      sort_data =
+        data
+        |> Map.put_new(:column, trimmed_column)
+        |> Map.put_new(:direction, normalized_direction)
+
+      build_event("unified.table.sorted", widget_id, widget_kind, sort_data, %{
+        binding: "Html.Events.onClick"
+      })
+    else
+      {:error,
+       TypedError.new(
+         "elm_bindings.invalid_sort_payload",
+         "validation",
+         false,
+         %{
+           widget_id: widget_id,
+           widget_kind: widget_kind,
+           reason: "column must be non-empty and direction must be asc or desc"
+         }
+       )}
+    end
+  end
+
+  def on_table_sort(widget_id, widget_kind, _column, _direction, _data) do
+    {:error,
+     TypedError.new(
+       "elm_bindings.invalid_sort_payload",
+       "validation",
+       false,
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason: "column/direction must be strings and data must be a map"
+       }
+     )}
+  end
+
+  @spec on_tab_change(String.t(), String.t(), String.t(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
+  def on_tab_change(widget_id, widget_kind, tab_id, data \\ %{})
+
+  def on_tab_change(widget_id, widget_kind, tab_id, data)
+      when is_binary(tab_id) and is_map(data) do
+    trimmed_tab_id = String.trim(tab_id)
+
+    if trimmed_tab_id != "" do
+      tab_data = Map.put_new(data, :tab_id, trimmed_tab_id)
+
+      build_event("unified.tab.changed", widget_id, widget_kind, tab_data, %{
+        binding: "Html.Events.onClick"
+      })
+    else
+      {:error,
+       TypedError.new(
+         "elm_bindings.invalid_tab_change_payload",
+         "validation",
+         false,
+         %{
+           widget_id: widget_id,
+           widget_kind: widget_kind,
+           reason: "tab_id must be a non-empty string"
+         }
+       )}
+    end
+  end
+
+  def on_tab_change(widget_id, widget_kind, _tab_id, _data) do
+    {:error,
+     TypedError.new(
+       "elm_bindings.invalid_tab_change_payload",
+       "validation",
+       false,
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason: "tab_id must be a non-empty string and data must be a map"
+       }
+     )}
+  end
+
+  @spec on_tree_node_select(String.t(), String.t(), String.t(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
+  def on_tree_node_select(widget_id, widget_kind, node_id, data \\ %{})
+
+  def on_tree_node_select(widget_id, widget_kind, node_id, data)
+      when is_binary(node_id) and is_map(data) do
+    trimmed_node_id = String.trim(node_id)
+
+    if trimmed_node_id != "" do
+      node_data = Map.put_new(data, :node_id, trimmed_node_id)
+
+      build_event("unified.tree.node_selected", widget_id, widget_kind, node_data, %{
+        binding: "Html.Events.onClick"
+      })
+    else
+      {:error,
+       TypedError.new(
+         "elm_bindings.invalid_tree_select_payload",
+         "validation",
+         false,
+         %{
+           widget_id: widget_id,
+           widget_kind: widget_kind,
+           reason: "node_id must be a non-empty string"
+         }
+       )}
+    end
+  end
+
+  def on_tree_node_select(widget_id, widget_kind, _node_id, _data) do
+    {:error,
+     TypedError.new(
+       "elm_bindings.invalid_tree_select_payload",
+       "validation",
+       false,
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason: "node_id must be a non-empty string and data must be a map"
+       }
+     )}
+  end
+
+  @spec on_tree_node_toggle(String.t(), String.t(), String.t(), boolean(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
+  def on_tree_node_toggle(widget_id, widget_kind, node_id, expanded, data \\ %{})
+
+  def on_tree_node_toggle(widget_id, widget_kind, node_id, expanded, data)
+      when is_binary(node_id) and is_boolean(expanded) and is_map(data) do
+    trimmed_node_id = String.trim(node_id)
+
+    if trimmed_node_id != "" do
+      node_data =
+        data
+        |> Map.put_new(:node_id, trimmed_node_id)
+        |> Map.put_new(:expanded, expanded)
+
+      build_event("unified.tree.node_toggled", widget_id, widget_kind, node_data, %{
+        binding: "Html.Events.onClick"
+      })
+    else
+      {:error,
+       TypedError.new(
+         "elm_bindings.invalid_tree_toggle_payload",
+         "validation",
+         false,
+         %{
+           widget_id: widget_id,
+           widget_kind: widget_kind,
+           reason: "node_id must be a non-empty string"
+         }
+       )}
+    end
+  end
+
+  def on_tree_node_toggle(widget_id, widget_kind, _node_id, _expanded, _data) do
+    {:error,
+     TypedError.new(
+       "elm_bindings.invalid_tree_toggle_payload",
+       "validation",
+       false,
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason:
+           "node_id must be a non-empty string, expanded must be a boolean, and data must be a map"
+       }
+     )}
+  end
+
   @spec on_focus(String.t(), String.t(), map()) :: {:ok, map()} | {:error, TypedError.t()}
   def on_focus(widget_id, widget_kind, data \\ %{}) do
-    build_event("unified.element.focused", widget_id, widget_kind, data, %{binding: "Html.Events.onFocus"})
+    build_event("unified.element.focused", widget_id, widget_kind, data, %{
+      binding: "Html.Events.onFocus"
+    })
   end
 
   @spec on_blur(String.t(), String.t(), map()) :: {:ok, map()} | {:error, TypedError.t()}
   def on_blur(widget_id, widget_kind, data \\ %{}) do
-    build_event("unified.element.blurred", widget_id, widget_kind, data, %{binding: "Html.Events.onBlur"})
+    build_event("unified.element.blurred", widget_id, widget_kind, data, %{
+      binding: "Html.Events.onBlur"
+    })
   end
 
-  @spec decode_action_key(String.t(), String.t(), map(), map()) :: {:ok, map()} | {:error, TypedError.t()}
+  @spec decode_action_key(String.t(), String.t(), map(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
   def decode_action_key(widget_id, widget_kind, key_event, data \\ %{})
 
-  def decode_action_key(widget_id, widget_kind, key_event, data) when is_map(key_event) and is_map(data) do
+  def decode_action_key(widget_id, widget_kind, key_event, data)
+      when is_map(key_event) and is_map(data) do
     case fetch_string(key_event, :key) do
       nil ->
         {:error,
@@ -79,7 +340,9 @@ defmodule WebUi.Events.ElmBindings do
           |> Map.put_new(:shift_key, fetch_boolean(key_event, :shift_key))
           |> Map.put_new(:meta_key, fetch_boolean(key_event, :meta_key))
 
-        build_event("unified.action.requested", widget_id, widget_kind, action_data, %{binding: "Html.Events.on \"keydown\""})
+        build_event("unified.action.requested", widget_id, widget_kind, action_data, %{
+          binding: "Html.Events.on \"keydown\""
+        })
     end
   end
 
@@ -96,7 +359,8 @@ defmodule WebUi.Events.ElmBindings do
   @spec decode_canvas_pointer(String.t(), map(), map()) :: {:ok, map()} | {:error, TypedError.t()}
   def decode_canvas_pointer(widget_id, pointer_event, data \\ %{})
 
-  def decode_canvas_pointer(widget_id, pointer_event, data) when is_map(pointer_event) and is_map(data) do
+  def decode_canvas_pointer(widget_id, pointer_event, data)
+      when is_map(pointer_event) and is_map(data) do
     x = fetch_number(pointer_event, :x) || fetch_number(pointer_event, :client_x)
     y = fetch_number(pointer_event, :y) || fetch_number(pointer_event, :client_y)
     phase = fetch_string(pointer_event, :phase) || fetch_string(pointer_event, :type)
@@ -136,7 +400,8 @@ defmodule WebUi.Events.ElmBindings do
      )}
   end
 
-  @spec on_resize(String.t(), String.t(), integer(), integer(), map()) :: {:ok, map()} | {:error, TypedError.t()}
+  @spec on_resize(String.t(), String.t(), integer(), integer(), map()) ::
+          {:ok, map()} | {:error, TypedError.t()}
   def on_resize(widget_id, widget_kind, width, height, data \\ %{})
 
   def on_resize(widget_id, widget_kind, width, height, data)
@@ -146,7 +411,9 @@ defmodule WebUi.Events.ElmBindings do
       |> Map.put_new(:width, width)
       |> Map.put_new(:height, height)
 
-    build_event("unified.viewport.resized", widget_id, widget_kind, resize_data, %{binding: "Browser.Events.onResize"})
+    build_event("unified.viewport.resized", widget_id, widget_kind, resize_data, %{
+      binding: "Browser.Events.onResize"
+    })
   end
 
   def on_resize(widget_id, widget_kind, _width, _height, _data) do
@@ -155,7 +422,11 @@ defmodule WebUi.Events.ElmBindings do
        "elm_bindings.invalid_resize_payload",
        "validation",
        false,
-       %{widget_id: widget_id, widget_kind: widget_kind, reason: "width/height must be integers and data must be a map"}
+       %{
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         reason: "width/height must be integers and data must be a map"
+       }
      )}
   end
 
@@ -186,7 +457,11 @@ defmodule WebUi.Events.ElmBindings do
     |> Enum.sort_by(& &1.subscription_id)
   end
 
-  @spec reconcile_subscriptions([map()], [map()]) :: %{subscribe: [map()], unsubscribe: [map()], active: [map()]}
+  @spec reconcile_subscriptions([map()], [map()]) :: %{
+          subscribe: [map()],
+          unsubscribe: [map()],
+          active: [map()]
+        }
   def reconcile_subscriptions(current, desired) when is_list(current) and is_list(desired) do
     normalized_current = normalize_subscriptions(current)
     normalized_desired = normalize_subscriptions(desired)
@@ -217,9 +492,11 @@ defmodule WebUi.Events.ElmBindings do
   end
 
   defp build_event(event_type, widget_id, widget_kind, data, meta)
-       when is_binary(event_type) and is_binary(widget_id) and is_binary(widget_kind) and is_map(data) and is_map(meta) do
+       when is_binary(event_type) and is_binary(widget_id) and is_binary(widget_kind) and
+              is_map(data) and is_map(meta) do
     with :ok <- validate_widget_ref(widget_id, widget_kind),
-         enriched_data <- data |> Map.put_new(:widget_id, widget_id) |> Map.put_new(:widget_kind, widget_kind),
+         enriched_data <-
+           data |> Map.put_new(:widget_id, widget_id) |> Map.put_new(:widget_kind, widget_kind),
          :ok <- EventCatalog.validate_event(event_type, enriched_data) do
       event = %{
         type: event_type,
@@ -262,7 +539,9 @@ defmodule WebUi.Events.ElmBindings do
     end
   end
 
-  defp maybe_add_subscription(subscriptions, true, subscription), do: [subscription | subscriptions]
+  defp maybe_add_subscription(subscriptions, true, subscription),
+    do: [subscription | subscriptions]
+
   defp maybe_add_subscription(subscriptions, _enabled, _subscription), do: subscriptions
 
   defp normalize_subscriptions(subscriptions) do
@@ -279,7 +558,10 @@ defmodule WebUi.Events.ElmBindings do
     widget_id = fetch_string(subscription, :widget_id)
     widget_kind = fetch_string(subscription, :widget_kind)
 
-    if Enum.all?([subscription_id, event_type, binding, widget_id, widget_kind], &(is_binary(&1) and &1 != "")) do
+    if Enum.all?(
+         [subscription_id, event_type, binding, widget_id, widget_kind],
+         &(is_binary(&1) and &1 != "")
+       ) do
       %{
         subscription_id: subscription_id,
         event_type: event_type,
@@ -319,7 +601,8 @@ defmodule WebUi.Events.ElmBindings do
             nil
           end
 
-        _ -> nil
+        _ ->
+          nil
       end
     end)
   end
