@@ -37,15 +37,15 @@ Back to index: [README](./README.md)
       [x] 30.2.1.2 Subtask - Implement parity tests across menu/table/tabs/tree canonical struct/map inputs.
       [x] 30.2.1.3 Subtask - Implement regression checks preserving existing canonical event output semantics.
 
-  [ ] 30.3 Section - Scenario and Matrix Mapping
+  [x] 30.3 Section - Scenario and Matrix Mapping
     Register canonical descriptor-parity behavior in conformance coverage.
 
-    [ ] 30.3.1 Task - Implement conformance mappings for canonical descriptor parity continuity
+    [x] 30.3.1 Task - Implement conformance mappings for canonical descriptor parity continuity
       Add scenario coverage for deterministic descriptor parity and default-prop normalization behavior.
 
-      [ ] 30.3.1.1 Subtask - Implement `SCN-035` scenario-catalog entry for canonical descriptor parity continuity.
-      [ ] 30.3.1.2 Subtask - Implement matrix updates linking `SCN-035` to service/widget requirement families.
-      [ ] 30.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 30.
+      [x] 30.3.1.1 Subtask - Implement `SCN-035` scenario-catalog entry for canonical descriptor parity continuity.
+      [x] 30.3.1.2 Subtask - Implement matrix updates linking `SCN-035` to service/widget requirement families.
+      [x] 30.3.1.3 Subtask - Implement phase-specific conformance scenario document for phase 30.
 
   [ ] 30.4 Section - Phase 30 Integration Tests
     Validate canonical descriptor parity and default normalization through conformance-tagged runtime flows.
