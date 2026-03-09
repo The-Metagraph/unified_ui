@@ -122,6 +122,7 @@ make assets-build
 make assets-css-watch
 make frontend-validate
 make frontend-contract-validate
+make frontend-cloudevent-validate
 ```
 
 Build output:
@@ -155,7 +156,13 @@ Validate frontend transport naming parity against `WebUi.Transport.Naming`:
 ./scripts/validate_frontend_transport_contract.sh
 ```
 
+Validate frontend CloudEvent envelope parity against `WebUi.CloudEvent` requirements:
+
+```bash
+./scripts/validate_frontend_cloudevent_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity.
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity.
