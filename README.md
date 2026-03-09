@@ -128,6 +128,12 @@ Build output:
 - `assets/dist/app.css` (Tailwind + DaisyUI)
 - `assets/dist/app.js` (compiled Elm)
 
+Runtime dev harness behavior:
+
+- Elm emits runtime commands through `sendRuntimeCommand` port.
+- `assets/js/app.js` simulates transport loopback events into `runtimeEventReceived`.
+- Simulated events include `runtime.event.joined.v1`, `runtime.event.pong.v1`, `runtime.event.recv.v1`, and typed `runtime.event.error.v1` failures for malformed/unknown commands.
+
 ## Frontend Validation
 
 Run strict frontend validation (dependency install + full build):
