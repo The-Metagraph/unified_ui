@@ -71,6 +71,50 @@ serverEventNames =
     ]
 
 
+canonicalWidgetEventTypes : List String
+canonicalWidgetEventTypes =
+    [ "unified.action.requested"
+    , "unified.button.clicked"
+    , "unified.canvas.pointer.changed"
+    , "unified.chart.point_hovered"
+    , "unified.chart.point_selected"
+    , "unified.command.executed"
+    , "unified.element.blurred"
+    , "unified.element.focused"
+    , "unified.form.submitted"
+    , "unified.input.changed"
+    , "unified.item.selected"
+    , "unified.item.toggled"
+    , "unified.link.clicked"
+    , "unified.menu.action_selected"
+    , "unified.overlay.closed"
+    , "unified.overlay.confirmed"
+    , "unified.scroll.changed"
+    , "unified.split.collapse_changed"
+    , "unified.split.resized"
+    , "unified.tab.changed"
+    , "unified.tab.closed"
+    , "unified.table.row_selected"
+    , "unified.table.sorted"
+    , "unified.toast.cleared"
+    , "unified.toast.dismissed"
+    , "unified.tree.node_selected"
+    , "unified.tree.node_toggled"
+    , "unified.view.changed"
+    , "unified.viewport.resized"
+    ]
+
+
+defaultWidgetEventType : String
+defaultWidgetEventType =
+    case canonicalWidgetEventTypes of
+        firstType :: _ ->
+            firstType
+
+        [] ->
+            "unified.button.clicked"
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     let
@@ -155,7 +199,7 @@ cloudEventEnvelope model =
         ([ ( "specversion", Encode.string "1.0" )
          , ( "id", Encode.string (nextEventId model) )
          , ( "source", Encode.string "web_ui/assets" )
-         , ( "type", Encode.string "unified.button.clicked" )
+         , ( "type", Encode.string defaultWidgetEventType )
          , ( "data", widgetEventData model )
          ]
             ++ runtimeContextFields model.runtimeContext
