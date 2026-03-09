@@ -35,3 +35,6 @@ jobs:
 
       - name: Validate frontend CloudEvent contract parity
         run: ./scripts/validate_frontend_cloudevent_contract.sh
+
+      - name: Validate frontend runtime-context contract parity
+        run: ./scripts/validate_frontend_runtime_context_contract.sh
