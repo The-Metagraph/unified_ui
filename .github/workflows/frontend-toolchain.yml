@@ -29,3 +29,6 @@ jobs:
 
       - name: Validate frontend toolchain
         run: ./scripts/validate_frontend_toolchain.sh
+
+      - name: Validate frontend transport contract parity
+        run: ./scripts/validate_frontend_transport_contract.sh

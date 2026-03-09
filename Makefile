@@ -1,4 +1,4 @@
-.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate
+.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate
 
 conformance:
 	./scripts/run_conformance.sh
@@ -44,3 +44,6 @@ assets-css-watch:
 
 frontend-validate:
 	./scripts/validate_frontend_toolchain.sh
+
+frontend-contract-validate:
+	./scripts/validate_frontend_transport_contract.sh

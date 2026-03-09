@@ -7,3 +7,4 @@ cd "$ROOT"
 ./scripts/validate_specs_governance.sh
 ./scripts/validate_rfc_governance.sh
 ./scripts/validate_frontend_toolchain.sh --report-only
+./scripts/validate_frontend_transport_contract.sh
