@@ -13,6 +13,37 @@ const SERVER_EVENT_NAMES = ["runtime.event.recv.v1", "runtime.event.error.v1", "
 const REQUIRED_CLOUDEVENT_FIELDS = ["specversion", "id", "source", "type", "data"];
 const REQUIRED_CLOUDEVENT_EXTENSIONS = ["correlation_id", "request_id"];
 const OPTIONAL_RUNTIME_CONTEXT_FIELDS = ["session_id", "client_id", "user_id", "trace_id"];
+const CANONICAL_WIDGET_EVENT_TYPES = [
+  "unified.action.requested",
+  "unified.button.clicked",
+  "unified.canvas.pointer.changed",
+  "unified.chart.point_hovered",
+  "unified.chart.point_selected",
+  "unified.command.executed",
+  "unified.element.blurred",
+  "unified.element.focused",
+  "unified.form.submitted",
+  "unified.input.changed",
+  "unified.item.selected",
+  "unified.item.toggled",
+  "unified.link.clicked",
+  "unified.menu.action_selected",
+  "unified.overlay.closed",
+  "unified.overlay.confirmed",
+  "unified.scroll.changed",
+  "unified.split.collapse_changed",
+  "unified.split.resized",
+  "unified.tab.changed",
+  "unified.tab.closed",
+  "unified.table.row_selected",
+  "unified.table.sorted",
+  "unified.toast.cleared",
+  "unified.toast.dismissed",
+  "unified.tree.node_selected",
+  "unified.tree.node_toggled",
+  "unified.view.changed",
+  "unified.viewport.resized",
+];
 
 const transportState = {
   joined: false,
@@ -82,27 +113,43 @@ const hasCanonicalExpectedEvents = (expectedEvents) => {
 
 const validateCloudEventEnvelope = (eventEnvelope) => {
   if (!eventEnvelope || typeof eventEnvelope !== "object" || Array.isArray(eventEnvelope)) {
-    return { ok: false, reason: "envelope must be an object" };
+    return { ok: false, errorCode: "transport.invalid_cloudevent_envelope", reason: "envelope must be an object" };
   }
 
   for (const field of REQUIRED_CLOUDEVENT_FIELDS) {
     if (!(field in eventEnvelope)) {
-      return { ok: false, reason: `missing required field: ${field}` };
+      return {
+        ok: false,
+        errorCode: "transport.invalid_cloudevent_envelope",
+        reason: `missing required field: ${field}`,
+      };
     }
   }
 
   for (const extension of REQUIRED_CLOUDEVENT_EXTENSIONS) {
     if (typeof eventEnvelope[extension] !== "string" || eventEnvelope[extension].trim() === "") {
-      return { ok: false, reason: `missing required extension: ${extension}` };
+      return {
+        ok: false,
+        errorCode: "transport.invalid_cloudevent_envelope",
+        reason: `missing required extension: ${extension}`,
+      };
     }
   }
 
   if (eventEnvelope.specversion !== "1.0") {
-    return { ok: false, reason: "specversion must equal 1.0" };
+    return { ok: false, errorCode: "transport.invalid_cloudevent_envelope", reason: "specversion must equal 1.0" };
   }
 
   if (typeof eventEnvelope.data !== "object" || eventEnvelope.data === null || Array.isArray(eventEnvelope.data)) {
-    return { ok: false, reason: "data must be an object" };
+    return { ok: false, errorCode: "transport.invalid_cloudevent_envelope", reason: "data must be an object" };
+  }
+
+  if (!CANONICAL_WIDGET_EVENT_TYPES.includes(eventEnvelope.type)) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_type",
+      reason: `unknown canonical widget event type: ${eventEnvelope.type}`,
+    };
   }
 
   return { ok: true };
@@ -173,9 +220,11 @@ const handleRuntimeCommand = (raw) => {
     });
 
     if (!envelopeValidation.ok) {
+      const errorCode = envelopeValidation.errorCode || "transport.invalid_cloudevent_envelope";
+
       sendRuntimeEvent(
         "runtime.event.error.v1",
-        transportError("transport.invalid_cloudevent_envelope", {
+        transportError(errorCode, {
           reason: envelopeValidation.reason,
           context: runtimeContext,
         }),
