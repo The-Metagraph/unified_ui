@@ -6,6 +6,11 @@ if (!(root && window.Elm && window.Elm.Main)) {
 
 const app = window.Elm.Main.init({ node: root });
 
+const DEFAULT_TOPIC = "webui:runtime:v1";
+const SESSION_TOPIC_REGEX = /^webui:runtime:session:[A-Za-z0-9_-]+:v1$/;
+const CLIENT_EVENT_NAMES = ["runtime.event.send.v1", "runtime.event.ping.v1"];
+const SERVER_EVENT_NAMES = ["runtime.event.recv.v1", "runtime.event.error.v1", "runtime.event.pong.v1"];
+
 const transportState = {
   joined: false,
   sequence: 0,
@@ -42,6 +47,16 @@ const transportError = (errorCode, details = {}) => ({
   },
 });
 
+const isValidTopic = (topic) => typeof topic === "string" && (topic === DEFAULT_TOPIC || SESSION_TOPIC_REGEX.test(topic));
+
+const hasCanonicalExpectedEvents = (expectedEvents) => {
+  if (!Array.isArray(expectedEvents) || expectedEvents.length !== SERVER_EVENT_NAMES.length) {
+    return false;
+  }
+
+  return SERVER_EVENT_NAMES.every((eventName) => expectedEvents.includes(eventName));
+};
+
 const handleRuntimeCommand = (raw) => {
   const command = normalizeCommand(raw);
 
@@ -51,17 +66,33 @@ const handleRuntimeCommand = (raw) => {
   }
 
   if (command.kind === "ws_join") {
-    transportState.joined = true;
+    if (!isValidTopic(command.topic)) {
+      sendRuntimeEvent("runtime.event.error.v1", transportError("transport.invalid_topic", { topic: command.topic }));
+      return;
+    }
 
-    sendRuntimeEvent("runtime.event.joined.v1", {
-      topic: command.topic || "webui:runtime:v1",
-      sequence: transportState.sequence,
-    });
+    if (!hasCanonicalExpectedEvents(raw.expected_events)) {
+      sendRuntimeEvent(
+        "runtime.event.error.v1",
+        transportError("transport.invalid_expected_events", { expected_events: raw.expected_events }),
+      );
+      return;
+    }
+
+    transportState.joined = true;
 
     return;
   }
 
   if (command.event_name === "runtime.event.ping.v1") {
+    if (!transportState.joined) {
+      sendRuntimeEvent(
+        "runtime.event.error.v1",
+        transportError("runtime.transport.not_joined", { event_name: command.event_name }),
+      );
+      return;
+    }
+
     sendRuntimeEvent("runtime.event.pong.v1", {
       correlation_id: command.payload.correlation_id || "corr-local-dev",
       request_id: command.payload.request_id || "req-local-dev",
@@ -87,6 +118,14 @@ const handleRuntimeCommand = (raw) => {
       sequence: transportState.sequence,
     });
 
+    return;
+  }
+
+  if (command.kind === "ws_push" && !CLIENT_EVENT_NAMES.includes(command.event_name)) {
+    sendRuntimeEvent(
+      "runtime.event.error.v1",
+      transportError("transport.unknown_client_event", { event_name: command.event_name, allowed: CLIENT_EVENT_NAMES }),
+    );
     return;
   }
 

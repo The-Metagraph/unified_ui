@@ -6,3 +6,4 @@ cd "$ROOT"
 
 ./scripts/run_conformance.sh
 ./scripts/validate_frontend_toolchain.sh --skip-install
+./scripts/validate_frontend_transport_contract.sh

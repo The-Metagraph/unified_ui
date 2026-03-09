@@ -44,3 +44,4 @@ Canonical validation scenarios for the current baseline contract layer.
 | `SCN-038` | Canonical Unified-IUR collection normalization parity continuity | Equivalent canonical set-like collection values (for example `MapSet` vs list) normalize to deterministic portable shapes with parity-equivalent interpreted snapshots. |
 | `SCN-039` | Frontend toolchain enforcement continuity | Elm/Tailwind/DaisyUI toolchain validation remains wired across local hooks and CI so frontend assets build deterministically before merge. |
 | `SCN-040` | Elm runtime transport bridge continuity | Elm runtime commands and JS bridge loopback events preserve deterministic bootstrap and typed runtime-event handling in local dev harness flows. |
+| `SCN-041` | Frontend transport contract parity continuity | Frontend Elm/JS runtime harness references only canonical transport topic and event names from `WebUi.Transport.Naming`, with deterministic validation gates in local and CI workflows. |

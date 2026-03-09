@@ -121,6 +121,7 @@ make assets-setup
 make assets-build
 make assets-css-watch
 make frontend-validate
+make frontend-contract-validate
 ```
 
 Build output:
@@ -132,7 +133,7 @@ Runtime dev harness behavior:
 
 - Elm emits runtime commands through `sendRuntimeCommand` port.
 - `assets/js/app.js` simulates transport loopback events into `runtimeEventReceived`.
-- Simulated events include `runtime.event.joined.v1`, `runtime.event.pong.v1`, `runtime.event.recv.v1`, and typed `runtime.event.error.v1` failures for malformed/unknown commands.
+- Simulated events include canonical server events `runtime.event.pong.v1`, `runtime.event.recv.v1`, and typed `runtime.event.error.v1` failures for malformed/unknown commands.
 
 ## Frontend Validation
 
@@ -148,7 +149,13 @@ Quick wiring-only validation:
 ./scripts/validate_frontend_toolchain.sh --report-only
 ```
 
+Validate frontend transport naming parity against `WebUi.Transport.Naming`:
+
+```bash
+./scripts/validate_frontend_transport_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`).
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity.
