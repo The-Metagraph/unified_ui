@@ -124,6 +124,7 @@ make frontend-validate
 make frontend-contract-validate
 make frontend-cloudevent-validate
 make frontend-runtime-context-validate
+make frontend-event-catalog-validate
 ```
 
 Build output:
@@ -169,7 +170,13 @@ Validate frontend runtime-context parity against `WebUi.RuntimeContext` requirem
 ./scripts/validate_frontend_runtime_context_contract.sh
 ```
 
+Validate frontend widget event-type parity against `WebUi.Events.EventCatalog`:
+
+```bash
+./scripts/validate_frontend_event_catalog_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity.
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity.
