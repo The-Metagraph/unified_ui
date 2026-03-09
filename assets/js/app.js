@@ -10,6 +10,8 @@ const DEFAULT_TOPIC = "webui:runtime:v1";
 const SESSION_TOPIC_REGEX = /^webui:runtime:session:[A-Za-z0-9_-]+:v1$/;
 const CLIENT_EVENT_NAMES = ["runtime.event.send.v1", "runtime.event.ping.v1"];
 const SERVER_EVENT_NAMES = ["runtime.event.recv.v1", "runtime.event.error.v1", "runtime.event.pong.v1"];
+const REQUIRED_CLOUDEVENT_FIELDS = ["specversion", "id", "source", "type", "data"];
+const REQUIRED_CLOUDEVENT_EXTENSIONS = ["correlation_id", "request_id"];
 
 const transportState = {
   joined: false,
@@ -55,6 +57,34 @@ const hasCanonicalExpectedEvents = (expectedEvents) => {
   }
 
   return SERVER_EVENT_NAMES.every((eventName) => expectedEvents.includes(eventName));
+};
+
+const validateCloudEventEnvelope = (eventEnvelope) => {
+  if (!eventEnvelope || typeof eventEnvelope !== "object" || Array.isArray(eventEnvelope)) {
+    return { ok: false, reason: "envelope must be an object" };
+  }
+
+  for (const field of REQUIRED_CLOUDEVENT_FIELDS) {
+    if (!(field in eventEnvelope)) {
+      return { ok: false, reason: `missing required field: ${field}` };
+    }
+  }
+
+  for (const extension of REQUIRED_CLOUDEVENT_EXTENSIONS) {
+    if (typeof eventEnvelope[extension] !== "string" || eventEnvelope[extension].trim() === "") {
+      return { ok: false, reason: `missing required extension: ${extension}` };
+    }
+  }
+
+  if (eventEnvelope.specversion !== "1.0") {
+    return { ok: false, reason: "specversion must equal 1.0" };
+  }
+
+  if (typeof eventEnvelope.data !== "object" || eventEnvelope.data === null || Array.isArray(eventEnvelope.data)) {
+    return { ok: false, reason: "data must be an object" };
+  }
+
+  return { ok: true };
 };
 
 const handleRuntimeCommand = (raw) => {
@@ -108,6 +138,18 @@ const handleRuntimeCommand = (raw) => {
         transportError("runtime.transport.not_joined", { event_name: command.event_name }),
       );
 
+      return;
+    }
+
+    const envelopeValidation = validateCloudEventEnvelope(command.payload.event);
+
+    if (!envelopeValidation.ok) {
+      sendRuntimeEvent(
+        "runtime.event.error.v1",
+        transportError("transport.invalid_cloudevent_envelope", {
+          reason: envelopeValidation.reason,
+        }),
+      );
       return;
     }
 
