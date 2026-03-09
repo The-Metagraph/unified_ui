@@ -24,6 +24,31 @@ require_file() {
   fi
 }
 
+has_rg() {
+  command -v rg >/dev/null 2>&1
+}
+
+extract_frontend_events() {
+  local pattern='runtime\.event\.[a-z_]+\.(v[0-9]+)'
+
+  if has_rg; then
+    rg -o --no-filename "$pattern" "$ELM_FILE" "$BRIDGE_FILE" | sort -u || true
+  else
+    grep -Eho "$pattern" "$ELM_FILE" "$BRIDGE_FILE" | sort -u || true
+  fi
+}
+
+file_contains_literal() {
+  local needle="$1"
+  shift
+
+  if has_rg; then
+    rg -Fq -- "$needle" "$@"
+  else
+    grep -Fq -- "$needle" "$@"
+  fi
+}
+
 extract_default_topic() {
   sed -n 's/^  @default_topic "\(.*\)"/\1/p' "$NAMING_FILE"
 }
@@ -70,18 +95,18 @@ fi
 CLIENT_EVENTS="$(extract_events client_events | sort -u)"
 SERVER_EVENTS="$(extract_events server_events | sort -u)"
 EXPECTED_EVENTS="$(printf "%s\n%s\n" "$CLIENT_EVENTS" "$SERVER_EVENTS" | sed '/^$/d' | sort -u)"
-FRONTEND_EVENTS="$(rg -o --no-filename 'runtime\.event\.[a-z_]+\.(v[0-9]+)' "$ELM_FILE" "$BRIDGE_FILE" | sort -u || true)"
+FRONTEND_EVENTS="$(extract_frontend_events)"
 
 echo "Validating frontend transport contract parity..."
 
 while IFS= read -r event_name; do
   [[ -z "$event_name" ]] && continue
 
-  if ! rg -Fq -- "$event_name" "$ELM_FILE"; then
+  if ! file_contains_literal "$event_name" "$ELM_FILE"; then
     fail "Elm runtime missing canonical event name '$event_name'"
   fi
 
-  if ! rg -Fq -- "$event_name" "$BRIDGE_FILE"; then
+  if ! file_contains_literal "$event_name" "$BRIDGE_FILE"; then
     fail "JS bridge missing canonical event name '$event_name'"
   fi
 done <<< "$EXPECTED_EVENTS"
@@ -93,11 +118,11 @@ if [[ -n "$UNKNOWN_FRONTEND_EVENTS" ]]; then
   echo "$UNKNOWN_FRONTEND_EVENTS"
 fi
 
-if ! rg -Fq -- "$DEFAULT_TOPIC" "$ELM_FILE"; then
+if ! file_contains_literal "$DEFAULT_TOPIC" "$ELM_FILE"; then
   fail "Elm runtime missing canonical default topic '$DEFAULT_TOPIC'"
 fi
 
-if ! rg -Fq -- "$DEFAULT_TOPIC" "$BRIDGE_FILE"; then
+if ! file_contains_literal "$DEFAULT_TOPIC" "$BRIDGE_FILE"; then
   fail "JS bridge missing canonical default topic '$DEFAULT_TOPIC'"
 fi
 
