@@ -59,6 +59,14 @@ type Msg
     | RetryBootstrap
 
 
+serverEventNames : List String
+serverEventNames =
+    [ "runtime.event.recv.v1"
+    , "runtime.event.error.v1"
+    , "runtime.event.pong.v1"
+    ]
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     let
@@ -101,7 +109,7 @@ joinCommand topic =
     Encode.object
         [ ( "kind", Encode.string "ws_join" )
         , ( "topic", Encode.string topic )
-        , ( "event_name", Encode.string "runtime.event.join.v1" )
+        , ( "expected_events", Encode.list Encode.string serverEventNames )
         ]
 
 
@@ -208,16 +216,9 @@ applyRuntimeEvent raw model =
 handleRuntimeEvent : RuntimeEvent -> Model -> ( Model, Cmd Msg )
 handleRuntimeEvent runtimeEvent model =
     case runtimeEvent.eventName of
-        "runtime.event.joined.v1" ->
-            ( model
-                |> setConnected
-                |> setLastEvent runtimeEvent.eventName
-                |> appendNotice "transport:joined"
-            , Cmd.none
-            )
-
         "runtime.event.pong.v1" ->
             ( model
+                |> setConnected
                 |> appendNotice "transport:pong"
                 |> setLastEvent runtimeEvent.eventName
             , Cmd.none
