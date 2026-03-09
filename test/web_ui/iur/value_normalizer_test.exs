@@ -38,4 +38,11 @@ defmodule WebUi.Iur.ValueNormalizerTest do
     assert normalized[:label] == "Save"
     assert normalized["custom_key_xyz"] == 1
   end
+
+  test "normalizes MapSet values into deterministic sorted lists" do
+    value = %{expanded_nodes: MapSet.new([:node_2, :node_1])}
+    normalized = ValueNormalizer.canonicalize(value)
+
+    assert normalized.expanded_nodes == [:node_1, :node_2]
+  end
 end

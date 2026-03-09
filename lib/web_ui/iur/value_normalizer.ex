@@ -4,6 +4,13 @@ defmodule WebUi.Iur.ValueNormalizer do
   """
 
   @spec canonicalize(term()) :: term()
+  def canonicalize(%MapSet{} = set) do
+    set
+    |> MapSet.to_list()
+    |> Enum.map(&canonicalize/1)
+    |> Enum.sort_by(&inspect/1)
+  end
+
   def canonicalize(%_{} = struct), do: struct |> Map.from_struct() |> canonicalize_map()
   def canonicalize(map) when is_map(map), do: canonicalize_map(map)
   def canonicalize(list) when is_list(list), do: Enum.map(list, &canonicalize/1)
