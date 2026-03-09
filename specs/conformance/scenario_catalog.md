@@ -42,3 +42,4 @@ Canonical validation scenarios for the current baseline contract layer.
 | `SCN-036` | Canonical Unified-IUR deep value/style parity continuity | Equivalent canonical nested struct/map prop values (including style payloads) normalize to identical deep descriptor value shapes. |
 | `SCN-037` | Canonical Unified-IUR nested default profile parity continuity | Equivalent canonical nested descriptors with default-profile differences (for example table columns) normalize to identical interpreted deep snapshots. |
 | `SCN-038` | Canonical Unified-IUR collection normalization parity continuity | Equivalent canonical set-like collection values (for example `MapSet` vs list) normalize to deterministic portable shapes with parity-equivalent interpreted snapshots. |
+| `SCN-039` | Frontend toolchain enforcement continuity | Elm/Tailwind/DaisyUI toolchain validation remains wired across local hooks and CI so frontend assets build deterministically before merge. |
