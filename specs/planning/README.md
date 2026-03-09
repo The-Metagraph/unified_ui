@@ -48,6 +48,7 @@ The plan aligns to:
 35. [Phase 35 - Elm Runtime Transport Bridge and Local Roundtrip Harness](./phase-35-elm-runtime-transport-bridge-and-local-roundtrip-harness.md): implement deterministic Elm port-based runtime commands and JS loopback transport simulation for local roundtrip bootstrap flows.
 36. [Phase 36 - Frontend Transport Contract Parity and Canonical Event Guardrails](./phase-36-frontend-transport-contract-parity-and-canonical-event-guardrails.md): align Elm/JS harness transport naming with `WebUi.Transport.Naming` and enforce canonical topic/event guardrails via local and CI validation gates.
 37. [Phase 37 - Frontend CloudEvent Contract Parity and Envelope Guardrails](./phase-37-frontend-cloudevent-contract-parity-and-envelope-guardrails.md): align Elm/JS harness CloudEvent envelope construction/validation with `WebUi.CloudEvent` required fields and extensions, and enforce parity through local and CI validation gates.
+38. [Phase 38 - Frontend Runtime-Context Continuity and Parity Guardrails](./phase-38-frontend-runtime-context-continuity-and-parity-guardrails.md): align Elm/JS harness runtime-context propagation (`WebUi.RuntimeContext`) and enforce deterministic required/optional field parity through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:
