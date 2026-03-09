@@ -21,3 +21,9 @@ web_ui-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Frontend assets toolchain.
+/assets/node_modules/
+/assets/.elm/
+/assets/elm-stuff/
+/assets/dist/

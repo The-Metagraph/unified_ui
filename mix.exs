@@ -30,7 +30,10 @@ defmodule WebUi.MixProject do
 
   defp aliases do
     [
-      conformance: ["test --only conformance"]
+      conformance: ["test --only conformance"],
+      "assets.setup": ["cmd --cd assets npm install"],
+      "assets.build": ["cmd --cd assets npm run build"],
+      "assets.css.watch": ["cmd --cd assets npm run watch:css"]
     ]
   end
 end
