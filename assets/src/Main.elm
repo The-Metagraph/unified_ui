@@ -129,32 +129,49 @@ pingCommand runtimeContext =
 
 widgetEventCommand : Model -> Encode.Value
 widgetEventCommand model =
+    let
+        cloudEvent =
+            cloudEventEnvelope model
+    in
     Encode.object
         [ ( "kind", Encode.string "ws_push" )
         , ( "event_name", Encode.string "runtime.event.send.v1" )
         , ( "payload"
           , Encode.object
                 [ ( "event"
-                  , Encode.object
-                        [ ( "specversion", Encode.string "1.0" )
-                        , ( "id", Encode.string "elm-local-event" )
-                        , ( "source", Encode.string "web_ui/assets" )
-                        , ( "type", Encode.string "unified.button.clicked" )
-                        , ( "data"
-                          , Encode.object
-                                [ ( "widget_id", Encode.string "elm-counter" )
-                                , ( "action", Encode.string "increment" )
-                                , ( "count", Encode.int model.count )
-                                , ( "input", Encode.string model.inputText )
-                                ]
-                          )
-                        , ( "correlation_id", Encode.string model.runtimeContext.correlationId )
-                        , ( "request_id", Encode.string model.runtimeContext.requestId )
-                        ]
+                  , cloudEvent
                   )
                 ]
           )
         ]
+
+
+cloudEventEnvelope : Model -> Encode.Value
+cloudEventEnvelope model =
+    Encode.object
+        [ ( "specversion", Encode.string "1.0" )
+        , ( "id", Encode.string (nextEventId model) )
+        , ( "source", Encode.string "web_ui/assets" )
+        , ( "type", Encode.string "unified.button.clicked" )
+        , ( "data", widgetEventData model )
+        , ( "correlation_id", Encode.string model.runtimeContext.correlationId )
+        , ( "request_id", Encode.string model.runtimeContext.requestId )
+        ]
+
+
+widgetEventData : Model -> Encode.Value
+widgetEventData model =
+    Encode.object
+        [ ( "widget_id", Encode.string "elm-counter" )
+        , ( "action", Encode.string "increment" )
+        , ( "count", Encode.int model.count )
+        , ( "input", Encode.string model.inputText )
+        ]
+
+
+nextEventId : Model -> String
+nextEventId model =
+    "elm-local-event-" ++ String.fromInt model.count
 
 
 runtimeEventDecoder : Decode.Decoder RuntimeEvent

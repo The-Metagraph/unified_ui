@@ -47,6 +47,7 @@ The plan aligns to:
 34. [Phase 34 - Frontend Toolchain Enforcement and Merge Gates](./phase-34-frontend-toolchain-enforcement-and-merge-gates.md): enforce Elm/Tailwind/DaisyUI frontend validation across local hooks, CI workflows, and conformance coverage.
 35. [Phase 35 - Elm Runtime Transport Bridge and Local Roundtrip Harness](./phase-35-elm-runtime-transport-bridge-and-local-roundtrip-harness.md): implement deterministic Elm port-based runtime commands and JS loopback transport simulation for local roundtrip bootstrap flows.
 36. [Phase 36 - Frontend Transport Contract Parity and Canonical Event Guardrails](./phase-36-frontend-transport-contract-parity-and-canonical-event-guardrails.md): align Elm/JS harness transport naming with `WebUi.Transport.Naming` and enforce canonical topic/event guardrails via local and CI validation gates.
+37. [Phase 37 - Frontend CloudEvent Contract Parity and Envelope Guardrails](./phase-37-frontend-cloudevent-contract-parity-and-envelope-guardrails.md): align Elm/JS harness CloudEvent envelope construction/validation with `WebUi.CloudEvent` required fields and extensions, and enforce parity through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:

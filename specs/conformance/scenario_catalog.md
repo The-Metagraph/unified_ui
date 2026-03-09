@@ -45,3 +45,4 @@ Canonical validation scenarios for the current baseline contract layer.
 | `SCN-039` | Frontend toolchain enforcement continuity | Elm/Tailwind/DaisyUI toolchain validation remains wired across local hooks and CI so frontend assets build deterministically before merge. |
 | `SCN-040` | Elm runtime transport bridge continuity | Elm runtime commands and JS bridge loopback events preserve deterministic bootstrap and typed runtime-event handling in local dev harness flows. |
 | `SCN-041` | Frontend transport contract parity continuity | Frontend Elm/JS runtime harness references only canonical transport topic and event names from `WebUi.Transport.Naming`, with deterministic validation gates in local and CI workflows. |
+| `SCN-042` | Frontend CloudEvent contract parity continuity | Frontend Elm/JS runtime harness emits and validates CloudEvent envelopes using required fields/extensions from `WebUi.CloudEvent`, with deterministic local and CI contract validation gates. |
