@@ -120,9 +120,29 @@ Makefile wrappers:
 make assets-setup
 make assets-build
 make assets-css-watch
+make frontend-validate
 ```
 
 Build output:
 
 - `assets/dist/app.css` (Tailwind + DaisyUI)
 - `assets/dist/app.js` (compiled Elm)
+
+## Frontend Validation
+
+Run strict frontend validation (dependency install + full build):
+
+```bash
+./scripts/validate_frontend_toolchain.sh
+```
+
+Quick wiring-only validation:
+
+```bash
+./scripts/validate_frontend_toolchain.sh --report-only
+```
+
+Git hook behavior when `.githooks` is enabled:
+
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`).
