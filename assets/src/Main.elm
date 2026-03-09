@@ -24,6 +24,10 @@ type alias RuntimeContext =
     { correlationId : String
     , requestId : String
     , topic : String
+    , sessionId : Maybe String
+    , clientId : Maybe String
+    , userId : Maybe String
+    , traceId : Maybe String
     }
 
 
@@ -76,6 +80,10 @@ init _ =
                 { correlationId = "corr-local-dev"
                 , requestId = "req-local-dev"
                 , topic = "webui:runtime:v1"
+                , sessionId = Just "session-local-dev"
+                , clientId = Just "client-local-dev"
+                , userId = Nothing
+                , traceId = Just "trace-local-dev"
                 }
             , viewState =
                 { screen = "connecting"
@@ -118,12 +126,7 @@ pingCommand runtimeContext =
     Encode.object
         [ ( "kind", Encode.string "ws_push" )
         , ( "event_name", Encode.string "runtime.event.ping.v1" )
-        , ( "payload"
-          , Encode.object
-                [ ( "correlation_id", Encode.string runtimeContext.correlationId )
-                , ( "request_id", Encode.string runtimeContext.requestId )
-                ]
-          )
+        , ( "payload", Encode.object (runtimeContextFields runtimeContext) )
         ]
 
 
@@ -149,14 +152,14 @@ widgetEventCommand model =
 cloudEventEnvelope : Model -> Encode.Value
 cloudEventEnvelope model =
     Encode.object
-        [ ( "specversion", Encode.string "1.0" )
-        , ( "id", Encode.string (nextEventId model) )
-        , ( "source", Encode.string "web_ui/assets" )
-        , ( "type", Encode.string "unified.button.clicked" )
-        , ( "data", widgetEventData model )
-        , ( "correlation_id", Encode.string model.runtimeContext.correlationId )
-        , ( "request_id", Encode.string model.runtimeContext.requestId )
-        ]
+        ([ ( "specversion", Encode.string "1.0" )
+         , ( "id", Encode.string (nextEventId model) )
+         , ( "source", Encode.string "web_ui/assets" )
+         , ( "type", Encode.string "unified.button.clicked" )
+         , ( "data", widgetEventData model )
+         ]
+            ++ runtimeContextFields model.runtimeContext
+        )
 
 
 widgetEventData : Model -> Encode.Value
@@ -172,6 +175,37 @@ widgetEventData model =
 nextEventId : Model -> String
 nextEventId model =
     "elm-local-event-" ++ String.fromInt model.count
+
+
+runtimeContextFields : RuntimeContext -> List ( String, Encode.Value )
+runtimeContextFields runtimeContext =
+    runtimeContextRequiredFields runtimeContext
+        ++ runtimeContextOptionalFields runtimeContext
+
+
+runtimeContextRequiredFields : RuntimeContext -> List ( String, Encode.Value )
+runtimeContextRequiredFields runtimeContext =
+    [ ( "correlation_id", Encode.string runtimeContext.correlationId )
+    , ( "request_id", Encode.string runtimeContext.requestId )
+    ]
+
+
+runtimeContextOptionalFields : RuntimeContext -> List ( String, Encode.Value )
+runtimeContextOptionalFields runtimeContext =
+    optionalContextField "session_id" runtimeContext.sessionId
+        ++ optionalContextField "client_id" runtimeContext.clientId
+        ++ optionalContextField "user_id" runtimeContext.userId
+        ++ optionalContextField "trace_id" runtimeContext.traceId
+
+
+optionalContextField : String -> Maybe String -> List ( String, Encode.Value )
+optionalContextField key maybeValue =
+    case maybeValue of
+        Just value ->
+            [ ( key, Encode.string value ) ]
+
+        Nothing ->
+            []
 
 
 runtimeEventDecoder : Decode.Decoder RuntimeEvent

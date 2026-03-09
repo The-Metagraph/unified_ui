@@ -12,6 +12,7 @@ const CLIENT_EVENT_NAMES = ["runtime.event.send.v1", "runtime.event.ping.v1"];
 const SERVER_EVENT_NAMES = ["runtime.event.recv.v1", "runtime.event.error.v1", "runtime.event.pong.v1"];
 const REQUIRED_CLOUDEVENT_FIELDS = ["specversion", "id", "source", "type", "data"];
 const REQUIRED_CLOUDEVENT_EXTENSIONS = ["correlation_id", "request_id"];
+const OPTIONAL_RUNTIME_CONTEXT_FIELDS = ["session_id", "client_id", "user_id", "trace_id"];
 
 const transportState = {
   joined: false,
@@ -48,6 +49,26 @@ const transportError = (errorCode, details = {}) => ({
     details,
   },
 });
+
+const normalizeRuntimeContext = (candidate, fallback = {}) => {
+  const safeCandidate = candidate && typeof candidate === "object" && !Array.isArray(candidate) ? candidate : {};
+  const context = {};
+
+  for (const requiredField of REQUIRED_CLOUDEVENT_EXTENSIONS) {
+    const rawValue = safeCandidate[requiredField] || fallback[requiredField];
+    context[requiredField] = typeof rawValue === "string" && rawValue.trim() !== "" ? rawValue : "unknown";
+  }
+
+  for (const optionalField of OPTIONAL_RUNTIME_CONTEXT_FIELDS) {
+    const rawValue = safeCandidate[optionalField] || fallback[optionalField];
+
+    if (typeof rawValue === "string" && rawValue.trim() !== "") {
+      context[optionalField] = rawValue;
+    }
+  }
+
+  return context;
+};
 
 const isValidTopic = (topic) => typeof topic === "string" && (topic === DEFAULT_TOPIC || SESSION_TOPIC_REGEX.test(topic));
 
@@ -123,9 +144,13 @@ const handleRuntimeCommand = (raw) => {
       return;
     }
 
+    const runtimeContext = normalizeRuntimeContext(command.payload, {
+      correlation_id: "corr-local-dev",
+      request_id: "req-local-dev",
+    });
+
     sendRuntimeEvent("runtime.event.pong.v1", {
-      correlation_id: command.payload.correlation_id || "corr-local-dev",
-      request_id: command.payload.request_id || "req-local-dev",
+      ...runtimeContext,
     });
 
     return;
@@ -142,12 +167,17 @@ const handleRuntimeCommand = (raw) => {
     }
 
     const envelopeValidation = validateCloudEventEnvelope(command.payload.event);
+    const runtimeContext = normalizeRuntimeContext(command.payload.event, {
+      correlation_id: "corr-local-dev",
+      request_id: "req-local-dev",
+    });
 
     if (!envelopeValidation.ok) {
       sendRuntimeEvent(
         "runtime.event.error.v1",
         transportError("transport.invalid_cloudevent_envelope", {
           reason: envelopeValidation.reason,
+          context: runtimeContext,
         }),
       );
       return;
@@ -158,6 +188,7 @@ const handleRuntimeCommand = (raw) => {
     sendRuntimeEvent("runtime.event.recv.v1", {
       event: command.payload.event || {},
       sequence: transportState.sequence,
+      context: runtimeContext,
     });
 
     return;
