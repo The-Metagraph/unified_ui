@@ -1,4 +1,4 @@
-.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report
+.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch
 
 conformance:
 	./scripts/run_conformance.sh
@@ -32,3 +32,12 @@ release-readiness:
 
 release-readiness-report:
 	./scripts/run_release_readiness.sh --report-only
+
+assets-setup:
+	mix assets.setup
+
+assets-build:
+	mix assets.build
+
+assets-css-watch:
+	mix assets.css.watch

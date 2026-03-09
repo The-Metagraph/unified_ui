@@ -97,3 +97,32 @@ Run report mode (governance + conformance alignment, no full test suite):
 # or
 make release-readiness-report
 ```
+
+## Frontend Toolchain (Elm + Tailwind + DaisyUI)
+
+This repository now includes a frontend scaffold under `assets/` with:
+
+- Elm app source in `assets/src/Main.elm`
+- Tailwind CSS input in `assets/css/app.css`
+- DaisyUI configured in `assets/tailwind.config.cjs`
+- Static preview shell in `assets/index.html`
+
+Setup and build:
+
+```bash
+mix assets.setup
+mix assets.build
+```
+
+Makefile wrappers:
+
+```bash
+make assets-setup
+make assets-build
+make assets-css-watch
+```
+
+Build output:
+
+- `assets/dist/app.css` (Tailwind + DaisyUI)
+- `assets/dist/app.js` (compiled Elm)
