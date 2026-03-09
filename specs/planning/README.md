@@ -46,6 +46,7 @@ The plan aligns to:
 33. [Phase 33 - Canonical Unified-IUR Collection Normalization and Set Parity](./phase-33-canonical-unified-iur-collection-normalization-and-set-parity.md): normalize canonical collection values (for example `MapSet`) into deterministic portable shapes so equivalent struct/map descriptors remain parity-equivalent.
 34. [Phase 34 - Frontend Toolchain Enforcement and Merge Gates](./phase-34-frontend-toolchain-enforcement-and-merge-gates.md): enforce Elm/Tailwind/DaisyUI frontend validation across local hooks, CI workflows, and conformance coverage.
 35. [Phase 35 - Elm Runtime Transport Bridge and Local Roundtrip Harness](./phase-35-elm-runtime-transport-bridge-and-local-roundtrip-harness.md): implement deterministic Elm port-based runtime commands and JS loopback transport simulation for local roundtrip bootstrap flows.
+36. [Phase 36 - Frontend Transport Contract Parity and Canonical Event Guardrails](./phase-36-frontend-transport-contract-parity-and-canonical-event-guardrails.md): align Elm/JS harness transport naming with `WebUi.Transport.Naming` and enforce canonical topic/event guardrails via local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:
