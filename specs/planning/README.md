@@ -44,6 +44,7 @@ The plan aligns to:
 31. [Phase 31 - Canonical Unified-IUR Deep Value Normalization and Style Parity](./phase-31-canonical-unified-iur-deep-value-normalization-and-style-parity.md): normalize nested canonical prop values (including style structs/maps) so equivalent struct/map descriptors remain deeply parity-equivalent.
 32. [Phase 32 - Canonical Unified-IUR Nested Default Profile Parity](./phase-32-canonical-unified-iur-nested-default-profile-parity.md): normalize nested default profiles (for example table column defaults) so equivalent struct/map nested descriptors remain parity-equivalent.
 33. [Phase 33 - Canonical Unified-IUR Collection Normalization and Set Parity](./phase-33-canonical-unified-iur-collection-normalization-and-set-parity.md): normalize canonical collection values (for example `MapSet`) into deterministic portable shapes so equivalent struct/map descriptors remain parity-equivalent.
+34. [Phase 34 - Frontend Toolchain Enforcement and Merge Gates](./phase-34-frontend-toolchain-enforcement-and-merge-gates.md): enforce Elm/Tailwind/DaisyUI frontend validation across local hooks, CI workflows, and conformance coverage.
 
 ## Shared Conventions
 - Numbering:
