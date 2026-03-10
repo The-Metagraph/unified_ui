@@ -241,6 +241,26 @@ const analyzeDeclaredRouteKeys = (candidate) => {
   };
 };
 
+const analyzeRequiredRouteKeyValues = (data, requiredRouteKeys) => {
+  const safeData = data && typeof data === "object" && !Array.isArray(data) ? data : {};
+
+  const invalidRouteKeyValues = requiredRouteKeys
+    .filter((key) => hasPresentPayloadKey(safeData, key))
+    .filter((key) => {
+      const value = safeData[key];
+      return typeof value !== "string" || value.trim() === "";
+    })
+    .map((key) => ({
+      key,
+      value_type: routeKeyValueType(safeData[key]),
+    }));
+
+  return {
+    invalidRouteKeyValues,
+    expectedRouteKeyValueShape: "non-empty string",
+  };
+};
+
 const duplicateStrings = (candidate) => {
   const seen = new Set();
   const duplicates = [];
@@ -339,6 +359,7 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
   const missingRouteKeys = requiredRouteKeys.filter((key) => !hasPresentPayloadKey(eventEnvelope.data, key));
   const routeKeyAnalysis = analyzeDeclaredRouteKeys(eventEnvelope.data && eventEnvelope.data.route_keys);
   const declaredRouteKeys = routeKeyAnalysis.normalized;
+  const routeKeyValueAnalysis = analyzeRequiredRouteKeyValues(eventEnvelope.data, requiredRouteKeys);
 
   if (presentRouteKeys.length === 0) {
     return {
@@ -392,6 +413,20 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         expected_route_keys: requiredRouteKeys,
         missing_route_keys: missingRouteKeys,
         actual_route_keys: presentRouteKeys,
+      },
+    };
+  }
+
+  if (routeKeyValueAnalysis.invalidRouteKeyValues.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route-key payload values must be non-empty strings for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_key_value_shape: routeKeyValueAnalysis.expectedRouteKeyValueShape,
+        invalid_route_key_values: routeKeyValueAnalysis.invalidRouteKeyValues,
       },
     };
   }
