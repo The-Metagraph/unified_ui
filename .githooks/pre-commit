@@ -22,3 +22,4 @@ cd "$ROOT"
 ./scripts/validate_frontend_event_route_key_value_contract.sh
 ./scripts/validate_frontend_event_route_key_source_contract.sh
 ./scripts/validate_frontend_event_route_key_source_requirements_contract.sh
+./scripts/validate_frontend_event_route_key_source_keys_contract.sh
