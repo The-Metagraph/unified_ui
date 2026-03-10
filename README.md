@@ -138,6 +138,7 @@ make frontend-event-route-key-source-validate
 make frontend-event-route-key-source-requirements-validate
 make frontend-event-route-key-source-keys-validate
 make frontend-event-route-key-source-key-parity-validate
+make frontend-event-route-key-source-map-parity-validate
 ```
 
 Build output:
@@ -267,7 +268,13 @@ Validate frontend widget event route-key source-key parity against emitted `rout
 ./scripts/validate_frontend_event_route_key_source_key_parity_contract.sh
 ```
 
+Validate frontend widget event route-key source-map parity against emitted `route_keys` continuity:
+
+```bash
+./scripts/validate_frontend_event_route_key_source_map_parity_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity + frontend event route-key allowlist parity + frontend event route-key payload-shape parity + frontend event route-key value-shape parity + frontend event route-key value-source parity + frontend event route-key source-requirements parity + frontend event route-key source-key parity + frontend event route-key source-key to route-key parity.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity + frontend event route-key allowlist parity + frontend event route-key payload-shape parity + frontend event route-key value-shape parity + frontend event route-key value-source parity + frontend event route-key source-requirements parity + frontend event route-key source-key parity + frontend event route-key source-key to route-key parity.
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity + frontend event route-key allowlist parity + frontend event route-key payload-shape parity + frontend event route-key value-shape parity + frontend event route-key value-source parity + frontend event route-key source-requirements parity + frontend event route-key source-key parity + frontend event route-key source-key to route-key parity + frontend event route-key source-map to route-key parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity + frontend event route-key allowlist parity + frontend event route-key payload-shape parity + frontend event route-key value-shape parity + frontend event route-key value-source parity + frontend event route-key source-requirements parity + frontend event route-key source-key parity + frontend event route-key source-key to route-key parity + frontend event route-key source-map to route-key parity.
