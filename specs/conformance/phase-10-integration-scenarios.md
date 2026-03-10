@@ -6,15 +6,15 @@ Define integration scenarios for first-slice delivery and release-readiness gate
 
 ## End-to-End Workflow Scenarios
 
-1. `SCN-slice-success`: canonical first-slice success from widget event -> runtime handler -> UI reconciliation.
-2. `SCN-slice-failure`: runtime failure path emits typed error and deterministic UI error state.
-3. `SCN-slice-recovery`: reconnect + retry preserves request continuity and session resume topic.
+1. `SCN-005`: canonical first-slice success from widget event -> runtime handler -> typed success outcome -> deterministic UI reconciliation.
+2. `SCN-005`: first-slice runtime failure path emits typed error outcome and deterministic UI error state.
+3. `SCN-016`: reconnect + retry sequence preserves request continuity and converges runtime/UI state deterministically.
 
 ## Release Gate Scenarios
 
-1. `SCN-release-fail`: release gate fails when governance/conformance inputs are invalid.
-2. `SCN-release-pass`: release gate passes when required checks are green.
-3. `SCN-release-rollback`: rollback criteria evaluate observable runtime signal thresholds.
+1. `SCN-019`: release gate fails when governance/conformance inputs are invalid.
+2. `SCN-019`: release gate passes when required checks are green.
+3. `SCN-019`: rollback criteria evaluate observable runtime signal thresholds.
 
 ## Validation Commands
 
