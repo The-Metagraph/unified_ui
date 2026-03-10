@@ -25,6 +25,7 @@ Without explicit authority boundaries, runtime behavior can drift and create spl
 - Transport and interop layers remain decoupled from product-domain authority.
 - Architecture, contract, and conformance docs can enforce the same control-plane model.
 - Policy, turn, scope, and replay continuity contracts can extend control-plane governance into deterministic runtime execution paths.
+- Supervision-restart, prompt-hygiene, and eval-calibration contracts can extend control-plane governance into recovery, observability, and release-evaluation operations.
 
 ## Related Requirements
 
@@ -33,6 +34,9 @@ Without explicit authority boundaries, runtime behavior can drift and create spl
 - `REQ-OBS-001` through `REQ-OBS-010`
 - `REQ-WGT-001` through `REQ-WGT-010`
 - `REQ-POL-001` through `REQ-POL-010`
+- `REQ-SUP-001` through `REQ-SUP-010`
 - `REQ-TRN-001` through `REQ-TRN-010`
 - `REQ-SCP-001` through `REQ-SCP-010`
 - `REQ-RPL-001` through `REQ-RPL-010`
+- `REQ-EVL-001` through `REQ-EVL-010`
+- `REQ-PRM-001` through `REQ-PRM-010`
