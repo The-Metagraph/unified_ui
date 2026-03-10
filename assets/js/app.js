@@ -204,6 +204,43 @@ const normalizedStringList = (candidate) => {
   return candidate.filter((value) => typeof value === "string").map((value) => value.trim()).filter(Boolean);
 };
 
+const routeKeyValueType = (value) => {
+  if (Array.isArray(value)) {
+    return "array";
+  }
+
+  if (value === null) {
+    return "null";
+  }
+
+  return typeof value;
+};
+
+const analyzeDeclaredRouteKeys = (candidate) => {
+  if (candidate === undefined || candidate === null) {
+    return { normalized: [], invalidRouteKeys: [], actualShape: "missing" };
+  }
+
+  if (!Array.isArray(candidate)) {
+    return {
+      normalized: [],
+      invalidRouteKeys: [{ index: -1, value_type: routeKeyValueType(candidate) }],
+      actualShape: routeKeyValueType(candidate),
+    };
+  }
+
+  const invalidRouteKeys = candidate
+    .map((value, index) => ({ value, index }))
+    .filter(({ value }) => typeof value !== "string" || value.trim() === "")
+    .map(({ value, index }) => ({ index, value_type: routeKeyValueType(value) }));
+
+  return {
+    normalized: normalizedStringList(candidate),
+    invalidRouteKeys,
+    actualShape: "array<unknown>",
+  };
+};
+
 const duplicateStrings = (candidate) => {
   const seen = new Set();
   const duplicates = [];
@@ -300,7 +337,8 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
 
   const presentRouteKeys = requiredRouteKeys.filter((key) => hasPresentPayloadKey(eventEnvelope.data, key));
   const missingRouteKeys = requiredRouteKeys.filter((key) => !hasPresentPayloadKey(eventEnvelope.data, key));
-  const declaredRouteKeys = normalizedStringList(eventEnvelope.data && eventEnvelope.data.route_keys);
+  const routeKeyAnalysis = analyzeDeclaredRouteKeys(eventEnvelope.data && eventEnvelope.data.route_keys);
+  const declaredRouteKeys = routeKeyAnalysis.normalized;
 
   if (presentRouteKeys.length === 0) {
     return {
@@ -311,6 +349,21 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         event_type: eventEnvelope.type,
         route_family: routeFamily,
         required_route_keys: requiredRouteKeys,
+      },
+    };
+  }
+
+  if (routeKeyAnalysis.invalidRouteKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_keys payload contains invalid key values for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_value_shape: "array<non-empty string>",
+        actual_value_shape: routeKeyAnalysis.actualShape,
+        invalid_route_keys: routeKeyAnalysis.invalidRouteKeys,
       },
     };
   }
