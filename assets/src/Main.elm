@@ -115,8 +115,10 @@ canonicalWidgetEventPayloadKeys =
     , "command_id"
     , "direction"
     , "expanded"
+    , "field"
     , "form_id"
     , "href"
+    , "id"
     , "index"
     , "input_id"
     , "item_id"
@@ -141,6 +143,14 @@ canonicalWidgetEventPayloadKeys =
     ]
 
 
+canonicalRouteKeyRequirements : List ( String, List String )
+canonicalRouteKeyRequirements =
+    [ ( "click", [ "action", "button_id", "widget_id", "id" ] )
+    , ( "change", [ "input_id", "widget_id", "field", "action", "id" ] )
+    , ( "submit", [ "form_id", "action", "id" ] )
+    ]
+
+
 defaultWidgetEventType : String
 defaultWidgetEventType =
     case canonicalWidgetEventTypes of
@@ -161,6 +171,11 @@ defaultWidgetEventRequiredAllOf =
 defaultWidgetEventRequiredAnyOf : List (List String)
 defaultWidgetEventRequiredAnyOf =
     []
+
+
+defaultWidgetEventRouteFamily : String
+defaultWidgetEventRouteFamily =
+    "click"
 
 
 init : () -> ( Model, Cmd Msg )
@@ -259,6 +274,7 @@ widgetEventData model =
     Encode.object
         (requiredWidgetEventDataFields model
             ++ requiredWidgetEventAnyOfFields model
+            ++ routeFamilyCompatibilityFields model
             ++ optionalWidgetEventDataFields model
         )
 
@@ -288,6 +304,43 @@ optionalWidgetEventDataFields model =
     [ ( "count", Encode.int model.count )
     , ( "input", Encode.string model.inputText )
     ]
+
+
+routeFamilyCompatibilityFields : Model -> List ( String, Encode.Value )
+routeFamilyCompatibilityFields model =
+    routeFamilyRequirementKeys defaultWidgetEventRouteFamily
+        |> List.filterMap (routeKeyContractValue model)
+
+
+routeFamilyRequirementKeys : String -> List String
+routeFamilyRequirementKeys routeFamily =
+    canonicalRouteKeyRequirements
+        |> List.filter (\( family, _ ) -> family == routeFamily)
+        |> List.head
+        |> Maybe.map Tuple.second
+        |> Maybe.withDefault []
+
+
+routeKeyContractValue : Model -> String -> Maybe ( String, Encode.Value )
+routeKeyContractValue model key =
+    case key of
+        "button_id" ->
+            Just ( key, Encode.string "elm-counter-increment-button" )
+
+        "id" ->
+            Just ( key, Encode.string ("elm-counter-route-" ++ String.fromInt model.count) )
+
+        "input_id" ->
+            Just ( key, Encode.string "elm-counter-input" )
+
+        "field" ->
+            Just ( key, Encode.string "input" )
+
+        "form_id" ->
+            Just ( key, Encode.string "elm-counter-form" )
+
+        _ ->
+            Nothing
 
 
 widgetEventContractValue : Model -> String -> Maybe ( String, Encode.Value )
