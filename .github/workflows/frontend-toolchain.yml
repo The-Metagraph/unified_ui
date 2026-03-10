@@ -56,3 +56,6 @@ jobs:
 
       - name: Validate frontend widget event route-key ordering parity
         run: ./scripts/validate_frontend_event_route_key_order_contract.sh
+
+      - name: Validate frontend widget event route-key completeness parity
+        run: ./scripts/validate_frontend_event_route_key_completeness_contract.sh

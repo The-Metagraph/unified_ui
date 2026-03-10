@@ -1,4 +1,4 @@
-.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate frontend-cloudevent-validate frontend-runtime-context-validate frontend-event-catalog-validate frontend-event-payload-validate frontend-event-route-validate frontend-event-route-family-validate frontend-event-route-keys-validate frontend-event-route-key-order-validate
+.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate frontend-cloudevent-validate frontend-runtime-context-validate frontend-event-catalog-validate frontend-event-payload-validate frontend-event-route-validate frontend-event-route-family-validate frontend-event-route-keys-validate frontend-event-route-key-order-validate frontend-event-route-key-completeness-validate
 
 conformance:
 	./scripts/run_conformance.sh
@@ -71,3 +71,6 @@ frontend-event-route-keys-validate:
 
 frontend-event-route-key-order-validate:
 	./scripts/validate_frontend_event_route_key_order_contract.sh
+
+frontend-event-route-key-completeness-validate:
+	./scripts/validate_frontend_event_route_key_completeness_contract.sh

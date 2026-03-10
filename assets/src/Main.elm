@@ -347,7 +347,17 @@ optionalWidgetEventDataFields model =
 routeFamilyCompatibilityFields : Model -> List ( String, Encode.Value )
 routeFamilyCompatibilityFields model =
     routeFamilyRequirementKeys defaultWidgetEventRouteFamily
-        |> List.filterMap (routeKeyContractValue model)
+        |> List.filterMap (routeFamilyRequirementValue model)
+
+
+routeFamilyRequirementValue : Model -> String -> Maybe ( String, Encode.Value )
+routeFamilyRequirementValue model key =
+    case routeKeyContractValue model key of
+        Just field ->
+            Just field
+
+        Nothing ->
+            widgetEventContractValue model key
 
 
 routeFamilyRequirementKeys : String -> List String

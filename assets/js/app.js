@@ -299,6 +299,7 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
   }
 
   const presentRouteKeys = requiredRouteKeys.filter((key) => hasPresentPayloadKey(eventEnvelope.data, key));
+  const missingRouteKeys = requiredRouteKeys.filter((key) => !hasPresentPayloadKey(eventEnvelope.data, key));
   const declaredRouteKeys = normalizedStringList(eventEnvelope.data && eventEnvelope.data.route_keys);
 
   if (presentRouteKeys.length === 0) {
@@ -322,7 +323,22 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
       details: {
         event_type: eventEnvelope.type,
         route_family: routeFamily,
-        expected_route_keys: presentRouteKeys,
+        expected_route_keys: requiredRouteKeys,
+      },
+    };
+  }
+
+  if (missingRouteKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `missing required route keys for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_keys: requiredRouteKeys,
+        missing_route_keys: missingRouteKeys,
+        actual_route_keys: presentRouteKeys,
       },
     };
   }
@@ -343,7 +359,7 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
     };
   }
 
-  const expectedRouteKeys = [...presentRouteKeys];
+  const expectedRouteKeys = [...requiredRouteKeys];
   const actualRouteKeys = [...declaredRouteKeys];
 
   const routeKeysMatch =
