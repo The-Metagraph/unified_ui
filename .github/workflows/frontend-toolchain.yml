@@ -59,3 +59,6 @@ jobs:
 
       - name: Validate frontend widget event route-key completeness parity
         run: ./scripts/validate_frontend_event_route_key_completeness_contract.sh
+
+      - name: Validate frontend widget event route-key allowlist parity
+        run: ./scripts/validate_frontend_event_route_key_allowlist_contract.sh
