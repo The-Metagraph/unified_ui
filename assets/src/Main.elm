@@ -424,7 +424,7 @@ routeFamilySourceContinuityFields model =
 routeFamilySourceKeyContinuityFields : Model -> List ( String, Encode.Value )
 routeFamilySourceKeyContinuityFields model =
     [ ( "route_key_source_keys"
-      , Encode.list Encode.string (declaredRouteKeySourceParityKeys model)
+      , Encode.list Encode.string (declaredRouteKeySourceMapParityKeys model)
       )
     ]
 
@@ -437,7 +437,7 @@ routeFamilyRequirementSource model key =
 
 declaredRouteKeySourceEntries : Model -> List ( String, Encode.Value )
 declaredRouteKeySourceEntries model =
-    declaredRouteKeySourceParityKeys model
+    declaredRouteKeySourceMapParityKeys model
         |> List.filterMap (routeFamilyRequirementSource model)
 
 
@@ -449,6 +449,11 @@ declaredRouteKeySourceKeys model =
 
 declaredRouteKeySourceParityKeys : Model -> List String
 declaredRouteKeySourceParityKeys model =
+    declaredRouteKeySourceMapParityKeys model
+
+
+declaredRouteKeySourceMapParityKeys : Model -> List String
+declaredRouteKeySourceMapParityKeys model =
     declaredRouteKeys model
 
 

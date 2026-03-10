@@ -80,3 +80,6 @@ jobs:
 
       - name: Validate frontend widget event route-key source-key to route-key parity
         run: ./scripts/validate_frontend_event_route_key_source_key_parity_contract.sh
+
+      - name: Validate frontend widget event route-key source-map to route-key parity
+        run: ./scripts/validate_frontend_event_route_key_source_map_parity_contract.sh

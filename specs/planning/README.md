@@ -63,6 +63,7 @@ The plan aligns to:
 50. [Phase 50 - Frontend Route-Key Source-Requirements and Parity Guardrails](./phase-50-frontend-route-key-source-requirements-and-parity-guardrails.md): align Elm/JS harness widget route-key source-requirements continuity with canonical route-key source conventions and enforce typed source-requirement drift fail-closed guardrails through local and CI validation gates.
 51. [Phase 51 - Frontend Route-Key Source-Keys and Parity Guardrails](./phase-51-frontend-route-key-source-keys-and-parity-guardrails.md): align Elm/JS harness widget route-key source-key continuity with canonical route-key source conventions and enforce typed source-key mismatch fail-closed guardrails through local and CI validation gates.
 52. [Phase 52 - Frontend Route-Key Source-Key and Route-Key Parity Guardrails](./phase-52-frontend-route-key-source-key-route-key-parity-guardrails.md): align Elm/JS harness widget route-key source-key continuity with emitted route-key continuity fields and enforce typed source-key-to-route-key mismatch fail-closed guardrails through local and CI validation gates.
+53. [Phase 53 - Frontend Route-Key Source-Map and Route-Key Parity Guardrails](./phase-53-frontend-route-key-source-map-route-key-parity-guardrails.md): align Elm/JS harness widget route-key source-map key continuity with emitted route-key continuity fields and enforce typed source-map-to-route-key mismatch fail-closed guardrails through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:
