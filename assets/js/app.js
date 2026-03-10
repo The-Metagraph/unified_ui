@@ -242,6 +242,33 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
     };
   }
 
+  const declaredRouteFamily = eventEnvelope.data && eventEnvelope.data.route_family;
+
+  if (typeof declaredRouteFamily !== "string" || declaredRouteFamily.trim() === "") {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_family",
+      reason: `missing route_family payload field for event type: ${eventEnvelope.type}`,
+      details: {
+        event_type: eventEnvelope.type,
+        expected_route_family: routeFamily,
+      },
+    };
+  }
+
+  if (declaredRouteFamily !== routeFamily) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_family",
+      reason: `route_family payload mismatch for event type: ${eventEnvelope.type}`,
+      details: {
+        event_type: eventEnvelope.type,
+        expected_route_family: routeFamily,
+        actual_route_family: declaredRouteFamily,
+      },
+    };
+  }
+
   const requiredRouteKeys = CANONICAL_ROUTE_KEY_REQUIREMENTS[routeFamily] || [];
 
   if (requiredRouteKeys.length === 0) {

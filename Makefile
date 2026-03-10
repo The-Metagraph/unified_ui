@@ -1,4 +1,4 @@
-.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate frontend-cloudevent-validate frontend-runtime-context-validate frontend-event-catalog-validate frontend-event-payload-validate frontend-event-route-validate
+.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate frontend-cloudevent-validate frontend-runtime-context-validate frontend-event-catalog-validate frontend-event-payload-validate frontend-event-route-validate frontend-event-route-family-validate
 
 conformance:
 	./scripts/run_conformance.sh
@@ -62,3 +62,6 @@ frontend-event-payload-validate:
 
 frontend-event-route-validate:
 	./scripts/validate_frontend_event_route_contract.sh
+
+frontend-event-route-family-validate:
+	./scripts/validate_frontend_event_route_family_contract.sh
