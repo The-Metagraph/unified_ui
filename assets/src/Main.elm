@@ -382,12 +382,12 @@ declaredRouteKeys model =
 
 isRouteKeyPopulated : Model -> String -> Bool
 isRouteKeyPopulated model key =
-    case widgetEventContractValue model key do
+    case widgetEventContractValue model key of
         Just _ ->
             True
 
         Nothing ->
-            case routeKeyContractValue model key do
+            case routeKeyContractValue model key of
                 Just _ ->
                     True
 
