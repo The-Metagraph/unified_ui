@@ -341,6 +341,49 @@ const analyzeDeclaredRouteKeySources = (candidate, requiredRouteKeys) => {
   };
 };
 
+const analyzeDeclaredRouteKeySourceKeys = (candidate, requiredRouteKeys) => {
+  if (candidate === undefined || candidate === null) {
+    return {
+      normalized: [],
+      invalidRouteKeySourceKeys: [],
+      duplicateRouteKeySourceKeys: [],
+      missingRouteKeySourceKeys: [...requiredRouteKeys],
+      unexpectedRouteKeySourceKeys: [],
+      actualShape: "missing",
+    };
+  }
+
+  if (!Array.isArray(candidate)) {
+    return {
+      normalized: [],
+      invalidRouteKeySourceKeys: [{ index: -1, value_type: routeKeyValueType(candidate) }],
+      duplicateRouteKeySourceKeys: [],
+      missingRouteKeySourceKeys: [...requiredRouteKeys],
+      unexpectedRouteKeySourceKeys: [],
+      actualShape: routeKeyValueType(candidate),
+    };
+  }
+
+  const invalidRouteKeySourceKeys = candidate
+    .map((value, index) => ({ value, index }))
+    .filter(({ value }) => typeof value !== "string" || value.trim() === "")
+    .map(({ value, index }) => ({ index, value_type: routeKeyValueType(value) }));
+
+  const normalized = normalizedStringList(candidate);
+  const duplicateRouteKeySourceKeys = duplicateStrings(normalized);
+  const missingRouteKeySourceKeys = requiredRouteKeys.filter((key) => !normalized.includes(key));
+  const unexpectedRouteKeySourceKeys = normalized.filter((key) => !requiredRouteKeys.includes(key));
+
+  return {
+    normalized,
+    invalidRouteKeySourceKeys,
+    duplicateRouteKeySourceKeys,
+    missingRouteKeySourceKeys,
+    unexpectedRouteKeySourceKeys,
+    actualShape: "array<unknown>",
+  };
+};
+
 const analyzeRouteKeySourceRequirements = (routeFamily, requiredRouteKeys) => {
   const candidate = CANONICAL_ROUTE_KEY_SOURCE_REQUIREMENTS[routeFamily];
 
@@ -490,6 +533,10 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
   const expectedRouteKeySources = sourceRequirementAnalysis.normalized;
   const routeKeySourceAnalysis = analyzeDeclaredRouteKeySources(
     eventEnvelope.data && eventEnvelope.data.route_key_sources,
+    requiredRouteKeys,
+  );
+  const routeKeySourceKeyAnalysis = analyzeDeclaredRouteKeySourceKeys(
+    eventEnvelope.data && eventEnvelope.data.route_key_source_keys,
     requiredRouteKeys,
   );
 
@@ -651,6 +698,121 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         expected_route_key_sources: expectedRouteKeySources,
         source_mismatches: routeKeySourceMismatches,
         actual_route_key_sources: routeKeySourceAnalysis.normalized,
+      },
+    };
+  }
+
+  if (routeKeySourceKeyAnalysis.invalidRouteKeySourceKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key_source_keys payload contains invalid key values for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_value_shape: "array<non-empty string>",
+        actual_value_shape: routeKeySourceKeyAnalysis.actualShape,
+        invalid_route_key_source_keys: routeKeySourceKeyAnalysis.invalidRouteKeySourceKeys,
+      },
+    };
+  }
+
+  if (routeKeySourceKeyAnalysis.normalized.length === 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason:
+        routeKeySourceKeyAnalysis.actualShape === "missing"
+          ? `missing route_key_source_keys payload field for route family: ${routeFamily}`
+          : `missing required route_key_source_keys entries for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_key_source_keys: requiredRouteKeys,
+      },
+    };
+  }
+
+  if (routeKeySourceKeyAnalysis.missingRouteKeySourceKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `missing required route_key_source_keys entries for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_key_source_keys: requiredRouteKeys,
+        missing_route_key_source_keys: routeKeySourceKeyAnalysis.missingRouteKeySourceKeys,
+        actual_route_key_source_keys: routeKeySourceKeyAnalysis.normalized,
+      },
+    };
+  }
+
+  if (routeKeySourceKeyAnalysis.duplicateRouteKeySourceKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key_source_keys payload contains duplicate route keys for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        duplicate_route_key_source_keys: routeKeySourceKeyAnalysis.duplicateRouteKeySourceKeys,
+        actual_route_key_source_keys: routeKeySourceKeyAnalysis.normalized,
+      },
+    };
+  }
+
+  if (routeKeySourceKeyAnalysis.unexpectedRouteKeySourceKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key_source_keys payload contains non-canonical route keys for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        allowed_route_key_source_keys: requiredRouteKeys,
+        unexpected_route_key_source_keys: routeKeySourceKeyAnalysis.unexpectedRouteKeySourceKeys,
+        actual_route_key_source_keys: routeKeySourceKeyAnalysis.normalized,
+      },
+    };
+  }
+
+  const expectedRouteKeySourceKeys = [...requiredRouteKeys];
+  const actualRouteKeySourceKeys = [...routeKeySourceKeyAnalysis.normalized];
+
+  const routeKeySourceKeysMatch =
+    expectedRouteKeySourceKeys.length === actualRouteKeySourceKeys.length &&
+    expectedRouteKeySourceKeys.every((expectedKey, index) => expectedKey === actualRouteKeySourceKeys[index]);
+
+  if (!routeKeySourceKeysMatch) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key_source_keys payload mismatch for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_key_source_keys: expectedRouteKeySourceKeys,
+        actual_route_key_source_keys: actualRouteKeySourceKeys,
+      },
+    };
+  }
+
+  const routeKeySourceMapKeys = Object.keys(routeKeySourceAnalysis.normalized);
+  const routeKeySourceKeyParity =
+    routeKeySourceMapKeys.length === actualRouteKeySourceKeys.length &&
+    routeKeySourceMapKeys.every((key, index) => key === actualRouteKeySourceKeys[index]);
+
+  if (!routeKeySourceKeyParity) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key_source_keys payload mismatch with route_key_sources entries for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        route_key_sources_keys: routeKeySourceMapKeys,
+        route_key_source_keys: actualRouteKeySourceKeys,
       },
     };
   }
