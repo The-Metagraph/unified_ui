@@ -126,6 +126,7 @@ make frontend-cloudevent-validate
 make frontend-runtime-context-validate
 make frontend-event-catalog-validate
 make frontend-event-payload-validate
+make frontend-event-route-validate
 ```
 
 Build output:
@@ -183,7 +184,13 @@ Validate frontend widget event payload-key parity against `WebUi.Events.EventCat
 ./scripts/validate_frontend_event_payload_contract.sh
 ```
 
+Validate frontend widget event route-family and route-key parity against canonical route conventions:
+
+```bash
+./scripts/validate_frontend_event_route_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity.
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity.
