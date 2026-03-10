@@ -6,7 +6,9 @@ cd "$ROOT"
 
 MATRIX="specs/conformance/spec_conformance_matrix.md"
 SCENARIO_CATALOG="specs/conformance/scenario_catalog.md"
-COMPONENT_SPEC_REGEX='^specs/(core|infrastructure|services|session)/.+\.md$'
+# Component specs can live anywhere under specs/.
+# AC-bearing membership is still filtered via COMPONENT_SPECS below.
+COMPONENT_SPEC_REGEX='^specs/.+\.md$'
 
 failures=0
 
