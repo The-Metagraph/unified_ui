@@ -1,6 +1,8 @@
 # WebUi
 
-**TODO: Add description**
+`WebUi` is a deterministic Elixir + Elm UI runtime that interprets canonical `unified_iur`
+descriptors, routes typed widget events through CloudEvents-shaped envelopes, and enforces
+spec governance/conformance contracts through local hooks and CI gates.
 
 ## Installation
 
