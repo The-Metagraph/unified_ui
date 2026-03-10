@@ -359,6 +359,23 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
     };
   }
 
+  const unexpectedRouteKeys = declaredRouteKeys.filter((key) => !requiredRouteKeys.includes(key));
+
+  if (unexpectedRouteKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_keys payload contains non-canonical route keys for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        allowed_route_keys: requiredRouteKeys,
+        unexpected_route_keys: unexpectedRouteKeys,
+        actual_route_keys: declaredRouteKeys,
+      },
+    };
+  }
+
   const expectedRouteKeys = [...requiredRouteKeys];
   const actualRouteKeys = [...declaredRouteKeys];
 

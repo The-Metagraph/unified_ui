@@ -131,6 +131,7 @@ make frontend-event-route-family-validate
 make frontend-event-route-keys-validate
 make frontend-event-route-key-order-validate
 make frontend-event-route-key-completeness-validate
+make frontend-event-route-key-allowlist-validate
 ```
 
 Build output:
@@ -218,7 +219,13 @@ Validate frontend widget event `route_keys` required-key completeness parity aga
 ./scripts/validate_frontend_event_route_key_completeness_contract.sh
 ```
 
+Validate frontend widget event `route_keys` allowlist parity against canonical route-key requirements:
+
+```bash
+./scripts/validate_frontend_event_route_key_allowlist_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity.
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity + frontend event route-key allowlist parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity + frontend event route-key ordering parity + frontend event route-key completeness parity + frontend event route-key allowlist parity.
