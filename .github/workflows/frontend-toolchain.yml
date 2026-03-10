@@ -74,3 +74,6 @@ jobs:
 
       - name: Validate frontend widget event route-key source-requirements parity
         run: ./scripts/validate_frontend_event_route_key_source_requirements_contract.sh
+
+      - name: Validate frontend widget event route-key source-key parity
+        run: ./scripts/validate_frontend_event_route_key_source_keys_contract.sh
