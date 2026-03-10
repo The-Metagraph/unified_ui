@@ -201,7 +201,22 @@ const normalizedStringList = (candidate) => {
     return [];
   }
 
-  return [...new Set(candidate.filter((value) => typeof value === "string").map((value) => value.trim()).filter(Boolean))];
+  return candidate.filter((value) => typeof value === "string").map((value) => value.trim()).filter(Boolean);
+};
+
+const duplicateStrings = (candidate) => {
+  const seen = new Set();
+  const duplicates = [];
+
+  for (const item of candidate) {
+    if (seen.has(item) && !duplicates.includes(item)) {
+      duplicates.push(item);
+    } else {
+      seen.add(item);
+    }
+  }
+
+  return duplicates;
 };
 
 const validateWidgetEventPayload = (eventEnvelope) => {
@@ -312,8 +327,24 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
     };
   }
 
-  const expectedRouteKeys = [...presentRouteKeys].sort();
-  const actualRouteKeys = [...declaredRouteKeys].sort();
+  const duplicateRouteKeys = duplicateStrings(declaredRouteKeys);
+
+  if (duplicateRouteKeys.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_keys payload contains duplicate route keys for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        duplicate_route_keys: duplicateRouteKeys,
+        actual_route_keys: declaredRouteKeys,
+      },
+    };
+  }
+
+  const expectedRouteKeys = [...presentRouteKeys];
+  const actualRouteKeys = [...declaredRouteKeys];
 
   const routeKeysMatch =
     expectedRouteKeys.length === actualRouteKeys.length &&

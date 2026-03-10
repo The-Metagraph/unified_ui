@@ -377,7 +377,17 @@ routeFamilyContinuityFields model =
 declaredRouteKeys : Model -> List String
 declaredRouteKeys model =
     routeFamilyRequirementKeys defaultWidgetEventRouteFamily
-        |> List.filter (isRouteKeyPopulated model)
+        |> List.foldl (appendIfRouteKeyPopulated model) []
+        |> List.reverse
+
+
+appendIfRouteKeyPopulated : Model -> String -> List String -> List String
+appendIfRouteKeyPopulated model key acc =
+    if isRouteKeyPopulated model key then
+        key :: acc
+
+    else
+        acc
 
 
 isRouteKeyPopulated : Model -> String -> Bool
