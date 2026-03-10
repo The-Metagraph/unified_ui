@@ -196,6 +196,14 @@ const hasPresentPayloadKey = (data, key) => {
   return true;
 };
 
+const normalizedStringList = (candidate) => {
+  if (!Array.isArray(candidate)) {
+    return [];
+  }
+
+  return [...new Set(candidate.filter((value) => typeof value === "string").map((value) => value.trim()).filter(Boolean))];
+};
+
 const validateWidgetEventPayload = (eventEnvelope) => {
   const keySpec = CANONICAL_WIDGET_EVENT_KEY_SPECS[eventEnvelope.type];
 
@@ -276,6 +284,7 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
   }
 
   const presentRouteKeys = requiredRouteKeys.filter((key) => hasPresentPayloadKey(eventEnvelope.data, key));
+  const declaredRouteKeys = normalizedStringList(eventEnvelope.data && eventEnvelope.data.route_keys);
 
   if (presentRouteKeys.length === 0) {
     return {
@@ -286,6 +295,40 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         event_type: eventEnvelope.type,
         route_family: routeFamily,
         required_route_keys: requiredRouteKeys,
+      },
+    };
+  }
+
+  if (declaredRouteKeys.length === 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `missing route_keys payload field for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_keys: presentRouteKeys,
+      },
+    };
+  }
+
+  const expectedRouteKeys = [...presentRouteKeys].sort();
+  const actualRouteKeys = [...declaredRouteKeys].sort();
+
+  const routeKeysMatch =
+    expectedRouteKeys.length === actualRouteKeys.length &&
+    expectedRouteKeys.every((expectedKey, index) => expectedKey === actualRouteKeys[index]);
+
+  if (!routeKeysMatch) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_keys payload mismatch for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_keys: expectedRouteKeys,
+        actual_route_keys: actualRouteKeys,
       },
     };
   }
