@@ -386,9 +386,21 @@ routeFamilyContinuityFields model =
 
 declaredRouteKeys : Model -> List String
 declaredRouteKeys model =
-    routeFamilyRequirementKeys defaultWidgetEventRouteFamily
+    routeFamilyCompatibilityRouteKeys model
         |> List.foldl (appendIfRouteKeyPopulated model) []
         |> List.reverse
+
+
+routeFamilyCompatibilityRouteKeys : Model -> List String
+routeFamilyCompatibilityRouteKeys model =
+    routeFamilyCompatibilityFields model
+        |> List.map Tuple.first
+        |> List.filter (isAllowedRouteKey defaultWidgetEventRouteFamily)
+
+
+isRouteKeyPopulated : Model -> String -> Bool
+isRouteKeyPopulated model key =
+    List.member key (routeFamilyCompatibilityRouteKeys model)
 
 
 appendIfRouteKeyPopulated : Model -> String -> List String -> List String
@@ -400,19 +412,9 @@ appendIfRouteKeyPopulated model key acc =
         acc
 
 
-isRouteKeyPopulated : Model -> String -> Bool
-isRouteKeyPopulated model key =
-    case widgetEventContractValue model key of
-        Just _ ->
-            True
-
-        Nothing ->
-            case routeKeyContractValue model key of
-                Just _ ->
-                    True
-
-                Nothing ->
-                    False
+isAllowedRouteKey : String -> String -> Bool
+isAllowedRouteKey routeFamily key =
+    List.member key (routeFamilyRequirementKeys routeFamily)
 
 
 routeKeyContractValue : Model -> String -> Maybe ( String, Encode.Value )
