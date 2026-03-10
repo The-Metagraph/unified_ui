@@ -56,6 +56,12 @@ type alias RuntimeEvent =
     }
 
 
+type alias RouteKeyResolution =
+    { value : String
+    , source : String
+    }
+
+
 type Msg
     = RuntimeEventReceived Decode.Value
     | Increment
@@ -131,6 +137,7 @@ canonicalWidgetEventPayloadKeys =
     , "row_index"
     , "route_family"
     , "route_keys"
+    , "route_key_sources"
     , "selected"
     , "series"
     , "tab_id"
@@ -313,6 +320,7 @@ widgetEventData model =
             ++ requiredWidgetEventAnyOfFields model
             ++ routeFamilyCompatibilityFields model
             ++ routeFamilyContinuityFields model
+            ++ routeFamilySourceContinuityFields model
             ++ optionalWidgetEventDataFields model
         )
 
@@ -352,17 +360,8 @@ routeFamilyCompatibilityFields model =
 
 routeFamilyRequirementValue : Model -> String -> Maybe ( String, Encode.Value )
 routeFamilyRequirementValue model key =
-    case canonicalRouteKeyValue model key of
-        Just value ->
-            Just ( key, Encode.string value )
-
-        Nothing ->
-            case routeKeyContractValue model key of
-                Just field ->
-                    Just field
-
-                Nothing ->
-                    widgetEventContractValue model key
+    canonicalRouteKeyValue model key
+        |> Maybe.map (\value -> ( key, Encode.string value ))
 
 
 routeFamilyRequirementKeys : String -> List String
@@ -387,6 +386,23 @@ routeFamilyContinuityFields model =
     [ ( "route_family", Encode.string defaultWidgetEventRouteFamily )
     , ( "route_keys", Encode.list Encode.string (declaredRouteKeys model) )
     ]
+
+
+routeFamilySourceContinuityFields : Model -> List ( String, Encode.Value )
+routeFamilySourceContinuityFields model =
+    [ ( "route_key_sources"
+      , Encode.object
+            (routeFamilyRequirementKeys defaultWidgetEventRouteFamily
+                |> List.filterMap (routeFamilyRequirementSource model)
+            )
+      )
+    ]
+
+
+routeFamilyRequirementSource : Model -> String -> Maybe ( String, Encode.Value )
+routeFamilyRequirementSource model key =
+    canonicalRouteKeySource model key
+        |> Maybe.map (\source -> ( key, Encode.string source ))
 
 
 declaredRouteKeys : Model -> List String
@@ -447,25 +463,40 @@ isAllowedRouteKey routeFamily key =
     List.member key (routeFamilyRequirementKeys routeFamily)
 
 
-routeKeyContractValue : Model -> String -> Maybe ( String, Encode.Value )
-routeKeyContractValue model key =
-    routeKeyContractStringValue model key
-        |> Maybe.map (\value -> ( key, Encode.string value ))
-
-
 canonicalRouteKeyValue : Model -> String -> Maybe String
 canonicalRouteKeyValue model key =
-    case routeKeyContractStringValue model key of
-        Just value ->
-            nonEmptyString value
+    canonicalRouteKeyResolution model key
+        |> Maybe.map .value
+
+
+canonicalRouteKeySource : Model -> String -> Maybe String
+canonicalRouteKeySource model key =
+    canonicalRouteKeyResolution model key
+        |> Maybe.map .source
+
+
+canonicalRouteKeyResolution : Model -> String -> Maybe RouteKeyResolution
+canonicalRouteKeyResolution model key =
+    case routeKeyContractResolution model key of
+        Just resolution ->
+            Just resolution
 
         Nothing ->
-            case widgetRouteKeyStringValue model key of
-                Just value ->
-                    nonEmptyString value
+            widgetRouteKeyResolution model key
 
-                Nothing ->
-                    Nothing
+
+routeKeyContractResolution : Model -> String -> Maybe RouteKeyResolution
+routeKeyContractResolution model key =
+    routeKeyContractStringValue model key
+        |> Maybe.andThen nonEmptyString
+        |> Maybe.map (\value -> { value = value, source = "route_key_contract" })
+
+
+widgetRouteKeyResolution : Model -> String -> Maybe RouteKeyResolution
+widgetRouteKeyResolution model key =
+    widgetRouteKeyStringValue model key
+        |> Maybe.andThen nonEmptyString
+        |> Maybe.map (\value -> { value = value, source = "widget_event_contract" })
 
 
 routeKeyContractStringValue : Model -> String -> Maybe String
