@@ -53,6 +53,7 @@ The plan aligns to:
 40. [Phase 40 - Frontend Event Payload Contract Parity and Required-Key Guardrails](./phase-40-frontend-event-payload-contract-parity-and-required-key-guardrails.md): align Elm/JS harness widget event `data` payload-key contracts with `WebUi.Events.EventCatalog` required key specs and enforce typed invalid-payload fail-closed guardrails through local and CI validation gates.
 41. [Phase 41 - Frontend Event Route Contract Parity and Dispatch-Key Guardrails](./phase-41-frontend-event-route-contract-parity-and-dispatch-key-guardrails.md): align Elm/JS harness widget event route-family mappings and dispatch-key conventions with canonical route contracts and enforce typed invalid-route fail-closed guardrails through local and CI validation gates.
 42. [Phase 42 - Frontend Route-Family Continuity and Parity Guardrails](./phase-42-frontend-route-family-continuity-and-parity-guardrails.md): align Elm/JS harness widget event `route_family` payload continuity with canonical event route mappings and enforce typed route-family mismatch fail-closed guardrails through local and CI validation gates.
+43. [Phase 43 - Frontend Route-Keys Continuity and Parity Guardrails](./phase-43-frontend-route-keys-continuity-and-parity-guardrails.md): align Elm/JS harness widget event `route_keys` payload continuity with canonical route-key requirements and enforce typed route-keys mismatch fail-closed guardrails through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:
