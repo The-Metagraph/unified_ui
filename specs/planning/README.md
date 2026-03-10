@@ -60,6 +60,7 @@ The plan aligns to:
 47. [Phase 47 - Frontend Route-Key Payload-Shape and Parity Guardrails](./phase-47-frontend-route-key-payload-shape-and-parity-guardrails.md): align Elm/JS harness widget event `route_keys` payload-shape continuity with canonical route-key requirements and enforce typed invalid-value fail-closed guardrails through local and CI validation gates.
 48. [Phase 48 - Frontend Route-Key Value-Shape and Parity Guardrails](./phase-48-frontend-route-key-value-shape-and-parity-guardrails.md): align Elm/JS harness widget route-key field value-shape continuity with canonical route-key requirements and enforce typed invalid-value fail-closed guardrails through local and CI validation gates.
 49. [Phase 49 - Frontend Route-Key Value-Source and Parity Guardrails](./phase-49-frontend-route-key-value-source-and-parity-guardrails.md): align Elm/JS harness widget route-key value-source continuity with canonical route-key source conventions and enforce typed invalid-source fail-closed guardrails through local and CI validation gates.
+50. [Phase 50 - Frontend Route-Key Source-Requirements and Parity Guardrails](./phase-50-frontend-route-key-source-requirements-and-parity-guardrails.md): align Elm/JS harness widget route-key source-requirements continuity with canonical route-key source conventions and enforce typed source-requirement drift fail-closed guardrails through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:

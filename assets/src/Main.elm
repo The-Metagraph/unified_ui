@@ -160,6 +160,32 @@ canonicalRouteKeyRequirements =
     ]
 
 
+canonicalRouteKeySourceRequirements : List ( String, List ( String, String ) )
+canonicalRouteKeySourceRequirements =
+    [ ( "click"
+      , [ ( "action", "widget_event_contract" )
+        , ( "button_id", "route_key_contract" )
+        , ( "widget_id", "widget_event_contract" )
+        , ( "id", "route_key_contract" )
+        ]
+      )
+    , ( "change"
+      , [ ( "input_id", "route_key_contract" )
+        , ( "widget_id", "widget_event_contract" )
+        , ( "field", "route_key_contract" )
+        , ( "action", "widget_event_contract" )
+        , ( "id", "route_key_contract" )
+        ]
+      )
+    , ( "submit"
+      , [ ( "form_id", "route_key_contract" )
+        , ( "action", "widget_event_contract" )
+        , ( "id", "route_key_contract" )
+        ]
+      )
+    ]
+
+
 canonicalWidgetEventRouteFamilies : List ( String, String )
 canonicalWidgetEventRouteFamilies =
     [ ( "unified.action.requested", "click" )
@@ -401,7 +427,7 @@ routeFamilySourceContinuityFields model =
 
 routeFamilyRequirementSource : Model -> String -> Maybe ( String, Encode.Value )
 routeFamilyRequirementSource model key =
-    canonicalRouteKeySource model key
+    canonicalRouteKeySourceForFamily defaultWidgetEventRouteFamily model key
         |> Maybe.map (\source -> ( key, Encode.string source ))
 
 
@@ -473,6 +499,28 @@ canonicalRouteKeySource : Model -> String -> Maybe String
 canonicalRouteKeySource model key =
     canonicalRouteKeyResolution model key
         |> Maybe.map .source
+
+
+canonicalRouteKeySourceForFamily : String -> Model -> String -> Maybe String
+canonicalRouteKeySourceForFamily routeFamily model key =
+    case routeFamilyExpectedRouteKeySource routeFamily key of
+        Just source ->
+            Just source
+
+        Nothing ->
+            canonicalRouteKeySource model key
+
+
+routeFamilyExpectedRouteKeySource : String -> String -> Maybe String
+routeFamilyExpectedRouteKeySource routeFamily key =
+    canonicalRouteKeySourceRequirements
+        |> List.filter (\( family, _ ) -> family == routeFamily)
+        |> List.head
+        |> Maybe.map Tuple.second
+        |> Maybe.withDefault []
+        |> List.filter (\( routeKey, _ ) -> routeKey == key)
+        |> List.head
+        |> Maybe.map Tuple.second
 
 
 canonicalRouteKeyResolution : Model -> String -> Maybe RouteKeyResolution
