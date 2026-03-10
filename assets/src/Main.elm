@@ -389,6 +389,7 @@ declaredRouteKeys model =
     routeFamilyCompatibilityRouteKeys model
         |> List.foldl (appendIfRouteKeyPopulated model) []
         |> List.reverse
+        |> canonicalRouteKeyShape defaultWidgetEventRouteFamily
 
 
 routeFamilyCompatibilityRouteKeys : Model -> List String
@@ -396,6 +397,30 @@ routeFamilyCompatibilityRouteKeys model =
     routeFamilyCompatibilityFields model
         |> List.map Tuple.first
         |> List.filter (isAllowedRouteKey defaultWidgetEventRouteFamily)
+
+
+canonicalRouteKeyShape : String -> List String -> List String
+canonicalRouteKeyShape routeFamily routeKeys =
+    routeKeys
+        |> List.filter (\key -> String.length key > 0)
+        |> List.filter (isAllowedRouteKey routeFamily)
+        |> uniqueRouteKeys
+
+
+uniqueRouteKeys : List String -> List String
+uniqueRouteKeys routeKeys =
+    routeKeys
+        |> List.foldl appendIfUniqueRouteKey []
+        |> List.reverse
+
+
+appendIfUniqueRouteKey : String -> List String -> List String
+appendIfUniqueRouteKey key acc =
+    if List.member key acc then
+        acc
+
+    else
+        key :: acc
 
 
 isRouteKeyPopulated : Model -> String -> Bool
