@@ -352,12 +352,17 @@ routeFamilyCompatibilityFields model =
 
 routeFamilyRequirementValue : Model -> String -> Maybe ( String, Encode.Value )
 routeFamilyRequirementValue model key =
-    case routeKeyContractValue model key of
-        Just field ->
-            Just field
+    case canonicalRouteKeyValue model key of
+        Just value ->
+            Just ( key, Encode.string value )
 
         Nothing ->
-            widgetEventContractValue model key
+            case routeKeyContractValue model key of
+                Just field ->
+                    Just field
+
+                Nothing ->
+                    widgetEventContractValue model key
 
 
 routeFamilyRequirementKeys : String -> List String
@@ -444,24 +449,76 @@ isAllowedRouteKey routeFamily key =
 
 routeKeyContractValue : Model -> String -> Maybe ( String, Encode.Value )
 routeKeyContractValue model key =
+    routeKeyContractStringValue model key
+        |> Maybe.map (\value -> ( key, Encode.string value ))
+
+
+canonicalRouteKeyValue : Model -> String -> Maybe String
+canonicalRouteKeyValue model key =
+    case routeKeyContractStringValue model key of
+        Just value ->
+            nonEmptyString value
+
+        Nothing ->
+            case widgetRouteKeyStringValue model key of
+                Just value ->
+                    nonEmptyString value
+
+                Nothing ->
+                    Nothing
+
+
+routeKeyContractStringValue : Model -> String -> Maybe String
+routeKeyContractStringValue model key =
     case key of
         "button_id" ->
-            Just ( key, Encode.string "elm-counter-increment-button" )
+            Just "elm-counter-increment-button"
 
         "id" ->
-            Just ( key, Encode.string ("elm-counter-route-" ++ String.fromInt model.count) )
+            Just ("elm-counter-route-" ++ String.fromInt model.count)
 
         "input_id" ->
-            Just ( key, Encode.string "elm-counter-input" )
+            Just "elm-counter-input"
 
         "field" ->
-            Just ( key, Encode.string "input" )
+            Just "input"
 
         "form_id" ->
-            Just ( key, Encode.string "elm-counter-form" )
+            Just "elm-counter-form"
 
         _ ->
             Nothing
+
+
+widgetRouteKeyStringValue : Model -> String -> Maybe String
+widgetRouteKeyStringValue _ key =
+    case key of
+        "action" ->
+            Just "increment"
+
+        "widget_id" ->
+            Just "elm-counter"
+
+        "button_id" ->
+            Just "elm-counter-increment-button"
+
+        "input_id" ->
+            Just "elm-counter-input"
+
+        "form_id" ->
+            Just "elm-counter-form"
+
+        _ ->
+            Nothing
+
+
+nonEmptyString : String -> Maybe String
+nonEmptyString value =
+    if String.length (String.trim value) > 0 then
+        Just value
+
+    else
+        Nothing
 
 
 widgetEventContractValue : Model -> String -> Maybe ( String, Encode.Value )
