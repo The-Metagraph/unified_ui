@@ -67,6 +67,7 @@ The plan aligns to:
 54. [Phase 54 - Frontend Route-Key Source Triad Parity and Guardrails](./phase-54-frontend-route-key-source-triad-parity-and-guardrails.md): align Elm/JS harness widget route-key source triad continuity (`route_keys`, `route_key_source_keys`, `route_key_sources`) and enforce typed triad parity mismatch fail-closed guardrails through local and CI validation gates.
 55. [Phase 55 - Runtime Governance Contract Surface Seeding](./phase-55-runtime-governance-contract-surface-seeding.md): replace policy/turn/scope/replay contract placeholders with deterministic requirement sets and align conformance matrix + ADR requirement-family coverage.
 56. [Phase 56 - Remaining Contract and Operations Surface Seeding](./phase-56-remaining-contract-and-operations-surface-seeding.md): replace supervision/eval/prompt-asset and operations placeholders with deterministic requirement/runbook surfaces and align matrix + ADR requirement-family coverage.
+57. [Phase 57 - Early Conformance Scenario Doc Seeding](./phase-57-early-conformance-scenario-doc-seeding.md): replace phase 01-09 conformance scenario placeholders with concrete canonical scenario coverage and deterministic validation command references.
 
 ## Shared Conventions
 - Numbering:
