@@ -16,3 +16,4 @@ cd "$ROOT"
 ./scripts/validate_frontend_event_route_family_contract.sh
 ./scripts/validate_frontend_event_route_keys_contract.sh
 ./scripts/validate_frontend_event_route_key_order_contract.sh
+./scripts/validate_frontend_event_route_key_completeness_contract.sh
