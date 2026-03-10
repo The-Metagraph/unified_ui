@@ -1,4 +1,4 @@
-.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate frontend-cloudevent-validate frontend-runtime-context-validate frontend-event-catalog-validate frontend-event-payload-validate frontend-event-route-validate frontend-event-route-family-validate frontend-event-route-keys-validate frontend-event-route-key-order-validate frontend-event-route-key-completeness-validate frontend-event-route-key-allowlist-validate frontend-event-route-key-shape-validate frontend-event-route-key-value-validate frontend-event-route-key-source-validate frontend-event-route-key-source-requirements-validate frontend-event-route-key-source-keys-validate
+.PHONY: conformance conformance-report conformance-ci rfc-governance rfc-governance-debt-scan rfc-specs-dry-run rfc-specs-generate release-readiness release-readiness-report assets-setup assets-build assets-css-watch frontend-validate frontend-contract-validate frontend-cloudevent-validate frontend-runtime-context-validate frontend-event-catalog-validate frontend-event-payload-validate frontend-event-route-validate frontend-event-route-family-validate frontend-event-route-keys-validate frontend-event-route-key-order-validate frontend-event-route-key-completeness-validate frontend-event-route-key-allowlist-validate frontend-event-route-key-shape-validate frontend-event-route-key-value-validate frontend-event-route-key-source-validate frontend-event-route-key-source-requirements-validate frontend-event-route-key-source-keys-validate frontend-event-route-key-source-key-parity-validate
 
 conformance:
 	./scripts/run_conformance.sh
@@ -92,3 +92,6 @@ frontend-event-route-key-source-requirements-validate:
 
 frontend-event-route-key-source-keys-validate:
 	./scripts/validate_frontend_event_route_key_source_keys_contract.sh
+
+frontend-event-route-key-source-key-parity-validate:
+	./scripts/validate_frontend_event_route_key_source_key_parity_contract.sh

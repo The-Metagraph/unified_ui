@@ -430,6 +430,29 @@ const analyzeRouteKeySourceRequirements = (routeFamily, requiredRouteKeys) => {
   };
 };
 
+const analyzeRouteKeySourceKeyParityWithRouteKeys = (routeKeys, routeKeySourceKeys) => {
+  const expected = Array.isArray(routeKeys) ? [...routeKeys] : [];
+  const actual = Array.isArray(routeKeySourceKeys) ? [...routeKeySourceKeys] : [];
+
+  const length = Math.max(expected.length, actual.length);
+  const mismatches = [];
+
+  for (let index = 0; index < length; index += 1) {
+    if (expected[index] !== actual[index]) {
+      mismatches.push({
+        index,
+        route_key: expected[index] ?? null,
+        route_key_source_key: actual[index] ?? null,
+      });
+    }
+  }
+
+  return {
+    matches: mismatches.length === 0,
+    mismatches,
+  };
+};
+
 const duplicateStrings = (candidate) => {
   const seen = new Set();
   const duplicates = [];
@@ -867,6 +890,26 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         route_family: routeFamily,
         expected_route_keys: expectedRouteKeys,
         actual_route_keys: actualRouteKeys,
+      },
+    };
+  }
+
+  const sourceKeyRouteKeyParityAnalysis = analyzeRouteKeySourceKeyParityWithRouteKeys(
+    actualRouteKeys,
+    actualRouteKeySourceKeys,
+  );
+
+  if (!sourceKeyRouteKeyParityAnalysis.matches) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key_source_keys payload mismatch with route_keys payload for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        route_keys: actualRouteKeys,
+        route_key_source_keys: actualRouteKeySourceKeys,
+        source_key_parity_mismatches: sourceKeyRouteKeyParityAnalysis.mismatches,
       },
     };
   }
