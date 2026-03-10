@@ -75,6 +75,42 @@ const CANONICAL_WIDGET_EVENT_KEY_SPECS = {
   "unified.view.changed": { required_all_of: ["widget_id", "view"], required_any_of: [] },
   "unified.viewport.resized": { required_all_of: ["widget_id", "width", "height"], required_any_of: [] },
 };
+const CANONICAL_WIDGET_EVENT_ROUTE_FAMILIES = {
+  "unified.action.requested": "click",
+  "unified.button.clicked": "click",
+  "unified.canvas.pointer.changed": "change",
+  "unified.chart.point_hovered": "selection",
+  "unified.chart.point_selected": "selection",
+  "unified.command.executed": "click",
+  "unified.element.blurred": "focus",
+  "unified.element.focused": "focus",
+  "unified.form.submitted": "submit",
+  "unified.input.changed": "change",
+  "unified.item.selected": "selection",
+  "unified.item.toggled": "selection",
+  "unified.link.clicked": "click",
+  "unified.menu.action_selected": "click",
+  "unified.overlay.closed": "click",
+  "unified.overlay.confirmed": "click",
+  "unified.scroll.changed": "change",
+  "unified.split.collapse_changed": "change",
+  "unified.split.resized": "change",
+  "unified.tab.changed": "selection",
+  "unified.tab.closed": "click",
+  "unified.table.row_selected": "selection",
+  "unified.table.sorted": "click",
+  "unified.toast.cleared": "click",
+  "unified.toast.dismissed": "click",
+  "unified.tree.node_selected": "selection",
+  "unified.tree.node_toggled": "selection",
+  "unified.view.changed": "change",
+  "unified.viewport.resized": "change",
+};
+const CANONICAL_ROUTE_KEY_REQUIREMENTS = {
+  click: ["action", "button_id", "widget_id", "id"],
+  change: ["input_id", "widget_id", "field", "action", "id"],
+  submit: ["form_id", "action", "id"],
+};
 
 const transportState = {
   joined: false,
@@ -192,6 +228,44 @@ const validateWidgetEventPayload = (eventEnvelope) => {
   return { ok: true };
 };
 
+const validateWidgetEventRouteKeys = (eventEnvelope) => {
+  const routeFamily = CANONICAL_WIDGET_EVENT_ROUTE_FAMILIES[eventEnvelope.type];
+
+  if (typeof routeFamily !== "string" || routeFamily.trim() === "") {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_family",
+      reason: `missing canonical route family for event type: ${eventEnvelope.type}`,
+      details: {
+        event_type: eventEnvelope.type,
+      },
+    };
+  }
+
+  const requiredRouteKeys = CANONICAL_ROUTE_KEY_REQUIREMENTS[routeFamily] || [];
+
+  if (requiredRouteKeys.length === 0) {
+    return { ok: true };
+  }
+
+  const presentRouteKeys = requiredRouteKeys.filter((key) => hasPresentPayloadKey(eventEnvelope.data, key));
+
+  if (presentRouteKeys.length === 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route",
+      reason: `missing canonical route keys for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        required_route_keys: requiredRouteKeys,
+      },
+    };
+  }
+
+  return { ok: true };
+};
+
 const validateCloudEventEnvelope = (eventEnvelope) => {
   if (!eventEnvelope || typeof eventEnvelope !== "object" || Array.isArray(eventEnvelope)) {
     return { ok: false, errorCode: "transport.invalid_cloudevent_envelope", reason: "envelope must be an object" };
@@ -237,6 +311,12 @@ const validateCloudEventEnvelope = (eventEnvelope) => {
 
   if (!payloadValidation.ok) {
     return payloadValidation;
+  }
+
+  const routeValidation = validateWidgetEventRouteKeys(eventEnvelope);
+
+  if (!routeValidation.ok) {
+    return routeValidation;
   }
 
   return { ok: true };
