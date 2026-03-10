@@ -41,3 +41,6 @@ jobs:
 
       - name: Validate frontend widget event catalog contract parity
         run: ./scripts/validate_frontend_event_catalog_contract.sh
+
+      - name: Validate frontend widget event payload contract parity
+        run: ./scripts/validate_frontend_event_payload_contract.sh
