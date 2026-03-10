@@ -16,10 +16,10 @@ This matrix maps requirement families to owning contracts and canonical baseline
 
 Every future AC-bearing component spec MUST map to at least one `REQ-*` family and one `SCN-*` scenario.
 
-## Bootstrap Note
+## Status Note
 
-Current implementation is in architecture-contract bootstrap mode (no AC-bearing component specs yet).
-This matrix establishes initial requirement-family and scenario-family alignment for early conformance planning.
+Architecture-contract coverage is active.
+The matrix includes AC-bearing component mappings and continues to serve as the canonical REQ/SCN alignment surface.
 
 ## Component AC Coverage
 
