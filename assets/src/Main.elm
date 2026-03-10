@@ -105,6 +105,42 @@ canonicalWidgetEventTypes =
     ]
 
 
+canonicalWidgetEventPayloadKeys : List String
+canonicalWidgetEventPayloadKeys =
+    [ "action"
+    , "action_id"
+    , "button_id"
+    , "collapsed"
+    , "column"
+    , "command_id"
+    , "direction"
+    , "expanded"
+    , "form_id"
+    , "href"
+    , "index"
+    , "input_id"
+    , "item_id"
+    , "node_id"
+    , "pane_id"
+    , "panes"
+    , "phase"
+    , "point"
+    , "position"
+    , "row_index"
+    , "selected"
+    , "series"
+    , "tab_id"
+    , "toast_id"
+    , "value"
+    , "view"
+    , "widget_id"
+    , "width"
+    , "height"
+    , "x"
+    , "y"
+    ]
+
+
 defaultWidgetEventType : String
 defaultWidgetEventType =
     case canonicalWidgetEventTypes of
@@ -113,6 +149,18 @@ defaultWidgetEventType =
 
         [] ->
             "unified.button.clicked"
+
+
+defaultWidgetEventRequiredAllOf : List String
+defaultWidgetEventRequiredAllOf =
+    [ "widget_id"
+    , "action"
+    ]
+
+
+defaultWidgetEventRequiredAnyOf : List (List String)
+defaultWidgetEventRequiredAnyOf =
+    []
 
 
 init : () -> ( Model, Cmd Msg )
@@ -209,11 +257,66 @@ cloudEventEnvelope model =
 widgetEventData : Model -> Encode.Value
 widgetEventData model =
     Encode.object
-        [ ( "widget_id", Encode.string "elm-counter" )
-        , ( "action", Encode.string "increment" )
-        , ( "count", Encode.int model.count )
-        , ( "input", Encode.string model.inputText )
-        ]
+        (requiredWidgetEventDataFields model
+            ++ requiredWidgetEventAnyOfFields model
+            ++ optionalWidgetEventDataFields model
+        )
+
+
+requiredWidgetEventDataFields : Model -> List ( String, Encode.Value )
+requiredWidgetEventDataFields model =
+    List.filterMap (widgetEventContractValue model) defaultWidgetEventRequiredAllOf
+
+
+requiredWidgetEventAnyOfFields : Model -> List ( String, Encode.Value )
+requiredWidgetEventAnyOfFields model =
+    case defaultWidgetEventRequiredAnyOf of
+        firstGroup :: _ ->
+            case List.filterMap (widgetEventContractValue model) firstGroup of
+                field :: _ ->
+                    [ field ]
+
+                [] ->
+                    []
+
+        [] ->
+            []
+
+
+optionalWidgetEventDataFields : Model -> List ( String, Encode.Value )
+optionalWidgetEventDataFields model =
+    [ ( "count", Encode.int model.count )
+    , ( "input", Encode.string model.inputText )
+    ]
+
+
+widgetEventContractValue : Model -> String -> Maybe ( String, Encode.Value )
+widgetEventContractValue model key =
+    if List.member key canonicalWidgetEventPayloadKeys then
+        case key of
+            "widget_id" ->
+                Just ( key, Encode.string "elm-counter" )
+
+            "action" ->
+                Just ( key, Encode.string "increment" )
+
+            "button_id" ->
+                Just ( key, Encode.string "elm-counter-increment-button" )
+
+            "input_id" ->
+                Just ( key, Encode.string "elm-counter-input" )
+
+            "form_id" ->
+                Just ( key, Encode.string "elm-counter-form" )
+
+            "value" ->
+                Just ( key, Encode.string model.inputText )
+
+            _ ->
+                Nothing
+
+    else
+        Nothing
 
 
 nextEventId : Model -> String

@@ -44,6 +44,37 @@ const CANONICAL_WIDGET_EVENT_TYPES = [
   "unified.view.changed",
   "unified.viewport.resized",
 ];
+const CANONICAL_WIDGET_EVENT_KEY_SPECS = {
+  "unified.action.requested": { required_all_of: ["widget_id", "action"], required_any_of: [] },
+  "unified.button.clicked": { required_all_of: [], required_any_of: [["action", "button_id", "widget_id"]] },
+  "unified.canvas.pointer.changed": { required_all_of: ["widget_id", "x", "y", "phase"], required_any_of: [] },
+  "unified.chart.point_hovered": { required_all_of: ["widget_id", "series", "point"], required_any_of: [] },
+  "unified.chart.point_selected": { required_all_of: ["widget_id", "series", "point"], required_any_of: [] },
+  "unified.command.executed": { required_all_of: ["widget_id", "command_id"], required_any_of: [] },
+  "unified.element.blurred": { required_all_of: ["widget_id"], required_any_of: [] },
+  "unified.element.focused": { required_all_of: ["widget_id"], required_any_of: [] },
+  "unified.form.submitted": { required_all_of: [], required_any_of: [["form_id", "widget_id"]] },
+  "unified.input.changed": { required_all_of: ["value"], required_any_of: [["input_id", "widget_id"]] },
+  "unified.item.selected": { required_all_of: ["widget_id"], required_any_of: [["item_id", "index", "value"]] },
+  "unified.item.toggled": { required_all_of: ["selected", "widget_id"], required_any_of: [["item_id", "index"]] },
+  "unified.link.clicked": { required_all_of: ["widget_id", "href"], required_any_of: [] },
+  "unified.menu.action_selected": { required_all_of: ["widget_id", "action_id"], required_any_of: [] },
+  "unified.overlay.closed": { required_all_of: ["widget_id"], required_any_of: [] },
+  "unified.overlay.confirmed": { required_all_of: ["widget_id", "action_id"], required_any_of: [] },
+  "unified.scroll.changed": { required_all_of: ["widget_id", "position"], required_any_of: [] },
+  "unified.split.collapse_changed": { required_all_of: ["widget_id", "pane_id", "collapsed"], required_any_of: [] },
+  "unified.split.resized": { required_all_of: ["widget_id", "panes"], required_any_of: [] },
+  "unified.tab.changed": { required_all_of: ["widget_id", "tab_id"], required_any_of: [] },
+  "unified.tab.closed": { required_all_of: ["widget_id", "tab_id"], required_any_of: [] },
+  "unified.table.row_selected": { required_all_of: ["widget_id", "row_index"], required_any_of: [] },
+  "unified.table.sorted": { required_all_of: ["widget_id", "column", "direction"], required_any_of: [] },
+  "unified.toast.cleared": { required_all_of: ["widget_id"], required_any_of: [] },
+  "unified.toast.dismissed": { required_all_of: ["widget_id", "toast_id"], required_any_of: [] },
+  "unified.tree.node_selected": { required_all_of: ["widget_id", "node_id"], required_any_of: [] },
+  "unified.tree.node_toggled": { required_all_of: ["widget_id", "node_id", "expanded"], required_any_of: [] },
+  "unified.view.changed": { required_all_of: ["widget_id", "view"], required_any_of: [] },
+  "unified.viewport.resized": { required_all_of: ["widget_id", "width", "height"], required_any_of: [] },
+};
 
 const transportState = {
   joined: false,
@@ -111,6 +142,56 @@ const hasCanonicalExpectedEvents = (expectedEvents) => {
   return SERVER_EVENT_NAMES.every((eventName) => expectedEvents.includes(eventName));
 };
 
+const hasPresentPayloadKey = (data, key) => {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return false;
+  }
+
+  const value = data[key];
+
+  if (value === undefined || value === null) {
+    return false;
+  }
+
+  if (typeof value === "string") {
+    return value.trim() !== "";
+  }
+
+  return true;
+};
+
+const validateWidgetEventPayload = (eventEnvelope) => {
+  const keySpec = CANONICAL_WIDGET_EVENT_KEY_SPECS[eventEnvelope.type];
+
+  if (!keySpec) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_type",
+      reason: `unknown canonical widget event type: ${eventEnvelope.type}`,
+    };
+  }
+
+  const missingAllOf = keySpec.required_all_of.filter((key) => !hasPresentPayloadKey(eventEnvelope.data, key));
+  const missingAnyOfGroups = keySpec.required_any_of.filter((group) =>
+    !group.some((candidateKey) => hasPresentPayloadKey(eventEnvelope.data, candidateKey)),
+  );
+
+  if (missingAllOf.length > 0 || missingAnyOfGroups.length > 0) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_payload",
+      reason: `missing required payload keys for event type: ${eventEnvelope.type}`,
+      details: {
+        event_type: eventEnvelope.type,
+        missing_all_of: missingAllOf,
+        missing_any_of_groups: missingAnyOfGroups,
+      },
+    };
+  }
+
+  return { ok: true };
+};
+
 const validateCloudEventEnvelope = (eventEnvelope) => {
   if (!eventEnvelope || typeof eventEnvelope !== "object" || Array.isArray(eventEnvelope)) {
     return { ok: false, errorCode: "transport.invalid_cloudevent_envelope", reason: "envelope must be an object" };
@@ -150,6 +231,12 @@ const validateCloudEventEnvelope = (eventEnvelope) => {
       errorCode: "transport.invalid_widget_event_type",
       reason: `unknown canonical widget event type: ${eventEnvelope.type}`,
     };
+  }
+
+  const payloadValidation = validateWidgetEventPayload(eventEnvelope);
+
+  if (!payloadValidation.ok) {
+    return payloadValidation;
   }
 
   return { ok: true };
@@ -221,12 +308,14 @@ const handleRuntimeCommand = (raw) => {
 
     if (!envelopeValidation.ok) {
       const errorCode = envelopeValidation.errorCode || "transport.invalid_cloudevent_envelope";
+      const errorDetails = envelopeValidation.details || {};
 
       sendRuntimeEvent(
         "runtime.event.error.v1",
         transportError(errorCode, {
           reason: envelopeValidation.reason,
           context: runtimeContext,
+          ...errorDetails,
         }),
       );
       return;

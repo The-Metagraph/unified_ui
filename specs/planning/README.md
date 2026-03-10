@@ -50,6 +50,7 @@ The plan aligns to:
 37. [Phase 37 - Frontend CloudEvent Contract Parity and Envelope Guardrails](./phase-37-frontend-cloudevent-contract-parity-and-envelope-guardrails.md): align Elm/JS harness CloudEvent envelope construction/validation with `WebUi.CloudEvent` required fields and extensions, and enforce parity through local and CI validation gates.
 38. [Phase 38 - Frontend Runtime-Context Continuity and Parity Guardrails](./phase-38-frontend-runtime-context-continuity-and-parity-guardrails.md): align Elm/JS harness runtime-context propagation (`WebUi.RuntimeContext`) and enforce deterministic required/optional field parity through local and CI validation gates.
 39. [Phase 39 - Frontend Event Catalog Parity and Typed Guardrails](./phase-39-frontend-event-catalog-parity-and-typed-guardrails.md): align Elm/JS harness widget event `type` usage with `WebUi.Events.EventCatalog` and enforce typed invalid-event fail-closed guardrails through local and CI validation gates.
+40. [Phase 40 - Frontend Event Payload Contract Parity and Required-Key Guardrails](./phase-40-frontend-event-payload-contract-parity-and-required-key-guardrails.md): align Elm/JS harness widget event `data` payload-key contracts with `WebUi.Events.EventCatalog` required key specs and enforce typed invalid-payload fail-closed guardrails through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:
