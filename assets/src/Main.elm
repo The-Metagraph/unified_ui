@@ -137,6 +137,7 @@ canonicalWidgetEventPayloadKeys =
     , "row_index"
     , "route_family"
     , "route_keys"
+    , "route_key_source_keys"
     , "route_key_sources"
     , "selected"
     , "series"
@@ -347,6 +348,7 @@ widgetEventData model =
             ++ routeFamilyCompatibilityFields model
             ++ routeFamilyContinuityFields model
             ++ routeFamilySourceContinuityFields model
+            ++ routeFamilySourceKeyContinuityFields model
             ++ optionalWidgetEventDataFields model
         )
 
@@ -416,11 +418,13 @@ routeFamilyContinuityFields model =
 
 routeFamilySourceContinuityFields : Model -> List ( String, Encode.Value )
 routeFamilySourceContinuityFields model =
-    [ ( "route_key_sources"
-      , Encode.object
-            (routeFamilyRequirementKeys defaultWidgetEventRouteFamily
-                |> List.filterMap (routeFamilyRequirementSource model)
-            )
+    [ ( "route_key_sources", Encode.object (declaredRouteKeySourceEntries model) ) ]
+
+
+routeFamilySourceKeyContinuityFields : Model -> List ( String, Encode.Value )
+routeFamilySourceKeyContinuityFields model =
+    [ ( "route_key_source_keys"
+      , Encode.list Encode.string (declaredRouteKeySourceKeys model)
       )
     ]
 
@@ -429,6 +433,18 @@ routeFamilyRequirementSource : Model -> String -> Maybe ( String, Encode.Value )
 routeFamilyRequirementSource model key =
     canonicalRouteKeySourceForFamily defaultWidgetEventRouteFamily model key
         |> Maybe.map (\source -> ( key, Encode.string source ))
+
+
+declaredRouteKeySourceEntries : Model -> List ( String, Encode.Value )
+declaredRouteKeySourceEntries model =
+    routeFamilyRequirementKeys defaultWidgetEventRouteFamily
+        |> List.filterMap (routeFamilyRequirementSource model)
+
+
+declaredRouteKeySourceKeys : Model -> List String
+declaredRouteKeySourceKeys model =
+    declaredRouteKeySourceEntries model
+        |> List.map Tuple.first
 
 
 declaredRouteKeys : Model -> List String
