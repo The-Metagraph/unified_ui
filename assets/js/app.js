@@ -341,6 +341,52 @@ const analyzeDeclaredRouteKeySources = (candidate, requiredRouteKeys) => {
   };
 };
 
+const analyzeRouteKeySourceRequirements = (routeFamily, requiredRouteKeys) => {
+  const candidate = CANONICAL_ROUTE_KEY_SOURCE_REQUIREMENTS[routeFamily];
+
+  if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
+    return {
+      normalized: {},
+      missingRequirementKeys: [...requiredRouteKeys],
+      invalidRequirementKeys: [{ route_family: routeFamily, value_type: routeKeyValueType(candidate) }],
+      unexpectedRequirementKeys: [],
+    };
+  }
+
+  const normalized = {};
+  const invalidRequirementKeys = [];
+
+  for (const routeKey of requiredRouteKeys) {
+    const sourceValue = candidate[routeKey];
+
+    if (typeof sourceValue !== "string" || sourceValue.trim() === "") {
+      continue;
+    }
+
+    const normalizedSource = sourceValue.trim();
+
+    if (!CANONICAL_ROUTE_KEY_SOURCE_VALUES.includes(normalizedSource)) {
+      invalidRequirementKeys.push({
+        key: routeKey,
+        value: normalizedSource,
+      });
+      continue;
+    }
+
+    normalized[routeKey] = normalizedSource;
+  }
+
+  const missingRequirementKeys = requiredRouteKeys.filter((routeKey) => !(routeKey in normalized));
+  const unexpectedRequirementKeys = Object.keys(candidate).filter((routeKey) => !requiredRouteKeys.includes(routeKey));
+
+  return {
+    normalized,
+    missingRequirementKeys,
+    invalidRequirementKeys,
+    unexpectedRequirementKeys,
+  };
+};
+
 const duplicateStrings = (candidate) => {
   const seen = new Set();
   const duplicates = [];
@@ -440,7 +486,8 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
   const routeKeyAnalysis = analyzeDeclaredRouteKeys(eventEnvelope.data && eventEnvelope.data.route_keys);
   const declaredRouteKeys = routeKeyAnalysis.normalized;
   const routeKeyValueAnalysis = analyzeRequiredRouteKeyValues(eventEnvelope.data, requiredRouteKeys);
-  const expectedRouteKeySources = CANONICAL_ROUTE_KEY_SOURCE_REQUIREMENTS[routeFamily] || {};
+  const sourceRequirementAnalysis = analyzeRouteKeySourceRequirements(routeFamily, requiredRouteKeys);
+  const expectedRouteKeySources = sourceRequirementAnalysis.normalized;
   const routeKeySourceAnalysis = analyzeDeclaredRouteKeySources(
     eventEnvelope.data && eventEnvelope.data.route_key_sources,
     requiredRouteKeys,
@@ -512,6 +559,27 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         route_family: routeFamily,
         expected_route_key_value_shape: routeKeyValueAnalysis.expectedRouteKeyValueShape,
         invalid_route_key_values: routeKeyValueAnalysis.invalidRouteKeyValues,
+      },
+    };
+  }
+
+  if (
+    sourceRequirementAnalysis.missingRequirementKeys.length > 0 ||
+    sourceRequirementAnalysis.invalidRequirementKeys.length > 0 ||
+    sourceRequirementAnalysis.unexpectedRequirementKeys.length > 0
+  ) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `canonical route_key source requirements drift for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        expected_route_keys: requiredRouteKeys,
+        allowed_route_key_source_values: CANONICAL_ROUTE_KEY_SOURCE_VALUES,
+        missing_route_key_source_requirements: sourceRequirementAnalysis.missingRequirementKeys,
+        invalid_route_key_source_requirements: sourceRequirementAnalysis.invalidRequirementKeys,
+        unexpected_route_key_source_requirements: sourceRequirementAnalysis.unexpectedRequirementKeys,
       },
     };
   }
