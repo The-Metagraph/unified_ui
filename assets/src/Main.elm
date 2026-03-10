@@ -130,6 +130,7 @@ canonicalWidgetEventPayloadKeys =
     , "position"
     , "row_index"
     , "route_family"
+    , "route_keys"
     , "selected"
     , "series"
     , "tab_id"
@@ -311,7 +312,7 @@ widgetEventData model =
         (requiredWidgetEventDataFields model
             ++ requiredWidgetEventAnyOfFields model
             ++ routeFamilyCompatibilityFields model
-            ++ routeFamilyContinuityField
+            ++ routeFamilyContinuityFields model
             ++ optionalWidgetEventDataFields model
         )
 
@@ -366,9 +367,32 @@ routeFamilyForEventType eventType =
         |> Maybe.map Tuple.second
 
 
-routeFamilyContinuityField : List ( String, Encode.Value )
-routeFamilyContinuityField =
-    [ ( "route_family", Encode.string defaultWidgetEventRouteFamily ) ]
+routeFamilyContinuityFields : Model -> List ( String, Encode.Value )
+routeFamilyContinuityFields model =
+    [ ( "route_family", Encode.string defaultWidgetEventRouteFamily )
+    , ( "route_keys", Encode.list Encode.string (declaredRouteKeys model) )
+    ]
+
+
+declaredRouteKeys : Model -> List String
+declaredRouteKeys model =
+    routeFamilyRequirementKeys defaultWidgetEventRouteFamily
+        |> List.filter (isRouteKeyPopulated model)
+
+
+isRouteKeyPopulated : Model -> String -> Bool
+isRouteKeyPopulated model key =
+    case widgetEventContractValue model key do
+        Just _ ->
+            True
+
+        Nothing ->
+            case routeKeyContractValue model key do
+                Just _ ->
+                    True
+
+                Nothing ->
+                    False
 
 
 routeKeyContractValue : Model -> String -> Maybe ( String, Encode.Value )
