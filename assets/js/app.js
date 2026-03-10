@@ -476,6 +476,22 @@ const analyzeRouteKeySourceMapKeyParityWithRouteKeys = (routeKeySourceMapKeys, r
   };
 };
 
+const analyzeRouteKeySourceTriadParity = (routeKeys, routeKeySourceKeys, routeKeySourceMapKeys) => {
+  const routeKeySourceKeyParity = analyzeRouteKeySourceKeyParityWithRouteKeys(routeKeys, routeKeySourceKeys);
+  const routeKeySourceMapKeyParity = analyzeRouteKeySourceMapKeyParityWithRouteKeys(routeKeySourceMapKeys, routeKeys);
+  const sourceKeySourceMapKeyParity = analyzeRouteKeySourceMapKeyParityWithRouteKeys(routeKeySourceMapKeys, routeKeySourceKeys);
+
+  return {
+    matches:
+      routeKeySourceKeyParity.matches &&
+      routeKeySourceMapKeyParity.matches &&
+      sourceKeySourceMapKeyParity.matches,
+    routeKeySourceKeyMismatches: routeKeySourceKeyParity.mismatches,
+    routeKeySourceMapKeyMismatches: routeKeySourceMapKeyParity.mismatches,
+    sourceKeySourceMapKeyMismatches: sourceKeySourceMapKeyParity.mismatches,
+  };
+};
+
 const duplicateStrings = (candidate) => {
   const seen = new Set();
   const duplicates = [];
@@ -953,6 +969,30 @@ const validateWidgetEventRouteKeys = (eventEnvelope) => {
         route_keys: actualRouteKeys,
         route_key_source_keys: actualRouteKeySourceKeys,
         source_key_parity_mismatches: sourceKeyRouteKeyParityAnalysis.mismatches,
+      },
+    };
+  }
+
+  const sourceTriadParityAnalysis = analyzeRouteKeySourceTriadParity(
+    actualRouteKeys,
+    actualRouteKeySourceKeys,
+    routeKeySourceMapKeys,
+  );
+
+  if (!sourceTriadParityAnalysis.matches) {
+    return {
+      ok: false,
+      errorCode: "transport.invalid_widget_event_route_keys",
+      reason: `route_key source triad parity mismatch for route family: ${routeFamily}`,
+      details: {
+        event_type: eventEnvelope.type,
+        route_family: routeFamily,
+        route_keys: actualRouteKeys,
+        route_key_source_keys: actualRouteKeySourceKeys,
+        route_key_sources_keys: routeKeySourceMapKeys,
+        route_key_source_key_mismatches: sourceTriadParityAnalysis.routeKeySourceKeyMismatches,
+        route_key_source_map_key_mismatches: sourceTriadParityAnalysis.routeKeySourceMapKeyMismatches,
+        source_key_source_map_key_mismatches: sourceTriadParityAnalysis.sourceKeySourceMapKeyMismatches,
       },
     };
   }

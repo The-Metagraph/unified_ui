@@ -412,19 +412,19 @@ routeFamilyForEventType eventType =
 routeFamilyContinuityFields : Model -> List ( String, Encode.Value )
 routeFamilyContinuityFields model =
     [ ( "route_family", Encode.string defaultWidgetEventRouteFamily )
-    , ( "route_keys", Encode.list Encode.string (declaredRouteKeys model) )
+    , ( "route_keys", Encode.list Encode.string (declaredRouteKeySourceTriadParityKeys model) )
     ]
 
 
 routeFamilySourceContinuityFields : Model -> List ( String, Encode.Value )
 routeFamilySourceContinuityFields model =
-    [ ( "route_key_sources", Encode.object (declaredRouteKeySourceEntries model) ) ]
+    [ ( "route_key_sources", Encode.object (declaredRouteKeySourceTriadEntries model) ) ]
 
 
 routeFamilySourceKeyContinuityFields : Model -> List ( String, Encode.Value )
 routeFamilySourceKeyContinuityFields model =
     [ ( "route_key_source_keys"
-      , Encode.list Encode.string (declaredRouteKeySourceMapParityKeys model)
+      , Encode.list Encode.string (declaredRouteKeySourceTriadParityKeys model)
       )
     ]
 
@@ -437,7 +437,12 @@ routeFamilyRequirementSource model key =
 
 declaredRouteKeySourceEntries : Model -> List ( String, Encode.Value )
 declaredRouteKeySourceEntries model =
-    declaredRouteKeySourceMapParityKeys model
+    declaredRouteKeySourceTriadEntries model
+
+
+declaredRouteKeySourceTriadEntries : Model -> List ( String, Encode.Value )
+declaredRouteKeySourceTriadEntries model =
+    declaredRouteKeySourceTriadParityKeys model
         |> List.filterMap (routeFamilyRequirementSource model)
 
 
@@ -449,11 +454,16 @@ declaredRouteKeySourceKeys model =
 
 declaredRouteKeySourceParityKeys : Model -> List String
 declaredRouteKeySourceParityKeys model =
-    declaredRouteKeySourceMapParityKeys model
+    declaredRouteKeySourceTriadParityKeys model
 
 
 declaredRouteKeySourceMapParityKeys : Model -> List String
 declaredRouteKeySourceMapParityKeys model =
+    declaredRouteKeySourceTriadParityKeys model
+
+
+declaredRouteKeySourceTriadParityKeys : Model -> List String
+declaredRouteKeySourceTriadParityKeys model =
     declaredRouteKeys model
 
 
