@@ -24,3 +24,4 @@ cd "$ROOT"
 ./scripts/validate_frontend_event_route_key_source_keys_contract.sh
 ./scripts/validate_frontend_event_route_key_source_key_parity_contract.sh
 ./scripts/validate_frontend_event_route_key_source_map_parity_contract.sh
+./scripts/validate_frontend_event_route_key_source_triad_parity_contract.sh
