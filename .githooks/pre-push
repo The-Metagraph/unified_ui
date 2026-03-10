@@ -13,3 +13,4 @@ cd "$ROOT"
 ./scripts/validate_frontend_event_payload_contract.sh
 ./scripts/validate_frontend_event_route_contract.sh
 ./scripts/validate_frontend_event_route_family_contract.sh
+./scripts/validate_frontend_event_route_keys_contract.sh

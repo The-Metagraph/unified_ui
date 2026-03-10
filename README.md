@@ -128,6 +128,7 @@ make frontend-event-catalog-validate
 make frontend-event-payload-validate
 make frontend-event-route-validate
 make frontend-event-route-family-validate
+make frontend-event-route-keys-validate
 ```
 
 Build output:
@@ -197,7 +198,13 @@ Validate frontend widget event `route_family` continuity parity against canonica
 ./scripts/validate_frontend_event_route_family_contract.sh
 ```
 
+Validate frontend widget event `route_keys` continuity parity against canonical route-key requirements:
+
+```bash
+./scripts/validate_frontend_event_route_keys_contract.sh
+```
+
 Git hook behavior when `.githooks` is enabled:
 
-- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity.
-- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity.
+- `pre-commit`: specs governance + RFC governance + frontend wiring checks + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity.
+- `pre-push`: conformance harness + frontend build validation (`--skip-install`) + frontend transport contract parity + frontend CloudEvent contract parity + frontend runtime-context contract parity + frontend event catalog contract parity + frontend event payload contract parity + frontend event route contract parity + frontend event route-family contract parity + frontend event route-keys contract parity.
