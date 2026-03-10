@@ -55,6 +55,7 @@ The plan aligns to:
 42. [Phase 42 - Frontend Route-Family Continuity and Parity Guardrails](./phase-42-frontend-route-family-continuity-and-parity-guardrails.md): align Elm/JS harness widget event `route_family` payload continuity with canonical event route mappings and enforce typed route-family mismatch fail-closed guardrails through local and CI validation gates.
 43. [Phase 43 - Frontend Route-Keys Continuity and Parity Guardrails](./phase-43-frontend-route-keys-continuity-and-parity-guardrails.md): align Elm/JS harness widget event `route_keys` payload continuity with canonical route-key requirements and enforce typed route-keys mismatch fail-closed guardrails through local and CI validation gates.
 44. [Phase 44 - Frontend Route-Key Order Continuity and Parity Guardrails](./phase-44-frontend-route-key-order-continuity-and-parity-guardrails.md): align Elm/JS harness widget event `route_keys` ordering continuity with canonical route-key ordering requirements and enforce typed duplicate/order mismatch fail-closed guardrails through local and CI validation gates.
+45. [Phase 45 - Frontend Route-Key Completeness and Parity Guardrails](./phase-45-frontend-route-key-completeness-and-parity-guardrails.md): align Elm/JS harness widget event `route_keys` required-key completeness with canonical route-key requirements and enforce typed missing-key fail-closed guardrails through local and CI validation gates.
 
 ## Shared Conventions
 - Numbering:
