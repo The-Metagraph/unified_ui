@@ -129,6 +129,7 @@ canonicalWidgetEventPayloadKeys =
     , "point"
     , "position"
     , "row_index"
+    , "route_family"
     , "selected"
     , "series"
     , "tab_id"
@@ -148,6 +149,40 @@ canonicalRouteKeyRequirements =
     [ ( "click", [ "action", "button_id", "widget_id", "id" ] )
     , ( "change", [ "input_id", "widget_id", "field", "action", "id" ] )
     , ( "submit", [ "form_id", "action", "id" ] )
+    ]
+
+
+canonicalWidgetEventRouteFamilies : List ( String, String )
+canonicalWidgetEventRouteFamilies =
+    [ ( "unified.action.requested", "click" )
+    , ( "unified.button.clicked", "click" )
+    , ( "unified.canvas.pointer.changed", "change" )
+    , ( "unified.chart.point_hovered", "selection" )
+    , ( "unified.chart.point_selected", "selection" )
+    , ( "unified.command.executed", "click" )
+    , ( "unified.element.blurred", "focus" )
+    , ( "unified.element.focused", "focus" )
+    , ( "unified.form.submitted", "submit" )
+    , ( "unified.input.changed", "change" )
+    , ( "unified.item.selected", "selection" )
+    , ( "unified.item.toggled", "selection" )
+    , ( "unified.link.clicked", "click" )
+    , ( "unified.menu.action_selected", "click" )
+    , ( "unified.overlay.closed", "click" )
+    , ( "unified.overlay.confirmed", "click" )
+    , ( "unified.scroll.changed", "change" )
+    , ( "unified.split.collapse_changed", "change" )
+    , ( "unified.split.resized", "change" )
+    , ( "unified.tab.changed", "selection" )
+    , ( "unified.tab.closed", "click" )
+    , ( "unified.table.row_selected", "selection" )
+    , ( "unified.table.sorted", "click" )
+    , ( "unified.toast.cleared", "click" )
+    , ( "unified.toast.dismissed", "click" )
+    , ( "unified.tree.node_selected", "selection" )
+    , ( "unified.tree.node_toggled", "selection" )
+    , ( "unified.view.changed", "change" )
+    , ( "unified.viewport.resized", "change" )
     ]
 
 
@@ -175,7 +210,8 @@ defaultWidgetEventRequiredAnyOf =
 
 defaultWidgetEventRouteFamily : String
 defaultWidgetEventRouteFamily =
-    "click"
+    routeFamilyForEventType defaultWidgetEventType
+        |> Maybe.withDefault "click"
 
 
 init : () -> ( Model, Cmd Msg )
@@ -275,6 +311,7 @@ widgetEventData model =
         (requiredWidgetEventDataFields model
             ++ requiredWidgetEventAnyOfFields model
             ++ routeFamilyCompatibilityFields model
+            ++ routeFamilyContinuityField
             ++ optionalWidgetEventDataFields model
         )
 
@@ -319,6 +356,19 @@ routeFamilyRequirementKeys routeFamily =
         |> List.head
         |> Maybe.map Tuple.second
         |> Maybe.withDefault []
+
+
+routeFamilyForEventType : String -> Maybe String
+routeFamilyForEventType eventType =
+    canonicalWidgetEventRouteFamilies
+        |> List.filter (\( eventName, _ ) -> eventName == eventType)
+        |> List.head
+        |> Maybe.map Tuple.second
+
+
+routeFamilyContinuityField : List ( String, Encode.Value )
+routeFamilyContinuityField =
+    [ ( "route_family", Encode.string defaultWidgetEventRouteFamily ) ]
 
 
 routeKeyContractValue : Model -> String -> Maybe ( String, Encode.Value )
