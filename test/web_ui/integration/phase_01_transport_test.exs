@@ -4,7 +4,7 @@ defmodule WebUi.Integration.Phase01TransportTest do
   alias WebUi.Channel
 
   @tag :conformance
-  test "SCN-transport-001 admits canonical websocket topic and rejects invalid topic" do
+  test "SCN-002 admits canonical websocket topic and rejects invalid topic" do
     valid_payload = %{
       event: %{
         specversion: "1.0",
@@ -30,7 +30,7 @@ defmodule WebUi.Integration.Phase01TransportTest do
   end
 
   @tag :conformance
-  test "SCN-transport-002 malformed envelopes fail with typed protocol errors" do
+  test "SCN-003 malformed envelopes fail with typed protocol errors" do
     malformed_payload = %{
       event: %{
         specversion: "1.0",
@@ -49,7 +49,7 @@ defmodule WebUi.Integration.Phase01TransportTest do
   end
 
   @tag :conformance
-  test "SCN-transport-003 unknown client event names return deterministic error envelopes" do
+  test "SCN-003 unknown client event names return deterministic error envelopes" do
     assert {:ok, response} =
              Channel.handle_client_message("webui:runtime:v1", "runtime.event.unknown.v1", %{})
 
@@ -60,7 +60,7 @@ defmodule WebUi.Integration.Phase01TransportTest do
   end
 
   @tag :conformance
-  test "SCN-transport-004 accepted ingress emits runtime.event.recv.v1 with valid envelope shape" do
+  test "SCN-002 accepted ingress emits runtime.event.recv.v1 with valid envelope shape" do
     payload = %{
       event: %{
         specversion: "1.0",
@@ -84,7 +84,7 @@ defmodule WebUi.Integration.Phase01TransportTest do
   end
 
   @tag :conformance
-  test "SCN-transport-005 failures emit runtime.event.error.v1 with stable typed-error fields" do
+  test "SCN-005 failures emit runtime.event.error.v1 with stable typed-error fields" do
     payload = %{
       event: %{
         specversion: "1.0",
@@ -106,7 +106,7 @@ defmodule WebUi.Integration.Phase01TransportTest do
   end
 
   @tag :conformance
-  test "SCN-transport-006 preserves correlation and request continuity from ingress to egress" do
+  test "SCN-004 preserves correlation and request continuity from ingress to egress" do
     payload = %{
       event: %{
         specversion: "1.0",
