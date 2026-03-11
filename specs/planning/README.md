@@ -69,6 +69,7 @@ The plan aligns to:
 56. [Phase 56 - Remaining Contract and Operations Surface Seeding](./phase-56-remaining-contract-and-operations-surface-seeding.md): replace supervision/eval/prompt-asset and operations placeholders with deterministic requirement/runbook surfaces and align matrix + ADR requirement-family coverage.
 57. [Phase 57 - Early Conformance Scenario Doc Seeding](./phase-57-early-conformance-scenario-doc-seeding.md): replace phase 01-09 conformance scenario placeholders with concrete canonical scenario coverage and deterministic validation command references.
 58. [Phase 58 - Specs Governance AC Change-Policy Hardening](./phase-58-specs-governance-ac-change-policy-hardening.md): restore AC-bearing component change detection across current specs paths and add regression coverage for fail-closed coupling rules.
+59. [Phase 59 - Phase 10 Canonical Scenario Alignment](./phase-59-phase-10-canonical-scenario-alignment.md): align Phase 10 conformance/spec-test scenario labels to canonical SCN identifiers and preserve deterministic release-readiness validation references.
 
 ## Shared Conventions
 - Numbering:

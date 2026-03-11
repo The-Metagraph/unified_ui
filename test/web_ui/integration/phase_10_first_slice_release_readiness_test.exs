@@ -9,7 +9,7 @@ defmodule WebUi.Integration.Phase10FirstSliceReleaseReadinessTest do
 
   @root Path.expand("../../..", __DIR__)
 
-  test "SCN-slice-success canonical success flow reaches runtime and reconciles UI" do
+  test "SCN-005 canonical success flow reaches runtime and reconciles UI" do
     {:ok, runtime_agent} = Workflow.agent()
 
     {:ok, model, _commands} =
@@ -50,7 +50,7 @@ defmodule WebUi.Integration.Phase10FirstSliceReleaseReadinessTest do
     assert hd(updated_model.view_state.notices) == "slice:ok:ui.preferences/save_preferences"
   end
 
-  test "SCN-slice-failure runtime failure returns typed errors and deterministic UI state" do
+  test "SCN-005 runtime failure returns typed errors and deterministic UI state" do
     {:ok, runtime_agent} = Workflow.agent()
 
     {:ok, model, _commands} =
@@ -90,7 +90,7 @@ defmodule WebUi.Integration.Phase10FirstSliceReleaseReadinessTest do
     assert updated_model.slice_state.status == :failed
   end
 
-  test "SCN-slice-recovery reconnect and retry preserve request continuity" do
+  test "SCN-016 reconnect and retry preserve request continuity" do
     {:ok, runtime_agent} = Workflow.agent()
 
     {:ok, model, _commands} =
@@ -137,7 +137,7 @@ defmodule WebUi.Integration.Phase10FirstSliceReleaseReadinessTest do
     assert updated_model.slice_state.attempts >= 2
   end
 
-  test "SCN-release-fail release gate fails when governance or conformance is invalid" do
+  test "SCN-019 release gate fails when governance or conformance is invalid" do
     unknown_id = scenario_id(999)
 
     with_temp_worktree(fn worktree_root ->
@@ -161,14 +161,14 @@ defmodule WebUi.Integration.Phase10FirstSliceReleaseReadinessTest do
     end)
   end
 
-  test "SCN-release-pass release gate passes when required checks are green" do
+  test "SCN-019 release gate passes when required checks are green" do
     {output, status} = run_release_gate(@root, ["--report-only"])
 
     assert status == 0
     assert output =~ "Release readiness gate passed."
   end
 
-  test "SCN-release-rollback rollback decision criteria map to observable runtime signals" do
+  test "SCN-019 rollback decision criteria map to observable runtime signals" do
     assert {:go, %{reasons: []}} =
              Readiness.rollback_decision(%{
                decode_error_ratio: 1.1,
