@@ -15,6 +15,6 @@ This folder is the canonical `spec_led_ex` workspace for `live_ui`.
 
 ## Notes
 
-- Authored specs remain in fenced JSON blocks even though `spec_led_ex` is YAML-first. JSON is accepted by the parser.
+- Authored specs are YAML-first, and existing JSON-compatible fenced blocks still parse because both `spec_led_ex` and the local overlay decode blocks as YAML.
 - Repo-local `spec-governance` blocks are preserved as local metadata for the `live_ui` governance overlay.
 - The structural shape of `spec-governance` is documented in [../schemas/spec-governance.schema.json](/Users/Pascal/code/unified/live_ui/schemas/spec-governance.schema.json); semantic and cross-document rules are still enforced by `mix live_ui.spec.check`.

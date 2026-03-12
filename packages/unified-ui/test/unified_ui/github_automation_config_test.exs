@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.package.repo_automation
+
 defmodule UnifiedUi.GitHubAutomationConfigTest do
   use ExUnit.Case, async: true
 

@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.dsl.module_compilation unified_ui.dsl.dynamic_state_bindings unified_ui.dsl.signal_helpers -->
+
 # DSL Reference
 
 This reference documents the currently implemented UnifiedUi DSL sections and entities.

@@ -59,7 +59,7 @@ This subject is intentionally local to `live_ui`. It implements the proposed gov
 [
   {
     "id": "live_ui_specs_checker.parses_governance_block",
-    "statement": "When a local spec document contains a spec-governance block, the checker shall parse that JSON block alongside meta, requirements, scenarios, verification, and exceptions.",
+    "statement": "When a local spec document contains a spec-governance block, the checker shall parse that YAML block alongside meta, requirements, scenarios, verification, and exceptions.",
     "priority": "must",
     "stability": "stable"
   },

@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.widgets.navigation_and_feedback unified_ui.widgets.advanced_surface
+
 defmodule UnifiedUi.Integration.Phase4Test do
   @moduledoc """
   Integration tests for Phase 4 of UnifiedUi.

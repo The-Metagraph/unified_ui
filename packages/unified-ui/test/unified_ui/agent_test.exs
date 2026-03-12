@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.component_lifecycle unified_ui.runtime.batching_and_dirty_tracking unified_ui.runtime.signal_delivery
+
 defmodule UnifiedUi.AgentTest do
   use ExUnit.Case, async: false
 

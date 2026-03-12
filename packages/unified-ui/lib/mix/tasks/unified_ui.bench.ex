@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.dev_wrappers
+
 defmodule Mix.Tasks.UnifiedUi.Bench do
   @shortdoc "Runs UnifiedUi benchmark scenarios"
   @moduledoc """

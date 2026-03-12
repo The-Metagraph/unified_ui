@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.coordination
+
 defmodule UnifiedUi.Adapters.Coordinator do
   @moduledoc """
   Coordinates rendering across multiple platforms for multi-platform support.

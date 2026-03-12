@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.signal_delivery
+
 defmodule UnifiedUi.SignalBusTest do
   use ExUnit.Case, async: true
 

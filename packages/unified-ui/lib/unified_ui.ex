@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.package.metadata
+
 defmodule UnifiedUi do
   @moduledoc """
   A Spark-powered DSL for building multi-platform user interfaces in Elixir.

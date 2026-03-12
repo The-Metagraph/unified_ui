@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.adapters.event_normalization unified_ui.runtime.signal_delivery -->
+
 # Signals And Events
 
 UnifiedUi normalizes platform events into signals consumed by `update/2`.

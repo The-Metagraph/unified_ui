@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.dev_wrappers
+
 defmodule Mix.Tasks.UnifiedUi.Format do
   @shortdoc "Formats UnifiedUi code with optional check mode"
   @moduledoc """

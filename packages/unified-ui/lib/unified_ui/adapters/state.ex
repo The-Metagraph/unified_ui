@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.shared_support
+
 defmodule UnifiedUi.Adapters.State do
   @moduledoc """
   Renderer state management for tracking platform widgets and metadata.

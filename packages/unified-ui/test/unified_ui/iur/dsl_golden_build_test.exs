@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.widgets.basic_layouts unified_ui.widgets.builder_translation unified_ui.widgets.data_and_tables unified_ui.widgets.navigation_and_feedback
+
 defmodule UnifiedUi.IUR.DslGoldenBuildTest do
   use ExUnit.Case, async: true
 

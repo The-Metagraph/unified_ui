@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.dsl.dynamic_state_bindings unified_ui.dsl.signal_helpers
+
 defmodule UnifiedUi.Dsl.IntegrationTest do
   @moduledoc """
   Integration tests for the UnifiedUi DSL.

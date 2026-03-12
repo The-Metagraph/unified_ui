@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.package.repo_automation -->
+
 ## Summary
 
 Describe what this PR changes and why.

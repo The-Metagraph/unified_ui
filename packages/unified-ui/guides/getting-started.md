@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.dsl.module_compilation unified_ui.dsl.signal_helpers unified_ui.runtime.elm_behaviour unified_ui.runtime.component_lifecycle -->
+
 # Getting Started
 
 This guide shows the shortest path to building and rendering a UnifiedUi screen.

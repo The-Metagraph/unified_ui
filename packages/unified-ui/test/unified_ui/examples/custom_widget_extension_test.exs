@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.extension_example
+
 defmodule UnifiedUi.Examples.CustomWidgetExtensionTest do
   use ExUnit.Case, async: true
 

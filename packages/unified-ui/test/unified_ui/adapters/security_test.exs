@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.security_pipeline
+
 defmodule UnifiedUi.Adapters.SecurityTest do
   @moduledoc """
   Tests for UnifiedUi.Adapters.Security module.

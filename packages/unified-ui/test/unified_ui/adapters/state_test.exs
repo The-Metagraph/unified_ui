@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.shared_support
+
 defmodule UnifiedUi.Adapters.StateTest do
   @moduledoc """
   Tests for UnifiedUi.Adapters.State

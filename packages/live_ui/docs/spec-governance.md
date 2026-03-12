@@ -4,7 +4,8 @@
 
 ## Authoring Rules
 
-- every `.spec/specs/*.spec.md` file uses JSON fenced blocks
+- `.spec/specs/*.spec.md` fenced spec blocks are decoded as YAML
+- existing JSON-compatible fenced content still parses, but YAML is the preferred authoring format
 - every non-policy subject declares a `spec-governance` block
 - every non-policy subject is governed by:
   - `policy.live_ui_governance`

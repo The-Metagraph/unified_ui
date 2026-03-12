@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.widgets.basic_layouts unified_ui.widgets.builder_translation
+
 defmodule UnifiedUi.Integration.Phase2Test do
   @moduledoc """
   Comprehensive integration tests for Phase 2 of UnifiedUi.

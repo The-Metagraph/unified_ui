@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.dsl.compile_time_validation
+
 defmodule UnifiedUi.Dsl.VerifiersTest do
   @moduledoc """
   Tests for the UnifiedUi DSL verifiers.

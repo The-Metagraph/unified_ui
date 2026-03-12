@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.package.overview unified_ui.documentation.guide_set -->
+
 # UnifiedUi
 
 A declarative DSL for building multi-platform user interfaces in Elixir. Define your UI once using a clean, composable syntax and render to terminal, desktop, and web platforms.

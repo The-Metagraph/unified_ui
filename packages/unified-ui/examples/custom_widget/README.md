@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.package.extension_example unified_ui.documentation.extension_example -->
+
 # Custom Widget Extension Example
 
 This example demonstrates a minimal extension package shape:

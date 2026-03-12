@@ -27,7 +27,8 @@ defmodule LiveUi.MixProject do
       {:unified_iur, github: "pcharbon70/unified_iur", override: true},
       {:unified_ui, github: "pcharbon70/unified-ui", only: :test, runtime: false},
       {:spec_led_ex,
-       git: "https://github.com/specleddev/specled_ex.git", only: [:dev, :test], runtime: false},
+       github: "specleddev/specled_ex", branch: "main", only: [:dev, :test], runtime: false},
+      {:yaml_elixir, "~> 2.12", runtime: false},
       {:phoenix_live_view, "~> 1.0"},
       {:ex_doc, "~> 0.38", only: :dev, runtime: false}
     ]

@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.project_generator
+
 defmodule Mix.Tasks.UnifiedUi.New do
   @shortdoc "Scaffolds a new UnifiedUi project"
   @moduledoc """

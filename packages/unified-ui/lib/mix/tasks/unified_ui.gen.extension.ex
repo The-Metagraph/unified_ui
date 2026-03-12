@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.component_generators
+
 defmodule Mix.Tasks.UnifiedUi.Gen.Extension do
   @shortdoc "Generates extension boilerplate (widget + renderer scaffold)"
   @moduledoc """

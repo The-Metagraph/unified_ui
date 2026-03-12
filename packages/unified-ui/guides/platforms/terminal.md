@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.adapters.renderer_contract unified_ui.adapters.event_normalization -->
+
 # Terminal Platform Guide
 
 The terminal adapter renders UnifiedIUR trees through TermUi-compatible structures.

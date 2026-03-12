@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.shared_support
+
 defmodule UnifiedUi.Adapters.Shared do
   @moduledoc """
   Shared utility functions for all platform renderers.

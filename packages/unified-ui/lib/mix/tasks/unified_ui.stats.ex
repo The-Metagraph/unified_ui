@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.preview_and_stats
+
 defmodule Mix.Tasks.UnifiedUi.Stats do
   @shortdoc "Shows UnifiedUi project statistics"
   @moduledoc """

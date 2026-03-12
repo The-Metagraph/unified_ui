@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.package.metadata
+
 defmodule UnifiedUi.MixProject do
   use Mix.Project
 
@@ -31,6 +33,7 @@ defmodule UnifiedUi.MixProject do
       {:jido_signal, "~> 2.0"},
       {:phoenix_pubsub, "~> 2.1"},
       {:term_ui, github: "pcharbon70/term_ui", branch: "multi-renderer"},
+      {:spec_led_ex, github: "specleddev/specled_ex", branch: "main", only: [:dev, :test], runtime: false},
       {:unified_iur, path: "../unified_iur"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},

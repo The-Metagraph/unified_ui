@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.adapters.renderer_contract unified_ui.adapters.event_normalization -->
+
 # Desktop Platform Guide
 
 The desktop adapter converts UnifiedIUR elements into desktop-renderer structures.

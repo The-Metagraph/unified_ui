@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.dsl.compile_time_validation
+
 defmodule UnifiedUi.Dsl.Verifiers.UniqueIdVerifier do
   @moduledoc """
   Verifier that ensures all widget and layout IDs are unique.

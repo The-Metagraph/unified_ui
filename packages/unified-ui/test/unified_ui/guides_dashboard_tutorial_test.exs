@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.guide_set
+
 defmodule UnifiedUi.GuidesDashboardTutorialTest do
   use ExUnit.Case, async: false
 

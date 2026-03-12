@@ -24,7 +24,9 @@ defmodule WebUi.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:unified_iur, git: "https://github.com/pcharbon70/unified_iur.git", ref: @unified_iur_ref}
+      {:unified_iur, git: "https://github.com/pcharbon70/unified_iur.git", ref: @unified_iur_ref},
+      {:spec_led_ex,
+       github: "specleddev/specled_ex", branch: "main", only: [:dev, :test], runtime: false}
     ]
   end
 

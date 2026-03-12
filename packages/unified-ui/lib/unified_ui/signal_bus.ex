@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.signal_delivery
+
 defmodule UnifiedUi.SignalBus do
   @moduledoc """
   PubSub-backed signal bus for high-fanout signal broadcasts.

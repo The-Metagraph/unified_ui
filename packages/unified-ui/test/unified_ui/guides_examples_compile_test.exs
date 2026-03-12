@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.guide_examples_compile
+
 defmodule UnifiedUi.GuidesExamplesCompileTest do
   use ExUnit.Case, async: false
 

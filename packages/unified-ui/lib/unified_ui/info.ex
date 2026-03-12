@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.dsl.introspection
+
 defmodule UnifiedUi.Info do
   @moduledoc """
   Introspection helpers for modules using `UnifiedUi.Dsl`.

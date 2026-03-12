@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.elm_behaviour
+
 defmodule UnifiedUi.ElmArchitecture do
   @moduledoc """
   Behaviour for UI components following The Elm Architecture.

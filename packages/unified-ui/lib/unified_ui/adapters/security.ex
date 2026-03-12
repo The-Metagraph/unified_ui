@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.security_pipeline
+
 defmodule UnifiedUi.Adapters.Security do
   @moduledoc """
   Centralized security utilities for UnifiedUi renderers.

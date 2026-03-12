@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.adapters.renderer_contract unified_ui.adapters.event_normalization -->
+
 # Web Platform Guide
 
 The web adapter converts UnifiedIUR elements into web-renderer structures suitable for browser-facing rendering layers.

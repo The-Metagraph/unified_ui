@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.coordination
+
 defmodule UnifiedUi.Adapters.CoordinatorTest do
   @moduledoc """
   Tests for UnifiedUi.Adapters.Coordinator

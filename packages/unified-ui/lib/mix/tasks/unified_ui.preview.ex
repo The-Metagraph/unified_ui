@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.preview_and_stats
+
 defmodule Mix.Tasks.UnifiedUi.Preview do
   @shortdoc "Renders a quick preview for a screen module"
   @moduledoc """

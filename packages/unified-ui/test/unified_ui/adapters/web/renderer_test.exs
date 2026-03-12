@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.renderer_contract
+
 defmodule UnifiedUi.Adapters.WebTest do
   @moduledoc """
   Tests for UnifiedUi.Adapters.Web

@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.signal_delivery
+
 defmodule UnifiedUi.Signals do
   @moduledoc """
   Signal helpers and utilities for UnifiedUi.

@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.component_lifecycle unified_ui.runtime.batching_and_dirty_tracking unified_ui.runtime.recovery_patterns
+
 defmodule UnifiedUi.Agent do
   @moduledoc """
   Runtime helpers for starting UI components as supervised processes.

@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.project_generator
+
 defmodule Mix.Tasks.UnifiedUi.NewTaskTest do
   use ExUnit.Case, async: true
 

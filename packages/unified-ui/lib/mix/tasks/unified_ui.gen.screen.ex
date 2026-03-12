@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.component_generators
+
 defmodule Mix.Tasks.UnifiedUi.Gen.Screen do
   @shortdoc "Generates a UnifiedUi screen module and optional test"
   @moduledoc """

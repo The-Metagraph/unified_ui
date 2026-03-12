@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.api_docs
+
 defmodule UnifiedUi.DocsComplianceTest do
   @moduledoc """
   Documentation coverage checks for application modules.

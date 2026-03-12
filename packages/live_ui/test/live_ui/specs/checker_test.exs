@@ -109,60 +109,83 @@ defmodule LiveUi.Specs.CheckerTest do
     # Example Subject
 
     ```spec-meta
-    {
-      "id": "module.example_subject",
-      "kind": "module",
-      "status": "draft",
-      "surface": ["Example.Subject"],
-      "relationships": [
-        {"kind": "governed_by", "target": "policy.live_ui_governance"},
-        {"kind": "governed_by", "target": "policy.live_ui_conformance"}
-      ]
-    }
+    id: module.example_subject
+    kind: module
+    status: draft
+    surface:
+      - Example.Subject
+    relationships:
+      - kind: governed_by
+        target: policy.live_ui_governance
+      - kind: governed_by
+        target: policy.live_ui_conformance
     ```
 
     ```spec-governance
-    {
-      "owner": "team.live_ui",
-      "criticality": "high",
-      "primary_plane": "execution",
-      "change_rules": [
-        {
-          "id": "example_rule",
-          "when": {"change_types": ["behavior_shape"]},
-          "requires": [{"artifacts": ["docs/governance.md"]}],
-          "severity": "error"
-        }
-      ],
-      "approval": {"required": true, "roles": ["maintainer"]},
-      "gates": [{"id": "local_spec_check", "kind": "mix_task", "target": "mix live_ui.spec.check", "mode": "required"}]
-    }
+    owner: team.live_ui
+    criticality: high
+    primary_plane: execution
+    change_rules:
+      - id: example_rule
+        when:
+          change_types:
+            - behavior_shape
+        requires:
+          - artifacts:
+              - docs/governance.md
+        severity: error
+    approval:
+      required: true
+      roles:
+        - maintainer
+    gates:
+      - id: local_spec_check
+        kind: mix_task
+        target: mix live_ui.spec.check
+        mode: required
     ```
 
     ```spec-requirements
-    [
-      {"id": "example.requirement", "statement": "When checked, the example shall comply.", "priority": "must", "stability": "stable"}
-    ]
+    - id: example.requirement
+      statement: When checked, the example shall comply.
+      priority: must
+      stability: stable
     ```
 
     ```spec-scenarios
-    [
-      {"id": "example.scenario", "given": ["a governed subject"], "when": ["the checker runs"], "then": ["it validates covers references"], "covers": #{Jason.encode!(scenario_covers)}}
-    ]
+    - id: example.scenario
+      given:
+        - a governed subject
+      when:
+        - the checker runs
+      then:
+        - it validates covers references
+      covers:
+    #{yaml_list(scenario_covers, 4)}
     ```
 
     ```spec-verification
-    [
-      {"kind": "doc", "target": #{Jason.encode!(doc_target)}, "covers": ["example.requirement"]},
-      {"kind": "test_file", "target": #{Jason.encode!(test_target)}, "covers": ["example.requirement"]},
-      {"kind": "command", "target": "mix live_ui.spec.check", "covers": ["example.requirement"]}
-    ]
+    - kind: doc
+      target: #{Jason.encode!(doc_target)}
+      covers:
+        - example.requirement
+    - kind: test_file
+      target: #{Jason.encode!(test_target)}
+      covers:
+        - example.requirement
+    - kind: command
+      target: mix live_ui.spec.check
+      covers:
+        - example.requirement
     ```
 
     ```spec-exceptions
-    [
-      {"id": "example.waiver", "reason": "Temporary deviation.", "covers": ["example.requirement"], "expires_on": #{Jason.encode!(expires_on)}, "approval_ref": "ADR-0001"}
-    ]
+    - id: example.waiver
+      reason: Temporary deviation.
+      covers:
+        - example.requirement
+      expires_on: #{Jason.encode!(expires_on)}
+      approval_ref: ADR-0001
     ```
     """
 
@@ -170,54 +193,75 @@ defmodule LiveUi.Specs.CheckerTest do
   end
 
   defp policy_source(policy_id) do
+    requirement_id = "#{policy_id}.requirement"
+    scenario_id = "#{policy_id}.scenario"
+
     """
     # Policy
 
     ```spec-meta
-    {
-      "id": #{Jason.encode!(policy_id)},
-      "kind": "policy",
-      "status": "draft",
-      "surface": ["local policy"]
-    }
+    id: #{Jason.encode!(policy_id)}
+    kind: policy
+    status: draft
+    surface:
+      - local policy
     ```
 
     ```spec-governance
-    {
-      "owner": "team.live_ui",
-      "criticality": "high",
-      "primary_plane": "package",
-      "change_rules": [
-        {
-          "id": "policy_rule",
-          "when": {"change_types": ["policy_shape"]},
-          "requires": [{"artifacts": ["docs/governance.md"]}],
-          "severity": "error"
-        }
-      ],
-      "approval": {"required": true, "roles": ["maintainer"]},
-      "gates": [{"id": "local_spec_check", "kind": "mix_task", "target": "mix live_ui.spec.check", "mode": "required"}]
-    }
+    owner: team.live_ui
+    criticality: high
+    primary_plane: package
+    change_rules:
+      - id: policy_rule
+        when:
+          change_types:
+            - policy_shape
+        requires:
+          - artifacts:
+              - docs/governance.md
+        severity: error
+    approval:
+      required: true
+      roles:
+        - maintainer
+    gates:
+      - id: local_spec_check
+        kind: mix_task
+        target: mix live_ui.spec.check
+        mode: required
     ```
 
     ```spec-requirements
-    [
-      {"id": #{Jason.encode!("#{policy_id}.requirement")}, "statement": "When checked, the policy shall be valid.", "priority": "must", "stability": "stable"}
-    ]
+    - id: #{Jason.encode!(requirement_id)}
+      statement: When checked, the policy shall be valid.
+      priority: must
+      stability: stable
     ```
 
     ```spec-scenarios
-    [
-      {"id": #{Jason.encode!("#{policy_id}.scenario")}, "given": ["a local policy"], "when": ["the checker runs"], "then": ["the policy passes"], "covers": [#{Jason.encode!("#{policy_id}.requirement")}]}
-    ]
+    - id: #{Jason.encode!(scenario_id)}
+      given:
+        - a local policy
+      when:
+        - the checker runs
+      then:
+        - the policy passes
+      covers:
+        - #{Jason.encode!(requirement_id)}
     ```
 
     ```spec-verification
-    [
-      {"kind": "command", "target": "mix live_ui.spec.check", "covers": [#{Jason.encode!("#{policy_id}.requirement")}]}
-    ]
+    - kind: command
+      target: mix live_ui.spec.check
+      covers:
+        - #{Jason.encode!(requirement_id)}
     ```
     """
+  end
+
+  defp yaml_list(items, indent) do
+    pad = String.duplicate(" ", indent)
+    Enum.map_join(items, "\n", &"#{pad}- #{Jason.encode!(&1)}")
   end
 
   defp make_tmpdir! do

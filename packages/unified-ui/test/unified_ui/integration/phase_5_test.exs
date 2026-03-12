@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.runtime.component_lifecycle unified_ui.runtime.recovery_patterns
+
 defmodule UnifiedUi.Integration.Phase5Test do
   @moduledoc """
   Focused integration tests for Phase 5 production-readiness scenarios.

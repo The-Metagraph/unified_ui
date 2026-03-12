@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.api_docs
+
 defmodule UnifiedUi.DocumentationExamplesTest do
   use ExUnit.Case, async: true
 

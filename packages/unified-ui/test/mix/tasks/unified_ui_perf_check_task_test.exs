@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.dev_wrappers
+
 defmodule Mix.Tasks.UnifiedUi.Perf.CheckTaskTest do
   use ExUnit.Case, async: true
 

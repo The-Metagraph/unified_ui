@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.task_docs
+
 defmodule Mix.Tasks.UnifiedUi.TasksHelpTest do
   use ExUnit.Case, async: true
 

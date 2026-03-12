@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set -->
+
 # Troubleshooting
 
 ## Compile-Time Verifier Errors

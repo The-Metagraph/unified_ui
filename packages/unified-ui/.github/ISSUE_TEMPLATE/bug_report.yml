@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.package.repo_automation
+
 name: Bug report
 description: Report a reproducible bug in UnifiedUi
 title: "bug: "

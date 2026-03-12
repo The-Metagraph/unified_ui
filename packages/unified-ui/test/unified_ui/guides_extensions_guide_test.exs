@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.extension_example
+
 defmodule UnifiedUi.GuidesExtensionsGuideTest do
   use ExUnit.Case, async: true
 

@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.widgets.basic_layouts -->
+
 # Layout System
 
 UnifiedUi currently provides `vbox` and `hbox` as core layout containers.

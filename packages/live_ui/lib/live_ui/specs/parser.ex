@@ -1,11 +1,14 @@
 defmodule LiveUi.Specs.Parser do
   @moduledoc """
   Repo-local parser for Spec Led markdown files plus local `spec-governance` blocks.
+
+  Fenced spec blocks are decoded as YAML so the local governance overlay stays aligned with
+  current Spec Led authoring, while existing JSON-compatible blocks continue to parse.
   """
 
   alias LiveUi.Specs.Document
 
-  @block_pattern ~r/```([a-z-]+)\n([\s\S]*?)```/
+  @block_pattern ~r/```([a-z-]+)\s*\n(.*?)\n```/ms
 
   @spec read_documents(String.t()) :: [Document.t()]
   def read_documents(glob \\ ".spec/specs/**/*.spec.md") when is_binary(glob) do
@@ -45,12 +48,12 @@ defmodule LiveUi.Specs.Parser do
 
   defp parse_array_block(source, language) do
     source
-    |> parse_json_blocks(language)
+    |> parse_yaml_blocks(language)
     |> List.flatten()
   end
 
   defp parse_single_object_block!(source, language, path, opts \\ []) do
-    blocks = parse_json_blocks(source, language)
+    blocks = parse_yaml_blocks(source, language)
 
     cond do
       length(blocks) > 1 ->
@@ -67,9 +70,9 @@ defmodule LiveUi.Specs.Parser do
     end
   end
 
-  defp parse_json_blocks(source, language) do
+  defp parse_yaml_blocks(source, language) do
     extract_blocks(source)
     |> Enum.filter(&(&1.language == language))
-    |> Enum.map(fn %{content: content} -> Jason.decode!(content) end)
+    |> Enum.map(fn %{content: content} -> YamlElixir.read_from_string!(content, atoms: false) end)
   end
 end

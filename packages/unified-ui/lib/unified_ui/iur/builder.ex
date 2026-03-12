@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.widgets.basic_layouts unified_ui.widgets.data_and_tables unified_ui.widgets.navigation_and_feedback unified_ui.widgets.advanced_surface unified_ui.widgets.builder_translation
+
 defmodule UnifiedUi.IUR.Builder do
   @moduledoc """
   Builds Intermediate UI Representation (IUR) trees from DSL definitions.

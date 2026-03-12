@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.dsl.module_compilation unified_ui.dsl.dynamic_state_bindings unified_ui.dsl.styles_and_themes unified_ui.dsl.signal_helpers
+
 defmodule UnifiedUi.DslTest do
   @moduledoc """
   Tests for the UnifiedUi.Dsl module.

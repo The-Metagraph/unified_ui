@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.renderer_contract
+
 defmodule UnifiedUi.Renderer do
   @moduledoc """
   Behaviour definition for platform-specific UI renderers.

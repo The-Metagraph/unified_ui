@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.dsl.introspection
+
 defmodule UnifiedUi.InfoTest do
   use ExUnit.Case, async: true
 

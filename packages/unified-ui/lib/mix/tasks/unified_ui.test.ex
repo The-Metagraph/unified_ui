@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.dev_wrappers
+
 defmodule Mix.Tasks.UnifiedUi.Test do
   @shortdoc "Runs UnifiedUi tests with optional strict checks"
   @moduledoc """

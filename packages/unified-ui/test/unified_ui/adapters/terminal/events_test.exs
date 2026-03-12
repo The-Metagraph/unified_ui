@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.event_normalization
+
 defmodule UnifiedUi.Adapters.Terminal.EventsTest do
   @moduledoc """
   Tests for UnifiedUi.Adapters.Terminal.Events

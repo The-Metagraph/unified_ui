@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.documentation.guide_cross_references
+
 defmodule UnifiedUi.GuidesCrossReferenceTest do
   use ExUnit.Case, async: true
 

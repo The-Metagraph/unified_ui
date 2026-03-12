@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.package.metadata
+
 defmodule UnifiedUi.VersionTest do
   use ExUnit.Case, async: true
 

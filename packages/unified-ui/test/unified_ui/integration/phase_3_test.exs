@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.adapters.renderer_contract unified_ui.adapters.coordination unified_ui.adapters.event_normalization unified_ui.adapters.shared_support
+
 defmodule UnifiedUi.Integration.Phase3Test do
   @moduledoc """
   Comprehensive integration tests for Phase 3 of UnifiedUi.

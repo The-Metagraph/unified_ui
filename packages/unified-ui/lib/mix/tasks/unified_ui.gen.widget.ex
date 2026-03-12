@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.component_generators
+
 defmodule Mix.Tasks.UnifiedUi.Gen.Widget do
   @shortdoc "Generates custom widget boilerplate with UnifiedIUR.Element support"
   @moduledoc """

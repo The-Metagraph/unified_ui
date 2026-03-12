@@ -1,3 +1,5 @@
+# spec-coverage: unified_ui.tooling.dev_wrappers
+
 defmodule Mix.Tasks.UnifiedUi.Perf.Check do
   @shortdoc "Runs UnifiedUi performance budget checks"
   @moduledoc """

@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.widgets.data_and_tables -->
+
 # Tutorial: Build A Dashboard
 
 This tutorial walks through a compact metrics dashboard using implemented widgets.

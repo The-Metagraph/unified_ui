@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.dsl.styles_and_themes -->
+
 # Styling And Theming
 
 UnifiedUi supports inline styles and named styles resolved at compile/runtime.

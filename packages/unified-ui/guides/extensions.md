@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.documentation.extension_example unified_ui.tooling.component_generators -->
+
 # Extensions
 
 This guide covers the current extension path for **custom widgets**, **custom layouts**, and **custom renderers**.

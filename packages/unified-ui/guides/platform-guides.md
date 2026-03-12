@@ -1,3 +1,5 @@
+<!-- spec-coverage: unified_ui.documentation.guide_set unified_ui.adapters.renderer_contract unified_ui.adapters.coordination -->
+
 # Platform Guides
 
 UnifiedUi supports three renderer targets. Use these focused references:
