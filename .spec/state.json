@@ -1,0 +1,1342 @@
+{
+  "decisions": {
+    "items": [
+      {
+        "affects": [
+          "ecosystem.architecture",
+          "ecosystem.dsl_iur_symbiosis",
+          "ecosystem.platform_runtimes",
+          "ecosystem.signal_transport",
+          "repo.governance.ecosystem_contract"
+        ],
+        "date": "2026-03-12",
+        "file": ".spec/decisions/architecture/repo.ecosystem.contract_model.md",
+        "id": "repo.ecosystem.contract_model",
+        "status": "accepted",
+        "title": "Ecosystem Centers on DSL, IUR, Renderer, and Signal Boundaries"
+      },
+      {
+        "affects": [
+          "spec.system",
+          "repo.package",
+          "repo.governance",
+          "repo.governance.contract"
+        ],
+        "date": "2026-03-12",
+        "file": ".spec/decisions/governance/repo.governance.contract_policy.md",
+        "id": "repo.governance.contract_policy",
+        "status": "accepted",
+        "title": "Repository Governance Uses Contracts and ADRs"
+      }
+    ]
+  },
+  "findings": [],
+  "index": {
+    "exceptions": [
+      {
+        "covers": [
+          "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+          "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+          "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+          "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl"
+        ],
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.coverage_evolving",
+        "reason": "The architecture requires full DSL and IUR symmetry, but widget, layering, and theming coverage is still expanding across the ecosystem.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "covers": [
+          "ecosystem.platform_runtimes.desktop_ui_targets",
+          "ecosystem.platform_runtimes.desktop_ui_internal_signal_model"
+        ],
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.desktop_runtime_evolving",
+        "reason": "The desktop runtime architecture and platform targets are defined at the ecosystem level, but implementation depth is still evolving.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "covers": [
+          "ecosystem.signal_transport.desktop_translation",
+          "ecosystem.signal_transport.desktop_internal_standard"
+        ],
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.desktop_bridge_evolving",
+        "reason": "The desktop runtime is expected to normalize native input into canonical signals, but the SDL2 event bridge is still evolving.",
+        "subject_id": "ecosystem.signal_transport"
+      }
+    ],
+    "requirements": [
+      {
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "id": "ecosystem.architecture.dsl_authoring_boundary",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`unified_ui` shall be the authored DSL boundary for describing ecosystem UIs, widget interactions, and compilation into canonical IUR structures.",
+        "subject_id": "ecosystem.architecture"
+      },
+      {
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "id": "ecosystem.architecture.iur_exchange_boundary",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`unified_iur` shall be the canonical intermediate exchange format between the DSL and renderer/widget libraries.",
+        "subject_id": "ecosystem.architecture"
+      },
+      {
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "id": "ecosystem.architecture.renderer_packages_consume_iur",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Renderer/widget libraries shall treat canonical IUR as the cross-package rendering boundary and shall not require authored DSL modules once IUR is available.",
+        "subject_id": "ecosystem.architecture"
+      },
+      {
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "id": "ecosystem.architecture.shared_transport_contract",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Cross-package UI interaction semantics shall use Jido.Signal values and CloudEvents-compatible event conventions as the shared transport contract.",
+        "subject_id": "ecosystem.architecture"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Introducing or changing canonical DSL surface that affects rendering semantics shall be accompanied by the corresponding `unified_iur` representation change, and vice versa when the IUR addition is intended for canonical DSL authoring.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Every canonical `unified_iur` widget, layout, layering, and theming construct intended for ecosystem-wide authoring shall be representable through the `unified_ui` DSL.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`unified_ui` shall compile authored DSL constructs into canonical `unified_iur` data rather than renderer-specific output formats.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Every DSL entity and attribute intended for canonical rendering shall have a representation in `unified_iur`.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`unified_iur` shall be able to represent widgets, layouts, layering, and theming constructs required by `unified_ui`.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Layering and theming shall remain part of the canonical `unified_ui` DSL surface and shall not be treated as separate authoring systems outside the DSL and IUR symbiosis.",
+        "subject_id": "ecosystem.dsl_iur_symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.desktop_ui_internal_signal_model",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`desktop_ui` shall use canonical Jido.Signal and CloudEvents-compatible semantics inside its own runtime, even when the communication does not leave the desktop package boundary.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.desktop_ui_targets",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`desktop_ui` shall target Windows, macOS, and Linux using an SDL2-based desktop runtime with its own native widget set.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.iur_interpretation",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Each widget library shall be able to interpret canonical `unified_iur` input and render it using its own native widget system.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.live_ui_runtime",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`live_ui` shall use Phoenix LiveView components with JavaScript hooks only where necessary to bridge canonical signals and local widget behavior.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.web_ui_runtime_split",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`web_ui` shall use Phoenix for server-side runtime representation and Elm for client-side rendering and local state while preserving canonical IUR and event semantics across the boundary.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes.widget_libraries_independent",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Each widget library may expose and evolve its own native widget set independently of the `unified_ui` DSL.",
+        "subject_id": "ecosystem.platform_runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.desktop_internal_standard",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`desktop_ui` shall use the same canonical `Jido.Signal` and CloudEvents-compatible semantics for internal runtime and widget communication, not only for external package boundaries.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.desktop_translation",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`desktop_ui` shall translate native platform input into the same canonical signal contract before events cross package boundaries.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.dsl_event_bindings",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`unified_ui` authored widget interaction bindings shall compile to signal descriptors that can be transported as the canonical event contract.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.jido_signal_canonical",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Ecosystem UI events shall be expressed as `Jido.Signal` values using CloudEvents-compatible semantics.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.live_bridge",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`live_ui` shall bridge canonical widget events over Phoenix channels using Jido.Signal and CloudEvents semantics while preserving server-authoritative UI behavior.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.local_state_not_contract",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Renderer-specific local state may vary by library, but cross-package event meanings shall remain canonical at the signal contract boundary.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport.web_bridge",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`web_ui` shall bridge canonical widget events between Phoenix and Elm through CloudEvents-shaped envelopes while preserving canonical event meaning across the boundary.",
+        "subject_id": "ecosystem.signal_transport"
+      },
+      {
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "id": "repo.governance.adrs_record_rationale",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Cross-cutting governance rationale shall be recorded as ADRs under .spec/decisions/.",
+        "subject_id": "repo.governance"
+      },
+      {
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "id": "repo.governance.conformance_separate",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Conformance shall be introduced as a separate future layer rather than embedded inside governance contracts.",
+        "subject_id": "repo.governance"
+      },
+      {
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "id": "repo.governance.contracts_authored",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Durable governance rules shall be authored as Spec Led subjects under .spec/specs/governance/.",
+        "subject_id": "repo.governance"
+      },
+      {
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "id": "repo.governance.current_truth_only",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Governance artifacts shall capture current enforced policy rather than proposal backlogs or branch-local implementation notes.",
+        "subject_id": "repo.governance"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "id": "repo.governance.contract.adrs_for_cross_cutting",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Durable cross-cutting governance changes shall add or update at least one ADR under .spec/decisions/ that records context, decision, and consequences.",
+        "subject_id": "repo.governance.contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "id": "repo.governance.contract.conformance_not_embedded",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Governance contracts shall define durable policy and authored obligations, while conformance evidence will be added later in a separate layer.",
+        "subject_id": "repo.governance.contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "id": "repo.governance.contract.no_inflight_proposal_layer",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The .spec workspace shall not grow separate in-flight proposal or branch-local planning folders; Git history and pull requests remain the time dimension for change.",
+        "subject_id": "repo.governance.contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "id": "repo.governance.contract.subjects_canonical",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Authored subjects under .spec/specs/**/*.spec.md shall remain the canonical current-truth contract for repository behavior and governance.",
+        "subject_id": "repo.governance.contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "id": "repo.governance.contract.subjects_reference_decisions",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "A governance subject constrained by a durable ADR shall reference that decision id in spec-meta.decisions.",
+        "subject_id": "repo.governance.contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "id": "repo.governance.ecosystem_decision_recorded",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Durable ecosystem architecture changes shall add or revise an ADR under .spec/decisions/architecture/.",
+        "subject_id": "repo.governance.ecosystem_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "id": "repo.governance.ecosystem_governance_precedes_conformance",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Governance contracts may define required ecosystem invariants before executable conformance artifacts are introduced, but they shall not imply conformance coverage exists before the dedicated conformance layer is authored.",
+        "subject_id": "repo.governance.ecosystem_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "id": "repo.governance.ecosystem_renderer_boundary_preserved",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Governance changes shall preserve the distinction between authored DSL semantics, canonical IUR, and native widget-library implementations unless an ADR explicitly redefines that boundary.",
+        "subject_id": "repo.governance.ecosystem_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "id": "repo.governance.ecosystem_specs_updated_with_boundary_changes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to package responsibilities, DSL and IUR mapping, or signal transport shall update the affected ecosystem subject specs in the same change set.",
+        "subject_id": "repo.governance.ecosystem_contract"
+      },
+      {
+        "file": ".spec/specs/package.spec.md",
+        "id": "repo.package.governance_scope",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Repository-wide governance contracts and ADRs shall apply across all packages unless a subject spec explicitly narrows scope.",
+        "subject_id": "repo.package"
+      },
+      {
+        "file": ".spec/specs/package.spec.md",
+        "id": "repo.package.packages_layout",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The repository shall keep implementation packages under packages/ while repository-wide governance remains centralized in the root .spec workspace.",
+        "subject_id": "repo.package"
+      },
+      {
+        "file": ".spec/specs/package.spec.md",
+        "id": "repo.package.root_spec_workspace",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The repository shall keep a single canonical .spec/ workspace at the repository root for repository-wide governance and package-level intent.",
+        "subject_id": "repo.package"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.agents_present",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The repository shall include a .spec/AGENTS.md that gives local operating guidance for agents working inside the .spec workspace.",
+        "subject_id": "spec.system"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.decisions_readme_present",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The repository shall include a .spec/decisions/README.md that explains when durable ADRs belong in the workspace.",
+        "subject_id": "spec.system"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.governance_layer_present",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The workspace shall define a governance layer under .spec/specs/governance/ for durable repository-wide contracts and policies.",
+        "subject_id": "spec.system"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.readme_present",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The repository shall include a .spec/README.md that explains purpose, layout, and workflow.",
+        "subject_id": "spec.system"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.recursive_authored_subjects",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The repository shall author subject specs under .spec/specs/**/*.spec.md so nested layers such as governance remain parser-compatible without custom rules.",
+        "subject_id": "spec.system"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.recursive_decisions",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Durable ADRs may be organized under nested paths below .spec/decisions/ and shall remain valid Spec Led decision documents.",
+        "subject_id": "spec.system"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.workspace.state_generated",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "When planning and verification run, the workspace shall generate .spec/state.json containing indexed subjects, indexed decisions, and verification state across the authored specs and ADR trees.",
+        "subject_id": "spec.system"
+      }
+    ],
+    "scenarios": [],
+    "subjects": [
+      {
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "id": "ecosystem.architecture",
+        "meta": {
+          "decisions": [
+            "repo.ecosystem.contract_model"
+          ],
+          "id": "ecosystem.architecture",
+          "kind": "architecture",
+          "status": "active",
+          "summary": "High-level architecture contract for the DSL, the canonical IUR, the renderer/widget libraries, and the shared event transport.",
+          "surface": [
+            "packages/unified-ui",
+            "packages/unified_iur",
+            "packages/live_ui",
+            "packages/web_ui",
+            "packages/desktop_ui",
+            ".spec/specs/ecosystem/**/*.spec.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Ecosystem Architecture"
+      },
+      {
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "id": "ecosystem.dsl_iur_symbiosis",
+        "meta": {
+          "decisions": [
+            "repo.ecosystem.contract_model"
+          ],
+          "id": "ecosystem.dsl_iur_symbiosis",
+          "kind": "integration",
+          "status": "active",
+          "summary": "Symbiotic contract between authored DSL entities in `unified_ui` and canonical widget, layout, layering, and theming representation in `unified_iur`.",
+          "surface": [
+            "packages/unified-ui",
+            "packages/unified_iur",
+            ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "DSL and IUR Symbiosis"
+      },
+      {
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "id": "ecosystem.platform_runtimes",
+        "meta": {
+          "decisions": [
+            "repo.ecosystem.contract_model"
+          ],
+          "id": "ecosystem.platform_runtimes",
+          "kind": "architecture",
+          "status": "active",
+          "summary": "Architecture contract for `web_ui`, `live_ui`, and `desktop_ui` as native widget libraries that also consume canonical IUR.",
+          "surface": [
+            "packages/web_ui",
+            "packages/live_ui",
+            "packages/desktop_ui",
+            ".spec/specs/ecosystem/platform_runtimes.spec.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Platform Runtimes"
+      },
+      {
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "id": "ecosystem.signal_transport",
+        "meta": {
+          "decisions": [
+            "repo.ecosystem.contract_model"
+          ],
+          "id": "ecosystem.signal_transport",
+          "kind": "integration",
+          "status": "active",
+          "summary": "Shared Jido.Signal and CloudEvents-compatible transport contract across the DSL, IUR consumers, and renderer runtimes.",
+          "surface": [
+            "packages/unified-ui",
+            "packages/live_ui",
+            "packages/web_ui",
+            "packages/desktop_ui",
+            ".spec/specs/ecosystem/signal_transport.spec.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Signal Transport"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "id": "repo.governance.ecosystem_contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy",
+            "repo.ecosystem.contract_model"
+          ],
+          "id": "repo.governance.ecosystem_contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Governance contract for changes to package responsibilities, DSL and IUR boundaries, and cross-package signal transport.",
+          "surface": [
+            ".spec/specs/ecosystem/**/*.spec.md",
+            ".spec/decisions/architecture/**/*.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Ecosystem Change Contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "id": "repo.governance.contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "repo.governance.contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Normative governance contract for authored subjects, ADR use, and durable repository-wide policy changes.",
+          "surface": [
+            ".spec/specs/**/*.spec.md",
+            ".spec/decisions/**/*.md",
+            ".spec/README.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Workspace Governance Contract"
+      },
+      {
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "id": "repo.governance",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "repo.governance",
+          "kind": "governance",
+          "status": "active",
+          "summary": "Repository-wide governance layer for durable contracts, ADR-backed policy, and future separation from conformance.",
+          "surface": [
+            ".spec/specs/governance/**/*.spec.md",
+            ".spec/decisions/**/*.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Governance Layer"
+      },
+      {
+        "file": ".spec/specs/package.spec.md",
+        "id": "repo.package",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "repo.package",
+          "kind": "package",
+          "status": "active",
+          "summary": "Repository-level specification for the unified monorepo and its centralized spec workspace.",
+          "surface": [
+            "mix.exs",
+            "packages/*",
+            ".spec/**"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Unified Repository"
+      },
+      {
+        "file": ".spec/specs/spec_system.spec.md",
+        "id": "spec.system",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "spec.system",
+          "kind": "policy",
+          "status": "active",
+          "summary": "Canonical workspace contract for authored specs, governance subjects, ADRs, and generated Spec Led state.",
+          "surface": [
+            ".spec/README.md",
+            ".spec/AGENTS.md",
+            ".spec/decisions/**/*.md",
+            ".spec/specs/**/*.spec.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "Spec System"
+      }
+    ],
+    "verifications": [
+      {
+        "covers": [
+          "ecosystem.architecture.dsl_authoring_boundary",
+          "ecosystem.architecture.iur_exchange_boundary",
+          "ecosystem.architecture.renderer_packages_consume_iur",
+          "ecosystem.architecture.shared_transport_contract"
+        ],
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "kind": "source_file",
+        "subject_id": "ecosystem.architecture",
+        "target": ".spec/specs/ecosystem/architecture.spec.md"
+      },
+      {
+        "covers": [
+          "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+          "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+          "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+          "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+          "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+          "ecosystem.dsl_iur_symbiosis.bilateral_change_rule"
+        ],
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md"
+      },
+      {
+        "covers": [
+          "ecosystem.platform_runtimes.widget_libraries_independent",
+          "ecosystem.platform_runtimes.iur_interpretation",
+          "ecosystem.platform_runtimes.web_ui_runtime_split",
+          "ecosystem.platform_runtimes.live_ui_runtime",
+          "ecosystem.platform_runtimes.desktop_ui_targets",
+          "ecosystem.platform_runtimes.desktop_ui_internal_signal_model"
+        ],
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md"
+      },
+      {
+        "covers": [
+          "ecosystem.signal_transport.jido_signal_canonical",
+          "ecosystem.signal_transport.dsl_event_bindings",
+          "ecosystem.signal_transport.web_bridge",
+          "ecosystem.signal_transport.live_bridge",
+          "ecosystem.signal_transport.desktop_translation",
+          "ecosystem.signal_transport.desktop_internal_standard",
+          "ecosystem.signal_transport.local_state_not_contract"
+        ],
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.contracts_authored",
+          "repo.governance.adrs_record_rationale",
+          "repo.governance.current_truth_only",
+          "repo.governance.conformance_separate"
+        ],
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance",
+        "target": ".spec/specs/governance/governance_layer.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.contract.adrs_for_cross_cutting",
+          "repo.governance.contract.no_inflight_proposal_layer",
+          "repo.governance.contract.subjects_canonical",
+          "repo.governance.contract.subjects_reference_decisions",
+          "repo.governance.contract.conformance_not_embedded"
+        ],
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.contract",
+        "target": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.ecosystem_specs_updated_with_boundary_changes",
+          "repo.governance.ecosystem_decision_recorded",
+          "repo.governance.ecosystem_governance_precedes_conformance",
+          "repo.governance.ecosystem_renderer_boundary_preserved"
+        ],
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.ecosystem_contract",
+        "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md"
+      },
+      {
+        "covers": [
+          "repo.package.root_spec_workspace",
+          "repo.package.packages_layout",
+          "repo.package.governance_scope"
+        ],
+        "file": ".spec/specs/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.package",
+        "target": ".spec/specs/package.spec.md"
+      },
+      {
+        "covers": [
+          "spec.workspace.readme_present"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "spec.system",
+        "target": ".spec/README.md"
+      },
+      {
+        "covers": [
+          "spec.workspace.agents_present"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "spec.system",
+        "target": ".spec/AGENTS.md"
+      },
+      {
+        "covers": [
+          "spec.workspace.decisions_readme_present"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "spec.system",
+        "target": ".spec/decisions/README.md"
+      },
+      {
+        "covers": [
+          "spec.workspace.recursive_authored_subjects",
+          "spec.workspace.governance_layer_present"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "spec.system",
+        "target": ".spec/specs/spec_system.spec.md"
+      },
+      {
+        "covers": [
+          "spec.workspace.recursive_decisions"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "spec.system",
+        "target": ".spec/specs/spec_system.spec.md"
+      },
+      {
+        "covers": [
+          "spec.workspace.state_generated"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "command",
+        "subject_id": "spec.system",
+        "target": "mix spec.plan"
+      },
+      {
+        "covers": [
+          "spec.workspace.state_generated"
+        ],
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "command",
+        "subject_id": "spec.system",
+        "target": "mix spec.verify"
+      }
+    ]
+  },
+  "specification_version": "1.0",
+  "summary": {
+    "decision_parse_errors": 0,
+    "decisions": 2,
+    "exceptions": 3,
+    "findings": 0,
+    "requirements": 46,
+    "scenarios": 0,
+    "subjects": 9,
+    "verifications": 15
+  },
+  "verification": {
+    "claims": [
+      {
+        "cover_id": "ecosystem.architecture.dsl_authoring_boundary",
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.architecture",
+        "target": ".spec/specs/ecosystem/architecture.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.architecture.iur_exchange_boundary",
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.architecture",
+        "target": ".spec/specs/ecosystem/architecture.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.architecture.renderer_packages_consume_iur",
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.architecture",
+        "target": ".spec/specs/ecosystem/architecture.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.architecture.shared_transport_contract",
+        "file": ".spec/specs/ecosystem/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.architecture",
+        "target": ".spec/specs/ecosystem/architecture.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+        "file": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.dsl_iur_symbiosis",
+        "target": ".spec/specs/ecosystem/dsl_iur_symbiosis.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.platform_runtimes.desktop_ui_internal_signal_model",
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.platform_runtimes.desktop_ui_targets",
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.platform_runtimes.iur_interpretation",
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.platform_runtimes.live_ui_runtime",
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.platform_runtimes.web_ui_runtime_split",
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.platform_runtimes.widget_libraries_independent",
+        "file": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.platform_runtimes",
+        "target": ".spec/specs/ecosystem/platform_runtimes.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.desktop_internal_standard",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.desktop_translation",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.dsl_event_bindings",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.jido_signal_canonical",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.live_bridge",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.local_state_not_contract",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "ecosystem.signal_transport.web_bridge",
+        "file": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "ecosystem.signal_transport",
+        "target": ".spec/specs/ecosystem/signal_transport.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.adrs_record_rationale",
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance",
+        "target": ".spec/specs/governance/governance_layer.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.conformance_separate",
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance",
+        "target": ".spec/specs/governance/governance_layer.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.contracts_authored",
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance",
+        "target": ".spec/specs/governance/governance_layer.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.current_truth_only",
+        "file": ".spec/specs/governance/governance_layer.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance",
+        "target": ".spec/specs/governance/governance_layer.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.contract.adrs_for_cross_cutting",
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.contract",
+        "target": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.contract.conformance_not_embedded",
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.contract",
+        "target": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.contract.no_inflight_proposal_layer",
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.contract",
+        "target": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.contract.subjects_canonical",
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.contract",
+        "target": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.contract.subjects_reference_decisions",
+        "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.contract",
+        "target": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.ecosystem_decision_recorded",
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.ecosystem_contract",
+        "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.ecosystem_governance_precedes_conformance",
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.ecosystem_contract",
+        "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.ecosystem_renderer_boundary_preserved",
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.ecosystem_contract",
+        "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.ecosystem_specs_updated_with_boundary_changes",
+        "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.ecosystem_contract",
+        "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.package.governance_scope",
+        "file": ".spec/specs/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.package",
+        "target": ".spec/specs/package.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.package.packages_layout",
+        "file": ".spec/specs/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.package",
+        "target": ".spec/specs/package.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.package.root_spec_workspace",
+        "file": ".spec/specs/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.package",
+        "target": ".spec/specs/package.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "spec.workspace.readme_present",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "spec.system",
+        "target": ".spec/README.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "spec.workspace.agents_present",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "spec.system",
+        "target": ".spec/AGENTS.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "spec.workspace.decisions_readme_present",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "spec.system",
+        "target": ".spec/decisions/README.md",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "spec.workspace.governance_layer_present",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "spec.system",
+        "target": ".spec/specs/spec_system.spec.md",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "spec.workspace.recursive_authored_subjects",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "spec.system",
+        "target": ".spec/specs/spec_system.spec.md",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "spec.workspace.recursive_decisions",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "spec.system",
+        "target": ".spec/specs/spec_system.spec.md",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "spec.workspace.state_generated",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "command",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "spec.system",
+        "target": "mix spec.plan",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "spec.workspace.state_generated",
+        "file": ".spec/specs/spec_system.spec.md",
+        "kind": "command",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "spec.system",
+        "target": "mix spec.verify",
+        "verification_index": 6
+      }
+    ],
+    "cli_minimum_strength": null,
+    "default_minimum_strength": "claimed",
+    "strength_summary": {
+      "claimed": 2,
+      "executed": 0,
+      "linked": 45
+    },
+    "threshold_failures": 0
+  },
+  "workspace": {
+    "decision_count": 2,
+    "spec_count": 9
+  }
+}

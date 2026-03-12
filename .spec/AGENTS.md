@@ -8,7 +8,7 @@ Use this folder to maintain authored Spec Led Development subjects and generated
 
 1. Read `.spec/README.md`.
 2. Read `.spec/decisions/README.md` and any ADRs that affect the subject you are changing.
-3. Read the current `.spec/specs/*.spec.md` files before editing.
+3. Read the current `.spec/specs/**/*.spec.md` files before editing, starting with governance subjects when the change is repository-wide.
 
 ## Working Rules
 
@@ -16,7 +16,8 @@ Use this folder to maintain authored Spec Led Development subjects and generated
 - Put normative statements in `spec-requirements`.
 - Add `spec-scenarios` only when `given` / `when` / `then` improves clarity.
 - Add `spec-meta.decisions` only when a subject depends on a durable cross-cutting ADR.
-- Keep ADRs in `.spec/decisions/*.md` for cross-cutting policy only.
+- Put repository-wide governance contracts under `.spec/specs/governance/`.
+- Keep ADRs in `.spec/decisions/**/*.md` for cross-cutting policy only.
 - Prefer targeted command verifications for behavioral proof.
 - Use file-backed verifications only when the target can carry stable `covers:` markers for every covered id.
 - Keep verification targets repository-root-relative.
