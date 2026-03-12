@@ -1,0 +1,10 @@
+# Default ownership for the repository
+* @pcharbon70
+
+# CI and workflow ownership
+/.github/ @pcharbon70
+
+# Core library and DSL ownership
+/lib/ @pcharbon70
+/test/ @pcharbon70
+/notes/ @pcharbon70

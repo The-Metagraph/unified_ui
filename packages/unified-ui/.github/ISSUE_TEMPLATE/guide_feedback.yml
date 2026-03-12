@@ -1,0 +1,60 @@
+name: Guide feedback
+description: Share clarity feedback for guides and tutorials
+title: "docs: guide feedback - "
+labels:
+  - documentation
+body:
+  - type: dropdown
+    id: guide
+    attributes:
+      label: Guide or tutorial
+      description: Which document are you giving feedback on?
+      options:
+        - guides/getting-started.md
+        - guides/dsl-reference.md
+        - guides/widget-reference.md
+        - guides/layout-system.md
+        - guides/styling-and-theming.md
+        - guides/signals-and-events.md
+        - guides/platform-guides.md
+        - guides/dashboard-tutorial.md
+        - guides/troubleshooting.md
+        - guides/extensions.md
+    validations:
+      required: true
+
+  - type: input
+    id: section
+    attributes:
+      label: Section or heading
+      description: Point to the specific section that was unclear.
+      placeholder: "Example: 4. Handle Events"
+    validations:
+      required: true
+
+  - type: textarea
+    id: confusion
+    attributes:
+      label: What was unclear?
+      description: Describe where you got stuck and what you expected.
+      placeholder: "I expected..., but the guide says..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested_change
+    attributes:
+      label: Suggested improvement
+      description: Optional rewrite, example, or missing context that would help.
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact on progress
+      description: How much did this block your progress?
+      options:
+        - Low (minor confusion)
+        - Medium (slowed me down)
+        - High (blocked task completion)
+    validations:
+      required: true

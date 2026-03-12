@@ -1,0 +1,60 @@
+name: Bug report
+description: Report a reproducible bug in UnifiedUi
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the bug clearly and concisely.
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide exact steps and sample code if possible.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include errors/logs.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: UnifiedUi version
+      description: Output of `mix deps | rg unified_ui` or your version.
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: elixir_otp
+    attributes:
+      label: Elixir/OTP
+      description: Output of `elixir -v`.
+      placeholder: Elixir 1.19.x / OTP 27
+    validations:
+      required: true

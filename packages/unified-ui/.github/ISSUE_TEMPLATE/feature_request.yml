@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose an enhancement to UnifiedUi
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem are you trying to solve?
+      placeholder: I want to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe your preferred API or behavior.
+      placeholder: A new DSL entity could...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe alternatives you've evaluated.
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and use cases
+      description: Who benefits, and how often will this be used?
