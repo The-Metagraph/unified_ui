@@ -1,0 +1,44 @@
+{
+  "children": [
+    {
+      "children": [],
+      "id": "dsl_counter_label",
+      "kind": "text",
+      "props": {
+        "visible": true
+      },
+      "signal_bindings": []
+    },
+    {
+      "children": [],
+      "id": "dsl_increment_button",
+      "kind": "button",
+      "props": {
+        "disabled": false,
+        "label": "Increment",
+        "on_click": "increment",
+        "visible": true
+      },
+      "signal_bindings": [
+        {
+          "event": "on_click",
+          "payload": {
+            "intent": "increment"
+          },
+          "widget_id": "dsl_increment_button",
+          "widget_kind": "button"
+        }
+      ]
+    }
+  ],
+  "id": "dsl_counter_root",
+  "kind": "vbox",
+  "props": {
+    "align_items": null,
+    "justify_content": null,
+    "padding": null,
+    "spacing": 2,
+    "visible": true
+  },
+  "signal_bindings": []
+}

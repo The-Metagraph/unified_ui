@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pcharbon70/live_ui/blob/main/schemas/spec-governance.schema.json",
+  "title": "live_ui spec-governance",
+  "description": "Structural schema for repo-local spec-governance blocks. The local checker remains responsible for cross-document and semantic validation.",
+  "type": "object",
+  "required": [
+    "owner",
+    "criticality",
+    "primary_plane",
+    "change_rules",
+    "approval",
+    "gates"
+  ],
+  "properties": {
+    "owner": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Owning team or steward for the subject."
+    },
+    "criticality": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Free-form criticality label such as low, medium, or high."
+    },
+    "primary_plane": {
+      "type": "string",
+      "enum": ["package", "integration", "execution", "rendering"],
+      "description": "Repo-local control plane taxonomy enforced by live_ui."
+    },
+    "change_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/changeRule"
+      },
+      "description": "Rules describing which aligned artifacts or subjects must change together."
+    },
+    "approval": {
+      "$ref": "#/$defs/approval",
+      "description": "Approval expectations for changes to this subject."
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/gate"
+      },
+      "description": "Required governance or compliance gates for the subject."
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "requirementReference": {
+      "type": "object",
+      "properties": {
+        "subject_ids": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "artifacts": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "verification_kinds": {
+          "$ref": "#/$defs/stringArray"
+        }
+      },
+      "additionalProperties": true
+    },
+    "changeRule": {
+      "type": "object",
+      "required": ["id", "when", "requires"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "when": {
+          "type": "object",
+          "description": "Free-form trigger metadata such as change_types.",
+          "additionalProperties": true
+        },
+        "requires": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/requirementReference"
+          }
+        },
+        "severity": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": true
+    },
+    "approval": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "roles": {
+          "$ref": "#/$defs/stringArray"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "required": {
+                "const": true
+              }
+            },
+            "required": ["required"]
+          },
+          "then": {
+            "required": ["roles"],
+            "properties": {
+              "roles": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/nonEmptyString"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "gate": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "target": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "mode": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

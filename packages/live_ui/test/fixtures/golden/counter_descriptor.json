@@ -1,0 +1,53 @@
+{
+  "id": "counter-root",
+  "kind": "vbox",
+  "children": [
+    {
+      "id": "counter-label",
+      "kind": "text",
+      "children": [],
+      "props": {
+        "content": "Count: 4",
+        "style": {
+          "class": "counter-value"
+        }
+      },
+      "signal_bindings": []
+    },
+    {
+      "id": "increment-button",
+      "kind": "button",
+      "children": [],
+      "props": {
+        "label": "Increment",
+        "on_click": {
+          "intent": "activate",
+          "payload": {
+            "delta": 1
+          }
+        }
+      },
+      "signal_bindings": [
+        {
+          "event": "on_click",
+          "payload": {
+            "intent": "activate",
+            "payload": {
+              "delta": 1
+            }
+          },
+          "widget_id": "increment-button",
+          "widget_kind": "button"
+        }
+      ]
+    }
+  ],
+  "props": {
+    "meta": {
+      "initialized?": true,
+      "mount_token": "golden"
+    },
+    "spacing": 2
+  },
+  "signal_bindings": []
+}
