@@ -1,0 +1,3 @@
+%{
+  "unified_iur": {:git, "https://github.com/pcharbon70/unified_iur.git", "6da558536a59f98ade5691f57e3739c4bedda8bb", [ref: "6da558536a59f98ade5691f57e3739c4bedda8bb"]},
+}

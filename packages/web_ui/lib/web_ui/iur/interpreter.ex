@@ -1,0 +1,608 @@
+defmodule WebUi.Iur.Interpreter do
+  @moduledoc """
+  Interprets canonical Unified-IUR layout trees into deterministic WebUi runtime descriptors.
+  """
+
+  alias WebUi.Events.ElmBindings
+  alias WebUi.Iur.DescriptorDefaults
+  alias WebUi.Iur.Dependency
+  alias WebUi.TypedError
+
+  @layout_kinds MapSet.new(["vbox", "hbox"])
+
+  @widget_aliases %{
+    "text" => "label",
+    "textinput" => "text_input",
+    "text_input" => "text_input",
+    "button" => "button",
+    "label" => "label",
+    "gauge" => "gauge",
+    "sparkline" => "sparkline",
+    "bar_chart" => "bar_chart",
+    "line_chart" => "line_chart",
+    "table" => "table",
+    "menu" => "menu",
+    "context_menu" => "context_menu",
+    "tabs" => "tabs",
+    "tree_view" => "tree_view"
+  }
+
+  @signal_fields_by_widget %{
+    "button" => [:on_click],
+    "text_input" => [:on_change, :on_submit],
+    "menu_item" => [:action],
+    "table" => [:on_row_select, :on_sort],
+    "tabs" => [:on_change],
+    "tree_view" => [:on_select, :on_toggle]
+  }
+  @widget_signal_fields @signal_fields_by_widget |> Map.values() |> List.flatten() |> Enum.uniq()
+
+  @spec interpret(map() | struct(), keyword()) :: {:ok, map()} | {:error, TypedError.t()}
+  def interpret(spec, opts \\ []) when is_list(opts) do
+    correlation_id = Keyword.get(opts, :correlation_id, "iur")
+
+    with {:ok, normalized_root, widgets, signals} <- normalize_node(spec, [], correlation_id),
+         {:ok, events} <- build_events(signals, correlation_id) do
+      {:ok,
+       %{
+         root: normalized_root,
+         widgets: widgets,
+         signals: signals,
+         events: events
+       }}
+    end
+  end
+
+  defp normalize_node(spec, path, correlation_id) do
+    with {:ok, normalized_map} <- normalize_node_input(spec, correlation_id),
+         {:ok, kind} <- infer_kind(normalized_map, correlation_id),
+         {:ok, id} <- infer_id(normalized_map, kind, path, correlation_id) do
+      if MapSet.member?(@layout_kinds, kind) do
+        normalize_layout_node(normalized_map, kind, id, path, correlation_id)
+      else
+        normalize_widget_node(normalized_map, kind, id, path, correlation_id)
+      end
+    end
+  end
+
+  defp normalize_layout_node(node, kind, id, path, correlation_id) do
+    children = fetch_any(node, :children, [])
+
+    if is_list(children) do
+      with {:ok, children_nodes, widgets, signals} <-
+             normalize_child_nodes(children, path, correlation_id) do
+        {:ok,
+         %{
+           type: :layout,
+           kind: kind,
+           id: id,
+           props: layout_props(node),
+           children: children_nodes
+         }, widgets, signals}
+      end
+    else
+      {:error,
+       TypedError.new(
+         "iur.interpreter.invalid_children",
+         "validation",
+         false,
+         %{kind: kind, id: id, reason: "children must be a list"},
+         correlation_id
+       )}
+    end
+  end
+
+  defp normalize_widget_node(node, kind, id, path, correlation_id) do
+    widget_kind = Map.get(@widget_aliases, kind, kind)
+    raw_children = fetch_any(node, :children, :__missing__)
+
+    signals =
+      @signal_fields_by_widget
+      |> Map.get(widget_kind, [])
+      |> Enum.reduce([], fn field, acc ->
+        case fetch_any(node, field) do
+          nil ->
+            acc
+
+          signal ->
+            acc ++
+              [
+                %{
+                  widget_id: id,
+                  widget_kind: widget_kind,
+                  source_field: field |> Atom.to_string(),
+                  signal: normalize_signal(signal)
+                }
+              ]
+        end
+      end)
+
+    with {:ok, child_nodes, child_widgets, child_signals} <-
+           normalize_widget_children(raw_children, path, correlation_id) do
+      widget_node =
+        %{
+          type: :widget,
+          kind: widget_kind,
+          id: id,
+          props: widget_props(node, widget_kind)
+        }
+        |> maybe_put_widget_children(child_nodes)
+
+      {:ok, widget_node, [widget_descriptor(id, widget_kind)] ++ child_widgets,
+       signals ++ child_signals}
+    end
+  end
+
+  defp normalize_node_input(spec, correlation_id) do
+    with {:ok, normalized_map} <- normalize_spec_map(spec, correlation_id),
+         :ok <- Dependency.validate_schema_markers(normalized_map, correlation_id) do
+      {:ok, normalized_map}
+    end
+  end
+
+  defp normalize_spec_map(%_{} = spec, correlation_id) do
+    if Dependency.canonical_iur_struct?(spec) do
+      normalize_canonical_struct(spec, correlation_id)
+    else
+      {:ok, normalize_map(spec)}
+    end
+  end
+
+  defp normalize_spec_map(spec, _correlation_id), do: {:ok, normalize_map(spec)}
+
+  defp normalize_canonical_struct(spec, correlation_id) when is_struct(spec) do
+    try do
+      metadata = UnifiedIUR.Element.metadata(spec)
+      children = UnifiedIUR.Element.children(spec)
+
+      normalized_map =
+        metadata
+        |> normalize_map()
+        |> Map.put(:children, children)
+        |> Map.put(:__struct__, spec.__struct__)
+
+      {:ok, normalized_map}
+    rescue
+      Protocol.UndefinedError ->
+        {:error,
+         TypedError.new(
+           "iur.interpreter.unsupported_canonical_struct",
+           "validation",
+           false,
+           %{struct: inspect(spec.__struct__)},
+           correlation_id
+         )}
+    end
+  end
+
+  defp build_events(signals, correlation_id) when is_list(signals) do
+    signals
+    |> Enum.reduce_while({:ok, []}, fn signal_binding, {:ok, acc} ->
+      case build_event(signal_binding) do
+        {:ok, event} ->
+          {:cont, {:ok, acc ++ [event]}}
+
+        {:error, %TypedError{} = error} ->
+          {:halt,
+           {:error,
+            TypedError.new(
+              "iur.interpreter.signal_mapping_failed",
+              "validation",
+              false,
+              %{
+                source_field: Map.get(signal_binding, :source_field),
+                widget_id: Map.get(signal_binding, :widget_id),
+                widget_kind: Map.get(signal_binding, :widget_kind),
+                reason: error.error_code
+              },
+              correlation_id
+            )}}
+      end
+    end)
+  end
+
+  defp build_event(%{
+         source_field: "on_click",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    ElmBindings.on_click(widget_id, widget_kind, signal_payload)
+  end
+
+  defp build_event(%{
+         source_field: "on_change",
+         widget_kind: "tabs",
+         widget_id: widget_id,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_map(signal_payload) do
+    tab_id = signal_tab_id(signal_payload)
+    data = Map.drop(signal_payload, [:tab_id, "tab_id", :active_tab, "active_tab"])
+    ElmBindings.on_tab_change(widget_id, "tabs", tab_id, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_change",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    value = fetch_string(signal_payload, :value) || "__iur_input_value__"
+    data = Map.delete(signal_payload, :value) |> Map.delete("value")
+
+    ElmBindings.on_input(widget_id, widget_kind, value, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_submit",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    ElmBindings.on_submit(widget_id, widget_kind, signal_payload)
+  end
+
+  defp build_event(%{
+         source_field: "action",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    action_id = signal_action_id(signal_payload)
+    data = Map.drop(signal_payload, [:action_id, "action_id", :action, "action"])
+    ElmBindings.on_menu_action(widget_id, widget_kind, action_id, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_row_select",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    row_index = signal_row_index(signal_payload)
+    data = Map.drop(signal_payload, [:row_index, "row_index", :index, "index"])
+    ElmBindings.on_table_row_select(widget_id, widget_kind, row_index, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_sort",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    column = signal_sort_column(signal_payload)
+    direction = signal_sort_direction(signal_payload)
+
+    data =
+      Map.drop(signal_payload, [
+        :column,
+        "column",
+        :direction,
+        "direction",
+        :sort_column,
+        "sort_column",
+        :sort_direction,
+        "sort_direction"
+      ])
+
+    ElmBindings.on_table_sort(widget_id, widget_kind, column, direction, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_select",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    node_id = signal_node_id(signal_payload)
+    data = Map.drop(signal_payload, [:node_id, "node_id", :id, "id"])
+    ElmBindings.on_tree_node_select(widget_id, widget_kind, node_id, data)
+  end
+
+  defp build_event(%{
+         source_field: "on_toggle",
+         widget_id: widget_id,
+         widget_kind: widget_kind,
+         signal: signal_payload
+       })
+       when is_binary(widget_id) and is_binary(widget_kind) and is_map(signal_payload) do
+    node_id = signal_node_id(signal_payload)
+    expanded = signal_expanded(signal_payload)
+    data = Map.drop(signal_payload, [:node_id, "node_id", :id, "id", :expanded, "expanded"])
+    ElmBindings.on_tree_node_toggle(widget_id, widget_kind, node_id, expanded, data)
+  end
+
+  defp build_event(_signal_binding) do
+    {:error,
+     TypedError.new(
+       "iur.interpreter.unsupported_signal_binding",
+       "validation",
+       false,
+       %{}
+     )}
+  end
+
+  defp normalize_map(%_{} = struct), do: struct |> Map.from_struct() |> normalize_map()
+
+  defp normalize_map(map) when is_map(map) do
+    map
+    |> Enum.reduce(%{}, fn {key, value}, acc ->
+      normalized_key =
+        case key do
+          atom when is_atom(atom) -> atom
+          binary when is_binary(binary) -> safe_atom(binary)
+          other -> other
+        end
+
+      Map.put(acc, normalized_key, value)
+    end)
+  end
+
+  defp normalize_map(_), do: %{}
+
+  defp normalize_widget_children(:__missing__, _path, _correlation_id),
+    do: {:ok, [], [], []}
+
+  defp normalize_widget_children(children, path, correlation_id) when is_list(children) do
+    normalize_child_nodes(children, path, correlation_id)
+  end
+
+  defp normalize_widget_children(children, _path, correlation_id) do
+    {:error,
+     TypedError.new(
+       "iur.interpreter.invalid_children",
+       "validation",
+       false,
+       %{reason: "children must be a list when provided", children: children},
+       correlation_id
+     )}
+  end
+
+  defp normalize_child_nodes(children, path, correlation_id)
+       when is_list(children) and is_list(path) do
+    children
+    |> Enum.with_index()
+    |> Enum.reduce_while({:ok, [], [], []}, fn {child, index},
+                                               {:ok, acc_nodes, acc_widgets, acc_signals} ->
+      case normalize_node(child, path ++ [index], correlation_id) do
+        {:ok, child_node, child_widgets, child_signals} ->
+          {:cont,
+           {:ok, acc_nodes ++ [child_node], acc_widgets ++ child_widgets,
+            acc_signals ++ child_signals}}
+
+        {:error, %TypedError{} = error} ->
+          {:halt, {:error, error}}
+      end
+    end)
+  end
+
+  defp maybe_put_widget_children(node, []), do: node
+
+  defp maybe_put_widget_children(node, children) when is_map(node) and is_list(children),
+    do: Map.put(node, :children, children)
+
+  defp infer_kind(node, correlation_id) when is_map(node) do
+    kind =
+      fetch_any(node, :type)
+      |> normalize_kind_from_value()
+      |> case do
+        nil -> infer_kind_from_struct_name(fetch_any(node, :__struct__))
+        value -> value
+      end
+
+    if is_binary(kind) and kind != "" do
+      {:ok, kind}
+    else
+      {:error,
+       TypedError.new(
+         "iur.interpreter.unknown_element_type",
+         "validation",
+         false,
+         %{node: inspect(node)},
+         correlation_id
+       )}
+    end
+  end
+
+  defp infer_id(node, kind, path, correlation_id)
+       when is_map(node) and is_binary(kind) and is_list(path) do
+    explicit_id = fetch_any(node, :id)
+
+    case normalize_id_value(explicit_id) do
+      nil ->
+        {:ok, generated_id(kind, path)}
+
+      id when is_binary(id) and id != "" ->
+        {:ok, id}
+
+      _ ->
+        {:error,
+         TypedError.new(
+           "iur.interpreter.invalid_id",
+           "validation",
+           false,
+           %{kind: kind, id: explicit_id},
+           correlation_id
+         )}
+    end
+  end
+
+  defp layout_props(node) when is_map(node) do
+    %{
+      spacing: fetch_any(node, :spacing, 0),
+      align_items: fetch_any(node, :align_items),
+      justify_content: fetch_any(node, :justify_content),
+      padding: fetch_any(node, :padding),
+      visible: fetch_any(node, :visible, true)
+    }
+  end
+
+  defp widget_props(node, widget_kind) when is_map(node) and is_binary(widget_kind) do
+    node
+    |> Map.drop([:__struct__, :type, :children] ++ @widget_signal_fields)
+    |> Enum.reduce(%{}, fn {key, value}, acc ->
+      case key do
+        :id -> acc
+        _ -> Map.put(acc, key, value)
+      end
+    end)
+    |> DescriptorDefaults.canonicalize_widget_props(widget_kind)
+  end
+
+  defp widget_descriptor(id, widget_kind) when is_binary(id) and is_binary(widget_kind) do
+    %{
+      widget_id: id,
+      widget_kind: widget_kind
+    }
+  end
+
+  defp normalize_signal(signal) when is_atom(signal), do: %{action: Atom.to_string(signal)}
+  defp normalize_signal(signal) when is_binary(signal), do: %{action: signal}
+
+  defp normalize_signal({action, payload}) when is_atom(action) and is_map(payload) do
+    Map.put_new(payload, :action, Atom.to_string(action))
+  end
+
+  defp normalize_signal(map) when is_map(map), do: normalize_map(map)
+  defp normalize_signal(other), do: %{value: other}
+
+  defp normalize_kind_from_value(nil), do: nil
+
+  defp normalize_kind_from_value(value) when is_atom(value) and not is_nil(value),
+    do: value |> Atom.to_string() |> normalize_kind_token()
+
+  defp normalize_kind_from_value(value) when is_binary(value), do: normalize_kind_token(value)
+  defp normalize_kind_from_value(_value), do: nil
+
+  defp signal_action_id(signal_payload) when is_map(signal_payload) do
+    fetch_string_like(signal_payload, :action_id) || fetch_string_like(signal_payload, :action)
+  end
+
+  defp signal_row_index(signal_payload) when is_map(signal_payload) do
+    case fetch_any(signal_payload, :row_index) || fetch_any(signal_payload, :index) do
+      value when is_integer(value) and value >= 0 -> value
+      value when is_binary(value) -> parse_non_negative_integer(value)
+      _ -> -1
+    end
+  end
+
+  defp signal_sort_column(signal_payload) when is_map(signal_payload) do
+    fetch_string_like(signal_payload, :column) || fetch_string_like(signal_payload, :sort_column)
+  end
+
+  defp signal_sort_direction(signal_payload) when is_map(signal_payload) do
+    case fetch_string_like(signal_payload, :direction) ||
+           fetch_string_like(signal_payload, :sort_direction) do
+      nil -> nil
+      direction -> direction |> String.trim() |> String.downcase()
+    end
+  end
+
+  defp signal_tab_id(signal_payload) when is_map(signal_payload) do
+    fetch_string_like(signal_payload, :tab_id) || fetch_string_like(signal_payload, :active_tab)
+  end
+
+  defp signal_node_id(signal_payload) when is_map(signal_payload) do
+    fetch_string_like(signal_payload, :node_id) || fetch_string_like(signal_payload, :id)
+  end
+
+  defp signal_expanded(signal_payload) when is_map(signal_payload) do
+    case fetch_any(signal_payload, :expanded) do
+      value when is_boolean(value) -> value
+      "true" -> true
+      "false" -> false
+      :true -> true
+      :false -> false
+      _ -> nil
+    end
+  end
+
+  defp normalize_kind_token(value) when is_binary(value) do
+    value
+    |> String.trim()
+    |> String.downcase()
+    |> String.replace("-", "_")
+  end
+
+  defp infer_kind_from_struct_name(nil), do: nil
+
+  defp infer_kind_from_struct_name(module) when is_atom(module) and not is_nil(module) do
+    module
+    |> Atom.to_string()
+    |> String.split(".")
+    |> List.last()
+    |> case do
+      nil -> nil
+      name -> name |> Macro.underscore() |> normalize_kind_token()
+    end
+  end
+
+  defp infer_kind_from_struct_name(_module), do: nil
+
+  defp normalize_id_value(nil), do: nil
+  defp normalize_id_value(value) when is_atom(value), do: Atom.to_string(value)
+
+  defp normalize_id_value(value) when is_binary(value) do
+    value
+    |> String.trim()
+    |> case do
+      "" -> nil
+      trimmed -> trimmed
+    end
+  end
+
+  defp normalize_id_value(value), do: to_string(value)
+
+  defp generated_id(kind, []) when is_binary(kind), do: "#{kind}_root"
+
+  defp generated_id(kind, path) when is_binary(kind) and is_list(path) do
+    suffix =
+      path
+      |> Enum.map(&Integer.to_string/1)
+      |> Enum.join("_")
+
+    "#{kind}_#{suffix}"
+  end
+
+  defp fetch_any(map, key, default \\ nil) when is_map(map) and is_atom(key) do
+    Map.get(map, key, Map.get(map, Atom.to_string(key), default))
+  end
+
+  defp fetch_string(map, key) when is_map(map) do
+    case fetch_any(map, key) do
+      value when is_binary(value) -> value
+      _ -> nil
+    end
+  end
+
+  defp fetch_string_like(map, key) when is_map(map) do
+    case fetch_any(map, key) do
+      value when is_binary(value) -> value
+      value when is_atom(value) and not is_nil(value) -> Atom.to_string(value)
+      _ -> nil
+    end
+  end
+
+  defp parse_non_negative_integer(value) when is_binary(value) do
+    case Integer.parse(String.trim(value)) do
+      {parsed, ""} when parsed >= 0 -> parsed
+      _ -> -1
+    end
+  end
+
+  defp safe_atom(binary) when is_binary(binary) do
+    try do
+      String.to_existing_atom(binary)
+    rescue
+      ArgumentError -> binary
+    end
+  end
+end

@@ -1,0 +1,50 @@
+name: Release Readiness
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-readiness:
+    name: Release Readiness
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+      DIFF_BASE: ${{ github.event.before }}
+      DIFF_HEAD: ${{ github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup BEAM
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: "27"
+          elixir-version: "1.18"
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Install deps
+        run: mix deps.get
+
+      - name: Run release readiness gate
+        run: ./scripts/run_release_readiness.sh | tee release-readiness-report.log
+
+      - name: Run release gate regression probes
+        run: ./scripts/check_release_gate_regressions.sh
+
+      - name: Upload release readiness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-readiness-report
+          path: release-readiness-report.log
