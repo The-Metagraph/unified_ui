@@ -1,42 +1,36 @@
 # LiveUi Interpreter
 
-This subject backfills the current IUR interpretation surface for
-`packages/live_ui`, based on its normalization helpers and descriptor pipeline.
+This subject defines the intended ecosystem-aligned interpretation boundary for
+`packages/live_ui`.
 
 ```spec-meta
 id: live_ui.interpreter
 kind: integration
 status: active
-summary: Current descriptor normalization contract for `packages/live_ui`, including accepted input shapes, schema marker validation, and normalized signal binding extraction.
+summary: Ecosystem-aligned interpretation contract for `packages/live_ui`, centered on canonical UnifiedIUR input and normalized internal render structures.
 surface:
-  - packages/live_ui/lib/live_ui/descriptor.ex
-  - packages/live_ui/lib/live_ui/iur
-  - packages/live_ui/test/live_ui/iur
-  - packages/live_ui/test/live_ui/architecture/golden_parity_test.exs
+  - packages/live_ui
+  - .spec/specs/live-ui/interpreter.spec.md
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.live_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: live_ui.interpreter.accepted_inputs
-  statement: 'The interpreter shall accept the current supported input shapes: canonical map payloads, UnifiedIUR protocol structs, and compatible extension structs that expose the same structural fields.'
+- id: live_ui.interpreter.canonical_iur_input
+  statement: '`live_ui` shall interpret canonical UnifiedIUR as its authoritative cross-package rendering input.'
   priority: must
   stability: stable
 
-- id: live_ui.interpreter.descriptor_normalization
-  statement: 'The interpreter shall normalize accepted inputs into `LiveUi.Descriptor` trees with stable ids, normalized kinds, normalized props, interpreted children, and extracted signal bindings.'
+- id: live_ui.interpreter.normalized_render_tree
+  statement: 'The library shall normalize canonical UnifiedIUR into internal render structures that preserve widget identity, structure, props, children, and canonical signal bindings for LiveView rendering.'
   priority: must
   stability: stable
 
-- id: live_ui.interpreter.schema_markers
-  statement: 'The interpreter support code shall validate the current optional unified_iur schema markers and reject incomplete or unsupported marker sets when those markers are present.'
-  priority: must
-  stability: stable
-
-- id: live_ui.interpreter.source_iur_parity
-  statement: 'The package shall preserve the current parity contract in which module-backed screens and canonical raw IUR inputs can produce the same normalized descriptor and rendered HTML outputs through the shared interpretation pipeline.'
+- id: live_ui.interpreter.input_boundary_not_broadened
+  statement: 'The authored package contract shall not broaden the ecosystem rendering boundary by requiring module-backed screen sources, structurally compatible non-canonical extension inputs, or other alternate authored source shapes.'
   priority: must
   stability: stable
 ```
@@ -45,39 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/live_ui/lib/live_ui/iur/interpreter.ex
+  target: .spec/specs/live-ui/interpreter.spec.md
   covers:
-    - live_ui.interpreter.accepted_inputs
-    - live_ui.interpreter.descriptor_normalization
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/iur/value_normalizer.ex
-  covers:
-    - live_ui.interpreter.descriptor_normalization
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/iur/dependency.ex
-  covers:
-    - live_ui.interpreter.schema_markers
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/descriptor.ex
-  covers:
-    - live_ui.interpreter.descriptor_normalization
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/iur/interpreter_test.exs
-  covers:
-    - live_ui.interpreter.accepted_inputs
-    - live_ui.interpreter.descriptor_normalization
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/iur/dependency_test.exs
-  covers:
-    - live_ui.interpreter.schema_markers
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/architecture/golden_parity_test.exs
-  covers:
-    - live_ui.interpreter.source_iur_parity
+    - live_ui.interpreter.canonical_iur_input
+    - live_ui.interpreter.normalized_render_tree
+    - live_ui.interpreter.input_boundary_not_broadened
 ```

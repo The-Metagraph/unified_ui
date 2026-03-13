@@ -17,6 +17,21 @@
       },
       {
         "affects": [
+          "live_ui.package",
+          "live_ui.interpreter",
+          "live_ui.rendering",
+          "live_ui.runtime",
+          "live_ui.transport",
+          "repo.governance.live_ui_contract"
+        ],
+        "date": "2026-03-13",
+        "file": ".spec/decisions/architecture/repo.live_ui.ecosystem_alignment.md",
+        "id": "repo.live_ui.ecosystem_alignment",
+        "status": "accepted",
+        "title": "LiveUi Package Specs Follow the Ecosystem Contract"
+      },
+      {
+        "affects": [
           "spec.system",
           "repo.package",
           "repo.governance",
@@ -164,293 +179,6 @@
       "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
       "level": "warning",
       "message": "Verification target packages/desktop_ui/notes/planning/poc/phase-3-first-real-widget.md does not reference covered requirement: desktop_ui.poc_plan.phase2_and_phase3_scope"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/descriptor.ex does not reference covered requirement: live_ui.interpreter.descriptor_normalization"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/iur/dependency.ex does not reference covered requirement: live_ui.interpreter.schema_markers"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/iur/interpreter.ex does not reference covered requirement: live_ui.interpreter.accepted_inputs"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/iur/interpreter.ex does not reference covered requirement: live_ui.interpreter.descriptor_normalization"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/iur/value_normalizer.ex does not reference covered requirement: live_ui.interpreter.descriptor_normalization"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/architecture/golden_parity_test.exs does not reference covered requirement: live_ui.interpreter.source_iur_parity"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/iur/dependency_test.exs does not reference covered requirement: live_ui.interpreter.schema_markers"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/iur/interpreter_test.exs does not reference covered requirement: live_ui.interpreter.accepted_inputs"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.interpreter",
-      "file": ".spec/specs/live-ui/interpreter.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/iur/interpreter_test.exs does not reference covered requirement: live_ui.interpreter.descriptor_normalization"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/specs.ex does not reference covered requirement: live_ui.local_specs.entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/specs/checker.ex does not reference covered requirement: live_ui.local_specs.compliance_checker"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/specs/compliance_report.ex does not reference covered requirement: live_ui.local_specs.entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/specs/parser.ex does not reference covered requirement: live_ui.local_specs.overlay_parser"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/mix/tasks/live_ui.spec.check.ex does not reference covered requirement: live_ui.local_specs.mix_task"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/specs/checker_test.exs does not reference covered requirement: live_ui.local_specs.compliance_checker"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.local_specs",
-      "file": ".spec/specs/live-ui/local_specs.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/specs/parser_test.exs does not reference covered requirement: live_ui.local_specs.overlay_parser"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.package",
-      "file": ".spec/specs/live-ui/package.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui.ex does not reference covered requirement: live_ui.package.host_entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.package",
-      "file": ".spec/specs/live-ui/package.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/mix.exs does not reference covered requirement: live_ui.package.metadata"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.package",
-      "file": ".spec/specs/live-ui/package.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/architecture/package_contract_test.exs does not reference covered requirement: live_ui.package.host_entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/assets.ex does not reference covered requirement: live_ui.rendering.asset_manifest"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/style/compiler.ex does not reference covered requirement: live_ui.rendering.asset_manifest"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/widget_registry.ex does not reference covered requirement: live_ui.rendering.registry_catalog"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/widgets.ex does not reference covered requirement: live_ui.rendering.widget_surface"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/assets/hooks_test.exs does not reference covered requirement: live_ui.rendering.asset_manifest"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/components/canvas_and_chart_test.exs does not reference covered requirement: live_ui.rendering.stable_html_contract"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/components/widget_rendering_test.exs does not reference covered requirement: live_ui.rendering.registry_catalog"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/components/widget_rendering_test.exs does not reference covered requirement: live_ui.rendering.stable_html_contract"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.rendering",
-      "file": ".spec/specs/live-ui/rendering.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/components/widget_rendering_test.exs does not reference covered requirement: live_ui.rendering.widget_surface"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/runtime.ex does not reference covered requirement: live_ui.runtime.shared_model"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/signals/encoder.ex does not reference covered requirement: live_ui.runtime.event_encoding"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/source.ex does not reference covered requirement: live_ui.runtime.source_validation"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/lib/live_ui/widget_state.ex does not reference covered requirement: live_ui.runtime.widget_state_overlay"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/host/entrypoint_parity_test.exs does not reference covered requirement: live_ui.runtime.host_entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/host/router_integration_test.exs does not reference covered requirement: live_ui.runtime.host_entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/live/engine_test.exs does not reference covered requirement: live_ui.runtime.host_entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/live/engine_test.exs does not reference covered requirement: live_ui.runtime.shared_model"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/runtime/runtime_test.exs does not reference covered requirement: live_ui.runtime.event_encoding"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/runtime/runtime_test.exs does not reference covered requirement: live_ui.runtime.shared_model"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/runtime/runtime_test.exs does not reference covered requirement: live_ui.runtime.widget_state_overlay"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/screen/macro_test.exs does not reference covered requirement: live_ui.runtime.host_entrypoints"
-    },
-    {
-      "code": "verification_target_missing_reference",
-      "entity_id": "live_ui.runtime",
-      "file": ".spec/specs/live-ui/runtime.spec.md",
-      "level": "warning",
-      "message": "Verification target packages/live_ui/test/live_ui/signals/encoder_test.exs does not reference covered requirement: live_ui.runtime.event_encoding"
     },
     {
       "code": "verification_target_missing_reference",
@@ -2084,155 +1812,123 @@
       },
       {
         "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "id": "live_ui.interpreter.accepted_inputs",
+        "id": "live_ui.interpreter.canonical_iur_input",
         "priority": "must",
         "stability": "stable",
-        "statement": "The interpreter shall accept the current supported input shapes: canonical map payloads, UnifiedIUR protocol structs, and compatible extension structs that expose the same structural fields.",
+        "statement": "`live_ui` shall interpret canonical UnifiedIUR as its authoritative cross-package rendering input.",
         "subject_id": "live_ui.interpreter"
       },
       {
         "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "id": "live_ui.interpreter.descriptor_normalization",
+        "id": "live_ui.interpreter.input_boundary_not_broadened",
         "priority": "must",
         "stability": "stable",
-        "statement": "The interpreter shall normalize accepted inputs into `LiveUi.Descriptor` trees with stable ids, normalized kinds, normalized props, interpreted children, and extracted signal bindings.",
+        "statement": "The authored package contract shall not broaden the ecosystem rendering boundary by requiring module-backed screen sources, structurally compatible non-canonical extension inputs, or other alternate authored source shapes.",
         "subject_id": "live_ui.interpreter"
       },
       {
         "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "id": "live_ui.interpreter.schema_markers",
+        "id": "live_ui.interpreter.normalized_render_tree",
         "priority": "must",
         "stability": "stable",
-        "statement": "The interpreter support code shall validate the current optional unified_iur schema markers and reject incomplete or unsupported marker sets when those markers are present.",
+        "statement": "The library shall normalize canonical UnifiedIUR into internal render structures that preserve widget identity, structure, props, children, and canonical signal bindings for LiveView rendering.",
         "subject_id": "live_ui.interpreter"
-      },
-      {
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "id": "live_ui.interpreter.source_iur_parity",
-        "priority": "must",
-        "stability": "stable",
-        "statement": "The package shall preserve the current parity contract in which module-backed screens and canonical raw IUR inputs can produce the same normalized descriptor and rendered HTML outputs through the shared interpretation pipeline.",
-        "subject_id": "live_ui.interpreter"
-      },
-      {
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "id": "live_ui.local_specs.compliance_checker",
-        "priority": "must",
-        "stability": "stable",
-        "statement": "The package shall evaluate the current local governance overlay by checking required policy subjects, governance metadata, covers integrity, exception lifetimes, verification targets, and derived summary status in a compliance report.",
-        "subject_id": "live_ui.local_specs"
-      },
-      {
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "id": "live_ui.local_specs.entrypoints",
-        "priority": "must",
-        "stability": "stable",
-        "statement": "The package shall expose `LiveUi.Specs` as the current public entrypoint for parsing spec documents, running the local compliance check, and writing a JSON-serializable compliance report.",
-        "subject_id": "live_ui.local_specs"
-      },
-      {
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "id": "live_ui.local_specs.mix_task",
-        "priority": "must",
-        "stability": "stable",
-        "statement": "The package shall expose `mix live_ui.spec.check` as the current repo-local entrypoint that writes a JSON compliance report and can fail on errors or on warnings in strict mode.",
-        "subject_id": "live_ui.local_specs"
-      },
-      {
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "id": "live_ui.local_specs.overlay_parser",
-        "priority": "must",
-        "stability": "stable",
-        "statement": "The package shall parse current Spec Led markdown documents together with the local `spec-governance` block into structured `LiveUi.Specs.Document` values.",
-        "subject_id": "live_ui.local_specs"
       },
       {
         "file": ".spec/specs/live-ui/package.spec.md",
-        "id": "live_ui.package.host_entrypoints",
+        "id": "live_ui.package.canonical_input_boundary",
         "priority": "must",
         "stability": "stable",
-        "statement": "The top-level `LiveUi` module shall expose the current dynamic session envelope helpers and session extraction entrypoints used by host applications.",
+        "statement": "The authored cross-package input boundary for `live_ui` shall be canonical UnifiedIUR.",
         "subject_id": "live_ui.package"
       },
       {
         "file": ".spec/specs/live-ui/package.spec.md",
-        "id": "live_ui.package.metadata",
+        "id": "live_ui.package.library_position",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall publish itself as the `:live_ui` library and declare its current positioning as a LiveView adapter and runtime shell for UnifiedUi screens and canonical UnifiedIUR sources.",
+        "statement": "`live_ui` shall remain an independent Phoenix LiveView widget library and runtime package rather than an authored DSL boundary.",
+        "subject_id": "live_ui.package"
+      },
+      {
+        "file": ".spec/specs/live-ui/package.spec.md",
+        "id": "live_ui.package.native_widget_independence",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`live_ui` may expose its own native widget surface and host integration helpers, but those conveniences shall not broaden or replace the canonical UnifiedIUR boundary.",
         "subject_id": "live_ui.package"
       },
       {
         "file": ".spec/specs/live-ui/rendering.spec.md",
-        "id": "live_ui.rendering.asset_manifest",
+        "id": "live_ui.rendering.canonical_signal_markup",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall expose the current JavaScript hook manifest and style token compiler used by advanced widgets such as viewport, split pane, command palette, and canvas.",
+        "statement": "The rendered LiveView surface shall preserve canonical widget identity and signal metadata needed to carry canonical event meaning through the runtime boundary.",
         "subject_id": "live_ui.rendering"
       },
       {
         "file": ".spec/specs/live-ui/rendering.spec.md",
-        "id": "live_ui.rendering.registry_catalog",
+        "id": "live_ui.rendering.hooks_only_when_necessary",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall normalize descriptor kinds through `LiveUi.WidgetRegistry` and dispatch rendering to the current renderer families for supported canonical and extension widget kinds.",
+        "statement": "JavaScript hooks shall be used only where they are necessary to bridge canonical signals and local widget behavior that cannot be expressed through plain LiveView rendering alone.",
         "subject_id": "live_ui.rendering"
       },
       {
         "file": ".spec/specs/live-ui/rendering.spec.md",
-        "id": "live_ui.rendering.stable_html_contract",
+        "id": "live_ui.rendering.native_widget_library",
         "priority": "must",
         "stability": "stable",
-        "statement": "The renderer components shall emit the current stable HTML contract, including CSS tokens and scoped LiveView payload attributes for stateless widgets, multi-event widgets, stateful composites, tables, and advanced hook-driven widgets.",
-        "subject_id": "live_ui.rendering"
-      },
-      {
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "id": "live_ui.rendering.widget_surface",
-        "priority": "must",
-        "stability": "stable",
-        "statement": "The package shall expose the current direct Phoenix component surface for its implemented widget and layout catalog across basic widgets, layouts, navigation, forms, feedback, data visualization, and extension widgets.",
+        "statement": "`live_ui` shall render canonical UnifiedIUR through its own native Phoenix LiveView widget and layout surface rather than acting as a thin authored DSL mirror.",
         "subject_id": "live_ui.rendering"
       },
       {
         "file": ".spec/specs/live-ui/runtime.spec.md",
-        "id": "live_ui.runtime.event_encoding",
+        "id": "live_ui.runtime.liveview_execution_model",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall encode current LiveView and hook payloads into concrete `Jido.Signal` values with normalized type, subject, source, intent, and scoped payload fields.",
+        "statement": "`live_ui` shall execute as a Phoenix LiveView runtime whose rendered state is driven by canonical UnifiedIUR interpretation and native widget rendering.",
         "subject_id": "live_ui.runtime"
       },
       {
         "file": ".spec/specs/live-ui/runtime.spec.md",
-        "id": "live_ui.runtime.host_entrypoints",
+        "id": "live_ui.runtime.local_state_subordinate",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall keep the current host integration model in which wrapper LiveViews, dynamic LiveViews, route helpers, session normalization, and the shared engine all converge on the same runtime model shape and rendering path.",
+        "statement": "Renderer-local or hook-local state may exist for runtime convenience, but it shall remain subordinate to the canonical server-side runtime model and shall not redefine cross-package UI meaning.",
         "subject_id": "live_ui.runtime"
       },
       {
         "file": ".spec/specs/live-ui/runtime.spec.md",
-        "id": "live_ui.runtime.shared_model",
+        "id": "live_ui.runtime.server_authoritative_behavior",
         "priority": "must",
         "stability": "stable",
-        "statement": "The runtime shall build and update the current deterministic `LiveUi.Runtime.Model` shape, including runtime context, source metadata, screen state, IUR tree, descriptor tree, signal bindings, render metadata, and event bookkeeping.",
+        "statement": "The runtime shall preserve server-authoritative UI behavior even when local widget behavior requires browser-assisted interaction.",
         "subject_id": "live_ui.runtime"
       },
       {
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "id": "live_ui.runtime.source_validation",
+        "file": ".spec/specs/live-ui/transport.spec.md",
+        "id": "live_ui.transport.canonical_event_meaning",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall validate the current two source modes for runtime execution: module-backed screen sources with required callbacks and raw IUR sources represented as maps or UnifiedIUR protocol structs.",
-        "subject_id": "live_ui.runtime"
+        "statement": "The transport boundary shall preserve canonical event meaning across runtime and renderer boundaries, including stable signal type, source, subject, and payload semantics.",
+        "subject_id": "live_ui.transport"
       },
       {
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "id": "live_ui.runtime.widget_state_overlay",
+        "file": ".spec/specs/live-ui/transport.spec.md",
+        "id": "live_ui.transport.local_state_not_contract",
         "priority": "must",
         "stability": "stable",
-        "statement": "The runtime shall maintain the current server-authoritative widget-local state overlay for advanced widgets and apply that overlay back onto the normalized descriptor tree after interpretation.",
-        "subject_id": "live_ui.runtime"
+        "statement": "Renderer-specific local state may vary inside `live_ui`, but local state shall not replace the canonical signal contract at the cross-package boundary.",
+        "subject_id": "live_ui.transport"
+      },
+      {
+        "file": ".spec/specs/live-ui/transport.spec.md",
+        "id": "live_ui.transport.phoenix_channel_bridge",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`live_ui` shall bridge canonical widget events over Phoenix channels using Jido.Signal values and CloudEvents-compatible semantics.",
+        "subject_id": "live_ui.transport"
       },
       {
         "file": ".spec/specs/governance/governance_layer.spec.md",
@@ -2356,10 +2052,10 @@
       },
       {
         "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
-        "id": "repo.governance.live_ui_local_overlay_kept_in_sync",
+        "id": "repo.governance.live_ui_specs_not_broader_than_ecosystem",
         "priority": "must",
         "stability": "stable",
-        "statement": "Changes to the shipped `live_ui` local specs-governance overlay under `packages/live_ui/lib/live_ui/specs*` or the `mix live_ui.spec.check` entrypoint shall update `.spec/specs/live-ui/local_specs.spec.md` in the same change set and shall remain grounded in the package’s current code rather than ecosystem-level governance.",
+        "statement": "Authored subjects under `.spec/specs/live-ui/` shall remain aligned with the ecosystem architecture and signal transport decisions and shall not broaden the package contract with alternate authored source modes, non-canonical input boundaries, or package-local governance overlays unless those are first adopted into the root ecosystem or governance layer.",
         "subject_id": "repo.governance.live_ui_contract"
       },
       {
@@ -2367,7 +2063,7 @@
         "id": "repo.governance.live_ui_specs_updated_with_surface_changes",
         "priority": "must",
         "stability": "stable",
-        "statement": "Changes to the current `live_ui` rendering, interpreter, runtime, session, routing, or host-entrypoint code shall update the affected authored subjects under `.spec/specs/live-ui/` in the same change set.",
+        "statement": "Changes to the `live_ui` package surface that affect its canonical UnifiedIUR boundary, native widget rendering model, LiveView runtime model, or canonical signal transport shall update the affected authored subjects under `.spec/specs/live-ui/` in the same change set.",
         "subject_id": "repo.governance.live_ui_contract"
       },
       {
@@ -3234,12 +2930,13 @@
         "meta": {
           "decisions": [
             "repo.governance.contract_policy",
-            "repo.governance.package_contract_policy"
+            "repo.governance.package_contract_policy",
+            "repo.live_ui.ecosystem_alignment"
           ],
           "id": "repo.governance.live_ui_contract",
           "kind": "contract",
           "status": "active",
-          "summary": "Governance contract for the current `live_ui` rendering, interpreter, runtime, host entrypoint, and local specs-overlay backfill.",
+          "summary": "Governance contract for the ecosystem-aligned `live_ui` package subjects, including canonical IUR boundary, LiveView runtime, native rendering surface, and canonical transport.",
           "surface": [
             "packages/live_ui",
             ".spec/specs/live-ui"
@@ -3352,59 +3049,36 @@
         "id": "live_ui.interpreter",
         "meta": {
           "decisions": [
-            "repo.governance.contract_policy"
+            "repo.ecosystem.contract_model",
+            "repo.live_ui.ecosystem_alignment"
           ],
           "id": "live_ui.interpreter",
           "kind": "integration",
           "status": "active",
-          "summary": "Current descriptor normalization contract for `packages/live_ui`, including accepted input shapes, schema marker validation, and normalized signal binding extraction.",
+          "summary": "Ecosystem-aligned interpretation contract for `packages/live_ui`, centered on canonical UnifiedIUR input and normalized internal render structures.",
           "surface": [
-            "packages/live_ui/lib/live_ui/descriptor.ex",
-            "packages/live_ui/lib/live_ui/iur",
-            "packages/live_ui/test/live_ui/iur",
-            "packages/live_ui/test/live_ui/architecture/golden_parity_test.exs"
+            "packages/live_ui",
+            ".spec/specs/live-ui/interpreter.spec.md"
           ],
           "verification_minimum_strength": null
         },
         "title": "LiveUi Interpreter"
       },
       {
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "id": "live_ui.local_specs",
-        "meta": {
-          "decisions": [
-            "repo.governance.contract_policy"
-          ],
-          "id": "live_ui.local_specs",
-          "kind": "tooling",
-          "status": "active",
-          "summary": "Current local spec-governance overlay contract for `packages/live_ui`, including document parsing, compliance checking, report generation, and the dedicated Mix task entrypoint.",
-          "surface": [
-            "packages/live_ui/lib/live_ui/specs.ex",
-            "packages/live_ui/lib/live_ui/specs",
-            "packages/live_ui/lib/mix/tasks/live_ui.spec.check.ex",
-            "packages/live_ui/test/live_ui/specs"
-          ],
-          "verification_minimum_strength": null
-        },
-        "title": "LiveUi Local Specs"
-      },
-      {
         "file": ".spec/specs/live-ui/package.spec.md",
         "id": "live_ui.package",
         "meta": {
           "decisions": [
-            "repo.governance.contract_policy"
+            "repo.ecosystem.contract_model",
+            "repo.live_ui.ecosystem_alignment"
           ],
           "id": "live_ui.package",
           "kind": "package",
           "status": "active",
-          "summary": "Current codebase-derived contract for the `packages/live_ui` library, its published package metadata, and its top-level host integration entrypoints.",
+          "summary": "Ecosystem-aligned package contract for `packages/live_ui` as an independent Phoenix LiveView widget library that consumes canonical UnifiedIUR and canonical signal transport.",
           "surface": [
-            "packages/live_ui/README.md",
-            "packages/live_ui/mix.exs",
-            "packages/live_ui/lib/live_ui.ex",
-            "packages/live_ui/test/live_ui/architecture/package_contract_test.exs"
+            "packages/live_ui",
+            ".spec/specs/live-ui"
           ],
           "verification_minimum_strength": null
         },
@@ -3415,21 +3089,16 @@
         "id": "live_ui.rendering",
         "meta": {
           "decisions": [
-            "repo.governance.contract_policy"
+            "repo.ecosystem.contract_model",
+            "repo.live_ui.ecosystem_alignment"
           ],
           "id": "live_ui.rendering",
           "kind": "subsystem",
           "status": "active",
-          "summary": "Current rendering contract for `packages/live_ui`, including direct widget helpers, descriptor-driven rendering, stable HTML tokens, and hook-backed advanced widgets.",
+          "summary": "Ecosystem-aligned rendering contract for `packages/live_ui`, including an independent native widget surface, LiveView component rendering, and minimized hook usage.",
           "surface": [
-            "packages/live_ui/lib/live_ui/widgets.ex",
-            "packages/live_ui/lib/live_ui/widget_registry.ex",
-            "packages/live_ui/lib/live_ui/components",
-            "packages/live_ui/lib/live_ui/assets.ex",
-            "packages/live_ui/lib/live_ui/style/compiler.ex",
-            "packages/live_ui/test/live_ui/components",
-            "packages/live_ui/test/live_ui/widgets",
-            "packages/live_ui/test/live_ui/assets"
+            "packages/live_ui",
+            ".spec/specs/live-ui/rendering.spec.md"
           ],
           "verification_minimum_strength": null
         },
@@ -3440,32 +3109,40 @@
         "id": "live_ui.runtime",
         "meta": {
           "decisions": [
-            "repo.governance.contract_policy"
+            "repo.ecosystem.contract_model",
+            "repo.live_ui.ecosystem_alignment"
           ],
           "id": "live_ui.runtime",
           "kind": "runtime",
           "status": "active",
-          "summary": "Current runtime and host integration contract for `packages/live_ui`, including source validation, deterministic runtime state, event encoding, widget-state overlaying, and wrapper or dynamic entrypoints.",
+          "summary": "Ecosystem-aligned runtime contract for `packages/live_ui`, centered on a server-authoritative LiveView runtime driven by canonical UnifiedIUR and canonical signals.",
           "surface": [
-            "packages/live_ui/lib/live_ui/configuration_error.ex",
-            "packages/live_ui/lib/live_ui/source.ex",
-            "packages/live_ui/lib/live_ui/runtime.ex",
-            "packages/live_ui/lib/live_ui/runtime",
-            "packages/live_ui/lib/live_ui/widget_state.ex",
-            "packages/live_ui/lib/live_ui/signals",
-            "packages/live_ui/lib/live_ui/live",
-            "packages/live_ui/lib/live_ui/screen.ex",
-            "packages/live_ui/lib/live_ui/router.ex",
-            "packages/live_ui/lib/live_ui/session.ex",
-            "packages/live_ui/test/live_ui/runtime",
-            "packages/live_ui/test/live_ui/host",
-            "packages/live_ui/test/live_ui/live",
-            "packages/live_ui/test/live_ui/screen",
-            "packages/live_ui/test/live_ui/signals"
+            "packages/live_ui",
+            ".spec/specs/live-ui/runtime.spec.md"
           ],
           "verification_minimum_strength": null
         },
         "title": "LiveUi Runtime"
+      },
+      {
+        "file": ".spec/specs/live-ui/transport.spec.md",
+        "id": "live_ui.transport",
+        "meta": {
+          "decisions": [
+            "repo.ecosystem.contract_model",
+            "repo.live_ui.ecosystem_alignment"
+          ],
+          "id": "live_ui.transport",
+          "kind": "integration",
+          "status": "active",
+          "summary": "Ecosystem-aligned transport contract for `packages/live_ui`, using Phoenix channels plus canonical Jido.Signal and CloudEvents-compatible semantics.",
+          "surface": [
+            "packages/live_ui",
+            ".spec/specs/live-ui/transport.spec.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "LiveUi Transport"
       },
       {
         "file": ".spec/specs/package.spec.md",
@@ -4128,316 +3805,58 @@
       },
       {
         "covers": [
-          "live_ui.interpreter.accepted_inputs",
-          "live_ui.interpreter.descriptor_normalization"
+          "live_ui.interpreter.canonical_iur_input",
+          "live_ui.interpreter.normalized_render_tree",
+          "live_ui.interpreter.input_boundary_not_broadened"
         ],
         "file": ".spec/specs/live-ui/interpreter.spec.md",
         "kind": "source_file",
         "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/interpreter.ex"
+        "target": ".spec/specs/live-ui/interpreter.spec.md"
       },
       {
         "covers": [
-          "live_ui.interpreter.descriptor_normalization"
-        ],
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/value_normalizer.ex"
-      },
-      {
-        "covers": [
-          "live_ui.interpreter.schema_markers"
-        ],
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/dependency.ex"
-      },
-      {
-        "covers": [
-          "live_ui.interpreter.descriptor_normalization"
-        ],
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/descriptor.ex"
-      },
-      {
-        "covers": [
-          "live_ui.interpreter.accepted_inputs",
-          "live_ui.interpreter.descriptor_normalization"
-        ],
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/iur/interpreter_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.interpreter.schema_markers"
-        ],
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/iur/dependency_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.interpreter.source_iur_parity"
-        ],
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/architecture/golden_parity_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs.ex"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.overlay_parser"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs/parser.ex"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.compliance_checker"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs/checker.ex"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.mix_task"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/mix/tasks/live_ui.spec.check.ex"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.overlay_parser"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/test/live_ui/specs/parser_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.compliance_checker"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/test/live_ui/specs/checker_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.local_specs.entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs/compliance_report.ex"
-      },
-      {
-        "covers": [
-          "live_ui.package.metadata"
+          "live_ui.package.library_position",
+          "live_ui.package.canonical_input_boundary",
+          "live_ui.package.native_widget_independence"
         ],
         "file": ".spec/specs/live-ui/package.spec.md",
         "kind": "source_file",
         "subject_id": "live_ui.package",
-        "target": "packages/live_ui/mix.exs"
+        "target": ".spec/specs/live-ui/package.spec.md"
       },
       {
         "covers": [
-          "live_ui.package.host_entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/package.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.package",
-        "target": "packages/live_ui/lib/live_ui.ex"
-      },
-      {
-        "covers": [
-          "live_ui.package.host_entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/package.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.package",
-        "target": "packages/live_ui/test/live_ui/architecture/package_contract_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.rendering.widget_surface"
+          "live_ui.rendering.native_widget_library",
+          "live_ui.rendering.canonical_signal_markup",
+          "live_ui.rendering.hooks_only_when_necessary"
         ],
         "file": ".spec/specs/live-ui/rendering.spec.md",
         "kind": "source_file",
         "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/widgets.ex"
+        "target": ".spec/specs/live-ui/rendering.spec.md"
       },
       {
         "covers": [
-          "live_ui.rendering.registry_catalog"
-        ],
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/widget_registry.ex"
-      },
-      {
-        "covers": [
-          "live_ui.rendering.widget_surface",
-          "live_ui.rendering.registry_catalog",
-          "live_ui.rendering.stable_html_contract"
-        ],
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/components/widget_rendering_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.rendering.stable_html_contract"
-        ],
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/components/canvas_and_chart_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.rendering.asset_manifest"
-        ],
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/assets.ex"
-      },
-      {
-        "covers": [
-          "live_ui.rendering.asset_manifest"
-        ],
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/style/compiler.ex"
-      },
-      {
-        "covers": [
-          "live_ui.rendering.asset_manifest"
-        ],
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/assets/hooks_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.source_validation"
+          "live_ui.runtime.liveview_execution_model",
+          "live_ui.runtime.server_authoritative_behavior",
+          "live_ui.runtime.local_state_subordinate"
         ],
         "file": ".spec/specs/live-ui/runtime.spec.md",
         "kind": "source_file",
         "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/source.ex"
+        "target": ".spec/specs/live-ui/runtime.spec.md"
       },
       {
         "covers": [
-          "live_ui.runtime.shared_model"
+          "live_ui.transport.phoenix_channel_bridge",
+          "live_ui.transport.canonical_event_meaning",
+          "live_ui.transport.local_state_not_contract"
         ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
+        "file": ".spec/specs/live-ui/transport.spec.md",
         "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/runtime.ex"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.event_encoding"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/signals/encoder.ex"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.widget_state_overlay"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/widget_state.ex"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.shared_model",
-          "live_ui.runtime.event_encoding",
-          "live_ui.runtime.widget_state_overlay"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/runtime/runtime_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.host_entrypoints",
-          "live_ui.runtime.shared_model"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/live/engine_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.host_entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/host/entrypoint_parity_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.host_entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/host/router_integration_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.host_entrypoints"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/screen/macro_test.exs"
-      },
-      {
-        "covers": [
-          "live_ui.runtime.event_encoding"
-        ],
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/signals/encoder_test.exs"
+        "subject_id": "live_ui.transport",
+        "target": ".spec/specs/live-ui/transport.spec.md"
       },
       {
         "covers": [
@@ -4489,7 +3908,7 @@
       {
         "covers": [
           "repo.governance.live_ui_specs_updated_with_surface_changes",
-          "repo.governance.live_ui_local_overlay_kept_in_sync"
+          "repo.governance.live_ui_specs_not_broader_than_ecosystem"
         ],
         "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
         "kind": "source_file",
@@ -6624,13 +6043,13 @@
   "specification_version": "1.0",
   "summary": {
     "decision_parse_errors": 0,
-    "decisions": 3,
+    "decisions": 4,
     "exceptions": 3,
-    "findings": 249,
-    "requirements": 151,
+    "findings": 208,
+    "requirements": 147,
     "scenarios": 0,
     "subjects": 41,
-    "verifications": 287
+    "verifications": 258
   },
   "verification": {
     "claims": [
@@ -7075,455 +6494,169 @@
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.interpreter.accepted_inputs",
+        "cover_id": "live_ui.interpreter.canonical_iur_input",
         "file": ".spec/specs/live-ui/interpreter.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/interpreter.ex",
+        "target": ".spec/specs/live-ui/interpreter.spec.md",
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.interpreter.descriptor_normalization",
+        "cover_id": "live_ui.interpreter.input_boundary_not_broadened",
         "file": ".spec/specs/live-ui/interpreter.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/interpreter.ex",
+        "target": ".spec/specs/live-ui/interpreter.spec.md",
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.interpreter.descriptor_normalization",
+        "cover_id": "live_ui.interpreter.normalized_render_tree",
         "file": ".spec/specs/live-ui/interpreter.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/value_normalizer.ex",
-        "verification_index": 1
-      },
-      {
-        "cover_id": "live_ui.interpreter.schema_markers",
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/iur/dependency.ex",
-        "verification_index": 2
-      },
-      {
-        "cover_id": "live_ui.interpreter.descriptor_normalization",
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/lib/live_ui/descriptor.ex",
-        "verification_index": 3
-      },
-      {
-        "cover_id": "live_ui.interpreter.accepted_inputs",
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/iur/interpreter_test.exs",
-        "verification_index": 4
-      },
-      {
-        "cover_id": "live_ui.interpreter.descriptor_normalization",
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/iur/interpreter_test.exs",
-        "verification_index": 4
-      },
-      {
-        "cover_id": "live_ui.interpreter.schema_markers",
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/iur/dependency_test.exs",
-        "verification_index": 5
-      },
-      {
-        "cover_id": "live_ui.interpreter.source_iur_parity",
-        "file": ".spec/specs/live-ui/interpreter.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.interpreter",
-        "target": "packages/live_ui/test/live_ui/architecture/golden_parity_test.exs",
-        "verification_index": 6
-      },
-      {
-        "cover_id": "live_ui.local_specs.entrypoints",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs.ex",
+        "target": ".spec/specs/live-ui/interpreter.spec.md",
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.local_specs.overlay_parser",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs/parser.ex",
-        "verification_index": 1
-      },
-      {
-        "cover_id": "live_ui.local_specs.compliance_checker",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs/checker.ex",
-        "verification_index": 2
-      },
-      {
-        "cover_id": "live_ui.local_specs.mix_task",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/mix/tasks/live_ui.spec.check.ex",
-        "verification_index": 3
-      },
-      {
-        "cover_id": "live_ui.local_specs.overlay_parser",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/test/live_ui/specs/parser_test.exs",
-        "verification_index": 4
-      },
-      {
-        "cover_id": "live_ui.local_specs.compliance_checker",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/test/live_ui/specs/checker_test.exs",
-        "verification_index": 5
-      },
-      {
-        "cover_id": "live_ui.local_specs.entrypoints",
-        "file": ".spec/specs/live-ui/local_specs.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.local_specs",
-        "target": "packages/live_ui/lib/live_ui/specs/compliance_report.ex",
-        "verification_index": 6
-      },
-      {
-        "cover_id": "live_ui.package.metadata",
+        "cover_id": "live_ui.package.canonical_input_boundary",
         "file": ".spec/specs/live-ui/package.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.package",
-        "target": "packages/live_ui/mix.exs",
+        "target": ".spec/specs/live-ui/package.spec.md",
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.package.host_entrypoints",
+        "cover_id": "live_ui.package.library_position",
         "file": ".spec/specs/live-ui/package.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.package",
-        "target": "packages/live_ui/lib/live_ui.ex",
-        "verification_index": 1
+        "target": ".spec/specs/live-ui/package.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.package.host_entrypoints",
+        "cover_id": "live_ui.package.native_widget_independence",
         "file": ".spec/specs/live-ui/package.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.package",
-        "target": "packages/live_ui/test/live_ui/architecture/package_contract_test.exs",
-        "verification_index": 2
-      },
-      {
-        "cover_id": "live_ui.rendering.widget_surface",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/widgets.ex",
+        "target": ".spec/specs/live-ui/package.spec.md",
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.rendering.registry_catalog",
+        "cover_id": "live_ui.rendering.canonical_signal_markup",
         "file": ".spec/specs/live-ui/rendering.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/widget_registry.ex",
-        "verification_index": 1
-      },
-      {
-        "cover_id": "live_ui.rendering.registry_catalog",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/components/widget_rendering_test.exs",
-        "verification_index": 2
-      },
-      {
-        "cover_id": "live_ui.rendering.stable_html_contract",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/components/widget_rendering_test.exs",
-        "verification_index": 2
-      },
-      {
-        "cover_id": "live_ui.rendering.widget_surface",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/components/widget_rendering_test.exs",
-        "verification_index": 2
-      },
-      {
-        "cover_id": "live_ui.rendering.stable_html_contract",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/components/canvas_and_chart_test.exs",
-        "verification_index": 3
-      },
-      {
-        "cover_id": "live_ui.rendering.asset_manifest",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/assets.ex",
-        "verification_index": 4
-      },
-      {
-        "cover_id": "live_ui.rendering.asset_manifest",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/lib/live_ui/style/compiler.ex",
-        "verification_index": 5
-      },
-      {
-        "cover_id": "live_ui.rendering.asset_manifest",
-        "file": ".spec/specs/live-ui/rendering.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.rendering",
-        "target": "packages/live_ui/test/live_ui/assets/hooks_test.exs",
-        "verification_index": 6
-      },
-      {
-        "cover_id": "live_ui.runtime.source_validation",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/source.ex",
+        "target": ".spec/specs/live-ui/rendering.spec.md",
         "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.shared_model",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
+        "cover_id": "live_ui.rendering.hooks_only_when_necessary",
+        "file": ".spec/specs/live-ui/rendering.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/runtime.ex",
-        "verification_index": 1
+        "strength": "linked",
+        "subject_id": "live_ui.rendering",
+        "target": ".spec/specs/live-ui/rendering.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.event_encoding",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
+        "cover_id": "live_ui.rendering.native_widget_library",
+        "file": ".spec/specs/live-ui/rendering.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/signals/encoder.ex",
-        "verification_index": 2
+        "strength": "linked",
+        "subject_id": "live_ui.rendering",
+        "target": ".spec/specs/live-ui/rendering.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.widget_state_overlay",
+        "cover_id": "live_ui.runtime.liveview_execution_model",
         "file": ".spec/specs/live-ui/runtime.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/lib/live_ui/widget_state.ex",
-        "verification_index": 3
+        "target": ".spec/specs/live-ui/runtime.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.event_encoding",
+        "cover_id": "live_ui.runtime.local_state_subordinate",
         "file": ".spec/specs/live-ui/runtime.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/runtime/runtime_test.exs",
-        "verification_index": 4
+        "target": ".spec/specs/live-ui/runtime.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.shared_model",
+        "cover_id": "live_ui.runtime.server_authoritative_behavior",
         "file": ".spec/specs/live-ui/runtime.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
+        "strength": "linked",
         "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/runtime/runtime_test.exs",
-        "verification_index": 4
+        "target": ".spec/specs/live-ui/runtime.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.widget_state_overlay",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
+        "cover_id": "live_ui.transport.canonical_event_meaning",
+        "file": ".spec/specs/live-ui/transport.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/runtime/runtime_test.exs",
-        "verification_index": 4
+        "strength": "linked",
+        "subject_id": "live_ui.transport",
+        "target": ".spec/specs/live-ui/transport.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.host_entrypoints",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
+        "cover_id": "live_ui.transport.local_state_not_contract",
+        "file": ".spec/specs/live-ui/transport.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/live/engine_test.exs",
-        "verification_index": 5
+        "strength": "linked",
+        "subject_id": "live_ui.transport",
+        "target": ".spec/specs/live-ui/transport.spec.md",
+        "verification_index": 0
       },
       {
-        "cover_id": "live_ui.runtime.shared_model",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
+        "cover_id": "live_ui.transport.phoenix_channel_bridge",
+        "file": ".spec/specs/live-ui/transport.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
         "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/live/engine_test.exs",
-        "verification_index": 5
-      },
-      {
-        "cover_id": "live_ui.runtime.host_entrypoints",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/host/entrypoint_parity_test.exs",
-        "verification_index": 6
-      },
-      {
-        "cover_id": "live_ui.runtime.host_entrypoints",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/host/router_integration_test.exs",
-        "verification_index": 7
-      },
-      {
-        "cover_id": "live_ui.runtime.host_entrypoints",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/screen/macro_test.exs",
-        "verification_index": 8
-      },
-      {
-        "cover_id": "live_ui.runtime.event_encoding",
-        "file": ".spec/specs/live-ui/runtime.spec.md",
-        "kind": "source_file",
-        "meets_minimum": true,
-        "required_strength": "claimed",
-        "strength": "claimed",
-        "subject_id": "live_ui.runtime",
-        "target": "packages/live_ui/test/live_ui/signals/encoder_test.exs",
-        "verification_index": 9
+        "strength": "linked",
+        "subject_id": "live_ui.transport",
+        "target": ".spec/specs/live-ui/transport.spec.md",
+        "verification_index": 0
       },
       {
         "cover_id": "repo.governance.adrs_record_rationale",
@@ -7691,7 +6824,7 @@
         "verification_index": 0
       },
       {
-        "cover_id": "repo.governance.live_ui_local_overlay_kept_in_sync",
+        "cover_id": "repo.governance.live_ui_specs_not_broader_than_ecosystem",
         "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
         "kind": "source_file",
         "meets_minimum": true,
@@ -10829,14 +9962,14 @@
     "cli_minimum_strength": null,
     "default_minimum_strength": "claimed",
     "strength_summary": {
-      "claimed": 251,
+      "claimed": 210,
       "executed": 0,
-      "linked": 130
+      "linked": 145
     },
     "threshold_failures": 0
   },
   "workspace": {
-    "decision_count": 3,
+    "decision_count": 4,
     "spec_count": 41
   }
 }
