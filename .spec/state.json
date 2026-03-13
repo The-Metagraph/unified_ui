@@ -33,6 +33,125 @@
   "findings": [
     {
       "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/CLAUDE.md does not reference covered requirement: desktop_ui.architecture.framework_positioning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/CLAUDE.md does not reference covered requirement: desktop_ui.architecture.future_jido_evolution"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/CLAUDE.md does not reference covered requirement: desktop_ui.architecture.layered_runtime_model"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md does not reference covered requirement: desktop_ui.architecture.framework_positioning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md does not reference covered requirement: desktop_ui.architecture.layered_runtime_model"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/research/1.01-foundation/1.01.2-architecture.md does not reference covered requirement: desktop_ui.architecture.layered_runtime_model"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/research/1.01-foundation/1.01.3-graphics-engine.md does not reference covered requirement: desktop_ui.architecture.layered_runtime_model"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.architecture",
+      "file": ".spec/specs/desktop-ui/architecture.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/research/1.01-foundation/1.01.4-component-architecture.md does not reference covered requirement: desktop_ui.architecture.future_jido_evolution"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.package",
+      "file": ".spec/specs/desktop-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/CLAUDE.md does not reference covered requirement: desktop_ui.package.research_phase_status"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.package",
+      "file": ".spec/specs/desktop-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/README.md does not reference covered requirement: desktop_ui.package.mix_scaffold"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.package",
+      "file": ".spec/specs/desktop-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/lib/desktop_ui.ex does not reference covered requirement: desktop_ui.package.placeholder_module"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.package",
+      "file": ".spec/specs/desktop-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/mix.exs does not reference covered requirement: desktop_ui.package.mix_scaffold"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.package",
+      "file": ".spec/specs/desktop-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/test/desktop_ui_test.exs does not reference covered requirement: desktop_ui.package.placeholder_module"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.poc_plan",
+      "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/planning/poc/README.md does not reference covered requirement: desktop_ui.poc_plan.phase_structure"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.poc_plan",
+      "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/planning/poc/phase-1-architecture-validation.md does not reference covered requirement: desktop_ui.poc_plan.phase1_validation_scope"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.poc_plan",
+      "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/planning/poc/phase-2-graphics-bridge.md does not reference covered requirement: desktop_ui.poc_plan.phase2_and_phase3_scope"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "desktop_ui.poc_plan",
+      "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/desktop_ui/notes/planning/poc/phase-3-first-real-widget.md does not reference covered requirement: desktop_ui.poc_plan.phase2_and_phase3_scope"
+    },
+    {
+      "code": "verification_target_missing_reference",
       "entity_id": "live_ui.interpreter",
       "file": ".spec/specs/live-ui/interpreter.spec.md",
       "level": "warning",
@@ -1693,6 +1812,78 @@
     ],
     "requirements": [
       {
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "id": "desktop_ui.architecture.framework_positioning",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current research set shall position DesktopUI as an Elixir-based cross-platform desktop UI framework that follows Elm-style state management and pursues direct desktop graphics rather than wrapping an existing GUI toolkit.",
+        "subject_id": "desktop_ui.architecture"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "id": "desktop_ui.architecture.future_jido_evolution",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current design docs shall describe Jido integration as a planned future evolution for agent-based components, signal-driven communication, and structured side-effect execution rather than as implemented package behavior today.",
+        "subject_id": "desktop_ui.architecture"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "id": "desktop_ui.architecture.layered_runtime_model",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The documented architecture shall define the current layered runtime model with a `DesktopUI.Elm` behaviour, a central runtime process, declarative widget trees, a rendering and layout layer, and a `DesktopUI.Graphics` bridge over SDL2-backed native functions.",
+        "subject_id": "desktop_ui.architecture"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "id": "desktop_ui.package.mix_scaffold",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`packages/desktop_ui` shall currently remain a minimal Mix project published as `:desktop_ui`, targeting Elixir `~> 1.18`, starting only `:logger`, and declaring no active package dependencies.",
+        "subject_id": "desktop_ui.package"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "id": "desktop_ui.package.placeholder_module",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current public code surface shall remain the placeholder `DesktopUi` module that exposes `hello/0` returning `:world`, with matching doctest and unit-test coverage.",
+        "subject_id": "desktop_ui.package"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "id": "desktop_ui.package.research_phase_status",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package documentation shall state that `desktop_ui` is still in an early research or prototype phase, with the runtime, graphics bridge, and widget system planned but not yet implemented in the shipped code.",
+        "subject_id": "desktop_ui.package"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "id": "desktop_ui.poc_plan.phase1_validation_scope",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Phase 1 planning shall cover the current pure-Elixir validation slice for the Elm behaviour, widget-construction DSL, runtime loop, mock renderer, example counter component, and integration-test coverage.",
+        "subject_id": "desktop_ui.poc_plan"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "id": "desktop_ui.poc_plan.phase2_and_phase3_scope",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Phase 2 and Phase 3 planning shall cover the current SDL2 NIF or graphics API bridge, event polling, SDL2-backed renderer integration, layout calculation, hit testing, and the enhanced interactive counter demonstration.",
+        "subject_id": "desktop_ui.poc_plan"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "id": "desktop_ui.poc_plan.phase_structure",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current POC plan shall remain organized as three sequential phases: architecture validation in pure Elixir, an SDL2 graphics bridge phase, and a first-real-widget phase that completes layout and interaction basics.",
+        "subject_id": "desktop_ui.poc_plan"
+      },
+      {
         "file": ".spec/specs/ecosystem/architecture.spec.md",
         "id": "ecosystem.architecture.dsl_authoring_boundary",
         "priority": "must",
@@ -2752,6 +2943,71 @@
     "scenarios": [],
     "subjects": [
       {
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "id": "desktop_ui.architecture",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "desktop_ui.architecture",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current documentation-level architecture for `packages/desktop_ui`, including its cross-platform desktop positioning, layered Elm-style runtime model, SDL2 graphics bridge strategy, and planned Jido-oriented evolution.",
+          "surface": [
+            "packages/desktop_ui/CLAUDE.md",
+            "packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md",
+            "packages/desktop_ui/notes/research/1.01-foundation/1.01.2-architecture.md",
+            "packages/desktop_ui/notes/research/1.01-foundation/1.01.3-graphics-engine.md",
+            "packages/desktop_ui/notes/research/1.01-foundation/1.01.4-component-architecture.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "DesktopUi Architecture"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "id": "desktop_ui.package",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "desktop_ui.package",
+          "kind": "package",
+          "status": "active",
+          "summary": "Current codebase-derived contract for the `packages/desktop_ui` library, including its Mix scaffold, placeholder public module, and explicitly documented research-phase status.",
+          "surface": [
+            "packages/desktop_ui/mix.exs",
+            "packages/desktop_ui/README.md",
+            "packages/desktop_ui/lib/desktop_ui.ex",
+            "packages/desktop_ui/test/desktop_ui_test.exs",
+            "packages/desktop_ui/CLAUDE.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "DesktopUi Package"
+      },
+      {
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "id": "desktop_ui.poc_plan",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "desktop_ui.poc_plan",
+          "kind": "tooling",
+          "status": "active",
+          "summary": "Current proof-of-concept plan for `packages/desktop_ui`, including its three-phase delivery structure, pure-Elixir architecture-validation slice, SDL2 graphics bridge phase, and final layout or widget-completion phase.",
+          "surface": [
+            "packages/desktop_ui/notes/planning/poc/README.md",
+            "packages/desktop_ui/notes/planning/poc/phase-1-architecture-validation.md",
+            "packages/desktop_ui/notes/planning/poc/phase-2-graphics-bridge.md",
+            "packages/desktop_ui/notes/planning/poc/phase-3-first-real-widget.md"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "DesktopUi POC Plan"
+      },
+      {
         "file": ".spec/specs/ecosystem/architecture.spec.md",
         "id": "ecosystem.architecture",
         "meta": {
@@ -3491,6 +3747,135 @@
       }
     ],
     "verifications": [
+      {
+        "covers": [
+          "desktop_ui.architecture.framework_positioning",
+          "desktop_ui.architecture.layered_runtime_model",
+          "desktop_ui.architecture.future_jido_evolution"
+        ],
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/CLAUDE.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.architecture.framework_positioning",
+          "desktop_ui.architecture.layered_runtime_model"
+        ],
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.architecture.layered_runtime_model"
+        ],
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.2-architecture.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.architecture.layered_runtime_model"
+        ],
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.3-graphics-engine.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.architecture.future_jido_evolution"
+        ],
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.4-component-architecture.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.package.mix_scaffold"
+        ],
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/mix.exs"
+      },
+      {
+        "covers": [
+          "desktop_ui.package.mix_scaffold"
+        ],
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/README.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.package.placeholder_module"
+        ],
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/lib/desktop_ui.ex"
+      },
+      {
+        "covers": [
+          "desktop_ui.package.placeholder_module"
+        ],
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/test/desktop_ui_test.exs"
+      },
+      {
+        "covers": [
+          "desktop_ui.package.research_phase_status"
+        ],
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/CLAUDE.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.poc_plan.phase_structure"
+        ],
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/README.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.poc_plan.phase1_validation_scope"
+        ],
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/phase-1-architecture-validation.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.poc_plan.phase2_and_phase3_scope"
+        ],
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/phase-2-graphics-bridge.md"
+      },
+      {
+        "covers": [
+          "desktop_ui.poc_plan.phase2_and_phase3_scope"
+        ],
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/phase-3-first-real-widget.md"
+      },
       {
         "covers": [
           "ecosystem.architecture.dsl_authoring_boundary",
@@ -5996,14 +6381,201 @@
     "decision_parse_errors": 0,
     "decisions": 2,
     "exceptions": 3,
-    "findings": 232,
-    "requirements": 132,
+    "findings": 249,
+    "requirements": 141,
     "scenarios": 0,
-    "subjects": 33,
-    "verifications": 268
+    "subjects": 36,
+    "verifications": 282
   },
   "verification": {
     "claims": [
+      {
+        "cover_id": "desktop_ui.architecture.framework_positioning",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/CLAUDE.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "desktop_ui.architecture.future_jido_evolution",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/CLAUDE.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "desktop_ui.architecture.layered_runtime_model",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/CLAUDE.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "desktop_ui.architecture.framework_positioning",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "desktop_ui.architecture.layered_runtime_model",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "desktop_ui.architecture.layered_runtime_model",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.2-architecture.md",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "desktop_ui.architecture.layered_runtime_model",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.3-graphics-engine.md",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "desktop_ui.architecture.future_jido_evolution",
+        "file": ".spec/specs/desktop-ui/architecture.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.architecture",
+        "target": "packages/desktop_ui/notes/research/1.01-foundation/1.01.4-component-architecture.md",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "desktop_ui.package.mix_scaffold",
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/mix.exs",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "desktop_ui.package.mix_scaffold",
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/README.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "desktop_ui.package.placeholder_module",
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/lib/desktop_ui.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "desktop_ui.package.placeholder_module",
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/test/desktop_ui_test.exs",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "desktop_ui.package.research_phase_status",
+        "file": ".spec/specs/desktop-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.package",
+        "target": "packages/desktop_ui/CLAUDE.md",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "desktop_ui.poc_plan.phase_structure",
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/README.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "desktop_ui.poc_plan.phase1_validation_scope",
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/phase-1-architecture-validation.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "desktop_ui.poc_plan.phase2_and_phase3_scope",
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/phase-2-graphics-bridge.md",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "desktop_ui.poc_plan.phase2_and_phase3_scope",
+        "file": ".spec/specs/desktop-ui/poc_plan.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "desktop_ui.poc_plan",
+        "target": "packages/desktop_ui/notes/planning/poc/phase-3-first-real-widget.md",
+        "verification_index": 3
+      },
       {
         "cover_id": "ecosystem.architecture.dsl_authoring_boundary",
         "file": ".spec/specs/ecosystem/architecture.spec.md",
@@ -9902,7 +10474,7 @@
     "cli_minimum_strength": null,
     "default_minimum_strength": "claimed",
     "strength_summary": {
-      "claimed": 234,
+      "claimed": 251,
       "executed": 0,
       "linked": 120
     },
@@ -9910,6 +10482,6 @@
   },
   "workspace": {
     "decision_count": 2,
-    "spec_count": 33
+    "spec_count": 36
   }
 }
