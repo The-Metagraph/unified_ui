@@ -6,7 +6,8 @@ defmodule UnifiedUi.Renderer do
 
   All renderers (Terminal, Desktop, Web) must implement this behaviour
   to ensure a consistent interface for converting IUR (Intermediate UI
-  Representation) to platform-specific widgets.
+  Representation) trees, including package-defined elements that implement
+  `UnifiedIUR.Element`, to platform-specific widgets.
 
   ## Renderer Lifecycle
 
@@ -75,12 +76,7 @@ defmodule UnifiedUi.Renderer do
   Errors should be descriptive and include context about what went wrong.
   """
 
-  @type iur_element :: UnifiedIUR.Widgets.Text.t() |
-                       UnifiedIUR.Widgets.Button.t() |
-                       UnifiedIUR.Widgets.Label.t() |
-                       UnifiedIUR.Widgets.TextInput.t() |
-                       UnifiedIUR.Layouts.VBox.t() |
-                       UnifiedIUR.Layouts.HBox.t()
+  @type iur_element :: UnifiedIUR.Element.t()
 
   @type iur_tree :: iur_element()
 
@@ -149,7 +145,8 @@ defmodule UnifiedUi.Renderer do
       {:ok, %RendererState{root: #PID<0.123.0>, version: 2}}
 
   """
-  @callback update(iur_tree(), renderer_state(), update_opts()) :: {:ok, renderer_state()} | {:error, term()}
+  @callback update(iur_tree(), renderer_state(), update_opts()) ::
+              {:ok, renderer_state()} | {:error, term()}
 
   @doc """
   Cleans up platform resources when the renderer is no longer needed.

@@ -1,299 +1,161 @@
-defmodule UnifiedUi.Adapters.EventTest do
-  @moduledoc """
-  Tests for UnifiedUi.Adapters.Event
-  """
+# spec-coverage: unified_ui.adapters.event_normalization
 
-  use ExUnit.Case, async: true
+defmodule UnifiedUi.Adapters.EventTest do
+  use ExUnit.Case, async: false
 
   alias UnifiedUi.Adapters.Event
-  alias UnifiedIUR.Widgets
+  alias UnifiedUi.Agent, as: UiAgent
 
-  describe "to_signal/3" do
-    test "creates click signal with element ID" do
-      signal = Event.to_signal(:click, :submit_button, %{})
+  defmodule DispatchProbeComponent do
+    @behaviour UnifiedUi.ElmArchitecture
 
-      assert signal == {:click, %{element_id: :submit_button}}
+    @impl true
+    def init(opts), do: %{observer: Keyword.get(opts, :observer)}
+
+    @impl true
+    def update(state, signal) do
+      if is_pid(state.observer), do: send(state.observer, {:adapter_event_signal, signal})
+      state
     end
 
-    test "creates signal with additional payload" do
-      signal = Event.to_signal(:change, :email_input, %{value: "test@example.com"})
+    @impl true
+    def view(_state), do: %UnifiedIUR.Widgets.Text{id: :adapter_event_probe, content: "ok"}
+  end
 
-      assert signal == {:change, %{element_id: :email_input, value: "test@example.com"}}
-    end
+  describe "create_event/2" do
+    test "creates a typed adapter event map" do
+      event = Event.create_event(:click, %{widget_id: :save})
 
-    test "creates signal with timestamp" do
-      signal = Event.to_signal(:key_down, :main, %{key: :enter})
-
-      assert {:key_down, payload} = signal
-      assert payload.element_id == :main
-      assert payload.key == :enter
+      assert event == %{type: :click, data: %{widget_id: :save}}
     end
   end
 
-  describe "get_handler/2" do
-    test "extracts on_click handler from button" do
-      button = %Widgets.Button{id: :submit, on_click: :submit_form}
-
-      assert {:ok, :submit_form} = Event.get_handler(button, :click)
-    end
-
-    test "extracts tuple handler from button" do
-      button = %Widgets.Button{id: :submit, on_click: {:submit, %{data: "value"}}}
-
-      assert {:ok, {:submit, %{data: "value"}}} = Event.get_handler(button, :click)
-    end
-
-    test "returns error for non-existent handler" do
-      button = %Widgets.Button{id: :submit}
-
-      assert :error = Event.get_handler(button, :click)
-    end
-
-    test "returns error for wrong event type" do
-      button = %Widgets.Button{id: :submit, on_click: :submit}
-
-      assert :error = Event.get_handler(button, :change)
-    end
-
-    test "extracts on_change handler from text input" do
-      input = %Widgets.TextInput{id: :email, on_change: :email_changed}
-
-      assert {:ok, :email_changed} = Event.get_handler(input, :change)
-    end
-
-    test "extracts on_submit handler from text input" do
-      input = %Widgets.TextInput{id: :search, on_submit: :search_performed}
-
-      assert {:ok, :search_performed} = Event.get_handler(input, :submit)
+  describe "normalize_payload/2" do
+    test "adds canonical platform metadata" do
+      assert Event.normalize_payload(:desktop, %{widget_id: :save}) == %{
+               widget_id: :save,
+               platform: :desktop
+             }
     end
   end
 
-  describe "build_signal/3" do
-    test "builds signal from button element" do
-      button = %Widgets.Button{id: :submit, on_click: :submit_form}
+  describe "to_signal/4" do
+    test "normalizes standard click events to canonical signals" do
+      assert {:ok, signal} = Event.to_signal(:terminal, :click, %{widget_id: :save})
 
-      assert {:ok, signal} = Event.build_signal(button, :click, %{})
-      assert signal == {:submit_form, %{element_id: :submit}}
+      assert signal.type == "unified.button.clicked"
+      assert signal.data.widget_id == :save
+      assert signal.data.platform == :terminal
+      assert signal.source == "/unified_ui/terminal"
     end
 
-    test "builds signal with payload from handler" do
-      button = %Widgets.Button{
-        id: :submit,
-        on_click: {:submit, %{form_id: :login}}
-      }
+    test "normalizes action-backed mouse events to canonical signals" do
+      assert {:ok, signal} =
+               Event.to_signal(:desktop, :mouse, %{action: :double_click, x: 10, y: 20})
 
-      assert {:ok, signal} = Event.build_signal(button, :click, %{})
-      assert {:submit, payload} = signal
-      assert payload.element_id == :submit
-      assert payload.form_id == :login
+      assert signal.type == "unified.mouse.double_click"
+      assert signal.data.action == :double_click
+      assert signal.data.platform == :desktop
     end
 
-    test "merges payload with handler payload" do
-      button = %Widgets.Button{
-        id: :submit,
-        on_click: {:submit, %{action: "save"}}
-      }
+    test "normalizes web hook events when the hook is allowed" do
+      assert {:ok, signal} =
+               Event.to_signal(
+                 :web,
+                 :hook,
+                 %{hook_name: :scroll_handler, data: %{scroll_top: 120}},
+                 allowed_hook_names: [:scroll_handler]
+               )
 
-      assert {:ok, signal} = Event.build_signal(button, :click, %{timestamp: 123})
-      assert {:submit, payload} = signal
-      assert payload.element_id == :submit
-      assert payload.action == "save"
-      assert payload.timestamp == 123
+      assert signal.type == "unified.web.scroll_handler"
+      assert signal.data.hook_name == :scroll_handler
+      assert signal.data.platform == :web
     end
 
-    test "returns error when element has no ID" do
-      button = %Widgets.Button{on_click: :submit}
-
-      assert :error = Event.build_signal(button, :click, %{})
+    test "rejects unsupported hook names" do
+      assert {:error, :invalid_hook} =
+               Event.to_signal(
+                 :web,
+                 :hook,
+                 %{hook_name: :unknown_hook, data: %{}},
+                 allowed_hook_names: [:scroll_handler]
+               )
     end
 
-    test "returns error when no handler for event type" do
-      button = %Widgets.Button{id: :submit}
-
-      assert :error = Event.build_signal(button, :click, %{})
+    test "rejects unsupported event types" do
+      assert {:error, :unsupported_event} =
+               Event.to_signal(:terminal, :window, %{action: :resize})
     end
 
-    test "builds signal from text input change" do
-      input = %Widgets.TextInput{
-        id: :email,
-        on_change: :email_changed
-      }
-
-      assert {:ok, signal} = Event.build_signal(input, :change, %{value: "test"})
-      assert signal == {:email_changed, %{element_id: :email, value: "test"}}
-    end
-
-    test "builds signal from text input submit" do
-      input = %Widgets.TextInput{
-        id: :search,
-        on_submit: :do_search
-      }
-
-      assert {:ok, signal} = Event.build_signal(input, :submit, %{})
-      assert signal == {:do_search, %{element_id: :search}}
+    test "rejects non-map payloads" do
+      assert {:error, :invalid_payload} = Event.to_signal(:web, :click, :invalid)
     end
   end
 
-  describe "normalize_payload/1" do
-    test "adds element_id if missing" do
-      payload = Event.normalize_payload(%{value: "test"})
+  describe "dispatch/4" do
+    test "returns the canonical signal when no component target is provided" do
+      assert {:ok, signal} = Event.dispatch(:web, :click, %{widget_id: :save, action: :save})
 
-      assert payload.element_id == :unknown
-      assert payload.value == "test"
+      assert signal.type == "unified.button.clicked"
+      assert signal.data.action == :save
     end
 
-    test "preserves existing element_id" do
-      payload = Event.normalize_payload(%{element_id: :button, value: "test"})
+    test "dispatches canonical signals through UnifiedUi.Agent when component_id is provided" do
+      component_id = :"adapter_event_dispatch_#{System.unique_integer([:positive])}"
 
-      assert payload.element_id == :button
-      assert payload.value == "test"
+      assert {:ok, _pid} =
+               UiAgent.start_component(DispatchProbeComponent, component_id, observer: self())
+
+      on_exit(fn -> UiAgent.stop_component(component_id) end)
+
+      assert {:ok, signal} =
+               Event.dispatch(
+                 :terminal,
+                 :change,
+                 %{widget_id: :email, value: "user@example.com"},
+                 component_id: component_id
+               )
+
+      assert signal.type == "unified.input.changed"
+
+      assert_receive {:adapter_event_signal, delivered_signal}
+      assert delivered_signal.type == "unified.input.changed"
+      assert delivered_signal.data.widget_id == :email
     end
 
-    test "adds timestamp if missing" do
-      payload = Event.normalize_payload(%{element_id: :button})
-
-      assert is_integer(payload.timestamp)
-      assert payload.element_id == :button
-    end
-
-    test "preserves existing timestamp" do
-      payload = Event.normalize_payload(%{element_id: :button, timestamp: 999})
-
-      assert payload.timestamp == 999
-    end
-  end
-
-  describe "dispatch/2" do
-    test "sends signal to target process" do
-      parent = self()
-      signal = {:click, %{element_id: :button}}
-
-      assert :ok = Event.dispatch(signal, parent)
-
-      assert_receive ^signal
-    end
-
-    test "returns error for invalid target" do
-      signal = {:click, %{element_id: :button}}
-
-      assert {:error, :invalid_target} = Event.dispatch(signal, :nonexistent)
-    end
-  end
-
-  describe "broadcast/2" do
-    test "sends signal to multiple targets" do
-      parent = self()
-      child = spawn(fn -> :timer.sleep(1000) end)
-      signal = {:update, %{data: 1}}
-
-      assert {:ok, 2} = Event.broadcast(signal, [parent, child])
-
-      assert_receive ^signal
-    end
-
-    test "returns error count for failed sends" do
-      parent = self()
-      signal = {:update, %{data: 1}}
-
-      # Mix of valid and invalid
-      result = Event.broadcast(signal, [parent, :nonexistent, :also_invalid])
-
-      assert {:error, 2} = result
-      assert_receive ^signal
-    end
-  end
-
-  describe "dispatcher/2" do
-    test "creates dispatcher function" do
-      button = %Widgets.Button{id: :submit, on_click: :submit_form}
-      dispatch_fn = Event.dispatcher(button, :click)
-
-      assert is_function(dispatch_fn, 1)
-
-      signal = dispatch_fn.(%{timestamp: 123})
-      assert signal == {:submit_form, %{element_id: :submit, timestamp: 123}}
-    end
-
-    test "dispatcher returns nil for no handler" do
-      button = %Widgets.Button{id: :submit}
-      dispatch_fn = Event.dispatcher(button, :click)
-
-      assert is_function(dispatch_fn, 1)
-
-      assert dispatch_fn.(%{}) == nil
-    end
-  end
-
-  describe "validate_signal/1" do
-    test "validates well-formed signal" do
-      signal = {:click, %{element_id: :button}}
-
-      assert :ok = Event.validate_signal(signal)
-    end
-
-    test "returns error for missing element_id" do
-      signal = {:click, %{other: "data"}}
-
-      assert {:error, :missing_element_id} = Event.validate_signal(signal)
-    end
-
-    test "returns error for invalid format" do
-      assert {:error, :invalid_format} = Event.validate_signal(:not_a_tuple)
-      assert {:error, :invalid_format} = Event.validate_signal({:only_one})
-      assert {:error, :invalid_format} = Event.validate_signal({:click, :not_a_map})
+    test "returns invalid_component_id for non-atom component targets" do
+      assert {:error, :invalid_component_id} =
+               Event.dispatch(:terminal, :click, %{widget_id: :save}, component_id: "save")
     end
   end
 
   describe "extract_metadata/1" do
-    test "extracts coordinates" do
-      event = %{x: 10, y: 20, time: 123}
+    test "extracts coordinates, modifiers, and timestamps from platform payloads" do
+      metadata =
+        Event.extract_metadata(%{
+          x: 10,
+          y: 20,
+          ctrl: true,
+          shift: false,
+          time: 123_456
+        })
 
-      metadata = Event.extract_metadata(event)
-
-      assert metadata.x == 10
-      assert metadata.y == 20
+      assert metadata == %{x: 10, y: 20, ctrl: true, shift: false, timestamp: 123_456}
     end
 
-    test "maps ctrl to control" do
-      event = %{ctrl: true}
+    test "supports alternative modifier and timestamp keys" do
+      metadata =
+        Event.extract_metadata(%{
+          modifier_alt: true,
+          modifier_meta: false,
+          timestamp_ms: 99
+        })
 
-      metadata = Event.extract_metadata(event)
-
-      assert metadata.ctrl == true
+      assert metadata == %{alt: true, meta: false, timestamp: 99}
     end
 
-    test "extracts shift modifier" do
-      event = %{shift: true}
-
-      metadata = Event.extract_metadata(event)
-
-      assert metadata.shift == true
-    end
-
-    test "extracts timestamp from time field" do
-      event = %{time: 123_456}
-
-      metadata = Event.extract_metadata(event)
-
-      assert metadata.timestamp == 123_456
-    end
-
-    test "handles empty map" do
-      metadata = Event.extract_metadata(%{})
-
-      assert metadata == %{}
-    end
-
-    test "extracts multiple fields" do
-      event = %{x: 10, y: 20, ctrl: true, shift: false, time: 123_456}
-
-      metadata = Event.extract_metadata(event)
-
-      assert metadata.x == 10
-      assert metadata.y == 20
-      assert metadata.ctrl == true
-      assert metadata.shift == false
-      assert metadata.timestamp == 123_456
+    test "returns an empty map for empty payloads" do
+      assert Event.extract_metadata(%{}) == %{}
     end
   end
 end

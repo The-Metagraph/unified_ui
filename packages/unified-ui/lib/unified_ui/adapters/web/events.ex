@@ -44,8 +44,7 @@ defmodule UnifiedUi.Adapters.Web.Events do
 
   """
 
-  alias UnifiedUi.Agent, as: UiAgent
-  alias UnifiedUi.Signals
+  alias UnifiedUi.Adapters.Event, as: AdapterEvent
   alias UnifiedUi.Adapters.Security
 
   @navigation_key_actions %{
@@ -63,6 +62,20 @@ defmodule UnifiedUi.Adapters.Web.Events do
     space: :activate,
     escape: :dismiss
   }
+
+  @allowed_hooks [
+    :scroll_handler,
+    :resize_handler,
+    :focus_handler,
+    :blur_handler,
+    :scroll_tracker,
+    :resize_observer,
+    :visibility_observer,
+    :connecting,
+    :connected,
+    :disconnected,
+    :reconnecting
+  ]
 
   @typedoc "Web event type."
   @type event_type ::
@@ -174,94 +187,37 @@ defmodule UnifiedUi.Adapters.Web.Events do
   def to_signal(event_type, data, opts \\ [])
 
   # Click events → unified.button.clicked
-  def to_signal(:click, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(:click, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:click, data, opts), do: AdapterEvent.to_signal(:web, :click, data, opts)
 
   # Change events → unified.input.changed
-  def to_signal(:change, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(:change, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:change, data, opts), do: AdapterEvent.to_signal(:web, :change, data, opts)
 
   # Submit events → unified.form.submitted
-  def to_signal(:submit, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(:submit, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:submit, data, opts), do: AdapterEvent.to_signal(:web, :submit, data, opts)
 
   # Key press events → unified.key.pressed
-  def to_signal(:key_press, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_type = "unified.key.pressed"
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(signal_type, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:key_press, data, opts), do: AdapterEvent.to_signal(:web, :key_press, data, opts)
 
   # Key release events → unified.key.released
-  def to_signal(:key_release, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_type = "unified.key.released"
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(signal_type, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:key_release, data, opts),
+    do: AdapterEvent.to_signal(:web, :key_release, data, opts)
 
   # Focus events → unified.element.focused
-  def to_signal(:focus, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(:focus, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:focus, data, opts), do: AdapterEvent.to_signal(:web, :focus, data, opts)
 
   # Blur events → unified.element.blurred
-  def to_signal(:blur, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :web})
-      Signals.create(:blur, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:blur, data, opts), do: AdapterEvent.to_signal(:web, :blur, data, opts)
 
   # Hook events → unified.web.{hook_name}
   # Security: Validate hook_name against allowlist to prevent signal injection
-  def to_signal(:hook, %{hook_name: hook_name} = data, opts) do
-    # Only allow predefined hook names (no arbitrary strings)
-    # Includes WebSocket lifecycle events and LiveView hook events
-    allowed_hooks = [
-      # LiveView hook events
-      :scroll_handler,
-      :resize_handler,
-      :focus_handler,
-      :blur_handler,
-      :scroll_tracker,
-      :resize_observer,
-      :visibility_observer,
-      # WebSocket lifecycle events
-      :connecting,
-      :connected,
-      :disconnected,
-      :reconnecting
-    ]
-
-    if hook_name in allowed_hooks do
-      with :ok <- Security.validate_signal_payload(data) do
-        signal_type = "unified.web.#{hook_name}"
-        signal_data = Map.merge(data, %{platform: :web})
-        Signals.create(signal_type, signal_data, source: signal_source(opts))
-      end
-    else
-      {:error, :invalid_hook}
-    end
-  end
+  def to_signal(:hook, data, opts),
+    do:
+      AdapterEvent.to_signal(
+        :web,
+        :hook,
+        data,
+        Keyword.put(opts, :allowed_hook_names, @allowed_hooks)
+      )
 
   # Signal Dispatch
 
@@ -292,23 +248,12 @@ defmodule UnifiedUi.Adapters.Web.Events do
   @spec dispatch(event_type(), event_data(), keyword()) ::
           {:ok, Jido.Signal.t()} | {:error, term()}
   def dispatch(event_type, data, opts \\ []) do
-    with {:ok, signal} <- to_signal(event_type, data, opts),
-         :ok <- maybe_dispatch_to_component(signal, opts) do
-      {:ok, signal}
-    end
-  end
-
-  defp maybe_dispatch_to_component(signal, opts) do
-    case Keyword.get(opts, :component_id) do
-      nil ->
-        :ok
-
-      component_id when is_atom(component_id) ->
-        UiAgent.signal_component(component_id, signal)
-
-      _other ->
-        {:error, :invalid_component_id}
-    end
+    AdapterEvent.dispatch(
+      :web,
+      event_type,
+      data,
+      Keyword.put(opts, :allowed_hook_names, @allowed_hooks)
+    )
   end
 
   # Widget-Specific Event Helpers
@@ -609,10 +554,4 @@ defmodule UnifiedUi.Adapters.Web.Events do
 
   # Unknown nodes have no handlers
   defp extract_node_handlers(_node), do: nil
-
-  # Private helpers
-
-  defp signal_source(opts) do
-    Keyword.get(opts, :source, "/unified_ui/web")
-  end
 end
