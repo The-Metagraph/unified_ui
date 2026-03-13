@@ -1,32 +1,36 @@
 # LiveUi Package
 
-This subject backfills the current package-level contract for
-`packages/live_ui` from the implementation that exists today.
+This subject defines the intended ecosystem-aligned package contract for
+`packages/live_ui`.
 
 ```spec-meta
 id: live_ui.package
 kind: package
 status: active
-summary: Current codebase-derived contract for the `packages/live_ui` library, its published package metadata, and its top-level host integration entrypoints.
+summary: Ecosystem-aligned package contract for `packages/live_ui` as an independent Phoenix LiveView widget library that consumes canonical UnifiedIUR and canonical signal transport.
 surface:
-  - packages/live_ui/README.md
-  - packages/live_ui/mix.exs
-  - packages/live_ui/lib/live_ui.ex
-  - packages/live_ui/test/live_ui/architecture/package_contract_test.exs
+  - packages/live_ui
+  - .spec/specs/live-ui
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.live_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: live_ui.package.metadata
-  statement: 'The package shall publish itself as the `:live_ui` library and declare its current positioning as a LiveView adapter and runtime shell for UnifiedUi screens and canonical UnifiedIUR sources.'
+- id: live_ui.package.library_position
+  statement: '`live_ui` shall remain an independent Phoenix LiveView widget library and runtime package rather than an authored DSL boundary.'
   priority: must
   stability: stable
 
-- id: live_ui.package.host_entrypoints
-  statement: 'The top-level `LiveUi` module shall expose the current dynamic session envelope helpers and session extraction entrypoints used by host applications.'
+- id: live_ui.package.canonical_input_boundary
+  statement: 'The authored cross-package input boundary for `live_ui` shall be canonical UnifiedIUR.'
+  priority: must
+  stability: stable
+
+- id: live_ui.package.native_widget_independence
+  statement: '`live_ui` may expose its own native widget surface and host integration helpers, but those conveniences shall not broaden or replace the canonical UnifiedIUR boundary.'
   priority: must
   stability: stable
 ```
@@ -35,17 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/live_ui/mix.exs
+  target: .spec/specs/live-ui/package.spec.md
   covers:
-    - live_ui.package.metadata
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui.ex
-  covers:
-    - live_ui.package.host_entrypoints
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/architecture/package_contract_test.exs
-  covers:
-    - live_ui.package.host_entrypoints
+    - live_ui.package.library_position
+    - live_ui.package.canonical_input_boundary
+    - live_ui.package.native_widget_independence
 ```

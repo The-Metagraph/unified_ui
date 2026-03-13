@@ -1,46 +1,36 @@
 # LiveUi Rendering
 
-This subject backfills the current rendering and widget catalog surface for
-`packages/live_ui`, based on its component modules, registry, and tests.
+This subject defines the intended ecosystem-aligned rendering contract for
+`packages/live_ui`.
 
 ```spec-meta
 id: live_ui.rendering
 kind: subsystem
 status: active
-summary: Current rendering contract for `packages/live_ui`, including direct widget helpers, descriptor-driven rendering, stable HTML tokens, and hook-backed advanced widgets.
+summary: Ecosystem-aligned rendering contract for `packages/live_ui`, including an independent native widget surface, LiveView component rendering, and minimized hook usage.
 surface:
-  - packages/live_ui/lib/live_ui/widgets.ex
-  - packages/live_ui/lib/live_ui/widget_registry.ex
-  - packages/live_ui/lib/live_ui/components
-  - packages/live_ui/lib/live_ui/assets.ex
-  - packages/live_ui/lib/live_ui/style/compiler.ex
-  - packages/live_ui/test/live_ui/components
-  - packages/live_ui/test/live_ui/widgets
-  - packages/live_ui/test/live_ui/assets
+  - packages/live_ui
+  - .spec/specs/live-ui/rendering.spec.md
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.live_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: live_ui.rendering.widget_surface
-  statement: 'The package shall expose the current direct Phoenix component surface for its implemented widget and layout catalog across basic widgets, layouts, navigation, forms, feedback, data visualization, and extension widgets.'
+- id: live_ui.rendering.native_widget_library
+  statement: '`live_ui` shall render canonical UnifiedIUR through its own native Phoenix LiveView widget and layout surface rather than acting as a thin authored DSL mirror.'
   priority: must
   stability: stable
 
-- id: live_ui.rendering.registry_catalog
-  statement: 'The package shall normalize descriptor kinds through `LiveUi.WidgetRegistry` and dispatch rendering to the current renderer families for supported canonical and extension widget kinds.'
+- id: live_ui.rendering.canonical_signal_markup
+  statement: 'The rendered LiveView surface shall preserve canonical widget identity and signal metadata needed to carry canonical event meaning through the runtime boundary.'
   priority: must
   stability: stable
 
-- id: live_ui.rendering.stable_html_contract
-  statement: 'The renderer components shall emit the current stable HTML contract, including CSS tokens and scoped LiveView payload attributes for stateless widgets, multi-event widgets, stateful composites, tables, and advanced hook-driven widgets.'
-  priority: must
-  stability: stable
-
-- id: live_ui.rendering.asset_manifest
-  statement: 'The package shall expose the current JavaScript hook manifest and style token compiler used by advanced widgets such as viewport, split pane, command palette, and canvas.'
+- id: live_ui.rendering.hooks_only_when_necessary
+  statement: 'JavaScript hooks shall be used only where they are necessary to bridge canonical signals and local widget behavior that cannot be expressed through plain LiveView rendering alone.'
   priority: must
   stability: stable
 ```
@@ -49,39 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/live_ui/lib/live_ui/widgets.ex
+  target: .spec/specs/live-ui/rendering.spec.md
   covers:
-    - live_ui.rendering.widget_surface
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/widget_registry.ex
-  covers:
-    - live_ui.rendering.registry_catalog
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/components/widget_rendering_test.exs
-  covers:
-    - live_ui.rendering.widget_surface
-    - live_ui.rendering.registry_catalog
-    - live_ui.rendering.stable_html_contract
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/components/canvas_and_chart_test.exs
-  covers:
-    - live_ui.rendering.stable_html_contract
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/assets.ex
-  covers:
-    - live_ui.rendering.asset_manifest
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/style/compiler.ex
-  covers:
-    - live_ui.rendering.asset_manifest
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/assets/hooks_test.exs
-  covers:
-    - live_ui.rendering.asset_manifest
+    - live_ui.rendering.native_widget_library
+    - live_ui.rendering.canonical_signal_markup
+    - live_ui.rendering.hooks_only_when_necessary
 ```

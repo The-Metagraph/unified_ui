@@ -1,59 +1,36 @@
 # LiveUi Runtime
 
-This subject backfills the current host/runtime execution model for
-`packages/live_ui`, based on its source validation, shared runtime model,
-signal encoding, wrapper macro, and LiveView engine.
+This subject defines the intended ecosystem-aligned runtime contract for
+`packages/live_ui`.
 
 ```spec-meta
 id: live_ui.runtime
 kind: runtime
 status: active
-summary: Current runtime and host integration contract for `packages/live_ui`, including source validation, deterministic runtime state, event encoding, widget-state overlaying, and wrapper or dynamic entrypoints.
+summary: Ecosystem-aligned runtime contract for `packages/live_ui`, centered on a server-authoritative LiveView runtime driven by canonical UnifiedIUR and canonical signals.
 surface:
-  - packages/live_ui/lib/live_ui/configuration_error.ex
-  - packages/live_ui/lib/live_ui/source.ex
-  - packages/live_ui/lib/live_ui/runtime.ex
-  - packages/live_ui/lib/live_ui/runtime
-  - packages/live_ui/lib/live_ui/widget_state.ex
-  - packages/live_ui/lib/live_ui/signals
-  - packages/live_ui/lib/live_ui/live
-  - packages/live_ui/lib/live_ui/screen.ex
-  - packages/live_ui/lib/live_ui/router.ex
-  - packages/live_ui/lib/live_ui/session.ex
-  - packages/live_ui/test/live_ui/runtime
-  - packages/live_ui/test/live_ui/host
-  - packages/live_ui/test/live_ui/live
-  - packages/live_ui/test/live_ui/screen
-  - packages/live_ui/test/live_ui/signals
+  - packages/live_ui
+  - .spec/specs/live-ui/runtime.spec.md
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.live_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: live_ui.runtime.source_validation
-  statement: 'The package shall validate the current two source modes for runtime execution: module-backed screen sources with required callbacks and raw IUR sources represented as maps or UnifiedIUR protocol structs.'
+- id: live_ui.runtime.liveview_execution_model
+  statement: '`live_ui` shall execute as a Phoenix LiveView runtime whose rendered state is driven by canonical UnifiedIUR interpretation and native widget rendering.'
   priority: must
   stability: stable
 
-- id: live_ui.runtime.shared_model
-  statement: 'The runtime shall build and update the current deterministic `LiveUi.Runtime.Model` shape, including runtime context, source metadata, screen state, IUR tree, descriptor tree, signal bindings, render metadata, and event bookkeeping.'
+- id: live_ui.runtime.server_authoritative_behavior
+  statement: 'The runtime shall preserve server-authoritative UI behavior even when local widget behavior requires browser-assisted interaction.'
   priority: must
   stability: stable
 
-- id: live_ui.runtime.event_encoding
-  statement: 'The package shall encode current LiveView and hook payloads into concrete `Jido.Signal` values with normalized type, subject, source, intent, and scoped payload fields.'
-  priority: must
-  stability: stable
-
-- id: live_ui.runtime.widget_state_overlay
-  statement: 'The runtime shall maintain the current server-authoritative widget-local state overlay for advanced widgets and apply that overlay back onto the normalized descriptor tree after interpretation.'
-  priority: must
-  stability: stable
-
-- id: live_ui.runtime.host_entrypoints
-  statement: 'The package shall keep the current host integration model in which wrapper LiveViews, dynamic LiveViews, route helpers, session normalization, and the shared engine all converge on the same runtime model shape and rendering path.'
+- id: live_ui.runtime.local_state_subordinate
+  statement: 'Renderer-local or hook-local state may exist for runtime convenience, but it shall remain subordinate to the canonical server-side runtime model and shall not redefine cross-package UI meaning.'
   priority: must
   stability: stable
 ```
@@ -62,55 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/live_ui/lib/live_ui/source.ex
+  target: .spec/specs/live-ui/runtime.spec.md
   covers:
-    - live_ui.runtime.source_validation
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/runtime.ex
-  covers:
-    - live_ui.runtime.shared_model
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/signals/encoder.ex
-  covers:
-    - live_ui.runtime.event_encoding
-
-- kind: source_file
-  target: packages/live_ui/lib/live_ui/widget_state.ex
-  covers:
-    - live_ui.runtime.widget_state_overlay
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/runtime/runtime_test.exs
-  covers:
-    - live_ui.runtime.shared_model
-    - live_ui.runtime.event_encoding
-    - live_ui.runtime.widget_state_overlay
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/live/engine_test.exs
-  covers:
-    - live_ui.runtime.host_entrypoints
-    - live_ui.runtime.shared_model
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/host/entrypoint_parity_test.exs
-  covers:
-    - live_ui.runtime.host_entrypoints
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/host/router_integration_test.exs
-  covers:
-    - live_ui.runtime.host_entrypoints
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/screen/macro_test.exs
-  covers:
-    - live_ui.runtime.host_entrypoints
-
-- kind: source_file
-  target: packages/live_ui/test/live_ui/signals/encoder_test.exs
-  covers:
-    - live_ui.runtime.event_encoding
+    - live_ui.runtime.liveview_execution_model
+    - live_ui.runtime.server_authoritative_behavior
+    - live_ui.runtime.local_state_subordinate
 ```
