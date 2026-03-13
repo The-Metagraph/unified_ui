@@ -51,8 +51,7 @@ defmodule UnifiedUi.Adapters.Terminal.Events do
 
   """
 
-  alias UnifiedUi.Agent, as: UiAgent
-  alias UnifiedUi.Signals
+  alias UnifiedUi.Adapters.Event, as: AdapterEvent
   alias UnifiedUi.Adapters.Security
 
   @navigation_key_actions %{
@@ -142,64 +141,27 @@ defmodule UnifiedUi.Adapters.Terminal.Events do
   def to_signal(event_type, data, opts \\ [])
 
   # Click events → unified.button.clicked
-  def to_signal(:click, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(:click, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:click, data, opts), do: AdapterEvent.to_signal(:terminal, :click, data, opts)
 
   # Change events → unified.input.changed
-  def to_signal(:change, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(:change, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:change, data, opts), do: AdapterEvent.to_signal(:terminal, :change, data, opts)
 
   # Submit events → unified.form.submitted
-  def to_signal(:submit, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(:submit, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:submit, data, opts), do: AdapterEvent.to_signal(:terminal, :submit, data, opts)
 
   # Key press events → unified.key.pressed
-  def to_signal(:key_press, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_type = "unified.key.pressed"
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(signal_type, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:key_press, data, opts),
+    do: AdapterEvent.to_signal(:terminal, :key_press, data, opts)
 
   # Mouse events → unified.mouse.{action}
   # Security: Validate action before string interpolation to prevent signal injection
-  def to_signal(:mouse, %{action: action} = data, opts) do
-    with :ok <- Security.validate_event_action(:mouse, action),
-         :ok <- Security.validate_signal_payload(data) do
-      signal_type = "unified.mouse.#{action}"
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(signal_type, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:mouse, data, opts), do: AdapterEvent.to_signal(:terminal, :mouse, data, opts)
 
   # Focus events → unified.element.focused
-  def to_signal(:focus, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(:focus, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:focus, data, opts), do: AdapterEvent.to_signal(:terminal, :focus, data, opts)
 
   # Blur events → unified.element.blurred
-  def to_signal(:blur, data, opts) do
-    with :ok <- Security.validate_signal_payload(data) do
-      signal_data = Map.merge(data, %{platform: :terminal})
-      Signals.create(:blur, signal_data, source: signal_source(opts))
-    end
-  end
+  def to_signal(:blur, data, opts), do: AdapterEvent.to_signal(:terminal, :blur, data, opts)
 
   # Signal Dispatch
 
@@ -230,23 +192,7 @@ defmodule UnifiedUi.Adapters.Terminal.Events do
   @spec dispatch(event_type(), event_data(), keyword()) ::
           {:ok, Jido.Signal.t()} | {:error, term()}
   def dispatch(event_type, data, opts \\ []) do
-    with {:ok, signal} <- to_signal(event_type, data, opts),
-         :ok <- maybe_dispatch_to_component(signal, opts) do
-      {:ok, signal}
-    end
-  end
-
-  defp maybe_dispatch_to_component(signal, opts) do
-    case Keyword.get(opts, :component_id) do
-      nil ->
-        :ok
-
-      component_id when is_atom(component_id) ->
-        UiAgent.signal_component(component_id, signal)
-
-      _other ->
-        {:error, :invalid_component_id}
-    end
+    AdapterEvent.dispatch(:terminal, event_type, data, opts)
   end
 
   # Widget-Specific Event Helpers
@@ -429,10 +375,4 @@ defmodule UnifiedUi.Adapters.Terminal.Events do
 
   # Unknown nodes have no handlers
   defp extract_node_handlers(_node), do: nil
-
-  # Private helpers
-
-  defp signal_source(opts) do
-    Keyword.get(opts, :source, "/unified_ui/terminal")
-  end
 end

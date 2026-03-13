@@ -1,14 +1,14 @@
 # UnifiedUi Adapters
 
-This subject backfills the current adapter layer in `packages/unified-ui`,
-including renderer contracts, coordination, event normalization, shared helper
-modules, and the security pipeline.
+This subject describes the adapter-layer contract in `packages/unified-ui`,
+including renderer contracts, coordination, canonical event normalization,
+shared helper modules, and the security pipeline.
 
 ```spec-meta
 id: unified_ui.adapters
 kind: subsystem
 status: active
-summary: Current adapter-layer contract for `packages/unified-ui`, derived from the implemented renderer, coordinator, event, shared-state, and security modules.
+summary: Adapter-layer contract for `packages/unified-ui`, covering renderer behaviour over supported IUR elements, coordination, canonical event normalization, shared-state utilities, and the security pipeline.
 surface:
   - packages/unified-ui/lib/unified_ui/adapters
   - packages/unified-ui/test/unified_ui/adapters
@@ -21,7 +21,7 @@ decisions:
 
 ```spec-requirements
 - id: unified_ui.adapters.renderer_contract
-  statement: The package shall define a renderer behaviour with `render/2`, `update/3`, and `destroy/1` callbacks over IUR trees and renderer-owned state.
+  statement: The package shall define a renderer behaviour with `render/2`, `update/3`, and `destroy/1` callbacks over canonical IUR trees, including package-defined elements that implement `UnifiedIUR.Element`, and renderer-owned state.
   priority: must
   stability: stable
 
@@ -31,7 +31,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.adapters.event_normalization
-  statement: The package shall provide adapter-side event normalization and dispatch helpers that convert platform events or element metadata into runtime-dispatchable signals.
+  statement: The package shall provide adapter-side event normalization and dispatch helpers that convert platform events into canonical `Jido.Signal` values and optionally dispatch them through the shared runtime component boundary.
   priority: must
   stability: stable
 
