@@ -159,6 +159,30 @@ defmodule UnifiedUi.AgentTest do
       end)
     end
 
+    test "lookup and query helpers return runtime_not_started when registry is stopped" do
+      signal = build_signal!("inc", %{})
+
+      with_runtime_child_stopped(UnifiedUi.AgentRegistry, fn ->
+        assert {:error, :agent_runtime_not_started} = Agent.whereis(:runtime_down_lookup)
+        assert {:error, :agent_runtime_not_started} = Agent.current_state(:runtime_down_lookup)
+        assert {:error, :agent_runtime_not_started} = Agent.current_iur(:runtime_down_lookup)
+        assert {:error, :agent_runtime_not_started} = Agent.render_results(:runtime_down_lookup)
+
+        assert {:error, :agent_runtime_not_started} =
+                 Agent.signal_component(:runtime_down_lookup, signal)
+      end)
+    end
+
+    test "start_component/3 returns signal_subscription_failed when pubsub is stopped" do
+      component_id = :counter_component_pubsub_down
+      expected_topic = Agent.component_signal_topic(component_id)
+
+      with_runtime_child_stopped(pubsub_child_id(), fn ->
+        assert {:error, {:signal_subscription_failed, ^expected_topic, :pubsub_not_started}} =
+                 Agent.start_component(CounterComponent, component_id)
+      end)
+    end
+
     test "start_component/3 rejects non-binary signal topics" do
       assert {:error, :invalid_signal_topic} =
                Agent.start_component(CounterComponent, :counter_component_invalid_topic,
@@ -257,6 +281,15 @@ defmodule UnifiedUi.AgentTest do
       fun.()
     after
       assert {:ok, _pid} = Supervisor.restart_child(UnifiedUi.Supervisor, child_id)
+    end
+  end
+
+  defp pubsub_child_id do
+    case Enum.find(Supervisor.which_children(UnifiedUi.Supervisor), fn
+           {id, _pid, _type, _modules} -> id == Phoenix.PubSub.Supervisor
+         end) do
+      {child_id, _pid, _type, _modules} -> child_id
+      nil -> flunk("could not resolve Phoenix.PubSub child id")
     end
   end
 

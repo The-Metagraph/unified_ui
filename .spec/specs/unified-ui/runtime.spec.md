@@ -46,7 +46,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.runtime.recovery_patterns
-  statement: The runtime shall degrade safely when initialization, update, topic subscription, or process lifecycle operations fail by returning fallback state or explicit runtime errors rather than crashing callers.
+  statement: The runtime shall degrade safely when initialization, update, topic subscription, PubSub readiness, or process lifecycle and query operations fail by returning fallback state or explicit runtime errors such as `:agent_runtime_not_started`, `:pubsub_not_started`, `:not_found`, or `{:signal_subscription_failed, topic, reason}` rather than crashing callers.
   priority: must
   stability: stable
 ```

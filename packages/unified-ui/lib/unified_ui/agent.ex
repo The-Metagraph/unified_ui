@@ -42,9 +42,10 @@ defmodule UnifiedUi.Agent do
   @spec start_component(module(), component_id(), keyword()) :: {:ok, pid()} | {:error, term()}
   def start_component(module, component_id, opts \\ [])
       when is_atom(module) and is_atom(component_id) and is_list(opts) do
-    child_spec = {Server, module: module, component_id: component_id, opts: opts}
-
-    DynamicSupervisor.start_child(@supervisor, child_spec)
+    with :ok <- ensure_runtime_ready() do
+      child_spec = {Server, module: module, component_id: component_id, opts: opts}
+      DynamicSupervisor.start_child(@supervisor, child_spec)
+    end
   rescue
     _ -> {:error, :agent_runtime_not_started}
   catch
@@ -57,7 +58,7 @@ defmodule UnifiedUi.Agent do
   @spec stop_component(component_id()) :: :ok | {:error, term()}
   def stop_component(component_id) when is_atom(component_id) do
     with {:ok, pid} <- whereis(component_id),
-         :ok <- DynamicSupervisor.terminate_child(@supervisor, pid) do
+         :ok <- terminate_component(pid) do
       :ok
     else
       {:error, _} = error -> error
@@ -75,8 +76,12 @@ defmodule UnifiedUi.Agent do
   @spec signal_component(component_id(), signal()) :: :ok | {:error, term()}
   def signal_component(component_id, %Signal{} = signal) when is_atom(component_id) do
     with {:ok, pid} <- whereis(component_id) do
-      GenServer.cast(pid, {:signal, signal})
-      :ok
+      if Process.alive?(pid) do
+        GenServer.cast(pid, {:signal, signal})
+        :ok
+      else
+        {:error, :not_found}
+      end
     end
   end
 
@@ -89,8 +94,9 @@ defmodule UnifiedUi.Agent do
   """
   @spec current_state(component_id()) :: {:ok, map()} | {:error, term()}
   def current_state(component_id) when is_atom(component_id) do
-    with {:ok, pid} <- whereis(component_id) do
-      GenServer.call(pid, :state)
+    with {:ok, pid} <- whereis(component_id),
+         {:ok, response} <- safe_component_call(pid, :state) do
+      response
     end
   end
 
@@ -99,8 +105,9 @@ defmodule UnifiedUi.Agent do
   """
   @spec current_iur(component_id()) :: {:ok, term()} | {:error, term()}
   def current_iur(component_id) when is_atom(component_id) do
-    with {:ok, pid} <- whereis(component_id) do
-      GenServer.call(pid, :iur)
+    with {:ok, pid} <- whereis(component_id),
+         {:ok, response} <- safe_component_call(pid, :iur) do
+      response
     end
   end
 
@@ -109,20 +116,73 @@ defmodule UnifiedUi.Agent do
   """
   @spec render_results(component_id()) :: {:ok, map()} | {:error, term()}
   def render_results(component_id) when is_atom(component_id) do
-    with {:ok, pid} <- whereis(component_id) do
-      GenServer.call(pid, :render_results)
+    with {:ok, pid} <- whereis(component_id),
+         {:ok, response} <- safe_component_call(pid, :render_results) do
+      response
     end
   end
 
   @doc """
   Looks up a component process by id.
   """
-  @spec whereis(component_id()) :: {:ok, pid()} | {:error, :not_found}
+  @spec whereis(component_id()) ::
+          {:ok, pid()} | {:error, :not_found | :agent_runtime_not_started}
   def whereis(component_id) when is_atom(component_id) do
-    case Registry.lookup(@registry, component_id) do
-      [{pid, _}] -> {:ok, pid}
-      [] -> {:error, :not_found}
+    with :ok <- ensure_runtime_ready() do
+      lookup_component(component_id)
     end
+  end
+
+  defp ensure_runtime_ready do
+    if runtime_process_ready?(@registry) and runtime_process_ready?(@supervisor) do
+      :ok
+    else
+      {:error, :agent_runtime_not_started}
+    end
+  end
+
+  defp runtime_process_ready?(name) when is_atom(name) do
+    case Process.whereis(name) do
+      pid when is_pid(pid) -> Process.alive?(pid)
+      nil -> false
+    end
+  end
+
+  defp lookup_component(component_id) when is_atom(component_id) do
+    case Registry.lookup(@registry, component_id) do
+      [{pid, _}] when is_pid(pid) ->
+        if Process.alive?(pid) do
+          {:ok, pid}
+        else
+          {:error, :not_found}
+        end
+
+      [{_pid, _}] ->
+        {:error, :not_found}
+
+      [] ->
+        {:error, :not_found}
+    end
+  rescue
+    _ -> {:error, :agent_runtime_not_started}
+  catch
+    :exit, _ -> {:error, :agent_runtime_not_started}
+  end
+
+  defp terminate_component(pid) when is_pid(pid) do
+    DynamicSupervisor.terminate_child(@supervisor, pid)
+  rescue
+    _ -> {:error, :agent_runtime_not_started}
+  catch
+    :exit, _ -> {:error, :agent_runtime_not_started}
+  end
+
+  defp safe_component_call(pid, request) when is_pid(pid) do
+    {:ok, GenServer.call(pid, request)}
+  rescue
+    _ -> {:error, :not_found}
+  catch
+    :exit, _ -> {:error, :not_found}
   end
 end
 
@@ -275,12 +335,24 @@ defmodule UnifiedUi.Agent.Server do
   end
 
   defp subscribe_signal_topics(topics) when is_list(topics) do
-    Enum.reduce_while(topics, :ok, fn topic, :ok ->
+    topics
+    |> Enum.reduce_while({:ok, []}, fn topic, {:ok, subscribed_topics} ->
       case SignalBus.subscribe(topic) do
-        :ok -> {:cont, :ok}
-        {:error, reason} -> {:halt, {:error, {:signal_subscription_failed, topic, reason}}}
+        :ok -> {:cont, {:ok, [topic | subscribed_topics]}}
+        {:error, reason} -> {:halt, {:error, {topic, reason, subscribed_topics}}}
       end
     end)
+    |> case do
+      {:ok, _subscribed_topics} ->
+        :ok
+
+      {:error, {topic, reason, subscribed_topics}} ->
+        Enum.each(subscribed_topics, fn subscribed_topic ->
+          _ = SignalBus.unsubscribe(subscribed_topic)
+        end)
+
+        {:error, {:signal_subscription_failed, topic, reason}}
+    end
   end
 
   defp via_tuple(component_id) do
