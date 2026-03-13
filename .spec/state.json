@@ -569,6 +569,1091 @@
       "file": ".spec/specs/unified-ui/widgets.spec.md",
       "level": "warning",
       "message": "Verification target packages/unified-ui/lib/unified_ui/dsl/entities/widgets.ex does not reference covered requirement: unified_ui.widgets.basic_layouts"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/agent.ex does not reference covered requirement: web_ui.authority_runtime.route_dispatch"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/first_slice/workflow.ex does not reference covered requirement: web_ui.authority_runtime.turns_and_first_slice"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/policy/authorizer.ex does not reference covered requirement: web_ui.authority_runtime.policy_and_scope_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/scope/resolver.ex does not reference covered requirement: web_ui.authority_runtime.policy_and_scope_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/turn/execution.ex does not reference covered requirement: web_ui.authority_runtime.turns_and_first_slice"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/agent_context_continuity_test.exs does not reference covered requirement: web_ui.authority_runtime.route_dispatch"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/agent_result_test.exs does not reference covered requirement: web_ui.authority_runtime.route_dispatch"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/agent_test.exs does not reference covered requirement: web_ui.authority_runtime.route_dispatch"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/first_slice/workflow_test.exs does not reference covered requirement: web_ui.authority_runtime.turns_and_first_slice"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_10_first_slice_release_readiness_test.exs does not reference covered requirement: web_ui.authority_runtime.turns_and_first_slice"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_17_policy_authorization_test.exs does not reference covered requirement: web_ui.authority_runtime.policy_and_scope_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_18_turn_execution_test.exs does not reference covered requirement: web_ui.authority_runtime.turns_and_first_slice"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_19_scope_resolution_test.exs does not reference covered requirement: web_ui.authority_runtime.policy_and_scope_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/policy/authorizer_test.exs does not reference covered requirement: web_ui.authority_runtime.policy_and_scope_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/scope/resolver_test.exs does not reference covered requirement: web_ui.authority_runtime.policy_and_scope_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.authority_runtime",
+      "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/turn/execution_test.exs does not reference covered requirement: web_ui.authority_runtime.turns_and_first_slice"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/assets/js/app.js does not reference covered requirement: web_ui.frontend_runtime.interop_and_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/assets/src/Main.elm does not reference covered requirement: web_ui.frontend_runtime.interop_and_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/events/elm_bindings.ex does not reference covered requirement: web_ui.frontend_runtime.event_catalog_and_bindings"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/events/event_catalog.ex does not reference covered requirement: web_ui.frontend_runtime.event_catalog_and_bindings"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/interop.ex does not reference covered requirement: web_ui.frontend_runtime.interop_and_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/message.ex does not reference covered requirement: web_ui.frontend_runtime.model_and_messages"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/model.ex does not reference covered requirement: web_ui.frontend_runtime.model_and_messages"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/runtime.ex does not reference covered requirement: web_ui.frontend_runtime.update_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/events/elm_bindings_test.exs does not reference covered requirement: web_ui.frontend_runtime.event_catalog_and_bindings"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/events/event_catalog_test.exs does not reference covered requirement: web_ui.frontend_runtime.event_catalog_and_bindings"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_02_elm_runtime_test.exs does not reference covered requirement: web_ui.frontend_runtime.update_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_35_elm_runtime_transport_bridge_test.exs does not reference covered requirement: web_ui.frontend_runtime.interop_and_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/interop_test.exs does not reference covered requirement: web_ui.frontend_runtime.interop_and_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/message_test.exs does not reference covered requirement: web_ui.frontend_runtime.model_and_messages"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/model_test.exs does not reference covered requirement: web_ui.frontend_runtime.model_and_messages"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/runtime_bootstrap_test.exs does not reference covered requirement: web_ui.frontend_runtime.update_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/runtime_interop_test.exs does not reference covered requirement: web_ui.frontend_runtime.interop_and_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/runtime_recovery_test.exs does not reference covered requirement: web_ui.frontend_runtime.update_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/runtime_replay_control_test.exs does not reference covered requirement: web_ui.frontend_runtime.update_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.frontend_runtime",
+      "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/runtime_update_test.exs does not reference covered requirement: web_ui.frontend_runtime.update_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/iur/dependency.ex does not reference covered requirement: web_ui.iur.dependency_compatibility"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/iur/descriptor_defaults.ex does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/iur/interpreter.ex does not reference covered requirement: web_ui.iur.descriptor_normalization"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/iur/nested_defaults.ex does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/iur/value_normalizer.ex does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_16_unified_iur_interpretation_test.exs does not reference covered requirement: web_ui.iur.descriptor_normalization"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_27_canonical_unified_iur_dependency_test.exs does not reference covered requirement: web_ui.iur.dependency_compatibility"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_28_canonical_unified_iur_extended_mapping_test.exs does not reference covered requirement: web_ui.iur.descriptor_normalization"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_29_canonical_unified_iur_signal_coercion_test.exs does not reference covered requirement: web_ui.iur.descriptor_normalization"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_30_canonical_unified_iur_descriptor_parity_test.exs does not reference covered requirement: web_ui.iur.descriptor_normalization"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_31_canonical_unified_iur_deep_value_parity_test.exs does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_32_canonical_unified_iur_nested_default_parity_test.exs does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_33_canonical_unified_iur_collection_normalization_test.exs does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/iur/dependency_test.exs does not reference covered requirement: web_ui.iur.dependency_compatibility"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/iur/descriptor_defaults_test.exs does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/iur/interpreter_test.exs does not reference covered requirement: web_ui.iur.descriptor_normalization"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/iur/nested_defaults_test.exs does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.iur",
+      "file": ".spec/specs/web-ui/iur.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/iur/value_normalizer_test.exs does not reference covered requirement: web_ui.iur.default_pruning"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/agent.ex does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/channel.ex does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/observability/diagnostics.ex does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/observability/diagnostics.ex does not reference covered requirement: web_ui.observability.metrics_and_joinability"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/observability/metrics.ex does not reference covered requirement: web_ui.observability.metrics_and_joinability"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/observability/runtime_event.ex does not reference covered requirement: web_ui.observability.runtime_event_conformance"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/service_result_envelope.ex does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget.ex does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/agent_metrics_test.exs does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/channel_metrics_test.exs does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/channel_observability_test.exs does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs does not reference covered requirement: web_ui.observability.integration_emission"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs does not reference covered requirement: web_ui.observability.metrics_and_joinability"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs does not reference covered requirement: web_ui.observability.runtime_event_conformance"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/observability/diagnostics_test.exs does not reference covered requirement: web_ui.observability.metrics_and_joinability"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/observability/metrics_test.exs does not reference covered requirement: web_ui.observability.metrics_and_joinability"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.observability",
+      "file": ".spec/specs/web-ui/observability.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/observability/runtime_event_test.exs does not reference covered requirement: web_ui.observability.runtime_event_conformance"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.package",
+      "file": ".spec/specs/web-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/Makefile does not reference covered requirement: web_ui.package.local_workflows"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.package",
+      "file": ".spec/specs/web-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/README.md does not reference covered requirement: web_ui.package.local_workflows"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.package",
+      "file": ".spec/specs/web-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/mix.exs does not reference covered requirement: web_ui.package.local_workflows"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.package",
+      "file": ".spec/specs/web-ui/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/mix.exs does not reference covered requirement: web_ui.package.metadata"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/persistence/replay_baseline_registry.ex does not reference covered requirement: web_ui.persistence.baseline_registry"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/persistence/replay_log.ex does not reference covered requirement: web_ui.persistence.replay_log"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/message.ex does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/model.ex does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/ui/runtime.ex does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_20_persistence_replay_test.exs does not reference covered requirement: web_ui.persistence.replay_log"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_20_persistence_replay_test.exs does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_21_replay_retention_export_test.exs does not reference covered requirement: web_ui.persistence.replay_log"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_22_replay_restore_apply_test.exs does not reference covered requirement: web_ui.persistence.replay_log"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_22_replay_restore_apply_test.exs does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_23_replay_verification_test.exs does not reference covered requirement: web_ui.persistence.replay_log"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_23_replay_verification_test.exs does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_24_replay_verification_gate_test.exs does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_25_replay_baseline_gate_test.exs does not reference covered requirement: web_ui.persistence.baseline_registry"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_25_replay_baseline_gate_test.exs does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_26_replay_baseline_registry_test.exs does not reference covered requirement: web_ui.persistence.baseline_registry"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/persistence/replay_baseline_registry_test.exs does not reference covered requirement: web_ui.persistence.baseline_registry"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/persistence/replay_log_test.exs does not reference covered requirement: web_ui.persistence.replay_log"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.persistence",
+      "file": ".spec/specs/web-ui/persistence.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/ui/runtime_replay_control_test.exs does not reference covered requirement: web_ui.persistence.runtime_replay_controls"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.githooks/pre-commit does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.githooks/pre-push does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.github/workflows/conformance.yml does not reference covered requirement: web_ui.tooling.conformance_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.github/workflows/frontend-toolchain.yml does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.github/workflows/release-readiness.yml does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.github/workflows/rfc-governance.yml does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/.github/workflows/specs-governance.yml does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/scripts/gen_specs_from_rfc.sh does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/scripts/run_conformance.sh does not reference covered requirement: web_ui.tooling.conformance_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/scripts/run_release_readiness.sh does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/scripts/validate_rfc_governance.sh does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/scripts/validate_specs_governance.sh does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_08_conformance_automation_test.exs does not reference covered requirement: web_ui.tooling.conformance_harness"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_09_rfc_governance_operations_test.exs does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_10_first_slice_release_readiness_test.exs does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_34_frontend_toolchain_enforcement_test.exs does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_36_frontend_transport_contract_parity_test.exs does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_37_frontend_cloudevent_contract_parity_test.exs does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_39_frontend_event_catalog_parity_test.exs does not reference covered requirement: web_ui.tooling.release_and_frontend_gates"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.tooling",
+      "file": ".spec/specs/web-ui/tooling.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_58_specs_governance_change_policy_test.exs does not reference covered requirement: web_ui.tooling.governance_automation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/channel.ex does not reference covered requirement: web_ui.transport.channel_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/cloud_event.ex does not reference covered requirement: web_ui.transport.channel_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/cloud_event.ex does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/endpoint.ex does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/router.ex does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/runtime_context.ex does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/service_request_envelope.ex does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/service_result_envelope.ex does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/transport/naming.ex does not reference covered requirement: web_ui.transport.channel_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/transport/naming.ex does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/typed_error.ex does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/channel_test.exs does not reference covered requirement: web_ui.transport.channel_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/cloud_event_test.exs does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/endpoint_test.exs does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_01_transport_test.exs does not reference covered requirement: web_ui.transport.channel_flow"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_01_transport_test.exs does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/router_test.exs does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/runtime_context_test.exs does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/service_request_envelope_test.exs does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/service_result_envelope_test.exs does not reference covered requirement: web_ui.transport.typed_boundaries"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.transport",
+      "file": ".spec/specs/web-ui/transport.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/transport/naming_test.exs does not reference covered requirement: web_ui.transport.naming_and_routes"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget.ex does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_descriptor.ex does not reference covered requirement: web_ui.widget_system.catalog_baseline"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_descriptor.ex does not reference covered requirement: web_ui.widget_system.custom_registration"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_registration_request.ex does not reference covered requirement: web_ui.widget_system.custom_registration"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_registry.ex does not reference covered requirement: web_ui.widget_system.catalog_baseline"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_registry.ex does not reference covered requirement: web_ui.widget_system.custom_registration"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_render_request.ex does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/lib/web_ui/widget_render_result.ex does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_04_widget_registry_test.exs does not reference covered requirement: web_ui.widget_system.catalog_baseline"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_04_widget_registry_test.exs does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_06_custom_widget_governance_test.exs does not reference covered requirement: web_ui.widget_system.custom_registration"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/integration/phase_06_custom_widget_governance_test.exs does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_custom_render_test.exs does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_descriptor_test.exs does not reference covered requirement: web_ui.widget_system.catalog_baseline"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_registration_request_test.exs does not reference covered requirement: web_ui.widget_system.custom_registration"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_registry_catalog_test.exs does not reference covered requirement: web_ui.widget_system.catalog_baseline"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_registry_custom_test.exs does not reference covered requirement: web_ui.widget_system.custom_registration"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_registry_descriptor_test.exs does not reference covered requirement: web_ui.widget_system.catalog_baseline"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_render_request_test.exs does not reference covered requirement: web_ui.widget_system.render_boundary"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "web_ui.widget_system",
+      "file": ".spec/specs/web-ui/widget_system.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/web_ui/test/web_ui/widget_render_test.exs does not reference covered requirement: web_ui.widget_system.render_boundary"
     }
   ],
   "index": {
@@ -1446,6 +2531,222 @@
         "stability": "stable",
         "statement": "The current package shall support navigation and feedback authored entities including menu, context_menu, tabs, tree_view, dialog, alert_dialog, toast, and their related child entities.",
         "subject_id": "unified_ui.widgets"
+      },
+      {
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall enforce the current widget-event policy and scope controls, including deny or allow lists, required-user rules, scope resolution precedence, scope-policy guardrails, and scoped outbound metadata.",
+        "subject_id": "web_ui.authority_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "id": "web_ui.authority_runtime.route_dispatch",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The runtime-authority layer shall validate the current route table shape, preserve context integrity, dispatch current widget events into handler functions with timeout and error normalization, and return normalized service outcomes.",
+        "subject_id": "web_ui.authority_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "id": "web_ui.authority_runtime.turns_and_first_slice",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The deterministic turn helper and first-slice workflow shall assign the current turn metadata, preserve retry continuity, and implement the shipped save-preferences success, cancellation, and retryable-failure outcome model.",
+        "subject_id": "web_ui.authority_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "id": "web_ui.frontend_runtime.event_catalog_and_bindings",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall maintain the current canonical widget event catalog, payload-key requirements, route-family conventions, and Elm binding helpers used to construct supported widget events.",
+        "subject_id": "web_ui.frontend_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "id": "web_ui.frontend_runtime.interop_and_harness",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The JS interop bridge and local Elm or JS harness shall expose the current ports, canonical runtime transport event names, blocked interop actions, and loopback guardrails used by the frontend runtime scaffold.",
+        "subject_id": "web_ui.frontend_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "id": "web_ui.frontend_runtime.model_and_messages",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current deterministic frontend model and typed message baseline for connection state, runtime context, view state, slice state, recovery state, websocket lifecycle, widget events, port events, and replay-control requests.",
+        "subject_id": "web_ui.frontend_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "id": "web_ui.frontend_runtime.update_flow",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The frontend runtime shall implement the current init and update flow for join or ping bootstrap, widget-event dispatch, websocket recv or error handling, retry and cancel paths, replay controls, and fail-closed UI error handling.",
+        "subject_id": "web_ui.frontend_runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "id": "web_ui.iur.default_pruning",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current value normalizer and descriptor-default helpers shall canonicalize deep values and prune the currently implemented global, widget, style, and nested table defaults from interpreted widget props.",
+        "subject_id": "web_ui.iur"
+      },
+      {
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "id": "web_ui.iur.dependency_compatibility",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall enforce the current `unified_iur` dependency compatibility checks for canonical schema markers, canonical source identifiers, dependency version matching, and canonical struct detection.",
+        "subject_id": "web_ui.iur"
+      },
+      {
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "id": "web_ui.iur.descriptor_normalization",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The interpreter shall accept the current supported IUR maps and canonical structs, normalize them into deterministic root, widget, signal, and event representations, and map current widget signal fields through the Elm binding helpers.",
+        "subject_id": "web_ui.iur"
+      },
+      {
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "id": "web_ui.observability.integration_emission",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current channel, widget, agent, and service-result paths shall emit runtime observability events and metric records for success, failure, timeout, encode or decode failure, denied paths, and service lifecycle outcomes.",
+        "subject_id": "web_ui.observability"
+      },
+      {
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "id": "web_ui.observability.metrics_and_joinability",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall maintain the current bounded metric family registry, label policy, record aggregation behavior, and event-to-metric joinability diagnostics based on correlation and request identifiers.",
+        "subject_id": "web_ui.observability"
+      },
+      {
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "id": "web_ui.observability.runtime_event_conformance",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall enforce the current runtime-event envelope contract for required fields, versioned event names, timestamp validity, allowed outcomes, context continuity, and conformance-failure fallback events.",
+        "subject_id": "web_ui.observability"
+      },
+      {
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "id": "web_ui.package.local_workflows",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall expose the current documented local workflows for conformance, frontend assets, governance validation, and release readiness through its Mix aliases, Make targets, and README entrypoints.",
+        "subject_id": "web_ui.package"
+      },
+      {
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "id": "web_ui.package.metadata",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`packages/web_ui` shall publish itself as the `:web_ui` library with the current Elixir requirement and the currently pinned `unified_iur` plus local `spec_led_ex` dependency posture declared in its package manifest.",
+        "subject_id": "web_ui.package"
+      },
+      {
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "id": "web_ui.persistence.baseline_registry",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall provide the current in-memory replay-baseline registry behavior for upsert, ordering, activation, retention, fetch, and active-baseline lookup.",
+        "subject_id": "web_ui.persistence"
+      },
+      {
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "id": "web_ui.persistence.replay_log",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall provide the current deterministic replay-log helpers for append, snapshot, compaction, export, restore, compare, verification, checkpoint identifiers, and replay-entry cursor continuity.",
+        "subject_id": "web_ui.persistence"
+      },
+      {
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "id": "web_ui.persistence.runtime_replay_controls",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The frontend runtime shall expose the current replay-control model, message, and update behavior for snapshot, export, compaction, restore, verification, baseline capture, baseline activation, and replay gating state.",
+        "subject_id": "web_ui.persistence"
+      },
+      {
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "id": "web_ui.tooling.conformance_harness",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall expose the current conformance harness that checks scenario-catalog and matrix alignment, supports report-only execution, and runs deterministic conformance-tagged tests when alignment passes.",
+        "subject_id": "web_ui.tooling"
+      },
+      {
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "id": "web_ui.tooling.governance_automation",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall expose the current RFC and specs governance automation for validating RFC metadata and mappings, generating governance-compliant spec stubs from RFC plans, and enforcing AC-bearing change coupling rules.",
+        "subject_id": "web_ui.tooling"
+      },
+      {
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "id": "web_ui.tooling.release_and_frontend_gates",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall keep the current release-readiness and frontend-parity gate stack wired through shell scripts, git hooks, and CI workflows for frontend toolchain validation and the implemented frontend contract validators.",
+        "subject_id": "web_ui.tooling"
+      },
+      {
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "id": "web_ui.transport.channel_flow",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The channel boundary shall validate current ingress topics, client event names, and CloudEvent envelopes, preserve correlation or request continuity, support ping or pong handling, and emit the current deterministic recv or error envelopes.",
+        "subject_id": "web_ui.transport"
+      },
+      {
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "id": "web_ui.transport.naming_and_routes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current canonical websocket topic and event naming policy together with the SPA, assets, and websocket route bootstrap contract.",
+        "subject_id": "web_ui.transport"
+      },
+      {
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "id": "web_ui.transport.typed_boundaries",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall provide the current typed error, runtime-context, CloudEvent, service-request, and service-result envelope helpers used to normalize protocol and service outcomes at runtime boundaries.",
+        "subject_id": "web_ui.transport"
+      },
+      {
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "id": "web_ui.widget_system.catalog_baseline",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall maintain the current built-in widget catalog, descriptor completeness rules, category and event-type validation, and catalog fingerprint or term_ui parity checks implemented by `WebUi.WidgetRegistry`.",
+        "subject_id": "web_ui.widget_system"
+      },
+      {
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "id": "web_ui.widget_system.custom_registration",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The widget registry shall support the current governed custom-widget registration flow, including descriptor validation, reserved-id protection, implementation references, capabilities, and lifecycle registration events.",
+        "subject_id": "web_ui.widget_system"
+      },
+      {
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "id": "web_ui.widget_system.render_boundary",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The widget render boundary shall normalize current render requests and results, render built-in widgets deterministically, require explicit extension dispatch for custom widgets, deny blocked extension actions, and emit the current lifecycle or diagnostic events.",
+        "subject_id": "web_ui.widget_system"
       }
     ],
     "scenarios": [],
@@ -1967,6 +3268,226 @@
           "verification_minimum_strength": null
         },
         "title": "UnifiedUi Widgets"
+      },
+      {
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "id": "web_ui.authority_runtime",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.authority_runtime",
+          "kind": "runtime",
+          "status": "active",
+          "summary": "Current runtime-authority contract for `packages/web_ui`, including route dispatch, policy or scope enforcement, deterministic turn metadata, and the first-slice save-preferences workflow.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/agent.ex",
+            "packages/web_ui/lib/web_ui/policy/authorizer.ex",
+            "packages/web_ui/lib/web_ui/scope/resolver.ex",
+            "packages/web_ui/lib/web_ui/turn/execution.ex",
+            "packages/web_ui/lib/web_ui/first_slice/workflow.ex",
+            "packages/web_ui/test/web_ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Authority Runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "id": "web_ui.frontend_runtime",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.frontend_runtime",
+          "kind": "runtime",
+          "status": "active",
+          "summary": "Current frontend runtime contract for `packages/web_ui`, including the UI model and message baseline, update flow, widget-event catalog or Elm bindings, JS interop policy, and the local Elm or JS harness bridge.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/events/event_catalog.ex",
+            "packages/web_ui/lib/web_ui/events/elm_bindings.ex",
+            "packages/web_ui/lib/web_ui/ui/model.ex",
+            "packages/web_ui/lib/web_ui/ui/message.ex",
+            "packages/web_ui/lib/web_ui/ui/interop.ex",
+            "packages/web_ui/lib/web_ui/ui/runtime.ex",
+            "packages/web_ui/assets/js/app.js",
+            "packages/web_ui/assets/src/Main.elm",
+            "packages/web_ui/test/web_ui/events",
+            "packages/web_ui/test/web_ui/ui",
+            "packages/web_ui/test/web_ui/integration"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Frontend Runtime"
+      },
+      {
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "id": "web_ui.iur",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.iur",
+          "kind": "integration",
+          "status": "active",
+          "summary": "Current IUR interpretation contract for `packages/web_ui`, including dependency compatibility checks, deterministic descriptor normalization, signal-to-event mapping, and default-value pruning.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/iur/dependency.ex",
+            "packages/web_ui/lib/web_ui/iur/interpreter.ex",
+            "packages/web_ui/lib/web_ui/iur/value_normalizer.ex",
+            "packages/web_ui/lib/web_ui/iur/descriptor_defaults.ex",
+            "packages/web_ui/lib/web_ui/iur/nested_defaults.ex",
+            "packages/web_ui/test/web_ui/iur",
+            "packages/web_ui/test/web_ui/integration"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi IUR"
+      },
+      {
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "id": "web_ui.observability",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.observability",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current observability contract for `packages/web_ui`, including runtime-event conformance, bounded metrics, correlation joinability, and integration with transport, widget, agent, and service-result flows.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/observability/runtime_event.ex",
+            "packages/web_ui/lib/web_ui/observability/metrics.ex",
+            "packages/web_ui/lib/web_ui/observability/diagnostics.ex",
+            "packages/web_ui/lib/web_ui/channel.ex",
+            "packages/web_ui/lib/web_ui/agent.ex",
+            "packages/web_ui/lib/web_ui/widget.ex",
+            "packages/web_ui/lib/web_ui/service_result_envelope.ex",
+            "packages/web_ui/test/web_ui/observability",
+            "packages/web_ui/test/web_ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Observability"
+      },
+      {
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "id": "web_ui.package",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.package",
+          "kind": "package",
+          "status": "active",
+          "summary": "Current codebase-derived contract for the `packages/web_ui` library, its package metadata, dependency posture, and documented local workflows.",
+          "surface": [
+            "packages/web_ui/README.md",
+            "packages/web_ui/mix.exs",
+            "packages/web_ui/Makefile"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Package"
+      },
+      {
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "id": "web_ui.persistence",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.persistence",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current persistence contract for `packages/web_ui`, including deterministic replay-log helpers, in-memory replay-baseline registry behavior, and frontend runtime replay-control integration.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/persistence/replay_log.ex",
+            "packages/web_ui/lib/web_ui/persistence/replay_baseline_registry.ex",
+            "packages/web_ui/lib/web_ui/ui/model.ex",
+            "packages/web_ui/lib/web_ui/ui/message.ex",
+            "packages/web_ui/lib/web_ui/ui/runtime.ex",
+            "packages/web_ui/test/web_ui/persistence",
+            "packages/web_ui/test/web_ui/ui",
+            "packages/web_ui/test/web_ui/integration"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Persistence"
+      },
+      {
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "id": "web_ui.tooling",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.tooling",
+          "kind": "tooling",
+          "status": "active",
+          "summary": "Current tooling contract for `packages/web_ui`, including conformance automation, RFC or specs governance validation and generation, release-readiness gating, and frontend parity validation wiring in local hooks and CI.",
+          "surface": [
+            "packages/web_ui/scripts",
+            "packages/web_ui/.githooks",
+            "packages/web_ui/.github/workflows",
+            "packages/web_ui/rfcs",
+            "packages/web_ui/specs/conformance",
+            "packages/web_ui/test/web_ui/integration"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Tooling"
+      },
+      {
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "id": "web_ui.transport",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.transport",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current transport contract for `packages/web_ui`, including typed error and context envelopes, CloudEvent validation, canonical naming and routes, and channel ingress or egress orchestration.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/typed_error.ex",
+            "packages/web_ui/lib/web_ui/runtime_context.ex",
+            "packages/web_ui/lib/web_ui/cloud_event.ex",
+            "packages/web_ui/lib/web_ui/service_request_envelope.ex",
+            "packages/web_ui/lib/web_ui/service_result_envelope.ex",
+            "packages/web_ui/lib/web_ui/transport/naming.ex",
+            "packages/web_ui/lib/web_ui/endpoint.ex",
+            "packages/web_ui/lib/web_ui/router.ex",
+            "packages/web_ui/lib/web_ui/channel.ex",
+            "packages/web_ui/test/web_ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Transport"
+      },
+      {
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "id": "web_ui.widget_system",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "web_ui.widget_system",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current widget system contract for `packages/web_ui`, including descriptor validation, built-in catalog parity, governed custom registration, and normalized render request or result flows.",
+          "surface": [
+            "packages/web_ui/lib/web_ui/widget_descriptor.ex",
+            "packages/web_ui/lib/web_ui/widget_registration_request.ex",
+            "packages/web_ui/lib/web_ui/widget_registry.ex",
+            "packages/web_ui/lib/web_ui/widget_render_request.ex",
+            "packages/web_ui/lib/web_ui/widget_render_result.ex",
+            "packages/web_ui/lib/web_ui/widget.ex",
+            "packages/web_ui/test/web_ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Widget System"
       }
     ],
     "verifications": [
@@ -3192,6 +4713,1281 @@
         "kind": "source_file",
         "subject_id": "unified_ui.widgets",
         "target": "packages/unified-ui/test/unified_ui/iur/dsl_golden_build_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.route_dispatch"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/agent.ex"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.policy_and_scope_controls"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/policy/authorizer.ex"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.policy_and_scope_controls"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/scope/resolver.ex"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.turns_and_first_slice"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/turn/execution.ex"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.turns_and_first_slice"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/first_slice/workflow.ex"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.route_dispatch"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/agent_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.route_dispatch"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/agent_result_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.route_dispatch"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/agent_context_continuity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.policy_and_scope_controls"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/policy/authorizer_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.policy_and_scope_controls"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/scope/resolver_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.turns_and_first_slice"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/turn/execution_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.turns_and_first_slice"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/first_slice/workflow_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.turns_and_first_slice"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_10_first_slice_release_readiness_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.policy_and_scope_controls"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_17_policy_authorization_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.turns_and_first_slice"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_18_turn_execution_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.authority_runtime.policy_and_scope_controls"
+        ],
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_19_scope_resolution_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.model_and_messages"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/model.ex"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.model_and_messages"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/message.ex"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.update_flow"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/runtime.ex"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.event_catalog_and_bindings"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/events/event_catalog.ex"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.event_catalog_and_bindings"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/events/elm_bindings.ex"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.interop_and_harness"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/interop.ex"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.interop_and_harness"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/assets/js/app.js"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.interop_and_harness"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/assets/src/Main.elm"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.model_and_messages"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/model_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.model_and_messages"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/message_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.update_flow"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_bootstrap_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.update_flow"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_update_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.update_flow"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_recovery_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.update_flow"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_replay_control_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.interop_and_harness"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_interop_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.interop_and_harness"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/interop_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.event_catalog_and_bindings"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/events/event_catalog_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.event_catalog_and_bindings"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/events/elm_bindings_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.update_flow"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_02_elm_runtime_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.frontend_runtime.interop_and_harness"
+        ],
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_35_elm_runtime_transport_bridge_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.dependency_compatibility"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/dependency.ex"
+      },
+      {
+        "covers": [
+          "web_ui.iur.descriptor_normalization"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/interpreter.ex"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/value_normalizer.ex"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/descriptor_defaults.ex"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/nested_defaults.ex"
+      },
+      {
+        "covers": [
+          "web_ui.iur.dependency_compatibility"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/dependency_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.descriptor_normalization"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/interpreter_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/value_normalizer_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/descriptor_defaults_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/nested_defaults_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.descriptor_normalization"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_16_unified_iur_interpretation_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.dependency_compatibility"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_27_canonical_unified_iur_dependency_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.descriptor_normalization"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_28_canonical_unified_iur_extended_mapping_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.descriptor_normalization"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_29_canonical_unified_iur_signal_coercion_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.descriptor_normalization"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_30_canonical_unified_iur_descriptor_parity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_31_canonical_unified_iur_deep_value_parity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_32_canonical_unified_iur_nested_default_parity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.iur.default_pruning"
+        ],
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_33_canonical_unified_iur_collection_normalization_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.runtime_event_conformance"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/runtime_event.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.metrics_and_joinability"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/metrics.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.metrics_and_joinability",
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/diagnostics.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/channel.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/agent.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/widget.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/service_result_envelope.ex"
+      },
+      {
+        "covers": [
+          "web_ui.observability.runtime_event_conformance"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/observability/runtime_event_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.metrics_and_joinability"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/observability/metrics_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.metrics_and_joinability"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/observability/diagnostics_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/channel_observability_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/channel_metrics_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/agent_metrics_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.observability.runtime_event_conformance",
+          "web_ui.observability.metrics_and_joinability",
+          "web_ui.observability.integration_emission"
+        ],
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.package.metadata",
+          "web_ui.package.local_workflows"
+        ],
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/mix.exs"
+      },
+      {
+        "covers": [
+          "web_ui.package.local_workflows"
+        ],
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/README.md"
+      },
+      {
+        "covers": [
+          "web_ui.package.local_workflows"
+        ],
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/Makefile"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.replay_log"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/persistence/replay_log.ex"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.baseline_registry"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/persistence/replay_baseline_registry.ex"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/ui/model.ex"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/ui/message.ex"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/ui/runtime.ex"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.replay_log"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/persistence/replay_log_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.baseline_registry"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/persistence/replay_baseline_registry_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_replay_control_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.replay_log",
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_20_persistence_replay_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.replay_log"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_21_replay_retention_export_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.replay_log",
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_22_replay_restore_apply_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.replay_log",
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_23_replay_verification_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_24_replay_verification_gate_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.baseline_registry",
+          "web_ui.persistence.runtime_replay_controls"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_25_replay_baseline_gate_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.persistence.baseline_registry"
+        ],
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_26_replay_baseline_registry_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.conformance_harness"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/run_conformance.sh"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/validate_rfc_governance.sh"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/gen_specs_from_rfc.sh"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/validate_specs_governance.sh"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/run_release_readiness.sh"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.githooks/pre-commit"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.githooks/pre-push"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/frontend-toolchain.yml"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.conformance_harness"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/conformance.yml"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/rfc-governance.yml"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/specs-governance.yml"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/release-readiness.yml"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.conformance_harness"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_08_conformance_automation_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_09_rfc_governance_operations_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_10_first_slice_release_readiness_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_34_frontend_toolchain_enforcement_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_36_frontend_transport_contract_parity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_37_frontend_cloudevent_contract_parity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.release_and_frontend_gates"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_39_frontend_event_catalog_parity_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.tooling.governance_automation"
+        ],
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_58_specs_governance_change_policy_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/typed_error.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/runtime_context.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries",
+          "web_ui.transport.channel_flow"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/cloud_event.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/service_request_envelope.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/service_result_envelope.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.naming_and_routes",
+          "web_ui.transport.channel_flow"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/transport/naming.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.naming_and_routes"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/endpoint.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.naming_and_routes"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/router.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.channel_flow"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/channel.ex"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/cloud_event_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/runtime_context_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/service_request_envelope_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.typed_boundaries"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/service_result_envelope_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.naming_and_routes"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/transport/naming_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.naming_and_routes"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/endpoint_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.naming_and_routes"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/router_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.channel_flow"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/channel_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.transport.channel_flow",
+          "web_ui.transport.naming_and_routes"
+        ],
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/integration/phase_01_transport_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.catalog_baseline",
+          "web_ui.widget_system.custom_registration"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_descriptor.ex"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.custom_registration"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_registration_request.ex"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.catalog_baseline",
+          "web_ui.widget_system.custom_registration"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_registry.ex"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_render_request.ex"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_render_result.ex"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget.ex"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.catalog_baseline"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_descriptor_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.custom_registration"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registration_request_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.catalog_baseline"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registry_catalog_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.catalog_baseline"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registry_descriptor_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.custom_registration"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registry_custom_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_render_request_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_render_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_custom_render_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.catalog_baseline",
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/integration/phase_04_widget_registry_test.exs"
+      },
+      {
+        "covers": [
+          "web_ui.widget_system.custom_registration",
+          "web_ui.widget_system.render_boundary"
+        ],
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/integration/phase_06_custom_widget_governance_test.exs"
       }
     ]
   },
@@ -3200,11 +5996,11 @@
     "decision_parse_errors": 0,
     "decisions": 2,
     "exceptions": 3,
-    "findings": 77,
-    "requirements": 105,
+    "findings": 232,
+    "requirements": 132,
     "scenarios": 0,
-    "subjects": 24,
-    "verifications": 128
+    "subjects": 33,
+    "verifications": 268
   },
   "verification": {
     "claims": [
@@ -5396,12 +8192,1717 @@
         "subject_id": "unified_ui.widgets",
         "target": "packages/unified-ui/test/unified_ui/iur/dsl_golden_build_test.exs",
         "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.route_dispatch",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/agent.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/policy/authorizer.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/scope/resolver.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.turns_and_first_slice",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/turn/execution.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.turns_and_first_slice",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/lib/web_ui/first_slice/workflow.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.route_dispatch",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/agent_test.exs",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.route_dispatch",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/agent_result_test.exs",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.route_dispatch",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/agent_context_continuity_test.exs",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/policy/authorizer_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/scope/resolver_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.turns_and_first_slice",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/turn/execution_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.turns_and_first_slice",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/first_slice/workflow_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.turns_and_first_slice",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_10_first_slice_release_readiness_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_17_policy_authorization_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.turns_and_first_slice",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_18_turn_execution_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.authority_runtime.policy_and_scope_controls",
+        "file": ".spec/specs/web-ui/authority_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.authority_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_19_scope_resolution_test.exs",
+        "verification_index": 15
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.model_and_messages",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/model.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.model_and_messages",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/message.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.update_flow",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/runtime.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.event_catalog_and_bindings",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/events/event_catalog.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.event_catalog_and_bindings",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/events/elm_bindings.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.interop_and_harness",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/lib/web_ui/ui/interop.ex",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.interop_and_harness",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/assets/js/app.js",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.interop_and_harness",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/assets/src/Main.elm",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.model_and_messages",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/model_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.model_and_messages",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/message_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.update_flow",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_bootstrap_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.update_flow",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_update_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.update_flow",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_recovery_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.update_flow",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_replay_control_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.interop_and_harness",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_interop_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.interop_and_harness",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/ui/interop_test.exs",
+        "verification_index": 15
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.event_catalog_and_bindings",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/events/event_catalog_test.exs",
+        "verification_index": 16
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.event_catalog_and_bindings",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/events/elm_bindings_test.exs",
+        "verification_index": 17
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.update_flow",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_02_elm_runtime_test.exs",
+        "verification_index": 18
+      },
+      {
+        "cover_id": "web_ui.frontend_runtime.interop_and_harness",
+        "file": ".spec/specs/web-ui/frontend_runtime.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.frontend_runtime",
+        "target": "packages/web_ui/test/web_ui/integration/phase_35_elm_runtime_transport_bridge_test.exs",
+        "verification_index": 19
+      },
+      {
+        "cover_id": "web_ui.iur.dependency_compatibility",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/dependency.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.iur.descriptor_normalization",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/interpreter.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/value_normalizer.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/descriptor_defaults.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/lib/web_ui/iur/nested_defaults.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.iur.dependency_compatibility",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/dependency_test.exs",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.iur.descriptor_normalization",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/interpreter_test.exs",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/value_normalizer_test.exs",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/descriptor_defaults_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/iur/nested_defaults_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.iur.descriptor_normalization",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_16_unified_iur_interpretation_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.iur.dependency_compatibility",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_27_canonical_unified_iur_dependency_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.iur.descriptor_normalization",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_28_canonical_unified_iur_extended_mapping_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.iur.descriptor_normalization",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_29_canonical_unified_iur_signal_coercion_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.iur.descriptor_normalization",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_30_canonical_unified_iur_descriptor_parity_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_31_canonical_unified_iur_deep_value_parity_test.exs",
+        "verification_index": 15
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_32_canonical_unified_iur_nested_default_parity_test.exs",
+        "verification_index": 16
+      },
+      {
+        "cover_id": "web_ui.iur.default_pruning",
+        "file": ".spec/specs/web-ui/iur.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.iur",
+        "target": "packages/web_ui/test/web_ui/integration/phase_33_canonical_unified_iur_collection_normalization_test.exs",
+        "verification_index": 17
+      },
+      {
+        "cover_id": "web_ui.observability.runtime_event_conformance",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/runtime_event.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.observability.metrics_and_joinability",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/metrics.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/diagnostics.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.observability.metrics_and_joinability",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/observability/diagnostics.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/channel.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/agent.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/widget.ex",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/lib/web_ui/service_result_envelope.ex",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.observability.runtime_event_conformance",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/observability/runtime_event_test.exs",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.observability.metrics_and_joinability",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/observability/metrics_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.observability.metrics_and_joinability",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/observability/diagnostics_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/channel_observability_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/channel_metrics_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/agent_metrics_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.observability.integration_emission",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.observability.metrics_and_joinability",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.observability.runtime_event_conformance",
+        "file": ".spec/specs/web-ui/observability.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.observability",
+        "target": "packages/web_ui/test/web_ui/integration/phase_07_observability_baseline_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.package.local_workflows",
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/mix.exs",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.package.metadata",
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/mix.exs",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.package.local_workflows",
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/README.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.package.local_workflows",
+        "file": ".spec/specs/web-ui/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.package",
+        "target": "packages/web_ui/Makefile",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.persistence.replay_log",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/persistence/replay_log.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.persistence.baseline_registry",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/persistence/replay_baseline_registry.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/ui/model.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/ui/message.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/lib/web_ui/ui/runtime.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.persistence.replay_log",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/persistence/replay_log_test.exs",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.persistence.baseline_registry",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/persistence/replay_baseline_registry_test.exs",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/ui/runtime_replay_control_test.exs",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.persistence.replay_log",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_20_persistence_replay_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_20_persistence_replay_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.persistence.replay_log",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_21_replay_retention_export_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.persistence.replay_log",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_22_replay_restore_apply_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_22_replay_restore_apply_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.persistence.replay_log",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_23_replay_verification_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_23_replay_verification_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_24_replay_verification_gate_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.persistence.baseline_registry",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_25_replay_baseline_gate_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.persistence.runtime_replay_controls",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_25_replay_baseline_gate_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.persistence.baseline_registry",
+        "file": ".spec/specs/web-ui/persistence.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.persistence",
+        "target": "packages/web_ui/test/web_ui/integration/phase_26_replay_baseline_registry_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.tooling.conformance_harness",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/run_conformance.sh",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/validate_rfc_governance.sh",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/gen_specs_from_rfc.sh",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/validate_specs_governance.sh",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/scripts/run_release_readiness.sh",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.githooks/pre-commit",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.githooks/pre-push",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/frontend-toolchain.yml",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.tooling.conformance_harness",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/conformance.yml",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/rfc-governance.yml",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/specs-governance.yml",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/.github/workflows/release-readiness.yml",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.tooling.conformance_harness",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_08_conformance_automation_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_09_rfc_governance_operations_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_10_first_slice_release_readiness_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_34_frontend_toolchain_enforcement_test.exs",
+        "verification_index": 15
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_36_frontend_transport_contract_parity_test.exs",
+        "verification_index": 16
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_37_frontend_cloudevent_contract_parity_test.exs",
+        "verification_index": 17
+      },
+      {
+        "cover_id": "web_ui.tooling.release_and_frontend_gates",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_39_frontend_event_catalog_parity_test.exs",
+        "verification_index": 18
+      },
+      {
+        "cover_id": "web_ui.tooling.governance_automation",
+        "file": ".spec/specs/web-ui/tooling.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.tooling",
+        "target": "packages/web_ui/test/web_ui/integration/phase_58_specs_governance_change_policy_test.exs",
+        "verification_index": 19
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/typed_error.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/runtime_context.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.transport.channel_flow",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/cloud_event.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/cloud_event.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/service_request_envelope.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/service_result_envelope.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.transport.channel_flow",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/transport/naming.ex",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/transport/naming.ex",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/endpoint.ex",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/router.ex",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.transport.channel_flow",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/lib/web_ui/channel.ex",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/cloud_event_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/runtime_context_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/service_request_envelope_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.transport.typed_boundaries",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/service_result_envelope_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/transport/naming_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/endpoint_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/router_test.exs",
+        "verification_index": 15
+      },
+      {
+        "cover_id": "web_ui.transport.channel_flow",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/channel_test.exs",
+        "verification_index": 16
+      },
+      {
+        "cover_id": "web_ui.transport.channel_flow",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/integration/phase_01_transport_test.exs",
+        "verification_index": 17
+      },
+      {
+        "cover_id": "web_ui.transport.naming_and_routes",
+        "file": ".spec/specs/web-ui/transport.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.transport",
+        "target": "packages/web_ui/test/web_ui/integration/phase_01_transport_test.exs",
+        "verification_index": 17
+      },
+      {
+        "cover_id": "web_ui.widget_system.catalog_baseline",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_descriptor.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.widget_system.custom_registration",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_descriptor.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "web_ui.widget_system.custom_registration",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_registration_request.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "web_ui.widget_system.catalog_baseline",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_registry.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.widget_system.custom_registration",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_registry.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_render_request.ex",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget_render_result.ex",
+        "verification_index": 4
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/lib/web_ui/widget.ex",
+        "verification_index": 5
+      },
+      {
+        "cover_id": "web_ui.widget_system.catalog_baseline",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_descriptor_test.exs",
+        "verification_index": 6
+      },
+      {
+        "cover_id": "web_ui.widget_system.custom_registration",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registration_request_test.exs",
+        "verification_index": 7
+      },
+      {
+        "cover_id": "web_ui.widget_system.catalog_baseline",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registry_catalog_test.exs",
+        "verification_index": 8
+      },
+      {
+        "cover_id": "web_ui.widget_system.catalog_baseline",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registry_descriptor_test.exs",
+        "verification_index": 9
+      },
+      {
+        "cover_id": "web_ui.widget_system.custom_registration",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_registry_custom_test.exs",
+        "verification_index": 10
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_render_request_test.exs",
+        "verification_index": 11
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_render_test.exs",
+        "verification_index": 12
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/widget_custom_render_test.exs",
+        "verification_index": 13
+      },
+      {
+        "cover_id": "web_ui.widget_system.catalog_baseline",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/integration/phase_04_widget_registry_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/integration/phase_04_widget_registry_test.exs",
+        "verification_index": 14
+      },
+      {
+        "cover_id": "web_ui.widget_system.custom_registration",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/integration/phase_06_custom_widget_governance_test.exs",
+        "verification_index": 15
+      },
+      {
+        "cover_id": "web_ui.widget_system.render_boundary",
+        "file": ".spec/specs/web-ui/widget_system.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "web_ui.widget_system",
+        "target": "packages/web_ui/test/web_ui/integration/phase_06_custom_widget_governance_test.exs",
+        "verification_index": 15
       }
     ],
     "cli_minimum_strength": null,
     "default_minimum_strength": "claimed",
     "strength_summary": {
-      "claimed": 79,
+      "claimed": 234,
       "executed": 0,
       "linked": 120
     },
@@ -5409,6 +9910,6 @@
   },
   "workspace": {
     "decision_count": 2,
-    "spec_count": 24
+    "spec_count": 33
   }
 }
