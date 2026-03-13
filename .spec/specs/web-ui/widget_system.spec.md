@@ -1,40 +1,36 @@
 # WebUi Widget System
 
-This subject backfills the current widget-catalog, registration, and render
-boundary contract for `packages/web_ui`.
+This subject defines the intended ecosystem-aligned native widget contract for
+`packages/web_ui`.
 
 ```spec-meta
 id: web_ui.widget_system
 kind: subsystem
 status: active
-summary: Current widget system contract for `packages/web_ui`, including descriptor validation, built-in catalog parity, governed custom registration, and normalized render request or result flows.
+summary: Ecosystem-aligned widget-system contract for `packages/web_ui`, including an independent native widget catalog that renders canonical UnifiedIUR without becoming an authored DSL mirror.
 surface:
-  - packages/web_ui/lib/web_ui/widget_descriptor.ex
-  - packages/web_ui/lib/web_ui/widget_registration_request.ex
-  - packages/web_ui/lib/web_ui/widget_registry.ex
-  - packages/web_ui/lib/web_ui/widget_render_request.ex
-  - packages/web_ui/lib/web_ui/widget_render_result.ex
-  - packages/web_ui/lib/web_ui/widget.ex
-  - packages/web_ui/test/web_ui
+  - packages/web_ui
+  - .spec/specs/web-ui/widget_system.spec.md
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.web_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: web_ui.widget_system.catalog_baseline
-  statement: 'The package shall maintain the current built-in widget catalog, descriptor completeness rules, category and event-type validation, and catalog fingerprint or term_ui parity checks implemented by `WebUi.WidgetRegistry`.'
+- id: web_ui.widget_system.native_widget_independence
+  statement: '`web_ui` may expose and evolve its own native widget system independently of the `unified_ui` DSL.'
   priority: must
   stability: stable
 
-- id: web_ui.widget_system.custom_registration
-  statement: 'The widget registry shall support the current governed custom-widget registration flow, including descriptor validation, reserved-id protection, implementation references, capabilities, and lifecycle registration events.'
+- id: web_ui.widget_system.renders_canonical_iur
+  statement: 'The `web_ui` widget system shall render canonical UnifiedIUR using its own native widget catalog and shall not require authored DSL modules once canonical IUR is available.'
   priority: must
   stability: stable
 
-- id: web_ui.widget_system.render_boundary
-  statement: 'The widget render boundary shall normalize current render requests and results, render built-in widgets deterministically, require explicit extension dispatch for custom widgets, deny blocked extension actions, and emit the current lifecycle or diagnostic events.'
+- id: web_ui.widget_system.canonical_semantics_preserved
+  statement: 'The native widget system shall preserve canonical widget identity and event meaning across server-side and frontend-side rendering boundaries.'
   priority: must
   stability: stable
 ```
@@ -43,86 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/web_ui/lib/web_ui/widget_descriptor.ex
+  target: .spec/specs/web-ui/widget_system.spec.md
   covers:
-    - web_ui.widget_system.catalog_baseline
-    - web_ui.widget_system.custom_registration
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/widget_registration_request.ex
-  covers:
-    - web_ui.widget_system.custom_registration
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/widget_registry.ex
-  covers:
-    - web_ui.widget_system.catalog_baseline
-    - web_ui.widget_system.custom_registration
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/widget_render_request.ex
-  covers:
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/widget_render_result.ex
-  covers:
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/widget.ex
-  covers:
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_descriptor_test.exs
-  covers:
-    - web_ui.widget_system.catalog_baseline
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_registration_request_test.exs
-  covers:
-    - web_ui.widget_system.custom_registration
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_registry_catalog_test.exs
-  covers:
-    - web_ui.widget_system.catalog_baseline
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_registry_descriptor_test.exs
-  covers:
-    - web_ui.widget_system.catalog_baseline
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_registry_custom_test.exs
-  covers:
-    - web_ui.widget_system.custom_registration
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_render_request_test.exs
-  covers:
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_render_test.exs
-  covers:
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/widget_custom_render_test.exs
-  covers:
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/integration/phase_04_widget_registry_test.exs
-  covers:
-    - web_ui.widget_system.catalog_baseline
-    - web_ui.widget_system.render_boundary
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/integration/phase_06_custom_widget_governance_test.exs
-  covers:
-    - web_ui.widget_system.custom_registration
-    - web_ui.widget_system.render_boundary
+    - web_ui.widget_system.native_widget_independence
+    - web_ui.widget_system.renders_canonical_iur
+    - web_ui.widget_system.canonical_semantics_preserved
 ```
