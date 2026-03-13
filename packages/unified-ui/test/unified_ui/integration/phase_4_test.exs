@@ -1001,10 +1001,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      scroll_signal = %{
-        type: "unified.input.changed",
-        data: %{widget_id: :main_viewport, value: %{scroll_x: 4, scroll_y: 12}}
-      }
+      scroll_signal =
+        Signals.create!("unified.input.changed", %{
+          widget_id: :main_viewport,
+          value: %{scroll_x: 4, scroll_y: 12}
+        })
 
       updated = module.update(state, scroll_signal)
       assert updated.main_viewport == %{scroll_x: 4, scroll_y: 12}
@@ -1040,10 +1041,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      resize_signal = %{
-        type: "unified.input.changed",
-        data: %{widget_id: :main_split, value: %{split: 65}}
-      }
+      resize_signal =
+        Signals.create!("unified.input.changed", %{
+          widget_id: :main_split,
+          value: %{split: 65}
+        })
 
       updated = module.update(state, resize_signal)
       assert updated.main_split == %{split: 65}
@@ -1085,10 +1087,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      click_signal = %{
-        type: "unified.button.clicked",
-        data: %{widget_id: :chart_canvas, action: :canvas_clicked}
-      }
+      click_signal =
+        Signals.create!("unified.button.clicked", %{
+          widget_id: :chart_canvas,
+          action: :canvas_clicked
+        })
 
       updated = module.update(state, click_signal)
       assert updated.canvas_clicked == true
@@ -1131,10 +1134,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      search_signal = %{
-        type: "unified.input.changed",
-        data: %{widget_id: :main_commands, query: "sav"}
-      }
+      search_signal =
+        Signals.create!("unified.input.changed", %{
+          widget_id: :main_commands,
+          query: "sav"
+        })
 
       updated = module.update(state, search_signal)
 
@@ -1179,10 +1183,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      item_signal = %{
-        type: "unified.input.changed",
-        data: %{widget_id: :events, value: %{event: "updated"}}
-      }
+      item_signal =
+        Signals.create!("unified.input.changed", %{
+          widget_id: :events,
+          value: %{event: "updated"}
+        })
 
       updated = module.update(state, item_signal)
       assert updated.events == %{event: "updated"}
@@ -1198,10 +1203,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      select_signal = %{
-        type: "unified.button.clicked",
-        data: %{widget_id: :processes, action: :process_selected}
-      }
+      select_signal =
+        Signals.create!("unified.button.clicked", %{
+          widget_id: :processes,
+          action: :process_selected
+        })
 
       updated = module.update(state, select_signal)
       assert updated.selected == true
@@ -1358,7 +1364,7 @@ defmodule UnifiedUi.Integration.Phase4Test do
       assert %Layouts.VBox{children: [%Widgets.Text{style: %UnifiedIUR.Style{fg: :black}}]} =
                light_iur
 
-      signal = %{type: "unified.input.changed", data: %{widget_id: :theme, value: "dark"}}
+      signal = Signals.create!("unified.input.changed", %{widget_id: :theme, value: "dark"})
       dark_state = module.update(light_state, signal)
 
       assert dark_state.theme == "dark"
@@ -1388,10 +1394,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
 
       state = module.init([])
 
-      invalid_signal = %{
-        type: "unified.form.submitted",
-        data: %{form_id: :profile_form, data: %{email: "bad", age: "abc", country: :xx}}
-      }
+      invalid_signal =
+        Signals.create!("unified.form.submitted", %{
+          form_id: :profile_form,
+          data: %{email: "bad", age: "abc", country: :xx}
+        })
 
       invalid_state = module.update(state, invalid_signal)
 
@@ -1400,13 +1407,11 @@ defmodule UnifiedUi.Integration.Phase4Test do
       assert invalid_state.profile_form_errors.age == [:invalid_number]
       assert invalid_state.profile_form_errors.country == [:invalid_option]
 
-      valid_signal = %{
-        type: "unified.form.submitted",
-        data: %{
+      valid_signal =
+        Signals.create!("unified.form.submitted", %{
           form_id: :profile_form,
           data: %{email: "user@example.com", age: "42", country: :ca}
-        }
-      }
+        })
 
       valid_state = module.update(invalid_state, valid_signal)
 
@@ -1718,7 +1723,7 @@ defmodule UnifiedUi.Integration.Phase4Test do
           end
 
           @impl true
-          def update(state, %{type: "unified.telemetry.tick", data: data}) do
+          def update(state, %Jido.Signal{type: "unified.telemetry.tick", data: data}) do
             %{
               state
               | cpu: Map.get(data, :cpu, state.cpu),

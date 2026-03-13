@@ -15,6 +15,7 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformer do
 
   use Spark.Dsl.Transformer
 
+  alias Jido.Signal
   alias Spark.Dsl.Transformer
   alias UnifiedUi.Dsl.CompileIndex
   alias UnifiedIUR.Widgets
@@ -52,27 +53,12 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformer do
         end
 
         @impl true
-        def update(state, %{type: unquote(@click_signal_type)} = signal) do
-          dispatch_click_signal(state, signal)
-        end
-
-        @impl true
         def update(state, %Jido.Signal{type: unquote(@change_signal_type)} = signal) do
           dispatch_change_signal(state, signal)
         end
 
         @impl true
-        def update(state, %{type: unquote(@change_signal_type)} = signal) do
-          dispatch_change_signal(state, signal)
-        end
-
-        @impl true
         def update(state, %Jido.Signal{type: unquote(@submit_signal_type)} = signal) do
-          dispatch_submit_signal(state, signal)
-        end
-
-        @impl true
-        def update(state, %{type: unquote(@submit_signal_type)} = signal) do
           dispatch_submit_signal(state, signal)
         end
 
@@ -237,7 +223,7 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformer do
   def after_compile?, do: false
 
   @doc false
-  @spec find_matching_route([map()], map(), :click | :change | :submit) :: map() | nil
+  @spec find_matching_route([map()], Signal.t(), :click | :change | :submit) :: map() | nil
   def find_matching_route(routes, signal, kind) when is_list(routes) do
     route_key = extract_route_key(kind, signal)
     signal_data = extract_signal_data(signal)
@@ -249,7 +235,7 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformer do
   end
 
   @doc false
-  @spec modal_blocked?(map(), map(), map()) :: boolean()
+  @spec modal_blocked?(map(), Signal.t(), map()) :: boolean()
   def modal_blocked?(state, signal, modal_scopes)
       when is_map(state) and is_map(modal_scopes) do
     source_id =
@@ -275,7 +261,7 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformer do
   def modal_blocked?(_state, _signal, _modal_scopes), do: false
 
   @doc false
-  @spec apply_route_update(:click | :change | :submit, map(), map(), map()) :: map()
+  @spec apply_route_update(:click | :change | :submit, map(), Signal.t(), map()) :: map()
   def apply_route_update(kind, state, signal, route) when is_map(state) and is_map(route) do
     case route.handler do
       {:mfa, module, function, args} ->
@@ -288,7 +274,6 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformer do
   end
 
   defp extract_signal_data(%Jido.Signal{data: data}) when is_map(data), do: data
-  defp extract_signal_data(%{data: data}) when is_map(data), do: data
   defp extract_signal_data(_), do: %{}
 
   defp extract_route_key(:click, signal) do

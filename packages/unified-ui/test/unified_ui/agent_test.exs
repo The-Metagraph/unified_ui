@@ -14,11 +14,11 @@ defmodule UnifiedUi.AgentTest do
     def init(_opts), do: %{count: 0}
 
     @impl true
-    def update(state, %{type: "inc", data: %{delta: delta}}) when is_integer(delta) do
+    def update(state, %Signal{type: "inc", data: %{delta: delta}}) when is_integer(delta) do
       %{state | count: state.count + delta}
     end
 
-    def update(state, %{type: "inc"}) do
+    def update(state, %Signal{type: "inc"}) do
       %{state | count: state.count + 1}
     end
 
@@ -42,7 +42,7 @@ defmodule UnifiedUi.AgentTest do
     end
 
     @impl true
-    def update(state, %{type: "inc"}) do
+    def update(state, %Signal{type: "inc"}) do
       %{state | count: state.count + 1}
     end
 
@@ -86,7 +86,7 @@ defmodule UnifiedUi.AgentTest do
         Agent.stop_component(component_id)
       end)
 
-      assert :ok = Agent.signal_component(component_id, %{type: "inc", data: %{delta: 3}})
+      assert :ok = Agent.signal_component(component_id, build_signal!("inc", %{delta: 3}))
       # Allow cast processing.
       Process.sleep(20)
 
@@ -124,9 +124,10 @@ defmodule UnifiedUi.AgentTest do
   describe "error paths" do
     test "returns :not_found for unknown component ids" do
       component_id = :missing_component
+      signal = build_signal!("inc", %{})
 
       assert {:error, :not_found} = Agent.whereis(component_id)
-      assert {:error, :not_found} = Agent.signal_component(component_id, %{type: "inc"})
+      assert {:error, :not_found} = Agent.signal_component(component_id, signal)
       assert {:error, :not_found} = Agent.current_state(component_id)
       assert {:error, :not_found} = Agent.current_iur(component_id)
       assert {:error, :not_found} = Agent.render_results(component_id)
@@ -164,6 +165,17 @@ defmodule UnifiedUi.AgentTest do
                  signal_topics: [:invalid]
                )
     end
+
+    test "signal_component/2 rejects non-signal values" do
+      component_id = :counter_component_invalid_signal
+      assert {:ok, _pid} = Agent.start_component(CounterComponent, component_id)
+
+      on_exit(fn ->
+        Agent.stop_component(component_id)
+      end)
+
+      assert {:error, :invalid_signal} = Agent.signal_component(component_id, %{type: "inc"})
+    end
   end
 
   describe "render optimization" do
@@ -183,7 +195,7 @@ defmodule UnifiedUi.AgentTest do
       assert_receive {:view_called, 0}
       drain_view_calls()
 
-      assert :ok = Agent.signal_component(component_id, %{type: "noop"})
+      assert :ok = Agent.signal_component(component_id, build_signal!("noop", %{}))
       assert {:ok, %{count: 0}} = Agent.current_state(component_id)
 
       refute_receive {:view_called, _count}, 30
@@ -207,7 +219,7 @@ defmodule UnifiedUi.AgentTest do
       drain_view_calls()
 
       Enum.each(1..burst_count, fn _ ->
-        assert :ok = Agent.signal_component(component_id, %{type: "inc"})
+        assert :ok = Agent.signal_component(component_id, build_signal!("inc", %{}))
       end)
 
       assert {:ok, %{count: ^burst_count}} = Agent.current_state(component_id)
@@ -266,5 +278,10 @@ defmodule UnifiedUi.AgentTest do
       0 ->
         Enum.reverse(acc)
     end
+  end
+
+  defp build_signal!(type, data) do
+    {:ok, signal} = Signal.new(type: type, data: data, source: "/unified_ui/test")
+    signal
   end
 end

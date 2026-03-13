@@ -327,7 +327,7 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformerTest do
       assert updated.profile_form_errors.country == [:invalid_option]
     end
 
-    test "map signals are supported in addition to Jido.Signal structs" do
+    test "map-shaped inputs do not match generated runtime routes" do
       module =
         compile_fixture("""
         vbox do
@@ -342,7 +342,7 @@ defmodule UnifiedUi.Dsl.Transformers.UpdateTransformerTest do
         data: %{widget_id: :username, value: "pascal"}
       }
 
-      assert %{username: "pascal"} = module.update(state, signal)
+      assert ^state = module.update(state, signal)
     end
 
     test "mfa routes are invoked for matched handlers" do
