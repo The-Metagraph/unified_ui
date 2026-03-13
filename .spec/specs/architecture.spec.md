@@ -6,7 +6,7 @@ This subject defines the top-level architecture boundaries for the unified UI ec
 id: ecosystem.architecture
 kind: architecture
 status: active
-summary: High-level architecture contract for the DSL, the canonical IUR, the renderer/widget libraries, and the shared event transport.
+summary: High-level architecture contract for the DSL, the canonical IUR, the native runtime libraries, and the shared event transport boundary.
 surface:
   - packages/unified-ui
   - packages/unified_iur
@@ -39,6 +39,16 @@ decisions:
   priority: must
   stability: stable
 
+- id: ecosystem.architecture.runtime_libraries_native_surface
+  statement: Renderer/widget libraries shall expose native widget, layering, styling, and signal surfaces that are usable independently of canonical IUR.
+  priority: must
+  stability: stable
+
+- id: ecosystem.architecture.runtime_libraries_iur_renderer
+  statement: Each renderer/widget library shall include a renderer that loads canonical IUR and realizes it through its own native widgets and native signals.
+  priority: must
+  stability: stable
+
 - id: ecosystem.architecture.shared_transport_contract
   statement: Cross-package UI interaction semantics shall use Jido.Signal values and CloudEvents-compatible event conventions as the shared transport contract.
   priority: must
@@ -54,5 +64,7 @@ decisions:
     - ecosystem.architecture.dsl_authoring_boundary
     - ecosystem.architecture.iur_exchange_boundary
     - ecosystem.architecture.renderer_packages_consume_iur
+    - ecosystem.architecture.runtime_libraries_native_surface
+    - ecosystem.architecture.runtime_libraries_iur_renderer
     - ecosystem.architecture.shared_transport_contract
 ```

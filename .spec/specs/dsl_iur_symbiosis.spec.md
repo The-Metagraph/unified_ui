@@ -6,7 +6,7 @@ This subject defines the bilateral contract between the `unified_ui` DSL and the
 id: ecosystem.dsl_iur_symbiosis
 kind: integration
 status: active
-summary: Symbiotic contract between authored DSL entities in `unified_ui` and canonical widget, layout, layering, and theming representation in `unified_iur`.
+summary: Symbiotic contract between authored DSL entities in `unified_ui` and canonical widget, layout, layering, styling, and theming representation in `unified_iur`.
 surface:
   - packages/unified-ui
   - packages/unified_iur
@@ -24,12 +24,12 @@ decisions:
   stability: stable
 
 - id: ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl
-  statement: Every canonical `unified_iur` widget, layout, layering, and theming construct intended for ecosystem-wide authoring shall be representable through the `unified_ui` DSL.
+  statement: Every canonical `unified_iur` widget, layout, layering, styling, and theming construct intended for ecosystem-wide authoring shall be representable through the `unified_ui` DSL.
   priority: must
   stability: stable
 
 - id: ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme
-  statement: `unified_iur` shall be able to represent widgets, layouts, layering, and theming constructs required by `unified_ui`.
+  statement: `unified_iur` shall be able to represent widgets, layouts, layering, styling attributes, and theming constructs required by `unified_ui`.
   priority: must
   stability: stable
 
