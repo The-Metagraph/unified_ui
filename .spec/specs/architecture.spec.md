@@ -13,7 +13,10 @@ surface:
   - packages/live_ui
   - packages/web_ui
   - packages/desktop_ui
-  - .spec/specs/ecosystem/**/*.spec.md
+  - .spec/specs/architecture.spec.md
+  - .spec/specs/dsl_iur_symbiosis.spec.md
+  - .spec/specs/platform_runtimes.spec.md
+  - .spec/specs/signal_transport.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -46,7 +49,7 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: .spec/specs/ecosystem/architecture.spec.md
+  target: .spec/specs/architecture.spec.md
   covers:
     - ecosystem.architecture.dsl_authoring_boundary
     - ecosystem.architecture.iur_exchange_boundary

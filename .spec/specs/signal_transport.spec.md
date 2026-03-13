@@ -12,7 +12,7 @@ surface:
   - packages/live_ui
   - packages/web_ui
   - packages/desktop_ui
-  - .spec/specs/ecosystem/signal_transport.spec.md
+  - .spec/specs/signal_transport.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -70,7 +70,7 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: .spec/specs/ecosystem/signal_transport.spec.md
+  target: .spec/specs/signal_transport.spec.md
   covers:
     - ecosystem.signal_transport.jido_signal_canonical
     - ecosystem.signal_transport.dsl_event_bindings

@@ -10,7 +10,7 @@ summary: Symbiotic contract between authored DSL entities in `unified_ui` and ca
 surface:
   - packages/unified-ui
   - packages/unified_iur
-  - .spec/specs/ecosystem/dsl_iur_symbiosis.spec.md
+  - .spec/specs/dsl_iur_symbiosis.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -65,7 +65,7 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: .spec/specs/ecosystem/dsl_iur_symbiosis.spec.md
+  target: .spec/specs/dsl_iur_symbiosis.spec.md
   covers:
     - ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation
     - ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl

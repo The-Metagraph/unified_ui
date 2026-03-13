@@ -11,7 +11,7 @@ surface:
   - packages/web_ui
   - packages/live_ui
   - packages/desktop_ui
-  - .spec/specs/ecosystem/platform_runtimes.spec.md
+  - .spec/specs/platform_runtimes.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -64,7 +64,7 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: .spec/specs/ecosystem/platform_runtimes.spec.md
+  target: .spec/specs/platform_runtimes.spec.md
   covers:
     - ecosystem.platform_runtimes.widget_libraries_independent
     - ecosystem.platform_runtimes.iur_interpretation
