@@ -1,6 +1,0 @@
-/_build
-/cover
-/deps
-/.elixir_ls
-.spec/state.json
-erl_crash.dump
