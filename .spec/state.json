@@ -1273,7 +1273,7 @@
         "id": "unified_ui.runtime.elm_behaviour",
         "priority": "must",
         "stability": "stable",
-        "statement": "The package shall define an Elm-style component behaviour with `init/1`, `update/2`, and `view/1` callbacks over map-shaped model state, `Jido.Signal` inputs, and IUR outputs.",
+        "statement": "The package shall define an Elm-style component behaviour with `init/1`, `update/2`, and `view/1` callbacks over map-shaped model state, canonical `Jido.Signal` inputs, and IUR outputs.",
         "subject_id": "unified_ui.runtime"
       },
       {
@@ -1281,7 +1281,7 @@
         "id": "unified_ui.runtime.recovery_patterns",
         "priority": "must",
         "stability": "stable",
-        "statement": "The runtime shall degrade safely when initialization, update, topic subscription, or process lifecycle operations fail by returning fallback state or explicit runtime errors rather than crashing callers.",
+        "statement": "The runtime shall degrade safely when initialization, update, topic subscription, PubSub readiness, or process lifecycle and query operations fail by returning fallback state or explicit runtime errors such as `:agent_runtime_not_started`, `:pubsub_not_started`, `:not_found`, or `{:signal_subscription_failed, topic, reason}` rather than crashing callers.",
         "subject_id": "unified_ui.runtime"
       },
       {
