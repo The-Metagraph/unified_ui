@@ -33,6 +33,153 @@
   "findings": [
     {
       "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.composite_widgets",
+      "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/widgets/dialog_feedback.ex does not reference covered requirement: unified_iur.composite_widgets.dialog_and_feedback"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.composite_widgets",
+      "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/widgets/input_widgets.ex does not reference covered requirement: unified_iur.composite_widgets.form_and_selection"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.composite_widgets",
+      "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/test/unified_iur_test.exs does not reference covered requirement: unified_iur.composite_widgets.dialog_and_feedback"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.composite_widgets",
+      "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/test/unified_iur_test.exs does not reference covered requirement: unified_iur.composite_widgets.form_and_selection"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.composite_widgets",
+      "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/test/unified_iur_test.exs does not reference covered requirement: unified_iur.composite_widgets.layout_compatibility"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.core",
+      "file": ".spec/specs/unified-iur/core.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element.ex does not reference covered requirement: unified_iur.core.element_protocol"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.core",
+      "file": ".spec/specs/unified-iur/core.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element.ex does not reference covered requirement: unified_iur.core.protocol_fallback"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.core",
+      "file": ".spec/specs/unified-iur/core.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element_helpers.ex does not reference covered requirement: unified_iur.core.metadata_helpers"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.core",
+      "file": ".spec/specs/unified-iur/core.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/style.ex does not reference covered requirement: unified_iur.core.style_model"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.core",
+      "file": ".spec/specs/unified-iur/core.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/test/unified_iur_test.exs does not reference covered requirement: unified_iur.core.element_protocol"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.package",
+      "file": ".spec/specs/unified-iur/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/README.md does not reference covered requirement: unified_iur.package.metadata"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.package",
+      "file": ".spec/specs/unified-iur/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur.ex does not reference covered requirement: unified_iur.package.public_types"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.package",
+      "file": ".spec/specs/unified-iur/package.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/mix.exs does not reference covered requirement: unified_iur.package.metadata"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element.ex does not reference covered requirement: unified_iur.structures.data_and_tables"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element.ex does not reference covered requirement: unified_iur.structures.foundational_widgets"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element.ex does not reference covered requirement: unified_iur.structures.layouts"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/element.ex does not reference covered requirement: unified_iur.structures.navigation"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/layouts.ex does not reference covered requirement: unified_iur.structures.layouts"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/widgets.ex does not reference covered requirement: unified_iur.structures.data_and_tables"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/widgets.ex does not reference covered requirement: unified_iur.structures.foundational_widgets"
+    },
+    {
+      "code": "verification_target_missing_reference",
+      "entity_id": "unified_iur.structures",
+      "file": ".spec/specs/unified-iur/structures.spec.md",
+      "level": "warning",
+      "message": "Verification target packages/unified_iur/lib/unified_iur/widgets.ex does not reference covered requirement: unified_iur.structures.navigation"
+    },
+    {
+      "code": "verification_target_missing_reference",
       "entity_id": "unified_ui.adapters",
       "file": ".spec/specs/unified-ui/adapters.spec.md",
       "level": "warning",
@@ -542,6 +689,110 @@
         "subject_id": "spec.system"
       },
       {
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "id": "unified_iur.composite_widgets.dialog_and_feedback",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current dialog and feedback structs for dialog_button, dialog, alert_dialog, and toast, including the current nested-child and metadata behavior exposed through the element protocol.",
+        "subject_id": "unified_iur.composite_widgets"
+      },
+      {
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "id": "unified_iur.composite_widgets.form_and_selection",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current selection and form-building structs for pick_list_option, pick_list, form_field, and form_builder, including the current nested-child and metadata behavior exposed through the element protocol.",
+        "subject_id": "unified_iur.composite_widgets"
+      },
+      {
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "id": "unified_iur.composite_widgets.layout_compatibility",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The current composite widget structs shall remain usable as layout children through the existing IUR child model exercised by the package tests.",
+        "subject_id": "unified_iur.composite_widgets"
+      },
+      {
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "id": "unified_iur.core.element_protocol",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define `UnifiedIUR.Element` as the current polymorphic contract for retrieving child elements and metadata from IUR structs.",
+        "subject_id": "unified_iur.core"
+      },
+      {
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "id": "unified_iur.core.metadata_helpers",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall provide helper functions for building metadata maps with optional `id` and `style` fields so protocol implementations can stay structurally consistent.",
+        "subject_id": "unified_iur.core"
+      },
+      {
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "id": "unified_iur.core.protocol_fallback",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall provide a fallback `UnifiedIUR.Element` implementation for unknown values that returns no children and `type: :unknown`.",
+        "subject_id": "unified_iur.core"
+      },
+      {
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "id": "unified_iur.core.style_model",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall provide a platform-agnostic style struct with constructor and merge helpers for the current foreground, background, text-attribute, spacing, sizing, and alignment fields.",
+        "subject_id": "unified_iur.core"
+      },
+      {
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "id": "unified_iur.package.metadata",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "`packages/unified_iur` shall publish itself as the `:unified_iur` library and declare the current package metadata, documentation entrypoints, and pure intermediate-representation positioning in its package manifest and README.",
+        "subject_id": "unified_iur.package"
+      },
+      {
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "id": "unified_iur.package.public_types",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The top-level `UnifiedIUR` module shall expose the current public type aliases for the implemented widget, layout, and style structs.",
+        "subject_id": "unified_iur.package"
+      },
+      {
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "id": "unified_iur.structures.data_and_tables",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current data-visualization and tabular structs for gauge, sparkline, bar_chart, line_chart, column, and table, with metadata exposed through the element protocol.",
+        "subject_id": "unified_iur.structures"
+      },
+      {
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "id": "unified_iur.structures.foundational_widgets",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current foundational widget structs for text, button, label, and text_input, with metadata exposed through the element protocol.",
+        "subject_id": "unified_iur.structures"
+      },
+      {
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "id": "unified_iur.structures.layouts",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current `VBox` and `HBox` layout structs with child lists, spacing/alignment fields, and element-protocol traversal of nested children.",
+        "subject_id": "unified_iur.structures"
+      },
+      {
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "id": "unified_iur.structures.navigation",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The package shall define the current navigation and hierarchy structs for menu_item, menu, context_menu, tab, tabs, tree_node, and tree_view, with metadata and nested-child traversal exposed through the element protocol where applicable.",
+        "subject_id": "unified_iur.structures"
+      },
+      {
         "file": ".spec/specs/unified-ui/adapters.spec.md",
         "id": "unified_ui.adapters.coordination",
         "priority": "must",
@@ -947,6 +1198,87 @@
         "title": "Spec System"
       },
       {
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "id": "unified_iur.composite_widgets",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "unified_iur.composite_widgets",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current composite widget contract for dialogs, feedback widgets, pick lists, and form builders in `packages/unified_iur`.",
+          "surface": [
+            "packages/unified_iur/lib/unified_iur/widgets/dialog_feedback.ex",
+            "packages/unified_iur/lib/unified_iur/widgets/input_widgets.ex",
+            "packages/unified_iur/test/unified_iur_test.exs"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "UnifiedIUR Composite Widgets"
+      },
+      {
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "id": "unified_iur.core",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "unified_iur.core",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current core protocol and style contract for `packages/unified_iur`, derived from the implemented element, helper, and style modules.",
+          "surface": [
+            "packages/unified_iur/lib/unified_iur/element.ex",
+            "packages/unified_iur/lib/unified_iur/element_helpers.ex",
+            "packages/unified_iur/lib/unified_iur/style.ex",
+            "packages/unified_iur/test/unified_iur_test.exs"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "UnifiedIUR Core"
+      },
+      {
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "id": "unified_iur.package",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "unified_iur.package",
+          "kind": "package",
+          "status": "active",
+          "summary": "Current codebase-derived contract for the `packages/unified_iur` library, its published package metadata, and its top-level public type surface.",
+          "surface": [
+            "packages/unified_iur/README.md",
+            "packages/unified_iur/mix.exs",
+            "packages/unified_iur/lib/unified_iur.ex"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "UnifiedIUR Package"
+      },
+      {
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "id": "unified_iur.structures",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy"
+          ],
+          "id": "unified_iur.structures",
+          "kind": "subsystem",
+          "status": "active",
+          "summary": "Current struct surface for foundational widgets, charts, tables, navigation, and layouts in `packages/unified_iur`.",
+          "surface": [
+            "packages/unified_iur/lib/unified_iur/widgets.ex",
+            "packages/unified_iur/lib/unified_iur/layouts.ex",
+            "packages/unified_iur/lib/unified_iur/element.ex"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "UnifiedIUR Structures"
+      },
+      {
         "file": ".spec/specs/unified-ui/adapters.spec.md",
         "id": "unified_ui.adapters",
         "meta": {
@@ -1245,6 +1577,131 @@
         "kind": "command",
         "subject_id": "spec.system",
         "target": "mix spec.verify"
+      },
+      {
+        "covers": [
+          "unified_iur.composite_widgets.dialog_and_feedback"
+        ],
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/lib/unified_iur/widgets/dialog_feedback.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.composite_widgets.form_and_selection"
+        ],
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/lib/unified_iur/widgets/input_widgets.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.composite_widgets.dialog_and_feedback",
+          "unified_iur.composite_widgets.form_and_selection",
+          "unified_iur.composite_widgets.layout_compatibility"
+        ],
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/test/unified_iur_test.exs"
+      },
+      {
+        "covers": [
+          "unified_iur.core.element_protocol",
+          "unified_iur.core.protocol_fallback"
+        ],
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.core.metadata_helpers"
+        ],
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/element_helpers.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.core.style_model"
+        ],
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/style.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.core.element_protocol"
+        ],
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/test/unified_iur_test.exs"
+      },
+      {
+        "covers": [
+          "unified_iur.package.metadata"
+        ],
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.package",
+        "target": "packages/unified_iur/mix.exs"
+      },
+      {
+        "covers": [
+          "unified_iur.package.metadata"
+        ],
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.package",
+        "target": "packages/unified_iur/README.md"
+      },
+      {
+        "covers": [
+          "unified_iur.package.public_types"
+        ],
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.package",
+        "target": "packages/unified_iur/lib/unified_iur.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.structures.foundational_widgets",
+          "unified_iur.structures.data_and_tables",
+          "unified_iur.structures.navigation"
+        ],
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/widgets.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.structures.layouts"
+        ],
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/layouts.ex"
+      },
+      {
+        "covers": [
+          "unified_iur.structures.foundational_widgets",
+          "unified_iur.structures.data_and_tables",
+          "unified_iur.structures.navigation",
+          "unified_iur.structures.layouts"
+        ],
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex"
       },
       {
         "covers": [
@@ -1871,11 +2328,11 @@
     "decision_parse_errors": 0,
     "decisions": 2,
     "exceptions": 3,
-    "findings": 15,
-    "requirements": 73,
+    "findings": 36,
+    "requirements": 86,
     "scenarios": 0,
-    "subjects": 15,
-    "verifications": 81
+    "subjects": 19,
+    "verifications": 94
   },
   "verification": {
     "claims": [
@@ -2395,6 +2852,237 @@
         "subject_id": "spec.system",
         "target": "mix spec.verify",
         "verification_index": 6
+      },
+      {
+        "cover_id": "unified_iur.composite_widgets.dialog_and_feedback",
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/lib/unified_iur/widgets/dialog_feedback.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.composite_widgets.form_and_selection",
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/lib/unified_iur/widgets/input_widgets.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "unified_iur.composite_widgets.dialog_and_feedback",
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/test/unified_iur_test.exs",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.composite_widgets.form_and_selection",
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/test/unified_iur_test.exs",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.composite_widgets.layout_compatibility",
+        "file": ".spec/specs/unified-iur/composite_widgets.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.composite_widgets",
+        "target": "packages/unified_iur/test/unified_iur_test.exs",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.core.element_protocol",
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.core.protocol_fallback",
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.core.metadata_helpers",
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/element_helpers.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "unified_iur.core.style_model",
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/lib/unified_iur/style.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.core.element_protocol",
+        "file": ".spec/specs/unified-iur/core.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.core",
+        "target": "packages/unified_iur/test/unified_iur_test.exs",
+        "verification_index": 3
+      },
+      {
+        "cover_id": "unified_iur.package.metadata",
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.package",
+        "target": "packages/unified_iur/mix.exs",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.package.metadata",
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.package",
+        "target": "packages/unified_iur/README.md",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "unified_iur.package.public_types",
+        "file": ".spec/specs/unified-iur/package.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.package",
+        "target": "packages/unified_iur/lib/unified_iur.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.structures.data_and_tables",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/widgets.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.structures.foundational_widgets",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/widgets.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.structures.navigation",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/widgets.ex",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "unified_iur.structures.layouts",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/layouts.ex",
+        "verification_index": 1
+      },
+      {
+        "cover_id": "unified_iur.structures.data_and_tables",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.structures.foundational_widgets",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.structures.layouts",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex",
+        "verification_index": 2
+      },
+      {
+        "cover_id": "unified_iur.structures.navigation",
+        "file": ".spec/specs/unified-iur/structures.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "claimed",
+        "subject_id": "unified_iur.structures",
+        "target": "packages/unified_iur/lib/unified_iur/element.ex",
+        "verification_index": 2
       },
       {
         "cover_id": "unified_ui.adapters.renderer_contract",
@@ -3390,7 +4078,7 @@
     "cli_minimum_strength": null,
     "default_minimum_strength": "claimed",
     "strength_summary": {
-      "claimed": 17,
+      "claimed": 38,
       "executed": 0,
       "linked": 120
     },
@@ -3398,6 +4086,6 @@
   },
   "workspace": {
     "decision_count": 2,
-    "spec_count": 15
+    "spec_count": 19
   }
 }
