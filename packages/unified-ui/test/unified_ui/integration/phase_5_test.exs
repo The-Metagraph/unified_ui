@@ -19,6 +19,7 @@ defmodule UnifiedUi.Integration.Phase5Test do
 
   use ExUnit.Case, async: false
 
+  alias Jido.Signal
   alias UnifiedIUR.Layouts.VBox
   alias UnifiedIUR.Widgets.{Button, Text}
   alias UnifiedUi.Adapters.Coordinator
@@ -107,9 +108,11 @@ defmodule UnifiedUi.Integration.Phase5Test do
     end)
 
     assert {:ok, %{count: 1}} = Agent.current_state(component_id)
-    assert {:error, :not_found} = Agent.signal_component(missing_component_id, %{type: "invalid"})
 
-    assert :ok = Agent.signal_component(component_id, %{type: "invalid.signal", data: %{}})
+    assert {:error, :not_found} =
+             Agent.signal_component(missing_component_id, build_signal!("invalid", %{}))
+
+    assert :ok = Agent.signal_component(component_id, build_signal!("invalid.signal", %{}))
     Process.sleep(25)
     assert {:ok, %{count: 1}} = Agent.current_state(component_id)
 
@@ -304,11 +307,11 @@ defmodule UnifiedUi.Integration.Phase5Test do
       end
 
       @impl true
-      def update(state, %{type: "unified.button.clicked", data: %{action: :increment}}) do
+      def update(state, %Jido.Signal{type: "unified.button.clicked", data: %{action: :increment}}) do
         %{state | count: state.count + 1}
       end
 
-      def update(_state, %{type: "unified.button.clicked", data: %{action: :reset}}) do
+      def update(_state, %Jido.Signal{type: "unified.button.clicked", data: %{action: :reset}}) do
         %{count: 0}
       end
 
@@ -335,7 +338,7 @@ defmodule UnifiedUi.Integration.Phase5Test do
 
       def init(_opts), do: %{count: 0}
 
-      def update(state, %{type: "unified.button.clicked", data: %{action: :increment}}) do
+      def update(state, %Jido.Signal{type: "unified.button.clicked", data: %{action: :increment}}) do
         %{state | count: state.count + #{increment_step}}
       end
 
@@ -380,7 +383,7 @@ defmodule UnifiedUi.Integration.Phase5Test do
         end
       end
 
-      def update(state, %{type: "unified.button.clicked", data: %{action: :increment}}) do
+      def update(state, %Jido.Signal{type: "unified.button.clicked", data: %{action: :increment}}) do
         %{state | count: state.count + 1}
       end
 
@@ -453,6 +456,11 @@ defmodule UnifiedUi.Integration.Phase5Test do
       widget: widget_module,
       renderer: renderer_module
     }
+  end
+
+  defp build_signal!(type, data) do
+    {:ok, signal} = Signal.new(type: type, data: data, source: "/unified_ui/test")
+    signal
   end
 
   defp wait_for_count(component_id, expected_count, attempts, interval_ms) do

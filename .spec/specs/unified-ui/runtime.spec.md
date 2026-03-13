@@ -26,7 +26,7 @@ decisions:
 
 ```spec-requirements
 - id: unified_ui.runtime.elm_behaviour
-  statement: The package shall define an Elm-style component behaviour with `init/1`, `update/2`, and `view/1` callbacks over map-shaped model state, `Jido.Signal` inputs, and IUR outputs.
+  statement: The package shall define an Elm-style component behaviour with `init/1`, `update/2`, and `view/1` callbacks over map-shaped model state, canonical `Jido.Signal` inputs, and IUR outputs.
   priority: must
   stability: stable
 

@@ -34,12 +34,8 @@ defmodule UnifiedUi.Dsl.Transformers.JidoAgentTransformer do
         @doc """
         Handles incoming signals using the DSL-generated routing logic.
         """
-        @spec handle_signal(map(), term()) :: map()
+        @spec handle_signal(map(), Jido.Signal.t()) :: map()
         def handle_signal(state, %Jido.Signal{type: unquote(@click_signal_type)} = signal) do
-          dispatch_click_signal(state, signal)
-        end
-
-        def handle_signal(state, %{type: unquote(@click_signal_type)} = signal) do
           dispatch_click_signal(state, signal)
         end
 
@@ -47,15 +43,7 @@ defmodule UnifiedUi.Dsl.Transformers.JidoAgentTransformer do
           dispatch_change_signal(state, signal)
         end
 
-        def handle_signal(state, %{type: unquote(@change_signal_type)} = signal) do
-          dispatch_change_signal(state, signal)
-        end
-
         def handle_signal(state, %Jido.Signal{type: unquote(@submit_signal_type)} = signal) do
-          dispatch_submit_signal(state, signal)
-        end
-
-        def handle_signal(state, %{type: unquote(@submit_signal_type)} = signal) do
           dispatch_submit_signal(state, signal)
         end
 
@@ -82,7 +70,8 @@ defmodule UnifiedUi.Dsl.Transformers.JidoAgentTransformer do
         @doc """
         Sends a signal to a running component agent by id.
         """
-        @spec signal_component(UnifiedUi.Agent.component_id(), term()) :: :ok | {:error, term()}
+        @spec signal_component(UnifiedUi.Agent.component_id(), Jido.Signal.t()) ::
+                :ok | {:error, term()}
         def signal_component(component_id, signal) when is_atom(component_id) do
           UnifiedUi.Agent.signal_component(component_id, signal)
         end

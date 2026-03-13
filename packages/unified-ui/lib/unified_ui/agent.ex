@@ -8,13 +8,14 @@ defmodule UnifiedUi.Agent do
   implement `UnifiedUi.ElmArchitecture`.
   """
 
+  alias Jido.Signal
   alias UnifiedUi.Agent.Server
 
   @registry UnifiedUi.AgentRegistry
   @supervisor UnifiedUi.AgentSupervisor
 
   @type component_id :: atom()
-  @type signal :: term()
+  @type signal :: Signal.t()
   @type signal_topic :: String.t()
 
   @doc """
@@ -72,11 +73,15 @@ defmodule UnifiedUi.Agent do
   Sends a signal to a running component process.
   """
   @spec signal_component(component_id(), signal()) :: :ok | {:error, term()}
-  def signal_component(component_id, signal) when is_atom(component_id) do
+  def signal_component(component_id, %Signal{} = signal) when is_atom(component_id) do
     with {:ok, pid} <- whereis(component_id) do
       GenServer.cast(pid, {:signal, signal})
       :ok
     end
+  end
+
+  def signal_component(component_id, _signal) when is_atom(component_id) do
+    {:error, :invalid_signal}
   end
 
   @doc """
@@ -125,6 +130,7 @@ defmodule UnifiedUi.Agent.Server do
   @moduledoc false
   use GenServer
 
+  alias Jido.Signal
   alias UnifiedUi.Adapters.Coordinator
   alias UnifiedUi.SignalBus
 
@@ -149,7 +155,7 @@ defmodule UnifiedUi.Agent.Server do
           component_id: atom(),
           model_state: map(),
           iur: term(),
-          pending_signals: [term()],
+          pending_signals: [Signal.t()],
           flush_timer_ref: reference() | nil,
           signal_topics: [String.t()],
           platforms: [atom()],
@@ -211,7 +217,7 @@ defmodule UnifiedUi.Agent.Server do
   end
 
   @impl true
-  @spec handle_cast({:signal, term()}, t()) :: {:noreply, t()}
+  @spec handle_cast({:signal, Signal.t()}, t()) :: {:noreply, t()}
   def handle_cast({:signal, signal}, %__MODULE__{} = state) do
     {:noreply, enqueue_signal(state, signal)}
   end
