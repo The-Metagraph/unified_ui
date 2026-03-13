@@ -27,6 +27,21 @@
         "id": "repo.governance.contract_policy",
         "status": "accepted",
         "title": "Repository Governance Uses Contracts and ADRs"
+      },
+      {
+        "affects": [
+          "repo.package",
+          "repo.governance.desktop_ui_contract",
+          "repo.governance.live_ui_contract",
+          "repo.governance.unified_iur_contract",
+          "repo.governance.unified_ui_contract",
+          "repo.governance.web_ui_contract"
+        ],
+        "date": "2026-03-13",
+        "file": ".spec/decisions/governance/repo.governance.package_contract_policy.md",
+        "id": "repo.governance.package_contract_policy",
+        "status": "accepted",
+        "title": "Package Governance Stays Centralized Through Package Contracts"
       }
     ]
   },
@@ -2292,6 +2307,22 @@
         "subject_id": "repo.governance.contract"
       },
       {
+        "file": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "id": "repo.governance.desktop_ui_docs_remain_current_truth",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to `packages/desktop_ui/notes/` or `CLAUDE.md` shall update the affected `desktop-ui` architecture or POC-plan subjects in the same change set, and those subjects shall not describe planned runtime layers as implemented package code until matching code exists.",
+        "subject_id": "repo.governance.desktop_ui_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "id": "repo.governance.desktop_ui_specs_updated_with_surface_changes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the current shipped `desktop_ui` Mix scaffold or public `DesktopUi` module shall update the affected authored subjects under `.spec/specs/desktop-ui/` in the same change set.",
+        "subject_id": "repo.governance.desktop_ui_contract"
+      },
+      {
         "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
         "id": "repo.governance.ecosystem_decision_recorded",
         "priority": "must",
@@ -2322,6 +2353,70 @@
         "stability": "stable",
         "statement": "Changes to package responsibilities, DSL and IUR mapping, or signal transport shall update the affected ecosystem subject specs in the same change set.",
         "subject_id": "repo.governance.ecosystem_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "id": "repo.governance.live_ui_local_overlay_kept_in_sync",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the shipped `live_ui` local specs-governance overlay under `packages/live_ui/lib/live_ui/specs*` or the `mix live_ui.spec.check` entrypoint shall update `.spec/specs/live-ui/local_specs.spec.md` in the same change set and shall remain grounded in the package’s current code rather than ecosystem-level governance.",
+        "subject_id": "repo.governance.live_ui_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "id": "repo.governance.live_ui_specs_updated_with_surface_changes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the current `live_ui` rendering, interpreter, runtime, session, routing, or host-entrypoint code shall update the affected authored subjects under `.spec/specs/live-ui/` in the same change set.",
+        "subject_id": "repo.governance.live_ui_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "id": "repo.governance.unified_iur_backfill_stays_package_local",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The `unified_iur` package backfill shall remain a current package-code contract and shall not imply DSL, compiler, or ecosystem-boundary guarantees unless those guarantees are implemented inside `packages/unified_iur` and reflected by the affected package subjects.",
+        "subject_id": "repo.governance.unified_iur_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "id": "repo.governance.unified_iur_specs_updated_with_surface_changes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the current `unified_iur` public types, widget or layout structs, style model, or composite-widget data structures shall update the affected authored subjects under `.spec/specs/unified-iur/` in the same change set.",
+        "subject_id": "repo.governance.unified_iur_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "id": "repo.governance.unified_ui_backfill_stays_package_local",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "The `unified-ui` package backfill shall remain grounded in current `packages/unified-ui` code and tests and shall not act as a substitute for ecosystem-level DSL or IUR governance owned under `.spec/specs/ecosystem/`.",
+        "subject_id": "repo.governance.unified_ui_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "id": "repo.governance.unified_ui_specs_updated_with_surface_changes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the current `unified-ui` DSL, widget entities, runtime, adapters, or package tooling shall update the affected authored subjects under `.spec/specs/unified-ui/` in the same change set.",
+        "subject_id": "repo.governance.unified_ui_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "id": "repo.governance.web_ui_specs_updated_with_surface_changes",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the current `web_ui` transport, widget system, IUR interpretation, runtime authority, frontend runtime, persistence, or observability code shall update the affected authored subjects under `.spec/specs/web-ui/` in the same change set.",
+        "subject_id": "repo.governance.web_ui_contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "id": "repo.governance.web_ui_tooling_backfill_kept_in_sync",
+        "priority": "must",
+        "stability": "stable",
+        "statement": "Changes to the current `web_ui` governance, conformance, release-readiness, or frontend parity automation under `packages/web_ui/scripts/`, `.githooks/`, `.github/workflows/`, `rfcs/`, or `specs/` shall update `.spec/specs/web-ui/tooling.spec.md` in the same change set and shall remain grounded in shipped package tooling rather than ecosystem governance.",
+        "subject_id": "repo.governance.web_ui_contract"
       },
       {
         "file": ".spec/specs/package.spec.md",
@@ -3094,6 +3189,26 @@
         "title": "Signal Transport"
       },
       {
+        "file": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "id": "repo.governance.desktop_ui_contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy",
+            "repo.governance.package_contract_policy"
+          ],
+          "id": "repo.governance.desktop_ui_contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Governance contract for the current `desktop_ui` scaffold, documentation-backed architecture notes, and proof-of-concept planning specs.",
+          "surface": [
+            "packages/desktop_ui",
+            ".spec/specs/desktop-ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "DesktopUi Change Contract"
+      },
+      {
         "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
         "id": "repo.governance.ecosystem_contract",
         "meta": {
@@ -3112,6 +3227,86 @@
           "verification_minimum_strength": null
         },
         "title": "Ecosystem Change Contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "id": "repo.governance.live_ui_contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy",
+            "repo.governance.package_contract_policy"
+          ],
+          "id": "repo.governance.live_ui_contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Governance contract for the current `live_ui` rendering, interpreter, runtime, host entrypoint, and local specs-overlay backfill.",
+          "surface": [
+            "packages/live_ui",
+            ".spec/specs/live-ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "LiveUi Change Contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "id": "repo.governance.unified_iur_contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy",
+            "repo.governance.package_contract_policy"
+          ],
+          "id": "repo.governance.unified_iur_contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Governance contract for the current `unified_iur` type surface, struct families, and composite-widget backfill.",
+          "surface": [
+            "packages/unified_iur",
+            ".spec/specs/unified-iur"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "UnifiedIUR Change Contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "id": "repo.governance.unified_ui_contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy",
+            "repo.governance.package_contract_policy"
+          ],
+          "id": "repo.governance.unified_ui_contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Governance contract for the current `unified-ui` DSL, widgets, runtime, adapters, and tooling backfill.",
+          "surface": [
+            "packages/unified-ui",
+            ".spec/specs/unified-ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "UnifiedUi Change Contract"
+      },
+      {
+        "file": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "id": "repo.governance.web_ui_contract",
+        "meta": {
+          "decisions": [
+            "repo.governance.contract_policy",
+            "repo.governance.package_contract_policy"
+          ],
+          "id": "repo.governance.web_ui_contract",
+          "kind": "contract",
+          "status": "active",
+          "summary": "Governance contract for the current `web_ui` transport, widget, runtime, frontend, persistence, observability, and tooling backfill.",
+          "surface": [
+            "packages/web_ui",
+            ".spec/specs/web-ui"
+          ],
+          "verification_minimum_strength": null
+        },
+        "title": "WebUi Change Contract"
       },
       {
         "file": ".spec/specs/governance/contracts/workspace_governance_contract.spec.md",
@@ -4271,6 +4466,16 @@
       },
       {
         "covers": [
+          "repo.governance.desktop_ui_specs_updated_with_surface_changes",
+          "repo.governance.desktop_ui_docs_remain_current_truth"
+        ],
+        "file": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.desktop_ui_contract",
+        "target": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md"
+      },
+      {
+        "covers": [
           "repo.governance.ecosystem_specs_updated_with_boundary_changes",
           "repo.governance.ecosystem_decision_recorded",
           "repo.governance.ecosystem_governance_precedes_conformance",
@@ -4280,6 +4485,46 @@
         "kind": "source_file",
         "subject_id": "repo.governance.ecosystem_contract",
         "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.live_ui_specs_updated_with_surface_changes",
+          "repo.governance.live_ui_local_overlay_kept_in_sync"
+        ],
+        "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.live_ui_contract",
+        "target": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.unified_iur_specs_updated_with_surface_changes",
+          "repo.governance.unified_iur_backfill_stays_package_local"
+        ],
+        "file": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.unified_iur_contract",
+        "target": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.unified_ui_specs_updated_with_surface_changes",
+          "repo.governance.unified_ui_backfill_stays_package_local"
+        ],
+        "file": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.unified_ui_contract",
+        "target": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md"
+      },
+      {
+        "covers": [
+          "repo.governance.web_ui_specs_updated_with_surface_changes",
+          "repo.governance.web_ui_tooling_backfill_kept_in_sync"
+        ],
+        "file": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "subject_id": "repo.governance.web_ui_contract",
+        "target": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md"
       },
       {
         "covers": [
@@ -6379,13 +6624,13 @@
   "specification_version": "1.0",
   "summary": {
     "decision_parse_errors": 0,
-    "decisions": 2,
+    "decisions": 3,
     "exceptions": 3,
     "findings": 249,
-    "requirements": 141,
+    "requirements": 151,
     "scenarios": 0,
-    "subjects": 36,
-    "verifications": 282
+    "subjects": 41,
+    "verifications": 287
   },
   "verification": {
     "claims": [
@@ -7380,6 +7625,28 @@
         "verification_index": 0
       },
       {
+        "cover_id": "repo.governance.desktop_ui_docs_remain_current_truth",
+        "file": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.desktop_ui_contract",
+        "target": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.desktop_ui_specs_updated_with_surface_changes",
+        "file": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.desktop_ui_contract",
+        "target": ".spec/specs/governance/contracts/desktop_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
         "cover_id": "repo.governance.ecosystem_decision_recorded",
         "file": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
         "kind": "source_file",
@@ -7421,6 +7688,94 @@
         "strength": "linked",
         "subject_id": "repo.governance.ecosystem_contract",
         "target": ".spec/specs/governance/contracts/ecosystem_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.live_ui_local_overlay_kept_in_sync",
+        "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.live_ui_contract",
+        "target": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.live_ui_specs_updated_with_surface_changes",
+        "file": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.live_ui_contract",
+        "target": ".spec/specs/governance/contracts/live_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.unified_iur_backfill_stays_package_local",
+        "file": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.unified_iur_contract",
+        "target": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.unified_iur_specs_updated_with_surface_changes",
+        "file": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.unified_iur_contract",
+        "target": ".spec/specs/governance/contracts/unified_iur_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.unified_ui_backfill_stays_package_local",
+        "file": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.unified_ui_contract",
+        "target": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.unified_ui_specs_updated_with_surface_changes",
+        "file": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.unified_ui_contract",
+        "target": ".spec/specs/governance/contracts/unified_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.web_ui_specs_updated_with_surface_changes",
+        "file": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.web_ui_contract",
+        "target": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "verification_index": 0
+      },
+      {
+        "cover_id": "repo.governance.web_ui_tooling_backfill_kept_in_sync",
+        "file": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
+        "kind": "source_file",
+        "meets_minimum": true,
+        "required_strength": "claimed",
+        "strength": "linked",
+        "subject_id": "repo.governance.web_ui_contract",
+        "target": ".spec/specs/governance/contracts/web_ui_change_contract.spec.md",
         "verification_index": 0
       },
       {
@@ -10476,12 +10831,12 @@
     "strength_summary": {
       "claimed": 251,
       "executed": 0,
-      "linked": 120
+      "linked": 130
     },
     "threshold_failures": 0
   },
   "workspace": {
-    "decision_count": 2,
-    "spec_count": 36
+    "decision_count": 3,
+    "spec_count": 41
   }
 }
