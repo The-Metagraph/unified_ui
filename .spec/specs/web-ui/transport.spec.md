@@ -1,44 +1,36 @@
 # WebUi Transport
 
-This subject backfills the current transport and boundary-envelope contract for
-`packages/web_ui`, based on its typed protocol helpers, channel orchestration,
-and route bootstrap modules.
+This subject defines the intended ecosystem-aligned signal and transport
+contract for `packages/web_ui`.
 
 ```spec-meta
 id: web_ui.transport
-kind: subsystem
+kind: integration
 status: active
-summary: Current transport contract for `packages/web_ui`, including typed error and context envelopes, CloudEvent validation, canonical naming and routes, and channel ingress or egress orchestration.
+summary: Ecosystem-aligned transport contract for `packages/web_ui`, bridging canonical widget events between Phoenix and Elm through CloudEvents-shaped envelopes and canonical Jido.Signal semantics.
 surface:
-  - packages/web_ui/lib/web_ui/typed_error.ex
-  - packages/web_ui/lib/web_ui/runtime_context.ex
-  - packages/web_ui/lib/web_ui/cloud_event.ex
-  - packages/web_ui/lib/web_ui/service_request_envelope.ex
-  - packages/web_ui/lib/web_ui/service_result_envelope.ex
-  - packages/web_ui/lib/web_ui/transport/naming.ex
-  - packages/web_ui/lib/web_ui/endpoint.ex
-  - packages/web_ui/lib/web_ui/router.ex
-  - packages/web_ui/lib/web_ui/channel.ex
-  - packages/web_ui/test/web_ui
+  - packages/web_ui
+  - .spec/specs/web-ui/transport.spec.md
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.web_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: web_ui.transport.typed_boundaries
-  statement: 'The package shall provide the current typed error, runtime-context, CloudEvent, service-request, and service-result envelope helpers used to normalize protocol and service outcomes at runtime boundaries.'
+- id: web_ui.transport.phoenix_elm_bridge
+  statement: '`web_ui` shall bridge canonical widget events between Phoenix and Elm through CloudEvents-shaped envelopes and canonical Jido.Signal semantics.'
   priority: must
   stability: stable
 
-- id: web_ui.transport.naming_and_routes
-  statement: 'The package shall define the current canonical websocket topic and event naming policy together with the SPA, assets, and websocket route bootstrap contract.'
+- id: web_ui.transport.canonical_event_meaning
+  statement: 'The transport boundary shall preserve canonical event meaning across the server and frontend runtimes, including stable signal type, source, subject, and payload semantics.'
   priority: must
   stability: stable
 
-- id: web_ui.transport.channel_flow
-  statement: 'The channel boundary shall validate current ingress topics, client event names, and CloudEvent envelopes, preserve correlation or request continuity, support ping or pong handling, and emit the current deterministic recv or error envelopes.'
+- id: web_ui.transport.local_state_not_contract
+  statement: 'Renderer-specific local state may vary inside `web_ui`, but local state shall not replace the canonical signal contract at the cross-package boundary.'
   priority: must
   stability: stable
 ```
@@ -47,95 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/web_ui/lib/web_ui/typed_error.ex
+  target: .spec/specs/web-ui/transport.spec.md
   covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/runtime_context.ex
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/cloud_event.ex
-  covers:
-    - web_ui.transport.typed_boundaries
-    - web_ui.transport.channel_flow
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/service_request_envelope.ex
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/service_result_envelope.ex
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/transport/naming.ex
-  covers:
-    - web_ui.transport.naming_and_routes
-    - web_ui.transport.channel_flow
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/endpoint.ex
-  covers:
-    - web_ui.transport.naming_and_routes
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/router.ex
-  covers:
-    - web_ui.transport.naming_and_routes
-
-- kind: source_file
-  target: packages/web_ui/lib/web_ui/channel.ex
-  covers:
-    - web_ui.transport.channel_flow
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/cloud_event_test.exs
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/runtime_context_test.exs
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/service_request_envelope_test.exs
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/service_result_envelope_test.exs
-  covers:
-    - web_ui.transport.typed_boundaries
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/transport/naming_test.exs
-  covers:
-    - web_ui.transport.naming_and_routes
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/endpoint_test.exs
-  covers:
-    - web_ui.transport.naming_and_routes
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/router_test.exs
-  covers:
-    - web_ui.transport.naming_and_routes
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/channel_test.exs
-  covers:
-    - web_ui.transport.channel_flow
-
-- kind: source_file
-  target: packages/web_ui/test/web_ui/integration/phase_01_transport_test.exs
-  covers:
-    - web_ui.transport.channel_flow
-    - web_ui.transport.naming_and_routes
+    - web_ui.transport.phoenix_elm_bridge
+    - web_ui.transport.canonical_event_meaning
+    - web_ui.transport.local_state_not_contract
 ```

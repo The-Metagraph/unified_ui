@@ -1,32 +1,36 @@
 # WebUi Package
 
-This subject backfills the current package-level contract for
-`packages/web_ui` from the implementation and local workflows that exist
-today.
+This subject defines the intended ecosystem-aligned package contract for
+`packages/web_ui`.
 
 ```spec-meta
 id: web_ui.package
 kind: package
 status: active
-summary: Current codebase-derived contract for the `packages/web_ui` library, its package metadata, dependency posture, and documented local workflows.
+summary: Ecosystem-aligned package contract for `packages/web_ui` as an independent widget library with a Phoenix server runtime, an Elm frontend runtime, canonical UnifiedIUR input, and canonical signal transport.
 surface:
-  - packages/web_ui/README.md
-  - packages/web_ui/mix.exs
-  - packages/web_ui/Makefile
+  - packages/web_ui
+  - .spec/specs/web-ui
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.web_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: web_ui.package.metadata
-  statement: '`packages/web_ui` shall publish itself as the `:web_ui` library with the current Elixir requirement and the currently pinned `unified_iur` plus local `spec_led_ex` dependency posture declared in its package manifest.'
+- id: web_ui.package.library_position
+  statement: '`web_ui` shall remain an independent widget library rather than an authored DSL boundary.'
   priority: must
   stability: stable
 
-- id: web_ui.package.local_workflows
-  statement: 'The package shall expose the current documented local workflows for conformance, frontend assets, governance validation, and release readiness through its Mix aliases, Make targets, and README entrypoints.'
+- id: web_ui.package.canonical_input_boundary
+  statement: 'The authored cross-package input boundary for `web_ui` shall be canonical UnifiedIUR.'
+  priority: must
+  stability: stable
+
+- id: web_ui.package.runtime_split
+  statement: '`web_ui` shall use Phoenix for server-side runtime representation and Elm for client-side rendering and local state.'
   priority: must
   stability: stable
 ```
@@ -35,18 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/web_ui/mix.exs
+  target: .spec/specs/web-ui/package.spec.md
   covers:
-    - web_ui.package.metadata
-    - web_ui.package.local_workflows
-
-- kind: source_file
-  target: packages/web_ui/README.md
-  covers:
-    - web_ui.package.local_workflows
-
-- kind: source_file
-  target: packages/web_ui/Makefile
-  covers:
-    - web_ui.package.local_workflows
+    - web_ui.package.library_position
+    - web_ui.package.canonical_input_boundary
+    - web_ui.package.runtime_split
 ```
