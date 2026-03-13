@@ -1,38 +1,36 @@
 # DesktopUi Package
 
-This subject backfills the current package-level contract for
-`packages/desktop_ui` from the code and package docs that exist today.
+This subject defines the intended ecosystem-aligned package contract for
+`packages/desktop_ui`.
 
 ```spec-meta
 id: desktop_ui.package
 kind: package
 status: active
-summary: Current codebase-derived contract for the `packages/desktop_ui` library, including its Mix scaffold, placeholder public module, and explicitly documented research-phase status.
+summary: Ecosystem-aligned package contract for `packages/desktop_ui` as an independent cross-platform desktop widget library with canonical UnifiedIUR input, SDL2-based runtime targets, and canonical signal transport.
 surface:
-  - packages/desktop_ui/mix.exs
-  - packages/desktop_ui/README.md
-  - packages/desktop_ui/lib/desktop_ui.ex
-  - packages/desktop_ui/test/desktop_ui_test.exs
-  - packages/desktop_ui/CLAUDE.md
+  - packages/desktop_ui
+  - .spec/specs/desktop-ui
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.desktop_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: desktop_ui.package.mix_scaffold
-  statement: '`packages/desktop_ui` shall currently remain a minimal Mix project published as `:desktop_ui`, targeting Elixir `~> 1.18`, starting only `:logger`, and declaring no active package dependencies.'
+- id: desktop_ui.package.library_position
+  statement: '`desktop_ui` shall remain an independent desktop widget library rather than an authored DSL boundary.'
   priority: must
   stability: stable
 
-- id: desktop_ui.package.placeholder_module
-  statement: 'The current public code surface shall remain the placeholder `DesktopUi` module that exposes `hello/0` returning `:world`, with matching doctest and unit-test coverage.'
+- id: desktop_ui.package.canonical_input_boundary
+  statement: 'The authored cross-package input boundary for `desktop_ui` shall be canonical UnifiedIUR.'
   priority: must
   stability: stable
 
-- id: desktop_ui.package.research_phase_status
-  statement: 'The package documentation shall state that `desktop_ui` is still in an early research or prototype phase, with the runtime, graphics bridge, and widget system planned but not yet implemented in the shipped code.'
+- id: desktop_ui.package.cross_platform_scope
+  statement: '`desktop_ui` shall target Windows, macOS, and Linux as its intended desktop runtime scope.'
   priority: must
   stability: stable
 ```
@@ -41,27 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/desktop_ui/mix.exs
+  target: .spec/specs/desktop-ui/package.spec.md
   covers:
-    - desktop_ui.package.mix_scaffold
-
-- kind: source_file
-  target: packages/desktop_ui/README.md
-  covers:
-    - desktop_ui.package.mix_scaffold
-
-- kind: source_file
-  target: packages/desktop_ui/lib/desktop_ui.ex
-  covers:
-    - desktop_ui.package.placeholder_module
-
-- kind: source_file
-  target: packages/desktop_ui/test/desktop_ui_test.exs
-  covers:
-    - desktop_ui.package.placeholder_module
-
-- kind: source_file
-  target: packages/desktop_ui/CLAUDE.md
-  covers:
-    - desktop_ui.package.research_phase_status
+    - desktop_ui.package.library_position
+    - desktop_ui.package.canonical_input_boundary
+    - desktop_ui.package.cross_platform_scope
 ```

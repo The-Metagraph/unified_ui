@@ -1,39 +1,36 @@
 # DesktopUi Architecture
 
-This subject backfills the current documented architecture for
-`packages/desktop_ui`, based on the local research notes and project guidance
-that exist today.
+This subject defines the intended ecosystem-aligned native widget architecture
+for `packages/desktop_ui`.
 
 ```spec-meta
 id: desktop_ui.architecture
 kind: subsystem
 status: active
-summary: Current documentation-level architecture for `packages/desktop_ui`, including its cross-platform desktop positioning, layered Elm-style runtime model, SDL2 graphics bridge strategy, and planned Jido-oriented evolution.
+summary: Ecosystem-aligned native widget architecture for `packages/desktop_ui`, including an independent desktop widget system that renders canonical UnifiedIUR without becoming an authored DSL mirror.
 surface:
-  - packages/desktop_ui/CLAUDE.md
-  - packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md
-  - packages/desktop_ui/notes/research/1.01-foundation/1.01.2-architecture.md
-  - packages/desktop_ui/notes/research/1.01-foundation/1.01.3-graphics-engine.md
-  - packages/desktop_ui/notes/research/1.01-foundation/1.01.4-component-architecture.md
+  - packages/desktop_ui
+  - .spec/specs/desktop-ui/architecture.spec.md
 decisions:
-  - repo.governance.contract_policy
+  - repo.ecosystem.contract_model
+  - repo.desktop_ui.ecosystem_alignment
 ```
 
 ## Requirements
 
 ```spec-requirements
-- id: desktop_ui.architecture.framework_positioning
-  statement: 'The current research set shall position DesktopUI as an Elixir-based cross-platform desktop UI framework that follows Elm-style state management and pursues direct desktop graphics rather than wrapping an existing GUI toolkit.'
+- id: desktop_ui.architecture.native_widget_independence
+  statement: '`desktop_ui` may expose and evolve its own native desktop widget system independently of the `unified_ui` DSL.'
   priority: must
   stability: stable
 
-- id: desktop_ui.architecture.layered_runtime_model
-  statement: 'The documented architecture shall define the current layered runtime model with a `DesktopUI.Elm` behaviour, a central runtime process, declarative widget trees, a rendering and layout layer, and a `DesktopUI.Graphics` bridge over SDL2-backed native functions.'
+- id: desktop_ui.architecture.renders_canonical_iur
+  statement: 'The `desktop_ui` architecture shall render canonical UnifiedIUR using its own native widget and layout system and shall not require authored DSL modules once canonical IUR is available.'
   priority: must
   stability: stable
 
-- id: desktop_ui.architecture.future_jido_evolution
-  statement: 'The current design docs shall describe Jido integration as a planned future evolution for agent-based components, signal-driven communication, and structured side-effect execution rather than as implemented package behavior today.'
+- id: desktop_ui.architecture.canonical_semantics_preserved
+  statement: 'The native desktop architecture shall preserve canonical widget identity and event meaning across runtime, layout, rendering, and platform input boundaries.'
   priority: must
   stability: stable
 ```
@@ -42,30 +39,9 @@ decisions:
 
 ```spec-verification
 - kind: source_file
-  target: packages/desktop_ui/CLAUDE.md
+  target: .spec/specs/desktop-ui/architecture.spec.md
   covers:
-    - desktop_ui.architecture.framework_positioning
-    - desktop_ui.architecture.layered_runtime_model
-    - desktop_ui.architecture.future_jido_evolution
-
-- kind: source_file
-  target: packages/desktop_ui/notes/research/1.01-foundation/1.01.1-original-concept.md
-  covers:
-    - desktop_ui.architecture.framework_positioning
-    - desktop_ui.architecture.layered_runtime_model
-
-- kind: source_file
-  target: packages/desktop_ui/notes/research/1.01-foundation/1.01.2-architecture.md
-  covers:
-    - desktop_ui.architecture.layered_runtime_model
-
-- kind: source_file
-  target: packages/desktop_ui/notes/research/1.01-foundation/1.01.3-graphics-engine.md
-  covers:
-    - desktop_ui.architecture.layered_runtime_model
-
-- kind: source_file
-  target: packages/desktop_ui/notes/research/1.01-foundation/1.01.4-component-architecture.md
-  covers:
-    - desktop_ui.architecture.future_jido_evolution
+    - desktop_ui.architecture.native_widget_independence
+    - desktop_ui.architecture.renders_canonical_iur
+    - desktop_ui.architecture.canonical_semantics_preserved
 ```
