@@ -34,7 +34,8 @@ defmodule UnifiedIURTest do
 
     assert %{
              layer: UnifiedIUR.Layer,
-             viewport: UnifiedIUR.Viewport
+             viewport: UnifiedIUR.Viewport,
+             canvas: UnifiedIUR.Canvas
            } = UnifiedIUR.Display.modules()
 
     assert %{

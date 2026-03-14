@@ -4,11 +4,12 @@ defmodule UnifiedIUR.Display do
   `UnifiedIUR`.
   """
 
-  @spec modules() :: %{layer: module(), viewport: module()}
+  @spec modules() :: %{canvas: module(), layer: module(), viewport: module()}
   def modules do
     %{
       layer: UnifiedIUR.Layer,
-      viewport: UnifiedIUR.Viewport
+      viewport: UnifiedIUR.Viewport,
+      canvas: UnifiedIUR.Canvas
     }
   end
 end
