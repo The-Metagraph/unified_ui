@@ -3,6 +3,7 @@ defmodule UnifiedIUR.Widgets.Navigation do
   Canonical constructors for baseline navigation widgets in `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Metadata
 
@@ -20,13 +21,15 @@ defmodule UnifiedIUR.Widgets.Navigation do
     Element.new(:widget, :menu,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        navigation:
-          %{}
-          |> maybe_put(:orientation, option(opts, :orientation, :vertical))
-          |> maybe_put(:active_item, option(opts, :active_item))
-          |> maybe_put(:items, normalize_items(items))
-      },
+      attributes:
+        %{
+          navigation:
+            %{}
+            |> maybe_put(:orientation, option(opts, :orientation, :vertical))
+            |> maybe_put(:active_item, option(opts, :active_item))
+            |> maybe_put(:items, normalize_items(items))
+        }
+        |> Attachment.merge(opts, component: :menu),
       children: []
     )
   end
@@ -38,13 +41,15 @@ defmodule UnifiedIUR.Widgets.Navigation do
     Element.new(:widget, :tabs,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        navigation:
-          %{}
-          |> maybe_put(:orientation, option(opts, :orientation, :horizontal))
-          |> maybe_put(:active_item, option(opts, :active_item))
-          |> maybe_put(:items, normalize_items(items))
-      },
+      attributes:
+        %{
+          navigation:
+            %{}
+            |> maybe_put(:orientation, option(opts, :orientation, :horizontal))
+            |> maybe_put(:active_item, option(opts, :active_item))
+            |> maybe_put(:items, normalize_items(items))
+        }
+        |> Attachment.merge(opts, component: :tabs),
       children: []
     )
   end

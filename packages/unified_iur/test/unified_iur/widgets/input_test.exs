@@ -1,6 +1,7 @@
 defmodule UnifiedIUR.Widgets.InputTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Binding
   alias UnifiedIUR.Element
   alias UnifiedIUR.Widgets
   alias UnifiedIUR.Widgets.Input
@@ -77,10 +78,15 @@ defmodule UnifiedIUR.Widgets.InputTest do
                  multiline?: false,
                  input_mode: :text
                },
-               binding: %{name: :username, path: [:profile, :username], value: "pascal"},
+               bindings: [
+                 %Binding{name: :username, path: [:profile, :username], value: "pascal"}
+               ],
                validation: %{required?: true, constraints: %{min_length: 3}},
                accessibility: %{label: "Username"},
-               style: %{style_refs: [:input]}
+               theme: %{
+                 component: :text_input,
+                 token_refs: [%{kind: :token_ref, path: [:input]}]
+               }
              }
            } = text_input
 
@@ -88,7 +94,7 @@ defmodule UnifiedIUR.Widgets.InputTest do
              kind: :numeric_input,
              attributes: %{
                input: %{value_kind: :numeric, min: 0, max: 120, step: 1},
-               binding: %{name: :age, value: 42}
+               bindings: [%Binding{name: :age, value: 42}]
              }
            } = numeric_input
 
@@ -101,7 +107,7 @@ defmodule UnifiedIUR.Widgets.InputTest do
                  checked_value: true,
                  unchecked_value: false
                },
-               binding: %{name: :notifications, value: true},
+               bindings: [%Binding{name: :notifications, value: true}],
                state: %{disabled?: false}
              }
            } = toggle
@@ -166,7 +172,7 @@ defmodule UnifiedIUR.Widgets.InputTest do
                    %{id: :pro, value: :pro, label: "Pro", selected?: true}
                  ]
                },
-               binding: %{name: :plan}
+               bindings: [%Binding{name: :plan}]
              }
            } = radio_group
 
@@ -202,7 +208,7 @@ defmodule UnifiedIUR.Widgets.InputTest do
              kind: :slider,
              attributes: %{
                input: %{value_kind: :range, min: 0, max: 10, step: 2},
-               binding: %{name: :volume, value: 6}
+               bindings: [%Binding{name: :volume, value: 6}]
              }
            } = slider
 

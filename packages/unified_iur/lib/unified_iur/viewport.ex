@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Viewport do
   display semantics in `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
 
@@ -21,18 +22,20 @@ defmodule UnifiedIUR.Viewport do
     Element.new(:layout, :viewport,
       id: option(opts, :id),
       metadata: option(opts, :metadata),
-      attributes: %{
-        viewport:
-          %{}
-          |> maybe_put(:axis, option(opts, :axis, :vertical))
-          |> maybe_put(:offset, normalize_offset(option(opts, :offset, 0)))
-          |> maybe_put(:clip?, option(opts, :clip?, true))
-          |> maybe_put(:scrollbars, option(opts, :scrollbars, :auto))
-          |> maybe_put(:width, option(opts, :width))
-          |> maybe_put(:height, option(opts, :height))
-          |> maybe_put(:sync_group, option(opts, :sync_group))
-          |> maybe_put(:independent_scroll?, option(opts, :independent_scroll?))
-      },
+      attributes:
+        %{
+          viewport:
+            %{}
+            |> maybe_put(:axis, option(opts, :axis, :vertical))
+            |> maybe_put(:offset, normalize_offset(option(opts, :offset, 0)))
+            |> maybe_put(:clip?, option(opts, :clip?, true))
+            |> maybe_put(:scrollbars, option(opts, :scrollbars, :auto))
+            |> maybe_put(:width, option(opts, :width))
+            |> maybe_put(:height, option(opts, :height))
+            |> maybe_put(:sync_group, option(opts, :sync_group))
+            |> maybe_put(:independent_scroll?, option(opts, :independent_scroll?))
+        }
+        |> Attachment.merge(opts, component: :viewport),
       children: [Child.new(:content, content)]
     )
   end
@@ -44,16 +47,18 @@ defmodule UnifiedIUR.Viewport do
     Element.new(:widget, :scroll_bar,
       id: option(opts, :id),
       metadata: option(opts, :metadata),
-      attributes: %{
-        scroll_bar:
-          %{}
-          |> maybe_put(:orientation, option(opts, :orientation, :vertical))
-          |> maybe_put(:position, normalize_scroll_position(option(opts, :position, 0)))
-          |> maybe_put(:viewport_size, option(opts, :viewport_size))
-          |> maybe_put(:content_size, option(opts, :content_size))
-          |> maybe_put(:viewport_ref, option(opts, :viewport_ref))
-          |> maybe_put(:sync_group, option(opts, :sync_group))
-      },
+      attributes:
+        %{
+          scroll_bar:
+            %{}
+            |> maybe_put(:orientation, option(opts, :orientation, :vertical))
+            |> maybe_put(:position, normalize_scroll_position(option(opts, :position, 0)))
+            |> maybe_put(:viewport_size, option(opts, :viewport_size))
+            |> maybe_put(:content_size, option(opts, :content_size))
+            |> maybe_put(:viewport_ref, option(opts, :viewport_ref))
+            |> maybe_put(:sync_group, option(opts, :sync_group))
+        }
+        |> Attachment.merge(opts, component: :scroll_bar),
       children: []
     )
   end
@@ -65,26 +70,28 @@ defmodule UnifiedIUR.Viewport do
     Element.new(:layout, :split_pane,
       id: option(opts, :id),
       metadata: option(opts, :metadata),
-      attributes: %{
-        split:
-          %{}
-          |> maybe_put(:direction, option(opts, :direction, :horizontal))
-          |> maybe_put(:ratio, option(opts, :ratio, 0.5))
-          |> maybe_put(:resizable?, option(opts, :resizable?, true))
-          |> maybe_put(:min_primary, option(opts, :min_primary))
-          |> maybe_put(:min_secondary, option(opts, :min_secondary))
-          |> maybe_put(:primary_size, option(opts, :primary_size))
-          |> maybe_put(:secondary_size, option(opts, :secondary_size))
-          |> maybe_put(
-            :divider,
-            normalize_divider(
-              option(opts, :divider, %{}),
-              option(opts, :divider_size),
-              option(opts, :divider_style)
+      attributes:
+        %{
+          split:
+            %{}
+            |> maybe_put(:direction, option(opts, :direction, :horizontal))
+            |> maybe_put(:ratio, option(opts, :ratio, 0.5))
+            |> maybe_put(:resizable?, option(opts, :resizable?, true))
+            |> maybe_put(:min_primary, option(opts, :min_primary))
+            |> maybe_put(:min_secondary, option(opts, :min_secondary))
+            |> maybe_put(:primary_size, option(opts, :primary_size))
+            |> maybe_put(:secondary_size, option(opts, :secondary_size))
+            |> maybe_put(
+              :divider,
+              normalize_divider(
+                option(opts, :divider, %{}),
+                option(opts, :divider_size),
+                option(opts, :divider_style)
+              )
             )
-          )
-          |> maybe_put(:sync_scroll, option(opts, :sync_scroll))
-      },
+            |> maybe_put(:sync_scroll, option(opts, :sync_scroll))
+        }
+        |> Attachment.merge(opts, component: :split_pane),
       children: [
         Child.new(:primary, primary),
         Child.new(:secondary, secondary)

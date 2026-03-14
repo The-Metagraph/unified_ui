@@ -50,13 +50,20 @@ defmodule UnifiedIUR.ViewportTest do
       Layout.scroll_region(
         Container.content([{:content, Foundational.text("Nav", id: "nav-copy")}],
           id: "nav-panel"
-        ), id: "nav-viewport", sync_group: :workspace_nav)
+        ),
+        id: "nav-viewport",
+        sync_group: :workspace_nav
+      )
 
     secondary =
       Layout.scroll_region(
         Container.content([{:content, Foundational.text("Detail", id: "detail-copy")}],
           id: "detail-panel"
-        ), id: "detail-viewport", offset: 12, sync_group: :workspace_detail)
+        ),
+        id: "detail-viewport",
+        offset: 12,
+        sync_group: :workspace_detail
+      )
 
     scroll_bar =
       Viewport.scroll_bar(

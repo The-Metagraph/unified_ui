@@ -3,6 +3,8 @@ defmodule UnifiedIUR.Widgets.FoundationalTest do
 
   alias UnifiedIUR.Container
   alias UnifiedIUR.Element
+  alias UnifiedIUR.Interaction
+  alias UnifiedIUR.Style
   alias UnifiedIUR.Widgets.Foundational
 
   test "builds content-bearing visual widgets with canonical metadata and accessibility hooks" do
@@ -45,7 +47,11 @@ defmodule UnifiedIUR.Widgets.FoundationalTest do
              attributes: %{
                content: %{text: "Unified IUR"},
                accessibility: %{label: "Hero title text"},
-               style: %{style_refs: [:headline], variant: :hero}
+               theme: %{
+                 component: :text,
+                 token_refs: [%{kind: :token_ref, path: [:headline]}],
+                 variant: :hero
+               }
              }
            } = title
 
@@ -107,9 +113,13 @@ defmodule UnifiedIUR.Widgets.FoundationalTest do
              kind: :button,
              attributes: %{
                content: %{text: "Save"},
-               action: %{intent: :save},
                state: %{disabled?: false, emphasis: :strong},
-               style: %{style_refs: [:primary_button], tone: :accent}
+               style: %Style{emphasis: %{tone: :accent}},
+               theme: %{
+                 component: :button,
+                 token_refs: [%{kind: :token_ref, path: [:primary_button]}]
+               },
+               interactions: [%Interaction{family: :click, intent: :save}]
              }
            } = button
 
@@ -118,7 +128,8 @@ defmodule UnifiedIUR.Widgets.FoundationalTest do
              attributes: %{
                content: %{text: "Docs"},
                link: %{target: "https://specled.dev/home", external?: true, target_kind: :uri},
-               state: %{current?: true, emphasis: :subtle}
+               state: %{current?: true, emphasis: :subtle},
+               interactions: [%Interaction{family: :navigation, intent: :follow_link}]
              }
            } = link
 

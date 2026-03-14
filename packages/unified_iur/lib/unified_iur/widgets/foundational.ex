@@ -4,7 +4,9 @@ defmodule UnifiedIUR.Widgets.Foundational do
   widgets in `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
+  alias UnifiedIUR.Interaction
   alias UnifiedIUR.Metadata
 
   @type opts :: keyword() | map()
@@ -117,8 +119,7 @@ defmodule UnifiedIUR.Widgets.Foundational do
     build_widget(
       :button,
       %{
-        content: %{text: label},
-        action: normalize_map(option(opts, :action, %{}))
+        content: %{text: label}
       },
       opts
     )
@@ -138,7 +139,7 @@ defmodule UnifiedIUR.Widgets.Foundational do
           target_kind: option(opts, :target_kind, :uri)
         }
       },
-      opts
+      Map.put(opts, :navigation_target, target)
     )
   end
 
@@ -207,7 +208,6 @@ defmodule UnifiedIUR.Widgets.Foundational do
         |> merge_attribute(:content, Map.get(kind_attributes, :content))
         |> merge_attribute(:icon, Map.get(kind_attributes, :icon))
         |> merge_attribute(:image, Map.get(kind_attributes, :image))
-        |> merge_attribute(:action, Map.get(kind_attributes, :action))
         |> merge_attribute(:link, Map.get(kind_attributes, :link))
         |> merge_attribute(:label, Map.get(kind_attributes, :label))
         |> merge_attribute(:separator, Map.get(kind_attributes, :separator))
@@ -215,7 +215,11 @@ defmodule UnifiedIUR.Widgets.Foundational do
         |> merge_attribute(:container, Map.get(kind_attributes, :container))
         |> merge_attribute(:accessibility, normalize_accessibility(opts))
         |> merge_attribute(:state, normalize_state(opts))
-        |> merge_attribute(:style, normalize_style(opts)),
+        |> Attachment.merge(opts,
+          component: kind,
+          local_style: normalize_style(opts),
+          fallback_interactions: default_interactions(kind, opts)
+        ),
       children: option(opts, :children, [])
     )
   end
@@ -255,19 +259,47 @@ defmodule UnifiedIUR.Widgets.Foundational do
   end
 
   defp normalize_style(opts) do
-    style_refs =
-      opts
-      |> option(:style_refs, [])
-      |> List.wrap()
-      |> Enum.reject(&is_nil/1)
-
     opts
     |> option(:style, %{})
     |> normalize_map()
-    |> maybe_put(:style_refs, if(style_refs == [], do: nil, else: style_refs))
-    |> maybe_put(:variant, option(opts, :variant))
     |> maybe_put(:tone, option(opts, :tone))
   end
+
+  defp default_interactions(:button, opts) do
+    action =
+      opts
+      |> option(:action, %{})
+      |> normalize_map()
+
+    if action == %{} do
+      []
+    else
+      [
+        Interaction.click(
+          intent: option(action, :intent),
+          element_id: option(opts, :id),
+          path: option(action, :path),
+          binding: option(action, :binding),
+          command: option(action, :command),
+          value: option(action, :value),
+          mapping: option(action, :mapping, %{})
+        )
+      ]
+    end
+  end
+
+  defp default_interactions(:link, opts) do
+    [
+      Interaction.navigation(
+        intent: :follow_link,
+        element_id: option(opts, :id),
+        entity: option(opts, :target_kind, :uri),
+        value: option(opts, :navigation_target)
+      )
+    ]
+  end
+
+  defp default_interactions(_kind, _opts), do: []
 
   defp normalize_opts(opts) when is_list(opts), do: Enum.into(opts, %{})
   defp normalize_opts(opts) when is_map(opts), do: Map.new(opts)

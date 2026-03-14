@@ -3,8 +3,10 @@ defmodule UnifiedIUR.Forms do
   Canonical form-composition constructors for `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Interaction
   alias UnifiedIUR.Metadata
   alias UnifiedIUR.Widgets.Foundational
 
@@ -32,10 +34,13 @@ defmodule UnifiedIUR.Forms do
           mode: option(opts, :mode, :grouped),
           autocomplete?: option(opts, :autocomplete?, true)
         })
-        |> merge_attribute(:binding, normalize_binding(opts))
         |> merge_attribute(:validation, normalize_validation(opts))
-        |> merge_attribute(:submission, normalize_submission(opts))
-        |> merge_attribute(:style, normalize_style(opts)),
+        |> Attachment.merge(opts,
+          component: :form_builder,
+          local_style: normalize_style(opts),
+          fallback_bindings: normalize_binding(opts),
+          fallback_interactions: normalize_submit_interactions(opts)
+        ),
       children: children
     )
   end
@@ -55,9 +60,12 @@ defmodule UnifiedIUR.Forms do
           role: option(opts, :role, :group),
           collapsible?: option(opts, :collapsible?, false)
         })
-        |> merge_attribute(:binding, normalize_binding(opts))
         |> merge_attribute(:validation, normalize_validation(opts))
-        |> merge_attribute(:style, normalize_style(opts)),
+        |> Attachment.merge(opts,
+          component: :field_group,
+          local_style: normalize_style(opts),
+          fallback_bindings: normalize_binding(opts)
+        ),
       children: children
     )
   end
@@ -86,9 +94,12 @@ defmodule UnifiedIUR.Forms do
           label_slot: if(label_child, do: :label, else: nil),
           help_slot: if(help_child, do: :help, else: nil)
         })
-        |> merge_attribute(:binding, normalize_binding(opts))
         |> merge_attribute(:validation, normalize_validation(opts))
-        |> merge_attribute(:style, normalize_style(opts)),
+        |> Attachment.merge(opts,
+          component: :field,
+          local_style: normalize_style(opts),
+          fallback_bindings: normalize_binding(opts)
+        ),
       children: children
     )
   end
@@ -147,33 +158,46 @@ defmodule UnifiedIUR.Forms do
     |> normalize_map()
     |> maybe_put(:required?, option(opts, :required?))
     |> maybe_put(:errors, normalize_errors(option(opts, :errors)))
-    |> maybe_put(:constraints, normalize_map(option(opts, :constraints, %{})))
+    |> maybe_put(:constraints, normalize_optional_map(option(opts, :constraints)))
     |> maybe_put(:status, option(opts, :status))
   end
 
-  defp normalize_submission(opts) do
-    opts
-    |> option(:submission, %{})
-    |> normalize_map()
-    |> maybe_put(:intent, option(opts, :submit_intent))
-    |> maybe_put(:method, option(opts, :submit_method, :signal))
-    |> maybe_put(:trigger, option(opts, :submit_trigger, :submit))
-    |> maybe_put(:allow_partial?, option(opts, :allow_partial?))
-  end
-
   defp normalize_style(opts) do
-    style_refs =
-      opts
-      |> option(:style_refs, [])
-      |> List.wrap()
-      |> Enum.reject(&is_nil/1)
-
     opts
     |> option(:style, %{})
     |> normalize_map()
-    |> maybe_put(:style_refs, if(style_refs == [], do: nil, else: style_refs))
-    |> maybe_put(:variant, option(opts, :variant))
     |> maybe_put(:tone, option(opts, :tone))
+  end
+
+  defp normalize_submit_interactions(opts) do
+    submission =
+      opts
+      |> option(:submission, %{})
+      |> normalize_map()
+
+    intent = option(submission, :intent, option(opts, :submit_intent))
+    trigger = option(submission, :trigger, option(opts, :submit_trigger, :submit))
+    allow_partial? = option(submission, :allow_partial?, option(opts, :allow_partial?))
+    binding_target = option(submission, :binding, option(opts, :path, option(opts, :name)))
+
+    if is_nil(intent) and is_nil(binding_target) and is_nil(allow_partial?) do
+      []
+    else
+      [
+        Interaction.new(%{
+          family: :submit,
+          intent: intent,
+          source: %{element_id: option(opts, :id)},
+          target:
+            %{}
+            |> maybe_put(:binding, binding_target),
+          metadata:
+            %{}
+            |> maybe_put(:phase, trigger)
+            |> maybe_put(:allow_partial?, allow_partial?)
+        })
+      ]
+    end
   end
 
   defp normalize_errors(nil), do: nil
@@ -182,6 +206,9 @@ defmodule UnifiedIUR.Forms do
   defp normalize_map(nil), do: %{}
   defp normalize_map(map) when is_map(map), do: Map.new(map)
   defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
+
+  defp normalize_optional_map(nil), do: nil
+  defp normalize_optional_map(map), do: normalize_map(map)
 
   defp normalize_opts(opts) when is_list(opts), do: Enum.into(opts, %{})
   defp normalize_opts(opts) when is_map(opts), do: Map.new(opts)
