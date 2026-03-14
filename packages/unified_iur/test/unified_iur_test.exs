@@ -3,6 +3,7 @@ defmodule UnifiedIURTest do
 
   test "exposes the canonical package module areas" do
     assert %{
+             display: UnifiedIUR.Display,
              constructs: UnifiedIUR.Constructs,
              core: UnifiedIUR.Core,
              interactions: UnifiedIUR.Interactions,
@@ -27,8 +28,15 @@ defmodule UnifiedIURTest do
              widgets: UnifiedIUR.Widgets,
              container: UnifiedIUR.Container,
              forms: UnifiedIUR.Forms,
-             layout: UnifiedIUR.Layout
+             layout: UnifiedIUR.Layout,
+             display: UnifiedIUR.Display
            } = UnifiedIUR.Constructs.modules()
+
+    assert %{
+             layer: UnifiedIUR.Layer,
+             viewport: UnifiedIUR.Viewport,
+             canvas: UnifiedIUR.Canvas
+           } = UnifiedIUR.Display.modules()
 
     assert %{
              foundational: UnifiedIUR.Widgets.Foundational,

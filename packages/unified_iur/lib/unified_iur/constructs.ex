@@ -4,15 +4,22 @@ defmodule UnifiedIUR.Constructs do
   construct families.
   """
 
-  alias UnifiedIUR.{Container, Forms, Layout, Widgets}
+  alias UnifiedIUR.{Container, Display, Forms, Layout, Widgets}
 
-  @spec modules() :: %{container: module(), forms: module(), layout: module(), widgets: module()}
+  @spec modules() :: %{
+          container: module(),
+          display: module(),
+          forms: module(),
+          layout: module(),
+          widgets: module()
+        }
   def modules do
     %{
       widgets: Widgets,
       container: Container,
       forms: Forms,
-      layout: Layout
+      layout: Layout,
+      display: Display
     }
   end
 end

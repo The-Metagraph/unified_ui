@@ -2,10 +2,11 @@ defmodule UnifiedIUR.WidgetsTest do
   use ExUnit.Case, async: true
 
   alias UnifiedIUR.Widgets
-  alias UnifiedIUR.Widgets.{Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
 
   test "exposes the foundational widget constructor family" do
     assert %{
+             advanced: Advanced,
              foundational: Foundational,
              input: Input,
              navigation: Navigation,
@@ -23,5 +24,17 @@ defmodule UnifiedIUR.WidgetsTest do
     assert Widgets.data_view_kinds() == Data.kinds()
     assert [:status, :progress, :gauge, :inline_feedback] == Widgets.feedback_kinds()
     assert Widgets.feedback_kinds() == Feedback.kinds()
+
+    assert [
+             :stream_widget,
+             :log_viewer,
+             :process_monitor,
+             :cluster_dashboard,
+             :command_palette,
+             :markdown_viewer,
+             :supervision_tree_viewer
+           ] == Widgets.advanced_kinds()
+
+    assert Widgets.advanced_kinds() == Advanced.kinds()
   end
 end

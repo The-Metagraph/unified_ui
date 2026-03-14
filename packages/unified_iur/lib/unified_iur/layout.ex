@@ -6,6 +6,7 @@ defmodule UnifiedIUR.Layout do
 
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Viewport
 
   @type child_input ::
           Child.t()
@@ -53,65 +54,17 @@ defmodule UnifiedIUR.Layout do
 
   @spec split_pane(Element.t(), Element.t(), keyword() | map()) :: Element.t()
   def split_pane(%Element{} = primary, %Element{} = secondary, opts \\ []) do
-    opts = normalize_opts(opts)
-
-    Element.new(:layout, :split_pane,
-      id: option(opts, :id),
-      metadata: option(opts, :metadata),
-      attributes: %{
-        split:
-          %{}
-          |> maybe_put(:direction, option(opts, :direction, :horizontal))
-          |> maybe_put(:ratio, option(opts, :ratio, 0.5))
-          |> maybe_put(:resizable?, option(opts, :resizable?, true))
-          |> maybe_put(:min_primary, option(opts, :min_primary))
-          |> maybe_put(:min_secondary, option(opts, :min_secondary))
-      },
-      children: [
-        Child.new(:primary, primary),
-        Child.new(:secondary, secondary)
-      ]
-    )
+    Viewport.split_pane(primary, secondary, opts)
   end
 
   @spec scroll_region(Element.t(), keyword() | map()) :: Element.t()
   def scroll_region(%Element{} = content, opts \\ []) do
-    opts = normalize_opts(opts)
-
-    Element.new(:layout, :viewport,
-      id: option(opts, :id),
-      metadata: option(opts, :metadata),
-      attributes: %{
-        viewport:
-          %{}
-          |> maybe_put(:axis, option(opts, :axis, :vertical))
-          |> maybe_put(:offset, option(opts, :offset, 0))
-          |> maybe_put(:clip?, option(opts, :clip?, true))
-          |> maybe_put(:scrollbars, option(opts, :scrollbars, :auto))
-          |> maybe_put(:width, option(opts, :width))
-          |> maybe_put(:height, option(opts, :height))
-      },
-      children: [Child.new(:content, content)]
-    )
+    Viewport.region(content, opts)
   end
 
   @spec scroll_bar(keyword() | map()) :: Element.t()
   def scroll_bar(opts \\ []) do
-    opts = normalize_opts(opts)
-
-    Element.new(:widget, :scroll_bar,
-      id: option(opts, :id),
-      metadata: option(opts, :metadata),
-      attributes: %{
-        scroll_bar:
-          %{}
-          |> maybe_put(:orientation, option(opts, :orientation, :vertical))
-          |> maybe_put(:position, option(opts, :position, 0))
-          |> maybe_put(:viewport_size, option(opts, :viewport_size))
-          |> maybe_put(:content_size, option(opts, :content_size))
-      },
-      children: []
-    )
+    Viewport.scroll_bar(opts)
   end
 
   defp build_layout(kind, children, opts, specific_attributes) do
