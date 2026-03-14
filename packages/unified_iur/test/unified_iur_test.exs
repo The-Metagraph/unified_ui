@@ -21,4 +21,12 @@ defmodule UnifiedIURTest do
   test "reference helpers mirror the package module areas" do
     assert UnifiedIUR.module_areas() == UnifiedIUR.Reference.module_areas()
   end
+
+  test "core namespace exposes the canonical core modules" do
+    assert %{element: UnifiedIUR.Element, metadata: UnifiedIUR.Metadata} =
+             UnifiedIUR.Core.modules()
+
+    assert [:widget, :layout, :layer, :style, :theme, :interaction, :composite] ==
+             UnifiedIUR.Core.element_types()
+  end
 end
