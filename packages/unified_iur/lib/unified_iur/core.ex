@@ -3,15 +3,16 @@ defmodule UnifiedIUR.Core do
   Namespace anchor for canonical core element and metadata concerns.
   """
 
-  alias UnifiedIUR.{Element, Metadata}
+  alias UnifiedIUR.{Element, Metadata, Tree}
 
   @canonical_element_types [:widget, :layout, :layer, :style, :theme, :interaction, :composite]
 
-  @spec modules() :: %{element: module(), metadata: module()}
+  @spec modules() :: %{element: module(), metadata: module(), tree: module()}
   def modules do
     %{
       element: Element,
-      metadata: Metadata
+      metadata: Metadata,
+      tree: Tree
     }
   end
 
