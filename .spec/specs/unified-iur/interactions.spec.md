@@ -1,0 +1,75 @@
+# UnifiedIUR Interactions
+
+This subject defines how canonical interaction and data-binding intent is
+represented inside `unified_iur`.
+
+## Related General Specs
+
+- [Signal Transport](../signal_transport.spec.md)
+- [DSL and IUR Symbiosis](../dsl_iur_symbiosis.spec.md)
+- [UnifiedIUR Package](./package.spec.md)
+- [UnifiedIUR Core](./core.spec.md)
+
+```spec-meta
+id: unified_iur.interactions
+kind: integration
+status: active
+summary: Target contract for representing canonical interaction descriptors, binding intent, and event metadata inside `unified_iur`.
+surface:
+  - packages/unified_iur
+  - .spec/specs/unified-iur/interactions.spec.md
+decisions:
+  - repo.ecosystem.contract_model
+```
+
+## Requirements
+
+```spec-requirements
+- id: unified_iur.interactions.canonical_event_descriptor_representation
+  statement: The package shall represent canonical interaction descriptors in a form that preserves authored event meaning and can be translated by runtime libraries into `Jido.Signal` and CloudEvents-compatible boundary behavior.
+  priority: must
+  stability: stable
+
+- id: unified_iur.interactions.element_binding_attachment
+  statement: Canonical widgets and composite constructs shall be able to carry interaction bindings, action intent, and data-binding metadata needed for runtime interpretation.
+  priority: must
+  stability: stable
+
+- id: unified_iur.interactions.renderer_independent_payload_mapping
+  statement: Interaction descriptors shall encode payload mapping, source context, and target intent without embedding renderer-local event names, transport envelopes, or runtime-specific callback logic.
+  priority: must
+  stability: stable
+
+- id: unified_iur.interactions.standard_interaction_families
+  statement: The package shall be able to represent standard canonical interaction families such as change, submit, click, open, close, selection, focus, navigation, and command-oriented interactions when they are authored through `unified_ui`.
+  priority: must
+  stability: stable
+
+- id: unified_iur.interactions.data_binding_representation
+  statement: The package shall represent dynamic data references, bound values, and authored dependency relationships needed for runtime libraries to reconstruct current UI meaning from canonical IUR.
+  priority: must
+  stability: stable
+```
+
+## Scenarios
+
+```spec-scenarios
+- id: unified_iur.interactions.form_submission_descriptor
+  given: A canonical form contains input bindings and submit actions
+  when: The form is compiled into `unified_iur`
+  then: The form elements carry canonical interaction descriptors and data-binding references without depending on any one runtime-library event model
+```
+
+## Verification
+
+```spec-verification
+- kind: source_file
+  target: .spec/specs/unified-iur/interactions.spec.md
+  covers:
+    - unified_iur.interactions.canonical_event_descriptor_representation
+    - unified_iur.interactions.element_binding_attachment
+    - unified_iur.interactions.renderer_independent_payload_mapping
+    - unified_iur.interactions.standard_interaction_families
+    - unified_iur.interactions.data_binding_representation
+    - unified_iur.interactions.form_submission_descriptor
+```
