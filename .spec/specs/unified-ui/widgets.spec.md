@@ -19,6 +19,7 @@ summary: Target canonical widget, layout, layer, style, and theme authoring surf
 surface:
   - packages/unified-ui
   - .spec/specs/unified-ui/widgets.spec.md
+  - .spec/specs/unified-iur/widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -32,22 +33,27 @@ decisions:
   stability: stable
 
 - id: unified_ui.widgets.input_surface
-  statement: The package shall author canonical input controls including text entry, numeric entry, toggles, checkboxes, radios, selects, sliders, date and time input, file-oriented input, and form composition primitives.
+  statement: The package shall author canonical input and navigation controls including `text_input`, `menu`, `context_menu`, `command_palette`, `tabs`, and `form_builder`, while remaining extensible to additional canonical controls such as toggles, selects, sliders, and other form primitives.
   priority: must
   stability: stable
 
 - id: unified_ui.widgets.layout_and_layer_surface
-  statement: The package shall author canonical row, column, grid, stack, split, scroll, viewport, overlay, and layer-oriented composition primitives needed to express hierarchy and z-order.
+  statement: The package shall author canonical row, column, grid, stack, split, scroll, viewport, overlay, and layer-oriented composition primitives needed to express hierarchy and z-order, including `split_pane`, `viewport`, overlay-backed dialog constructs, and canvas-oriented composition support.
   priority: must
   stability: stable
 
 - id: unified_ui.widgets.feedback_navigation_data_surface
-  statement: The package shall author canonical navigation, feedback, and data-display constructs including menus, tabs, dialogs, toast or alert feedback, lists, tables, trees, progress indicators, and chart-like or inspection-oriented widgets.
+  statement: The package shall author canonical navigation, feedback, and data-display constructs including `dialog`, `alert_dialog`, `toast`, `table`, `tree_view`, `markdown_viewer`, `log_viewer`, `scroll_bar`, `gauge`, `sparkline`, `bar_chart`, `line_chart`, `stream_widget`, `process_monitor`, `supervision_tree_viewer`, and `cluster_dashboard`.
   priority: must
   stability: stable
 
 - id: unified_ui.widgets.style_attribute_surface
   statement: The package shall author canonical styling attributes for typography, color, spacing, sizing, alignment, borders, background treatment, visibility, state variants, and theme-driven design tokens.
+  priority: must
+  stability: stable
+
+- id: unified_ui.widgets.canvas_surface
+  statement: The package shall author a canonical `canvas` widget or equivalent drawing construct for direct visual composition beyond standard layout-driven widgets.
   priority: must
   stability: stable
 
@@ -82,6 +88,7 @@ decisions:
     - unified_ui.widgets.layout_and_layer_surface
     - unified_ui.widgets.feedback_navigation_data_surface
     - unified_ui.widgets.style_attribute_surface
+    - unified_ui.widgets.canvas_surface
     - unified_ui.widgets.iur_surface_parity
     - unified_ui.widgets.author_modal_flow
     - unified_ui.widgets.author_data_experience

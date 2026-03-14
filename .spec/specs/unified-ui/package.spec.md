@@ -10,6 +10,8 @@ ecosystem.
 - [Ecosystem Architecture](../architecture.spec.md)
 - [DSL and IUR Symbiosis](../dsl_iur_symbiosis.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
+- [Workspace Governance Contract](../governance/contracts/workspace_governance_contract.spec.md)
+- [Unified UI Change Contract](../governance/contracts/unified_ui_change_contract.spec.md)
 
 ```spec-meta
 id: unified_ui.package
@@ -22,11 +24,14 @@ surface:
   - .spec/specs/unified-ui/structure.spec.md
   - .spec/specs/unified-ui/dsl.spec.md
   - .spec/specs/unified-ui/widgets.spec.md
+  - .spec/specs/unified-ui/display_systems.spec.md
+  - .spec/specs/unified-ui/theming.spec.md
   - .spec/specs/unified-ui/compiler.spec.md
   - .spec/specs/unified-ui/signals.spec.md
   - .spec/specs/unified-ui/tooling.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.governance.package_contract_policy
 ```
 
 ## Requirements
