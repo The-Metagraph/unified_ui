@@ -6,6 +6,7 @@ defmodule UnifiedIUR.Element do
   metadata, construct-specific attributes, and child slots in one pure value.
   """
 
+  alias UnifiedIUR.Element.Child
   alias UnifiedIUR.Metadata
 
   @type element_type ::
@@ -26,7 +27,7 @@ defmodule UnifiedIUR.Element do
           kind: element_kind(),
           metadata: Metadata.t(),
           attributes: map(),
-          children: [term()]
+          children: [Child.t()]
         }
 
   defstruct id: nil,
@@ -55,6 +56,11 @@ defmodule UnifiedIUR.Element do
     %{element | metadata: Metadata.merge(element.metadata, metadata)}
   end
 
+  @spec put_children(t(), [Child.t() | t() | {Child.slot(), t() | nil} | map()]) :: t()
+  def put_children(%__MODULE__{} = element, children) do
+    %{element | children: normalize_children(children)}
+  end
+
   @spec put_attribute(t(), term(), term()) :: t()
   def put_attribute(%__MODULE__{} = element, key, value) do
     %{element | attributes: Map.put(element.attributes, key, value)}
@@ -65,6 +71,16 @@ defmodule UnifiedIUR.Element do
     %{element | id: id}
   end
 
+  @spec child_shape(t()) :: :leaf | :single | :multi
+  def child_shape(%__MODULE__{children: []}), do: :leaf
+  def child_shape(%__MODULE__{children: [_]}), do: :single
+  def child_shape(%__MODULE__{}), do: :multi
+
+  @spec children_for_slot(t(), Child.slot()) :: [Child.t()]
+  def children_for_slot(%__MODULE__{} = element, slot) do
+    Enum.filter(element.children, &(&1.slot == slot))
+  end
+
   defp normalize_attrs(attrs) when is_list(attrs), do: Enum.into(attrs, %{})
   defp normalize_attrs(attrs) when is_map(attrs), do: Map.new(attrs)
 
@@ -73,5 +89,24 @@ defmodule UnifiedIUR.Element do
   defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
 
   defp normalize_children(nil), do: []
-  defp normalize_children(children) when is_list(children), do: Enum.map(children, & &1)
+
+  defp normalize_children(children) when is_list(children) do
+    Enum.map(children, &normalize_child/1)
+  end
+
+  defp normalize_child(%Child{} = child), do: child
+
+  defp normalize_child({slot, element}) when is_atom(slot) or is_binary(slot),
+    do: Child.new(slot, element)
+
+  defp normalize_child(%{slot: slot, element: element}) when is_atom(slot) or is_binary(slot) do
+    Child.new(slot, element)
+  end
+
+  defp normalize_child(%{"slot" => slot, "element" => element})
+       when is_atom(slot) or is_binary(slot) do
+    Child.new(slot, element)
+  end
+
+  defp normalize_child(%__MODULE__{} = element), do: Child.new(:default, element)
 end
