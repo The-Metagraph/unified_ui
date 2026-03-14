@@ -3,7 +3,7 @@ defmodule UnifiedIUR.Widgets do
   Reference surface for canonical widget constructors exposed by `UnifiedIUR`.
   """
 
-  alias UnifiedIUR.Widgets.{Foundational, Input}
+  alias UnifiedIUR.Widgets.{Data, Feedback, Foundational, Input, Navigation}
 
   @foundational_kinds [
     :text,
@@ -29,10 +29,25 @@ defmodule UnifiedIUR.Widgets do
     :time_input,
     :file_input
   ]
+  @navigation_kinds [:menu, :tabs]
+  @data_view_kinds [:list, :table, :tree_view]
+  @feedback_kinds [:status, :progress, :gauge, :inline_feedback]
 
-  @spec modules() :: %{foundational: module(), input: module()}
+  @spec modules() :: %{
+          data: module(),
+          feedback: module(),
+          foundational: module(),
+          input: module(),
+          navigation: module()
+        }
   def modules do
-    %{foundational: Foundational, input: Input}
+    %{
+      foundational: Foundational,
+      input: Input,
+      navigation: Navigation,
+      data: Data,
+      feedback: Feedback
+    }
   end
 
   @spec foundational_kinds() :: [atom()]
@@ -43,5 +58,20 @@ defmodule UnifiedIUR.Widgets do
   @spec input_kinds() :: [atom()]
   def input_kinds do
     @input_kinds
+  end
+
+  @spec navigation_kinds() :: [atom()]
+  def navigation_kinds do
+    @navigation_kinds
+  end
+
+  @spec data_view_kinds() :: [atom()]
+  def data_view_kinds do
+    @data_view_kinds
+  end
+
+  @spec feedback_kinds() :: [atom()]
+  def feedback_kinds do
+    @feedback_kinds
   end
 end
