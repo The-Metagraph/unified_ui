@@ -7,7 +7,8 @@ defmodule UnifiedIUR do
   """
 
   @type module_area ::
-          :core
+          :display
+          | :core
           | :constructs
           | :interactions
           | :normalize
@@ -16,6 +17,7 @@ defmodule UnifiedIUR do
           | :tooling
 
   @module_areas %{
+    display: UnifiedIUR.Display,
     core: UnifiedIUR.Core,
     constructs: UnifiedIUR.Constructs,
     interactions: UnifiedIUR.Interactions,
