@@ -4,15 +4,17 @@ defmodule UnifiedIUR.Core do
   """
 
   alias UnifiedIUR.{Element, Metadata, Tree}
+  alias UnifiedIUR.Core.Invariant
 
   @canonical_element_types [:widget, :layout, :layer, :style, :theme, :interaction, :composite]
 
-  @spec modules() :: %{element: module(), metadata: module(), tree: module()}
+  @spec modules() :: %{element: module(), metadata: module(), tree: module(), invariant: module()}
   def modules do
     %{
       element: Element,
       metadata: Metadata,
-      tree: Tree
+      tree: Tree,
+      invariant: Invariant
     }
   end
 

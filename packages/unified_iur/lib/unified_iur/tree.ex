@@ -45,6 +45,23 @@ defmodule UnifiedIUR.Tree do
     Enum.filter(depth_first(root), &(&1.type == type))
   end
 
+  @spec shape_signature(Element.t()) :: map()
+  def shape_signature(%Element{} = root) do
+    %{
+      type: root.type,
+      kind: root.kind,
+      child_shape: Element.child_shape(root),
+      slots:
+        Enum.map(root.children, fn %Child{slot: slot, element: child} ->
+          %{
+            slot: slot,
+            present?: not is_nil(child),
+            child: if(child, do: shape_signature(child), else: nil)
+          }
+        end)
+    }
+  end
+
   defp depth_first_child(%Child{element: nil}), do: []
   defp depth_first_child(%Child{element: %Element{} = child}), do: depth_first(child)
 
