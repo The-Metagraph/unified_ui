@@ -25,10 +25,14 @@ defmodule UnifiedIURTest do
   test "constructs namespace exposes foundational widget modules" do
     assert %{
              widgets: UnifiedIUR.Widgets,
-             container: UnifiedIUR.Container
+             container: UnifiedIUR.Container,
+             forms: UnifiedIUR.Forms
            } = UnifiedIUR.Constructs.modules()
 
-    assert %{foundational: UnifiedIUR.Widgets.Foundational} = UnifiedIUR.Widgets.modules()
+    assert %{
+             foundational: UnifiedIUR.Widgets.Foundational,
+             input: UnifiedIUR.Widgets.Input
+           } = UnifiedIUR.Widgets.modules()
   end
 
   test "core namespace exposes the canonical core modules" do
