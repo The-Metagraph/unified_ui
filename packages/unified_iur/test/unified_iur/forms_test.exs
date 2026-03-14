@@ -1,8 +1,10 @@
 defmodule UnifiedIUR.FormsTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Binding
   alias UnifiedIUR.Element
   alias UnifiedIUR.Forms
+  alias UnifiedIUR.Interaction
   alias UnifiedIUR.Widgets.Foundational
   alias UnifiedIUR.Widgets.Input
 
@@ -49,15 +51,20 @@ defmodule UnifiedIUR.FormsTest do
              children: [content, actions],
              attributes: %{
                form: %{mode: :grouped, autocomplete?: true},
-               binding: %{name: :profile, path: [:profile]},
+               bindings: [%Binding{name: :profile, path: [:profile]}],
                validation: %{status: :valid},
-               submission: %{
-                 intent: :save_profile,
-                 method: :signal,
-                 trigger: :submit,
-                 allow_partial?: false
-               },
-               style: %{style_refs: [:form_surface]}
+               interactions: [
+                 %Interaction{
+                   family: :submit,
+                   intent: :save_profile,
+                   target: %{binding: [:profile]},
+                   metadata: %{phase: :submit, allow_partial?: false}
+                 }
+               ],
+               theme: %{
+                 component: :form_builder,
+                 token_refs: [%{kind: :token_ref, path: [:form_surface]}]
+               }
              }
            } = form
 

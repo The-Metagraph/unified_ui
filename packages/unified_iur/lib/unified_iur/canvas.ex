@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Canvas do
   composition in `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Metadata
 
@@ -21,16 +22,18 @@ defmodule UnifiedIUR.Canvas do
     Element.new(:widget, :canvas,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        canvas:
-          %{}
-          |> maybe_put(:width, option(opts, :width))
-          |> maybe_put(:height, option(opts, :height))
-          |> maybe_put(:unit, option(opts, :unit, :cell))
-          |> maybe_put(:background, option(opts, :background))
-          |> maybe_put(:clip?, option(opts, :clip?, true))
-          |> maybe_put(:operations, normalize_operations(operations))
-      },
+      attributes:
+        %{
+          canvas:
+            %{}
+            |> maybe_put(:width, option(opts, :width))
+            |> maybe_put(:height, option(opts, :height))
+            |> maybe_put(:unit, option(opts, :unit, :cell))
+            |> maybe_put(:background, option(opts, :background))
+            |> maybe_put(:clip?, option(opts, :clip?, true))
+            |> maybe_put(:operations, normalize_operations(operations))
+        }
+        |> Attachment.merge(opts, component: :canvas),
       children: []
     )
   end
@@ -58,14 +61,16 @@ defmodule UnifiedIUR.Canvas do
     Element.new(:widget, kind,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        chart:
-          %{}
-          |> maybe_put(:series, series)
-          |> maybe_put(:axes, normalize_axes(option(opts, :axes, %{})))
-          |> maybe_put(:legend, normalize_legend(option(opts, :legend, %{})))
-          |> maybe_put(:scale, normalize_scale(option(opts, :scale, %{})))
-      },
+      attributes:
+        %{
+          chart:
+            %{}
+            |> maybe_put(:series, series)
+            |> maybe_put(:axes, normalize_axes(option(opts, :axes, %{})))
+            |> maybe_put(:legend, normalize_legend(option(opts, :legend, %{})))
+            |> maybe_put(:scale, normalize_scale(option(opts, :scale, %{})))
+        }
+        |> Attachment.merge(opts, component: kind),
       children: []
     )
   end

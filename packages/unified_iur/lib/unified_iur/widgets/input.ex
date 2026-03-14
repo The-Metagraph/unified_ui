@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Widgets.Input do
   widgets in `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Metadata
 
@@ -232,11 +233,14 @@ defmodule UnifiedIUR.Widgets.Input do
         |> merge_attribute(:selection, Map.get(kind_attributes, :selection))
         |> merge_attribute(:file, Map.get(kind_attributes, :file))
         |> merge_attribute(:label, normalize_label(opts))
-        |> merge_attribute(:binding, normalize_binding(opts))
         |> merge_attribute(:validation, normalize_validation(opts))
         |> merge_attribute(:accessibility, normalize_accessibility(opts))
         |> merge_attribute(:state, normalize_state(opts))
-        |> merge_attribute(:style, normalize_style(opts)),
+        |> Attachment.merge(opts,
+          component: kind,
+          local_style: normalize_style(opts),
+          fallback_bindings: normalize_binding(opts)
+        ),
       children: []
     )
   end
@@ -293,7 +297,7 @@ defmodule UnifiedIUR.Widgets.Input do
     |> normalize_map()
     |> maybe_put(:required?, option(opts, :required?))
     |> maybe_put(:errors, normalize_errors(option(opts, :errors)))
-    |> maybe_put(:constraints, normalize_map(option(opts, :constraints, %{})))
+    |> maybe_put(:constraints, normalize_optional_map(option(opts, :constraints)))
     |> maybe_put(:status, option(opts, :status))
   end
 
@@ -320,17 +324,9 @@ defmodule UnifiedIUR.Widgets.Input do
   end
 
   defp normalize_style(opts) do
-    style_refs =
-      opts
-      |> option(:style_refs, [])
-      |> List.wrap()
-      |> Enum.reject(&is_nil/1)
-
     opts
     |> option(:style, %{})
     |> normalize_map()
-    |> maybe_put(:style_refs, if(style_refs == [], do: nil, else: style_refs))
-    |> maybe_put(:variant, option(opts, :variant))
     |> maybe_put(:tone, option(opts, :tone))
   end
 
@@ -340,6 +336,9 @@ defmodule UnifiedIUR.Widgets.Input do
   defp normalize_map(nil), do: %{}
   defp normalize_map(map) when is_map(map), do: Map.new(map)
   defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
+
+  defp normalize_optional_map(nil), do: nil
+  defp normalize_optional_map(map), do: normalize_map(map)
 
   defp normalize_opts(opts) when is_list(opts), do: Enum.into(opts, %{})
   defp normalize_opts(opts) when is_map(opts), do: Map.new(opts)

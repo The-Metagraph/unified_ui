@@ -1,6 +1,7 @@
 defmodule UnifiedIUR.Phase2IntegrationTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Binding
   alias UnifiedIUR.Container
   alias UnifiedIUR.Core.Invariant
   alias UnifiedIUR.Element
@@ -141,7 +142,9 @@ defmodule UnifiedIUR.Phase2IntegrationTest do
     assert %Element{
              kind: :text_input,
              attributes: %{
-               binding: %{name: :email, path: [:profile, :email], value: "user@example.com"}
+               bindings: [
+                 %Binding{name: :email, path: [:profile, :email], value: "user@example.com"}
+               ]
              }
            } = Tree.find_by_id(form, "email-input")
   end
@@ -310,7 +313,12 @@ defmodule UnifiedIUR.Phase2IntegrationTest do
 
     assert %Element{kind: :box} = shell
 
-    assert %{style: %{style_refs: [:section_label]}} =
+    assert %{
+             theme: %{
+               component: :label,
+               token_refs: [%{kind: :token_ref, path: [:section_label]}]
+             }
+           } =
              Tree.find_by_id(shell, "system-label").attributes
 
     assert %{feedback: %{severity: :success}} = Tree.find_by_id(shell, "save-feedback").attributes

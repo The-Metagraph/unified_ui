@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Container do
   widget composition.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
   alias UnifiedIUR.Widgets.Foundational
@@ -27,26 +28,28 @@ defmodule UnifiedIUR.Container do
     Element.new(:layout, :box,
       id: option(opts, :id),
       metadata: option(opts, :metadata),
-      attributes: %{
-        container:
-          %{}
-          |> maybe_put(:padding, option(opts, :padding))
-          |> maybe_put(:margin, option(opts, :margin))
-          |> maybe_put(:border, option(opts, :border))
-          |> maybe_put(:background, option(opts, :background))
-          |> maybe_put(:clip?, option(opts, :clip?)),
-        layout:
-          %{}
-          |> maybe_put(:gap, option(opts, :gap))
-          |> maybe_put(:align, option(opts, :align))
-          |> maybe_put(:justify, option(opts, :justify))
-          |> maybe_put(:width, option(opts, :width))
-          |> maybe_put(:height, option(opts, :height))
-          |> maybe_put(:min_width, option(opts, :min_width))
-          |> maybe_put(:max_width, option(opts, :max_width))
-          |> maybe_put(:min_height, option(opts, :min_height))
-          |> maybe_put(:max_height, option(opts, :max_height))
-      },
+      attributes:
+        %{
+          container:
+            %{}
+            |> maybe_put(:padding, option(opts, :padding))
+            |> maybe_put(:margin, option(opts, :margin))
+            |> maybe_put(:border, option(opts, :border))
+            |> maybe_put(:background, option(opts, :background))
+            |> maybe_put(:clip?, option(opts, :clip?)),
+          layout:
+            %{}
+            |> maybe_put(:gap, option(opts, :gap))
+            |> maybe_put(:align, option(opts, :align))
+            |> maybe_put(:justify, option(opts, :justify))
+            |> maybe_put(:width, option(opts, :width))
+            |> maybe_put(:height, option(opts, :height))
+            |> maybe_put(:min_width, option(opts, :min_width))
+            |> maybe_put(:max_width, option(opts, :max_width))
+            |> maybe_put(:min_height, option(opts, :min_height))
+            |> maybe_put(:max_height, option(opts, :max_height))
+        }
+        |> Attachment.merge(opts, component: :box),
       children: children
     )
   end

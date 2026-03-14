@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Widgets.Advanced do
   widgets in `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Metadata
 
@@ -29,14 +30,16 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :stream_widget,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        stream:
-          %{}
-          |> maybe_put(:entries, normalize_entries(entries))
-          |> maybe_put(:ordering, option(opts, :ordering, :append_only))
-          |> maybe_put(:severity_field, option(opts, :severity_field))
-          |> maybe_put(:timestamp_field, option(opts, :timestamp_field))
-      },
+      attributes:
+        %{
+          stream:
+            %{}
+            |> maybe_put(:entries, normalize_entries(entries))
+            |> maybe_put(:ordering, option(opts, :ordering, :append_only))
+            |> maybe_put(:severity_field, option(opts, :severity_field))
+            |> maybe_put(:timestamp_field, option(opts, :timestamp_field))
+        }
+        |> Attachment.merge(opts, component: :stream_widget),
       children: []
     )
   end
@@ -48,13 +51,15 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :log_viewer,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        logs:
-          %{}
-          |> maybe_put(:entries, normalize_entries(entries))
-          |> maybe_put(:wrap?, option(opts, :wrap?, true))
-          |> maybe_put(:show_timestamps?, option(opts, :show_timestamps?, true))
-      },
+      attributes:
+        %{
+          logs:
+            %{}
+            |> maybe_put(:entries, normalize_entries(entries))
+            |> maybe_put(:wrap?, option(opts, :wrap?, true))
+            |> maybe_put(:show_timestamps?, option(opts, :show_timestamps?, true))
+        }
+        |> Attachment.merge(opts, component: :log_viewer),
       children: []
     )
   end
@@ -66,13 +71,15 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :process_monitor,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        monitor:
-          %{}
-          |> maybe_put(:processes, normalize_entities(processes))
-          |> maybe_put(:sort_by, option(opts, :sort_by))
-          |> maybe_put(:severity, option(opts, :severity))
-      },
+      attributes:
+        %{
+          monitor:
+            %{}
+            |> maybe_put(:processes, normalize_entities(processes))
+            |> maybe_put(:sort_by, option(opts, :sort_by))
+            |> maybe_put(:severity, option(opts, :severity))
+        }
+        |> Attachment.merge(opts, component: :process_monitor),
       children: []
     )
   end
@@ -84,13 +91,15 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :cluster_dashboard,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        cluster:
-          %{}
-          |> maybe_put(:nodes, normalize_entities(nodes))
-          |> maybe_put(:summary, normalize_map(option(opts, :summary, %{})))
-          |> maybe_put(:severity, option(opts, :severity))
-      },
+      attributes:
+        %{
+          cluster:
+            %{}
+            |> maybe_put(:nodes, normalize_entities(nodes))
+            |> maybe_put(:summary, normalize_map(option(opts, :summary, %{})))
+            |> maybe_put(:severity, option(opts, :severity))
+        }
+        |> Attachment.merge(opts, component: :cluster_dashboard),
       children: []
     )
   end
@@ -102,14 +111,16 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :command_palette,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        command_palette:
-          %{}
-          |> maybe_put(:commands, normalize_entities(commands))
-          |> maybe_put(:query, option(opts, :query))
-          |> maybe_put(:active_command, option(opts, :active_command))
-          |> maybe_put(:placeholder, option(opts, :placeholder))
-      },
+      attributes:
+        %{
+          command_palette:
+            %{}
+            |> maybe_put(:commands, normalize_entities(commands))
+            |> maybe_put(:query, option(opts, :query))
+            |> maybe_put(:active_command, option(opts, :active_command))
+            |> maybe_put(:placeholder, option(opts, :placeholder))
+        }
+        |> Attachment.merge(opts, component: :command_palette),
       children: []
     )
   end
@@ -121,14 +132,16 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :markdown_viewer,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        document:
-          %{}
-          |> maybe_put(:format, :markdown)
-          |> maybe_put(:source, markdown)
-          |> maybe_put(:mode, option(opts, :mode, :rendered))
-          |> maybe_put(:anchors, option(opts, :anchors))
-      },
+      attributes:
+        %{
+          document:
+            %{}
+            |> maybe_put(:format, :markdown)
+            |> maybe_put(:source, markdown)
+            |> maybe_put(:mode, option(opts, :mode, :rendered))
+            |> maybe_put(:anchors, option(opts, :anchors))
+        }
+        |> Attachment.merge(opts, component: :markdown_viewer),
       children: []
     )
   end
@@ -140,13 +153,15 @@ defmodule UnifiedIUR.Widgets.Advanced do
     Element.new(:widget, :supervision_tree_viewer,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        inspection:
-          %{}
-          |> maybe_put(:nodes, normalize_hierarchy(nodes))
-          |> maybe_put(:expanded?, option(opts, :expanded?, true))
-          |> maybe_put(:show_restarts?, option(opts, :show_restarts?, true))
-      },
+      attributes:
+        %{
+          inspection:
+            %{}
+            |> maybe_put(:nodes, normalize_hierarchy(nodes))
+            |> maybe_put(:expanded?, option(opts, :expanded?, true))
+            |> maybe_put(:show_restarts?, option(opts, :show_restarts?, true))
+        }
+        |> Attachment.merge(opts, component: :supervision_tree_viewer),
       children: []
     )
   end

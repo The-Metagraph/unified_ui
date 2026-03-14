@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Layout do
   for `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
   alias UnifiedIUR.Viewport
@@ -73,25 +74,27 @@ defmodule UnifiedIUR.Layout do
     Element.new(:layout, kind,
       id: option(opts, :id),
       metadata: option(opts, :metadata),
-      attributes: %{
-        layout:
-          %{}
-          |> maybe_put(:gap, option(opts, :gap))
-          |> maybe_put(:padding, option(opts, :padding))
-          |> maybe_put(:align, option(opts, :align))
-          |> maybe_put(:justify, option(opts, :justify))
-          |> maybe_put(:width, option(opts, :width))
-          |> maybe_put(:height, option(opts, :height))
-          |> maybe_put(:min_width, option(opts, :min_width))
-          |> maybe_put(:max_width, option(opts, :max_width))
-          |> maybe_put(:min_height, option(opts, :min_height))
-          |> maybe_put(:max_height, option(opts, :max_height))
-          |> maybe_put(:order, option(opts, :order))
-          |> Map.merge(
-            Enum.reject(specific_attributes, fn {_key, value} -> is_nil(value) end)
-            |> Map.new()
-          )
-      },
+      attributes:
+        %{
+          layout:
+            %{}
+            |> maybe_put(:gap, option(opts, :gap))
+            |> maybe_put(:padding, option(opts, :padding))
+            |> maybe_put(:align, option(opts, :align))
+            |> maybe_put(:justify, option(opts, :justify))
+            |> maybe_put(:width, option(opts, :width))
+            |> maybe_put(:height, option(opts, :height))
+            |> maybe_put(:min_width, option(opts, :min_width))
+            |> maybe_put(:max_width, option(opts, :max_width))
+            |> maybe_put(:min_height, option(opts, :min_height))
+            |> maybe_put(:max_height, option(opts, :max_height))
+            |> maybe_put(:order, option(opts, :order))
+            |> Map.merge(
+              Enum.reject(specific_attributes, fn {_key, value} -> is_nil(value) end)
+              |> Map.new()
+            )
+        }
+        |> Attachment.merge(opts, component: kind),
       children: children
     )
   end

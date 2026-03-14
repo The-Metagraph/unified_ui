@@ -3,6 +3,7 @@ defmodule UnifiedIUR.Layer do
   Canonical layering and overlay constructors for `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
   alias UnifiedIUR.Metadata
@@ -29,14 +30,16 @@ defmodule UnifiedIUR.Layer do
     Element.new(:layer, :overlay,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        overlay:
-          %{}
-          |> maybe_put(:mode, option(opts, :mode, :stacked))
-          |> maybe_put(:background_fill, option(opts, :background_fill, :transparent))
-          |> maybe_put(:dismissible?, option(opts, :dismissible?))
-          |> maybe_put(:focus_scope, option(opts, :focus_scope))
-      },
+      attributes:
+        %{
+          overlay:
+            %{}
+            |> maybe_put(:mode, option(opts, :mode, :stacked))
+            |> maybe_put(:background_fill, option(opts, :background_fill, :transparent))
+            |> maybe_put(:dismissible?, option(opts, :dismissible?))
+            |> maybe_put(:focus_scope, option(opts, :focus_scope))
+        }
+        |> Attachment.merge(opts, component: :overlay),
       children: [Child.new(:base, base) | normalize_layer_children(layers)]
     )
   end
@@ -48,16 +51,18 @@ defmodule UnifiedIUR.Layer do
     Element.new(:layer, :dialog,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        dialog:
-          %{}
-          |> maybe_put(:title, option(opts, :title))
-          |> maybe_put(:modal?, option(opts, :modal?, true))
-          |> maybe_put(:dismissible?, option(opts, :dismissible?, true))
-          |> maybe_put(:size, option(opts, :size, :md))
-          |> maybe_put(:background_fill, option(opts, :background_fill, :scrim))
-          |> maybe_put(:focus_scope, option(opts, :focus_scope, :dialog))
-      },
+      attributes:
+        %{
+          dialog:
+            %{}
+            |> maybe_put(:title, option(opts, :title))
+            |> maybe_put(:modal?, option(opts, :modal?, true))
+            |> maybe_put(:dismissible?, option(opts, :dismissible?, true))
+            |> maybe_put(:size, option(opts, :size, :md))
+            |> maybe_put(:background_fill, option(opts, :background_fill, :scrim))
+            |> maybe_put(:focus_scope, option(opts, :focus_scope, :dialog))
+        }
+        |> Attachment.merge(opts, component: :dialog),
       children: [Child.new(:content, content)]
     )
   end
@@ -69,14 +74,16 @@ defmodule UnifiedIUR.Layer do
     Element.new(:layer, :toast,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        toast:
-          %{}
-          |> maybe_put(:placement, option(opts, :placement, :top_end))
-          |> maybe_put(:duration_ms, option(opts, :duration_ms, 5000))
-          |> maybe_put(:severity, option(opts, :severity, :info))
-          |> maybe_put(:transient?, option(opts, :transient?, true))
-      },
+      attributes:
+        %{
+          toast:
+            %{}
+            |> maybe_put(:placement, option(opts, :placement, :top_end))
+            |> maybe_put(:duration_ms, option(opts, :duration_ms, 5000))
+            |> maybe_put(:severity, option(opts, :severity, :info))
+            |> maybe_put(:transient?, option(opts, :transient?, true))
+        }
+        |> Attachment.merge(opts, component: :toast),
       children: [Child.new(:content, content)]
     )
   end
@@ -88,15 +95,17 @@ defmodule UnifiedIUR.Layer do
     Element.new(:layer, :alert_dialog,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        alert_dialog:
-          %{}
-          |> maybe_put(:title, option(opts, :title))
-          |> maybe_put(:severity, option(opts, :severity, :warning))
-          |> maybe_put(:requires_confirmation?, option(opts, :requires_confirmation?, true))
-          |> maybe_put(:background_fill, option(opts, :background_fill, :scrim))
-          |> maybe_put(:focus_scope, option(opts, :focus_scope, :alert_dialog))
-      },
+      attributes:
+        %{
+          alert_dialog:
+            %{}
+            |> maybe_put(:title, option(opts, :title))
+            |> maybe_put(:severity, option(opts, :severity, :warning))
+            |> maybe_put(:requires_confirmation?, option(opts, :requires_confirmation?, true))
+            |> maybe_put(:background_fill, option(opts, :background_fill, :scrim))
+            |> maybe_put(:focus_scope, option(opts, :focus_scope, :alert_dialog))
+        }
+        |> Attachment.merge(opts, component: :alert_dialog),
       children: [Child.new(:content, content)]
     )
   end
@@ -115,14 +124,16 @@ defmodule UnifiedIUR.Layer do
     Element.new(:layer, :context_menu,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        context_menu:
-          %{}
-          |> maybe_put(:anchor, normalize_map(option(opts, :anchor, %{})))
-          |> maybe_put(:placement, option(opts, :placement, :bottom_start))
-          |> maybe_put(:dismissible?, option(opts, :dismissible?, true))
-          |> maybe_put(:background_fill, option(opts, :background_fill, :none))
-      },
+      attributes:
+        %{
+          context_menu:
+            %{}
+            |> maybe_put(:anchor, normalize_map(option(opts, :anchor, %{})))
+            |> maybe_put(:placement, option(opts, :placement, :bottom_start))
+            |> maybe_put(:dismissible?, option(opts, :dismissible?, true))
+            |> maybe_put(:background_fill, option(opts, :background_fill, :none))
+        }
+        |> Attachment.merge(opts, component: :context_menu),
       children: [Child.new(:menu, menu)]
     )
   end

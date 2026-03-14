@@ -4,6 +4,7 @@ defmodule UnifiedIUR.Widgets.Data do
   `UnifiedIUR`.
   """
 
+  alias UnifiedIUR.Attachment
   alias UnifiedIUR.Element
   alias UnifiedIUR.Metadata
 
@@ -21,13 +22,15 @@ defmodule UnifiedIUR.Widgets.Data do
     Element.new(:widget, :list,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        list:
-          %{}
-          |> maybe_put(:ordered?, option(opts, :ordered?, false))
-          |> maybe_put(:selection_mode, option(opts, :selection_mode, :single))
-          |> maybe_put(:items, normalize_items(items))
-      },
+      attributes:
+        %{
+          list:
+            %{}
+            |> maybe_put(:ordered?, option(opts, :ordered?, false))
+            |> maybe_put(:selection_mode, option(opts, :selection_mode, :single))
+            |> maybe_put(:items, normalize_items(items))
+        }
+        |> Attachment.merge(opts, component: :list),
       children: []
     )
   end
@@ -39,13 +42,15 @@ defmodule UnifiedIUR.Widgets.Data do
     Element.new(:widget, :table,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        table:
-          %{}
-          |> maybe_put(:columns, normalize_columns(columns))
-          |> maybe_put(:rows, normalize_rows(rows))
-          |> maybe_put(:dense?, option(opts, :dense?, false))
-      },
+      attributes:
+        %{
+          table:
+            %{}
+            |> maybe_put(:columns, normalize_columns(columns))
+            |> maybe_put(:rows, normalize_rows(rows))
+            |> maybe_put(:dense?, option(opts, :dense?, false))
+        }
+        |> Attachment.merge(opts, component: :table),
       children: []
     )
   end
@@ -57,12 +62,14 @@ defmodule UnifiedIUR.Widgets.Data do
     Element.new(:widget, :tree_view,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
-      attributes: %{
-        tree:
-          %{}
-          |> maybe_put(:selection_mode, option(opts, :selection_mode, :single))
-          |> maybe_put(:nodes, normalize_nodes(nodes))
-      },
+      attributes:
+        %{
+          tree:
+            %{}
+            |> maybe_put(:selection_mode, option(opts, :selection_mode, :single))
+            |> maybe_put(:nodes, normalize_nodes(nodes))
+        }
+        |> Attachment.merge(opts, component: :tree_view),
       children: []
     )
   end
