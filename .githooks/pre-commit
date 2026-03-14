@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -eu
+
+repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+
+cd "$repo_root"
+
+echo "Running pre-commit checks from $repo_root"
+
+mix format --check-formatted
+mix compile --warnings-as-errors
+mix credo --strict
+mix dialyzer
