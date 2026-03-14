@@ -23,8 +23,12 @@ defmodule UnifiedIURTest do
   end
 
   test "core namespace exposes the canonical core modules" do
-    assert %{element: UnifiedIUR.Element, metadata: UnifiedIUR.Metadata, tree: UnifiedIUR.Tree} =
-             UnifiedIUR.Core.modules()
+    assert %{
+             element: UnifiedIUR.Element,
+             metadata: UnifiedIUR.Metadata,
+             tree: UnifiedIUR.Tree,
+             invariant: UnifiedIUR.Core.Invariant
+           } = UnifiedIUR.Core.modules()
 
     assert [:widget, :layout, :layer, :style, :theme, :interaction, :composite] ==
              UnifiedIUR.Core.element_types()
