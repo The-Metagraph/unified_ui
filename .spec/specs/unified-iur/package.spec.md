@@ -11,6 +11,8 @@ the ecosystem.
 - [DSL and IUR Symbiosis](../dsl_iur_symbiosis.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
+- [Workspace Governance Contract](../governance/contracts/workspace_governance_contract.spec.md)
+- [Unified IUR Change Contract](../governance/contracts/unified_iur_change_contract.spec.md)
 
 ```spec-meta
 id: unified_iur.package
@@ -23,11 +25,15 @@ surface:
   - .spec/specs/unified-iur/structure.spec.md
   - .spec/specs/unified-iur/core.spec.md
   - .spec/specs/unified-iur/constructs.spec.md
+  - .spec/specs/unified-iur/widgets.spec.md
+  - .spec/specs/unified-iur/display_systems.spec.md
+  - .spec/specs/unified-iur/theming.spec.md
   - .spec/specs/unified-iur/interactions.spec.md
   - .spec/specs/unified-iur/interoperability.spec.md
   - .spec/specs/unified-iur/tooling.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.governance.package_contract_policy
 ```
 
 ## Requirements
