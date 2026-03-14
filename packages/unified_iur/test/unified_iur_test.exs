@@ -22,6 +22,15 @@ defmodule UnifiedIURTest do
     assert UnifiedIUR.module_areas() == UnifiedIUR.Reference.module_areas()
   end
 
+  test "constructs namespace exposes foundational widget modules" do
+    assert %{
+             widgets: UnifiedIUR.Widgets,
+             container: UnifiedIUR.Container
+           } = UnifiedIUR.Constructs.modules()
+
+    assert %{foundational: UnifiedIUR.Widgets.Foundational} = UnifiedIUR.Widgets.modules()
+  end
+
   test "core namespace exposes the canonical core modules" do
     assert %{
              element: UnifiedIUR.Element,
