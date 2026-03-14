@@ -171,7 +171,7 @@ defmodule UnifiedIUR.LayoutTest do
              attributes: %{
                viewport: %{
                  axis: :vertical,
-                 offset: 12,
+                 offset: %{x: 0, y: 12},
                  clip?: true,
                  scrollbars: :always,
                  height: 40
@@ -187,7 +187,7 @@ defmodule UnifiedIUR.LayoutTest do
              attributes: %{
                scroll_bar: %{
                  orientation: :vertical,
-                 position: 12,
+                 position: %{start: 12, end: 12},
                  viewport_size: 40,
                  content_size: 120
                }

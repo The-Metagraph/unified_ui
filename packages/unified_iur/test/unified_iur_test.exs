@@ -32,7 +32,10 @@ defmodule UnifiedIURTest do
              display: UnifiedIUR.Display
            } = UnifiedIUR.Constructs.modules()
 
-    assert %{layer: UnifiedIUR.Layer} = UnifiedIUR.Display.modules()
+    assert %{
+             layer: UnifiedIUR.Layer,
+             viewport: UnifiedIUR.Viewport
+           } = UnifiedIUR.Display.modules()
 
     assert %{
              foundational: UnifiedIUR.Widgets.Foundational,
