@@ -26,7 +26,8 @@ defmodule UnifiedIURTest do
     assert %{
              widgets: UnifiedIUR.Widgets,
              container: UnifiedIUR.Container,
-             forms: UnifiedIUR.Forms
+             forms: UnifiedIUR.Forms,
+             layout: UnifiedIUR.Layout
            } = UnifiedIUR.Constructs.modules()
 
     assert %{
