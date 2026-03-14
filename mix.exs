@@ -22,7 +22,9 @@ defmodule Unified.MixProject do
   defp deps do
     [
       {:spec_led_ex,
-       github: "specleddev/specled_ex", branch: "main", only: [:dev, :test], runtime: false}
+       github: "specleddev/specled_ex", branch: "main", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev], runtime: false}
     ]
   end
 end
