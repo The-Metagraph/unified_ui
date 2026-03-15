@@ -5,6 +5,7 @@ defmodule UnifiedExamples.Shared do
 
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Tooling
+  alias UnifiedExamples.Shared.Validation
 
   @type dependency_app :: :unified_ui | :unified_iur | :live_ui
 
@@ -71,6 +72,11 @@ defmodule UnifiedExamples.Shared do
   @spec review_metadata(String.t() | atom()) :: {:ok, map()}
   def review_metadata(directory) do
     Tooling.review_metadata(directory)
+  end
+
+  @spec validation_report() :: map()
+  def validation_report do
+    Validation.report()
   end
 
   @spec catalog_directories() :: [String.t()]

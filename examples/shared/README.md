@@ -29,3 +29,5 @@ Maintainer workflows:
 - `mix examples.preview <directory>` prints a preview report, metadata, or HTML
 - `mix examples.run <directory>` runs the target example app through its own
   `mix test` workflow
+- `mix examples.validate` checks catalog continuity and shared-template/theme
+  reuse across the suite
