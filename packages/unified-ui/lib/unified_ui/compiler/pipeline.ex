@@ -469,8 +469,31 @@ defmodule UnifiedUi.Compiler.Pipeline do
             common_opts(node, attachments, [:placeholder, :value_path, :default_value])
           )
 
+        :numeric_input ->
+          Widgets.Input.numeric_input(
+            common_opts(node, attachments, [
+              :placeholder,
+              :value_path,
+              :default_value,
+              :min,
+              :max,
+              :step
+            ])
+          )
+
         :toggle ->
           Widgets.Input.toggle(
+            common_opts(node, attachments, [:label, :value_path, :default_value])
+          )
+
+        :checkbox ->
+          Widgets.Input.checkbox(
+            common_opts(node, attachments, [:label, :value_path, :default_value])
+          )
+
+        :radio_group ->
+          Widgets.Input.radio_group(
+            normalize_keyword_items(node.options),
             common_opts(node, attachments, [:label, :value_path, :default_value])
           )
 
@@ -478,6 +501,34 @@ defmodule UnifiedUi.Compiler.Pipeline do
           Widgets.Input.select(
             normalize_keyword_items(node.options),
             common_opts(node, attachments, [:label, :value_path, :default_value, :multiple?])
+          )
+
+        :pick_list ->
+          Widgets.Input.pick_list(
+            normalize_keyword_items(node.options),
+            common_opts(node, attachments, [:label, :value_path, :default_value, :multiple?])
+          )
+
+        :date_input ->
+          Widgets.Input.date_input(
+            common_opts(node, attachments, [:value_path, :default_value, :format, :min, :max])
+          )
+
+        :time_input ->
+          Widgets.Input.time_input(
+            common_opts(node, attachments, [
+              :value_path,
+              :default_value,
+              :format,
+              :min,
+              :max,
+              :step
+            ])
+          )
+
+        :file_input ->
+          Widgets.Input.file_input(
+            common_opts(node, attachments, [:label, :value_path, :accept, :multiple?, :capture])
           )
 
         :menu ->
