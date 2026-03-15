@@ -39,7 +39,8 @@ defmodule LiveUi.InfoTest do
              module: LiveUi.Widgets.ScreenShell,
              family: :layout,
              name: :screen_shell,
-             slots: [:inner_block]
+             slots: [:inner_block],
+             style_hooks: [:tone, :variant, :state]
            } = LiveUi.Info.widget_summary(LiveUi.Widgets.ScreenShell)
   end
 

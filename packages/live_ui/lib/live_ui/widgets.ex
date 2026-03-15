@@ -14,16 +14,17 @@ defmodule LiveUi.Widgets do
 
   @spec modules() :: [widget_module()]
   def modules do
-    [
-      LiveUi.Widgets.Text,
-      LiveUi.Widgets.Container,
-      LiveUi.Widgets.ScreenShell
-    ]
+    LiveUi.Widgets.Foundational.modules()
   end
 
   @spec metadata() :: [LiveUi.Component.Metadata.t()]
   def metadata do
     Enum.map(modules(), &LiveUi.Component.metadata/1)
+  end
+
+  @spec foundational_modules() :: [widget_module()]
+  def foundational_modules do
+    LiveUi.Widgets.Foundational.modules()
   end
 
   @spec namespace() :: module()

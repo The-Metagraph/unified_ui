@@ -4,14 +4,16 @@ defmodule LiveUi.Component.Metadata do
   """
 
   @enforce_keys [:module, :family, :name]
-  defstruct [:module, :family, :name, assigns: [], slots: []]
+  defstruct [:module, :family, :name, assigns: [], slots: [], style_hooks: [], events: []]
 
   @type t :: %__MODULE__{
           module: module(),
           family: atom(),
           name: atom(),
           assigns: [atom()],
-          slots: [atom()]
+          slots: [atom()],
+          style_hooks: [LiveUi.Component.style_hook()],
+          events: [LiveUi.Component.event_surface()]
         }
 
   @spec new(module(), keyword()) :: t()
@@ -21,7 +23,9 @@ defmodule LiveUi.Component.Metadata do
       family: Keyword.fetch!(opts, :family),
       name: Keyword.fetch!(opts, :name),
       assigns: Keyword.get(opts, :assigns, []),
-      slots: Keyword.get(opts, :slots, [])
+      slots: Keyword.get(opts, :slots, []),
+      style_hooks: Keyword.get(opts, :style_hooks, []),
+      events: Keyword.get(opts, :events, [])
     }
   end
 end

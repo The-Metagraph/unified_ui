@@ -1,20 +1,20 @@
-defmodule LiveUi.Widgets.Container do
+defmodule LiveUi.Widgets.Content do
   @moduledoc """
-  Baseline native container widget for grouping child content.
+  Baseline content-bearing native widget for arbitrary child content.
   """
 
-  use LiveUi.Component, family: :layout, name: :container, slots: [:inner_block]
+  use LiveUi.Component, family: :content, name: :content, slots: [:inner_block]
 
   LiveUi.Component.common_attrs()
-  attr(:role, :string, default: "container")
+  attr(:role, :string, default: "content")
   slot(:inner_block)
 
   @impl true
   def render(assigns) do
     ~H"""
-    <section
+    <article
       id={@id}
-      data-live-ui-widget="container"
+      data-live-ui-widget="content"
       data-live-ui-role={@role}
       data-live-ui-tone={@tone}
       data-live-ui-variant={@variant}
@@ -23,7 +23,7 @@ defmodule LiveUi.Widgets.Container do
       {@rest}
     >
       <%= render_slot(@inner_block) %>
-    </section>
+    </article>
     """
   end
 end

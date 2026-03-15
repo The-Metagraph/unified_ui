@@ -24,7 +24,9 @@ defmodule LiveUi.Info do
       family: metadata.family,
       name: metadata.name,
       assigns: metadata.assigns,
-      slots: metadata.slots
+      slots: metadata.slots,
+      style_hooks: metadata.style_hooks,
+      events: metadata.events
     }
   end
 
