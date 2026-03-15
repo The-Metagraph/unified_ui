@@ -256,7 +256,7 @@ defmodule UnifiedUi.Theme do
             component: atom() | nil,
             variant: atom() | nil,
             state: atom() | nil,
-            style: Style.t(),
+            style: Style.t() | nil,
             token_refs: [Token.ref_t()],
             inherit?: boolean(),
             summary: String.t() | nil
@@ -267,7 +267,7 @@ defmodule UnifiedUi.Theme do
               component: nil,
               variant: nil,
               state: nil,
-              style: %Style{},
+              style: nil,
               token_refs: [],
               inherit?: true,
               summary: nil
@@ -284,7 +284,7 @@ defmodule UnifiedUi.Theme do
         component: fetch(component_style, :component),
         variant: fetch(component_style, :variant),
         state: fetch(component_style, :state),
-        style: component_style |> fetch(:style, %{}) |> Style.new(),
+        style: component_style |> fetch(:style) |> normalize_style(),
         token_refs: component_style |> fetch(:token_refs, []) |> normalize_token_refs(),
         inherit?: fetch(component_style, :inherit?, true),
         summary: fetch(component_style, :summary)
@@ -294,10 +294,13 @@ defmodule UnifiedUi.Theme do
     defp normalize(%__MODULE__{} = component_style) do
       %__MODULE__{
         component_style
-        | style: Style.new(component_style.style),
+        | style: normalize_style(component_style.style),
           token_refs: normalize_token_refs(component_style.token_refs)
       }
     end
+
+    defp normalize_style(nil), do: nil
+    defp normalize_style(style), do: Style.new(style)
 
     defp normalize_token_refs(token_refs) do
       token_refs
@@ -390,7 +393,11 @@ defmodule UnifiedUi.Theme do
             component: component_style.component,
             variant: component_style.variant,
             state: component_style.state,
-            style: Style.summary(component_style.style),
+            style:
+              case component_style.style do
+                nil -> nil
+                style -> Style.summary(style)
+              end,
             token_refs: component_style.token_refs,
             inherit?: component_style.inherit?,
             summary: component_style.summary

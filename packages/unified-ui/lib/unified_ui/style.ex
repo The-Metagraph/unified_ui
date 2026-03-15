@@ -17,6 +17,30 @@ defmodule UnifiedUi.Style do
   @type state_key :: :default | :focused | :selected | :disabled | :active | atom() | String.t()
   @type color_value :: Color.t() | Token.ref_t() | role_ref_t() | nil
 
+  @attribute_families %{
+    typography: [
+      :font_family,
+      :font_size,
+      :font_weight,
+      :italic?,
+      :underline?,
+      :blink?,
+      :reverse?,
+      :hidden?,
+      :strikethrough?
+    ],
+    color: [:foreground, :background, :border_color, :role],
+    spacing: [:padding, :padding_x, :padding_y, :margin, :margin_x, :margin_y, :gap],
+    sizing: [:width, :height, :min_width, :min_height, :max_width, :max_height],
+    alignment: [:align, :justify, :text_align, :anchor],
+    border: [:width, :radius, :style, :color],
+    visibility: [:hidden?, :collapsed?, :opacity],
+    emphasis: [:weight, :intent, :elevation, :tone]
+  }
+
+  @semantic_roles [:success, :warning, :error, :info, :muted, :help, :placeholder]
+  @component_states [:default, :focused, :selected, :disabled, :active]
+
   @type t :: %__MODULE__{
           theme_ref: atom() | String.t() | nil,
           component: atom() | String.t() | nil,
@@ -156,6 +180,21 @@ defmodule UnifiedUi.Style do
     }
     |> Enum.reject(fn {_key, value} -> value in [nil, [], %{}] end)
     |> Enum.into(%{})
+  end
+
+  @spec attribute_families() :: %{atom() => [atom()]}
+  def attribute_families do
+    @attribute_families
+  end
+
+  @spec semantic_roles() :: [atom()]
+  def semantic_roles do
+    @semantic_roles
+  end
+
+  @spec component_states() :: [atom()]
+  def component_states do
+    @component_states
   end
 
   defp normalize(%__MODULE__{} = style) do

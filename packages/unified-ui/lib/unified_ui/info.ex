@@ -14,6 +14,11 @@ defmodule UnifiedUi.Info do
     Reference.construct_families()
   end
 
+  @spec style_attribute_families() :: %{atom() => [atom()]}
+  def style_attribute_families do
+    Reference.style_attribute_families()
+  end
+
   @spec composition_nodes(module()) :: [struct()]
   def composition_nodes(module) when is_atom(module) do
     Extension.get_entities(module, [:composition])

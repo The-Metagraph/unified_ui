@@ -73,6 +73,21 @@ defmodule UnifiedUi.Reference do
     |> Enum.map(&Theme.summary/1)
   end
 
+  @spec style_attribute_families() :: %{atom() => [atom()]}
+  def style_attribute_families do
+    UnifiedUi.Style.attribute_families()
+  end
+
+  @spec semantic_style_roles() :: [atom()]
+  def semantic_style_roles do
+    UnifiedUi.Style.semantic_roles()
+  end
+
+  @spec style_component_states() :: [atom()]
+  def style_component_states do
+    UnifiedUi.Style.component_states()
+  end
+
   defp normalize_description(description) do
     description
     |> String.split("\n")

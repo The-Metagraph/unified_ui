@@ -59,5 +59,30 @@ defmodule UnifiedUi.ReferenceTest do
              :summary,
              :default_slot
            ]
+
+    assert UnifiedUi.Reference.style_attribute_families().color == [
+             :foreground,
+             :background,
+             :border_color,
+             :role
+           ]
+
+    assert UnifiedUi.Reference.semantic_style_roles() == [
+             :success,
+             :warning,
+             :error,
+             :info,
+             :muted,
+             :help,
+             :placeholder
+           ]
+
+    assert UnifiedUi.Reference.style_component_states() == [
+             :default,
+             :focused,
+             :selected,
+             :disabled,
+             :active
+           ]
   end
 end

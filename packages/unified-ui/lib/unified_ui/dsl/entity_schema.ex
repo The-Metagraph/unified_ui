@@ -9,7 +9,9 @@ defmodule UnifiedUi.Dsl.EntitySchema do
     tags: [type: {:list, :atom}, required: false, default: []],
     variant: [type: :atom, required: false],
     tone: [type: :atom, required: false],
+    theme_ref: [type: :atom, required: false],
     style_refs: [type: {:list, :atom}, required: false, default: []],
+    style: [type: :any, required: false],
     accessibility_label: [type: :string, required: false],
     accessibility_description: [type: :string, required: false],
     disabled?: [type: :boolean, required: false, default: false]

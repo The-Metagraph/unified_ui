@@ -32,7 +32,9 @@ defmodule UnifiedUi.Dsl.Node do
           tags: [atom()],
           variant: atom() | nil,
           tone: atom() | nil,
+          theme_ref: atom() | nil,
           style_refs: [atom()],
+          style: UnifiedUi.Style.t() | nil,
           accessibility_label: String.t() | nil,
           accessibility_description: String.t() | nil,
           action_intent: atom() | nil,
@@ -142,7 +144,9 @@ defmodule UnifiedUi.Dsl.Node do
             tags: [],
             variant: nil,
             tone: nil,
+            theme_ref: nil,
             style_refs: [],
+            style: nil,
             accessibility_label: nil,
             accessibility_description: nil,
             action_intent: nil,
@@ -246,6 +250,15 @@ defmodule UnifiedUi.Dsl.Node do
       label: node.label,
       target: node.target,
       source: node.source,
+      variant: node.variant,
+      tone: node.tone,
+      theme_ref: node.theme_ref,
+      style_refs: node.style_refs,
+      style:
+        case node.style do
+          nil -> nil
+          style -> UnifiedUi.Style.summary(style)
+        end,
       role: node.role,
       presentation: node.presentation,
       summary: node.summary,

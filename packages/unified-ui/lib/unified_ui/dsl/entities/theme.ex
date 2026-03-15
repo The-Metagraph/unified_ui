@@ -1,7 +1,6 @@
 defmodule UnifiedUi.Dsl.Entities.Theme do
   @moduledoc false
 
-  alias UnifiedUi.Dsl.Helpers
   alias UnifiedUi.Theme
 
   @spec entities() :: [Spark.Dsl.Entity.t()]
@@ -83,7 +82,7 @@ defmodule UnifiedUi.Dsl.Entities.Theme do
         component: [type: :atom, required: true],
         variant: [type: :atom, required: false],
         state: [type: :atom, required: false],
-        style: [type: :any, required: false, default: Helpers.style_value()],
+        style: [type: :any, required: false],
         token_refs: [type: {:list, :any}, required: false, default: []],
         inherit?: [type: :boolean, required: false, default: true],
         summary: [type: :string, required: false]
