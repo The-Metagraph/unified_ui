@@ -74,6 +74,12 @@ defmodule UnifiedExamples.SharedTest do
                ],
                layout: ["box", "content", "row", "column", "grid"],
                navigation: ["menu", "tabs", "command_palette"],
+               operational: [
+                 "stream_widget",
+                 "process_monitor",
+                 "supervision_tree_viewer",
+                 "cluster_dashboard"
+               ],
                overlay: ["overlay", "dialog", "alert_dialog", "context_menu", "toast"]
              }
   end

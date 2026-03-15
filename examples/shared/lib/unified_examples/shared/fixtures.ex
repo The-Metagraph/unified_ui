@@ -226,4 +226,89 @@ defmodule UnifiedExamples.Shared.Fixtures do
       background_fill: :scrim
     }
   end
+
+  @spec stream_widget_entries() :: [map()]
+  def stream_widget_entries do
+    [
+      %{
+        id: "evt-ops-001",
+        timestamp: "2026-03-15T15:04:00Z",
+        severity: :info,
+        message: "Deploy pipeline resumed after approval"
+      },
+      %{
+        id: "evt-ops-002",
+        timestamp: "2026-03-15T15:06:00Z",
+        severity: :warning,
+        message: "Queue latency crossed the warning threshold"
+      },
+      %{
+        id: "evt-ops-003",
+        timestamp: "2026-03-15T15:08:00Z",
+        severity: :success,
+        message: "Responder handoff completed successfully"
+      }
+    ]
+  end
+
+  @spec process_monitor_snapshot() :: map()
+  def process_monitor_snapshot do
+    %{
+      sort_by: :cpu,
+      severity: :warning,
+      processes: [
+        %{id: "proc-api", pid: "#PID<0.210.0>", label: "api-supervisor", state: :running},
+        %{id: "proc-queue", pid: "#PID<0.211.0>", label: "queue-consumer", state: :waiting},
+        %{id: "proc-sync", pid: "#PID<0.212.0>", label: "sync-coordinator", state: :running}
+      ]
+    }
+  end
+
+  @spec cluster_dashboard_snapshot() :: map()
+  def cluster_dashboard_snapshot do
+    %{
+      severity: :warning,
+      summary: %{healthy: 2, degraded: 1, regions: 3},
+      nodes: [
+        %{id: "denver-a", status: :up},
+        %{id: "dallas-b", status: :degraded},
+        %{id: "atlanta-c", status: :up}
+      ]
+    }
+  end
+
+  @spec supervision_tree_snapshot() :: map()
+  def supervision_tree_snapshot do
+    %{
+      expanded?: true,
+      topology: [
+        %{
+          id: "root-sup",
+          type: :supervisor,
+          status: :running,
+          label: "Root Supervisor",
+          children: [
+            %{
+              id: "api-sup",
+              type: :supervisor,
+              status: :running,
+              label: "API Supervisor",
+              children: [
+                %{id: "api-worker", type: :worker, status: :running, label: "API Worker"}
+              ]
+            },
+            %{
+              id: "queue-sup",
+              type: :supervisor,
+              status: :degraded,
+              label: "Queue Supervisor",
+              children: [
+                %{id: "queue-worker", type: :worker, status: :restarting, label: "Queue Worker"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  end
 end

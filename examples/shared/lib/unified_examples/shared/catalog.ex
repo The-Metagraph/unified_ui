@@ -138,6 +138,34 @@ defmodule UnifiedExamples.Shared.Catalog do
       shell_kind: :box
     },
     %{directory: "toast", widget: :toast, family: :overlay, phase: 4, shell_kind: :box},
+    %{
+      directory: "stream_widget",
+      widget: :stream_widget,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "process_monitor",
+      widget: :process_monitor,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "supervision_tree_viewer",
+      widget: :supervision_tree_viewer,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "cluster_dashboard",
+      widget: :cluster_dashboard,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
     %{directory: "menu", widget: :menu, family: :navigation, phase: 3, shell_kind: :box},
     %{directory: "tabs", widget: :tabs, family: :navigation, phase: 3, shell_kind: :box},
     %{

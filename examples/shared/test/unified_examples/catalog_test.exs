@@ -11,6 +11,7 @@ defmodule UnifiedExamples.CatalogTest do
              "button",
              "canvas",
              "checkbox",
+             "cluster_dashboard",
              "column",
              "command_palette",
              "content",
@@ -36,6 +37,7 @@ defmodule UnifiedExamples.CatalogTest do
              "numeric_input",
              "overlay",
              "pick_list",
+             "process_monitor",
              "progress",
              "radio_group",
              "row",
@@ -46,6 +48,8 @@ defmodule UnifiedExamples.CatalogTest do
              "sparkline",
              "split_pane",
              "status",
+             "stream_widget",
+             "supervision_tree_viewer",
              "table",
              "tabs",
              "text",
@@ -112,7 +116,11 @@ defmodule UnifiedExamples.CatalogTest do
              "dialog",
              "alert_dialog",
              "context_menu",
-             "toast"
+             "toast",
+             "stream_widget",
+             "process_monitor",
+             "supervision_tree_viewer",
+             "cluster_dashboard"
            ]
 
     assert Catalog.entry!("numeric_input") == %{
@@ -167,6 +175,14 @@ defmodule UnifiedExamples.CatalogTest do
              directory: "dialog",
              widget: :dialog,
              family: :overlay,
+             phase: 4,
+             shell_kind: :box
+           }
+
+    assert Catalog.entry!("stream_widget") == %{
+             directory: "stream_widget",
+             widget: :stream_widget,
+             family: :operational,
              phase: 4,
              shell_kind: :box
            }
