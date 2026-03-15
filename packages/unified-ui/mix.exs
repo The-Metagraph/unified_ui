@@ -1,0 +1,48 @@
+defmodule UnifiedUi.MixProject do
+  use Mix.Project
+
+  @version "0.1.0"
+  @source_url "https://github.com/pcharbon70/unified_ui"
+
+  def project do
+    [
+      app: :unified_ui,
+      version: @version,
+      elixir: "~> 1.19",
+      start_permanent: Mix.env() == :prod,
+      description: "Authored DSL and canonical IUR compiler for the unified ecosystem.",
+      deps: deps(),
+      docs: docs(),
+      package: package()
+    ]
+  end
+
+  def application do
+    [
+      extra_applications: [:logger]
+    ]
+  end
+
+  defp deps do
+    [
+      {:spark, "~> 1.0"},
+      {:unified_iur, path: "../unified_iur"}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "UnifiedUi",
+      extras: ["README.md"],
+      source_ref: "main",
+      source_url: @source_url
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
+    ]
+  end
+end
