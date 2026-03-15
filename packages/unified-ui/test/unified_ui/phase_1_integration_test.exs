@@ -22,6 +22,15 @@ defmodule UnifiedUi.Phase1IntegrationTest do
 
     themes do
       default_theme(:workspace)
+
+      theme do
+        id(:workspace)
+
+        palette_color do
+          id(:surface)
+          color(named_color(:black))
+        end
+      end
     end
 
     signals do

@@ -13,6 +13,30 @@ defmodule UnifiedUi.StylesTest do
       authored_ref([:examples, :styled_workspace])
     end
 
+    themes do
+      default_theme(:workspace)
+
+      theme do
+        id(:workspace)
+
+        palette_color do
+          id(:surface)
+          color(named_color(:black))
+        end
+
+        semantic_role do
+          id(:primary_text)
+          value(named_color(:white))
+        end
+
+        component_style do
+          id(:primary_shell)
+          component(:box)
+          style(style_value(border: %{width: 1}))
+        end
+      end
+    end
+
     composition do
       root(:styled_workspace_root)
       mode(:screen)

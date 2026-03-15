@@ -37,7 +37,7 @@ defmodule UnifiedUi.ThemesTest do
 
         semantic_role do
           id(:primary_text)
-          value(role_ref(:surface_text))
+          value(named_color(:white))
         end
 
         token do
@@ -107,7 +107,7 @@ defmodule UnifiedUi.ThemesTest do
                    %{id: :accent, color: %{mode: :named, name: :cyan}}
                  ],
                  semantic_roles: [
-                   %{id: :primary_text, value: %{kind: :role_ref, id: :surface_text}}
+                   %{id: :primary_text, value: %{mode: :named, name: :white}}
                  ],
                  tokens: [
                    %{
