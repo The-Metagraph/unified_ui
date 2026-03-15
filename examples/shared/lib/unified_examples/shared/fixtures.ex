@@ -79,4 +79,70 @@ defmodule UnifiedExamples.Shared.Fixtures do
       ]
     ]
   end
+
+  @spec status_snapshot() :: map()
+  def status_snapshot do
+    %{
+      text: "Release train stable",
+      severity: :info,
+      status: :ready
+    }
+  end
+
+  @spec progress_snapshot() :: map()
+  def progress_snapshot do
+    %{
+      current: 72,
+      total: 100,
+      label: "Deploy progress",
+      severity: :info,
+      status: :running
+    }
+  end
+
+  @spec gauge_snapshot() :: map()
+  def gauge_snapshot do
+    %{
+      current: 74,
+      minimum: 0,
+      maximum: 100,
+      label: "CPU load",
+      severity: :warning,
+      status: :degraded
+    }
+  end
+
+  @spec inline_feedback_snapshot() :: map()
+  def inline_feedback_snapshot do
+    %{
+      title: "Validation complete",
+      message: "Runbook synced across regions",
+      severity: :success,
+      status: :complete
+    }
+  end
+
+  @spec sparkline_points() :: [number()]
+  def sparkline_points do
+    [34, 41, 39, 52, 48, 55]
+  end
+
+  @spec bar_chart_series() :: [map()]
+  def bar_chart_series do
+    [
+      %{label: "API", value: 34},
+      %{label: "Queue", value: 21},
+      %{label: "Billing", value: 18}
+    ]
+  end
+
+  @spec line_chart_series() :: [map()]
+  def line_chart_series do
+    [
+      %{x: "09:00", y: 12},
+      %{x: "10:00", y: 18},
+      %{x: "11:00", y: 15},
+      %{x: "12:00", y: 24}
+    ]
+  end
 end

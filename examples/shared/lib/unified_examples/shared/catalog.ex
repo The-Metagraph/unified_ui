@@ -114,7 +114,44 @@ defmodule UnifiedExamples.Shared.Catalog do
       phase: 3,
       shell_kind: :box
     },
-    %{directory: "log_viewer", widget: :log_viewer, family: :data, phase: 3, shell_kind: :box}
+    %{directory: "log_viewer", widget: :log_viewer, family: :data, phase: 3, shell_kind: :box},
+    %{directory: "status", widget: :status, family: :feedback, phase: 3, shell_kind: :box},
+    %{
+      directory: "progress",
+      widget: :progress,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{directory: "gauge", widget: :gauge, family: :feedback, phase: 3, shell_kind: :box},
+    %{
+      directory: "inline_feedback",
+      widget: :inline_feedback,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{
+      directory: "sparkline",
+      widget: :sparkline,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{
+      directory: "bar_chart",
+      widget: :bar_chart,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{
+      directory: "line_chart",
+      widget: :line_chart,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    }
   ]
 
   @spec entries() :: [entry()]

@@ -98,7 +98,15 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :log_viewer
            ]
 
-    assert UnifiedUi.Widgets.Feedback.kinds() == [:gauge, :sparkline, :bar_chart, :line_chart]
+    assert UnifiedUi.Widgets.Feedback.kinds() == [
+             :status,
+             :progress,
+             :gauge,
+             :inline_feedback,
+             :sparkline,
+             :bar_chart,
+             :line_chart
+           ]
 
     assert UnifiedUi.Widgets.Advanced.kinds() == [
              :stream_widget,
@@ -135,7 +143,10 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :tree_view,
              :markdown_viewer,
              :log_viewer,
+             :status,
+             :progress,
              :gauge,
+             :inline_feedback,
              :sparkline,
              :bar_chart,
              :line_chart,

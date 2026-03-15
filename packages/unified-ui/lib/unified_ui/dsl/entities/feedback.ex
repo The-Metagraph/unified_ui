@@ -7,11 +7,35 @@ defmodule UnifiedUi.Dsl.Entities.Feedback do
   @spec entities() :: [Spark.Dsl.Entity.t()]
   def entities do
     [
+      leaf(:status,
+        value: [type: :string, required: true],
+        severity: [type: :atom, required: false, default: :info],
+        status: [type: :atom, required: false, default: :idle],
+        summary: [type: :string, required: false]
+      ),
+      leaf(:progress,
+        current: [type: :integer, required: false],
+        maximum: [type: :integer, required: false, default: 100],
+        label: [type: :string, required: false],
+        severity: [type: :atom, required: false],
+        status: [type: :atom, required: false],
+        indeterminate?: [type: :boolean, required: false, default: false],
+        summary: [type: :string, required: false]
+      ),
       leaf(:gauge,
         current: [type: :integer, required: true],
         minimum: [type: :integer, required: false, default: 0],
         maximum: [type: :integer, required: false, default: 100],
+        label: [type: :string, required: false],
         severity: [type: :atom, required: false],
+        status: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      ),
+      leaf(:inline_feedback,
+        title: [type: :string, required: false],
+        message: [type: :string, required: true],
+        severity: [type: :atom, required: false, default: :info],
+        status: [type: :atom, required: false],
         summary: [type: :string, required: false]
       ),
       leaf(:sparkline,

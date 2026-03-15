@@ -577,13 +577,43 @@ defmodule UnifiedUi.Compiler.Pipeline do
             common_opts(node, attachments, [:wrap?, :show_timestamps?])
           )
 
+        :status ->
+          Widgets.Feedback.status(
+            node.value || "",
+            common_opts(node, attachments, severity: node.severity, status: node.status)
+          )
+
+        :progress ->
+          Widgets.Feedback.progress(
+            common_opts(node, attachments,
+              current: node.current,
+              total: node.maximum,
+              label: node.label,
+              severity: node.severity,
+              status: node.status,
+              indeterminate?: node.indeterminate?
+            )
+          )
+
         :gauge ->
           Widgets.Feedback.gauge(
             common_opts(node, attachments,
-              current: node.current,
+              value: node.current,
               min: node.minimum,
               max: node.maximum,
-              severity: node.severity
+              label: node.label,
+              severity: node.severity,
+              status: node.status
+            )
+          )
+
+        :inline_feedback ->
+          Widgets.Feedback.inline_feedback(
+            node.message || "",
+            common_opts(node, attachments,
+              title: node.title,
+              severity: node.severity,
+              status: node.status
             )
           )
 
@@ -908,6 +938,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
   defp common_opts(node, attachments, extra \\ []) do
     extra =
       cond do
+        Keyword.keyword?(extra) -> Enum.into(extra, %{})
         is_list(extra) -> Enum.into(extra, %{}, fn key -> {key, Map.get(node, key)} end)
         is_map(extra) -> Map.new(extra)
         true -> %{}

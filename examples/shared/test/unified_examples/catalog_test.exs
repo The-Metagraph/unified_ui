@@ -5,6 +5,7 @@ defmodule UnifiedExamples.CatalogTest do
 
   test "tracks the implemented phase 1 and phase 2 example apps with stable metadata" do
     assert Catalog.directories() == [
+             "bar_chart",
              "box",
              "button",
              "checkbox",
@@ -16,10 +17,13 @@ defmodule UnifiedExamples.CatalogTest do
              "field_group",
              "file_input",
              "form_builder",
+             "gauge",
              "grid",
              "icon",
              "image",
+             "inline_feedback",
              "label",
+             "line_chart",
              "link",
              "list",
              "log_viewer",
@@ -27,11 +31,14 @@ defmodule UnifiedExamples.CatalogTest do
              "menu",
              "numeric_input",
              "pick_list",
+             "progress",
              "radio_group",
              "row",
              "select",
              "separator",
              "spacer",
+             "sparkline",
+             "status",
              "table",
              "tabs",
              "text",
@@ -77,7 +84,14 @@ defmodule UnifiedExamples.CatalogTest do
              "table",
              "tree_view",
              "markdown_viewer",
-             "log_viewer"
+             "log_viewer",
+             "status",
+             "progress",
+             "gauge",
+             "inline_feedback",
+             "sparkline",
+             "bar_chart",
+             "line_chart"
            ]
 
     assert Catalog.entry!("numeric_input") == %{
@@ -108,6 +122,14 @@ defmodule UnifiedExamples.CatalogTest do
              directory: "table",
              widget: :table,
              family: :data,
+             phase: 3,
+             shell_kind: :box
+           }
+
+    assert Catalog.entry!("status") == %{
+             directory: "status",
+             widget: :status,
+             family: :feedback,
              phase: 3,
              shell_kind: :box
            }

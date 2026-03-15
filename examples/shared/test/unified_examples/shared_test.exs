@@ -49,6 +49,15 @@ defmodule UnifiedExamples.SharedTest do
                  "spacer"
                ],
                data: ["list", "table", "tree_view", "markdown_viewer", "log_viewer"],
+               feedback: [
+                 "status",
+                 "progress",
+                 "gauge",
+                 "inline_feedback",
+                 "sparkline",
+                 "bar_chart",
+                 "line_chart"
+               ],
                forms: ["field", "field_group", "form_builder"],
                input: [
                  "text_input",
