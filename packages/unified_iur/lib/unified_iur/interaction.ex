@@ -97,7 +97,7 @@ defmodule UnifiedIUR.Interaction do
         |> maybe_put(:binding, fetch(opts, :binding)),
       payload:
         %{}
-        |> maybe_put(:mapping, normalize_map(fetch(opts, :mapping, %{})))
+        |> maybe_put(:mapping, normalize_optional_map(fetch(opts, :mapping)))
         |> maybe_put(:value, fetch(opts, :value))
         |> maybe_put(:selection, fetch(opts, :selection))
         |> maybe_put(:command, fetch(opts, :command)),
@@ -123,6 +123,9 @@ defmodule UnifiedIUR.Interaction do
   defp normalize_map(nil), do: %{}
   defp normalize_map(map) when is_map(map), do: Map.new(map)
   defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
+
+  defp normalize_optional_map(nil), do: nil
+  defp normalize_optional_map(map), do: normalize_map(map)
 
   defp fetch(source, key, default \\ nil) do
     Map.get(source, key, Map.get(source, Atom.to_string(key), default))
