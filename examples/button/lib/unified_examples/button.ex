@@ -1,10 +1,10 @@
-defmodule UnifiedExamples.Text do
+defmodule UnifiedExamples.Button do
   @moduledoc """
-  Baseline standalone example-app entrypoint for the shared examples suite.
+  Standalone button example-app entrypoint for the shared examples suite.
   """
 
+  alias UnifiedExamples.Button.Screen
   alias UnifiedExamples.Shared.Runtime
-  alias UnifiedExamples.Text.Screen
 
   @spec screen_module() :: module()
   def screen_module, do: Screen
@@ -13,8 +13,8 @@ defmodule UnifiedExamples.Text do
   def metadata do
     screen_module().example_metadata()
     |> Map.merge(%{
-      app: :unified_example_text,
-      directory: "examples/text",
+      app: :unified_example_button,
+      directory: "examples/button",
       purpose: :widget_proof
     })
   end
@@ -22,11 +22,6 @@ defmodule UnifiedExamples.Text do
   @spec boot(keyword()) :: {:ok, LiveUi.Runtime.State.t()} | {:error, term()}
   def boot(opts \\ []) do
     Runtime.mount(screen_module(), opts)
-  end
-
-  @spec component_assigns(keyword()) :: {:ok, map()} | {:error, term()}
-  def component_assigns(opts \\ []) do
-    Runtime.component_assigns(screen_module(), opts)
   end
 
   @spec render_html(keyword()) :: {:ok, String.t()} | {:error, term()}

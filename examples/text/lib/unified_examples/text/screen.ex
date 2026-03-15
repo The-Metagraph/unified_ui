@@ -1,18 +1,18 @@
 defmodule UnifiedExamples.Text.Screen do
   @moduledoc """
-  Baseline shared-template screen used to prove the standalone example-app shape.
+  Shared-template text proof for the standalone example-app suite.
   """
 
   use UnifiedExamples.Shared.Template,
     id: :text_example_screen,
-    title: "Example App Skeleton",
-    summary: "Baseline standalone app proving the shared example runtime path",
+    title: "Text Widget Example",
+    summary: "Focused content-oriented example using the shared suite shell",
     widget: :text,
-    notes: "This skeleton is the baseline structure for standalone example apps."
+    notes: "Text examples keep the shared shell while foregrounding one primary content widget."
 
   example_panel do
-    text :text_example_placeholder do
-      value("Skeleton ready")
+    text :text_example_primary_content do
+      value("Shared text example")
       theme_ref(:example_suite_default)
       tone(:accent)
       variant(:headline)
