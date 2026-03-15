@@ -10,6 +10,7 @@ defmodule UnifiedUi do
   @type module_area ::
           :dsl
           | :compiler
+          | :parity
           | :signals
           | :signal
           | :binding
@@ -22,6 +23,7 @@ defmodule UnifiedUi do
   @module_areas %{
     dsl: UnifiedUi.Dsl,
     compiler: UnifiedUi.Compiler,
+    parity: UnifiedUi.Parity,
     signals: UnifiedUi.Signals,
     signal: UnifiedUi.Signal,
     binding: UnifiedUi.Binding,

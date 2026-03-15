@@ -15,6 +15,11 @@ defmodule UnifiedUi.Info do
     Reference.construct_families()
   end
 
+  @spec supported_compiled_construct_families() :: map()
+  def supported_compiled_construct_families do
+    Reference.compiled_construct_families()
+  end
+
   @spec style_attribute_families() :: %{atom() => [atom()]}
   def style_attribute_families do
     Reference.style_attribute_families()

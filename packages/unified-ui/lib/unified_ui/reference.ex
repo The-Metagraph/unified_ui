@@ -44,6 +44,40 @@ defmodule UnifiedUi.Reference do
     Entities.construct_families()
   end
 
+  @spec compiled_construct_families() :: map()
+  def compiled_construct_families do
+    %{
+      element_types: UnifiedIUR.Reference.construct_families(),
+      widgets: compiled_widget_families(),
+      display: compiled_display_system_families(),
+      signals: compiled_signal_families()
+    }
+  end
+
+  @spec compiled_widget_families() :: %{atom() => [atom()]}
+  def compiled_widget_families do
+    %{
+      foundational: UnifiedIUR.Widgets.foundational_kinds(),
+      input: UnifiedIUR.Widgets.input_kinds(),
+      navigation: UnifiedIUR.Widgets.navigation_kinds(),
+      data: UnifiedIUR.Widgets.data_view_kinds(),
+      feedback: UnifiedIUR.Widgets.feedback_kinds(),
+      advanced: UnifiedIUR.Widgets.advanced_kinds(),
+      forms: UnifiedIUR.Forms.kinds(),
+      container: [:box]
+    }
+  end
+
+  @spec compiled_display_system_families() :: %{atom() => [atom()]}
+  def compiled_display_system_families do
+    %{
+      layout: UnifiedIUR.Layout.kinds(),
+      layer: UnifiedIUR.Layer.kinds(),
+      viewport: UnifiedIUR.Viewport.kinds(),
+      canvas: UnifiedIUR.Canvas.kinds()
+    }
+  end
+
   @spec identity_rules() :: map()
   def identity_rules do
     %{
@@ -92,6 +126,11 @@ defmodule UnifiedUi.Reference do
   @spec signal_families() :: [Signal.family()]
   def signal_families do
     Signal.families()
+  end
+
+  @spec compiled_signal_families() :: [UnifiedIUR.Interaction.family()]
+  def compiled_signal_families do
+    UnifiedIUR.Interaction.families()
   end
 
   defp normalize_description(description) do
