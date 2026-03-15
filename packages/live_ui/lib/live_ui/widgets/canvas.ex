@@ -15,6 +15,9 @@ defmodule LiveUi.Widgets.Canvas do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(assigns, :diagnostics, LiveUi.Diagnostics.validate_canvas(assigns.operations))
+
     ~H"""
     <section
       id={@id}
@@ -31,6 +34,7 @@ defmodule LiveUi.Widgets.Canvas do
       class={@class}
       {@rest}
     >
+      <LiveUi.Diagnostics.render diagnostics={@diagnostics} />
       <%= for operation <- @operations do %>
         <div
           data-live-ui-canvas-op={operation[:kind] || operation["kind"]}

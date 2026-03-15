@@ -59,7 +59,8 @@ defmodule LiveUi.Runtime do
       mount: :ready,
       event_routing: :ready,
       live_component_host: :ready,
-      canonical_renderer: :baseline_ready
+      canonical_renderer: :advanced_ready,
+      advanced_diagnostics: :ready
     }
   end
 

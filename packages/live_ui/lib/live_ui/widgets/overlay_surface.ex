@@ -15,6 +15,9 @@ defmodule LiveUi.Widgets.OverlaySurface do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(assigns, :diagnostics, LiveUi.Diagnostics.validate_overlay_surface(assigns.base))
+
     ~H"""
     <section
       id={@id}
@@ -29,6 +32,7 @@ defmodule LiveUi.Widgets.OverlaySurface do
       class={@class}
       {@rest}
     >
+      <LiveUi.Diagnostics.render diagnostics={@diagnostics} />
       <div data-live-ui-overlay-slot="base"><%= render_slot(@base) %></div>
       <%= for overlay <- @overlay do %>
         <div data-live-ui-overlay-slot="overlay"><%= render_slot([overlay]) %></div>

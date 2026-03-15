@@ -18,6 +18,13 @@ defmodule LiveUi.Widgets.SplitPane do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :diagnostics,
+        LiveUi.Diagnostics.validate_split_pane(assigns.primary, assigns.secondary)
+      )
+
     ~H"""
     <section
       id={@id}
@@ -35,6 +42,7 @@ defmodule LiveUi.Widgets.SplitPane do
       class={@class}
       {@rest}
     >
+      <LiveUi.Diagnostics.render diagnostics={@diagnostics} />
       <div data-live-ui-split-pane-slot="primary"><%= render_slot(@primary) %></div>
       <div data-live-ui-split-pane-slot="secondary"><%= render_slot(@secondary) %></div>
     </section>

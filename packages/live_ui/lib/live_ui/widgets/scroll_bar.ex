@@ -16,6 +16,9 @@ defmodule LiveUi.Widgets.ScrollBar do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(assigns, :diagnostics, LiveUi.Diagnostics.validate_scroll_bar(assigns.viewport_ref))
+
     ~H"""
     <div
       id={@id}
@@ -32,7 +35,9 @@ defmodule LiveUi.Widgets.ScrollBar do
       data-live-ui-state={@state}
       class={@class}
       {@rest}
-    />
+    >
+      <LiveUi.Diagnostics.render diagnostics={@diagnostics} />
+    </div>
     """
   end
 end

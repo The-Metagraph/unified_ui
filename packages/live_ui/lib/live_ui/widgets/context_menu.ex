@@ -14,6 +14,13 @@ defmodule LiveUi.Widgets.ContextMenu do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :diagnostics,
+        LiveUi.Diagnostics.validate_context_menu(assigns.anchor, assigns.items)
+      )
+
     ~H"""
     <nav
       id={@id}
@@ -28,6 +35,7 @@ defmodule LiveUi.Widgets.ContextMenu do
       class={@class}
       {@rest}
     >
+      <LiveUi.Diagnostics.render diagnostics={@diagnostics} />
       <ul>
         <%= for item <- @items do %>
           <li data-active={to_string(item[:id]) == @active_item}>

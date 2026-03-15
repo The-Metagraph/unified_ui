@@ -19,6 +19,9 @@ defmodule LiveUi.Widgets.Viewport do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(assigns, :diagnostics, LiveUi.Diagnostics.validate_viewport(assigns.inner_block))
+
     ~H"""
     <section
       id={@id}
@@ -38,6 +41,7 @@ defmodule LiveUi.Widgets.Viewport do
       class={@class}
       {@rest}
     >
+      <LiveUi.Diagnostics.render diagnostics={@diagnostics} />
       <div data-live-ui-viewport-slot="content"><%= render_slot(@inner_block) %></div>
     </section>
     """
