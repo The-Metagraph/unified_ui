@@ -4,6 +4,7 @@ defmodule UnifiedExamples.Shared do
   """
 
   alias UnifiedExamples.Shared.Catalog
+  alias UnifiedExamples.Shared.Tooling
 
   @type dependency_app :: :unified_ui | :unified_iur | :live_ui
 
@@ -54,6 +55,22 @@ defmodule UnifiedExamples.Shared do
   @spec catalog_manifest() :: String.t()
   def catalog_manifest do
     Catalog.tsv()
+  end
+
+  @spec preview(String.t() | atom(), :report | :html | :metadata | :inspection) ::
+          {:ok, String.t() | map()} | {:error, term()}
+  def preview(directory, format \\ :report) do
+    Tooling.preview(directory, format)
+  end
+
+  @spec run_descriptor(String.t() | atom(), [String.t()]) :: map()
+  def run_descriptor(directory, mix_args \\ ["test"]) do
+    Tooling.run_descriptor(directory, mix_args)
+  end
+
+  @spec review_metadata(String.t() | atom()) :: {:ok, map()}
+  def review_metadata(directory) do
+    Tooling.review_metadata(directory)
   end
 
   @spec catalog_directories() :: [String.t()]
