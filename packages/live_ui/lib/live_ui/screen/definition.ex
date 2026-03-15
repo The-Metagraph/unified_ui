@@ -1,0 +1,16 @@
+defmodule LiveUi.Screen.Definition do
+  @moduledoc """
+  Summary of a native `live_ui` screen contract.
+  """
+
+  @enforce_keys [:module, :id, :title]
+  defstruct [:module, :id, :title, mount_defaults: %{}, metadata: %{}]
+
+  @type t :: %__MODULE__{
+          module: module(),
+          id: atom(),
+          title: String.t(),
+          mount_defaults: map(),
+          metadata: map()
+        }
+end

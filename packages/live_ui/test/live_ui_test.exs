@@ -15,6 +15,10 @@ defmodule LiveUiTest do
     assert :native_mount in runtime_capabilities
   end
 
+  test "package exposes native screen namespace" do
+    assert LiveUi.screen() == LiveUi.Screen
+  end
+
   test "package summary reports package identity" do
     assert %{package: :live_ui, namespace: LiveUi} = LiveUi.info()
   end
