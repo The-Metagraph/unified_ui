@@ -4,6 +4,7 @@ defmodule LiveUi do
   """
 
   alias LiveUi.{
+    Examples,
     Forms,
     Info,
     Layout,
@@ -28,6 +29,9 @@ defmodule LiveUi do
 
   @spec forms() :: module()
   def forms, do: Forms
+
+  @spec examples() :: module()
+  def examples, do: Examples
 
   @spec layout() :: module()
   def layout, do: Layout

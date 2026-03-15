@@ -27,6 +27,10 @@ defmodule LiveUiTest do
     assert LiveUi.layout() == LiveUi.Layout
   end
 
+  test "package exposes example namespace" do
+    assert LiveUi.examples() == LiveUi.Examples
+  end
+
   test "package summary reports package identity" do
     assert %{package: :live_ui, namespace: LiveUi} = LiveUi.info()
   end
