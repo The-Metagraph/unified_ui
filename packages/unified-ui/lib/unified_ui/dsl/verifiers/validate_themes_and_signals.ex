@@ -650,10 +650,42 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateThemesAndSignals do
   defp theme_context(theme, context) do
     %{
       context
-      | token_ids: theme |> Theme.tokens() |> Enum.map(& &1.id) |> MapSet.new(),
-        palette_ids: theme |> Theme.palette_colors() |> Enum.map(& &1.id) |> MapSet.new(),
-        role_ids: theme |> Theme.semantic_roles() |> Enum.map(& &1.id) |> MapSet.new()
+      | token_ids: theme_resource_ids(theme, context, &Theme.tokens/1),
+        palette_ids: theme_resource_ids(theme, context, &Theme.palette_colors/1),
+        role_ids: theme_resource_ids(theme, context, &Theme.semantic_roles/1)
     }
+  end
+
+  defp theme_resource_ids(theme, context, extractor) do
+    theme
+    |> theme_lineage(context)
+    |> Enum.flat_map(fn current_theme -> current_theme |> extractor.() |> Enum.map(& &1.id) end)
+    |> MapSet.new()
+  end
+
+  defp theme_lineage(theme, context) do
+    do_theme_lineage(theme, context, MapSet.new())
+  end
+
+  defp do_theme_lineage(nil, _context, _visited), do: []
+
+  defp do_theme_lineage(%Theme{} = theme, context, visited) do
+    visited = MapSet.put(visited, theme.id)
+
+    inherited =
+      case Map.get(context.theme_by_id, theme.extends) do
+        nil ->
+          []
+
+        %Theme{} = inherited_theme ->
+          if MapSet.member?(visited, inherited_theme.id) do
+            [inherited_theme]
+          else
+            do_theme_lineage(inherited_theme, context, visited)
+          end
+      end
+
+    [theme | inherited]
   end
 
   defp flatten_nodes(nodes) do
