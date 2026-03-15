@@ -14,6 +14,7 @@ defmodule LiveUi do
     Renderer,
     Runtime,
     Screen,
+    Signals,
     Tooling,
     Transport,
     Viewport,
@@ -59,6 +60,9 @@ defmodule LiveUi do
 
   @spec transport() :: module()
   def transport, do: Transport
+
+  @spec signals() :: module()
+  def signals, do: Signals
 
   @spec tooling() :: module()
   def tooling, do: Tooling

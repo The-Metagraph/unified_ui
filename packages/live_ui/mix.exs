@@ -25,6 +25,7 @@ defmodule LiveUi.MixProject do
 
   defp deps do
     [
+      {:jido_signal, "~> 2.0"},
       {:phoenix, "~> 1.8"},
       {:phoenix_live_view, "~> 1.1"},
       {:unified_iur, path: "../unified_iur"}

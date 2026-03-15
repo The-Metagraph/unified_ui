@@ -18,6 +18,11 @@ defmodule LiveUi.Reference do
     LiveUi.Transport.integration_points()
   end
 
+  @spec signal_families() :: [UnifiedIUR.Interaction.family()]
+  def signal_families do
+    LiveUi.Signals.families()
+  end
+
   @spec responsibilities() :: map()
   def responsibilities do
     %{
@@ -56,7 +61,8 @@ defmodule LiveUi.Reference do
       },
       transport: %{
         modes: LiveUi.Transport.modes(),
-        integration_points: transport_integration_points()
+        integration_points: transport_integration_points(),
+        supported_families: signal_families()
       },
       responsibilities: responsibilities(),
       tooling: LiveUi.Tooling.workflows()
