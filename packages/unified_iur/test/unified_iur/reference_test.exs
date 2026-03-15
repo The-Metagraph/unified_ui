@@ -9,7 +9,7 @@ defmodule UnifiedIUR.ReferenceTest do
     assert [:widget, :layout, :layer, :style, :theme, :interaction, :composite] ==
              Reference.construct_families()
 
-    assert [:element, :metadata, :child, :tree, :summary, :invariant] ==
+    assert [:element, :metadata, :child, :tree, :summary, :snapshot, :diff, :invariant] ==
              Reference.public_type_categories()
   end
 
@@ -55,5 +55,60 @@ defmodule UnifiedIUR.ReferenceTest do
              type_histogram: %{layout: 1, widget: 1},
              shape_signature: %{type: :layout, kind: :stack, child_shape: :single}
            } = Reference.summarize_tree(root)
+  end
+
+  test "produces deterministic snapshots and semantic diffs for canonical trees" do
+    left =
+      Element.new(:layout, :stack,
+        id: "root",
+        attributes: %{
+          interactions: [
+            UnifiedIUR.Interaction.click(intent: :save),
+            UnifiedIUR.Interaction.click(intent: :cancel)
+          ]
+        },
+        children: [Child.new(:content, Element.new(:widget, :button, id: "save-button"))]
+      )
+
+    right =
+      Element.new(:layout, :stack,
+        id: "root",
+        attributes: %{
+          interactions: [
+            UnifiedIUR.Interaction.click(intent: :cancel),
+            UnifiedIUR.Interaction.click(intent: :save)
+          ]
+        },
+        children: [Child.new(:content, Element.new(:widget, :button, id: "deploy-button"))]
+      )
+
+    assert Reference.equivalent?(left, left)
+    refute Reference.equivalent?(left, right)
+
+    normalized =
+      %{
+        id: "root",
+        type: :layout,
+        kind: :stack,
+        attributes: %{
+          interactions: [
+            %{family: :click, intent: :save},
+            %{family: :click, intent: :cancel}
+          ]
+        },
+        children: [
+          %{
+            slot: :content,
+            element: %{id: "save-button", type: :widget, kind: :button}
+          }
+        ]
+      }
+      |> UnifiedIUR.Normalize.element!()
+
+    assert Reference.snapshot(normalized) ==
+             Reference.snapshot(UnifiedIUR.Normalize.element!(normalized))
+
+    assert [%{path: [:children, 0, :element, :id], left: "save-button", right: "deploy-button"}] =
+             Reference.shape_diff(left, right)
   end
 end
