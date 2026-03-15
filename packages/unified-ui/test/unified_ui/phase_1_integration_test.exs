@@ -52,6 +52,7 @@ defmodule UnifiedUi.Phase1IntegrationTest do
              dsl: UnifiedUi.Dsl,
              binding: UnifiedUi.Binding,
              info: UnifiedUi.Info,
+             parity: UnifiedUi.Parity,
              reference: UnifiedUi.Reference,
              signal: UnifiedUi.Signal,
              signals: UnifiedUi.Signals,
@@ -62,6 +63,7 @@ defmodule UnifiedUi.Phase1IntegrationTest do
 
     assert UnifiedUi.module_for(:dsl) == {:ok, UnifiedUi.Dsl}
     assert UnifiedUi.module_for(:compiler) == {:ok, UnifiedUi.Compiler}
+    assert UnifiedUi.module_for(:parity) == {:ok, UnifiedUi.Parity}
     assert UnifiedUi.required_runtime_services() == []
   end
 

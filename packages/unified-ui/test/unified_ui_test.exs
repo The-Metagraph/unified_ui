@@ -12,6 +12,7 @@ defmodule UnifiedUiTest do
     assert UnifiedUi.module_areas() == %{
              dsl: UnifiedUi.Dsl,
              compiler: UnifiedUi.Compiler,
+             parity: UnifiedUi.Parity,
              signals: UnifiedUi.Signals,
              signal: UnifiedUi.Signal,
              binding: UnifiedUi.Binding,
@@ -24,6 +25,7 @@ defmodule UnifiedUiTest do
 
     assert {:ok, UnifiedUi.Dsl} = UnifiedUi.module_for(:dsl)
     assert {:ok, UnifiedUi.Info} = UnifiedUi.module_for(:info)
+    assert {:ok, UnifiedUi.Parity} = UnifiedUi.module_for(:parity)
     assert :error = UnifiedUi.module_for(:missing)
   end
 
