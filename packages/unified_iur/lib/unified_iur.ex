@@ -14,6 +14,7 @@ defmodule UnifiedIUR do
           | :validate
           | :normalize
           | :interoperability
+          | :extension
           | :reference
           | :tooling
 
@@ -25,6 +26,7 @@ defmodule UnifiedIUR do
     validate: UnifiedIUR.Validate,
     normalize: UnifiedIUR.Normalize,
     interoperability: UnifiedIUR.Interoperability,
+    extension: UnifiedIUR.Extension,
     reference: UnifiedIUR.Reference,
     tooling: UnifiedIUR.Tooling
   }

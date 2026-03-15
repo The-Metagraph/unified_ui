@@ -9,6 +9,7 @@ defmodule UnifiedIURTest do
              interactions: UnifiedIUR.Interactions,
              validate: UnifiedIUR.Validate,
              interoperability: UnifiedIUR.Interoperability,
+             extension: UnifiedIUR.Extension,
              normalize: UnifiedIUR.Normalize,
              reference: UnifiedIUR.Reference,
              tooling: UnifiedIUR.Tooling
