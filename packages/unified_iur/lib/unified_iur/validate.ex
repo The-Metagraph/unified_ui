@@ -16,6 +16,73 @@ defmodule UnifiedIUR.Validate do
     "Jido.Signal"
   ]
 
+  @guidance_by_code %{
+    invalid_element: %{
+      construct_family: :core_model,
+      guidance:
+        "Validate values through UnifiedIUR.Normalize and ensure the root is a UnifiedIUR.Element."
+    },
+    missing_type: %{
+      construct_family: :core_model,
+      guidance:
+        "Create elements through package constructors so canonical type values stay explicit."
+    },
+    missing_kind: %{
+      construct_family: :core_model,
+      guidance:
+        "Use a known canonical kind from UnifiedIUR.Core, Widgets, Layout, Layer, Forms, or Canvas."
+    },
+    invalid_metadata: %{
+      construct_family: :core_model,
+      guidance:
+        "Attach metadata through UnifiedIUR.Metadata so description, tags, and annotations stay portable."
+    },
+    invalid_children: %{
+      construct_family: :display_systems,
+      guidance: "Represent children as UnifiedIUR.Element.Child values with stable slot names."
+    },
+    invalid_child: %{
+      construct_family: :display_systems,
+      guidance:
+        "Wrap nested elements with UnifiedIUR.Element.Child.new/2 or package constructors that do so for you."
+    },
+    invalid_style_attachment: %{
+      construct_family: :theming,
+      guidance: "Attach styles as UnifiedIUR.Style structs and keep style references portable."
+    },
+    invalid_theme_attachment: %{
+      construct_family: :theming,
+      guidance:
+        "Attach themes as canonical maps or token references rather than runtime-local theme structs."
+    },
+    invalid_interaction_attachment: %{
+      construct_family: :interactions,
+      guidance: "Populate :interactions with UnifiedIUR.Interaction structs only."
+    },
+    invalid_interactions_attachment: %{
+      construct_family: :interactions,
+      guidance: "Keep the :interactions attachment as a list of UnifiedIUR.Interaction structs."
+    },
+    invalid_binding_attachment: %{
+      construct_family: :interactions,
+      guidance: "Populate :bindings with UnifiedIUR.Binding structs only."
+    },
+    invalid_bindings_attachment: %{
+      construct_family: :interactions,
+      guidance: "Keep the :bindings attachment as a list of UnifiedIUR.Binding structs."
+    },
+    invalid_interaction_scope: %{
+      construct_family: :interactions,
+      guidance:
+        "Represent interaction_scope as a canonical map describing portable routing context."
+    },
+    runtime_local_escape_hatch: %{
+      construct_family: :interoperability,
+      guidance:
+        "Keep runtime-native structs out of canonical IUR and translate them at runtime-library boundaries."
+    }
+  }
+
   @spec element(Element.t()) :: :ok | {:error, [Error.t()]}
   def element(%Element{} = element) do
     errors =
@@ -63,6 +130,62 @@ defmodule UnifiedIUR.Validate do
         details: %{value: inspect(other)}
       )
     ]
+  end
+
+  @spec diagnostics(Element.t() | map() | keyword()) :: map()
+  def diagnostics(input) do
+    case UnifiedIUR.Normalize.element(input) do
+      {:ok, element} ->
+        case element(element) do
+          :ok ->
+            %{
+              valid?: true,
+              identity: %{id: element.id, type: element.type, kind: element.kind},
+              errors: [],
+              construct_families: []
+            }
+
+          {:error, errors} ->
+            %{
+              valid?: false,
+              identity: %{id: element.id, type: element.type, kind: element.kind},
+              errors: Enum.map(errors, &diagnostic_entry/1),
+              construct_families:
+                errors
+                |> Enum.map(&guidance_for_error/1)
+                |> Enum.map(& &1.construct_family)
+                |> Enum.uniq()
+                |> Enum.sort()
+            }
+        end
+
+      {:error, errors} ->
+        %{
+          valid?: false,
+          identity: nil,
+          errors: Enum.map(errors, &diagnostic_entry/1),
+          construct_families:
+            errors
+            |> Enum.map(&guidance_for_error/1)
+            |> Enum.map(& &1.construct_family)
+            |> Enum.uniq()
+            |> Enum.sort()
+        }
+    end
+  end
+
+  @spec guidance_for_error(Error.t() | atom()) :: %{
+          construct_family: atom(),
+          guidance: String.t()
+        }
+  def guidance_for_error(%Error{code: code}), do: guidance_for_error(code)
+
+  def guidance_for_error(code) when is_atom(code) do
+    Map.get(@guidance_by_code, code, %{
+      construct_family: :unknown,
+      guidance:
+        "Review the canonical construct family and normalize the value before export or validation."
+    })
   end
 
   defp validate_children(children) when is_list(children) do
@@ -307,5 +430,18 @@ defmodule UnifiedIUR.Validate do
 
   defp prepend_path(%Error{} = error, prefix) do
     %{error | path: prefix ++ error.path}
+  end
+
+  defp diagnostic_entry(%Error{} = error) do
+    guidance = guidance_for_error(error)
+
+    %{
+      code: error.code,
+      message: Error.format(error),
+      path: error.path,
+      details: error.details,
+      construct_family: guidance.construct_family,
+      guidance: guidance.guidance
+    }
   end
 end
