@@ -30,6 +30,11 @@ defmodule LiveUi.Info do
     }
   end
 
+  @spec advanced_widget_summary() :: [map()]
+  def advanced_widget_summary do
+    Enum.map(LiveUi.Widgets.advanced_modules(), &widget_summary/1)
+  end
+
   @spec screen_summary(module()) :: map()
   def screen_summary(screen_module) do
     definition = LiveUi.Screen.definition(screen_module)
