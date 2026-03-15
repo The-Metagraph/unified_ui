@@ -42,6 +42,11 @@ defmodule LiveUi.Signals do
     family = fetch_family(attrs)
 
     with :ok <- validate_family(family),
+         :ok <-
+           maybe_validate_boundary(
+             attrs,
+             &LiveUi.Transport.Diagnostics.validate_native_boundary/1
+           ),
          {:ok, signal} <- maybe_signal(family, attrs, :native) do
       {:ok,
        %{
@@ -67,6 +72,11 @@ defmodule LiveUi.Signals do
     family = interaction.family
 
     with :ok <- validate_family(family),
+         :ok <-
+           maybe_validate_boundary(
+             attrs,
+             &LiveUi.Transport.Diagnostics.validate_canonical_boundary(interaction, &1)
+           ),
          {:ok, signal} <- maybe_signal(family, attrs, :canonical, interaction) do
       {:ok,
        %{
@@ -86,9 +96,9 @@ defmodule LiveUi.Signals do
 
   @spec to_runtime_action(Signal.t() | map()) :: {:ok, map()} | {:error, term()}
   def to_runtime_action(%Signal{} = signal) do
-    family = signal.extensions["live_ui_family"] || signal.extensions[:live_ui_family]
+    with :ok <- LiveUi.Transport.Diagnostics.validate_boundary_signal(signal) do
+      family = signal.extensions["live_ui_family"] || signal.extensions[:live_ui_family]
 
-    with :ok <- validate_family(family) do
       {:ok,
        %{
          family: family,
@@ -275,7 +285,15 @@ defmodule LiveUi.Signals do
   end
 
   defp validate_family(family) when family in @families, do: :ok
-  defp validate_family(_family), do: {:error, :invalid_family}
+  defp validate_family(family), do: {:error, LiveUi.Transport.Error.invalid_family(family)}
+
+  defp maybe_validate_boundary(attrs, validator) do
+    if boundary_kind(attrs) == :boundary do
+      validator.(attrs)
+    else
+      :ok
+    end
+  end
 
   defp fetch(source, key, default \\ nil) do
     Map.get(source, key, Map.get(source, Atom.to_string(key), default))

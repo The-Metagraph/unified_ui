@@ -22,6 +22,7 @@ defmodule LiveUi.TransportTest do
                family: :command,
                intent: :open_palette,
                screen: :workspace,
+               element_id: :workspace_commands,
                boundary: :boundary,
                payload: %{source: :keyboard}
              )

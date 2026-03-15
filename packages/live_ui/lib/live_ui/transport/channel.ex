@@ -38,10 +38,21 @@ defmodule LiveUi.Transport.Channel do
     do: build_signal(signal_attrs)
 
   def inbound(%{signal: signal_attrs}), do: build_signal(signal_attrs)
-  def inbound(_envelope), do: {:error, :invalid_channel_envelope}
+  def inbound(envelope), do: {:error, LiveUi.Transport.Error.invalid_channel_envelope(envelope)}
 
-  defp build_signal(%Signal{} = signal), do: {:ok, signal}
-  defp build_signal(attrs) when is_map(attrs) or is_list(attrs), do: Signal.new(attrs)
+  defp build_signal(%Signal{} = signal) do
+    case LiveUi.Transport.Diagnostics.validate_boundary_signal(signal) do
+      :ok -> {:ok, signal}
+      {:error, error} -> {:error, error}
+    end
+  end
+
+  defp build_signal(attrs) when is_map(attrs) or is_list(attrs) do
+    with {:ok, signal} <- Signal.new(attrs),
+         :ok <- LiveUi.Transport.Diagnostics.validate_boundary_signal(signal) do
+      {:ok, signal}
+    end
+  end
 
   defp signal_map(%Signal{} = signal) do
     signal

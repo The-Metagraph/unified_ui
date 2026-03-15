@@ -99,7 +99,7 @@ defmodule LiveUi.RuntimeTransportTest do
              LiveUi.Runtime.handle_hook_event(
                runtime_state,
                :resize_observer,
-               %{"width" => 120, "height" => 80, "renderer_local_key" => "ignored"},
+               %{"width" => 120, "height" => 80},
                event: "resize_observer",
                family: :change,
                intent: :measure_viewport

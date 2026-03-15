@@ -39,7 +39,7 @@ defmodule LiveUi.Runtime.BrowserBridge do
 
   @spec normalize_payload(hook(), map()) :: {:ok, map()} | {:error, term()}
   def normalize_payload(hook, payload) when is_atom(hook) and is_map(payload) do
-    with true <- supported?(hook) || {:error, :unsupported_hook} do
+    with :ok <- LiveUi.Transport.Diagnostics.validate_hook_payload(hook, payload) do
       {:ok, payload_for(hook, payload)}
     end
   end
