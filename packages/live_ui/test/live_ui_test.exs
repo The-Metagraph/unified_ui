@@ -6,9 +6,9 @@ defmodule LiveUiTest do
 
     assert %{
              package: LiveUi,
-             widgets: families,
-             runtime: runtime_capabilities,
-             transport: [:native_local, :canonical_boundary]
+             widgets: %{families: families},
+             runtime: %{capabilities: runtime_capabilities},
+             transport: %{modes: [:native_local, :canonical_boundary]}
            } = LiveUi.reference()
 
     assert :content in families

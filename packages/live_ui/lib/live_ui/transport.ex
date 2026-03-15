@@ -10,6 +10,11 @@ defmodule LiveUi.Transport do
     [:native_local, :canonical_boundary]
   end
 
+  @spec integration_points() :: [atom()]
+  def integration_points do
+    [:native_liveview_events, :browser_hooks, :canonical_boundary_translation]
+  end
+
   @spec namespace() :: module()
   def namespace, do: __MODULE__
 end

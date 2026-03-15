@@ -27,6 +27,30 @@ defmodule LiveUi.Runtime do
     State.handle_event(runtime_state, event, payload)
   end
 
+  @spec modules() :: [module()]
+  def modules do
+    [State, ScreenComponent, BrowserBridge]
+  end
+
+  @spec assumptions() :: map()
+  def assumptions do
+    %{
+      server_authoritative?: true,
+      browser_bridge_authoritative?: false,
+      shared_runtime_for_native_and_iur?: true
+    }
+  end
+
+  @spec validation_state() :: map()
+  def validation_state do
+    %{
+      mount: :ready,
+      event_routing: :ready,
+      live_component_host: :ready,
+      canonical_renderer: :pending
+    }
+  end
+
   @spec component() :: module()
   def component, do: ScreenComponent
 
