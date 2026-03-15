@@ -4,6 +4,7 @@ defmodule UnifiedUi.Reference do
   """
 
   alias UnifiedUi.Dsl.{Entities, Identity, Placement, SectionRegistry}
+  alias UnifiedUi.Examples
 
   @spec supported_sections() :: [atom()]
   def supported_sections do
@@ -57,6 +58,11 @@ defmodule UnifiedUi.Reference do
       boundaries: Placement.section_boundaries(),
       rules: Placement.placement_rules()
     }
+  end
+
+  @spec example_catalog() :: [map()]
+  def example_catalog do
+    Examples.catalog()
   end
 
   defp normalize_description(description) do

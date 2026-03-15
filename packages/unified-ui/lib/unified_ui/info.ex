@@ -5,6 +5,7 @@ defmodule UnifiedUi.Info do
 
   alias Spark.Dsl.Extension
   alias UnifiedUi.Dsl.Node
+  alias UnifiedUi.Examples
   alias UnifiedUi.Reference
 
   @spec supported_construct_families() :: %{atom() => [atom()]}
@@ -22,6 +23,14 @@ defmodule UnifiedUi.Info do
     module
     |> composition_nodes()
     |> Enum.map(&Node.summary/1)
+  end
+
+  @spec example_summaries() :: [map()]
+  def example_summaries do
+    Examples.catalog()
+    |> Enum.map(fn example ->
+      Map.put(example, :composition, composition_summary(example.module))
+    end)
   end
 
   @spec module_summary(module()) :: map()
