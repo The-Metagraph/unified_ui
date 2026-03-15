@@ -5,6 +5,7 @@ defmodule LiveUi.ReferenceTest do
     assert :content in LiveUi.Reference.widget_families()
     assert LiveUi.Runtime.State in LiveUi.Reference.runtime_modules()
     assert :canonical_boundary_translation in LiveUi.Reference.transport_integration_points()
+    assert :command in LiveUi.Reference.signal_families()
   end
 
   test "reference surfaces distinguish direct native and canonical responsibilities" do
