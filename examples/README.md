@@ -3,6 +3,10 @@
 This directory contains the standalone example-application suite for the
 unified ecosystem.
 
+The suite is organized around one shared authoring template, one shared default
+theme/style baseline, and one dedicated standalone app per primary widget or
+construct.
+
 Current layout:
 
 - `shared/`: the shared support library that owns the common dependency wiring,
@@ -40,6 +44,14 @@ Directory convention:
 - every example app is a standalone Mix project
 - every example app depends on `examples/shared/` plus the local package paths
   for `unified_ui`, `unified_iur`, and `live_ui`
+
+Discovery surfaces:
+
+- `examples/catalog.tsv` is the machine-readable catalog manifest for the suite
+- `examples/shared/` is the shared support library that exposes the catalog,
+  fixtures, runtime helpers, and suite-wide template contract
+- the family groupings above are the human-readable landing page for the same
+  catalog entries
 
 Shared review surfaces:
 

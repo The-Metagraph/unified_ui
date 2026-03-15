@@ -17,6 +17,16 @@ defmodule UnifiedExamples.Shared do
     Path.expand("..", shared_root())
   end
 
+  @spec suite_index_path() :: String.t()
+  def suite_index_path do
+    Path.join(suite_root(), "README.md")
+  end
+
+  @spec catalog_manifest_path() :: String.t()
+  def catalog_manifest_path do
+    Path.join(suite_root(), "catalog.tsv")
+  end
+
   @spec shared_root() :: String.t()
   def shared_root do
     Path.expand("../..", __DIR__)
@@ -39,6 +49,11 @@ defmodule UnifiedExamples.Shared do
   @spec catalog_entries() :: [Catalog.entry()]
   def catalog_entries do
     Catalog.entries()
+  end
+
+  @spec catalog_manifest() :: String.t()
+  def catalog_manifest do
+    Catalog.tsv()
   end
 
   @spec catalog_directories() :: [String.t()]

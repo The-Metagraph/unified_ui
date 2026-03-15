@@ -24,6 +24,8 @@ defmodule UnifiedExamples.Shared.Catalog do
           shell_kind: shell_kind()
         }
 
+  @catalog_headers ["directory", "widget", "family", "phase", "shell_kind"]
+
   @entries [
     %{directory: "button", widget: :button, family: :content, phase: 1, shell_kind: :box},
     %{directory: "text", widget: :text, family: :content, phase: 1, shell_kind: :box},
@@ -230,11 +232,23 @@ defmodule UnifiedExamples.Shared.Catalog do
     @entries
   end
 
+  @spec catalog_headers() :: [String.t()]
+  def catalog_headers do
+    @catalog_headers
+  end
+
   @spec directories() :: [String.t()]
   def directories do
     @entries
     |> Enum.map(& &1.directory)
     |> Enum.sort()
+  end
+
+  @spec tsv() :: String.t()
+  def tsv do
+    [Enum.join(@catalog_headers, "\t") | Enum.map(@entries, &entry_row/1)]
+    |> Enum.join("\n")
+    |> Kernel.<>("\n")
   end
 
   @spec by_phase(pos_integer()) :: [entry()]
@@ -298,4 +312,15 @@ defmodule UnifiedExamples.Shared.Catalog do
 
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)
   defp normalize_directory(directory) when is_binary(directory), do: directory
+
+  defp entry_row(entry) do
+    [
+      entry.directory,
+      Atom.to_string(entry.widget),
+      Atom.to_string(entry.family),
+      Integer.to_string(entry.phase),
+      Atom.to_string(entry.shell_kind)
+    ]
+    |> Enum.join("\t")
+  end
 end
