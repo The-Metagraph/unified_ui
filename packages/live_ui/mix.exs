@@ -37,7 +37,10 @@ defmodule LiveUi.MixProject do
       main: "LiveUi",
       extras: [
         "README.md",
-        "guides/runtime_backbone.md"
+        "guides/runtime_backbone.md",
+        "guides/native_runtime_and_examples.md",
+        "guides/canonical_rendering_and_transport.md",
+        "guides/maintainer_workflows.md"
       ],
       source_ref: "main",
       source_url: @source_url

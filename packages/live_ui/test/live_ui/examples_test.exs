@@ -105,6 +105,30 @@ defmodule LiveUi.ExamplesTest do
     assert :styled_continuity_compare in example_ids
   end
 
+  test "example catalog provides stable preview and review metadata" do
+    assert {:ok, native_profile} = LiveUi.Examples.find(:native_styled_profile)
+    assert {:ok, styled_compare} = LiveUi.Examples.find("styled_continuity_compare")
+
+    assert native_profile.preview_id == "native:native_styled_profile"
+    assert native_profile.review_artifact == "live_ui/native/native_styled_profile"
+    assert native_profile.coverage.native?
+    refute native_profile.coverage.canonical?
+    assert native_profile.coverage.continuity?
+    assert native_profile.runtime_obligations.server_authoritative?
+
+    assert styled_compare.path == :mixed
+    assert styled_compare.coverage.native?
+    assert styled_compare.coverage.canonical?
+    assert styled_compare.coverage.transport?
+    assert styled_compare.runtime_obligations.canonical_boundary?
+
+    grouped = LiveUi.Examples.grouped_catalog()
+
+    assert Enum.any?(grouped.native, &(&1.id == :native_display))
+    assert Enum.any?(grouped.canonical, &(&1.id == :canonical_display))
+    assert Enum.any?(grouped.mixed, &(&1.id == :styled_continuity_compare))
+  end
+
   test "styled continuity examples keep native and canonical paths aligned" do
     assert {:ok, continuity} = LiveUi.Examples.StyledContinuityComparison.compare()
 

@@ -2,17 +2,61 @@
 
 `LiveUi` is the Phoenix LiveView runtime library for the unified ecosystem.
 
-## Scope
+The package has two equally important roles:
 
-- Native LiveView-oriented widgets and composition helpers
-- Server-authoritative runtime helpers for mounting and rendering screens
-- Canonical `UnifiedIUR` renderer entry points
-- Boundary transport helpers for canonical signal translation
+- it is a directly usable native LiveView widget/runtime library
+- it is the canonical `UnifiedIUR` renderer and boundary-transport layer for the LiveView runtime
 
-`LiveUi` does not own the authored DSL or canonical IUR data model.
+`LiveUi` does not own the authored DSL or the canonical IUR data model. It owns
+the server-authoritative runtime behavior that turns native screens and
+canonical IUR values into one coherent LiveView-facing runtime.
 
-## Status
+## What This Package Owns
 
-The package is under active implementation. Phase 1 establishes the package
-scaffold, native component backbone, server-authoritative runtime boundary, and
-reference surfaces.
+`LiveUi` owns:
+
+- native widget, form, layout, overlay, display, and operational component families
+- the shared server-authoritative runtime used for both native screens and canonical IUR rendering
+- canonical `UnifiedIUR` rendering through native widget reuse instead of a second renderer stack
+- canonical boundary transport via `Jido.Signal` and channel-safe translation helpers
+- maintained native, canonical, and mixed comparison examples
+- maintainer-facing preview, inspection, export, and validation workflows
+
+`LiveUi` does not own:
+
+- the authored `unified_ui` DSL
+- the canonical `unified_iur` construct model
+- client-side Elm state management
+- desktop-native process lifecycles
+
+## Maintainer Workflows
+
+The package includes four maintainer-facing Mix tasks:
+
+- `mix live_ui.preview [EXAMPLE_ID] [--format report|html|metadata]`
+- `mix live_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|catalog]`
+- `mix live_ui.export [EXAMPLE_ID] [--format metadata|report|html|comparison|diagnostics|catalog]`
+- `mix live_ui.validate [--format summary|report] [--strict]`
+
+Use these commands to:
+
+- preview maintained native and canonical examples
+- inspect how native and canonical flows map onto the same runtime
+- export review-friendly metadata, snapshots, comparisons, and diagnostics
+- validate continuity, transport, runtime authority, and documentation readiness
+
+## Reference Guides
+
+Use the package guides for the package contract details:
+
+- [Runtime Backbone](guides/runtime_backbone.md)
+- [Native Runtime and Examples](guides/native_runtime_and_examples.md)
+- [Canonical Rendering and Transport](guides/canonical_rendering_and_transport.md)
+- [Maintainer Workflows](guides/maintainer_workflows.md)
+
+## Release Readiness
+
+`LiveUi` treats maintained example health, styled continuity alignment, boundary
+transport soundness, server-authoritative runtime behavior, and maintainer
+documentation as release-readiness criteria. Run `mix live_ui.validate --strict`
+before promoting runtime-boundary changes.
