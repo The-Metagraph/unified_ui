@@ -61,21 +61,11 @@ defmodule UnifiedUi.ValidationTest do
              total_interactions: 5
            }
 
-    refute report.documentation_surface.complete?
+    assert report.documentation_surface.complete?
+    assert report.documentation_surface.missing_paths == []
 
-    assert Enum.sort(report.documentation_surface.missing_paths) == [
-             "guides/compiler_and_parity.md",
-             "guides/dsl_model.md",
-             "guides/maintainer_workflows.md",
-             "guides/theming_and_signals.md"
-           ]
-
-    refute report.release_readiness.ready?
-
-    assert Enum.any?(
-             report.release_readiness.criteria,
-             &(&1.id == :documentation_surface and not &1.passed?)
-           )
+    assert report.release_readiness.ready?
+    assert Enum.all?(report.release_readiness.criteria, & &1.passed?)
   end
 
   test "summarizes the current release-readiness state" do
@@ -85,7 +75,7 @@ defmodule UnifiedUi.ValidationTest do
 
     assert summary =~ "UnifiedUi validation summary"
     assert summary =~ "parity synchronized?: true"
-    assert summary =~ "documentation surface complete?: false"
-    assert summary =~ "release ready?: false"
+    assert summary =~ "documentation surface complete?: true"
+    assert summary =~ "release ready?: true"
   end
 end

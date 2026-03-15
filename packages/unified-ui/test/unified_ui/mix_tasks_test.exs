@@ -67,14 +67,15 @@ defmodule UnifiedUi.MixTasksTest do
       end)
 
     assert summary_output =~ "UnifiedUi validation summary"
-    assert summary_output =~ "release ready?: false"
+    assert summary_output =~ "release ready?: true"
 
     Mix.Task.clear()
 
-    assert_raise Mix.Error, ~r/UnifiedUi validation failed strict release-readiness gates/, fn ->
+    strict_output =
       capture_io(fn ->
         Mix.Tasks.UnifiedUi.Validate.run(["--strict"])
       end)
-    end
+
+    assert strict_output =~ "release ready?: true"
   end
 end
