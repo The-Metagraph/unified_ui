@@ -2,6 +2,7 @@ defmodule UnifiedExamples.SharedTest do
   use ExUnit.Case, async: true
 
   alias UnifiedExamples.Shared
+  alias UnifiedExamples.Shared.Catalog
 
   test "exposes the shared dependency contract for standalone example apps" do
     assert Shared.dependency_apps() == [:unified_ui, :unified_iur, :live_ui]
@@ -24,6 +25,43 @@ defmodule UnifiedExamples.SharedTest do
 
     assert Shared.shared_root() == shared_root
     assert Shared.suite_root() == Path.expand("..", shared_root)
-    assert Shared.app_directories() == ["button", "text", "text_input"]
+    assert Shared.app_directories() == Catalog.directories()
+  end
+
+  test "exposes the implemented example catalog for review tooling" do
+    assert Shared.catalog_directories() == Catalog.directories()
+
+    assert Shared.catalog_entries()
+           |> Enum.map(& &1.directory)
+           |> Enum.sort() == Catalog.directories()
+
+    assert Shared.catalog_by_family()
+           |> Map.new(fn {family, entries} -> {family, Enum.map(entries, & &1.directory)} end) ==
+             %{
+               content: [
+                 "button",
+                 "text",
+                 "icon",
+                 "image",
+                 "label",
+                 "link",
+                 "separator",
+                 "spacer"
+               ],
+               forms: ["field", "field_group", "form_builder"],
+               input: [
+                 "text_input",
+                 "checkbox",
+                 "date_input",
+                 "file_input",
+                 "numeric_input",
+                 "pick_list",
+                 "radio_group",
+                 "select",
+                 "time_input",
+                 "toggle"
+               ],
+               layout: ["box", "content"]
+             }
   end
 end
