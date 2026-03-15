@@ -33,7 +33,13 @@ defmodule UnifiedUi.MixProject do
   defp docs do
     [
       main: "UnifiedUi",
-      extras: ["README.md"],
+      extras: [
+        "README.md",
+        "guides/dsl_model.md",
+        "guides/theming_and_signals.md",
+        "guides/compiler_and_parity.md",
+        "guides/maintainer_workflows.md"
+      ],
       source_ref: "main",
       source_url: @source_url
     ]

@@ -330,19 +330,25 @@ defmodule UnifiedUi.Phase2IntegrationTest do
     assert UnifiedUi.Examples.modules() == [
              UnifiedUi.Examples.FoundationalScreen,
              UnifiedUi.Examples.ProfileForm,
-             UnifiedUi.Examples.OverlayWorkspace
+             UnifiedUi.Examples.OverlayWorkspace,
+             UnifiedUi.Examples.OperationsDashboard,
+             UnifiedUi.Examples.ThemedSignalWorkspace
            ]
 
     assert Enum.map(UnifiedUi.Reference.example_catalog(), & &1.id) == [
              :foundational_screen,
              :profile_form,
-             :overlay_workspace
+             :overlay_workspace,
+             :operations_dashboard,
+             :themed_signal_workspace
            ]
 
     assert Enum.map(UnifiedUi.Info.example_summaries(), & &1.id) == [
              :foundational_screen,
              :profile_form,
-             :overlay_workspace
+             :overlay_workspace,
+             :operations_dashboard,
+             :themed_signal_workspace
            ]
 
     assert Enum.all?(UnifiedUi.Examples.modules(), fn module ->

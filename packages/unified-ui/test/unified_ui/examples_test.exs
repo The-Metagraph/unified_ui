@@ -1,224 +1,178 @@
 defmodule UnifiedUi.ExamplesTest do
   use ExUnit.Case, async: true
 
-  test "registers maintained example modules through package reference helpers" do
-    assert UnifiedUi.Examples.modules() == [
+  alias UnifiedUi.{Examples, Info, Reference}
+
+  test "registers maintained examples with stable metadata and coverage obligations" do
+    assert Examples.modules() == [
              UnifiedUi.Examples.FoundationalScreen,
              UnifiedUi.Examples.ProfileForm,
-             UnifiedUi.Examples.OverlayWorkspace
+             UnifiedUi.Examples.OverlayWorkspace,
+             UnifiedUi.Examples.OperationsDashboard,
+             UnifiedUi.Examples.ThemedSignalWorkspace
            ]
 
-    assert UnifiedUi.Reference.example_catalog() == [
-             %{
-               id: :foundational_screen,
-               category: :foundational,
-               module: UnifiedUi.Examples.FoundationalScreen,
-               constructs: [:foundational_visual, :layout],
-               summary: "Minimal screen showing foundational widgets and baseline layouts."
-             },
-             %{
-               id: :profile_form,
-               category: :form_workflow,
-               module: UnifiedUi.Examples.ProfileForm,
-               constructs: [:input, :navigation, :forms],
-               summary: "Baseline form workflow with grouped fields, tabs, and command actions."
-             },
-             %{
-               id: :overlay_workspace,
-               category: :advanced_flow,
-               module: UnifiedUi.Examples.OverlayWorkspace,
-               constructs: [:overlay, :display, :layout],
-               summary: "Advanced overlay and split-pane workflow with contextual actions."
-             }
+    assert Examples.ids() == [
+             :foundational_screen,
+             :profile_form,
+             :overlay_workspace,
+             :operations_dashboard,
+             :themed_signal_workspace
            ]
+
+    assert Examples.categories() == [
+             :advanced_dashboard,
+             :advanced_flow,
+             :cross_cutting,
+             :form_workflow,
+             :foundational
+           ]
+
+    assert Examples.validation_purposes() == [
+             :coverage,
+             :determinism,
+             :display_systems,
+             :docs,
+             :parity,
+             :signals,
+             :themes
+           ]
+
+    assert {:ok, themed_signal_workspace} = Examples.example(:themed_signal_workspace)
+
+    assert themed_signal_workspace == %{
+             id: :themed_signal_workspace,
+             category: :cross_cutting,
+             scenario: :theme_signal_workspace,
+             module: UnifiedUi.Examples.ThemedSignalWorkspace,
+             constructs: [:themes, :signals, :overlay, :display, :forms, :canvas],
+             parity_obligations: [
+               :feedback_widgets,
+               :input_widgets,
+               :layer_constructs,
+               :layout_constructs,
+               :canvas_constructs
+             ],
+             validation_purpose: [:docs, :signals, :themes, :determinism, :parity],
+             review_artifact: %{
+               inspection: "themed_signal_workspace.inspection",
+               snapshot: "themed_signal_workspace.snapshot"
+             },
+             summary:
+               "Cross-cutting themed workspace combining style inheritance, bindings, interactions, overlays, and canvas output."
+           }
+
+    assert :error = Examples.example(:missing)
+    assert Reference.example_catalog() == Examples.catalog()
   end
 
-  test "exposes example composition summaries without runtime-library dependencies" do
-    assert UnifiedUi.Info.example_summaries() == [
-             %{
-               id: :foundational_screen,
-               category: :foundational,
-               module: UnifiedUi.Examples.FoundationalScreen,
-               constructs: [:foundational_visual, :layout],
-               summary: "Minimal screen showing foundational widgets and baseline layouts.",
-               composition: [
-                 %{
-                   id: :shell,
-                   family: :layout,
-                   kind: :box,
-                   summary: "Foundational shell",
-                   children: [
-                     %{
-                       id: :headline,
-                       family: :foundational,
-                       kind: :text,
-                       role: :text,
-                       value: "Welcome to UnifiedUi"
-                     },
-                     %{
-                       id: :primary_action,
-                       family: :foundational,
-                       kind: :button,
-                       label: "Get started"
-                     }
-                   ]
-                 },
-                 %{
-                   id: :shortcut_bar,
-                   family: :layout,
-                   kind: :row,
-                   children: [
-                     %{id: :main_menu, family: :navigation, kind: :menu},
-                     %{
-                       id: :docs_link,
-                       family: :foundational,
-                       kind: :link,
-                       label: "Open docs",
-                       target: "https://specled.dev/home"
-                     }
-                   ]
-                 }
-               ]
+  test "reports aggregated example coverage for later tooling and validation" do
+    assert Examples.coverage_report() == %{
+             total_examples: 5,
+             ids: [
+               :foundational_screen,
+               :profile_form,
+               :overlay_workspace,
+               :operations_dashboard,
+               :themed_signal_workspace
+             ],
+             categories: %{
+               advanced_dashboard: 1,
+               advanced_flow: 1,
+               cross_cutting: 1,
+               form_workflow: 1,
+               foundational: 1
              },
-             %{
-               id: :profile_form,
-               category: :form_workflow,
-               module: UnifiedUi.Examples.ProfileForm,
-               constructs: [:input, :navigation, :forms],
-               summary: "Baseline form workflow with grouped fields, tabs, and command actions.",
-               composition: [
-                 %{
-                   id: :profile_form,
-                   family: :forms,
-                   kind: :form_builder,
-                   summary: "Profile update workflow",
-                   children: [
-                     %{
-                       id: :profile_identity,
-                       family: :forms,
-                       kind: :field_group,
-                       children: [
-                         %{
-                           id: :display_name,
-                           family: :forms,
-                           kind: :field,
-                           label: "Display name",
-                           children: [
-                             %{id: :display_name_input, family: :input, kind: :text_input}
-                           ]
-                         },
-                         %{
-                           id: :role,
-                           family: :forms,
-                           kind: :field,
-                           label: "Role",
-                           children: [%{id: :role_select, family: :input, kind: :select}]
-                         }
-                       ]
-                     },
-                     %{id: :profile_tabs, family: :navigation, kind: :tabs},
-                     %{
-                       id: :profile_commands,
-                       family: :navigation,
-                       kind: :command_palette,
-                       label: "Profile actions"
-                     }
-                   ]
-                 }
-               ]
-             },
-             %{
-               id: :overlay_workspace,
-               category: :advanced_flow,
-               module: UnifiedUi.Examples.OverlayWorkspace,
-               constructs: [:overlay, :display, :layout],
-               summary: "Advanced overlay and split-pane workflow with contextual actions.",
-               composition: [
-                 %{
-                   id: :workspace_shell,
-                   family: :layout,
-                   kind: :row,
-                   children: [
-                     %{
-                       id: :open_settings,
-                       family: :foundational,
-                       kind: :button,
-                       label: "Open settings"
-                     },
-                     %{
-                       id: :open_context,
-                       family: :foundational,
-                       kind: :button,
-                       label: "Open menu"
-                     }
-                   ]
-                 },
-                 %{
-                   id: :settings_panel,
-                   family: :layout,
-                   kind: :box,
-                   summary: "Settings panel",
-                   children: [
-                     %{
-                       id: :settings_heading,
-                       family: :foundational,
-                       kind: :text,
-                       role: :text,
-                       value: "Workspace settings"
-                     },
-                     %{
-                       id: :settings_copy,
-                       family: :foundational,
-                       kind: :text,
-                       role: :text,
-                       value: "Advanced workspace options"
-                     }
-                   ]
-                 },
-                 %{
-                   id: :settings_dialog,
-                   family: :overlay,
-                   kind: :dialog,
-                   title: "Settings",
-                   content_ref: :settings_panel,
-                   trigger_ref: :open_settings
-                 },
-                 %{
-                   id: :workspace_menu,
-                   family: :overlay,
-                   kind: :context_menu,
-                   target_ref: :workspace_shell,
-                   trigger_ref: :open_context,
-                   placement: :bottom_start
-                 },
-                 %{
-                   id: :save_toast,
-                   family: :overlay,
-                   kind: :toast,
-                   title: "Saved",
-                   message: "Workspace settings updated",
-                   severity: :success,
-                   placement: :bottom_end
-                 },
-                 %{
-                   id: :workspace_split,
-                   family: :display,
-                   kind: :split_pane,
-                   primary_ref: :workspace_shell,
-                   secondary_ref: :settings_panel,
-                   ratio: 0.35
-                 },
-                 %{
-                   id: :workspace_scroll,
-                   family: :display,
-                   kind: :scroll_bar,
-                   target_ref: :workspace_shell,
-                   position: 4,
-                   viewport_size: 24,
-                   content_size: 120
-                 }
-               ]
-             }
+             constructs: [
+               :advanced,
+               :canvas,
+               :data,
+               :display,
+               :feedback,
+               :forms,
+               :foundational_visual,
+               :input,
+               :layout,
+               :navigation,
+               :overlay,
+               :signals,
+               :themes
+             ],
+             parity_obligations: [
+               :advanced_widgets,
+               :canvas_constructs,
+               :container_constructs,
+               :data_widgets,
+               :feedback_widgets,
+               :form_constructs,
+               :foundational_widgets,
+               :input_widgets,
+               :layer_constructs,
+               :layout_constructs,
+               :navigation_widgets
+             ],
+             validation_purposes: [
+               :coverage,
+               :determinism,
+               :display_systems,
+               :docs,
+               :parity,
+               :signals,
+               :themes
+             ]
+           }
+  end
+
+  test "exposes maintained example summaries without runtime-library dependencies" do
+    summaries = Info.example_summaries()
+
+    assert Enum.map(summaries, & &1.id) == [
+             :foundational_screen,
+             :profile_form,
+             :overlay_workspace,
+             :operations_dashboard,
+             :themed_signal_workspace
            ]
+
+    dashboard =
+      Enum.find(summaries, &(&1.id == :operations_dashboard))
+
+    assert dashboard.category == :advanced_dashboard
+
+    assert dashboard.review_artifact == %{
+             inspection: "operations_dashboard.inspection",
+             snapshot: "operations_dashboard.snapshot"
+           }
+
+    assert Enum.any?(dashboard.composition, fn node ->
+             node.id == :operations_shell and
+               Enum.any?(
+                 node.children,
+                 &(&1.id == :cluster_status and &1.kind == :cluster_dashboard)
+               ) and
+               Enum.any?(
+                 node.children,
+                 &(&1.id == :release_notes and &1.kind == :markdown_viewer)
+               )
+           end)
+
+    themed_workspace =
+      Enum.find(summaries, &(&1.id == :themed_signal_workspace))
+
+    assert themed_workspace.category == :cross_cutting
+
+    assert themed_workspace.validation_purpose == [
+             :docs,
+             :signals,
+             :themes,
+             :determinism,
+             :parity
+           ]
+
+    assert Enum.any?(themed_workspace.composition, fn node ->
+             node.id == :workspace_shell and
+               Enum.any?(node.children, &(&1.id == :activity_viewport and &1.kind == :viewport)) and
+               Enum.any?(node.children, &(&1.id == :status_canvas and &1.kind == :canvas))
+           end)
   end
 end
