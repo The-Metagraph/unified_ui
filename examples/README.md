@@ -22,7 +22,7 @@ Currently implemented apps:
 - Layout and navigation:
   `row/`, `column/`, `grid/`, `menu/`, `tabs/`, `command_palette/`
 - Baseline data views:
-  `list/`
+  `list/`, `table/`, `tree_view/`, `markdown_viewer/`, `log_viewer/`
 
 Directory convention:
 

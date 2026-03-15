@@ -48,6 +48,7 @@ defmodule UnifiedExamples.SharedTest do
                  "separator",
                  "spacer"
                ],
+               data: ["list", "table", "tree_view", "markdown_viewer", "log_viewer"],
                forms: ["field", "field_group", "form_builder"],
                input: [
                  "text_input",
@@ -61,7 +62,8 @@ defmodule UnifiedExamples.SharedTest do
                  "time_input",
                  "toggle"
                ],
-               layout: ["box", "content"]
+               layout: ["box", "content", "row", "column", "grid"],
+               navigation: ["menu", "tabs", "command_palette"]
              }
   end
 end
