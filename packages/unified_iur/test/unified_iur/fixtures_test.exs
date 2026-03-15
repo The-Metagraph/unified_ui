@@ -38,6 +38,10 @@ defmodule UnifiedIUR.FixturesTest do
     assert :dialog in report.covered_kinds
     assert :canvas in report.covered_kinds
     assert :text_input in report.covered_kinds
+    assert report.attachment_families.style_semantics.covered?
+    assert report.attachment_families.theme_semantics.covered?
+    assert report.attachment_families.interaction_semantics.covered?
+    assert report.attachment_families.binding_semantics.covered?
 
     assert Enum.all?(report.categories, fn {_category, category_report} ->
              category_report.missing == []

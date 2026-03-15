@@ -38,4 +38,16 @@ defmodule UnifiedIUR.MixTasksTest do
     assert output =~ "extension_points"
     assert output =~ "unified_ui_family_map"
   end
+
+  test "mix unified_iur.validate prints the package validation summary" do
+    Mix.Task.reenable("unified_iur.validate")
+
+    output =
+      capture_io(fn ->
+        Mix.Task.run("unified_iur.validate", ["--strict"])
+      end)
+
+    assert output =~ "UnifiedIUR validation summary"
+    assert output =~ "release ready?: true"
+  end
 end

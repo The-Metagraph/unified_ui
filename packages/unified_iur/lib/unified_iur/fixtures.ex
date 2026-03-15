@@ -132,8 +132,10 @@ defmodule UnifiedIUR.Fixtures do
 
   @spec coverage_report() :: map()
   def coverage_report do
+    fixtures = all()
+
     covered_kinds =
-      all()
+      fixtures
       |> Enum.flat_map(fn fixture ->
         fixture.element
         |> Interoperability.walk()
@@ -154,10 +156,33 @@ defmodule UnifiedIUR.Fixtures do
          }}
       end)
 
+    attachment_families =
+      [
+        style_semantics:
+          attachment_family_report(fixtures, fn element ->
+            match?(%UnifiedIUR.Style{}, Map.get(element.attributes, :style)) or
+              theme_token_refs?(Map.get(element.attributes, :theme))
+          end),
+        theme_semantics:
+          attachment_family_report(fixtures, fn element ->
+            Map.has_key?(element.attributes, :theme)
+          end),
+        interaction_semantics:
+          attachment_family_report(fixtures, fn element ->
+            Map.has_key?(element.attributes, :interactions)
+          end),
+        binding_semantics:
+          attachment_family_report(fixtures, fn element ->
+            Map.has_key?(element.attributes, :bindings)
+          end)
+      ]
+      |> Enum.into(%{})
+
     %{
       fixture_ids: ids(),
       covered_kinds: Enum.sort(covered_kinds),
       categories: categories,
+      attachment_families: attachment_families,
       complete?: Enum.all?(categories, fn {_category, report} -> report.missing == [] end)
     }
   end
@@ -267,25 +292,40 @@ defmodule UnifiedIUR.Fixtures do
           name: :terms,
           value: true,
           label_text: "Accept terms"
-        ), id: "terms-field", label: "Terms"),
+        ),
+        id: "terms-field",
+        label: "Terms"
+      ),
       Forms.field(
         Input.radio_group(
           [
             [id: :free, value: :free, label: "Free"],
             [id: :pro, value: :pro, label: "Pro", selected?: true]
-          ], id: "plan-radio", name: :plan), id: "plan-field", label: "Plan"),
+          ],
+          id: "plan-radio",
+          name: :plan
+        ),
+        id: "plan-field",
+        label: "Plan"
+      ),
       Forms.field(
         Input.select([[value: "en", label: "English"], [value: "fr", label: "French"]],
           id: "locale-select",
           name: :locale,
           value: "en"
-        ), id: "locale-field", label: "Locale"),
+        ),
+        id: "locale-field",
+        label: "Locale"
+      ),
       Forms.field(
         Input.pick_list(
           [[value: :specs, label: "Specs", selected?: true], [value: :tests, label: "Tests"]],
           id: "artifact-picklist",
           name: :artifacts
-        ), id: "artifacts-field", label: "Artifacts"),
+        ),
+        id: "artifacts-field",
+        label: "Artifacts"
+      ),
       Forms.field(Input.slider(id: "volume-slider", name: :volume, value: 6),
         id: "volume-field",
         label: "Volume"
@@ -553,4 +593,23 @@ defmodule UnifiedIUR.Fixtures do
       theme: :workspace
     )
   end
+
+  defp attachment_family_report(fixtures, predicate) do
+    covered_fixture_ids =
+      fixtures
+      |> Enum.filter(fn fixture ->
+        fixture.element
+        |> Interoperability.walk()
+        |> Enum.any?(predicate)
+      end)
+      |> Enum.map(& &1.id)
+
+    %{
+      covered_fixture_ids: covered_fixture_ids,
+      covered?: covered_fixture_ids != []
+    }
+  end
+
+  defp theme_token_refs?(%{token_refs: refs}) when is_list(refs), do: refs != []
+  defp theme_token_refs?(_theme), do: false
 end
