@@ -24,7 +24,9 @@ defmodule LiveUi.Info do
       family: metadata.family,
       name: metadata.name,
       assigns: metadata.assigns,
-      slots: metadata.slots
+      slots: metadata.slots,
+      style_hooks: metadata.style_hooks,
+      events: metadata.events
     }
   end
 
@@ -40,6 +42,15 @@ defmodule LiveUi.Info do
       event_routes: definition.event_routes,
       bridge_hooks: definition.bridge_hooks,
       metadata: definition.metadata
+    }
+  end
+
+  @spec renderer_summary() :: map()
+  def renderer_summary do
+    %{
+      accepts: LiveUi.Renderer.accepts(),
+      supported_kinds: LiveUi.Renderer.supported_kinds(),
+      responsibilities: LiveUi.Renderer.responsibilities()
     }
   end
 end

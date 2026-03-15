@@ -3,7 +3,8 @@ defmodule LiveUi.Runtime do
   Package-facing entrypoint for the server-authoritative LiveView runtime.
   """
 
-  alias LiveUi.Runtime.{BrowserBridge, ScreenComponent, State}
+  alias LiveUi.Runtime.{BrowserBridge, CanonicalScreen, ScreenComponent, State}
+  alias UnifiedIUR.Element
 
   @type capability ::
           :native_mount
@@ -21,6 +22,17 @@ defmodule LiveUi.Runtime do
     State.mount(screen, opts)
   end
 
+  @spec mount_iur(Element.t(), keyword()) :: {:ok, State.t()} | {:error, LiveUi.Runtime.Error.t()}
+  def mount_iur(%Element{} = element, opts \\ []) do
+    canonical_assigns =
+      opts
+      |> Keyword.get(:assigns, %{})
+      |> Map.put(:iur, element)
+
+    CanonicalScreen
+    |> State.mount(Keyword.merge(opts, assigns: canonical_assigns, mode: :canonical))
+  end
+
   @spec handle_event(State.t(), String.t(), map()) ::
           {:ok, State.t()} | {:error, LiveUi.Runtime.Error.t()}
   def handle_event(runtime_state, event, payload) do
@@ -29,7 +41,7 @@ defmodule LiveUi.Runtime do
 
   @spec modules() :: [module()]
   def modules do
-    [State, ScreenComponent, BrowserBridge]
+    [State, ScreenComponent, BrowserBridge, CanonicalScreen]
   end
 
   @spec assumptions() :: map()
@@ -47,7 +59,7 @@ defmodule LiveUi.Runtime do
       mount: :ready,
       event_routing: :ready,
       live_component_host: :ready,
-      canonical_renderer: :pending
+      canonical_renderer: :baseline_ready
     }
   end
 

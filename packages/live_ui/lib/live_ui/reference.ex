@@ -21,7 +21,13 @@ defmodule LiveUi.Reference do
   @spec responsibilities() :: map()
   def responsibilities do
     %{
-      direct_native: [:native_widgets, :liveview_runtime, :local_event_handling],
+      direct_native: [
+        :native_widgets,
+        :native_forms,
+        :native_navigation,
+        :liveview_runtime,
+        :local_event_handling
+      ],
       canonical_renderer: LiveUi.Renderer.responsibilities()
     }
   end

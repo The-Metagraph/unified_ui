@@ -110,7 +110,7 @@ defmodule LiveUi.Phase1IntegrationTest do
              metadata: %{server_authoritative?: true}
            } = LiveUi.Info.screen_summary(MinimalScreen)
 
-    assert %{validation_state: %{canonical_renderer: :pending, mount: :ready}} =
+    assert %{validation_state: %{canonical_renderer: :baseline_ready, mount: :ready}} =
              LiveUi.Info.package_summary()
   end
 end

@@ -16,7 +16,15 @@ defmodule LiveUi.Widgets.ScreenShell do
   @impl true
   def render(assigns) do
     ~H"""
-    <main id={@id} data-live-ui-widget="screen-shell" class={@class} {@rest}>
+    <main
+      id={@id}
+      data-live-ui-widget="screen-shell"
+      data-live-ui-tone={@tone}
+      data-live-ui-variant={@variant}
+      data-live-ui-state={@state}
+      class={@class}
+      {@rest}
+    >
       <header>
         <h1><%= @title %></h1>
       </header>
