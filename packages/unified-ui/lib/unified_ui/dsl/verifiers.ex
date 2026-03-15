@@ -4,12 +4,13 @@ defmodule UnifiedUi.Dsl.Verifiers do
   """
 
   alias UnifiedUi.Dsl.Verifiers.{
+    ValidateCompositionPlacement,
     ValidateAuthoringInvariants,
     ValidateRequiredSections
   }
 
   @spec all() :: [module()]
   def all do
-    [ValidateRequiredSections, ValidateAuthoringInvariants]
+    [ValidateRequiredSections, ValidateAuthoringInvariants, ValidateCompositionPlacement]
   end
 end
