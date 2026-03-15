@@ -3,6 +3,8 @@ defmodule UnifiedExamples.Shared do
   Package-facing entrypoint for the shared example-suite support library.
   """
 
+  alias UnifiedExamples.Shared.Catalog
+
   @type dependency_app :: :unified_ui | :unified_iur | :live_ui
 
   @spec dependency_apps() :: [dependency_app()]
@@ -32,6 +34,21 @@ defmodule UnifiedExamples.Shared do
       |> File.dir?()
     end)
     |> Enum.sort()
+  end
+
+  @spec catalog_entries() :: [Catalog.entry()]
+  def catalog_entries do
+    Catalog.entries()
+  end
+
+  @spec catalog_directories() :: [String.t()]
+  def catalog_directories do
+    Catalog.directories()
+  end
+
+  @spec catalog_by_family() :: %{optional(Catalog.family()) => [Catalog.entry()]}
+  def catalog_by_family do
+    Catalog.by_family()
   end
 
   @spec local_package_paths() :: map()

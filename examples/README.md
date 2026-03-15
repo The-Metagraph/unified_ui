@@ -7,8 +7,18 @@ Current layout:
 
 - `shared/`: the shared support library that owns the common dependency wiring,
   DSL template, and suite-wide theme/style defaults
-- `text/`, `button/`, `text_input/`: the first widget-focused app directories
-  that will be populated during Phase 1
+- one standalone app directory per implemented widget-focused example
+
+Currently implemented apps:
+
+- Foundational content and layout:
+  `text/`, `button/`, `label/`, `icon/`, `image/`, `link/`, `separator/`,
+  `spacer/`, `content/`, `box/`
+- Forms and input scaffolding:
+  `form_builder/`, `field_group/`, `field/`
+- Input controls:
+  `text_input/`, `numeric_input/`, `checkbox/`, `radio_group/`, `select/`,
+  `pick_list/`, `date_input/`, `time_input/`, `file_input/`, `toggle/`
 
 Directory convention:
 
@@ -16,6 +26,13 @@ Directory convention:
 - every example app is a standalone Mix project
 - every example app depends on `examples/shared/` plus the local package paths
   for `unified_ui`, `unified_iur`, and `live_ui`
+
+Shared review surfaces:
+
+- `examples/shared` exposes the implemented catalog and family grouping for the
+  current example suite
+- the shared catalog is expected to stay aligned with the implemented app
+  directories as the suite grows
 
 Authoritative suite contract:
 

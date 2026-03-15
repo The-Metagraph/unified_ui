@@ -56,7 +56,19 @@ defmodule UnifiedUi.FormsNavigationTest do
   end
 
   test "registers input, form, and navigation kinds for package inspection" do
-    assert UnifiedUi.Widgets.input_kinds() == [:text_input, :toggle, :select]
+    assert UnifiedUi.Widgets.input_kinds() == [
+             :text_input,
+             :numeric_input,
+             :toggle,
+             :checkbox,
+             :radio_group,
+             :select,
+             :pick_list,
+             :date_input,
+             :time_input,
+             :file_input
+           ]
+
     assert UnifiedUi.Navigation.kinds() == [:menu, :tabs, :command_palette]
     assert UnifiedUi.Forms.kinds() == [:form_builder, :field_group, :field]
   end
