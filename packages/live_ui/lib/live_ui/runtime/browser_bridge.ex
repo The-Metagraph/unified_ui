@@ -4,12 +4,36 @@ defmodule LiveUi.Runtime.BrowserBridge do
   """
 
   @type hook :: atom()
+  @supported_hooks [
+    :resize_observer,
+    :viewport_measurement,
+    :scroll_tracking,
+    :canvas_pointer,
+    :split_pane_drag
+  ]
+
+  @spec supported_hooks() :: [hook()]
+  def supported_hooks do
+    @supported_hooks
+  end
 
   @spec normalize_hooks([hook()]) :: [hook()]
   def normalize_hooks(hooks) when is_list(hooks) do
-    Enum.uniq(hooks)
+    hooks
+    |> Enum.uniq()
+    |> Enum.filter(&supported?/1)
   end
 
   @spec authoritative?() :: boolean()
   def authoritative?, do: false
+
+  @spec display_hooks() :: [hook()]
+  def display_hooks do
+    LiveUi.Display.browser_bridge_hooks()
+  end
+
+  @spec supported?(hook()) :: boolean()
+  def supported?(hook) when is_atom(hook) do
+    hook in @supported_hooks
+  end
 end

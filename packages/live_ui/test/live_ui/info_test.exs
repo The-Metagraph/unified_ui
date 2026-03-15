@@ -56,7 +56,13 @@ defmodule LiveUi.InfoTest do
   end
 
   test "package summary exposes validation state" do
-    assert %{validation_state: %{mount: :ready, canonical_renderer: :baseline_ready}} =
+    assert %{
+             validation_state: %{
+               mount: :ready,
+               canonical_renderer: :advanced_ready,
+               advanced_diagnostics: :ready
+             }
+           } =
              LiveUi.Info.package_summary()
   end
 end
