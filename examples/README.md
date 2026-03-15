@@ -21,6 +21,8 @@ Currently implemented apps:
   `pick_list/`, `date_input/`, `time_input/`, `file_input/`, `toggle/`
 - Layout and navigation:
   `row/`, `column/`, `grid/`, `menu/`, `tabs/`, `command_palette/`
+- Display systems:
+  `viewport/`, `scroll_bar/`, `split_pane/`, `canvas/`
 - Baseline data views:
   `list/`, `table/`, `tree_view/`, `markdown_viewer/`, `log_viewer/`
 - Feedback and charts:

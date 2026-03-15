@@ -49,6 +49,7 @@ defmodule UnifiedExamples.SharedTest do
                  "spacer"
                ],
                data: ["list", "table", "tree_view", "markdown_viewer", "log_viewer"],
+               display: ["viewport", "scroll_bar", "split_pane", "canvas"],
                feedback: [
                  "status",
                  "progress",

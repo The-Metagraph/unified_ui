@@ -4,7 +4,17 @@ defmodule UnifiedExamples.Shared.Catalog do
   """
 
   @type shell_kind :: :box | :form_builder
-  @type family :: :content | :layout | :forms | :input | :navigation | :data | :feedback
+  @type family ::
+          :content
+          | :layout
+          | :display
+          | :forms
+          | :input
+          | :navigation
+          | :data
+          | :feedback
+          | :overlay
+          | :operational
 
   @type entry :: %{
           directory: String.t(),
@@ -95,6 +105,22 @@ defmodule UnifiedExamples.Shared.Catalog do
     %{directory: "row", widget: :row, family: :layout, phase: 3, shell_kind: :box},
     %{directory: "column", widget: :column, family: :layout, phase: 3, shell_kind: :box},
     %{directory: "grid", widget: :grid, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "viewport", widget: :viewport, family: :display, phase: 4, shell_kind: :box},
+    %{
+      directory: "scroll_bar",
+      widget: :scroll_bar,
+      family: :display,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "split_pane",
+      widget: :split_pane,
+      family: :display,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{directory: "canvas", widget: :canvas, family: :display, phase: 4, shell_kind: :box},
     %{directory: "menu", widget: :menu, family: :navigation, phase: 3, shell_kind: :box},
     %{directory: "tabs", widget: :tabs, family: :navigation, phase: 3, shell_kind: :box},
     %{

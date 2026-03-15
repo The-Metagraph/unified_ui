@@ -145,4 +145,43 @@ defmodule UnifiedExamples.Shared.Fixtures do
       %{x: "12:00", y: 24}
     ]
   end
+
+  @spec viewport_document_lines() :: [String.t()]
+  def viewport_document_lines do
+    [
+      "Incident INC-101 escalated to the response lead",
+      "Rollback approval is pending security review",
+      "Queue depth stabilized after replay completion",
+      "Status page update scheduled for the next checkpoint"
+    ]
+  end
+
+  @spec scroll_bar_snapshot() :: map()
+  def scroll_bar_snapshot do
+    %{
+      position: 18,
+      viewport_size: 16,
+      content_size: 120,
+      orientation: :vertical
+    }
+  end
+
+  @spec split_pane_snapshot() :: map()
+  def split_pane_snapshot do
+    %{
+      ratio: 0.42,
+      orientation: :horizontal,
+      primary_heading: "Active incidents",
+      secondary_heading: "Responder notes"
+    }
+  end
+
+  @spec canvas_operations() :: [map()]
+  def canvas_operations do
+    [
+      %{kind: :cell, position: {1, 1}, text: "A"},
+      %{kind: :fragment, position: {4, 2}, text: "Alert"},
+      %{kind: :cell, position: {14, 5}, text: "R"}
+    ]
+  end
 end

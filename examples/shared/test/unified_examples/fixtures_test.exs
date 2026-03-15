@@ -73,5 +73,32 @@ defmodule UnifiedExamples.FixturesTest do
              %{x: "11:00", y: 15},
              %{x: "12:00", y: 24}
            ]
+
+    assert Fixtures.viewport_document_lines() == [
+             "Incident INC-101 escalated to the response lead",
+             "Rollback approval is pending security review",
+             "Queue depth stabilized after replay completion",
+             "Status page update scheduled for the next checkpoint"
+           ]
+
+    assert Fixtures.scroll_bar_snapshot() == %{
+             position: 18,
+             viewport_size: 16,
+             content_size: 120,
+             orientation: :vertical
+           }
+
+    assert Fixtures.split_pane_snapshot() == %{
+             ratio: 0.42,
+             orientation: :horizontal,
+             primary_heading: "Active incidents",
+             secondary_heading: "Responder notes"
+           }
+
+    assert Fixtures.canvas_operations() == [
+             %{kind: :cell, position: {1, 1}, text: "A"},
+             %{kind: :fragment, position: {4, 2}, text: "Alert"},
+             %{kind: :cell, position: {14, 5}, text: "R"}
+           ]
   end
 end
