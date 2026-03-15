@@ -9,6 +9,7 @@ defmodule LiveUi.Widgets.TextInput do
   attr(:name, :string, required: true)
   attr(:value, :string, default: nil)
   attr(:placeholder, :string, default: nil)
+  attr(:input_type, :string, default: "text")
   attr(:multiline, :boolean, default: false)
   attr(:disabled, :boolean, default: false)
 
@@ -35,7 +36,7 @@ defmodule LiveUi.Widgets.TextInput do
     ~H"""
     <input
       id={@id}
-      type="text"
+      type={@input_type}
       name={@name}
       value={@value}
       placeholder={@placeholder}

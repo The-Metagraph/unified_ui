@@ -3,7 +3,18 @@ defmodule LiveUi do
   Package entrypoint for the `live_ui` runtime library.
   """
 
-  alias LiveUi.{Forms, Info, Reference, Renderer, Runtime, Screen, Tooling, Transport, Widgets}
+  alias LiveUi.{
+    Forms,
+    Info,
+    Layout,
+    Reference,
+    Renderer,
+    Runtime,
+    Screen,
+    Tooling,
+    Transport,
+    Widgets
+  }
 
   @type package_area :: :widgets | :runtime | :renderer | :transport | :tooling
 
@@ -17,6 +28,9 @@ defmodule LiveUi do
 
   @spec forms() :: module()
   def forms, do: Forms
+
+  @spec layout() :: module()
+  def layout, do: Layout
 
   @spec screen() :: module()
   def screen, do: Screen

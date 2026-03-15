@@ -44,4 +44,13 @@ defmodule LiveUi.Info do
       metadata: definition.metadata
     }
   end
+
+  @spec renderer_summary() :: map()
+  def renderer_summary do
+    %{
+      accepts: LiveUi.Renderer.accepts(),
+      supported_kinds: LiveUi.Renderer.supported_kinds(),
+      responsibilities: LiveUi.Renderer.responsibilities()
+    }
+  end
 end
