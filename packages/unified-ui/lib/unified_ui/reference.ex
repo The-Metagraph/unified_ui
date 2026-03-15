@@ -5,6 +5,7 @@ defmodule UnifiedUi.Reference do
 
   alias UnifiedUi.Dsl.{Entities, Identity, Placement, SectionRegistry}
   alias UnifiedUi.Examples
+  alias UnifiedUi.Theme
 
   @spec supported_sections() :: [atom()]
   def supported_sections do
@@ -63,6 +64,13 @@ defmodule UnifiedUi.Reference do
   @spec example_catalog() :: [map()]
   def example_catalog do
     Examples.catalog()
+  end
+
+  @spec theme_catalog(module()) :: [map()]
+  def theme_catalog(module) when is_atom(module) do
+    module
+    |> Theme.themes()
+    |> Enum.map(&Theme.summary/1)
   end
 
   defp normalize_description(description) do

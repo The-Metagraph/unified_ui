@@ -3,6 +3,8 @@ defmodule UnifiedUi.Dsl.Sections.Themes do
   Baseline authored theming section for `UnifiedUi` modules.
   """
 
+  alias UnifiedUi.Dsl.Entities.Theme
+
   @section %Spark.Dsl.Section{
     name: :themes,
     describe: """
@@ -25,7 +27,8 @@ defmodule UnifiedUi.Dsl.Sections.Themes do
         required: false,
         doc: "Optional summary of the theme intent for the authored module."
       ]
-    ]
+    ],
+    entities: Theme.entities()
   }
 
   @spec section() :: Spark.Dsl.Section.t()

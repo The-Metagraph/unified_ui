@@ -66,6 +66,12 @@ defmodule UnifiedUi.InfoTest do
                default_target: :session,
                mode: :canonical
              },
+             theme_catalog: %{
+               default_theme: :workspace,
+               inherit?: false,
+               summary: nil,
+               themes: []
+             },
              validation_state: :phase_1_valid
            }
   end
