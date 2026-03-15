@@ -28,6 +28,12 @@ defmodule UnifiedExamples.SharedTest do
     assert Shared.app_directories() == Catalog.directories()
   end
 
+  test "exposes the advanced review sweep directories separately from the full catalog" do
+    assert Shared.advanced_catalog_directories() == Catalog.advanced_directories()
+    assert Shared.advanced_app_directories() == Catalog.advanced_directories()
+    assert Shared.missing_advanced_directories() == []
+  end
+
   test "exposes the implemented example catalog for review tooling" do
     assert Shared.catalog_directories() == Catalog.directories()
 

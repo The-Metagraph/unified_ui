@@ -247,6 +247,23 @@ defmodule UnifiedExamples.Shared.Catalog do
     Enum.group_by(@entries, & &1.family)
   end
 
+  @spec advanced_families() :: [family()]
+  def advanced_families do
+    [:display, :overlay, :operational]
+  end
+
+  @spec advanced_entries() :: [entry()]
+  def advanced_entries do
+    Enum.filter(@entries, &(&1.family in advanced_families()))
+  end
+
+  @spec advanced_directories() :: [String.t()]
+  def advanced_directories do
+    advanced_entries()
+    |> Enum.map(& &1.directory)
+    |> Enum.sort()
+  end
+
   @spec entry!(String.t() | atom()) :: entry()
   def entry!(directory) do
     directory = normalize_directory(directory)
