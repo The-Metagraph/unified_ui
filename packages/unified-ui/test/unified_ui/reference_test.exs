@@ -1,0 +1,63 @@
+defmodule UnifiedUi.ReferenceTest do
+  use ExUnit.Case, async: true
+
+  test "reports baseline DSL sections and extension points" do
+    assert UnifiedUi.Reference.supported_sections() == [
+             :identity,
+             :composition,
+             :themes,
+             :signals
+           ]
+
+    assert UnifiedUi.Reference.dsl_sections().identity == %{
+             fields: [:id, :title, :description, :authored_ref, :annotations, :tags],
+             purpose:
+               "Declare the authored module identity, metadata, and traceability baseline.",
+             top_level?: false
+           }
+
+    assert UnifiedUi.Reference.extension_points() == %{
+             identity: [:metadata_fields, :traceability_fields],
+             composition: [:widget_entities, :layout_entities, :layer_entities],
+             themes: [:theme_entities, :style_entities, :token_entities],
+             signals: [:signal_entities, :binding_entities, :payload_entities]
+           }
+  end
+
+  test "reports construct families and baseline identity and placement rules" do
+    assert UnifiedUi.Reference.construct_families().widgets == [
+             :foundational_visual,
+             :input,
+             :navigation,
+             :feedback,
+             :data,
+             :operational
+           ]
+
+    assert UnifiedUi.Reference.construct_families().signals == [
+             :interaction,
+             :binding,
+             :payload_mapping,
+             :target_intent
+           ]
+
+    assert UnifiedUi.Reference.identity_rules() == %{
+             required_sections: [:identity, :composition],
+             reserved_ids: [:identity, :composition, :themes, :signals, :root],
+             traceability_fields: [:authored_ref, :annotations, :tags],
+             identifier_fields: %{
+               identity: :id,
+               composition: :root,
+               themes: :default_theme,
+               signals: :namespace
+             }
+           }
+
+    assert UnifiedUi.Reference.placement_rules().boundaries.composition == [
+             :root,
+             :mode,
+             :summary,
+             :default_slot
+           ]
+  end
+end
