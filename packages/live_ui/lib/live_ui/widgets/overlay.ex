@@ -4,6 +4,7 @@ defmodule LiveUi.Widgets.Overlay do
   """
 
   @modules [
+    LiveUi.Widgets.OverlaySurface,
     LiveUi.Widgets.Dialog,
     LiveUi.Widgets.AlertDialog,
     LiveUi.Widgets.ContextMenu,

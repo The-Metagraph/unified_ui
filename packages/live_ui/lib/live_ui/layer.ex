@@ -10,7 +10,7 @@ defmodule LiveUi.Layer do
 
   @spec overlay_kinds() :: [atom()]
   def overlay_kinds do
-    [:dialog, :alert_dialog, :context_menu, :toast]
+    [:overlay, :dialog, :alert_dialog, :context_menu, :toast]
   end
 
   @spec visibility_states() :: [atom()]
