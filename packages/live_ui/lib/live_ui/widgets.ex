@@ -23,7 +23,9 @@ defmodule LiveUi.Widgets do
 
   @spec modules() :: [widget_module()]
   def modules do
-    foundational_modules() ++ input_modules() ++ navigation_modules() ++ advanced_modules()
+    foundational_modules() ++
+      input_modules() ++
+      navigation_modules() ++ advanced_modules() ++ overlay_modules() ++ display_modules()
   end
 
   @spec metadata() :: [LiveUi.Component.Metadata.t()]
@@ -49,6 +51,16 @@ defmodule LiveUi.Widgets do
   @spec advanced_modules() :: [widget_module()]
   def advanced_modules do
     LiveUi.Widgets.Advanced.modules()
+  end
+
+  @spec overlay_modules() :: [widget_module()]
+  def overlay_modules do
+    LiveUi.Widgets.Overlay.modules()
+  end
+
+  @spec display_modules() :: [widget_module()]
+  def display_modules do
+    LiveUi.Widgets.Display.modules()
   end
 
   @spec namespace() :: module()

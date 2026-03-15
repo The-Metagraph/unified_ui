@@ -4,16 +4,19 @@ defmodule LiveUi do
   """
 
   alias LiveUi.{
+    Display,
     Examples,
     Forms,
     Info,
     Layout,
+    Layer,
     Reference,
     Renderer,
     Runtime,
     Screen,
     Tooling,
     Transport,
+    Viewport,
     Widgets
   }
 
@@ -35,6 +38,15 @@ defmodule LiveUi do
 
   @spec layout() :: module()
   def layout, do: Layout
+
+  @spec display() :: module()
+  def display, do: Display
+
+  @spec layer() :: module()
+  def layer, do: Layer
+
+  @spec viewport() :: module()
+  def viewport, do: Viewport
 
   @spec screen() :: module()
   def screen, do: Screen
