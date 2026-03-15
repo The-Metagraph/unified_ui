@@ -533,20 +533,26 @@ defmodule UnifiedUi.Compiler.Pipeline do
 
         :menu ->
           Widgets.Navigation.menu(
-            normalize_keyword_items(node.options),
+            normalize_keyword_items(node.items || node.options),
             common_opts(node, attachments, [:active_item, :orientation])
           )
 
         :tabs ->
           Widgets.Navigation.tabs(
-            normalize_keyword_items(node.options),
+            normalize_keyword_items(node.items || node.options),
             common_opts(node, attachments, [:active_item, :orientation])
           )
 
         :command_palette ->
           Widgets.Advanced.command_palette(
-            normalize_keyword_items(node.options),
+            normalize_keyword_items(node.items || node.options),
             common_opts(node, attachments, [:label])
+          )
+
+        :list ->
+          Widgets.Data.list(
+            normalize_list(node.items),
+            common_opts(node, attachments, [:ordered?, :selection_mode, :empty_state])
           )
 
         :table ->

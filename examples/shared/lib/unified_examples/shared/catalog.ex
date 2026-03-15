@@ -4,7 +4,7 @@ defmodule UnifiedExamples.Shared.Catalog do
   """
 
   @type shell_kind :: :box | :form_builder
-  @type family :: :content | :layout | :forms | :input
+  @type family :: :content | :layout | :forms | :input | :navigation | :data | :feedback
 
   @type entry :: %{
           directory: String.t(),
@@ -94,7 +94,17 @@ defmodule UnifiedExamples.Shared.Catalog do
     %{directory: "toggle", widget: :toggle, family: :input, phase: 2, shell_kind: :form_builder},
     %{directory: "row", widget: :row, family: :layout, phase: 3, shell_kind: :box},
     %{directory: "column", widget: :column, family: :layout, phase: 3, shell_kind: :box},
-    %{directory: "grid", widget: :grid, family: :layout, phase: 3, shell_kind: :box}
+    %{directory: "grid", widget: :grid, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "menu", widget: :menu, family: :navigation, phase: 3, shell_kind: :box},
+    %{directory: "tabs", widget: :tabs, family: :navigation, phase: 3, shell_kind: :box},
+    %{
+      directory: "command_palette",
+      widget: :command_palette,
+      family: :navigation,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{directory: "list", widget: :list, family: :data, phase: 3, shell_kind: :box}
   ]
 
   @spec entries() :: [entry()]

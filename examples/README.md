@@ -19,6 +19,10 @@ Currently implemented apps:
 - Input controls:
   `text_input/`, `numeric_input/`, `checkbox/`, `radio_group/`, `select/`,
   `pick_list/`, `date_input/`, `time_input/`, `file_input/`, `toggle/`
+- Layout and navigation:
+  `row/`, `column/`, `grid/`, `menu/`, `tabs/`, `command_palette/`
+- Baseline data views:
+  `list/`
 
 Directory convention:
 

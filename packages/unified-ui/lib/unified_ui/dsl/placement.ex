@@ -88,6 +88,7 @@ defmodule UnifiedUi.Dsl.Placement do
   ]
 
   @advanced_leaf_kinds [
+    :list,
     :table,
     :tree_view,
     :markdown_viewer,
