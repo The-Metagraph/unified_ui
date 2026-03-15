@@ -33,6 +33,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
           authored_themes: [UnifiedUi.Theme.t()],
           compiled_themes: [Theme.t()],
           compiled_theme_by_id: %{optional(atom()) => Theme.t()},
+          theme_style_by_id: %{optional(atom()) => Style.t()},
           binding_by_id: %{optional(atom()) => UnifiedIUR.Binding.t()},
           interaction_by_id: %{optional(atom()) => UnifiedIUR.Interaction.t()},
           authored_ids: [atom()]
@@ -41,8 +42,9 @@ defmodule UnifiedUi.Compiler.Pipeline do
   @spec run(module(), keyword() | map()) :: Result.t()
   def run(module, _opts \\ []) when is_atom(module) do
     context = build_context(module)
-    compiled_themes = compile_themes(context.authored_themes)
-    compiled_theme_by_id = Map.new(compiled_themes, &{&1.id, &1})
+    theme_bundle = compile_themes(context.authored_themes)
+    compiled_themes = theme_bundle.themes
+    compiled_theme_by_id = theme_bundle.by_id
     compiled_bindings = compile_bindings(Signals.bindings(module))
     binding_by_id = Map.new(compiled_bindings, &{&1.name, &1})
     compiled_interactions = compile_interactions(Signals.interactions(module), binding_by_id)
@@ -52,6 +54,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
       context
       |> Map.put(:compiled_themes, compiled_themes)
       |> Map.put(:compiled_theme_by_id, compiled_theme_by_id)
+      |> Map.put(:theme_style_by_id, theme_bundle.style_by_id)
       |> Map.put(:binding_by_id, binding_by_id)
       |> Map.put(:interaction_by_id, interaction_by_id)
 
@@ -109,6 +112,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
       authored_themes: authored_themes,
       compiled_themes: [],
       compiled_theme_by_id: %{},
+      theme_style_by_id: %{},
       binding_by_id: %{},
       interaction_by_id: %{},
       authored_ids: top_level_nodes |> flatten_nodes() |> Enum.map(& &1.id) |> Enum.sort()
@@ -158,53 +162,114 @@ defmodule UnifiedUi.Compiler.Pipeline do
   end
 
   defp compile_themes(themes) do
-    Enum.map(themes, &compile_theme/1)
-  end
+    authored_by_id = Map.new(themes, &{&1.id, &1})
 
-  defp compile_theme(theme) do
-    components =
-      theme
-      |> UnifiedUi.Theme.component_styles()
-      |> Enum.reduce(%{}, fn component_style, acc ->
-        style = lower_style(component_style.style)
+    {compiled_by_id, style_by_id} =
+      Enum.reduce(themes, {%{}, %{}}, fn theme, {compiled_by_id, style_by_id} ->
+        {compiled_theme, compiled_by_id, style_by_id} =
+          compile_theme(theme.id, authored_by_id, compiled_by_id, style_by_id)
 
-        Map.update(
-          acc,
-          component_style.component,
-          component_bucket(component_style, style),
-          fn bucket ->
-            Map.merge(bucket, component_bucket(component_style, style))
-          end
-        )
+        {Map.put(compiled_by_id, theme.id, compiled_theme), style_by_id}
       end)
 
-    Theme.new(%{
-      id: theme.id,
-      palette:
-        theme
-        |> UnifiedUi.Theme.palette_colors()
-        |> Map.new(&{&1.id, &1.color}),
-      roles:
-        theme
-        |> UnifiedUi.Theme.semantic_roles()
-        |> Map.new(fn role ->
-          {role.id, lower_theme_role_value(role.value)}
-        end),
-      tokens:
-        theme
-        |> UnifiedUi.Theme.tokens()
-        |> Map.new(fn token ->
-          {[token.id], lower_theme_token_value(token.value)}
-        end),
-      components: components,
-      extra: %{
-        authored_ref: theme.authored_ref,
-        description: theme.description,
-        summary: theme.summary,
-        extends: theme.extends,
-        inherit?: theme.inherit?
-      }
-    })
+    %{
+      themes: Enum.map(themes, &Map.fetch!(compiled_by_id, &1.id)),
+      by_id: compiled_by_id,
+      style_by_id: style_by_id
+    }
+  end
+
+  defp compile_theme(theme_id, authored_by_id, compiled_by_id, style_by_id) do
+    case Map.fetch(compiled_by_id, theme_id) do
+      {:ok, compiled_theme} ->
+        {compiled_theme, compiled_by_id, style_by_id}
+
+      :error ->
+        theme = Map.fetch!(authored_by_id, theme_id)
+
+        {base_theme, compiled_by_id, style_by_id} =
+          case theme.extends do
+            nil ->
+              {Theme.new(%{}), compiled_by_id, style_by_id}
+
+            extends_id ->
+              compile_theme(extends_id, authored_by_id, compiled_by_id, style_by_id)
+          end
+
+        local_palette =
+          theme
+          |> UnifiedUi.Theme.palette_colors()
+          |> Map.new(&{&1.id, &1.color})
+
+        palette = Map.merge(base_theme.palette, local_palette)
+        provisional_theme = %{base_theme | palette: palette}
+
+        local_roles =
+          theme
+          |> UnifiedUi.Theme.semantic_roles()
+          |> Map.new(fn role ->
+            {role.id, resolve_theme_role_value(role.value, provisional_theme)}
+          end)
+
+        roles = Map.merge(base_theme.roles, local_roles)
+        role_theme = %{provisional_theme | roles: roles}
+
+        {tokens, token_theme} =
+          Enum.reduce(UnifiedUi.Theme.tokens(theme), {base_theme.tokens, role_theme}, fn token,
+                                                                                         {tokens,
+                                                                                          current_theme} ->
+            resolved = resolve_theme_token_value(token.value, current_theme)
+
+            tokens =
+              Map.put(
+                tokens,
+                token_path_key([token.id]),
+                UnifiedIUR.Token.define([token.id], resolved)
+              )
+
+            {tokens, %{current_theme | tokens: tokens}}
+          end)
+
+        {local_components, local_style_by_id} =
+          Enum.reduce(
+            UnifiedUi.Theme.component_styles(theme),
+            {%{}, style_by_id},
+            fn component_style, {components, style_by_id} ->
+              style = lower_style(component_style.style, token_theme)
+              components = merge_component_buckets(components, component_style, style)
+              style_by_id = Map.put(style_by_id, component_style.id, style)
+              {components, style_by_id}
+            end
+          )
+
+        compiled_theme =
+          Theme.new(%{
+            id: theme.id,
+            palette: palette,
+            roles: roles,
+            tokens: tokens,
+            defaults: base_theme.defaults,
+            components: merge_component_maps(base_theme.components, local_components),
+            extra: %{
+              authored_ref: theme.authored_ref,
+              description: theme.description,
+              summary: theme.summary,
+              extends: theme.extends,
+              inherit?: theme.inherit?
+            }
+          })
+
+        {compiled_theme, Map.put(compiled_by_id, theme.id, compiled_theme), local_style_by_id}
+    end
+  end
+
+  defp merge_component_buckets(components, component_style, style) do
+    Map.update(
+      components,
+      component_style.component,
+      component_bucket(component_style, style),
+      &merge_component_maps(&1, component_bucket(component_style, style))
+    )
   end
 
   defp component_bucket(component_style, style) do
@@ -220,10 +285,25 @@ defmodule UnifiedUi.Compiler.Pipeline do
     end
   end
 
-  defp lower_theme_role_value(value) do
+  defp merge_component_maps(left, right) do
+    Map.merge(left, right, fn _component, left_bucket, right_bucket ->
+      %{}
+      |> maybe_put(:default, Map.get(right_bucket, :default, Map.get(left_bucket, :default)))
+      |> maybe_put(
+        :variants,
+        Map.merge(Map.get(left_bucket, :variants, %{}), Map.get(right_bucket, :variants, %{}))
+      )
+      |> maybe_put(
+        :states,
+        Map.merge(Map.get(left_bucket, :states, %{}), Map.get(right_bucket, :states, %{}))
+      )
+    end)
+  end
+
+  defp resolve_theme_role_value(value, compiled_theme) do
     cond do
       UnifiedUi.Style.role_reference?(value) ->
-        nil
+        resolve_role_reference(value, compiled_theme)
 
       token_reference?(value) ->
         UnifiedIUR.Token.new(value)
@@ -233,9 +313,13 @@ defmodule UnifiedUi.Compiler.Pipeline do
     end
   end
 
-  defp lower_theme_token_value(%UnifiedUi.Style{} = style), do: lower_style(style)
-  defp lower_theme_token_value(style) when is_map(style) or is_list(style), do: lower_style(style)
-  defp lower_theme_token_value(value), do: value
+  defp resolve_theme_token_value(%UnifiedUi.Style{} = style, compiled_theme),
+    do: lower_style(style, compiled_theme)
+
+  defp resolve_theme_token_value(style, compiled_theme) when is_map(style) or is_list(style),
+    do: lower_style(style, compiled_theme)
+
+  defp resolve_theme_token_value(value, _compiled_theme), do: value
 
   defp compile_bindings(bindings) do
     Enum.map(bindings, &compile_binding/1)
@@ -649,9 +733,10 @@ defmodule UnifiedUi.Compiler.Pipeline do
   defp node_attachments(node, context) do
     bindings = compile_node_bindings(node, context)
     interactions = compile_node_interactions(node, context)
+    compiled_theme = compiled_theme(node, context)
 
     %{
-      style: lower_style(node.style),
+      style: resolved_node_style(node, compiled_theme, context),
       theme: compile_theme_attachment(node, context),
       bindings: if(bindings == [], do: nil, else: bindings),
       interactions: if(interactions == [], do: nil, else: interactions)
@@ -729,9 +814,38 @@ defmodule UnifiedUi.Compiler.Pipeline do
         id: theme_id,
         component: node.kind,
         variant: node.variant,
-        source_style_refs: node.style_refs
+        style_refs: node.style_refs
       }
     end
+  end
+
+  defp compiled_theme(node, context) do
+    theme_id = node.theme_ref || context.default_theme
+    Map.get(context.compiled_theme_by_id, theme_id)
+  end
+
+  defp resolved_node_style(node, compiled_theme, context) do
+    base_style =
+      case compiled_theme do
+        nil -> %Style{}
+        theme -> Theme.resolve_style(theme, node.kind, variant: node.variant)
+      end
+
+    style_ref_style =
+      node.style_refs
+      |> List.wrap()
+      |> Enum.map(&Map.get(context.theme_style_by_id, &1))
+      |> Enum.reject(&is_nil/1)
+      |> Enum.reduce(%Style{}, &Style.merge(&2, &1))
+
+    local_style = lower_style(node.style, compiled_theme)
+
+    resolved =
+      base_style
+      |> Style.merge(style_ref_style)
+      |> Style.merge(local_style)
+
+    if resolved == %Style{}, do: nil, else: resolved
   end
 
   defp common_opts(node, attachments, extra \\ []) do
@@ -781,17 +895,20 @@ defmodule UnifiedUi.Compiler.Pipeline do
     )
   end
 
-  defp lower_style(nil), do: nil
+  defp lower_style(nil, _compiled_theme), do: nil
 
-  defp lower_style(style) do
+  defp lower_style(style, compiled_theme) do
     style = UnifiedUi.Style.new(style)
+    {text_attributes, typography_extra} = lower_text_attributes(style.typography)
+
+    token_style = resolve_style_token_refs(style.token_refs, compiled_theme)
 
     lowered =
       Style.new(%{
-        foreground: lower_color(style.foreground),
-        background: lower_color(style.background),
-        border_color: lower_color(style.border_color),
-        text: style.typography,
+        foreground: resolve_color(style.foreground, compiled_theme),
+        background: resolve_color(style.background, compiled_theme),
+        border_color: resolve_color(style.border_color, compiled_theme),
+        text: text_attributes,
         spacing: style.spacing,
         sizing: style.sizing,
         alignment: style.alignment,
@@ -800,26 +917,129 @@ defmodule UnifiedUi.Compiler.Pipeline do
         emphasis: style.emphasis,
         state_variants:
           Map.new(style.state_variants, fn {key, variant} ->
-            {key, lower_style(variant)}
+            {key, lower_style(variant, compiled_theme)}
           end),
         extra:
           %{}
+          |> maybe_put(:typography, typography_extra)
           |> maybe_put(:variant, style.variant)
           |> maybe_put(:tone, style.tone)
           |> maybe_put(:component, style.component)
       })
+      |> Style.merge(token_style)
 
     if lowered == %Style{}, do: nil, else: lowered
   end
 
-  defp lower_color(nil), do: nil
+  defp resolve_color(nil, _compiled_theme), do: nil
 
-  defp lower_color(value) do
+  defp resolve_color(value, compiled_theme) do
     cond do
-      UnifiedUi.Style.role_reference?(value) -> nil
-      token_reference?(value) -> nil
-      true -> UnifiedIUR.Style.Color.new(value)
+      UnifiedUi.Style.role_reference?(value) ->
+        resolve_role_reference(value, compiled_theme)
+
+      token_reference?(value) ->
+        resolve_token_color(value, compiled_theme)
+
+      true ->
+        UnifiedIUR.Style.Color.new(value)
     end
+  end
+
+  defp resolve_style_token_refs(_token_refs, nil), do: %Style{}
+
+  defp resolve_style_token_refs(token_refs, compiled_theme) do
+    token_refs
+    |> List.wrap()
+    |> Enum.reduce(%Style{}, fn token_ref, acc ->
+      case resolve_token_style(token_ref, compiled_theme) do
+        nil -> acc
+        style -> Style.merge(acc, style)
+      end
+    end)
+  end
+
+  defp resolve_role_reference(_value, nil), do: nil
+
+  defp resolve_role_reference(value, compiled_theme) do
+    role_id = Map.get(value, :id, Map.get(value, "id"))
+
+    case Map.get(compiled_theme.roles, role_id) do
+      %{kind: :token_ref} = token_ref -> resolve_token_color(token_ref, compiled_theme)
+      %{"kind" => :token_ref} = token_ref -> resolve_token_color(token_ref, compiled_theme)
+      other -> UnifiedIUR.Style.Color.new(other)
+    end
+  end
+
+  defp resolve_token_color(_value, nil), do: nil
+
+  defp resolve_token_color(value, compiled_theme) do
+    token_ref = UnifiedIUR.Token.new(value)
+    palette_key = token_ref.path |> List.last()
+
+    cond do
+      Map.has_key?(compiled_theme.palette, palette_key) ->
+        Map.get(compiled_theme.palette, palette_key)
+
+      true ->
+        case Theme.token(compiled_theme, token_ref.path) do
+          nil -> nil
+          %Style{} -> nil
+          other -> UnifiedIUR.Style.Color.new(other)
+        end
+    end
+  end
+
+  defp resolve_token_style(_value, nil), do: nil
+
+  defp resolve_token_style(value, compiled_theme) do
+    token_ref = UnifiedIUR.Token.new(value)
+
+    case Theme.token(compiled_theme, token_ref.path) do
+      %Style{} = style -> style
+      style when is_map(style) or is_list(style) -> Style.new(style)
+      _other -> nil
+    end
+  end
+
+  defp lower_text_attributes(typography) when typography in [nil, %{}] do
+    {%{}, nil}
+  end
+
+  defp lower_text_attributes(typography) do
+    typography = Map.new(typography)
+
+    text_attributes =
+      %{}
+      |> maybe_put(:bold?, bold_weight?(Map.get(typography, :font_weight)))
+      |> maybe_put(:italic?, truthy_attr?(typography, :italic?))
+      |> maybe_put(:underline?, truthy_attr?(typography, :underline?))
+      |> maybe_put(:blink?, truthy_attr?(typography, :blink?))
+      |> maybe_put(:reverse?, truthy_attr?(typography, :reverse?))
+      |> maybe_put(:hidden?, truthy_attr?(typography, :hidden?))
+      |> maybe_put(:strikethrough?, truthy_attr?(typography, :strikethrough?))
+
+    typography_extra =
+      typography
+      |> Map.drop([
+        :font_weight,
+        :italic?,
+        :underline?,
+        :blink?,
+        :reverse?,
+        :hidden?,
+        :strikethrough?
+      ])
+      |> compact_map()
+
+    {text_attributes, if(typography_extra == %{}, do: nil, else: typography_extra)}
+  end
+
+  defp truthy_attr?(map, key), do: Map.get(map, key) == true
+
+  defp bold_weight?(value) do
+    value in [:bold, :semibold, :heavy, :black, "bold", "semibold", "heavy", "black"] or
+      (is_integer(value) and value >= 600)
   end
 
   defp compile_payload_map(values, binding_by_id) when is_map(values) do
@@ -950,6 +1170,8 @@ defmodule UnifiedUi.Compiler.Pipeline do
   defp token_reference?(%{kind: :token_ref, path: path}) when is_list(path), do: true
   defp token_reference?(%{"kind" => :token_ref, "path" => path}) when is_list(path), do: true
   defp token_reference?(_other), do: false
+
+  defp token_path_key(path), do: Enum.join(Enum.map(path, &to_string/1), ".")
 
   defp normalize_map(nil), do: %{}
   defp normalize_map(map) when is_map(map), do: Map.new(map)

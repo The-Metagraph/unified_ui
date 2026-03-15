@@ -37,7 +37,8 @@ defmodule UnifiedIUR.Forms do
         |> merge_attribute(:validation, normalize_validation(opts))
         |> Attachment.merge(opts,
           component: :form_builder,
-          local_style: normalize_style(opts),
+          tone: option(opts, :tone),
+          local_style: option(opts, :style),
           fallback_bindings: normalize_binding(opts),
           fallback_interactions: normalize_submit_interactions(opts)
         ),
@@ -63,7 +64,8 @@ defmodule UnifiedIUR.Forms do
         |> merge_attribute(:validation, normalize_validation(opts))
         |> Attachment.merge(opts,
           component: :field_group,
-          local_style: normalize_style(opts),
+          tone: option(opts, :tone),
+          local_style: option(opts, :style),
           fallback_bindings: normalize_binding(opts)
         ),
       children: children
@@ -97,7 +99,8 @@ defmodule UnifiedIUR.Forms do
         |> merge_attribute(:validation, normalize_validation(opts))
         |> Attachment.merge(opts,
           component: :field,
-          local_style: normalize_style(opts),
+          tone: option(opts, :tone),
+          local_style: option(opts, :style),
           fallback_bindings: normalize_binding(opts)
         ),
       children: children
@@ -160,13 +163,6 @@ defmodule UnifiedIUR.Forms do
     |> maybe_put(:errors, normalize_errors(option(opts, :errors)))
     |> maybe_put(:constraints, normalize_optional_map(option(opts, :constraints)))
     |> maybe_put(:status, option(opts, :status))
-  end
-
-  defp normalize_style(opts) do
-    opts
-    |> option(:style, %{})
-    |> normalize_map()
-    |> maybe_put(:tone, option(opts, :tone))
   end
 
   defp normalize_submit_interactions(opts) do

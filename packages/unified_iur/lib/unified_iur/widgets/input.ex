@@ -238,7 +238,8 @@ defmodule UnifiedIUR.Widgets.Input do
         |> merge_attribute(:state, normalize_state(opts))
         |> Attachment.merge(opts,
           component: kind,
-          local_style: normalize_style(opts),
+          tone: option(opts, :tone),
+          local_style: option(opts, :style),
           fallback_bindings: normalize_binding(opts)
         ),
       children: []
@@ -321,13 +322,6 @@ defmodule UnifiedIUR.Widgets.Input do
     |> maybe_put(:selected?, option(opts, :selected?))
     |> maybe_put(:focused?, option(opts, :focused?))
     |> maybe_put(:current?, option(opts, :current?))
-  end
-
-  defp normalize_style(opts) do
-    opts
-    |> option(:style, %{})
-    |> normalize_map()
-    |> maybe_put(:tone, option(opts, :tone))
   end
 
   defp normalize_errors(nil), do: nil

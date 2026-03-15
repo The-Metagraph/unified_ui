@@ -217,7 +217,8 @@ defmodule UnifiedIUR.Widgets.Foundational do
         |> merge_attribute(:state, normalize_state(opts))
         |> Attachment.merge(opts,
           component: kind,
-          local_style: normalize_style(opts),
+          tone: option(opts, :tone),
+          local_style: option(opts, :style),
           fallback_interactions: default_interactions(kind, opts)
         ),
       children: option(opts, :children, [])
@@ -256,13 +257,6 @@ defmodule UnifiedIUR.Widgets.Foundational do
     |> maybe_put(:pressed?, option(opts, :pressed?))
     |> maybe_put(:current?, option(opts, :current?))
     |> maybe_put(:emphasis, option(opts, :emphasis))
-  end
-
-  defp normalize_style(opts) do
-    opts
-    |> option(:style, %{})
-    |> normalize_map()
-    |> maybe_put(:tone, option(opts, :tone))
   end
 
   defp default_interactions(:button, opts) do
