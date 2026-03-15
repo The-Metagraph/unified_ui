@@ -45,7 +45,7 @@ defmodule UnifiedUi.Dsl.Node do
           placeholder: String.t() | nil,
           multiline?: boolean() | nil,
           input_mode: atom() | nil,
-          options: [keyword()],
+          options: keyword(),
           active_item: atom() | nil,
           multiple?: boolean() | nil,
           field_name: atom() | nil,

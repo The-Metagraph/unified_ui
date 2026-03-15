@@ -3,7 +3,7 @@ defmodule UnifiedUi.Dsl.Entities do
   Baseline registry of canonical authored construct families.
   """
 
-  alias UnifiedUi.Dsl.Entities.Foundational
+  alias UnifiedUi.Dsl.Entities.{Forms, Foundational, Input, Navigation}
 
   @construct_families %{
     widgets: [
@@ -33,6 +33,7 @@ defmodule UnifiedUi.Dsl.Entities do
 
   @spec composition_entities() :: [Spark.Dsl.Entity.t()]
   def composition_entities do
-    Foundational.entities()
+    Foundational.entities() ++
+      Input.entities() ++ Navigation.entities() ++ Forms.top_level_entities()
   end
 end
