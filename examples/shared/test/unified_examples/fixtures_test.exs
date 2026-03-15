@@ -100,5 +100,36 @@ defmodule UnifiedExamples.FixturesTest do
              %{kind: :fragment, position: {4, 2}, text: "Alert"},
              %{kind: :cell, position: {14, 5}, text: "R"}
            ]
+
+    assert Fixtures.dialog_snapshot() == %{
+             trigger_label: "Open settings",
+             title: "Settings",
+             copy: "Review escalation windows and routing defaults"
+           }
+
+    assert Fixtures.alert_dialog_snapshot() == %{
+             trigger_label: "Escalate incident",
+             title: "Escalate incident",
+             message: "Paging the on-call owner will create a responder page.",
+             severity: :warning
+           }
+
+    assert Fixtures.context_menu_options() == [
+             retry: "Retry sync",
+             silence: "Silence alert",
+             assign: "Assign owner"
+           ]
+
+    assert Fixtures.toast_snapshot() == %{
+             title: "Runbook synced",
+             message: "Changes propagated to every region",
+             severity: :success,
+             placement: :bottom_end
+           }
+
+    assert Fixtures.overlay_snapshot() == %{
+             base_title: "Coordinator workspace",
+             background_fill: :scrim
+           }
   end
 end

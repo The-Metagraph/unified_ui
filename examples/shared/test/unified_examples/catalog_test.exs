@@ -3,8 +3,9 @@ defmodule UnifiedExamples.CatalogTest do
 
   alias UnifiedExamples.Shared.Catalog
 
-  test "tracks the implemented phase 1 and phase 2 example apps with stable metadata" do
+  test "tracks the implemented phase 1 through phase 4 example apps with stable metadata" do
     assert Catalog.directories() == [
+             "alert_dialog",
              "bar_chart",
              "box",
              "button",
@@ -13,7 +14,9 @@ defmodule UnifiedExamples.CatalogTest do
              "column",
              "command_palette",
              "content",
+             "context_menu",
              "date_input",
+             "dialog",
              "field",
              "field_group",
              "file_input",
@@ -31,6 +34,7 @@ defmodule UnifiedExamples.CatalogTest do
              "markdown_viewer",
              "menu",
              "numeric_input",
+             "overlay",
              "pick_list",
              "progress",
              "radio_group",
@@ -47,6 +51,7 @@ defmodule UnifiedExamples.CatalogTest do
              "text",
              "text_input",
              "time_input",
+             "toast",
              "toggle",
              "tree_view",
              "viewport"
@@ -102,7 +107,12 @@ defmodule UnifiedExamples.CatalogTest do
              "viewport",
              "scroll_bar",
              "split_pane",
-             "canvas"
+             "canvas",
+             "overlay",
+             "dialog",
+             "alert_dialog",
+             "context_menu",
+             "toast"
            ]
 
     assert Catalog.entry!("numeric_input") == %{
@@ -149,6 +159,14 @@ defmodule UnifiedExamples.CatalogTest do
              directory: "viewport",
              widget: :viewport,
              family: :display,
+             phase: 4,
+             shell_kind: :box
+           }
+
+    assert Catalog.entry!("dialog") == %{
+             directory: "dialog",
+             widget: :dialog,
+             family: :overlay,
              phase: 4,
              shell_kind: :box
            }

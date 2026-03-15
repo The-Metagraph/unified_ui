@@ -121,6 +121,23 @@ defmodule UnifiedExamples.Shared.Catalog do
       shell_kind: :box
     },
     %{directory: "canvas", widget: :canvas, family: :display, phase: 4, shell_kind: :box},
+    %{directory: "overlay", widget: :overlay, family: :overlay, phase: 4, shell_kind: :box},
+    %{directory: "dialog", widget: :dialog, family: :overlay, phase: 4, shell_kind: :box},
+    %{
+      directory: "alert_dialog",
+      widget: :alert_dialog,
+      family: :overlay,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "context_menu",
+      widget: :context_menu,
+      family: :overlay,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{directory: "toast", widget: :toast, family: :overlay, phase: 4, shell_kind: :box},
     %{directory: "menu", widget: :menu, family: :navigation, phase: 3, shell_kind: :box},
     %{directory: "tabs", widget: :tabs, family: :navigation, phase: 3, shell_kind: :box},
     %{

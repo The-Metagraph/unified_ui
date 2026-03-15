@@ -9,7 +9,8 @@ defmodule UnifiedUi.Dsl.Entities.Layout do
     Feedback,
     Foundational,
     Input,
-    Navigation
+    Navigation,
+    Overlay
   }
 
   alias UnifiedUi.Dsl.EntitySchema
@@ -24,6 +25,7 @@ defmodule UnifiedUi.Dsl.Entities.Layout do
         Data.entities() ++
         Feedback.entities() ++
         Advanced.entities() ++
+        Overlay.entities() ++
         Display.entities() ++
         Canvas.entities()
 

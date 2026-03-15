@@ -73,7 +73,8 @@ defmodule UnifiedExamples.SharedTest do
                  "toggle"
                ],
                layout: ["box", "content", "row", "column", "grid"],
-               navigation: ["menu", "tabs", "command_palette"]
+               navigation: ["menu", "tabs", "command_palette"],
+               overlay: ["overlay", "dialog", "alert_dialog", "context_menu", "toast"]
              }
   end
 end

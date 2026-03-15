@@ -23,6 +23,8 @@ Currently implemented apps:
   `row/`, `column/`, `grid/`, `menu/`, `tabs/`, `command_palette/`
 - Display systems:
   `viewport/`, `scroll_bar/`, `split_pane/`, `canvas/`
+- Overlays and layered flows:
+  `overlay/`, `dialog/`, `alert_dialog/`, `context_menu/`, `toast/`
 - Baseline data views:
   `list/`, `table/`, `tree_view/`, `markdown_viewer/`, `log_viewer/`
 - Feedback and charts:

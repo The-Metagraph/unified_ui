@@ -184,4 +184,46 @@ defmodule UnifiedExamples.Shared.Fixtures do
       %{kind: :cell, position: {14, 5}, text: "R"}
     ]
   end
+
+  @spec dialog_snapshot() :: map()
+  def dialog_snapshot do
+    %{
+      trigger_label: "Open settings",
+      title: "Settings",
+      copy: "Review escalation windows and routing defaults"
+    }
+  end
+
+  @spec alert_dialog_snapshot() :: map()
+  def alert_dialog_snapshot do
+    %{
+      trigger_label: "Escalate incident",
+      title: "Escalate incident",
+      message: "Paging the on-call owner will create a responder page.",
+      severity: :warning
+    }
+  end
+
+  @spec context_menu_options() :: keyword(String.t())
+  def context_menu_options do
+    [retry: "Retry sync", silence: "Silence alert", assign: "Assign owner"]
+  end
+
+  @spec toast_snapshot() :: map()
+  def toast_snapshot do
+    %{
+      title: "Runbook synced",
+      message: "Changes propagated to every region",
+      severity: :success,
+      placement: :bottom_end
+    }
+  end
+
+  @spec overlay_snapshot() :: map()
+  def overlay_snapshot do
+    %{
+      base_title: "Coordinator workspace",
+      background_fill: :scrim
+    }
+  end
 end
