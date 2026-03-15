@@ -219,6 +219,7 @@ defmodule UnifiedIUR.Normalize do
   defp normalize_generic_value(%Style{} = style), do: Style.new(style)
   defp normalize_generic_value(%Interaction{} = interaction), do: Interaction.new(interaction)
   defp normalize_generic_value(%Binding{} = binding), do: Binding.new(binding)
+  defp normalize_generic_value(%_{} = struct), do: struct
   defp normalize_generic_value(list) when is_list(list), do: normalize_generic_list(list)
   defp normalize_generic_value(map) when is_map(map), do: normalize_generic_map(map)
   defp normalize_generic_value(value), do: value
@@ -252,11 +253,13 @@ defmodule UnifiedIUR.Normalize do
   defp compact_value(%Metadata{} = metadata), do: metadata
   defp compact_value(%Interaction{} = interaction), do: interaction
   defp compact_value(%Binding{} = binding), do: binding
+  defp compact_value(%_{} = struct), do: struct
   defp compact_value(list) when is_list(list), do: Enum.map(list, &compact_value/1)
   defp compact_value(map) when is_map(map), do: compact_map(map)
   defp compact_value(value), do: value
 
   defp empty_value?(nil), do: true
+  defp empty_value?(%_{}), do: false
   defp empty_value?(%{} = value), do: map_size(value) == 0
   defp empty_value?([]), do: true
   defp empty_value?(_value), do: false
