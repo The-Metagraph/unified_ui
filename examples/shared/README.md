@@ -12,5 +12,11 @@ It owns:
 - helper functions for compiling authored examples and mounting them through the
   canonical `live_ui` runtime path
 
+Main modules:
+
+- `UnifiedExamples.Shared`
+- `UnifiedExamples.Shared.Template`
+- `UnifiedExamples.Shared.Runtime`
+
 Standalone widget apps under `examples/<widget_name>/` should depend on this
 package through a local path dependency.
