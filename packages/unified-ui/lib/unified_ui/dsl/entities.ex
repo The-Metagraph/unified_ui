@@ -6,12 +6,14 @@ defmodule UnifiedUi.Dsl.Entities do
   alias UnifiedUi.Dsl.Entities.{
     Advanced,
     Data,
+    Display,
     Feedback,
     Forms,
     Foundational,
     Input,
     Layout,
-    Navigation
+    Navigation,
+    Overlay
   }
 
   @construct_families %{
@@ -47,6 +49,10 @@ defmodule UnifiedUi.Dsl.Entities do
       Navigation.entities() ++
       Forms.top_level_entities() ++
       Layout.entities() ++
-      Data.entities() ++ Feedback.entities() ++ Advanced.entities()
+      Data.entities() ++
+      Feedback.entities() ++
+      Advanced.entities() ++
+      Overlay.entities() ++
+      Display.entities()
   end
 end

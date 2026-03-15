@@ -329,17 +329,20 @@ defmodule UnifiedUi.Phase2IntegrationTest do
   test "phase 2 reference examples remain valid and introspectable without runtime libraries" do
     assert UnifiedUi.Examples.modules() == [
              UnifiedUi.Examples.FoundationalScreen,
-             UnifiedUi.Examples.ProfileForm
+             UnifiedUi.Examples.ProfileForm,
+             UnifiedUi.Examples.OverlayWorkspace
            ]
 
     assert Enum.map(UnifiedUi.Reference.example_catalog(), & &1.id) == [
              :foundational_screen,
-             :profile_form
+             :profile_form,
+             :overlay_workspace
            ]
 
     assert Enum.map(UnifiedUi.Info.example_summaries(), & &1.id) == [
              :foundational_screen,
-             :profile_form
+             :profile_form,
+             :overlay_workspace
            ]
 
     assert Enum.all?(UnifiedUi.Examples.modules(), fn module ->

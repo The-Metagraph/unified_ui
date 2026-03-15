@@ -3,7 +3,7 @@ defmodule UnifiedUi.Examples do
   Maintained reference modules for baseline `UnifiedUi` authored workflows.
   """
 
-  alias UnifiedUi.Examples.{FoundationalScreen, ProfileForm}
+  alias UnifiedUi.Examples.{FoundationalScreen, OverlayWorkspace, ProfileForm}
 
   @catalog [
     %{
@@ -19,6 +19,13 @@ defmodule UnifiedUi.Examples do
       module: ProfileForm,
       constructs: [:input, :navigation, :forms],
       summary: "Baseline form workflow with grouped fields, tabs, and command actions."
+    },
+    %{
+      id: :overlay_workspace,
+      category: :advanced_flow,
+      module: OverlayWorkspace,
+      constructs: [:overlay, :display, :layout],
+      summary: "Advanced overlay and split-pane workflow with contextual actions."
     }
   ]
 

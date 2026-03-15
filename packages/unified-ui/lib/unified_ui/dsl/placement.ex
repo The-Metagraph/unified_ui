@@ -35,6 +35,16 @@ defmodule UnifiedUi.Dsl.Placement do
       id: :leaf_nodes_cannot_have_children,
       description:
         "Leaf widget and navigation nodes may not declare nested children in the authored Phase 2 surface."
+    },
+    %{
+      id: :overlay_content_refs_must_resolve,
+      description:
+        "Dialogs, context menus, scroll bars, and split panes must reference existing authored nodes so advanced flows remain deterministic."
+    },
+    %{
+      id: :split_pane_refs_must_be_distinct,
+      description:
+        "Split panes must reference two distinct authored nodes so multi-pane composition remains unambiguous."
     }
   ]
 
@@ -55,6 +65,27 @@ defmodule UnifiedUi.Dsl.Placement do
     :command_palette
   ]
 
+  @advanced_leaf_kinds [
+    :table,
+    :tree_view,
+    :markdown_viewer,
+    :log_viewer,
+    :gauge,
+    :sparkline,
+    :bar_chart,
+    :line_chart,
+    :stream_widget,
+    :process_monitor,
+    :supervision_tree_viewer,
+    :cluster_dashboard,
+    :context_menu,
+    :dialog,
+    :alert_dialog,
+    :toast,
+    :scroll_bar,
+    :split_pane
+  ]
+
   @layout_kinds [:box, :row, :column, :grid, :stack]
   @container_kinds [:content, :form_builder, :field_group]
 
@@ -70,7 +101,7 @@ defmodule UnifiedUi.Dsl.Placement do
 
   @spec leaf_kinds() :: [atom()]
   def leaf_kinds do
-    @leaf_kinds
+    @leaf_kinds ++ @advanced_leaf_kinds
   end
 
   @spec layout_kinds() :: [atom()]
