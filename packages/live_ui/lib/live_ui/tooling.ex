@@ -8,20 +8,24 @@ defmodule LiveUi.Tooling do
   alias UnifiedIUR.Element
 
   @type workflow ::
-          :reference_examples
+          :preview
+          | :reference_examples
           | :inspection
           | :styling_inspection
           | :continuity_comparison
+          | :export
           | :validation
           | :documentation
 
   @spec workflows() :: [workflow()]
   def workflows do
     [
+      :preview,
       :reference_examples,
       :inspection,
       :styling_inspection,
       :continuity_comparison,
+      :export,
       :validation,
       :documentation
     ]
@@ -30,6 +34,48 @@ defmodule LiveUi.Tooling do
   @spec examples() :: [map()]
   def examples do
     Examples.catalog()
+  end
+
+  @spec preview_example(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def preview_example(id, opts \\ []) do
+    inspect_example(id, opts)
+  end
+
+  @spec inspect_example(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def inspect_example(id, opts \\ []) do
+    with {:ok, example} <- resolve_example(id),
+         {:ok, result} <- inspect_example_output(example, opts) do
+      {:ok, %{example: example, result: result}}
+    end
+  end
+
+  @spec compare_example_pair(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def compare_example_pair(id, opts \\ []) do
+    with {:ok, example} <- resolve_example(id),
+         {:ok, native_example, canonical_example} <- continuity_pair(example),
+         {:ok, report} <-
+           compare_native_and_canonical(
+             native_example.module,
+             canonical_example.module.element(),
+             opts
+           ) do
+      {:ok,
+       %{
+         example: example,
+         native_example: native_example,
+         canonical_example: canonical_example,
+         report: report,
+         diagnostics:
+           Enum.map(report.diagnostics, fn diagnostic ->
+             Map.merge(diagnostic, %{
+               native_example: native_example.id,
+               canonical_example: canonical_example.id,
+               native_families: native_example.families,
+               canonical_families: canonical_example.families
+             })
+           end)
+       }}
+    end
   end
 
   @spec inspect_native(module(), keyword()) :: {:ok, map()} | {:error, term()}
@@ -160,4 +206,56 @@ defmodule LiveUi.Tooling do
   defp maybe_add_diagnostic(diagnostics, reason, widgets) do
     diagnostics ++ [%{reason: reason, widgets: widgets}]
   end
+
+  defp resolve_example(id) do
+    case Examples.find(id) do
+      {:ok, example} -> {:ok, example}
+      :error -> {:error, :unknown_example}
+    end
+  end
+
+  defp inspect_example_output(example, opts) do
+    case example.path do
+      :native ->
+        inspect_native(example.module, opts)
+
+      :canonical ->
+        inspect_canonical(example.module.element(), opts)
+
+      :mixed ->
+        inspect_mixed(example.module)
+    end
+  end
+
+  defp inspect_mixed(module) do
+    cond do
+      function_exported?(module, :compare, 0) -> module.compare()
+      function_exported?(module, :compare_paths, 0) -> module.compare_paths()
+      true -> {:error, :unsupported_mixed_example}
+    end
+  end
+
+  defp continuity_pair(%{path: :native, comparable_to: comparable_to} = example)
+       when not is_nil(comparable_to) do
+    with {:ok, paired} <- resolve_example(comparable_to),
+         true <- paired.path == :canonical do
+      {:ok, example, paired}
+    else
+      false -> {:error, :invalid_comparison_pair}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  defp continuity_pair(%{path: :canonical, comparable_to: comparable_to} = example)
+       when not is_nil(comparable_to) do
+    with {:ok, paired} <- resolve_example(comparable_to),
+         true <- paired.path == :native do
+      {:ok, paired, example}
+    else
+      false -> {:error, :invalid_comparison_pair}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  defp continuity_pair(_example), do: {:error, :not_comparable_example}
 end
