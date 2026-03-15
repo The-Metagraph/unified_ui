@@ -4,7 +4,7 @@ defmodule UnifiedUi.Compiler do
   canonical `UnifiedIUR` output.
   """
 
-  alias UnifiedUi.Compiler.{Pipeline, Result}
+  alias UnifiedUi.Compiler.{Inspection, Pipeline, Result}
 
   @type compile_result :: {:ok, Result.t()}
 
@@ -45,5 +45,22 @@ defmodule UnifiedUi.Compiler do
     module
     |> compile!(opts)
     |> Result.summary()
+  end
+
+  @spec listing(module(), keyword() | map()) :: map()
+  def listing(module, opts \\ []) when is_atom(module) do
+    module
+    |> compile!(opts)
+    |> Result.listing()
+  end
+
+  @spec inspection(module(), keyword() | map()) :: map()
+  def inspection(module, opts \\ []) when is_atom(module) do
+    Inspection.report(module, opts)
+  end
+
+  @spec render_inspection(module(), keyword() | map()) :: String.t()
+  def render_inspection(module, opts \\ []) when is_atom(module) do
+    Inspection.render(module, opts)
   end
 end
