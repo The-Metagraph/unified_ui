@@ -35,6 +35,22 @@ defmodule UnifiedUi.Tooling do
     signals: [".spec/specs/unified-ui/signals.spec.md", ".spec/specs/unified-ui/compiler.spec.md"]
   }
 
+  @required_docs [
+    "README.md",
+    "guides/dsl_model.md",
+    "guides/theming_and_signals.md",
+    "guides/compiler_and_parity.md",
+    "guides/maintainer_workflows.md"
+  ]
+
+  @required_example_categories [
+    :advanced_dashboard,
+    :advanced_flow,
+    :cross_cutting,
+    :form_workflow,
+    :foundational
+  ]
+
   @type inspection_result :: {:ok, map()} | {:error, map()}
 
   @spec example_catalog() :: [map()]
@@ -205,6 +221,79 @@ defmodule UnifiedUi.Tooling do
     Export.module(module, format)
   end
 
+  @spec governance_gates() :: map()
+  def governance_gates do
+    %{
+      minimum_example_categories: @required_example_categories,
+      minimum_parity_obligations: expected_parity_obligations(),
+      change_review_expectations: [
+        :compiled_output_review_for_maintained_examples,
+        :unified_iur_parity_review_for_catalog_changes,
+        :signal_surface_review_for_interaction_changes
+      ],
+      release_readiness_focus: [
+        :deterministic_compilation,
+        :bilateral_parity,
+        :signal_surface_clarity,
+        :documentation_surface
+      ]
+    }
+  end
+
+  @spec documentation_surface() :: map()
+  def documentation_surface do
+    root = File.cwd!()
+
+    present_paths =
+      @required_docs
+      |> Enum.filter(&File.exists?(Path.join(root, &1)))
+      |> Enum.sort()
+
+    %{
+      required_paths: @required_docs,
+      present_paths: present_paths,
+      missing_paths: @required_docs -- present_paths,
+      complete?: length(present_paths) == length(@required_docs)
+    }
+  end
+
+  @spec validation_report() :: map()
+  def validation_report do
+    parity_report = UnifiedUi.Parity.validation_report()
+    coverage = coverage_report()
+    docs = documentation_surface()
+    signal_surface = signal_surface_report()
+
+    report = %{
+      example_coverage: example_coverage_report(coverage),
+      signal_surface: signal_surface,
+      parity: parity_report.parity,
+      example_compilation: parity_report.example_compilation,
+      documentation_surface: docs,
+      governance_gates: governance_gates()
+    }
+
+    Map.put(report, :release_readiness, release_readiness_report(report))
+  end
+
+  @spec validation_summary(map()) :: String.t()
+  def validation_summary(report) when is_map(report) do
+    [
+      "UnifiedUi validation summary",
+      "  example compilation valid?: #{report.example_compilation.all_valid?}",
+      "  example compilation deterministic?: #{report.example_compilation.deterministic?}",
+      "  parity synchronized?: #{report.parity.synchronized?}",
+      "  example coverage complete?: #{report.example_coverage.complete?}",
+      "  signal coverage canonical?: #{report.signal_surface.canonical_only?}",
+      "  documentation surface complete?: #{report.documentation_surface.complete?}",
+      "  release ready?: #{report.release_readiness.ready?}",
+      "  missing example categories: #{inspect(report.example_coverage.missing_categories)}",
+      "  missing parity obligations: #{inspect(report.example_coverage.missing_parity_obligations)}",
+      "  missing docs: #{inspect(report.documentation_surface.missing_paths)}"
+    ]
+    |> Enum.join("\n")
+  end
+
   defp signal_coverage(signal_catalog) do
     %{
       namespace: signal_catalog.namespace,
@@ -241,6 +330,116 @@ defmodule UnifiedUi.Tooling do
         end)
         |> sort_terms()
     }
+  end
+
+  defp signal_surface_report do
+    example_reports =
+      Examples.catalog()
+      |> Enum.map(fn example ->
+        signal_coverage =
+          example.module
+          |> Info.inspect_module()
+          |> Map.fetch!(:signal_catalog)
+          |> signal_coverage()
+
+        %{
+          id: example.id,
+          bindings: signal_coverage.binding_names,
+          interactions: signal_coverage.interaction_ids,
+          families: signal_coverage.families,
+          canonical?: signal_coverage.mode == :canonical
+        }
+      end)
+
+    %{
+      example_ids_with_signals:
+        example_reports
+        |> Enum.filter(&(length(&1.bindings) > 0 or length(&1.interactions) > 0))
+        |> Enum.map(& &1.id),
+      families:
+        example_reports
+        |> Enum.flat_map(& &1.families)
+        |> sort_terms(),
+      canonical_only?: Enum.all?(example_reports, & &1.canonical?),
+      total_bindings:
+        example_reports
+        |> Enum.flat_map(& &1.bindings)
+        |> length(),
+      total_interactions:
+        example_reports
+        |> Enum.flat_map(& &1.interactions)
+        |> length()
+    }
+  end
+
+  defp example_coverage_report(coverage) do
+    covered_categories = coverage.categories |> Map.keys() |> sort_terms()
+    covered_obligations = sort_terms(coverage.parity_obligations)
+    missing_categories = @required_example_categories -- covered_categories
+    missing_parity_obligations = expected_parity_obligations() -- covered_obligations
+
+    %{
+      total_examples: coverage.total_examples,
+      categories: coverage.categories,
+      covered_categories: covered_categories,
+      missing_categories: missing_categories,
+      parity_obligations: covered_obligations,
+      missing_parity_obligations: missing_parity_obligations,
+      validation_purposes: coverage.validation_purposes,
+      complete?: missing_categories == [] and missing_parity_obligations == []
+    }
+  end
+
+  defp release_readiness_report(report) do
+    criteria = [
+      gate(
+        :example_compilation,
+        "Maintained examples compile successfully.",
+        report.example_compilation.all_valid?
+      ),
+      gate(
+        :deterministic_examples,
+        "Maintained examples compile deterministically.",
+        report.example_compilation.deterministic?
+      ),
+      gate(
+        :parity,
+        "UnifiedUi stays synchronized with canonical UnifiedIUR.",
+        report.parity.synchronized?
+      ),
+      gate(
+        :example_coverage,
+        "Maintained examples cover the required authored categories and parity obligations.",
+        report.example_coverage.complete?
+      ),
+      gate(
+        :canonical_signals,
+        "Maintained examples exercise canonical signal authoring without renderer leakage.",
+        report.signal_surface.canonical_only? and
+          report.signal_surface.example_ids_with_signals != []
+      ),
+      gate(
+        :documentation_surface,
+        "Maintainer-facing documentation exists for DSL, signals, compiler, and workflows.",
+        report.documentation_surface.complete?
+      )
+    ]
+
+    %{
+      ready?: Enum.all?(criteria, & &1.passed?),
+      criteria: criteria,
+      required_change_review: governance_gates().change_review_expectations
+    }
+  end
+
+  defp expected_parity_obligations do
+    UnifiedUi.Parity.catalog()
+    |> Map.keys()
+    |> sort_terms()
+  end
+
+  defp gate(id, description, passed?) do
+    %{id: id, description: description, passed?: passed?}
   end
 
   defp related_examples(construct_families, exclude_module) do
