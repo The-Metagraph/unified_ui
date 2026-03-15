@@ -19,6 +19,10 @@ defmodule LiveUiTest do
     assert LiveUi.screen() == LiveUi.Screen
   end
 
+  test "package exposes native forms namespace" do
+    assert LiveUi.forms() == LiveUi.Forms
+  end
+
   test "package summary reports package identity" do
     assert %{package: :live_ui, namespace: LiveUi} = LiveUi.info()
   end
