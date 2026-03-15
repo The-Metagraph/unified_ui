@@ -64,6 +64,10 @@ defmodule LiveUi.Reference do
         integration_points: transport_integration_points(),
         supported_families: signal_families()
       },
+      styling: %{
+        theme: LiveUi.Info.style_summary(),
+        native_surface: LiveUi.theme()
+      },
       responsibilities: responsibilities(),
       tooling: LiveUi.Tooling.workflows()
     }

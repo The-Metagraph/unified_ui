@@ -11,7 +11,25 @@ defmodule LiveUi.Info do
       package: :live_ui,
       namespace: LiveUi,
       package_areas: LiveUi.package_areas(),
-      validation_state: LiveUi.Runtime.validation_state()
+      validation_state: LiveUi.Runtime.validation_state(),
+      styling: style_summary(),
+      tooling: %{workflows: LiveUi.Tooling.workflows()}
+    }
+  end
+
+  @spec style_summary(LiveUi.Theme.t() | keyword() | map() | nil) :: map()
+  def style_summary(theme \\ LiveUi.Theme.default()) do
+    theme = LiveUi.Theme.new(theme)
+
+    %{
+      theme_id: theme.id,
+      native_components:
+        theme
+        |> Map.fetch!(:native)
+        |> Map.fetch!(:components)
+        |> Map.keys()
+        |> Enum.sort(),
+      token_count: map_size(theme.canonical.tokens)
     }
   end
 
@@ -56,6 +74,17 @@ defmodule LiveUi.Info do
       accepts: LiveUi.Renderer.accepts(),
       supported_kinds: LiveUi.Renderer.supported_kinds(),
       responsibilities: LiveUi.Renderer.responsibilities()
+    }
+  end
+
+  @spec continuity_summary(map()) :: map()
+  def continuity_summary(report) when is_map(report) do
+    %{
+      shared_widgets: Map.get(report, :shared_widgets, []),
+      native_only_widgets: Map.get(report, :native_only_widgets, []),
+      canonical_only_widgets: Map.get(report, :canonical_only_widgets, []),
+      diagnostics: Map.get(report, :diagnostics, []),
+      continuity: Map.get(report, :continuity, %{})
     }
   end
 end
