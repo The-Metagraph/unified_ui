@@ -31,3 +31,4 @@ Maintainer workflows:
   `mix test` workflow
 - `mix examples.validate` checks catalog continuity and shared-template/theme
   reuse across the suite
+- `mix examples.report` prints the cross-family review summary for the suite

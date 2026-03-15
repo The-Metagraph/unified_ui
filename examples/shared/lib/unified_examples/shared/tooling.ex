@@ -96,6 +96,7 @@ defmodule UnifiedExamples.Shared.Tooling do
     Map.merge(metadata, %{
       directory: entry.directory,
       suite_directory: metadata.directory,
+      primary_subject: entry.widget,
       family: entry.family,
       phase: entry.phase,
       shell_kind: entry.shell_kind,
