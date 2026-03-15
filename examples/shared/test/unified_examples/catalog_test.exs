@@ -8,12 +8,14 @@ defmodule UnifiedExamples.CatalogTest do
              "box",
              "button",
              "checkbox",
+             "column",
              "content",
              "date_input",
              "field",
              "field_group",
              "file_input",
              "form_builder",
+             "grid",
              "icon",
              "image",
              "label",
@@ -21,6 +23,7 @@ defmodule UnifiedExamples.CatalogTest do
              "numeric_input",
              "pick_list",
              "radio_group",
+             "row",
              "select",
              "separator",
              "spacer",
@@ -55,12 +58,26 @@ defmodule UnifiedExamples.CatalogTest do
              "toggle"
            ]
 
+    assert Enum.map(Catalog.by_phase(3), & &1.directory) == [
+             "row",
+             "column",
+             "grid"
+           ]
+
     assert Catalog.entry!("numeric_input") == %{
              directory: "numeric_input",
              widget: :numeric_input,
              family: :input,
              phase: 2,
              shell_kind: :form_builder
+           }
+
+    assert Catalog.entry!("grid") == %{
+             directory: "grid",
+             widget: :grid,
+             family: :layout,
+             phase: 3,
+             shell_kind: :box
            }
   end
 

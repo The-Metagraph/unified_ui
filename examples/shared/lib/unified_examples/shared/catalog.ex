@@ -91,7 +91,10 @@ defmodule UnifiedExamples.Shared.Catalog do
       phase: 2,
       shell_kind: :form_builder
     },
-    %{directory: "toggle", widget: :toggle, family: :input, phase: 2, shell_kind: :form_builder}
+    %{directory: "toggle", widget: :toggle, family: :input, phase: 2, shell_kind: :form_builder},
+    %{directory: "row", widget: :row, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "column", widget: :column, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "grid", widget: :grid, family: :layout, phase: 3, shell_kind: :box}
   ]
 
   @spec entries() :: [entry()]
