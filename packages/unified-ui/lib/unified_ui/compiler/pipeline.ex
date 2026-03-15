@@ -663,62 +663,49 @@ defmodule UnifiedUi.Compiler.Pipeline do
           )
 
         :dialog ->
-          generic_element(:layer, :dialog, node, attachments, %{
-            dialog: %{
+          UnifiedIUR.Layer.dialog(
+            lower_referenced_node(node.content_ref, context, visited, :dialog),
+            common_opts(node, attachments,
               title: node.title,
-              content_ref: node.content_ref,
-              trigger_ref: node.trigger_ref,
-              visible?: node.visible?,
-              modal?: node.modal?,
-              confirm_intent: node.confirm_intent,
-              dismiss_intent: node.dismiss_intent
-            }
-          })
+              modal?: node.modal?
+            )
+          )
 
         :alert_dialog ->
-          generic_element(:layer, :alert_dialog, node, attachments, %{
-            alert_dialog: %{
+          UnifiedIUR.Layer.alert_dialog(
+            overlay_message_content(node.id, node.message || ""),
+            common_opts(node, attachments,
               title: node.title,
-              message: node.message,
-              trigger_ref: node.trigger_ref,
-              visible?: node.visible?,
-              confirm_intent: node.confirm_intent,
-              dismiss_intent: node.dismiss_intent,
               severity: node.severity
-            }
-          })
+            )
+          )
 
         :toast ->
-          generic_element(:layer, :toast, node, attachments, %{
-            toast: %{
-              title: node.title,
-              message: node.message,
-              trigger_ref: node.trigger_ref,
-              visible?: node.visible?,
+          UnifiedIUR.Layer.toast(
+            overlay_notice_content(node.id, node.title, node.message || ""),
+            common_opts(node, attachments,
               placement: node.placement,
               severity: node.severity
-            }
-          })
+            )
+          )
 
         :context_menu ->
-          generic_element(:layer, :context_menu, node, attachments, %{
-            context_menu: %{
-              options: normalize_keyword_items(node.options),
-              target_ref: node.target_ref,
-              trigger_ref: node.trigger_ref,
-              placement: node.placement,
-              visible?: node.visible?
-            }
-          })
+          UnifiedIUR.Layer.context_menu(
+            normalize_keyword_items(node.options),
+            common_opts(node, attachments,
+              anchor: %{target_id: node.target_ref},
+              placement: node.placement
+            )
+          )
 
         :overlay ->
-          generic_element(:layer, :overlay, node, attachments, %{
-            overlay: %{
-              base_ref: node.base_ref,
-              layer_refs: node.layer_refs,
-              background_fill: node.background_fill
-            }
-          })
+          UnifiedIUR.Layer.overlay(
+            lower_referenced_node(node.base_ref, context, visited, :overlay_base),
+            Enum.map(List.wrap(node.layer_refs), fn ref ->
+              lower_referenced_node(ref, context, visited, :overlay_layer)
+            end),
+            common_opts(node, attachments, background_fill: node.background_fill)
+          )
 
         :absolute ->
           generic_element(:layer, :absolute, node, attachments, %{
@@ -732,15 +719,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
           })
 
         :viewport ->
-          generic_element(:layout, :viewport, node, attachments, %{
-            viewport: %{
-              content_ref: node.content_ref,
-              width: node.width,
-              height: node.height,
-              offset: node.offset,
-              clip?: node.clip?
-            }
-          })
+          lower_viewport(node, context, visited, attachments)
 
         :scroll_region ->
           generic_element(:layout, :scroll_region, node, attachments, %{
@@ -753,27 +732,18 @@ defmodule UnifiedUi.Compiler.Pipeline do
           })
 
         :scroll_bar ->
-          generic_element(:widget, :scroll_bar, node, attachments, %{
-            scroll_bar: %{
-              target_ref: node.target_ref,
+          UnifiedIUR.Viewport.scroll_bar(
+            common_opts(node, attachments,
+              viewport_ref: node.target_ref,
               position: node.position,
               viewport_size: node.viewport_size,
               content_size: node.content_size,
               orientation: node.orientation
-            }
-          })
+            )
+          )
 
         :split_pane ->
-          generic_element(:layout, :split_pane, node, attachments, %{
-            split: %{
-              primary_ref: node.primary_ref,
-              secondary_ref: node.secondary_ref,
-              ratio: node.ratio,
-              orientation: node.orientation,
-              divider_size: node.divider_size,
-              divider_style: node.divider_style
-            }
-          })
+          lower_split_pane(node, context, visited, attachments)
 
         :canvas ->
           UnifiedIUR.Canvas.surface(
@@ -815,6 +785,72 @@ defmodule UnifiedUi.Compiler.Pipeline do
     Enum.map(node.children, fn child ->
       Element.Child.new(:default, lower_node(child, context, visited))
     end)
+  end
+
+  defp lower_viewport(node, context, visited, attachments) do
+    UnifiedIUR.Viewport.region(
+      lower_referenced_node(node.content_ref, context, visited, :viewport),
+      common_opts(node, attachments,
+        width: node.width,
+        height: node.height,
+        offset: node.offset,
+        clip?: node.clip?
+      )
+    )
+  end
+
+  defp lower_split_pane(node, context, visited, attachments) do
+    UnifiedIUR.Viewport.split_pane(
+      lower_referenced_node(node.primary_ref, context, visited, :split_primary),
+      lower_referenced_node(node.secondary_ref, context, visited, :split_secondary),
+      common_opts(node, attachments,
+        direction: node.orientation,
+        ratio: node.ratio,
+        divider_size: node.divider_size,
+        divider_style: node.divider_style
+      )
+    )
+  end
+
+  defp overlay_message_content(node_id, message) do
+    Widgets.Foundational.text(message, id: "#{node_id}_content")
+  end
+
+  defp overlay_notice_content(node_id, nil, message) do
+    overlay_message_content(node_id, message)
+  end
+
+  defp overlay_notice_content(node_id, title, message) do
+    Container.box(
+      [
+        Element.Child.new(
+          :default,
+          Widgets.Foundational.text(title, id: "#{node_id}_title")
+        ),
+        Element.Child.new(
+          :default,
+          Widgets.Foundational.text(message, id: "#{node_id}_message")
+        )
+      ],
+      id: "#{node_id}_content"
+    )
+  end
+
+  defp lower_referenced_node(ref, context, visited, kind) do
+    case Map.get(context.node_by_id, ref) do
+      nil ->
+        Element.new(:composite, :missing_reference,
+          id: "missing:#{kind}:#{ref}",
+          metadata:
+            Metadata.new(%{
+              description: "Missing authored reference #{inspect(ref)}",
+              annotations: %{ref: ref, kind: kind}
+            })
+        )
+
+      referenced ->
+        lower_node(referenced, context, visited)
+    end
   end
 
   defp node_attachments(node, context) do

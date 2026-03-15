@@ -21,6 +21,13 @@ Currently implemented apps:
   `pick_list/`, `date_input/`, `time_input/`, `file_input/`, `toggle/`
 - Layout and navigation:
   `row/`, `column/`, `grid/`, `menu/`, `tabs/`, `command_palette/`
+- Display systems:
+  `viewport/`, `scroll_bar/`, `split_pane/`, `canvas/`
+- Overlays and layered flows:
+  `overlay/`, `dialog/`, `alert_dialog/`, `context_menu/`, `toast/`
+- Operational and monitoring:
+  `stream_widget/`, `process_monitor/`, `supervision_tree_viewer/`,
+  `cluster_dashboard/`
 - Baseline data views:
   `list/`, `table/`, `tree_view/`, `markdown_viewer/`, `log_viewer/`
 - Feedback and charts:

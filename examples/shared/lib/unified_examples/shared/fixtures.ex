@@ -145,4 +145,170 @@ defmodule UnifiedExamples.Shared.Fixtures do
       %{x: "12:00", y: 24}
     ]
   end
+
+  @spec viewport_document_lines() :: [String.t()]
+  def viewport_document_lines do
+    [
+      "Incident INC-101 escalated to the response lead",
+      "Rollback approval is pending security review",
+      "Queue depth stabilized after replay completion",
+      "Status page update scheduled for the next checkpoint"
+    ]
+  end
+
+  @spec scroll_bar_snapshot() :: map()
+  def scroll_bar_snapshot do
+    %{
+      position: 18,
+      viewport_size: 16,
+      content_size: 120,
+      orientation: :vertical
+    }
+  end
+
+  @spec split_pane_snapshot() :: map()
+  def split_pane_snapshot do
+    %{
+      ratio: 0.42,
+      orientation: :horizontal,
+      primary_heading: "Active incidents",
+      secondary_heading: "Responder notes"
+    }
+  end
+
+  @spec canvas_operations() :: [map()]
+  def canvas_operations do
+    [
+      %{kind: :cell, position: {1, 1}, text: "A"},
+      %{kind: :fragment, position: {4, 2}, text: "Alert"},
+      %{kind: :cell, position: {14, 5}, text: "R"}
+    ]
+  end
+
+  @spec dialog_snapshot() :: map()
+  def dialog_snapshot do
+    %{
+      trigger_label: "Open settings",
+      title: "Settings",
+      copy: "Review escalation windows and routing defaults"
+    }
+  end
+
+  @spec alert_dialog_snapshot() :: map()
+  def alert_dialog_snapshot do
+    %{
+      trigger_label: "Escalate incident",
+      title: "Escalate incident",
+      message: "Paging the on-call owner will create a responder page.",
+      severity: :warning
+    }
+  end
+
+  @spec context_menu_options() :: keyword(String.t())
+  def context_menu_options do
+    [retry: "Retry sync", silence: "Silence alert", assign: "Assign owner"]
+  end
+
+  @spec toast_snapshot() :: map()
+  def toast_snapshot do
+    %{
+      title: "Runbook synced",
+      message: "Changes propagated to every region",
+      severity: :success,
+      placement: :bottom_end
+    }
+  end
+
+  @spec overlay_snapshot() :: map()
+  def overlay_snapshot do
+    %{
+      base_title: "Coordinator workspace",
+      background_fill: :scrim
+    }
+  end
+
+  @spec stream_widget_entries() :: [map()]
+  def stream_widget_entries do
+    [
+      %{
+        id: "evt-ops-001",
+        timestamp: "2026-03-15T15:04:00Z",
+        severity: :info,
+        message: "Deploy pipeline resumed after approval"
+      },
+      %{
+        id: "evt-ops-002",
+        timestamp: "2026-03-15T15:06:00Z",
+        severity: :warning,
+        message: "Queue latency crossed the warning threshold"
+      },
+      %{
+        id: "evt-ops-003",
+        timestamp: "2026-03-15T15:08:00Z",
+        severity: :success,
+        message: "Responder handoff completed successfully"
+      }
+    ]
+  end
+
+  @spec process_monitor_snapshot() :: map()
+  def process_monitor_snapshot do
+    %{
+      sort_by: :cpu,
+      severity: :warning,
+      processes: [
+        %{id: "proc-api", pid: "#PID<0.210.0>", label: "api-supervisor", state: :running},
+        %{id: "proc-queue", pid: "#PID<0.211.0>", label: "queue-consumer", state: :waiting},
+        %{id: "proc-sync", pid: "#PID<0.212.0>", label: "sync-coordinator", state: :running}
+      ]
+    }
+  end
+
+  @spec cluster_dashboard_snapshot() :: map()
+  def cluster_dashboard_snapshot do
+    %{
+      severity: :warning,
+      summary: %{healthy: 2, degraded: 1, regions: 3},
+      nodes: [
+        %{id: "denver-a", status: :up},
+        %{id: "dallas-b", status: :degraded},
+        %{id: "atlanta-c", status: :up}
+      ]
+    }
+  end
+
+  @spec supervision_tree_snapshot() :: map()
+  def supervision_tree_snapshot do
+    %{
+      expanded?: true,
+      topology: [
+        %{
+          id: "root-sup",
+          type: :supervisor,
+          status: :running,
+          label: "Root Supervisor",
+          children: [
+            %{
+              id: "api-sup",
+              type: :supervisor,
+              status: :running,
+              label: "API Supervisor",
+              children: [
+                %{id: "api-worker", type: :worker, status: :running, label: "API Worker"}
+              ]
+            },
+            %{
+              id: "queue-sup",
+              type: :supervisor,
+              status: :degraded,
+              label: "Queue Supervisor",
+              children: [
+                %{id: "queue-worker", type: :worker, status: :restarting, label: "Queue Worker"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  end
 end

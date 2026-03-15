@@ -4,7 +4,17 @@ defmodule UnifiedExamples.Shared.Catalog do
   """
 
   @type shell_kind :: :box | :form_builder
-  @type family :: :content | :layout | :forms | :input | :navigation | :data | :feedback
+  @type family ::
+          :content
+          | :layout
+          | :display
+          | :forms
+          | :input
+          | :navigation
+          | :data
+          | :feedback
+          | :overlay
+          | :operational
 
   @type entry :: %{
           directory: String.t(),
@@ -95,6 +105,67 @@ defmodule UnifiedExamples.Shared.Catalog do
     %{directory: "row", widget: :row, family: :layout, phase: 3, shell_kind: :box},
     %{directory: "column", widget: :column, family: :layout, phase: 3, shell_kind: :box},
     %{directory: "grid", widget: :grid, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "viewport", widget: :viewport, family: :display, phase: 4, shell_kind: :box},
+    %{
+      directory: "scroll_bar",
+      widget: :scroll_bar,
+      family: :display,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "split_pane",
+      widget: :split_pane,
+      family: :display,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{directory: "canvas", widget: :canvas, family: :display, phase: 4, shell_kind: :box},
+    %{directory: "overlay", widget: :overlay, family: :overlay, phase: 4, shell_kind: :box},
+    %{directory: "dialog", widget: :dialog, family: :overlay, phase: 4, shell_kind: :box},
+    %{
+      directory: "alert_dialog",
+      widget: :alert_dialog,
+      family: :overlay,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "context_menu",
+      widget: :context_menu,
+      family: :overlay,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{directory: "toast", widget: :toast, family: :overlay, phase: 4, shell_kind: :box},
+    %{
+      directory: "stream_widget",
+      widget: :stream_widget,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "process_monitor",
+      widget: :process_monitor,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "supervision_tree_viewer",
+      widget: :supervision_tree_viewer,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
+    %{
+      directory: "cluster_dashboard",
+      widget: :cluster_dashboard,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    },
     %{directory: "menu", widget: :menu, family: :navigation, phase: 3, shell_kind: :box},
     %{directory: "tabs", widget: :tabs, family: :navigation, phase: 3, shell_kind: :box},
     %{
@@ -174,6 +245,23 @@ defmodule UnifiedExamples.Shared.Catalog do
   @spec by_family() :: %{optional(family()) => [entry()]}
   def by_family do
     Enum.group_by(@entries, & &1.family)
+  end
+
+  @spec advanced_families() :: [family()]
+  def advanced_families do
+    [:display, :overlay, :operational]
+  end
+
+  @spec advanced_entries() :: [entry()]
+  def advanced_entries do
+    Enum.filter(@entries, &(&1.family in advanced_families()))
+  end
+
+  @spec advanced_directories() :: [String.t()]
+  def advanced_directories do
+    advanced_entries()
+    |> Enum.map(& &1.directory)
+    |> Enum.sort()
   end
 
   @spec entry!(String.t() | atom()) :: entry()

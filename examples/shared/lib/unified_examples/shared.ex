@@ -51,6 +51,22 @@ defmodule UnifiedExamples.Shared do
     Catalog.by_family()
   end
 
+  @spec advanced_catalog_directories() :: [String.t()]
+  def advanced_catalog_directories do
+    Catalog.advanced_directories()
+  end
+
+  @spec advanced_app_directories() :: [String.t()]
+  def advanced_app_directories do
+    advanced_catalog_directories()
+    |> Enum.filter(&(&1 in app_directories()))
+  end
+
+  @spec missing_advanced_directories() :: [String.t()]
+  def missing_advanced_directories do
+    advanced_catalog_directories() -- app_directories()
+  end
+
   @spec local_package_paths() :: map()
   def local_package_paths do
     %{

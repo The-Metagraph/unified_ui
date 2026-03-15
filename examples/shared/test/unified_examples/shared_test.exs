@@ -28,6 +28,12 @@ defmodule UnifiedExamples.SharedTest do
     assert Shared.app_directories() == Catalog.directories()
   end
 
+  test "exposes the advanced review sweep directories separately from the full catalog" do
+    assert Shared.advanced_catalog_directories() == Catalog.advanced_directories()
+    assert Shared.advanced_app_directories() == Catalog.advanced_directories()
+    assert Shared.missing_advanced_directories() == []
+  end
+
   test "exposes the implemented example catalog for review tooling" do
     assert Shared.catalog_directories() == Catalog.directories()
 
@@ -49,6 +55,7 @@ defmodule UnifiedExamples.SharedTest do
                  "spacer"
                ],
                data: ["list", "table", "tree_view", "markdown_viewer", "log_viewer"],
+               display: ["viewport", "scroll_bar", "split_pane", "canvas"],
                feedback: [
                  "status",
                  "progress",
@@ -72,7 +79,14 @@ defmodule UnifiedExamples.SharedTest do
                  "toggle"
                ],
                layout: ["box", "content", "row", "column", "grid"],
-               navigation: ["menu", "tabs", "command_palette"]
+               navigation: ["menu", "tabs", "command_palette"],
+               operational: [
+                 "stream_widget",
+                 "process_monitor",
+                 "supervision_tree_viewer",
+                 "cluster_dashboard"
+               ],
+               overlay: ["overlay", "dialog", "alert_dialog", "context_menu", "toast"]
              }
   end
 end
