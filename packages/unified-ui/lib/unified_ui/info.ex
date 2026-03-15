@@ -7,10 +7,17 @@ defmodule UnifiedUi.Info do
   alias UnifiedUi.Dsl.Node
   alias UnifiedUi.Examples
   alias UnifiedUi.Reference
+  alias UnifiedUi.Signals
+  alias UnifiedUi.Theme
 
   @spec supported_construct_families() :: %{atom() => [atom()]}
   def supported_construct_families do
     Reference.construct_families()
+  end
+
+  @spec style_attribute_families() :: %{atom() => [atom()]}
+  def style_attribute_families do
+    Reference.style_attribute_families()
   end
 
   @spec composition_nodes(module()) :: [struct()]
@@ -43,6 +50,8 @@ defmodule UnifiedUi.Info do
       composition: section_options(module, :composition),
       themes: section_options(module, :themes),
       signals: section_options(module, :signals),
+      theme_catalog: Theme.module_summary(module),
+      signal_catalog: Signals.module_summary(module),
       validation_state: validation_state(module)
     }
   end

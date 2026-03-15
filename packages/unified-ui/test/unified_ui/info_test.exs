@@ -21,6 +21,15 @@ defmodule UnifiedUi.InfoTest do
     themes do
       default_theme(:workspace)
       inherit?(false)
+
+      theme do
+        id(:workspace)
+
+        palette_color do
+          id(:surface)
+          color(named_color(:black))
+        end
+      end
     end
 
     signals do
@@ -65,6 +74,36 @@ defmodule UnifiedUi.InfoTest do
                namespace: :workspace,
                default_target: :session,
                mode: :canonical
+             },
+             theme_catalog: %{
+               default_theme: :workspace,
+               inherit?: false,
+               summary: nil,
+               themes: [
+                 %{
+                   id: :workspace,
+                   inherit?: true,
+                   palette_colors: [%{id: :surface, color: %{mode: :named, name: :black}}]
+                 }
+               ]
+             },
+             signal_catalog: %{
+               namespace: :workspace,
+               default_target: :session,
+               mode: :canonical,
+               families: [
+                 :click,
+                 :change,
+                 :submit,
+                 :open,
+                 :close,
+                 :focus,
+                 :selection,
+                 :navigation,
+                 :command
+               ],
+               bindings: [],
+               interactions: []
              },
              validation_state: :phase_1_valid
            }

@@ -5,6 +5,8 @@ defmodule UnifiedUi.Reference do
 
   alias UnifiedUi.Dsl.{Entities, Identity, Placement, SectionRegistry}
   alias UnifiedUi.Examples
+  alias UnifiedUi.Signal
+  alias UnifiedUi.Theme
 
   @spec supported_sections() :: [atom()]
   def supported_sections do
@@ -63,6 +65,33 @@ defmodule UnifiedUi.Reference do
   @spec example_catalog() :: [map()]
   def example_catalog do
     Examples.catalog()
+  end
+
+  @spec theme_catalog(module()) :: [map()]
+  def theme_catalog(module) when is_atom(module) do
+    module
+    |> Theme.themes()
+    |> Enum.map(&Theme.summary/1)
+  end
+
+  @spec style_attribute_families() :: %{atom() => [atom()]}
+  def style_attribute_families do
+    UnifiedUi.Style.attribute_families()
+  end
+
+  @spec semantic_style_roles() :: [atom()]
+  def semantic_style_roles do
+    UnifiedUi.Style.semantic_roles()
+  end
+
+  @spec style_component_states() :: [atom()]
+  def style_component_states do
+    UnifiedUi.Style.component_states()
+  end
+
+  @spec signal_families() :: [Signal.family()]
+  def signal_families do
+    Signal.families()
   end
 
   defp normalize_description(description) do

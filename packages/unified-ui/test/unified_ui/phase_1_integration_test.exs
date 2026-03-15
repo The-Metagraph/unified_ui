@@ -22,6 +22,15 @@ defmodule UnifiedUi.Phase1IntegrationTest do
 
     themes do
       default_theme(:workspace)
+
+      theme do
+        id(:workspace)
+
+        palette_color do
+          id(:surface)
+          color(named_color(:black))
+        end
+      end
     end
 
     signals do
@@ -41,9 +50,13 @@ defmodule UnifiedUi.Phase1IntegrationTest do
     assert UnifiedUi.module_areas() == %{
              compiler: UnifiedUi.Compiler,
              dsl: UnifiedUi.Dsl,
+             binding: UnifiedUi.Binding,
              info: UnifiedUi.Info,
              reference: UnifiedUi.Reference,
+             signal: UnifiedUi.Signal,
              signals: UnifiedUi.Signals,
+             style: UnifiedUi.Style,
+             theme: UnifiedUi.Theme,
              tooling: UnifiedUi.Tooling
            }
 
