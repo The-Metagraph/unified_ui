@@ -30,7 +30,13 @@ defmodule UnifiedIUR.MixProject do
   defp docs do
     [
       main: "UnifiedIUR",
-      extras: ["README.md"],
+      extras: [
+        "README.md",
+        "guides/construct_families.md",
+        "guides/core_model.md",
+        "guides/interoperability.md",
+        "guides/maintainer_workflows.md"
+      ],
       source_ref: "main",
       source_url: @source_url
     ]

@@ -18,9 +18,12 @@ defmodule UnifiedIUR.ToolingTest do
 
   test "documents governance gates and validation summaries" do
     gates = Tooling.governance_gates()
+    documentation = Tooling.documentation_surface()
 
     assert :paired_unified_ui_catalog_review in gates.change_review_expectations
     assert :style_semantics in gates.minimum_attachment_families
+    assert "guides/interoperability.md" in documentation.required_paths
+    assert documentation.complete?
 
     summary = Tooling.validation_summary(Tooling.validation_report())
 

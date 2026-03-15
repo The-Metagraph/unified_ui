@@ -17,7 +17,11 @@ defmodule UnifiedIUR.Tooling do
   @required_docs [
     "README.md",
     "lib/unified_iur.ex",
-    "lib/unified_iur/tooling.ex"
+    "lib/unified_iur/tooling.ex",
+    "guides/construct_families.md",
+    "guides/core_model.md",
+    "guides/interoperability.md",
+    "guides/maintainer_workflows.md"
   ]
 
   @spec fixture_catalog() :: [map()]
