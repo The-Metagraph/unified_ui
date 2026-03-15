@@ -7,13 +7,14 @@ defmodule UnifiedUi do
   them into `UnifiedIUR`.
   """
 
-  @type module_area :: :dsl | :compiler | :signals | :reference | :tooling
+  @type module_area :: :dsl | :compiler | :signals | :reference | :info | :tooling
 
   @module_areas %{
     dsl: UnifiedUi.Dsl,
     compiler: UnifiedUi.Compiler,
     signals: UnifiedUi.Signals,
     reference: UnifiedUi.Reference,
+    info: UnifiedUi.Info,
     tooling: UnifiedUi.Tooling
   }
 

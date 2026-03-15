@@ -14,10 +14,12 @@ defmodule UnifiedUiTest do
              compiler: UnifiedUi.Compiler,
              signals: UnifiedUi.Signals,
              reference: UnifiedUi.Reference,
+             info: UnifiedUi.Info,
              tooling: UnifiedUi.Tooling
            }
 
     assert {:ok, UnifiedUi.Dsl} = UnifiedUi.module_for(:dsl)
+    assert {:ok, UnifiedUi.Info} = UnifiedUi.module_for(:info)
     assert :error = UnifiedUi.module_for(:missing)
   end
 
