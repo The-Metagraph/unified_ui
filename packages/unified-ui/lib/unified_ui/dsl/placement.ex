@@ -45,6 +45,21 @@ defmodule UnifiedUi.Dsl.Placement do
       id: :split_pane_refs_must_be_distinct,
       description:
         "Split panes must reference two distinct authored nodes so multi-pane composition remains unambiguous."
+    },
+    %{
+      id: :layer_refs_must_target_overlay_nodes,
+      description:
+        "Overlay stacks must reference authored overlay nodes only so layered composition remains explicit."
+    },
+    %{
+      id: :viewport_and_scroll_refs_must_target_displayable_content,
+      description:
+        "Viewport and scroll-region declarations must target authored content nodes rather than overlay-only nodes."
+    },
+    %{
+      id: :canvas_operations_require_kind_and_position,
+      description:
+        "Canvas operations must declare a supported kind and positioned coordinate metadata so direct drawing remains portable."
     }
   ]
 
