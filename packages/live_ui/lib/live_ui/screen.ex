@@ -8,8 +8,12 @@ defmodule LiveUi.Screen do
   @callback id() :: atom()
   @callback title() :: String.t()
   @callback mount_defaults() :: map()
+  @callback event_routes() :: %{optional(String.t()) => atom()}
+  @callback bridge_hooks() :: [atom()]
+  @callback handle_event(atom(), map(), map()) :: {:ok, map()} | {:error, term()}
   @callback render(map()) :: Phoenix.LiveView.Rendered.t()
   @callback metadata() :: map()
+  @optional_callbacks event_routes: 0, bridge_hooks: 0, handle_event: 3
 
   @spec definition(module()) :: Definition.t()
   def definition(module) do
@@ -18,7 +22,9 @@ defmodule LiveUi.Screen do
       id: module.id(),
       title: module.title(),
       mount_defaults: module.mount_defaults(),
-      metadata: module.metadata()
+      metadata: module.metadata(),
+      event_routes: module.event_routes(),
+      bridge_hooks: module.bridge_hooks()
     }
   end
 
@@ -43,6 +49,15 @@ defmodule LiveUi.Screen do
       def mount_defaults, do: %{}
 
       @impl true
+      def event_routes, do: %{}
+
+      @impl true
+      def bridge_hooks, do: []
+
+      @impl true
+      def handle_event(_event, _payload, _assigns), do: {:error, :unsupported_event}
+
+      @impl true
       def metadata do
         %{
           kind: :native_screen,
@@ -51,7 +66,12 @@ defmodule LiveUi.Screen do
         }
       end
 
-      defoverridable title: 0, mount_defaults: 0, metadata: 0
+      defoverridable title: 0,
+                     mount_defaults: 0,
+                     event_routes: 0,
+                     bridge_hooks: 0,
+                     handle_event: 3,
+                     metadata: 0
     end
   end
 end

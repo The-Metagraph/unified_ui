@@ -28,6 +28,8 @@ defmodule LiveUi.ScreenTest do
     assert definition.title == "Example Screen"
     assert definition.mount_defaults == %{status: :ready}
     assert definition.metadata.server_authoritative?
+    assert definition.event_routes == %{}
+    assert definition.bridge_hooks == []
   end
 
   test "screens render through shared screen shell composition" do
