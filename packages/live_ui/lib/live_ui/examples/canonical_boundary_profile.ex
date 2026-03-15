@@ -17,7 +17,7 @@ defmodule LiveUi.Examples.CanonicalBoundaryProfile do
                 id: "profile-name",
                 name: "name",
                 value: "Pascal",
-                binding: %{name: :profile_name, path: [:profile, :name]},
+                binding: %{name: :profile_name, path: [:profile, :name], default: "Pascal"},
                 interaction: interaction()
               ),
               id: "profile-name-field",
