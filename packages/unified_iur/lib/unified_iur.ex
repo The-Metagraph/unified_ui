@@ -11,8 +11,10 @@ defmodule UnifiedIUR do
           | :core
           | :constructs
           | :interactions
+          | :validate
           | :normalize
           | :interoperability
+          | :extension
           | :reference
           | :tooling
 
@@ -21,8 +23,10 @@ defmodule UnifiedIUR do
     core: UnifiedIUR.Core,
     constructs: UnifiedIUR.Constructs,
     interactions: UnifiedIUR.Interactions,
+    validate: UnifiedIUR.Validate,
     normalize: UnifiedIUR.Normalize,
     interoperability: UnifiedIUR.Interoperability,
+    extension: UnifiedIUR.Extension,
     reference: UnifiedIUR.Reference,
     tooling: UnifiedIUR.Tooling
   }

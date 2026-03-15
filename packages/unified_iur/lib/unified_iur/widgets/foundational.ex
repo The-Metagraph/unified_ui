@@ -282,7 +282,7 @@ defmodule UnifiedIUR.Widgets.Foundational do
           binding: option(action, :binding),
           command: option(action, :command),
           value: option(action, :value),
-          mapping: option(action, :mapping, %{})
+          mapping: option(action, :mapping)
         )
       ]
     end
