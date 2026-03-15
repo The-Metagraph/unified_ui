@@ -5,6 +5,7 @@ defmodule UnifiedUi.Dsl.Entities do
 
   alias UnifiedUi.Dsl.Entities.{
     Advanced,
+    Canvas,
     Data,
     Display,
     Feedback,
@@ -53,6 +54,7 @@ defmodule UnifiedUi.Dsl.Entities do
       Feedback.entities() ++
       Advanced.entities() ++
       Overlay.entities() ++
-      Display.entities()
+      Display.entities() ++
+      Canvas.entities()
   end
 end

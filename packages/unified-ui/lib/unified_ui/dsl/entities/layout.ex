@@ -1,7 +1,17 @@
 defmodule UnifiedUi.Dsl.Entities.Layout do
   @moduledoc false
 
-  alias UnifiedUi.Dsl.Entities.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedUi.Dsl.Entities.{
+    Advanced,
+    Canvas,
+    Data,
+    Display,
+    Feedback,
+    Foundational,
+    Input,
+    Navigation
+  }
+
   alias UnifiedUi.Dsl.EntitySchema
   alias UnifiedUi.Dsl.Node
 
@@ -13,7 +23,9 @@ defmodule UnifiedUi.Dsl.Entities.Layout do
         Navigation.entities() ++
         Data.entities() ++
         Feedback.entities() ++
-        Advanced.entities()
+        Advanced.entities() ++
+        Display.entities() ++
+        Canvas.entities()
 
     [
       layout(:box, children,

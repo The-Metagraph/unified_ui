@@ -75,8 +75,8 @@ defmodule UnifiedUi.OverlayDisplayTest do
   end
 
   test "registers overlay and display kinds for package inspection" do
-    assert UnifiedUi.Layer.kinds() == [:context_menu, :dialog, :alert_dialog, :toast]
-    assert UnifiedUi.Display.kinds() == [:scroll_bar, :split_pane]
+    assert UnifiedUi.Layer.kinds() == [:context_menu, :dialog, :alert_dialog, :toast, :overlay, :absolute]
+    assert UnifiedUi.Display.kinds() == [:scroll_bar, :split_pane, :viewport, :scroll_region]
   end
 
   test "stores overlay-driven and split-pane nodes in authored composition" do

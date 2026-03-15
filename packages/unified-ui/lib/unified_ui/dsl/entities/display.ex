@@ -31,6 +31,21 @@ defmodule UnifiedUi.Dsl.Entities.Display do
         divider_size: [type: :integer, required: false, default: 1],
         divider_style: [type: :atom, required: false, default: :solid],
         summary: [type: :string, required: false]
+      ),
+      leaf(:viewport,
+        content_ref: [type: :atom, required: true],
+        width: [type: :integer, required: true],
+        height: [type: :integer, required: true],
+        offset: [type: :any, required: false, default: {0, 0}],
+        clip?: [type: :boolean, required: false, default: true],
+        summary: [type: :string, required: false]
+      ),
+      leaf(:scroll_region,
+        content_ref: [type: :atom, required: true],
+        height: [type: :integer, required: true],
+        offset: [type: :integer, required: false, default: 0],
+        clip?: [type: :boolean, required: false, default: true],
+        summary: [type: :string, required: false]
       )
     ]
   end

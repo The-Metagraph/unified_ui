@@ -43,6 +43,20 @@ defmodule UnifiedUi.Dsl.Entities.Overlay do
         placement: [type: :atom, required: false, default: :bottom_end],
         severity: [type: :atom, required: false],
         summary: [type: :string, required: false]
+      ),
+      leaf(:overlay,
+        base_ref: [type: :atom, required: true],
+        layer_refs: [type: {:list, :atom}, required: true],
+        background_fill: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      ),
+      leaf(:absolute,
+        content_ref: [type: :atom, required: true],
+        target_ref: [type: :atom, required: true],
+        x: [type: :integer, required: true],
+        y: [type: :integer, required: true],
+        z_index: [type: :integer, required: false, default: 0],
+        summary: [type: :string, required: false]
       )
     ]
   end
