@@ -3,7 +3,18 @@ defmodule UnifiedUi.Dsl.Node do
   Baseline authored node shape for `UnifiedUi` widgets, forms, and layouts.
   """
 
-  @type family :: :foundational | :input | :navigation | :forms | :layout
+  @type family ::
+          :foundational
+          | :input
+          | :navigation
+          | :forms
+          | :layout
+          | :data
+          | :feedback
+          | :advanced
+          | :overlay
+          | :display
+          | :canvas
 
   @type t :: %__MODULE__{
           __identifier__: atom() | nil,
@@ -61,6 +72,31 @@ defmodule UnifiedUi.Dsl.Node do
           height: integer() | atom() | nil,
           columns: integer() | nil,
           rows: integer() | nil,
+          table_columns: keyword() | list() | nil,
+          table_rows: list() | nil,
+          empty_state: String.t() | nil,
+          tree_nodes: list() | nil,
+          log_entries: list() | nil,
+          show_timestamps?: boolean() | nil,
+          wrap?: boolean() | nil,
+          severity: atom() | nil,
+          current: integer() | float() | nil,
+          minimum: integer() | float() | nil,
+          maximum: integer() | float() | nil,
+          points: list() | nil,
+          series: list() | nil,
+          x_label: String.t() | nil,
+          y_label: String.t() | nil,
+          entries: list() | nil,
+          ordering: atom() | nil,
+          severity_field: atom() | nil,
+          timestamp_field: atom() | nil,
+          processes: list() | nil,
+          sort_by: atom() | nil,
+          topology: list() | nil,
+          expanded?: boolean() | nil,
+          cluster_nodes: list() | nil,
+          metrics: map() | nil,
           children: [t()]
         }
 
@@ -119,6 +155,31 @@ defmodule UnifiedUi.Dsl.Node do
             height: nil,
             columns: nil,
             rows: nil,
+            table_columns: nil,
+            table_rows: nil,
+            empty_state: nil,
+            tree_nodes: nil,
+            log_entries: nil,
+            show_timestamps?: nil,
+            wrap?: nil,
+            severity: nil,
+            current: nil,
+            minimum: nil,
+            maximum: nil,
+            points: nil,
+            series: nil,
+            x_label: nil,
+            y_label: nil,
+            entries: nil,
+            ordering: nil,
+            severity_field: nil,
+            timestamp_field: nil,
+            processes: nil,
+            sort_by: nil,
+            topology: nil,
+            expanded?: nil,
+            cluster_nodes: nil,
+            metrics: nil,
             children: []
 
   @spec summary(t()) :: map()
@@ -134,6 +195,18 @@ defmodule UnifiedUi.Dsl.Node do
       role: node.role,
       presentation: node.presentation,
       summary: node.summary,
+      empty_state: node.empty_state,
+      severity: node.severity,
+      current: node.current,
+      minimum: node.minimum,
+      maximum: node.maximum,
+      x_label: node.x_label,
+      y_label: node.y_label,
+      ordering: node.ordering,
+      severity_field: node.severity_field,
+      timestamp_field: node.timestamp_field,
+      sort_by: node.sort_by,
+      expanded?: node.expanded?,
       children: Enum.map(node.children, &summary/1)
     }
     |> Enum.reject(fn {_key, value} -> value in [nil, []] end)

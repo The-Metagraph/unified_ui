@@ -268,7 +268,19 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :select,
              :menu,
              :tabs,
-             :command_palette
+             :command_palette,
+             :table,
+             :tree_view,
+             :markdown_viewer,
+             :log_viewer,
+             :gauge,
+             :sparkline,
+             :bar_chart,
+             :line_chart,
+             :stream_widget,
+             :process_monitor,
+             :supervision_tree_viewer,
+             :cluster_dashboard
            ]
 
     assert UnifiedUi.Layout.kinds() == [:box, :row, :column, :grid, :stack]

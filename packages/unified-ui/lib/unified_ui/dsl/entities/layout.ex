@@ -1,13 +1,19 @@
 defmodule UnifiedUi.Dsl.Entities.Layout do
   @moduledoc false
 
-  alias UnifiedUi.Dsl.Entities.{Foundational, Input, Navigation}
+  alias UnifiedUi.Dsl.Entities.{Advanced, Data, Feedback, Foundational, Input, Navigation}
   alias UnifiedUi.Dsl.EntitySchema
   alias UnifiedUi.Dsl.Node
 
   @spec entities() :: [Spark.Dsl.Entity.t()]
   def entities do
-    children = Foundational.entities() ++ Input.entities() ++ Navigation.entities()
+    children =
+      Foundational.entities() ++
+        Input.entities() ++
+        Navigation.entities() ++
+        Data.entities() ++
+        Feedback.entities() ++
+        Advanced.entities()
 
     [
       layout(:box, children,
