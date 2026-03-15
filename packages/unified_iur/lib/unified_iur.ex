@@ -12,6 +12,8 @@ defmodule UnifiedIUR do
           | :constructs
           | :interactions
           | :fixtures
+          | :inspect
+          | :export
           | :validate
           | :normalize
           | :interoperability
@@ -25,6 +27,8 @@ defmodule UnifiedIUR do
     constructs: UnifiedIUR.Constructs,
     interactions: UnifiedIUR.Interactions,
     fixtures: UnifiedIUR.Fixtures,
+    inspect: UnifiedIUR.Inspect,
+    export: UnifiedIUR.Export,
     validate: UnifiedIUR.Validate,
     normalize: UnifiedIUR.Normalize,
     interoperability: UnifiedIUR.Interoperability,
