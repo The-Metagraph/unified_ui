@@ -10,6 +10,13 @@ defmodule LiveUi.Tooling do
 
   @required_example_paths [:native, :canonical, :mixed]
   @required_example_families [:input, :transport, :styling, :overlay, :operational]
+  @required_docs [
+    "README.md",
+    "guides/runtime_backbone.md",
+    "guides/native_runtime_and_examples.md",
+    "guides/canonical_rendering_and_transport.md",
+    "guides/maintainer_workflows.md"
+  ]
 
   @type workflow ::
           :preview
@@ -64,6 +71,23 @@ defmodule LiveUi.Tooling do
     }
   end
 
+  @spec documentation_surface() :: map()
+  def documentation_surface do
+    root = File.cwd!()
+
+    present_paths =
+      @required_docs
+      |> Enum.filter(&File.exists?(Path.join(root, &1)))
+      |> Enum.sort()
+
+    %{
+      required_paths: @required_docs,
+      present_paths: present_paths,
+      missing_paths: @required_docs -- present_paths,
+      complete?: length(present_paths) == length(@required_docs)
+    }
+  end
+
   @spec validation_report() :: map()
   def validation_report do
     catalog = examples()
@@ -79,6 +103,7 @@ defmodule LiveUi.Tooling do
       continuity: continuity,
       transport: transport,
       runtime_authority: runtime_authority,
+      documentation_surface: documentation_surface(),
       governance_gates: governance_gates()
     }
 
@@ -94,6 +119,7 @@ defmodule LiveUi.Tooling do
       "  continuity aligned?: #{report.continuity.aligned?}",
       "  transport sound?: #{report.transport.sound?}",
       "  server authoritative?: #{report.runtime_authority.server_authoritative?}",
+      "  documentation complete?: #{report.documentation_surface.complete?}",
       "  release ready?: #{report.release_readiness.ready?}",
       "  failing examples: #{inspect(report.example_health.failing_ids)}",
       "  missing paths: #{inspect(report.example_coverage.missing_paths)}",
@@ -448,6 +474,11 @@ defmodule LiveUi.Tooling do
         :runtime_authority,
         "Inspectable native and canonical paths remain server-authoritative.",
         report.runtime_authority.server_authoritative?
+      ),
+      gate(
+        :documentation,
+        "Maintainer-facing runtime and workflow documentation is present.",
+        report.documentation_surface.complete?
       )
     ]
 

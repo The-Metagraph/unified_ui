@@ -9,6 +9,7 @@ defmodule LiveUi.ValidationTest do
     assert report.continuity.aligned?
     assert report.transport.sound?
     assert report.runtime_authority.server_authoritative?
+    assert report.documentation_surface.complete?
     assert report.release_readiness.ready?
 
     assert :paired_native_and_canonical_example_review in report.governance_gates.change_review_expectations
@@ -20,6 +21,7 @@ defmodule LiveUi.ValidationTest do
     assert summary =~ "LiveUi validation summary"
     assert summary =~ "examples passing?: true"
     assert summary =~ "continuity aligned?: true"
+    assert summary =~ "documentation complete?: true"
     assert summary =~ "release ready?: true"
   end
 end

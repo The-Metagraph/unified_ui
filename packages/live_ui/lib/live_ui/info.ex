@@ -13,7 +13,11 @@ defmodule LiveUi.Info do
       package_areas: LiveUi.package_areas(),
       validation_state: LiveUi.Runtime.validation_state(),
       styling: style_summary(),
-      tooling: %{workflows: LiveUi.Tooling.workflows()}
+      tooling: %{
+        workflows: LiveUi.Tooling.workflows(),
+        mix_tasks: LiveUi.Tooling.mix_tasks()
+      },
+      documentation: LiveUi.Tooling.documentation_surface()
     }
   end
 
