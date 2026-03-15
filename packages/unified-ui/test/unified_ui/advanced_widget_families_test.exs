@@ -18,6 +18,21 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
       column :operations_shell do
         summary("Operations shell")
 
+        list :incident_list do
+          items([
+            [id: :sev_1, label: "SEV-1 outage", description: "Database failover in progress"],
+            [
+              id: :sev_2,
+              label: "SEV-2 queue lag",
+              description: "Background jobs delayed",
+              selected?: true
+            ]
+          ])
+
+          selection_mode(:single)
+          empty_state("No incidents")
+        end
+
         table :deployments_table do
           table_columns(name: "Name", status: "Status")
 
@@ -75,8 +90,23 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
   end
 
   test "registers advanced data, feedback, and operational widget kinds for package inspection" do
-    assert UnifiedUi.Widgets.data_kinds() == [:table, :tree_view, :markdown_viewer, :log_viewer]
-    assert UnifiedUi.Widgets.Feedback.kinds() == [:gauge, :sparkline, :bar_chart, :line_chart]
+    assert UnifiedUi.Widgets.data_kinds() == [
+             :list,
+             :table,
+             :tree_view,
+             :markdown_viewer,
+             :log_viewer
+           ]
+
+    assert UnifiedUi.Widgets.Feedback.kinds() == [
+             :status,
+             :progress,
+             :gauge,
+             :inline_feedback,
+             :sparkline,
+             :bar_chart,
+             :line_chart
+           ]
 
     assert UnifiedUi.Widgets.Advanced.kinds() == [
              :stream_widget,
@@ -96,16 +126,27 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :separator,
              :spacer,
              :text_input,
+             :numeric_input,
              :toggle,
+             :checkbox,
+             :radio_group,
              :select,
+             :pick_list,
+             :date_input,
+             :time_input,
+             :file_input,
              :menu,
              :tabs,
              :command_palette,
+             :list,
              :table,
              :tree_view,
              :markdown_viewer,
              :log_viewer,
+             :status,
+             :progress,
              :gauge,
+             :inline_feedback,
              :sparkline,
              :bar_chart,
              :line_chart,
@@ -123,6 +164,7 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
     assert dashboard.kind == :column
 
     assert Enum.map(dashboard.children, &{&1.id, &1.family, &1.kind}) == [
+             {:incident_list, :data, :list},
              {:deployments_table, :data, :table},
              {:cluster_tree, :data, :tree_view},
              {:cpu_gauge, :feedback, :gauge},
@@ -141,6 +183,27 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
                kind: :column,
                summary: "Operations shell",
                children: [
+                 %{
+                   id: :incident_list,
+                   family: :data,
+                   items: [
+                     [
+                       id: :sev_1,
+                       label: "SEV-1 outage",
+                       description: "Database failover in progress"
+                     ],
+                     [
+                       id: :sev_2,
+                       label: "SEV-2 queue lag",
+                       description: "Background jobs delayed",
+                       selected?: true
+                     ]
+                   ],
+                   kind: :list,
+                   ordered?: false,
+                   selection_mode: :single,
+                   empty_state: "No incidents"
+                 },
                  %{
                    id: :deployments_table,
                    family: :data,

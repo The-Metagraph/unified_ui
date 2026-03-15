@@ -5,29 +5,47 @@ defmodule UnifiedExamples.CatalogTest do
 
   test "tracks the implemented phase 1 and phase 2 example apps with stable metadata" do
     assert Catalog.directories() == [
+             "bar_chart",
              "box",
              "button",
              "checkbox",
+             "column",
+             "command_palette",
              "content",
              "date_input",
              "field",
              "field_group",
              "file_input",
              "form_builder",
+             "gauge",
+             "grid",
              "icon",
              "image",
+             "inline_feedback",
              "label",
+             "line_chart",
              "link",
+             "list",
+             "log_viewer",
+             "markdown_viewer",
+             "menu",
              "numeric_input",
              "pick_list",
+             "progress",
              "radio_group",
+             "row",
              "select",
              "separator",
              "spacer",
+             "sparkline",
+             "status",
+             "table",
+             "tabs",
              "text",
              "text_input",
              "time_input",
-             "toggle"
+             "toggle",
+             "tree_view"
            ]
 
     assert Enum.map(Catalog.by_phase(1), & &1.directory) == ["button", "text", "text_input"]
@@ -55,12 +73,65 @@ defmodule UnifiedExamples.CatalogTest do
              "toggle"
            ]
 
+    assert Enum.map(Catalog.by_phase(3), & &1.directory) == [
+             "row",
+             "column",
+             "grid",
+             "menu",
+             "tabs",
+             "command_palette",
+             "list",
+             "table",
+             "tree_view",
+             "markdown_viewer",
+             "log_viewer",
+             "status",
+             "progress",
+             "gauge",
+             "inline_feedback",
+             "sparkline",
+             "bar_chart",
+             "line_chart"
+           ]
+
     assert Catalog.entry!("numeric_input") == %{
              directory: "numeric_input",
              widget: :numeric_input,
              family: :input,
              phase: 2,
              shell_kind: :form_builder
+           }
+
+    assert Catalog.entry!("grid") == %{
+             directory: "grid",
+             widget: :grid,
+             family: :layout,
+             phase: 3,
+             shell_kind: :box
+           }
+
+    assert Catalog.entry!("command_palette") == %{
+             directory: "command_palette",
+             widget: :command_palette,
+             family: :navigation,
+             phase: 3,
+             shell_kind: :box
+           }
+
+    assert Catalog.entry!("table") == %{
+             directory: "table",
+             widget: :table,
+             family: :data,
+             phase: 3,
+             shell_kind: :box
+           }
+
+    assert Catalog.entry!("status") == %{
+             directory: "status",
+             widget: :status,
+             family: :feedback,
+             phase: 3,
+             shell_kind: :box
            }
   end
 

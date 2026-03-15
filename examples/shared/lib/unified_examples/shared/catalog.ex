@@ -4,7 +4,7 @@ defmodule UnifiedExamples.Shared.Catalog do
   """
 
   @type shell_kind :: :box | :form_builder
-  @type family :: :content | :layout | :forms | :input
+  @type family :: :content | :layout | :forms | :input | :navigation | :data | :feedback
 
   @type entry :: %{
           directory: String.t(),
@@ -91,7 +91,67 @@ defmodule UnifiedExamples.Shared.Catalog do
       phase: 2,
       shell_kind: :form_builder
     },
-    %{directory: "toggle", widget: :toggle, family: :input, phase: 2, shell_kind: :form_builder}
+    %{directory: "toggle", widget: :toggle, family: :input, phase: 2, shell_kind: :form_builder},
+    %{directory: "row", widget: :row, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "column", widget: :column, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "grid", widget: :grid, family: :layout, phase: 3, shell_kind: :box},
+    %{directory: "menu", widget: :menu, family: :navigation, phase: 3, shell_kind: :box},
+    %{directory: "tabs", widget: :tabs, family: :navigation, phase: 3, shell_kind: :box},
+    %{
+      directory: "command_palette",
+      widget: :command_palette,
+      family: :navigation,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{directory: "list", widget: :list, family: :data, phase: 3, shell_kind: :box},
+    %{directory: "table", widget: :table, family: :data, phase: 3, shell_kind: :box},
+    %{directory: "tree_view", widget: :tree_view, family: :data, phase: 3, shell_kind: :box},
+    %{
+      directory: "markdown_viewer",
+      widget: :markdown_viewer,
+      family: :data,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{directory: "log_viewer", widget: :log_viewer, family: :data, phase: 3, shell_kind: :box},
+    %{directory: "status", widget: :status, family: :feedback, phase: 3, shell_kind: :box},
+    %{
+      directory: "progress",
+      widget: :progress,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{directory: "gauge", widget: :gauge, family: :feedback, phase: 3, shell_kind: :box},
+    %{
+      directory: "inline_feedback",
+      widget: :inline_feedback,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{
+      directory: "sparkline",
+      widget: :sparkline,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{
+      directory: "bar_chart",
+      widget: :bar_chart,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    },
+    %{
+      directory: "line_chart",
+      widget: :line_chart,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    }
   ]
 
   @spec entries() :: [entry()]

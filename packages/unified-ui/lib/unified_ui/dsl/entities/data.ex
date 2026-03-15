@@ -7,6 +7,17 @@ defmodule UnifiedUi.Dsl.Entities.Data do
   @spec entities() :: [Spark.Dsl.Entity.t()]
   def entities do
     [
+      leaf(:list,
+        items: [type: :any, required: true],
+        ordered?: [type: :boolean, required: false, default: false],
+        selection_mode: [
+          type: {:in, [:single, :multiple, :none]},
+          required: false,
+          default: :single
+        ],
+        empty_state: [type: :string, required: false],
+        summary: [type: :string, required: false]
+      ),
       leaf(:table,
         table_columns: [type: :any, required: true],
         table_rows: [type: :any, required: true],
