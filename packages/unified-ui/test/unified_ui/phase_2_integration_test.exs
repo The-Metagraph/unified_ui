@@ -268,7 +268,19 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :select,
              :menu,
              :tabs,
-             :command_palette
+             :command_palette,
+             :table,
+             :tree_view,
+             :markdown_viewer,
+             :log_viewer,
+             :gauge,
+             :sparkline,
+             :bar_chart,
+             :line_chart,
+             :stream_widget,
+             :process_monitor,
+             :supervision_tree_viewer,
+             :cluster_dashboard
            ]
 
     assert UnifiedUi.Layout.kinds() == [:box, :row, :column, :grid, :stack]
@@ -317,17 +329,20 @@ defmodule UnifiedUi.Phase2IntegrationTest do
   test "phase 2 reference examples remain valid and introspectable without runtime libraries" do
     assert UnifiedUi.Examples.modules() == [
              UnifiedUi.Examples.FoundationalScreen,
-             UnifiedUi.Examples.ProfileForm
+             UnifiedUi.Examples.ProfileForm,
+             UnifiedUi.Examples.OverlayWorkspace
            ]
 
     assert Enum.map(UnifiedUi.Reference.example_catalog(), & &1.id) == [
              :foundational_screen,
-             :profile_form
+             :profile_form,
+             :overlay_workspace
            ]
 
     assert Enum.map(UnifiedUi.Info.example_summaries(), & &1.id) == [
              :foundational_screen,
-             :profile_form
+             :profile_form,
+             :overlay_workspace
            ]
 
     assert Enum.all?(UnifiedUi.Examples.modules(), fn module ->

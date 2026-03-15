@@ -4,7 +4,8 @@ defmodule UnifiedUi.ExamplesTest do
   test "registers maintained example modules through package reference helpers" do
     assert UnifiedUi.Examples.modules() == [
              UnifiedUi.Examples.FoundationalScreen,
-             UnifiedUi.Examples.ProfileForm
+             UnifiedUi.Examples.ProfileForm,
+             UnifiedUi.Examples.OverlayWorkspace
            ]
 
     assert UnifiedUi.Reference.example_catalog() == [
@@ -21,6 +22,13 @@ defmodule UnifiedUi.ExamplesTest do
                module: UnifiedUi.Examples.ProfileForm,
                constructs: [:input, :navigation, :forms],
                summary: "Baseline form workflow with grouped fields, tabs, and command actions."
+             },
+             %{
+               id: :overlay_workspace,
+               category: :advanced_flow,
+               module: UnifiedUi.Examples.OverlayWorkspace,
+               constructs: [:overlay, :display, :layout],
+               summary: "Advanced overlay and split-pane workflow with contextual actions."
              }
            ]
   end
@@ -116,6 +124,98 @@ defmodule UnifiedUi.ExamplesTest do
                        label: "Profile actions"
                      }
                    ]
+                 }
+               ]
+             },
+             %{
+               id: :overlay_workspace,
+               category: :advanced_flow,
+               module: UnifiedUi.Examples.OverlayWorkspace,
+               constructs: [:overlay, :display, :layout],
+               summary: "Advanced overlay and split-pane workflow with contextual actions.",
+               composition: [
+                 %{
+                   id: :workspace_shell,
+                   family: :layout,
+                   kind: :row,
+                   children: [
+                     %{
+                       id: :open_settings,
+                       family: :foundational,
+                       kind: :button,
+                       label: "Open settings"
+                     },
+                     %{
+                       id: :open_context,
+                       family: :foundational,
+                       kind: :button,
+                       label: "Open menu"
+                     }
+                   ]
+                 },
+                 %{
+                   id: :settings_panel,
+                   family: :layout,
+                   kind: :box,
+                   summary: "Settings panel",
+                   children: [
+                     %{
+                       id: :settings_heading,
+                       family: :foundational,
+                       kind: :text,
+                       role: :text,
+                       value: "Workspace settings"
+                     },
+                     %{
+                       id: :settings_copy,
+                       family: :foundational,
+                       kind: :text,
+                       role: :text,
+                       value: "Advanced workspace options"
+                     }
+                   ]
+                 },
+                 %{
+                   id: :settings_dialog,
+                   family: :overlay,
+                   kind: :dialog,
+                   title: "Settings",
+                   content_ref: :settings_panel,
+                   trigger_ref: :open_settings
+                 },
+                 %{
+                   id: :workspace_menu,
+                   family: :overlay,
+                   kind: :context_menu,
+                   target_ref: :workspace_shell,
+                   trigger_ref: :open_context,
+                   placement: :bottom_start
+                 },
+                 %{
+                   id: :save_toast,
+                   family: :overlay,
+                   kind: :toast,
+                   title: "Saved",
+                   message: "Workspace settings updated",
+                   severity: :success,
+                   placement: :bottom_end
+                 },
+                 %{
+                   id: :workspace_split,
+                   family: :display,
+                   kind: :split_pane,
+                   primary_ref: :workspace_shell,
+                   secondary_ref: :settings_panel,
+                   ratio: 0.35
+                 },
+                 %{
+                   id: :workspace_scroll,
+                   family: :display,
+                   kind: :scroll_bar,
+                   target_ref: :workspace_shell,
+                   position: 4,
+                   viewport_size: 24,
+                   content_size: 120
                  }
                ]
              }
