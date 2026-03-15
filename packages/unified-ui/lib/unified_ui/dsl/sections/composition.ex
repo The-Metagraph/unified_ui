@@ -3,6 +3,8 @@ defmodule UnifiedUi.Dsl.Sections.Composition do
   Baseline authored composition section for `UnifiedUi` modules.
   """
 
+  alias UnifiedUi.Dsl.Entities
+
   @section %Spark.Dsl.Section{
     name: :composition,
     describe: """
@@ -30,7 +32,8 @@ defmodule UnifiedUi.Dsl.Sections.Composition do
         required: false,
         doc: "Optional default child slot name for later composition entities."
       ]
-    ]
+    ],
+    entities: Entities.composition_entities()
   }
 
   @spec section() :: Spark.Dsl.Section.t()

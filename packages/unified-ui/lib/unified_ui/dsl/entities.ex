@@ -3,6 +3,8 @@ defmodule UnifiedUi.Dsl.Entities do
   Baseline registry of canonical authored construct families.
   """
 
+  alias UnifiedUi.Dsl.Entities.Foundational
+
   @construct_families %{
     widgets: [
       :foundational_visual,
@@ -27,5 +29,10 @@ defmodule UnifiedUi.Dsl.Entities do
   @spec categories() :: [atom()]
   def categories do
     Map.keys(@construct_families)
+  end
+
+  @spec composition_entities() :: [Spark.Dsl.Entity.t()]
+  def composition_entities do
+    Foundational.entities()
   end
 end
