@@ -5,7 +5,8 @@ defmodule LiveUi.Renderer do
 
   use Phoenix.Component
 
-  alias UnifiedIUR.{Binding, Element, Style}
+  alias LiveUi.Style, as: NativeStyle
+  alias UnifiedIUR.{Binding, Element}
 
   @spec accepts() :: module()
   def accepts, do: Element
@@ -84,6 +85,8 @@ defmodule LiveUi.Renderer do
       content={content_text(@element)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -96,6 +99,8 @@ defmodule LiveUi.Renderer do
       content={content_text(@element)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -109,6 +114,8 @@ defmodule LiveUi.Renderer do
       fallback_text={string_optional(get_in(@element.attributes, [:icon, :fallback_text]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -122,6 +129,8 @@ defmodule LiveUi.Renderer do
       fit={string_optional(get_in(@element.attributes, [:image, :fit]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -134,6 +143,8 @@ defmodule LiveUi.Renderer do
       disabled={state_boolean(@element, :disabled?)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -147,6 +158,8 @@ defmodule LiveUi.Renderer do
       external={state_boolean(@element, [:link, :external?])}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -158,6 +171,8 @@ defmodule LiveUi.Renderer do
       orientation={string_value(get_in(@element.attributes, [:separator, :orientation]), "horizontal")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -170,6 +185,8 @@ defmodule LiveUi.Renderer do
       grow={integer_value(get_in(@element.attributes, [:spacer, :grow]), 0)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -181,6 +198,8 @@ defmodule LiveUi.Renderer do
       role={string_value(get_in(@element.attributes, [:container, :role]), "content")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -198,6 +217,8 @@ defmodule LiveUi.Renderer do
       background={string_optional(get_in(@element.attributes, [:container, :background]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -215,6 +236,8 @@ defmodule LiveUi.Renderer do
       justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -232,6 +255,8 @@ defmodule LiveUi.Renderer do
       justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -249,6 +274,8 @@ defmodule LiveUi.Renderer do
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -264,6 +291,8 @@ defmodule LiveUi.Renderer do
       autocomplete={boolean_default(get_in(@element.attributes, [:form, :autocomplete?]), true)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -280,6 +309,8 @@ defmodule LiveUi.Renderer do
       description={string_optional(get_in(@element.attributes, [:group, :description]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} />
@@ -295,6 +326,8 @@ defmodule LiveUi.Renderer do
       name={string_optional(get_in(@element.attributes, [:field, :name]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <:label :for={child <- child_elements(@element, :label)}>
         <.render element={child} />
@@ -320,6 +353,8 @@ defmodule LiveUi.Renderer do
       input_type={input_type(@element.kind)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -333,6 +368,8 @@ defmodule LiveUi.Renderer do
       checked={boolean_default(binding_value(@element), false)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -347,6 +384,8 @@ defmodule LiveUi.Renderer do
       multiple={selection_multiple?(@element, @element.kind)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -360,6 +399,8 @@ defmodule LiveUi.Renderer do
       orientation={string_value(get_in(@element.attributes, [:navigation, :orientation]), "vertical")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -372,6 +413,8 @@ defmodule LiveUi.Renderer do
       active_item={string_optional(get_in(@element.attributes, [:navigation, :active_item]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -384,6 +427,8 @@ defmodule LiveUi.Renderer do
       items={command_palette_items(@element)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -397,6 +442,8 @@ defmodule LiveUi.Renderer do
       selection_mode={string_value(get_in(@element.attributes, [:list, :selection_mode]), "single")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -410,6 +457,8 @@ defmodule LiveUi.Renderer do
       dense={boolean_default(get_in(@element.attributes, [:table, :dense?]), false)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -422,6 +471,8 @@ defmodule LiveUi.Renderer do
       selection_mode={string_value(get_in(@element.attributes, [:tree, :selection_mode]), "single")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -435,6 +486,8 @@ defmodule LiveUi.Renderer do
       status={string_value(get_in(@element.attributes, [:feedback, :status]), "idle")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -449,6 +502,8 @@ defmodule LiveUi.Renderer do
       label={string_optional(get_in(@element.attributes, [:progress, :label]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -463,6 +518,8 @@ defmodule LiveUi.Renderer do
       label={string_optional(get_in(@element.attributes, [:gauge, :label]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -476,6 +533,8 @@ defmodule LiveUi.Renderer do
       severity={string_value(get_in(@element.attributes, [:feedback, :severity]), "info")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -488,6 +547,8 @@ defmodule LiveUi.Renderer do
       mode={string_value(get_in(@element.attributes, [:document, :mode]), "rendered")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -501,6 +562,8 @@ defmodule LiveUi.Renderer do
       show_timestamps={boolean_default(get_in(@element.attributes, [:logs, :show_timestamps?]), true)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -513,6 +576,8 @@ defmodule LiveUi.Renderer do
       ordering={string_value(get_in(@element.attributes, [:stream, :ordering]), "append_only")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -524,6 +589,8 @@ defmodule LiveUi.Renderer do
       processes={get_in(@element.attributes, [:monitor, :processes]) || []}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -536,6 +603,8 @@ defmodule LiveUi.Renderer do
       summary={get_in(@element.attributes, [:cluster, :summary]) || %{}}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -548,6 +617,8 @@ defmodule LiveUi.Renderer do
       expanded={boolean_default(get_in(@element.attributes, [:inspection, :expanded?]), true)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -559,6 +630,8 @@ defmodule LiveUi.Renderer do
       series={chart_values(@element)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -570,6 +643,8 @@ defmodule LiveUi.Renderer do
       series={get_in(@element.attributes, [:chart, :series]) || []}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -581,6 +656,8 @@ defmodule LiveUi.Renderer do
       series={get_in(@element.attributes, [:chart, :series]) || []}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -596,6 +673,8 @@ defmodule LiveUi.Renderer do
       background_fill={string_value(get_in(@element.attributes, [:dialog, :background_fill]), "scrim")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} />
@@ -614,6 +693,8 @@ defmodule LiveUi.Renderer do
       background_fill={string_value(get_in(@element.attributes, [:alert_dialog, :background_fill]), "scrim")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} />
@@ -632,6 +713,8 @@ defmodule LiveUi.Renderer do
       transient={boolean_default(get_in(@element.attributes, [:toast, :transient?]), true)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} />
@@ -650,6 +733,8 @@ defmodule LiveUi.Renderer do
       active_item={string_optional(get_in(@element.attributes, [:context_menu, :active_item]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -664,6 +749,8 @@ defmodule LiveUi.Renderer do
       focus_scope={string_optional(get_in(@element.attributes, [:overlay, :focus_scope]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <:base :for={child <- child_elements(@element, :base)}>
         <.render element={child} />
@@ -690,6 +777,8 @@ defmodule LiveUi.Renderer do
       independent_scroll={boolean_default(get_in(@element.attributes, [:viewport, :independent_scroll?]), false)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} />
@@ -711,6 +800,8 @@ defmodule LiveUi.Renderer do
       sync_group={string_optional(get_in(@element.attributes, [:scroll_bar, :sync_group]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -728,6 +819,8 @@ defmodule LiveUi.Renderer do
       sync_scroll={string_optional(get_in(@element.attributes, [:split, :sync_scroll]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     >
       <:primary :for={child <- child_elements(@element, :primary)}>
         <.render element={child} />
@@ -751,6 +844,8 @@ defmodule LiveUi.Renderer do
       clip={boolean_default(get_in(@element.attributes, [:canvas, :clip?]), true)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
     />
     """
   end
@@ -866,27 +961,13 @@ defmodule LiveUi.Renderer do
     end
   end
 
-  defp theme_variant(%Element{} = element) do
-    element.attributes
-    |> Map.get(:theme)
-    |> case do
-      %{variant: variant} -> string_optional(variant)
-      %{"variant" => variant} -> string_optional(variant)
-      _ -> nil
-    end
-  end
+  defp theme_variant(%Element{} = element), do: element |> style_profile() |> Map.get(:variant)
+  defp style_tone(%Element{} = element), do: element |> style_profile() |> Map.get(:tone)
+  defp style_state(%Element{} = element), do: element |> style_profile() |> Map.get(:state)
+  defp style_class(%Element{} = element), do: element |> style_profile() |> Map.get(:class)
 
-  defp style_tone(%Element{} = element) do
-    case Map.get(element.attributes, :style) do
-      %Style{emphasis: emphasis} ->
-        string_optional(Map.get(emphasis, :tone) || Map.get(emphasis, "tone"))
-
-      %{emphasis: emphasis} when is_map(emphasis) ->
-        string_optional(Map.get(emphasis, :tone) || Map.get(emphasis, "tone"))
-
-      _ ->
-        nil
-    end
+  defp style_profile(%Element{} = element) do
+    NativeStyle.from_element(element)
   end
 
   defp content_text(%Element{} = element) do
