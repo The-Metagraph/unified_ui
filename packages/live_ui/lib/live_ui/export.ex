@@ -78,12 +78,13 @@ defmodule LiveUi.Export do
     %{
       example: example,
       diagnostics:
-        Map.take(result, [
-          :diagnostics,
-          :runtime_action,
-          :native_boundary,
-          :canonical_boundary
-        ])
+        %{}
+        |> maybe_put(:diagnostics, Map.get(result, :diagnostics))
+        |> maybe_put(:runtime_action, get_in(result, [:boundary, :runtime_action]))
+        |> maybe_put(:native_boundary, get_in(result, [:boundary, :native_boundary]))
+        |> maybe_put(:canonical_boundary, get_in(result, [:boundary, :canonical_boundary]))
+        |> maybe_put(:profile_diagnostics, get_in(result, [:profile, :diagnostics]))
+        |> maybe_put(:operations_diagnostics, get_in(result, [:operations, :diagnostics]))
     }
   end
 
@@ -100,4 +101,7 @@ defmodule LiveUi.Export do
   defp inspect_output(value) do
     Kernel.inspect(value, pretty: true, width: 100, limit: :infinity, sort_maps: true)
   end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 end
