@@ -72,6 +72,24 @@ defmodule UnifiedUi.InfoTest do
                summary: nil,
                themes: []
              },
+             signal_catalog: %{
+               namespace: :workspace,
+               default_target: :session,
+               mode: :canonical,
+               families: [
+                 :click,
+                 :change,
+                 :submit,
+                 :open,
+                 :close,
+                 :focus,
+                 :selection,
+                 :navigation,
+                 :command
+               ],
+               bindings: [],
+               interactions: []
+             },
              validation_state: :phase_1_valid
            }
   end

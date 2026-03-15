@@ -66,6 +66,6 @@ defmodule UnifiedUi.DslTest do
     assert UnifiedUi.Dsl.module_imports() == [UnifiedUi.Dsl.Helpers]
     assert UnifiedUi.Dsl.Helpers.annotation_map(source: :test) == %{source: :test}
     assert UnifiedUi.Dsl.Helpers.tag_list([:alpha, :alpha, :beta]) == [:alpha, :beta]
-    assert UnifiedUi.Dsl.Helpers.path(:profile) == [:profile]
+    assert UnifiedUi.Dsl.Helpers.path_segments(:profile) == [:profile]
   end
 end

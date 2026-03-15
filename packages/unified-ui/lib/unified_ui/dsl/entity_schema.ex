@@ -12,6 +12,8 @@ defmodule UnifiedUi.Dsl.EntitySchema do
     theme_ref: [type: :atom, required: false],
     style_refs: [type: {:list, :atom}, required: false, default: []],
     style: [type: :any, required: false],
+    interaction_refs: [type: {:list, :atom}, required: false, default: []],
+    binding_refs: [type: {:list, :atom}, required: false, default: []],
     accessibility_label: [type: :string, required: false],
     accessibility_description: [type: :string, required: false],
     disabled?: [type: :boolean, required: false, default: false]

@@ -3,6 +3,8 @@ defmodule UnifiedUi.Dsl.Sections.Signals do
   Baseline authored signal section for `UnifiedUi` modules.
   """
 
+  alias UnifiedUi.Dsl.Entities.Signal
+
   @section %Spark.Dsl.Section{
     name: :signals,
     describe: """
@@ -25,7 +27,8 @@ defmodule UnifiedUi.Dsl.Sections.Signals do
         default: :canonical,
         doc: "Baseline signal authoring mode for the package."
       ]
-    ]
+    ],
+    entities: Signal.entities()
   }
 
   @spec section() :: Spark.Dsl.Section.t()

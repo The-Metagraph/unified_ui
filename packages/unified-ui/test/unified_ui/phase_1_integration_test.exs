@@ -41,9 +41,13 @@ defmodule UnifiedUi.Phase1IntegrationTest do
     assert UnifiedUi.module_areas() == %{
              compiler: UnifiedUi.Compiler,
              dsl: UnifiedUi.Dsl,
+             binding: UnifiedUi.Binding,
              info: UnifiedUi.Info,
              reference: UnifiedUi.Reference,
+             signal: UnifiedUi.Signal,
              signals: UnifiedUi.Signals,
+             style: UnifiedUi.Style,
+             theme: UnifiedUi.Theme,
              tooling: UnifiedUi.Tooling
            }
 

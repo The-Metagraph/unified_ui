@@ -5,6 +5,7 @@ defmodule UnifiedUi.Reference do
 
   alias UnifiedUi.Dsl.{Entities, Identity, Placement, SectionRegistry}
   alias UnifiedUi.Examples
+  alias UnifiedUi.Signal
   alias UnifiedUi.Theme
 
   @spec supported_sections() :: [atom()]
@@ -86,6 +87,11 @@ defmodule UnifiedUi.Reference do
   @spec style_component_states() :: [atom()]
   def style_component_states do
     UnifiedUi.Style.component_states()
+  end
+
+  @spec signal_families() :: [Signal.family()]
+  def signal_families do
+    Signal.families()
   end
 
   defp normalize_description(description) do

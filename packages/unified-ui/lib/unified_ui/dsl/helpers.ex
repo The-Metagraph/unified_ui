@@ -5,6 +5,7 @@ defmodule UnifiedUi.Dsl.Helpers do
 
   alias UnifiedIUR.Style.Color
   alias UnifiedIUR.Token
+  alias UnifiedUi.Binding
   alias UnifiedUi.Style
 
   @spec annotation_map(keyword() | map() | nil) :: map()
@@ -16,10 +17,11 @@ defmodule UnifiedUi.Dsl.Helpers do
   def tag_list(nil), do: []
   def tag_list(values) when is_list(values), do: values |> Enum.uniq() |> Enum.reject(&is_nil/1)
 
-  @spec path(atom() | String.t() | [atom() | String.t()] | nil) :: [atom() | String.t()]
-  def path(nil), do: []
-  def path(value) when is_atom(value) or is_binary(value), do: [value]
-  def path(values) when is_list(values), do: values
+  @spec path_segments(atom() | String.t() | [atom() | String.t()] | nil) ::
+          [atom() | String.t()]
+  def path_segments(nil), do: []
+  def path_segments(value) when is_atom(value) or is_binary(value), do: [value]
+  def path_segments(values) when is_list(values), do: values
 
   @spec metadata(keyword() | map()) :: keyword()
   def metadata(values) when is_list(values), do: values
@@ -42,4 +44,7 @@ defmodule UnifiedUi.Dsl.Helpers do
 
   @spec style_value(keyword() | map() | Style.t() | nil) :: Style.t()
   def style_value(values \\ nil), do: Style.new(values)
+
+  @spec binding_ref(atom() | String.t()) :: Binding.ref_t()
+  def binding_ref(id), do: Binding.ref(id)
 end

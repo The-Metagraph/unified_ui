@@ -35,6 +35,8 @@ defmodule UnifiedUi.Dsl.Node do
           theme_ref: atom() | nil,
           style_refs: [atom()],
           style: UnifiedUi.Style.t() | nil,
+          interaction_refs: [atom()],
+          binding_refs: [atom()],
           accessibility_label: String.t() | nil,
           accessibility_description: String.t() | nil,
           action_intent: atom() | nil,
@@ -147,6 +149,8 @@ defmodule UnifiedUi.Dsl.Node do
             theme_ref: nil,
             style_refs: [],
             style: nil,
+            interaction_refs: [],
+            binding_refs: [],
             accessibility_label: nil,
             accessibility_description: nil,
             action_intent: nil,
@@ -259,6 +263,8 @@ defmodule UnifiedUi.Dsl.Node do
           nil -> nil
           style -> UnifiedUi.Style.summary(style)
         end,
+      interaction_refs: node.interaction_refs,
+      binding_refs: node.binding_refs,
       role: node.role,
       presentation: node.presentation,
       summary: node.summary,

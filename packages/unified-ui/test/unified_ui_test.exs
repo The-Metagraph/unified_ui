@@ -13,6 +13,10 @@ defmodule UnifiedUiTest do
              dsl: UnifiedUi.Dsl,
              compiler: UnifiedUi.Compiler,
              signals: UnifiedUi.Signals,
+             signal: UnifiedUi.Signal,
+             binding: UnifiedUi.Binding,
+             style: UnifiedUi.Style,
+             theme: UnifiedUi.Theme,
              reference: UnifiedUi.Reference,
              info: UnifiedUi.Info,
              tooling: UnifiedUi.Tooling
