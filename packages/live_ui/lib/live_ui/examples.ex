@@ -7,18 +7,23 @@ defmodule LiveUi.Examples do
     LiveUi.Examples.NativeDisplayScreen,
     LiveUi.Examples.NativeFormScreen,
     LiveUi.Examples.NativeNavigationScreen,
-    LiveUi.Examples.NativeBoundaryScreen
+    LiveUi.Examples.NativeBoundaryScreen,
+    LiveUi.Examples.NativeStyledProfileScreen,
+    LiveUi.Examples.NativeStyledOperationsScreen
   ]
 
   @canonical_examples [
     LiveUi.Examples.CanonicalDisplay,
     LiveUi.Examples.CanonicalForm,
     LiveUi.Examples.CanonicalNavigation,
-    LiveUi.Examples.CanonicalBoundaryProfile
+    LiveUi.Examples.CanonicalBoundaryProfile,
+    LiveUi.Examples.CanonicalStyledProfile,
+    LiveUi.Examples.CanonicalStyledOperations
   ]
 
   @mixed_examples [
-    LiveUi.Examples.MixedBoundaryTransport
+    LiveUi.Examples.MixedBoundaryTransport,
+    LiveUi.Examples.StyledContinuityComparison
   ]
 
   @spec native_examples() :: [module()]
