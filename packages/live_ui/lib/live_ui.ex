@@ -15,17 +15,19 @@ defmodule LiveUi do
     Runtime,
     Screen,
     Signals,
+    Style,
+    Theme,
     Tooling,
     Transport,
     Viewport,
     Widgets
   }
 
-  @type package_area :: :widgets | :runtime | :renderer | :transport | :tooling
+  @type package_area :: :widgets | :runtime | :renderer | :transport | :tooling | :styling
 
   @spec package_areas() :: [package_area()]
   def package_areas do
-    [:widgets, :runtime, :renderer, :transport, :tooling]
+    [:widgets, :runtime, :renderer, :transport, :tooling, :styling]
   end
 
   @spec widgets() :: module()
@@ -63,6 +65,12 @@ defmodule LiveUi do
 
   @spec signals() :: module()
   def signals, do: Signals
+
+  @spec theme() :: module()
+  def theme, do: Theme
+
+  @spec style() :: module()
+  def style, do: Style
 
   @spec tooling() :: module()
   def tooling, do: Tooling
