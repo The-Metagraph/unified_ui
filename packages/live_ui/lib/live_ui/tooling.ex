@@ -3,9 +3,13 @@ defmodule LiveUi.Tooling do
   Package-facing entrypoint for inspection and validation helpers.
   """
 
+  alias Jido.Signal
   alias LiveUi.Examples
   alias LiveUi.Runtime.State
   alias UnifiedIUR.Element
+
+  @required_example_paths [:native, :canonical, :mixed]
+  @required_example_families [:input, :transport, :styling, :overlay, :operational]
 
   @type workflow ::
           :preview
@@ -31,9 +35,73 @@ defmodule LiveUi.Tooling do
     ]
   end
 
+  @spec mix_tasks() :: [String.t()]
+  def mix_tasks do
+    [
+      "mix live_ui.preview",
+      "mix live_ui.inspect",
+      "mix live_ui.export",
+      "mix live_ui.validate"
+    ]
+  end
+
   @spec examples() :: [map()]
   def examples do
     Examples.catalog()
+  end
+
+  @spec governance_gates() :: map()
+  def governance_gates do
+    %{
+      required_paths: @required_example_paths,
+      required_example_families: @required_example_families,
+      change_review_expectations: [
+        :paired_native_and_canonical_example_review,
+        :boundary_transport_review,
+        :server_authority_review
+      ],
+      release_readiness_focus: [:example_health, :continuity_alignment, :boundary_transport]
+    }
+  end
+
+  @spec validation_report() :: map()
+  def validation_report do
+    catalog = examples()
+    example_health = example_health_report(catalog)
+    example_coverage = example_coverage_report(catalog)
+    continuity = continuity_report(catalog)
+    transport = transport_report()
+    runtime_authority = runtime_authority_report(catalog)
+
+    report = %{
+      example_health: example_health,
+      example_coverage: example_coverage,
+      continuity: continuity,
+      transport: transport,
+      runtime_authority: runtime_authority,
+      governance_gates: governance_gates()
+    }
+
+    Map.put(report, :release_readiness, release_readiness_report(report))
+  end
+
+  @spec validation_summary(map()) :: String.t()
+  def validation_summary(report) when is_map(report) do
+    [
+      "LiveUi validation summary",
+      "  examples passing?: #{report.example_health.all_passing?}",
+      "  example coverage complete?: #{report.example_coverage.complete?}",
+      "  continuity aligned?: #{report.continuity.aligned?}",
+      "  transport sound?: #{report.transport.sound?}",
+      "  server authoritative?: #{report.runtime_authority.server_authoritative?}",
+      "  release ready?: #{report.release_readiness.ready?}",
+      "  failing examples: #{inspect(report.example_health.failing_ids)}",
+      "  missing paths: #{inspect(report.example_coverage.missing_paths)}",
+      "  missing families: #{inspect(report.example_coverage.missing_families)}",
+      "  continuity failures: #{inspect(report.continuity.failing_ids)}",
+      "  transport issues: #{inspect(report.transport.issues)}"
+    ]
+    |> Enum.join("\n")
   end
 
   @spec preview_example(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
@@ -206,6 +274,196 @@ defmodule LiveUi.Tooling do
   defp maybe_add_diagnostic(diagnostics, reason, widgets) do
     diagnostics ++ [%{reason: reason, widgets: widgets}]
   end
+
+  defp example_health_report(catalog) do
+    results =
+      Enum.map(catalog, fn example ->
+        case inspect_example(example.id) do
+          {:ok, inspection} ->
+            %{id: example.id, path: example.path, ok?: true, result: inspection.result}
+
+          {:error, reason} ->
+            %{id: example.id, path: example.path, ok?: false, reason: reason}
+        end
+      end)
+
+    failing_ids =
+      results
+      |> Enum.reject(& &1.ok?)
+      |> Enum.map(& &1.id)
+
+    %{
+      total: length(results),
+      results: results,
+      failing_ids: failing_ids,
+      all_passing?: failing_ids == []
+    }
+  end
+
+  defp example_coverage_report(catalog) do
+    present_paths =
+      catalog
+      |> Enum.map(& &1.path)
+      |> Enum.uniq()
+      |> Enum.sort()
+
+    present_families =
+      catalog
+      |> Enum.flat_map(& &1.families)
+      |> Enum.uniq()
+      |> Enum.sort()
+
+    missing_paths = @required_example_paths -- present_paths
+    missing_families = @required_example_families -- present_families
+
+    %{
+      present_paths: present_paths,
+      missing_paths: missing_paths,
+      present_families: present_families,
+      missing_families: missing_families,
+      complete?: missing_paths == [] and missing_families == []
+    }
+  end
+
+  defp continuity_report(catalog) do
+    targets =
+      Enum.filter(catalog, fn example ->
+        example.path == :native and :continuity in example.families
+      end)
+
+    results =
+      Enum.map(targets, fn example ->
+        case compare_example_pair(example.id) do
+          {:ok, comparison} ->
+            report = comparison.report
+
+            %{
+              id: example.id,
+              ok?:
+                report.continuity.widgets_aligned? and report.continuity.tone_overlap? and
+                  report.continuity.runtime_model_aligned?,
+              report: report,
+              diagnostics: comparison.diagnostics
+            }
+
+          {:error, reason} ->
+            %{id: example.id, ok?: false, reason: reason, diagnostics: [%{reason: reason}]}
+        end
+      end)
+
+    failing_ids =
+      results
+      |> Enum.reject(& &1.ok?)
+      |> Enum.map(& &1.id)
+
+    %{
+      total: length(results),
+      results: results,
+      failing_ids: failing_ids,
+      aligned?: failing_ids == []
+    }
+  end
+
+  defp transport_report do
+    with {:ok, boundary} <- LiveUi.Examples.MixedBoundaryTransport.compare_paths(),
+         {:ok, styled} <- LiveUi.Examples.StyledContinuityComparison.compare() do
+      issues =
+        []
+        |> maybe_issue(boundary.native_local.signal != nil, :local_transport_leakage)
+        |> maybe_issue(
+          not match?(%Signal{}, boundary.native_boundary.signal),
+          :missing_native_boundary_signal
+        )
+        |> maybe_issue(
+          not match?(%Signal{}, boundary.canonical_boundary.signal),
+          :missing_canonical_boundary_signal
+        )
+        |> maybe_issue(
+          boundary.runtime_action.runtime_event != "rename",
+          :unexpected_runtime_event
+        )
+        |> maybe_issue(
+          styled.boundary.runtime_action.runtime_event != "rename",
+          :styled_runtime_event
+        )
+
+      %{
+        sound?: issues == [],
+        issues: issues,
+        boundary_transport: boundary,
+        styled_continuity_boundary: styled.boundary
+      }
+    else
+      {:error, reason} ->
+        %{sound?: false, issues: [reason]}
+    end
+  end
+
+  defp runtime_authority_report(catalog) do
+    results =
+      catalog
+      |> Enum.reject(&(&1.path == :mixed))
+      |> Enum.map(fn example ->
+        case inspect_example(example.id) do
+          {:ok, inspection} ->
+            %{
+              id: example.id,
+              server_authoritative?: Map.get(inspection.result, :server_authoritative?, false)
+            }
+
+          {:error, _reason} ->
+            %{id: example.id, server_authoritative?: false}
+        end
+      end)
+
+    %{
+      results: results,
+      server_authoritative?: Enum.all?(results, & &1.server_authoritative?)
+    }
+  end
+
+  defp release_readiness_report(report) do
+    criteria = [
+      gate(
+        :example_health,
+        "All maintained examples inspect successfully.",
+        report.example_health.all_passing?
+      ),
+      gate(
+        :example_coverage,
+        "Maintained examples cover the required paths and families.",
+        report.example_coverage.complete?
+      ),
+      gate(
+        :continuity,
+        "Styled native and canonical continuity pairs stay aligned.",
+        report.continuity.aligned?
+      ),
+      gate(
+        :transport,
+        "Boundary transport remains canonical-safe and predictable.",
+        report.transport.sound?
+      ),
+      gate(
+        :runtime_authority,
+        "Inspectable native and canonical paths remain server-authoritative.",
+        report.runtime_authority.server_authoritative?
+      )
+    ]
+
+    %{
+      ready?: Enum.all?(criteria, & &1.passed?),
+      criteria: criteria,
+      required_change_review: governance_gates().change_review_expectations
+    }
+  end
+
+  defp gate(id, description, passed?) do
+    %{id: id, description: description, passed?: passed?}
+  end
+
+  defp maybe_issue(issues, false, _reason), do: issues
+  defp maybe_issue(issues, true, reason), do: issues ++ [reason]
 
   defp resolve_example(id) do
     case Examples.find(id) do
