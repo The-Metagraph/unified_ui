@@ -3,7 +3,7 @@ defmodule LiveUi.RendererTest do
 
   import Phoenix.LiveViewTest
 
-  alias UnifiedIUR.{Container, Forms, Layout}
+  alias UnifiedIUR.{Container, Forms, Interaction, Layout}
   alias UnifiedIUR.Widgets.{Foundational, Input, Navigation}
 
   test "renderer maps foundational canonical widgets and layouts into native components" do
@@ -103,5 +103,50 @@ defmodule LiveUi.RendererTest do
 
     assert render_component(&LiveUi.Renderer.render/1, %{element: left}) ==
              render_component(&LiveUi.Renderer.render/1, %{element: right})
+  end
+
+  test "renderer lowers canonical button interactions into LiveView click bindings when an event target is present" do
+    element =
+      Foundational.button("Save",
+        id: "save-button",
+        interactions: [Interaction.click(intent: :save_profile, element_id: :save_button)]
+      )
+
+    html =
+      render_component(&LiveUi.Renderer.render/1, %{
+        element: element,
+        event_target: %Phoenix.LiveComponent.CID{cid: 1}
+      })
+
+    assert html =~ ~s(data-live-ui-widget="button")
+    assert html =~ ~s(phx-click="canonical_interaction")
+    assert html =~ ~s(phx-target="1")
+    assert html =~ ~s(phx-value-element_id="save-button")
+    assert html =~ ~s(phx-value-widget="button")
+  end
+
+  test "renderer lowers canonical text input interactions into LiveView change bindings when an event target is present" do
+    element =
+      Input.text_input(
+        id: "profile-name",
+        name: "note",
+        value: "",
+        placeholder: "Type your note",
+        interactions: [Interaction.change(intent: :draft_note, element_id: :profile_name)]
+      )
+
+    html =
+      render_component(&LiveUi.Renderer.render/1, %{
+        element: element,
+        event_target: %Phoenix.LiveComponent.CID{cid: 1}
+      })
+
+    assert html =~ ~s(data-live-ui-widget="text-input")
+    assert html =~ ~s(phx-input="canonical_interaction")
+    assert html =~ ~s(phx-change="canonical_interaction")
+    assert html =~ ~s(phx-target="1")
+    assert html =~ ~s(data-live-ui-interaction-form="true")
+    assert html =~ ~s(name="element_id" value="profile-name")
+    assert html =~ ~s(name="widget" value="text_input")
   end
 end

@@ -125,6 +125,24 @@ defmodule UnifiedIUR.Widgets.InputTest do
            } = checkbox
   end
 
+  test "accepts value_path and default_value as binding aliases for authored DSL compilation" do
+    text_input =
+      Input.text_input(
+        id: "draft-note-input",
+        value_path: [:note],
+        default_value: "",
+        placeholder: "Type your note"
+      )
+
+    assert %Element{
+             kind: :text_input,
+             attributes: %{
+               bindings: [%Binding{path: [:note], default: ""}],
+               input: %{placeholder: "Type your note"}
+             }
+           } = text_input
+  end
+
   test "builds selection and specialized inputs with stable canonical option shape" do
     radio_group =
       Input.radio_group(
