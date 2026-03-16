@@ -4,6 +4,9 @@ defmodule UnifiedExamples.Shared do
   """
 
   alias UnifiedExamples.Shared.Catalog
+  alias UnifiedExamples.Shared.Reporting
+  alias UnifiedExamples.Shared.Tooling
+  alias UnifiedExamples.Shared.Validation
 
   @type dependency_app :: :unified_ui | :unified_iur | :live_ui
 
@@ -15,6 +18,16 @@ defmodule UnifiedExamples.Shared do
   @spec suite_root() :: String.t()
   def suite_root do
     Path.expand("..", shared_root())
+  end
+
+  @spec suite_index_path() :: String.t()
+  def suite_index_path do
+    Path.join(suite_root(), "README.md")
+  end
+
+  @spec catalog_manifest_path() :: String.t()
+  def catalog_manifest_path do
+    Path.join(suite_root(), "catalog.tsv")
   end
 
   @spec shared_root() :: String.t()
@@ -39,6 +52,37 @@ defmodule UnifiedExamples.Shared do
   @spec catalog_entries() :: [Catalog.entry()]
   def catalog_entries do
     Catalog.entries()
+  end
+
+  @spec catalog_manifest() :: String.t()
+  def catalog_manifest do
+    Catalog.tsv()
+  end
+
+  @spec preview(String.t() | atom(), :report | :html | :metadata | :inspection) ::
+          {:ok, String.t() | map()} | {:error, term()}
+  def preview(directory, format \\ :report) do
+    Tooling.preview(directory, format)
+  end
+
+  @spec run_descriptor(String.t() | atom(), [String.t()]) :: map()
+  def run_descriptor(directory, mix_args \\ ["test"]) do
+    Tooling.run_descriptor(directory, mix_args)
+  end
+
+  @spec review_metadata(String.t() | atom()) :: {:ok, map()}
+  def review_metadata(directory) do
+    Tooling.review_metadata(directory)
+  end
+
+  @spec validation_report() :: map()
+  def validation_report do
+    Validation.report()
+  end
+
+  @spec suite_report() :: map()
+  def suite_report do
+    Reporting.suite_report()
   end
 
   @spec catalog_directories() :: [String.t()]
