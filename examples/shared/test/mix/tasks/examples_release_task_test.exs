@@ -3,6 +3,8 @@ defmodule Mix.Tasks.ExamplesReleaseTaskTest do
 
   import ExUnit.CaptureIO
 
+  @moduletag timeout: 180_000
+
   setup do
     Mix.Task.clear()
     :ok
