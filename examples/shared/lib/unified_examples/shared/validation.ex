@@ -80,6 +80,54 @@ defmodule UnifiedExamples.Shared.Validation do
       metadata.directory,
       "example app must report a supported shared shell kind"
     )
+    |> maybe_issue(
+      metadata.browser_runnable? != true,
+      :not_browser_runnable,
+      metadata.directory,
+      "example app must expose a browser-runnable Phoenix LiveView baseline"
+    )
+    |> maybe_issue(
+      metadata.launch_path != "/",
+      :launch_path_mismatch,
+      metadata.directory,
+      "example app must mount its browser entrypoint at the shared root path"
+    )
+    |> maybe_issue(
+      not String.contains?(metadata.launch_command || "", "mix phx.server"),
+      :launch_command_mismatch,
+      metadata.directory,
+      "example app launch metadata must expose a mix phx.server command"
+    )
+    |> maybe_issue(
+      not String.contains?(metadata.launch_url || "", metadata.launch_path || "/"),
+      :launch_url_mismatch,
+      metadata.directory,
+      "example app launch metadata must expose a URL aligned with the mount path"
+    )
+    |> maybe_missing_module(
+      metadata.application_module,
+      :missing_application_module,
+      metadata.directory,
+      "example app must expose an application module for the Phoenix baseline"
+    )
+    |> maybe_missing_module(
+      metadata.endpoint_module,
+      :missing_endpoint_module,
+      metadata.directory,
+      "example app must expose an endpoint module for the Phoenix baseline"
+    )
+    |> maybe_missing_module(
+      metadata.router_module,
+      :missing_router_module,
+      metadata.directory,
+      "example app must expose a router module for the Phoenix baseline"
+    )
+    |> maybe_missing_module(
+      metadata.live_module,
+      :missing_live_module,
+      metadata.directory,
+      "example app must expose a LiveView module for the Phoenix baseline"
+    )
   end
 
   @spec catalog_findings([String.t()], [String.t()]) :: map()
@@ -114,6 +162,10 @@ defmodule UnifiedExamples.Shared.Validation do
 
   defp maybe_issue(issues, true, code, directory, message) do
     issues ++ [%{code: code, directory: normalize_directory(directory), message: message}]
+  end
+
+  defp maybe_missing_module(issues, module, code, directory, message) do
+    maybe_issue(issues, not Code.ensure_loaded?(module), code, directory, message)
   end
 
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)

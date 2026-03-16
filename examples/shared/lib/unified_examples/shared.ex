@@ -74,6 +74,11 @@ defmodule UnifiedExamples.Shared do
     Tooling.run_descriptor(directory, mix_args)
   end
 
+  @spec launch_descriptor(String.t() | atom(), keyword()) :: map()
+  def launch_descriptor(directory, opts \\ []) do
+    Tooling.launch_descriptor(directory, opts)
+  end
+
   @spec review_metadata(String.t() | atom()) :: {:ok, map()}
   def review_metadata(directory) do
     Tooling.review_metadata(directory)

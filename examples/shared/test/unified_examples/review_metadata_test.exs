@@ -16,12 +16,17 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert button.family == Catalog.entry!("button").family
     assert button.phase == Catalog.entry!("button").phase
     assert button.uses_shared_template
+    assert button.browser_runnable?
+    assert button.launch_path == "/"
+    assert button.launch_command =~ "mix phx.server"
     assert button.traceability.authored_dsl.package == :unified_ui
 
     assert cluster_dashboard.primary_subject == :cluster_dashboard
     assert cluster_dashboard.family == Catalog.entry!("cluster_dashboard").family
     assert cluster_dashboard.phase == Catalog.entry!("cluster_dashboard").phase
     assert cluster_dashboard.default_theme_id == Template.default_theme_id()
+    assert cluster_dashboard.browser_runnable?
+    assert cluster_dashboard.launch_url =~ "http://127.0.0.1:"
     assert cluster_dashboard.traceability.runtime_library.package == :live_ui
   end
 
@@ -34,6 +39,8 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert report.catalog.family_counts[:overlay] == 5
     assert report.catalog.family_counts[:operational] == 4
     assert report.template.default_theme_id == Template.default_theme_id()
+    assert report.runtime.launchable_total == length(Catalog.entries())
+    assert report.runtime.mount_paths["button"] == "/"
     assert report.traceability.valid?
     assert report.validation.valid?
   end

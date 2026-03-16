@@ -38,4 +38,15 @@ defmodule Mix.Tasks.ExamplesTasksTest do
     assert output =~ "examples/overlay"
     assert output =~ "mix test"
   end
+
+  test "mix examples.launch exposes a dry-run command for browser-runnable example apps" do
+    output =
+      capture_io(fn ->
+        Mix.Tasks.Examples.Launch.run(["button", "--dry-run", "--port", "4110"])
+      end)
+
+    assert output =~ "examples/button"
+    assert output =~ "PORT=4110"
+    assert output =~ "mix phx.server"
+  end
 end

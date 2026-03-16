@@ -40,4 +40,21 @@ defmodule UnifiedExamples.ToolingTest do
     assert overlay.argv == ["mix", "test"]
     assert overlay.command =~ "mix test"
   end
+
+  test "builds deterministic launch descriptors for browser-runnable example apps" do
+    button = Tooling.launch_descriptor("button")
+    overlay = Tooling.launch_descriptor("overlay", port: 4104)
+
+    assert button.cwd =~ "/examples/button"
+    assert button.argv == ["mix", "phx.server"]
+    assert button.env == [{"PORT", "4000"}]
+    assert button.path == "/"
+    assert button.url == "http://127.0.0.1:4000/"
+    assert button.command =~ "PORT=4000 mix phx.server"
+
+    assert overlay.cwd =~ "/examples/overlay"
+    assert overlay.env == [{"PORT", "4104"}]
+    assert overlay.url == "http://127.0.0.1:4104/"
+    assert overlay.command =~ "PORT=4104 mix phx.server"
+  end
 end
