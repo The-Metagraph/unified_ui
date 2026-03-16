@@ -8,7 +8,17 @@ defmodule UnifiedExamples.Button.Screen do
     title: "Button Widget Example",
     summary: "Focused action-oriented example using the shared suite shell",
     widget: :button,
-    notes: "Click the button to inspect the canonical signal compiled from the authored DSL."
+    notes: "Click the button to inspect the canonical signal compiled from the authored DSL.",
+    interaction_demo: %{
+      mode: :custom,
+      family: :click,
+      source: :primary_widget,
+      source_label: "Primary action button",
+      trigger_label: nil,
+      idle_prompt: "Click Save profile to emit the authored canonical button signal.",
+      outcome:
+        "The button example should make the primary action feel live and explain the emitted click signal in reviewer-friendly language."
+    }
 
   signals do
     namespace(:examples)

@@ -224,6 +224,17 @@ defmodule UnifiedExamples.Shared.App do
                   flex-wrap: wrap;
                 }
 
+                [data-live-ui-runtime="screen"][data-example-demo-active="true"] {
+                  border-radius: 16px;
+                  box-shadow:
+                    inset 0 0 0 1px hsl(152 100% 50% / 0.25),
+                    0 0 0 1px hsl(152 100% 50% / 0.18);
+                }
+
+                [data-live-ui-runtime="screen"][data-example-demo-active="true"] [data-live-ui-widget] {
+                  box-shadow: 0 0 0 1px hsl(152 100% 50% / 0.18);
+                }
+
                 .example-app-kicker {
                   margin: 0;
                   color: var(--example-primary);
@@ -407,8 +418,9 @@ defmodule UnifiedExamples.Shared.App do
                 [data-live-ui-demo-empty="true"],
                 [data-live-ui-demo-outcome="true"],
                 [data-live-ui-demo-payload="true"] {
-                  margin: 0;
+                  margin: 0.4rem 0 0;
                   color: hsl(0 0% 91% / 0.78);
+                  line-height: 1.6;
                 }
 
                 [data-live-ui-signal-type="true"] {

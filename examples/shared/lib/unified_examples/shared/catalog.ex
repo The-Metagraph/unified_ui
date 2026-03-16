@@ -39,17 +39,165 @@ defmodule UnifiedExamples.Shared.Catalog do
   ]
 
   @entries [
-    %{directory: "button", widget: :button, family: :content, phase: 1, shell_kind: :box},
-    %{directory: "text", widget: :text, family: :content, phase: 1, shell_kind: :box},
-    %{directory: "text_input", widget: :text_input, family: :input, phase: 1, shell_kind: :box},
-    %{directory: "box", widget: :box, family: :layout, phase: 2, shell_kind: :box},
-    %{directory: "content", widget: :content, family: :layout, phase: 2, shell_kind: :box},
-    %{directory: "icon", widget: :icon, family: :content, phase: 2, shell_kind: :box},
-    %{directory: "image", widget: :image, family: :content, phase: 2, shell_kind: :box},
-    %{directory: "label", widget: :label, family: :content, phase: 2, shell_kind: :box},
-    %{directory: "link", widget: :link, family: :content, phase: 2, shell_kind: :box},
-    %{directory: "separator", widget: :separator, family: :content, phase: 2, shell_kind: :box},
-    %{directory: "spacer", widget: :spacer, family: :content, phase: 2, shell_kind: :box},
+    %{
+      directory: "button",
+      widget: :button,
+      family: :content,
+      phase: 1,
+      shell_kind: :box,
+      interaction_demo: %{
+        mode: :custom,
+        family: :click,
+        source: :primary_widget,
+        trigger_label: nil,
+        idle_prompt: "Click Save profile to emit the authored canonical button signal.",
+        outcome:
+          "The button example should make the primary action feel live and explain the emitted click signal in reviewer-friendly language."
+      }
+    },
+    %{
+      directory: "text",
+      widget: :text,
+      family: :content,
+      phase: 1,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Highlight the text story",
+        idle_prompt:
+          "Use the shared trigger to spotlight the text example and see how its authored copy becomes a reviewed interaction story.",
+        outcome:
+          "The text example should spotlight its authored copy and explain why the shared trigger exists for otherwise passive content."
+      }
+    },
+    %{
+      directory: "text_input",
+      widget: :text_input,
+      family: :input,
+      phase: 1,
+      shell_kind: :box,
+      interaction_demo: %{
+        mode: :custom,
+        family: :change,
+        source: :primary_widget,
+        trigger_label: nil,
+        idle_prompt:
+          "Type into the draft field to capture the authored change signal and latest value.",
+        outcome:
+          "The text input example should mirror the live draft value and explain the emitted change signal clearly."
+      }
+    },
+    %{
+      directory: "box",
+      widget: :box,
+      family: :layout,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Review the box layout story",
+        idle_prompt:
+          "Use the shared trigger to highlight how the box example frames spacing, grouping, and visual boundary choices.",
+        outcome:
+          "The box example should make the authored layout container feel intentional and easy to review in the browser."
+      }
+    },
+    %{
+      directory: "content",
+      widget: :content,
+      family: :layout,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Review the content story",
+        idle_prompt:
+          "Use the shared trigger to spotlight how the content container groups authored children into one reviewable story.",
+        outcome:
+          "The content example should make grouping and semantic containment obvious even before reading the underlying DSL."
+      }
+    },
+    %{
+      directory: "icon",
+      widget: :icon,
+      family: :content,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Highlight the icon story",
+        idle_prompt:
+          "Use the shared trigger to spotlight the icon example and review how the glyph participates in the shared story.",
+        outcome:
+          "The icon example should explain the authored glyph choice and make the visual emphasis obvious to reviewers."
+      }
+    },
+    %{
+      directory: "image",
+      widget: :image,
+      family: :content,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Highlight the image story",
+        idle_prompt:
+          "Use the shared trigger to spotlight the image example and review how the authored media is framed.",
+        outcome:
+          "The image example should make the media block feel intentional and show how passive visuals still participate in a meaningful interaction story."
+      }
+    },
+    %{
+      directory: "label",
+      widget: :label,
+      family: :content,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Highlight the label relationship",
+        idle_prompt:
+          "Use the shared trigger to call out how the label example frames authored relationships for reviewers.",
+        outcome:
+          "The label example should make the authored label relationship easy to understand in the browser without inspecting source."
+      }
+    },
+    %{
+      directory: "link",
+      widget: :link,
+      family: :content,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Review the link story",
+        idle_prompt:
+          "Use the shared trigger to review how the link example explains its authored destination before navigation.",
+        outcome:
+          "The link example should communicate the authored destination and make the navigation intent obvious before anyone follows it."
+      }
+    },
+    %{
+      directory: "separator",
+      widget: :separator,
+      family: :content,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Highlight the separator story",
+        idle_prompt:
+          "Use the shared trigger to call out how the separator organizes the reviewed content.",
+        outcome:
+          "The separator example should explain the authored visual boundary and why it matters in the surrounding composition."
+      }
+    },
+    %{
+      directory: "spacer",
+      widget: :spacer,
+      family: :content,
+      phase: 2,
+      shell_kind: :box,
+      interaction_demo: %{
+        trigger_label: "Highlight the spacing story",
+        idle_prompt:
+          "Use the shared trigger to show how the spacer example explains authored rhythm and spacing.",
+        outcome:
+          "The spacer example should make invisible spacing choices easier to review through the shared interaction story."
+      }
+    },
     %{
       directory: "checkbox",
       widget: :checkbox,
@@ -326,7 +474,11 @@ defmodule UnifiedExamples.Shared.Catalog do
   defp normalize_directory(directory) when is_binary(directory), do: directory
 
   defp decorate_entry(entry) do
-    Map.put(entry, :interaction_demo, InteractionDemo.default_for(entry))
+    override_demo = Map.get(entry, :interaction_demo, %{})
+
+    entry
+    |> Map.drop([:interaction_demo])
+    |> Map.put(:interaction_demo, InteractionDemo.normalize(override_demo, entry))
   end
 
   defp entry_row(entry) do

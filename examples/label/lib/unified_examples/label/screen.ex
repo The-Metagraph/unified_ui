@@ -8,7 +8,14 @@ defmodule UnifiedExamples.Label.Screen do
     title: "Label Widget Example",
     summary: "Focused content-oriented example using the shared suite shell",
     widget: :label,
-    notes: "Label examples keep the shared shell while foregrounding one primary label widget."
+    notes: "Label examples keep the shared shell while foregrounding one primary label widget.",
+    interaction_demo: %{
+      trigger_label: "Highlight the label relationship",
+      idle_prompt:
+        "Use the shared trigger to call out how the label example frames authored relationships for reviewers.",
+      outcome:
+        "The label example should make the authored label relationship easy to understand in the browser without inspecting source."
+    }
 
   example_panel do
     label :label_example_primary_label do

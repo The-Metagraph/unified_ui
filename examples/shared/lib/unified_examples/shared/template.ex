@@ -43,6 +43,20 @@ defmodule UnifiedExamples.Shared.Template do
   end
 
   defmacro __using__(opts) do
+    opts =
+      case Keyword.fetch(opts, :interaction_demo) do
+        {:ok, interaction_demo} ->
+          if Macro.quoted_literal?(interaction_demo) do
+            {evaluated, _binding} = Code.eval_quoted(interaction_demo, [], __CALLER__)
+            Keyword.put(opts, :interaction_demo, evaluated)
+          else
+            opts
+          end
+
+        _other ->
+          opts
+      end
+
     opts = Keyword.put_new(opts, :notes, default_notes())
     Module.put_attribute(__CALLER__.module, :example_template_opts, opts)
 
@@ -500,6 +514,35 @@ defmodule UnifiedExamples.Shared.Template do
             end
           end
 
+        :form_shell ->
+          quote do
+            signals do
+              namespace(:examples)
+
+              interaction do
+                id(unquote(interaction_id))
+                family(unquote(interaction_demo.family))
+                intent(unquote(String.to_atom("inspect_#{widget}")))
+
+                source_context(
+                  element_id: unquote(shell_id),
+                  scope: :screen
+                )
+
+                target_intent(action: :review_example)
+
+                payload_mapping(
+                  widget: unquote(widget),
+                  example: unquote(widget),
+                  outcome: unquote(interaction_demo.outcome),
+                  source: :shared_form_shell
+                )
+
+                summary(unquote(interaction_demo.idle_prompt))
+              end
+            end
+          end
+
         _other ->
           quote(do: nil)
       end
@@ -516,6 +559,17 @@ defmodule UnifiedExamples.Shared.Template do
               tone(:accent)
               variant(:solid)
             end
+          end
+
+        _other ->
+          quote(do: nil)
+      end
+
+    shell_interaction_block =
+      case interaction_demo.mode do
+        :form_shell ->
+          quote do
+            interaction_refs([unquote(interaction_id)])
           end
 
         _other ->
@@ -732,6 +786,7 @@ defmodule UnifiedExamples.Shared.Template do
           style_refs([:example_form_shell])
           tone(:surface)
           variant(:panel)
+          unquote(shell_interaction_block)
 
           text unquote(title_id) do
             value(unquote(title))

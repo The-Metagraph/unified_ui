@@ -9,7 +9,14 @@ defmodule UnifiedExamples.Box.Screen do
     summary: "Focused layout-oriented example using the shared suite shell",
     widget: :box,
     notes:
-      "Box examples keep the shared shell while foregrounding the shared panel box as the primary layout container."
+      "Box examples keep the shared shell while foregrounding the shared panel box as the primary layout container.",
+    interaction_demo: %{
+      trigger_label: "Review the box layout story",
+      idle_prompt:
+        "Use the shared trigger to highlight how the box example frames spacing, grouping, and visual boundary choices.",
+      outcome:
+        "The box example should make the authored layout container feel intentional and easy to review in the browser."
+    }
 
   example_panel do
     text :box_example_heading do

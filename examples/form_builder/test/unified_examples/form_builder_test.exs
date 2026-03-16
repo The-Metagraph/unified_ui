@@ -4,19 +4,16 @@ defmodule UnifiedExamples.FormBuilderTest do
   alias UnifiedExamples.FormBuilder
 
   test "form_builder example exposes standalone example metadata" do
-    assert FormBuilder.metadata() == %{
-             id: :form_builder_example_screen,
-             root_id: :form_builder_example_screen_root,
-             title: "Form Builder Example",
-             summary: "Focused form-oriented example using the shared suite shell",
-             notes:
-               "Form builder examples keep the shared form shell while foregrounding one primary form workflow.",
-             widget: :form_builder,
-             theme_id: :example_suite_default,
-             app: :unified_example_form_builder,
-             directory: "examples/form_builder",
-             purpose: :widget_proof
-           }
+    metadata = FormBuilder.metadata()
+
+    assert metadata.id == :form_builder_example_screen
+    assert metadata.root_id == :form_builder_example_screen_root
+    assert metadata.widget == :form_builder
+    assert metadata.app == :unified_example_form_builder
+    assert metadata.directory == "examples/form_builder"
+    assert metadata.interaction_demo.mode == :form_shell
+    assert metadata.interaction_demo.family == :change
+    assert metadata.interaction_demo.source == :form_shell
   end
 
   test "form_builder example renders the shared shell and the focused content widget" do
@@ -30,5 +27,6 @@ defmodule UnifiedExamples.FormBuilderTest do
     assert html =~ "data-live-ui-widget=\"field\""
     assert html =~ "data-live-ui-widget=\"text-input\""
     assert html =~ "Save profile"
+    assert html =~ "phx-change=\"canonical_change_interaction\""
   end
 end

@@ -294,6 +294,13 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :form_builder}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :form_interaction_attrs,
+        form_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Forms.FormBuilder.render
       id={element_id(@element, "form-builder")}
@@ -302,6 +309,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@form_interaction_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -397,6 +405,13 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:toggle, :checkbox] do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.Toggle.render
       id={element_id(@element, "toggle")}
@@ -406,12 +421,20 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:select, :pick_list, :radio_group] do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.Select.render
       id={element_id(@element, "select")}
@@ -422,6 +445,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
@@ -1107,5 +1131,84 @@ defmodule LiveUi.Renderer do
 
   defp state_boolean(%Element{} = element, key) do
     boolean_default(get_in(element.attributes, [:state, key]), false)
+  end
+
+  defp control_interaction_attrs(%Element{} = element, event_target) do
+    case {primary_control_interaction(element), event_target} do
+      {%Interaction{} = interaction, target} when is_binary(target) ->
+        %{
+          :"phx-change" => "canonical_interaction",
+          :"phx-target" => target,
+          :"phx-value-interaction" => encode_interaction(interaction),
+          :"phx-value-widget" => Atom.to_string(element.kind),
+          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+        }
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp form_interaction_attrs(%Element{} = element, event_target) do
+    case event_target do
+      target when is_binary(target) ->
+        %{}
+        |> maybe_merge_form_interaction(
+          primary_control_interaction(element),
+          element,
+          target,
+          :"phx-change",
+          "canonical_change_interaction",
+          :"phx-value-change-interaction"
+        )
+        |> maybe_merge_form_interaction(
+          primary_submit_interaction(element),
+          element,
+          target,
+          :"phx-submit",
+          "canonical_submit_interaction",
+          :"phx-value-submit-interaction"
+        )
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp maybe_merge_form_interaction(
+         attrs,
+         %Interaction{} = interaction,
+         %Element{} = element,
+         target,
+         event_attr,
+         event_name,
+         value_attr
+       ) do
+    Map.merge(attrs, %{
+      event_attr => event_name,
+      :"phx-target" => target,
+      value_attr => encode_interaction(interaction),
+      :"phx-value-widget" => Atom.to_string(element.kind),
+      :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+    })
+  end
+
+  defp maybe_merge_form_interaction(
+         attrs,
+         nil,
+         _element,
+         _target,
+         _event_attr,
+         _event_name,
+         _value_attr
+       ),
+       do: attrs
+
+  defp primary_control_interaction(%Element{} = element) do
+    primary_interaction(element, :change) || primary_interaction(element, :selection)
+  end
+
+  defp primary_submit_interaction(%Element{} = element) do
+    primary_interaction(element, :submit)
   end
 end

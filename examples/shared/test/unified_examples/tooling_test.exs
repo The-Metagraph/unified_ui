@@ -5,6 +5,7 @@ defmodule UnifiedExamples.ToolingTest do
 
   test "builds review metadata for representative apps from multiple families" do
     assert {:ok, button} = Tooling.review_metadata("button")
+    assert {:ok, checkbox} = Tooling.review_metadata("checkbox")
     assert {:ok, overlay} = Tooling.review_metadata("overlay")
 
     assert button.family == :content
@@ -19,6 +20,11 @@ defmodule UnifiedExamples.ToolingTest do
     assert overlay.uses_shared_template
     assert overlay.interaction_family == :click
     assert is_binary(overlay.interaction_idle_prompt)
+
+    assert checkbox.family == :input
+    assert checkbox.widget == :checkbox
+    assert checkbox.interaction_family == :change
+    assert checkbox.interaction_source == :form_shell
   end
 
   test "previews representative apps through one shared workflow" do

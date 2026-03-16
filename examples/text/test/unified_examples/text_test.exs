@@ -5,19 +5,18 @@ defmodule UnifiedExamples.TextTest do
   alias UnifiedExamples.Shared.Tooling
 
   test "text example exposes standalone example metadata" do
-    assert Text.metadata() == %{
-             id: :text_example_screen,
-             root_id: :text_example_screen_root,
-             title: "Text Widget Example",
-             summary: "Focused content-oriented example using the shared suite shell",
-             notes:
-               "Text examples keep the shared shell while foregrounding one primary content widget.",
-             widget: :text,
-             theme_id: :example_suite_default,
-             app: :unified_example_text,
-             directory: "examples/text",
-             purpose: :widget_proof
-           }
+    metadata = Text.metadata()
+
+    assert metadata.id == :text_example_screen
+    assert metadata.root_id == :text_example_screen_root
+    assert metadata.title == "Text Widget Example"
+    assert metadata.widget == :text
+    assert metadata.theme_id == :example_suite_default
+    assert metadata.app == :unified_example_text
+    assert metadata.directory == "examples/text"
+    assert metadata.purpose == :widget_proof
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :click
   end
 
   test "text example renders the shared shell and the focused content widget" do
@@ -31,6 +30,8 @@ defmodule UnifiedExamples.TextTest do
     assert html =~ "Shared text example"
     assert html =~ "data-live-ui-widget=\"text\""
     assert html =~ "data-live-ui-variant=\"headline\""
+    assert html =~ "Highlight the text story"
+    assert html =~ "Meaningful Interaction Story"
   end
 
   test "text example boots through its Phoenix LiveView app entrypoint" do
