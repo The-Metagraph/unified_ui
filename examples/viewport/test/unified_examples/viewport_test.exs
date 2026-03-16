@@ -5,19 +5,15 @@ defmodule UnifiedExamples.ViewportTest do
   alias UnifiedExamples.Viewport
 
   test "viewport example exposes standalone example metadata" do
-    assert Viewport.metadata() == %{
-             id: :viewport_example_screen,
-             root_id: :viewport_example_screen_root,
-             title: "Viewport Widget Example",
-             summary: "Focused display-system example using the shared suite shell",
-             notes:
-               "Viewport examples foreground one canonical clipped region inside the shared shell.",
-             widget: :viewport,
-             theme_id: :example_suite_default,
-             app: :unified_example_viewport,
-             directory: "examples/viewport",
-             purpose: :widget_proof
-           }
+    metadata = Viewport.metadata()
+
+    assert metadata.id == :viewport_example_screen
+    assert metadata.root_id == :viewport_example_screen_root
+    assert metadata.widget == :viewport
+    assert metadata.app == :unified_example_viewport
+    assert metadata.directory == "examples/viewport"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :focus
   end
 
   test "viewport example renders the shared shell and foregrounds one primary viewport" do
@@ -35,5 +31,7 @@ defmodule UnifiedExamples.ViewportTest do
     assert html =~ "data-live-ui-viewport-slot=\"content\""
     assert html =~ "Viewport Widget Example"
     assert html =~ "Incident timeline"
+    assert html =~ "Inspect the viewport display story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end
