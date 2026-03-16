@@ -18,7 +18,7 @@ defmodule UnifiedExamples.ToolingTest do
     assert overlay.family == :overlay
     assert overlay.widget == :overlay
     assert overlay.uses_shared_template
-    assert overlay.interaction_family == :click
+    assert overlay.interaction_family == :open
     assert is_binary(overlay.interaction_idle_prompt)
 
     assert checkbox.family == :input

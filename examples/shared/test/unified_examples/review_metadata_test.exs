@@ -36,7 +36,7 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert cluster_dashboard.default_theme_id == Template.default_theme_id()
     assert cluster_dashboard.browser_runnable?
     assert cluster_dashboard.launch_url =~ "http://127.0.0.1:"
-    assert cluster_dashboard.interaction_family == :click
+    assert cluster_dashboard.interaction_family == :command
     assert is_binary(cluster_dashboard.interaction_idle_prompt)
     assert cluster_dashboard.traceability.runtime_library.package == :live_ui
   end
