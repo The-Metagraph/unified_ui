@@ -29,6 +29,7 @@ The plan aligns to:
 5. [Phase 5 - Suite Catalog, Tooling, and Validation Workflow](./phase-05-suite-catalog-tooling-and-validation-workflow.md): implement the suite index, app discovery tooling, per-app preview workflows, and validation checks that enforce catalog and template continuity.
 6. [Phase 6 - Documentation, Release Readiness, and Full Suite Integration](./phase-06-documentation-release-readiness-and-full-suite-integration.md): implement the final documentation surface, release-readiness gates, and full-suite integration coverage for the standalone example apps.
 7. [Phase 7 - Phoenix LiveView App Runtime Alignment](./phase-07-phoenix-liveview-app-runtime-alignment.md): retrofit every example directory into a runnable Phoenix LiveView app with its own endpoint, router, and browser launch workflow.
+8. [Phase 8 - Meaningful Interaction Demonstration Alignment](./phase-08-meaningful-interaction-demonstration-alignment.md): retrofit every example so it demonstrates at least one authored canonical interaction and presents the resulting behavior and signal meaning clearly in the browser.
 
 ## Shared Conventions
 - Numbering:
@@ -51,3 +52,4 @@ The plan aligns to:
 - The authored path for every example app is `unified_ui` DSL -> canonical `UnifiedIUR` -> `live_ui` runtime rendering.
 - Every example app should be directly launchable through its own Phoenix runtime entrypoint rather than only through shared preview helpers.
 - The catalog is complete only when every current `live_ui` widget or construct named in the example catalog has its own example app directory.
+- Every example app should demonstrate at least one meaningful interaction path, and that interaction should be visible to reviewers through a browser-facing explanation rather than only through static rendering or source inspection.

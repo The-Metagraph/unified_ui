@@ -3,6 +3,8 @@ defmodule UnifiedExamples.Shared.Catalog do
   Shared review catalog for the currently implemented example applications.
   """
 
+  alias UnifiedExamples.Shared.InteractionDemo
+
   @type shell_kind :: :box | :form_builder
   @type family ::
           :content
@@ -21,10 +23,20 @@ defmodule UnifiedExamples.Shared.Catalog do
           widget: atom(),
           family: family(),
           phase: pos_integer(),
-          shell_kind: shell_kind()
+          shell_kind: shell_kind(),
+          interaction_demo: InteractionDemo.t()
         }
 
-  @catalog_headers ["directory", "widget", "family", "phase", "shell_kind"]
+  @catalog_headers [
+    "directory",
+    "widget",
+    "family",
+    "phase",
+    "shell_kind",
+    "interaction_family",
+    "interaction_source",
+    "interaction_outcome"
+  ]
 
   @entries [
     %{directory: "button", widget: :button, family: :content, phase: 1, shell_kind: :box},
@@ -229,7 +241,7 @@ defmodule UnifiedExamples.Shared.Catalog do
 
   @spec entries() :: [entry()]
   def entries do
-    @entries
+    Enum.map(@entries, &decorate_entry/1)
   end
 
   @spec catalog_headers() :: [String.t()]
@@ -239,26 +251,26 @@ defmodule UnifiedExamples.Shared.Catalog do
 
   @spec directories() :: [String.t()]
   def directories do
-    @entries
+    entries()
     |> Enum.map(& &1.directory)
     |> Enum.sort()
   end
 
   @spec tsv() :: String.t()
   def tsv do
-    [Enum.join(@catalog_headers, "\t") | Enum.map(@entries, &entry_row/1)]
+    [Enum.join(@catalog_headers, "\t") | Enum.map(entries(), &entry_row/1)]
     |> Enum.join("\n")
     |> Kernel.<>("\n")
   end
 
   @spec by_phase(pos_integer()) :: [entry()]
   def by_phase(phase) when is_integer(phase) and phase > 0 do
-    Enum.filter(@entries, &(&1.phase == phase))
+    Enum.filter(entries(), &(&1.phase == phase))
   end
 
   @spec by_family() :: %{optional(family()) => [entry()]}
   def by_family do
-    Enum.group_by(@entries, & &1.family)
+    Enum.group_by(entries(), & &1.family)
   end
 
   @spec advanced_families() :: [family()]
@@ -268,7 +280,7 @@ defmodule UnifiedExamples.Shared.Catalog do
 
   @spec advanced_entries() :: [entry()]
   def advanced_entries do
-    Enum.filter(@entries, &(&1.family in advanced_families()))
+    Enum.filter(entries(), &(&1.family in advanced_families()))
   end
 
   @spec advanced_directories() :: [String.t()]
@@ -282,7 +294,7 @@ defmodule UnifiedExamples.Shared.Catalog do
   def entry!(directory) do
     directory = normalize_directory(directory)
 
-    Enum.find(@entries, &(&1.directory == directory)) ||
+    Enum.find(entries(), &(&1.directory == directory)) ||
       raise ArgumentError, "unknown example directory: #{directory}"
   end
 
@@ -313,13 +325,20 @@ defmodule UnifiedExamples.Shared.Catalog do
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)
   defp normalize_directory(directory) when is_binary(directory), do: directory
 
+  defp decorate_entry(entry) do
+    Map.put(entry, :interaction_demo, InteractionDemo.default_for(entry))
+  end
+
   defp entry_row(entry) do
     [
       entry.directory,
       Atom.to_string(entry.widget),
       Atom.to_string(entry.family),
       Integer.to_string(entry.phase),
-      Atom.to_string(entry.shell_kind)
+      Atom.to_string(entry.shell_kind),
+      Atom.to_string(entry.interaction_demo.family),
+      Atom.to_string(entry.interaction_demo.source),
+      entry.interaction_demo.outcome
     ]
     |> Enum.join("\t")
   end

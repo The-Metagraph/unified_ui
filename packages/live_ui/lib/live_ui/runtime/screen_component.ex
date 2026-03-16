@@ -25,10 +25,37 @@ defmodule LiveUi.Runtime.ScreenComponent do
       assigns
       |> Map.put_new(:last_translation, nil)
       |> Map.put_new(:runtime_event_error, nil)
+      |> Map.put_new(:interaction_demo, interaction_demo(assigns.runtime_state))
+      |> Map.put(:demo_active?, not is_nil(assigns[:last_translation]))
 
     ~H"""
-    <section id={@id} data-live-ui-runtime="screen">
+    <section
+      id={@id}
+      data-live-ui-runtime="screen"
+      data-example-demo-active={to_string(@demo_active?)}
+    >
       <%= render_screen(@runtime_state, "##{@id}") %>
+
+      <section data-live-ui-demo-story="true">
+        <h2>Meaningful Interaction Story</h2>
+
+        <%= if @last_translation && @last_translation.signal do %>
+          <p data-live-ui-demo-status="true">
+            <%= runtime_summary(@interaction_demo, @last_translation) %>
+          </p>
+          <p :if={@interaction_demo[:outcome]} data-live-ui-demo-outcome="true">
+            <%= @interaction_demo[:outcome] %>
+          </p>
+          <p :if={payload_highlight(@last_translation)} data-live-ui-demo-payload="true">
+            Latest payload highlight: <%= payload_highlight(@last_translation) %>
+          </p>
+        <% else %>
+          <p data-live-ui-demo-empty="true">
+            <%= @interaction_demo[:idle_prompt] ||
+              "No signal captured yet. Trigger the example interaction to emit and inspect its canonical signal." %>
+          </p>
+        <% end %>
+      </section>
 
       <section data-live-ui-signal-preview="true">
         <h2>Canonical Signal Preview</h2>
@@ -41,7 +68,8 @@ defmodule LiveUi.Runtime.ScreenComponent do
           <pre data-live-ui-signal-translation="true"><%= inspect(@last_translation, pretty: true, limit: :infinity) %></pre>
         <% else %>
           <p data-live-ui-signal-empty="true">
-            No signal captured yet. Trigger the example interaction to emit and inspect its canonical signal.
+            <%= @interaction_demo[:idle_prompt] ||
+              "No signal captured yet. Trigger the example interaction to emit and inspect its canonical signal." %>
           </p>
         <% end %>
       </section>
@@ -57,6 +85,28 @@ defmodule LiveUi.Runtime.ScreenComponent do
         %{"interaction" => encoded_interaction} = params,
         socket
       ) do
+    handle_canonical_event(encoded_interaction, params, socket)
+  end
+
+  @impl true
+  def handle_event(
+        "canonical_change_interaction",
+        %{"change_interaction" => encoded_interaction} = params,
+        socket
+      ) do
+    handle_canonical_event(encoded_interaction, params, socket)
+  end
+
+  @impl true
+  def handle_event(
+        "canonical_submit_interaction",
+        %{"submit_interaction" => encoded_interaction} = params,
+        socket
+      ) do
+    handle_canonical_event(encoded_interaction, params, socket)
+  end
+
+  defp handle_canonical_event(encoded_interaction, params, socket) do
     runtime_state = socket.assigns.runtime_state
 
     with {:ok, interaction} <- decode_interaction(encoded_interaction),
@@ -109,6 +159,75 @@ defmodule LiveUi.Runtime.ScreenComponent do
 
   defp canonical_payload(params) when is_map(params) do
     params
-    |> Map.drop(["interaction", "element_id", "widget", "_target"])
+    |> Map.drop([
+      "interaction",
+      "change_interaction",
+      "submit_interaction",
+      "element_id",
+      "widget",
+      "_target"
+    ])
   end
+
+  defp interaction_demo(%State{assigns: assigns}) when is_map(assigns) do
+    Map.get(assigns, :example_interaction_demo, %{})
+  end
+
+  defp runtime_summary(interaction_demo, translation) do
+    widget =
+      interaction_demo
+      |> Map.get(:widget, :example)
+      |> to_string()
+      |> String.replace("_", " ")
+
+    family =
+      translation
+      |> Map.get(:family, Map.get(interaction_demo, :family, :interaction))
+      |> to_string()
+      |> String.replace("_", " ")
+
+    payload_hint = payload_highlight(translation)
+
+    base = "The #{widget} example just captured a #{family} interaction."
+
+    if payload_hint in [nil, ""] do
+      base
+    else
+      base <> " Highlighted payload: " <> payload_hint <> "."
+    end
+  end
+
+  defp payload_highlight(translation) when is_map(translation) do
+    translation
+    |> Map.get(:signal)
+    |> case do
+      nil ->
+        nil
+
+      signal ->
+        signal.data
+        |> Map.new()
+        |> Map.drop([
+          :source,
+          :example,
+          :widget,
+          :phase,
+          "source",
+          "example",
+          "widget",
+          "phase"
+        ])
+        |> Enum.take(3)
+        |> Enum.map_join(", ", fn {key, value} -> "#{key}=#{normalize_value(value)}" end)
+    end
+    |> case do
+      "" -> nil
+      value -> value
+    end
+  end
+
+  defp normalize_value(%{name: name}) when is_atom(name), do: Atom.to_string(name)
+  defp normalize_value(value) when is_binary(value), do: value
+  defp normalize_value(value) when is_atom(value), do: Atom.to_string(value)
+  defp normalize_value(value), do: inspect(value)
 end

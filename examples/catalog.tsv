@@ -1,55 +1,55 @@
-directory	widget	family	phase	shell_kind
-button	button	content	1	box
-text	text	content	1	box
-text_input	text_input	input	1	box
-box	box	layout	2	box
-content	content	layout	2	box
-icon	icon	content	2	box
-image	image	content	2	box
-label	label	content	2	box
-link	link	content	2	box
-separator	separator	content	2	box
-spacer	spacer	content	2	box
-checkbox	checkbox	input	2	form_builder
-date_input	date_input	input	2	form_builder
-field	field	forms	2	form_builder
-field_group	field_group	forms	2	form_builder
-file_input	file_input	input	2	form_builder
-form_builder	form_builder	forms	2	form_builder
-numeric_input	numeric_input	input	2	form_builder
-pick_list	pick_list	input	2	form_builder
-radio_group	radio_group	input	2	form_builder
-select	select	input	2	form_builder
-time_input	time_input	input	2	form_builder
-toggle	toggle	input	2	form_builder
-row	row	layout	3	box
-column	column	layout	3	box
-grid	grid	layout	3	box
-viewport	viewport	display	4	box
-scroll_bar	scroll_bar	display	4	box
-split_pane	split_pane	display	4	box
-canvas	canvas	display	4	box
-overlay	overlay	overlay	4	box
-dialog	dialog	overlay	4	box
-alert_dialog	alert_dialog	overlay	4	box
-context_menu	context_menu	overlay	4	box
-toast	toast	overlay	4	box
-stream_widget	stream_widget	operational	4	box
-process_monitor	process_monitor	operational	4	box
-supervision_tree_viewer	supervision_tree_viewer	operational	4	box
-cluster_dashboard	cluster_dashboard	operational	4	box
-menu	menu	navigation	3	box
-tabs	tabs	navigation	3	box
-command_palette	command_palette	navigation	3	box
-list	list	data	3	box
-table	table	data	3	box
-tree_view	tree_view	data	3	box
-markdown_viewer	markdown_viewer	data	3	box
-log_viewer	log_viewer	data	3	box
-status	status	feedback	3	box
-progress	progress	feedback	3	box
-gauge	gauge	feedback	3	box
-inline_feedback	inline_feedback	feedback	3	box
-sparkline	sparkline	feedback	3	box
-bar_chart	bar_chart	feedback	3	box
-line_chart	line_chart	feedback	3	box
+directory	widget	family	phase	shell_kind	interaction_family	interaction_source	interaction_outcome
+button	button	content	1	box	click	shared_trigger	The review panel should explain how the button example turns an authored canonical interaction into a browser-visible content story.
+text	text	content	1	box	click	shared_trigger	The review panel should explain how the text example turns an authored canonical interaction into a browser-visible content story.
+text_input	text_input	input	1	box	click	shared_trigger	The review panel should explain how the text input example turns an authored canonical interaction into a browser-visible input story.
+box	box	layout	2	box	click	shared_trigger	The review panel should explain how the box example turns an authored canonical interaction into a browser-visible layout story.
+content	content	layout	2	box	click	shared_trigger	The review panel should explain how the content example turns an authored canonical interaction into a browser-visible layout story.
+icon	icon	content	2	box	click	shared_trigger	The review panel should explain how the icon example turns an authored canonical interaction into a browser-visible content story.
+image	image	content	2	box	click	shared_trigger	The review panel should explain how the image example turns an authored canonical interaction into a browser-visible content story.
+label	label	content	2	box	click	shared_trigger	The review panel should explain how the label example turns an authored canonical interaction into a browser-visible content story.
+link	link	content	2	box	click	shared_trigger	The review panel should explain how the link example turns an authored canonical interaction into a browser-visible content story.
+separator	separator	content	2	box	click	shared_trigger	The review panel should explain how the separator example turns an authored canonical interaction into a browser-visible content story.
+spacer	spacer	content	2	box	click	shared_trigger	The review panel should explain how the spacer example turns an authored canonical interaction into a browser-visible content story.
+checkbox	checkbox	input	2	form_builder	click	shared_trigger	The review panel should explain how the checkbox example turns an authored canonical interaction into a browser-visible input story.
+date_input	date_input	input	2	form_builder	click	shared_trigger	The review panel should explain how the date input example turns an authored canonical interaction into a browser-visible input story.
+field	field	forms	2	form_builder	click	shared_trigger	The review panel should explain how the field example turns an authored canonical interaction into a browser-visible forms story.
+field_group	field_group	forms	2	form_builder	click	shared_trigger	The review panel should explain how the field group example turns an authored canonical interaction into a browser-visible forms story.
+file_input	file_input	input	2	form_builder	click	shared_trigger	The review panel should explain how the file input example turns an authored canonical interaction into a browser-visible input story.
+form_builder	form_builder	forms	2	form_builder	click	shared_trigger	The review panel should explain how the form builder example turns an authored canonical interaction into a browser-visible forms story.
+numeric_input	numeric_input	input	2	form_builder	click	shared_trigger	The review panel should explain how the numeric input example turns an authored canonical interaction into a browser-visible input story.
+pick_list	pick_list	input	2	form_builder	click	shared_trigger	The review panel should explain how the pick list example turns an authored canonical interaction into a browser-visible input story.
+radio_group	radio_group	input	2	form_builder	click	shared_trigger	The review panel should explain how the radio group example turns an authored canonical interaction into a browser-visible input story.
+select	select	input	2	form_builder	click	shared_trigger	The review panel should explain how the select example turns an authored canonical interaction into a browser-visible input story.
+time_input	time_input	input	2	form_builder	click	shared_trigger	The review panel should explain how the time input example turns an authored canonical interaction into a browser-visible input story.
+toggle	toggle	input	2	form_builder	click	shared_trigger	The review panel should explain how the toggle example turns an authored canonical interaction into a browser-visible input story.
+row	row	layout	3	box	click	shared_trigger	The review panel should explain how the row example turns an authored canonical interaction into a browser-visible layout story.
+column	column	layout	3	box	click	shared_trigger	The review panel should explain how the column example turns an authored canonical interaction into a browser-visible layout story.
+grid	grid	layout	3	box	click	shared_trigger	The review panel should explain how the grid example turns an authored canonical interaction into a browser-visible layout story.
+viewport	viewport	display	4	box	click	shared_trigger	The review panel should explain how the viewport example turns an authored canonical interaction into a browser-visible display story.
+scroll_bar	scroll_bar	display	4	box	click	shared_trigger	The review panel should explain how the scroll bar example turns an authored canonical interaction into a browser-visible display story.
+split_pane	split_pane	display	4	box	click	shared_trigger	The review panel should explain how the split pane example turns an authored canonical interaction into a browser-visible display story.
+canvas	canvas	display	4	box	click	shared_trigger	The review panel should explain how the canvas example turns an authored canonical interaction into a browser-visible display story.
+overlay	overlay	overlay	4	box	click	shared_trigger	The review panel should explain how the overlay example turns an authored canonical interaction into a browser-visible overlay story.
+dialog	dialog	overlay	4	box	click	shared_trigger	The review panel should explain how the dialog example turns an authored canonical interaction into a browser-visible overlay story.
+alert_dialog	alert_dialog	overlay	4	box	click	shared_trigger	The review panel should explain how the alert dialog example turns an authored canonical interaction into a browser-visible overlay story.
+context_menu	context_menu	overlay	4	box	click	shared_trigger	The review panel should explain how the context menu example turns an authored canonical interaction into a browser-visible overlay story.
+toast	toast	overlay	4	box	click	shared_trigger	The review panel should explain how the toast example turns an authored canonical interaction into a browser-visible overlay story.
+stream_widget	stream_widget	operational	4	box	click	shared_trigger	The review panel should explain how the stream widget example turns an authored canonical interaction into a browser-visible operational story.
+process_monitor	process_monitor	operational	4	box	click	shared_trigger	The review panel should explain how the process monitor example turns an authored canonical interaction into a browser-visible operational story.
+supervision_tree_viewer	supervision_tree_viewer	operational	4	box	click	shared_trigger	The review panel should explain how the supervision tree viewer example turns an authored canonical interaction into a browser-visible operational story.
+cluster_dashboard	cluster_dashboard	operational	4	box	click	shared_trigger	The review panel should explain how the cluster dashboard example turns an authored canonical interaction into a browser-visible operational story.
+menu	menu	navigation	3	box	click	shared_trigger	The review panel should explain how the menu example turns an authored canonical interaction into a browser-visible navigation story.
+tabs	tabs	navigation	3	box	click	shared_trigger	The review panel should explain how the tabs example turns an authored canonical interaction into a browser-visible navigation story.
+command_palette	command_palette	navigation	3	box	click	shared_trigger	The review panel should explain how the command palette example turns an authored canonical interaction into a browser-visible navigation story.
+list	list	data	3	box	click	shared_trigger	The review panel should explain how the list example turns an authored canonical interaction into a browser-visible data story.
+table	table	data	3	box	click	shared_trigger	The review panel should explain how the table example turns an authored canonical interaction into a browser-visible data story.
+tree_view	tree_view	data	3	box	click	shared_trigger	The review panel should explain how the tree view example turns an authored canonical interaction into a browser-visible data story.
+markdown_viewer	markdown_viewer	data	3	box	click	shared_trigger	The review panel should explain how the markdown viewer example turns an authored canonical interaction into a browser-visible data story.
+log_viewer	log_viewer	data	3	box	click	shared_trigger	The review panel should explain how the log viewer example turns an authored canonical interaction into a browser-visible data story.
+status	status	feedback	3	box	click	shared_trigger	The review panel should explain how the status example turns an authored canonical interaction into a browser-visible feedback story.
+progress	progress	feedback	3	box	click	shared_trigger	The review panel should explain how the progress example turns an authored canonical interaction into a browser-visible feedback story.
+gauge	gauge	feedback	3	box	click	shared_trigger	The review panel should explain how the gauge example turns an authored canonical interaction into a browser-visible feedback story.
+inline_feedback	inline_feedback	feedback	3	box	click	shared_trigger	The review panel should explain how the inline feedback example turns an authored canonical interaction into a browser-visible feedback story.
+sparkline	sparkline	feedback	3	box	click	shared_trigger	The review panel should explain how the sparkline example turns an authored canonical interaction into a browser-visible feedback story.
+bar_chart	bar_chart	feedback	3	box	click	shared_trigger	The review panel should explain how the bar chart example turns an authored canonical interaction into a browser-visible feedback story.
+line_chart	line_chart	feedback	3	box	click	shared_trigger	The review panel should explain how the line chart example turns an authored canonical interaction into a browser-visible feedback story.

@@ -19,6 +19,9 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert button.browser_runnable?
     assert button.launch_path == "/"
     assert button.launch_command =~ "mix phx.server"
+    assert button.interaction_family == Catalog.entry!("button").interaction_demo.family
+    assert button.interaction_source == Catalog.entry!("button").interaction_demo.source
+    assert button.interaction_outcome == Catalog.entry!("button").interaction_demo.outcome
     assert button.traceability.authored_dsl.package == :unified_ui
 
     assert cluster_dashboard.primary_subject == :cluster_dashboard
@@ -27,6 +30,8 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert cluster_dashboard.default_theme_id == Template.default_theme_id()
     assert cluster_dashboard.browser_runnable?
     assert cluster_dashboard.launch_url =~ "http://127.0.0.1:"
+    assert cluster_dashboard.interaction_family == :click
+    assert is_binary(cluster_dashboard.interaction_idle_prompt)
     assert cluster_dashboard.traceability.runtime_library.package == :live_ui
   end
 

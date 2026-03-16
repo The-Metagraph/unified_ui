@@ -85,6 +85,36 @@ defmodule UnifiedExamples.Shared.Validation do
       "example app must enable its Phoenix endpoint server in dev so mix phx.server works"
     )
     |> maybe_issue(
+      not is_map(metadata.interaction_demo),
+      :missing_interaction_demo,
+      metadata.directory,
+      "example app must declare a meaningful interaction demonstration contract"
+    )
+    |> maybe_issue(
+      metadata.interaction_family in [nil, ""],
+      :missing_interaction_family,
+      metadata.directory,
+      "example app must declare the primary interaction family reviewers should exercise"
+    )
+    |> maybe_issue(
+      metadata.interaction_storytelling in [nil, ""],
+      :missing_interaction_storytelling,
+      metadata.directory,
+      "example app must declare whether its interaction story is source-driven or target-driven"
+    )
+    |> maybe_issue(
+      metadata.interaction_outcome in [nil, ""],
+      :missing_interaction_outcome,
+      metadata.directory,
+      "example app must declare the reviewer-visible interaction outcome"
+    )
+    |> maybe_issue(
+      metadata.interaction_idle_prompt in [nil, ""],
+      :missing_interaction_prompt,
+      metadata.directory,
+      "example app must explain what interaction reviewers should try before any signal is captured"
+    )
+    |> maybe_issue(
       metadata.launch_path != "/",
       :launch_path_mismatch,
       metadata.directory,
@@ -147,6 +177,7 @@ defmodule UnifiedExamples.Shared.Validation do
       "catalog_unexpected: #{Enum.join(report.catalog.unexpected_directories, ", ")}",
       "manifest_in_sync?: #{report.catalog.manifest_in_sync?}",
       "metadata_issues: #{length(report.metadata.issues)}",
+      "interaction_story_valid?: #{report.release.gates.interaction_story_continuity.passed?}",
       "release_valid?: #{report.release.valid?}"
     ]
     |> Enum.join("\n")
