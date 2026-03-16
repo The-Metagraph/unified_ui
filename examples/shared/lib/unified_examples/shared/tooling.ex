@@ -165,6 +165,7 @@ defmodule UnifiedExamples.Shared.Tooling do
       style_profile: screen.shared_style_profile(),
       uses_shared_template: screen.shared_style_profile() == Template.default_style_profile(),
       default_theme_id: screen.default_theme_id(),
+      dev_server_enabled?: dev_server_enabled?(app_root),
       browser_runnable?: phoenix_runtime.browser_runnable?,
       launch_command: launch.command,
       launch_argv: launch.argv,
@@ -227,7 +228,7 @@ defmodule UnifiedExamples.Shared.Tooling do
 
   defp build_phoenix_runtime(loaded, launch) do
     %{
-      browser_runnable?: phoenix_baseline?(loaded.app, launch),
+      browser_runnable?: phoenix_baseline?(loaded.app, launch, loaded.app_root),
       application_module: launch.application_module,
       endpoint_module: launch.endpoint_module,
       router_module: launch.router_module,
@@ -239,7 +240,7 @@ defmodule UnifiedExamples.Shared.Tooling do
     }
   end
 
-  defp phoenix_baseline?(app, launch) do
+  defp phoenix_baseline?(app, launch, app_root) do
     Enum.all?([
       Code.ensure_loaded?(launch.application_module),
       Code.ensure_loaded?(launch.endpoint_module),
@@ -247,8 +248,22 @@ defmodule UnifiedExamples.Shared.Tooling do
       Code.ensure_loaded?(launch.live_module),
       function_exported?(app, :launch_path, 0),
       function_exported?(app, :launch_url, 0),
-      function_exported?(app, :endpoint_config, 0)
+      function_exported?(app, :endpoint_config, 0),
+      dev_server_enabled?(app_root)
     ])
+  end
+
+  defp dev_server_enabled?(app_root) do
+    app_root
+    |> Path.join("config/config.exs")
+    |> File.read()
+    |> case do
+      {:ok, contents} ->
+        Regex.match?(~r/server:\s*(Mix\.env\(\)\s*==\s*:dev|true)/, contents)
+
+      {:error, _reason} ->
+        false
+    end
   end
 
   defp with_started_app(loaded, fun) do

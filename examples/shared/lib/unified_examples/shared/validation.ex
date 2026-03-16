@@ -79,6 +79,12 @@ defmodule UnifiedExamples.Shared.Validation do
       "example app must expose a browser-runnable Phoenix LiveView baseline"
     )
     |> maybe_issue(
+      metadata.dev_server_enabled? != true,
+      :dev_server_disabled,
+      metadata.directory,
+      "example app must enable its Phoenix endpoint server in dev so mix phx.server works"
+    )
+    |> maybe_issue(
       metadata.launch_path != "/",
       :launch_path_mismatch,
       metadata.directory,
