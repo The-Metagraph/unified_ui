@@ -60,19 +60,22 @@ defmodule UnifiedExamples.Shared.App do
         })
       end
 
+      @spec example_interaction_demo() :: map()
+      def example_interaction_demo, do: screen_module().example_interaction_demo()
+
       @spec boot(keyword()) :: {:ok, LiveUi.Runtime.State.t()} | {:error, term()}
       def boot(opts \\ []) do
-        Runtime.mount(screen_module(), opts)
+        Runtime.mount(screen_module(), runtime_opts(opts))
       end
 
       @spec component_assigns(keyword()) :: {:ok, map()} | {:error, term()}
       def component_assigns(opts \\ []) do
-        Runtime.component_assigns(screen_module(), opts)
+        Runtime.component_assigns(screen_module(), runtime_opts(opts))
       end
 
       @spec render_html(keyword()) :: {:ok, String.t()} | {:error, term()}
       def render_html(opts \\ []) do
-        Runtime.render_html(screen_module(), opts)
+        Runtime.render_html(screen_module(), runtime_opts(opts))
       end
 
       @spec launch_path() :: String.t()
@@ -102,6 +105,15 @@ defmodule UnifiedExamples.Shared.App do
         ArgumentError -> 4000
       end
 
+      defp runtime_opts(opts) do
+        shared_assigns = %{
+          example_metadata: metadata(),
+          example_interaction_demo: example_interaction_demo()
+        }
+
+        Keyword.update(opts, :assigns, shared_assigns, &Map.merge(shared_assigns, &1))
+      end
+
       defmodule Layouts do
         @moduledoc false
         use Phoenix.Component
@@ -113,10 +125,173 @@ defmodule UnifiedExamples.Shared.App do
             <head>
               <meta charset="utf-8" />
               <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <meta name="csrf-token" content={Plug.CSRFProtection.get_csrf_token()} />
               <title><%= @page_title || "Unified Example" %></title>
+              <style>
+                :root {
+                  --example-background: hsl(0 0% 5%);
+                  --example-foreground: hsl(0 0% 92%);
+                  --example-surface: hsl(0 0% 9%);
+                  --example-surface-elevated: hsl(0 0% 12%);
+                  --example-border: hsl(0 0% 18%);
+                  --example-muted: hsl(0 0% 58%);
+                  --example-primary: hsl(152 100% 50%);
+                  --example-cyan: hsl(192 100% 50%);
+                  --example-yellow: hsl(43 100% 50%);
+                  --example-shadow: 0 24px 64px hsl(0 0% 0% / 0.35);
+                  --example-font: "IBM Plex Mono", "SFMono-Regular", "SF Mono", Consolas, monospace;
+                }
+
+                body.unified-example-shell {
+                  margin: 0;
+                  min-height: 100vh;
+                  color: var(--example-foreground);
+                  background:
+                    radial-gradient(circle at top, hsl(152 100% 50% / 0.08), transparent 24%),
+                    linear-gradient(180deg, hsl(0 0% 7%) 0%, var(--example-background) 100%);
+                  font-family: var(--example-font);
+                }
+
+                .example-app-shell {
+                  width: min(72rem, calc(100% - 2rem));
+                  margin: 0 auto;
+                  padding: 2rem 0 3rem;
+                  display: grid;
+                  gap: 1.5rem;
+                }
+
+                .example-app-header,
+                .example-app-runtime {
+                  border: 1px solid var(--example-border);
+                  border-radius: 18px;
+                  background: linear-gradient(
+                    180deg,
+                    hsl(0 0% 11% / 0.98) 0%,
+                    hsl(0 0% 8% / 0.98) 100%
+                  );
+                  box-shadow: var(--example-shadow);
+                }
+
+                .example-app-header {
+                  padding: 1.5rem;
+                }
+
+                .example-app-runtime {
+                  padding: 1.25rem;
+                }
+
+                .example-app-kicker {
+                  margin: 0 0 0.75rem;
+                  color: var(--example-primary);
+                  text-transform: uppercase;
+                  letter-spacing: 0.14em;
+                  font-size: 0.74rem;
+                  font-weight: 700;
+                }
+
+                .example-app-widget {
+                  display: inline-flex;
+                  align-items: center;
+                  margin-bottom: 0.85rem;
+                  padding: 0.28rem 0.72rem;
+                  border: 1px solid hsl(192 100% 50% / 0.25);
+                  border-radius: 999px;
+                  color: var(--example-cyan);
+                  background: hsl(192 100% 50% / 0.08);
+                  font-size: 0.72rem;
+                  letter-spacing: 0.08em;
+                  text-transform: uppercase;
+                }
+
+                .example-app-title {
+                  margin: 0;
+                  font-size: clamp(1.55rem, 3vw, 2.3rem);
+                  line-height: 1.08;
+                }
+
+                .example-app-summary,
+                .example-app-notes {
+                  margin: 0.65rem 0 0;
+                  color: hsl(0 0% 92% / 0.85);
+                  line-height: 1.65;
+                }
+
+                .example-app-notes {
+                  color: var(--example-muted);
+                }
+
+                [data-live-ui-signal-preview="true"] {
+                  border: 1px solid hsl(192 100% 50% / 0.18);
+                  border-radius: 14px;
+                  padding: 1rem;
+                  background:
+                    linear-gradient(180deg, hsl(192 100% 50% / 0.06) 0%, hsl(0 0% 9% / 0.98) 100%);
+                }
+
+                [data-live-ui-signal-preview="true"] h2 {
+                  margin: 0 0 0.75rem;
+                  font-size: 0.8rem;
+                  letter-spacing: 0.12em;
+                  text-transform: uppercase;
+                  color: var(--example-cyan);
+                }
+
+                [data-live-ui-signal-status="true"],
+                [data-live-ui-signal-empty="true"],
+                [data-live-ui-signal-summary="true"],
+                [data-live-ui-signal-outcome="true"] {
+                  margin: 0.4rem 0 0;
+                  line-height: 1.6;
+                }
+
+                [data-live-ui-signal-type="true"] {
+                  margin: 0.75rem 0 0.35rem;
+                  color: var(--example-primary);
+                  font-weight: 700;
+                }
+
+                [data-live-ui-runtime-event="true"] {
+                  margin: 0;
+                  color: var(--example-yellow);
+                }
+
+                [data-live-ui-signal-payload="true"],
+                [data-live-ui-signal-translation="true"],
+                [data-live-ui-runtime-event-error="true"] {
+                  margin: 0.85rem 0 0;
+                  padding: 0.8rem 0.9rem;
+                  overflow-x: auto;
+                  border: 1px solid var(--example-border);
+                  border-radius: 12px;
+                  background: hsl(0 0% 5%);
+                  color: hsl(0 0% 84%);
+                  font-size: 0.82rem;
+                  line-height: 1.55;
+                }
+              </style>
             </head>
-            <body>
+            <body class="unified-example-shell">
               <%= @inner_content %>
+              <script src="/vendor/phoenix/phoenix.js"></script>
+              <script src="/vendor/live_view/phoenix_live_view.js"></script>
+              <script>
+                if (!window.liveSocket) {
+                  const csrfToken = document
+                    .querySelector("meta[name='csrf-token']")
+                    ?.getAttribute("content")
+
+                  if (window.Phoenix?.Socket && window.LiveView?.LiveSocket && csrfToken) {
+                    const liveSocket = new window.LiveView.LiveSocket(
+                      "/live",
+                      window.Phoenix.Socket,
+                      {params: {_csrf_token: csrfToken}}
+                    )
+
+                    liveSocket.connect()
+                    window.liveSocket = liveSocket
+                  }
+                }
+              </script>
             </body>
           </html>
           """
@@ -158,17 +333,21 @@ defmodule UnifiedExamples.Shared.App do
           ~H"""
           <main
             id={"#{@metadata.root_id}-liveview-app"}
+            class="example-app-shell"
             data-example-directory={@metadata.directory}
             data-example-widget={@metadata.widget}
             data-example-launch={@metadata.app}
+            data-example-interaction-family={@metadata.interaction_demo.family}
           >
-            <header>
+            <header class="example-app-header">
+              <p class="example-app-kicker">Meaningful live_ui example</p>
+              <span class="example-app-widget"><%= widget_label(@metadata.widget) %></span>
               <h1><%= @metadata.title %></h1>
-              <p><%= @metadata.summary %></p>
-              <p :if={@metadata.notes}><%= @metadata.notes %></p>
+              <p class="example-app-summary"><%= @metadata.summary %></p>
+              <p :if={@metadata.notes} class="example-app-notes"><%= @metadata.notes %></p>
             </header>
 
-            <section id={"#{@metadata.root_id}-runtime-surface"}>
+            <section id={"#{@metadata.root_id}-runtime-surface"} class="example-app-runtime">
               <%= if @runtime_state do %>
                 <.live_component
                   module={LiveUi.Runtime.component()}
@@ -181,6 +360,13 @@ defmodule UnifiedExamples.Shared.App do
             </section>
           </main>
           """
+        end
+
+        defp widget_label(widget) do
+          widget
+          |> to_string()
+          |> String.replace("_", " ")
+          |> String.upcase()
         end
       end
 

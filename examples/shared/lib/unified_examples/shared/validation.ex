@@ -79,6 +79,30 @@ defmodule UnifiedExamples.Shared.Validation do
       "example app must expose a browser-runnable Phoenix LiveView baseline"
     )
     |> maybe_issue(
+      not is_map(metadata.interaction_demo),
+      :missing_interaction_demo,
+      metadata.directory,
+      "example app must declare a meaningful interaction demonstration contract"
+    )
+    |> maybe_issue(
+      metadata.interaction_family in [nil, ""],
+      :missing_interaction_family,
+      metadata.directory,
+      "example app must declare the primary interaction family reviewers should exercise"
+    )
+    |> maybe_issue(
+      metadata.interaction_outcome in [nil, ""],
+      :missing_interaction_outcome,
+      metadata.directory,
+      "example app must declare the reviewer-visible interaction outcome"
+    )
+    |> maybe_issue(
+      metadata.interaction_idle_prompt in [nil, ""],
+      :missing_interaction_prompt,
+      metadata.directory,
+      "example app must explain what interaction reviewers should try before any signal is captured"
+    )
+    |> maybe_issue(
       metadata.launch_path != "/",
       :launch_path_mismatch,
       metadata.directory,

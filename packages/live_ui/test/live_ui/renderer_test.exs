@@ -86,6 +86,27 @@ defmodule LiveUi.RendererTest do
     assert html =~ "data-live-ui-widget=\"select\""
   end
 
+  test "renderer lowers canonical button interactions into LiveView click bindings when an event target is present" do
+    element =
+      Foundational.button("Inspect",
+        id: "inspect-button",
+        interactions: [
+          UnifiedIUR.Interaction.click(intent: :inspect_button, element_id: "inspect-button")
+        ]
+      )
+
+    html =
+      render_component(&LiveUi.Renderer.render/1, %{
+        element: element,
+        event_target: "#runtime-host"
+      })
+
+    assert html =~ ~s(phx-click="canonical_interaction")
+    assert html =~ ~s(phx-target="#runtime-host")
+    assert html =~ ~s(phx-value-widget="button")
+    assert html =~ ~s(phx-value-element_id="inspect-button")
+  end
+
   test "equivalent canonical inputs map deterministically into the same native structure" do
     left =
       Layout.row([

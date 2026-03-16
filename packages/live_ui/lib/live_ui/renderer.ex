@@ -6,7 +6,7 @@ defmodule LiveUi.Renderer do
   use Phoenix.Component
 
   alias LiveUi.Style, as: NativeStyle
-  alias UnifiedIUR.{Binding, Element}
+  alias UnifiedIUR.{Binding, Element, Interaction}
 
   @spec accepts() :: module()
   def accepts, do: Element
@@ -77,6 +77,7 @@ defmodule LiveUi.Renderer do
   end
 
   attr(:element, :any, required: true)
+  attr(:event_target, :any, default: nil)
 
   def render(%{element: %Element{kind: :text}} = assigns) do
     ~H"""
@@ -136,6 +137,13 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :button}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.Button.render
       id={element_id(@element, "button")}
@@ -145,6 +153,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
@@ -202,7 +211,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Widgets.Content.render>
     """
@@ -221,7 +230,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Widgets.Box.render>
     """
@@ -240,7 +249,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Layout.Row.render>
     """
@@ -259,7 +268,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Layout.Column.render>
     """
@@ -278,7 +287,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Layout.Grid.render>
     """
@@ -295,7 +304,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Forms.FormBuilder.render>
     """
@@ -313,7 +322,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Forms.FieldGroup.render>
     """
@@ -330,13 +339,13 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <:label :for={child <- child_elements(@element, :label)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:label>
       <:control :for={child <- child_elements(@element, :control)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:control>
       <:help :for={child <- child_elements(@element, :help)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:help>
     </LiveUi.Forms.Field.render>
     """
@@ -677,7 +686,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Widgets.Dialog.render>
     """
@@ -697,7 +706,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Widgets.AlertDialog.render>
     """
@@ -717,7 +726,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Widgets.Toast.render>
     """
@@ -753,10 +762,10 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <:base :for={child <- child_elements(@element, :base)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:base>
       <:overlay :for={child <- overlay_children(@element)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:overlay>
     </LiveUi.Widgets.OverlaySurface.render>
     """
@@ -781,7 +790,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element, :content) do %>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       <% end %>
     </LiveUi.Widgets.Viewport.render>
     """
@@ -823,10 +832,10 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <:primary :for={child <- child_elements(@element, :primary)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:primary>
       <:secondary :for={child <- child_elements(@element, :secondary)}>
-        <.render element={child} />
+        <.render element={child} event_target={} />
       </:secondary>
     </LiveUi.Widgets.SplitPane.render>
     """
@@ -1034,5 +1043,34 @@ defmodule LiveUi.Renderer do
 
   defp state_boolean(%Element{} = element, key) do
     boolean_default(get_in(element.attributes, [:state, key]), false)
+  end
+
+  defp primary_click_interaction(%Element{} = element) do
+    element.attributes
+    |> Map.get(:interactions, [])
+    |> List.wrap()
+    |> Enum.find(&(&1.family == :click))
+  end
+
+  defp interaction_event_attrs(%Element{} = element, event_target) do
+    case {primary_click_interaction(element), event_target} do
+      {%Interaction{} = interaction, target} when is_binary(target) ->
+        %{
+          :"phx-click" => "canonical_interaction",
+          :"phx-target" => target,
+          :"phx-value-interaction" => encode_interaction(interaction),
+          :"phx-value-widget" => Atom.to_string(element.kind),
+          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+        }
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp encode_interaction(%Interaction{} = interaction) do
+    interaction
+    |> :erlang.term_to_binary()
+    |> Base.url_encode64(padding: false)
   end
 end

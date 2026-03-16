@@ -10,10 +10,15 @@ defmodule UnifiedExamples.ToolingTest do
     assert button.family == :content
     assert button.widget == :button
     assert button.uses_shared_template
+    assert button.interaction_family == :click
+    assert button.interaction_source in [:shared_trigger, :primary_widget]
+    assert is_binary(button.interaction_outcome)
 
     assert overlay.family == :overlay
     assert overlay.widget == :overlay
     assert overlay.uses_shared_template
+    assert overlay.interaction_family == :click
+    assert is_binary(overlay.interaction_idle_prompt)
   end
 
   test "previews representative apps through one shared workflow" do
@@ -23,6 +28,7 @@ defmodule UnifiedExamples.ToolingTest do
 
     assert report =~ "directory: button"
     assert report =~ "widget: button"
+    assert report =~ "interaction_family: click"
     assert html =~ ~s(data-live-ui-widget="overlay-surface")
     assert metadata.family == :operational
     assert metadata.widget == :cluster_dashboard
