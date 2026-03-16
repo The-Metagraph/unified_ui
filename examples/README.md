@@ -41,6 +41,21 @@ The point is to demonstrate one widget or construct at a time under one common
 theme and style baseline so the rendered differences come from the widget
 itself.
 
+## Cross-Package Traceability
+
+Each example app is meant to be reviewable against the package contracts it is
+demonstrating:
+
+- `unified_ui` owns the authored DSL template and compiler surface
+- `unified_iur` owns the canonical intermediate representation produced by that
+  authored DSL
+- `live_ui` owns the runtime rendering path that mounts the resulting canonical
+  screen under the shared theme and style baseline
+
+The shared support library exposes traceability metadata for every app so
+reviewers can see the exact package roots, package specs, general ecosystem
+specs, and governance contracts that define the example’s expected behavior.
+
 ## Maintainer Commands
 
 Run these from `examples/shared/`:
@@ -84,7 +99,7 @@ Discovery surfaces:
 
 - `examples/catalog.tsv` is the machine-readable catalog manifest for the suite
 - `examples/shared/` exposes the shared catalog, fixtures, runtime helpers,
-  documentation checks, and release-readiness workflow
+  documentation checks, traceability metadata, and release-readiness workflow
 - the family groupings above are the human-readable landing page for the same
   catalog entries
 

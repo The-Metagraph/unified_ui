@@ -7,6 +7,7 @@ defmodule UnifiedExamples.Shared.Tooling do
   alias UnifiedExamples.Shared.Loader
   alias UnifiedExamples.Shared.Runtime
   alias UnifiedExamples.Shared.Template
+  alias UnifiedExamples.Shared.Traceability
 
   @type loaded_app :: Loader.loaded_app()
   @type run_descriptor :: %{
@@ -106,7 +107,9 @@ defmodule UnifiedExamples.Shared.Tooling do
       source_files: loaded.source_files,
       style_profile: screen.shared_style_profile(),
       uses_shared_template: screen.shared_style_profile() == Template.default_style_profile(),
-      default_theme_id: screen.default_theme_id()
+      default_theme_id: screen.default_theme_id(),
+      traceability:
+        Traceability.traceability_for(entry.directory, app, screen, loaded.source_files)
     })
   end
 

@@ -6,6 +6,7 @@ defmodule UnifiedExamples.Shared.Reporting do
   alias UnifiedExamples.Shared
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Template
+  alias UnifiedExamples.Shared.Traceability
   alias UnifiedExamples.Shared.Validation
 
   @spec suite_report() :: map()
@@ -43,6 +44,7 @@ defmodule UnifiedExamples.Shared.Reporting do
           |> Enum.uniq()
           |> Enum.sort()
       },
+      traceability: Traceability.report(),
       validation: validation
     }
   end
@@ -62,6 +64,7 @@ defmodule UnifiedExamples.Shared.Reporting do
       "default_theme_id: #{report.template.default_theme_id}",
       "aligned_apps: #{length(report.template.aligned_apps)}",
       "divergent_apps: #{Enum.join(report.template.divergent_apps, ", ")}",
+      "traceability_valid?: #{report.traceability.valid?}",
       "validation_valid?: #{report.validation.valid?}"
     ]
     |> Enum.join("\n")

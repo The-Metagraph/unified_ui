@@ -55,3 +55,14 @@ Documentation checks:
 - the documentation checks confirm the suite continues to describe
   `examples/catalog.tsv`, `examples/shared/`, the common template, and the
   current app directories
+
+Cross-package traceability:
+
+- `UnifiedExamples.Shared.Traceability.report/0` verifies the example suite
+  stays linked to the `unified_ui`, `unified_iur`, and `live_ui` package
+  contracts
+- per-app review metadata includes a `traceability` map describing the authored
+  DSL path, canonical IUR path, runtime rendering path, and the relevant root
+  and package spec files
+- see [guides/traceability.md](./guides/traceability.md) for the reviewer-facing
+  traceability workflow
