@@ -104,6 +104,7 @@ defmodule UnifiedExamples.Shared.Tooling do
       app_module: app,
       screen_module: screen,
       source_files: loaded.source_files,
+      style_profile: screen.shared_style_profile(),
       uses_shared_template: screen.shared_style_profile() == Template.default_style_profile(),
       default_theme_id: screen.default_theme_id()
     })

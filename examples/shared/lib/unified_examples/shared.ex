@@ -5,6 +5,7 @@ defmodule UnifiedExamples.Shared do
 
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Documentation
+  alias UnifiedExamples.Shared.ReleaseReadiness
   alias UnifiedExamples.Shared.Reporting
   alias UnifiedExamples.Shared.Tooling
   alias UnifiedExamples.Shared.Validation
@@ -84,6 +85,11 @@ defmodule UnifiedExamples.Shared do
   @spec documentation_report() :: map()
   def documentation_report do
     Documentation.report()
+  end
+
+  @spec release_readiness_report() :: map()
+  def release_readiness_report do
+    ReleaseReadiness.report()
   end
 
   @spec suite_report() :: map()
