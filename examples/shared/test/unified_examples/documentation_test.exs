@@ -10,10 +10,12 @@ defmodule UnifiedExamples.DocumentationTest do
     assert report.valid?
     assert report.root.synchronized?
     assert report.shared.synchronized?
+    assert report.app_readmes.synchronized?
     assert report.root.missing_snippets == []
     assert report.root.missing_directories == []
     assert report.shared.missing_snippets == []
     assert report.shared.missing_directories == []
+    assert report.app_readmes.mismatched_directories == []
     assert report.paths.suite_index == Shared.suite_index_path()
   end
 
@@ -24,7 +26,8 @@ defmodule UnifiedExamples.DocumentationTest do
              shared: %{
                missing_snippets: ["`UnifiedExamples.Shared.Template`"],
                missing_directories: ["overlay"]
-             }
+             },
+             app_readmes: %{mismatched_directories: ["button"]}
            }) =~ "root_missing_directories: button"
   end
 end

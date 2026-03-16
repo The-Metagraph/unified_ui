@@ -34,6 +34,7 @@ defmodule UnifiedExamples.Shared.Catalog do
     "phase",
     "shell_kind",
     "interaction_family",
+    "interaction_storytelling",
     "interaction_source",
     "interaction_outcome"
   ]
@@ -489,6 +490,7 @@ defmodule UnifiedExamples.Shared.Catalog do
       Integer.to_string(entry.phase),
       Atom.to_string(entry.shell_kind),
       Atom.to_string(entry.interaction_demo.family),
+      entry.interaction_demo |> InteractionDemo.storytelling() |> Atom.to_string(),
       Atom.to_string(entry.interaction_demo.source),
       entry.interaction_demo.outcome
     ]

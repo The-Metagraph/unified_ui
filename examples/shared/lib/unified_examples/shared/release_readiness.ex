@@ -26,12 +26,14 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     primary_subject_gate = primary_subject_gate(metadata)
     shared_template_gate = shared_template_gate(metadata)
     browser_launch_gate = browser_launch_gate(launch_results)
+    interaction_story_gate = interaction_story_gate(metadata_results, launch_results)
 
     gates = %{
       catalog_complete: catalog_gate,
       primary_subject_coverage: primary_subject_gate,
       shared_template_continuity: shared_template_gate,
-      browser_launch_continuity: browser_launch_gate
+      browser_launch_continuity: browser_launch_gate,
+      interaction_story_continuity: interaction_story_gate
     }
 
     %{
@@ -51,7 +53,8 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       "catalog_complete?: #{report.gates.catalog_complete.passed?}",
       "primary_subject_coverage?: #{report.gates.primary_subject_coverage.passed?}",
       "shared_template_continuity?: #{report.gates.shared_template_continuity.passed?}",
-      "browser_launch_continuity?: #{report.gates.browser_launch_continuity.passed?}"
+      "browser_launch_continuity?: #{report.gates.browser_launch_continuity.passed?}",
+      "interaction_story_continuity?: #{report.gates.interaction_story_continuity.passed?}"
     ]
     |> Enum.join("\n")
   end
@@ -69,6 +72,15 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
   @spec browser_launch_continuity([{String.t(), {:ok, map()} | {:error, term()}}]) :: gate()
   def browser_launch_continuity(results) when is_list(results) do
     browser_launch_gate(results)
+  end
+
+  @spec interaction_story_continuity(
+          [{String.t(), {:ok, map()} | {:error, term()}}],
+          [{String.t(), {:ok, map()} | {:error, term()}}]
+        ) :: gate()
+  def interaction_story_continuity(metadata_results, launch_results)
+      when is_list(metadata_results) and is_list(launch_results) do
+    interaction_story_gate(metadata_results, launch_results)
   end
 
   defp catalog_complete_gate do
@@ -175,6 +187,31 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     }
   end
 
+  defp interaction_story_gate(metadata_results, launch_results) do
+    metadata_by_directory =
+      Map.new(metadata_results, fn
+        {directory, {:ok, metadata}} -> {directory, metadata}
+        {directory, {:error, _reason}} -> {directory, nil}
+      end)
+
+    failures =
+      Enum.flat_map(launch_results, fn
+        {directory, {:ok, %{body: body}}} ->
+          metadata = Map.get(metadata_by_directory, directory)
+          interaction_story_failures(directory, metadata, body)
+
+        {directory, {:error, reason}} ->
+          [%{directory: directory, reason: {:launch_failed, reason}}]
+      end)
+
+    %{
+      passed?: failures == [],
+      failures: failures,
+      message:
+        "every example app must expose a meaningful interaction story panel, canonical signal preview, and reviewer-facing interaction copy in the browser"
+    }
+  end
+
   defp collect_metadata(results) do
     results
     |> Enum.flat_map(fn
@@ -205,9 +242,45 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     end)
   end
 
+  defp interaction_story_failures(directory, nil, _body) do
+    [%{directory: directory, reason: :missing_review_metadata}]
+  end
+
+  defp interaction_story_failures(directory, metadata, body) do
+    []
+    |> maybe_story_failure(
+      directory,
+      not String.contains?(body, "Meaningful Interaction Story"),
+      :missing_story_panel
+    )
+    |> maybe_story_failure(
+      directory,
+      not String.contains?(body, "Canonical Signal Preview"),
+      :missing_signal_preview
+    )
+    |> maybe_story_failure(
+      directory,
+      metadata.interaction_idle_prompt not in [nil, ""] and
+        not String.contains?(body, metadata.interaction_idle_prompt),
+      :missing_idle_prompt
+    )
+    |> maybe_story_failure(
+      directory,
+      metadata.interaction_trigger_label not in [nil, ""] and
+        not String.contains?(body, metadata.interaction_trigger_label),
+      :missing_trigger_label
+    )
+  end
+
   defp maybe_divergence(divergences, _directory, false, _kind), do: divergences
 
   defp maybe_divergence(divergences, directory, true, kind) do
     divergences ++ [%{directory: directory, kind: kind}]
+  end
+
+  defp maybe_story_failure(failures, _directory, false, _reason), do: failures
+
+  defp maybe_story_failure(failures, directory, true, reason) do
+    failures ++ [%{directory: directory, reason: reason}]
   end
 end

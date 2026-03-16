@@ -13,6 +13,7 @@ defmodule UnifiedExamples.ValidationTest do
     assert report.catalog.unexpected_directories == []
     assert report.catalog.manifest_in_sync?
     assert report.metadata.issues == []
+    assert report.release.gates.interaction_story_continuity.passed?
   end
 
   test "detects catalog drift when expected and actual directories diverge" do
@@ -31,6 +32,7 @@ defmodule UnifiedExamples.ValidationTest do
         uses_shared_template: false,
         interaction_demo: nil,
         interaction_family: nil,
+        interaction_storytelling: nil,
         interaction_outcome: nil,
         interaction_idle_prompt: nil,
         shell_kind: :box,
@@ -51,6 +53,7 @@ defmodule UnifiedExamples.ValidationTest do
              :not_browser_runnable,
              :missing_interaction_demo,
              :missing_interaction_family,
+             :missing_interaction_storytelling,
              :missing_interaction_outcome,
              :missing_interaction_prompt,
              :launch_path_mismatch,

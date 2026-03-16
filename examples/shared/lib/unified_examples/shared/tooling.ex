@@ -4,6 +4,7 @@ defmodule UnifiedExamples.Shared.Tooling do
   """
 
   alias UnifiedExamples.Shared.Catalog
+  alias UnifiedExamples.Shared.InteractionDemo
   alias UnifiedExamples.Shared.Loader
   alias UnifiedExamples.Shared.Runtime
   alias UnifiedExamples.Shared.Template
@@ -167,6 +168,7 @@ defmodule UnifiedExamples.Shared.Tooling do
       default_theme_id: screen.default_theme_id(),
       interaction_demo: metadata.interaction_demo,
       interaction_family: metadata.interaction_demo.family,
+      interaction_storytelling: InteractionDemo.storytelling(metadata.interaction_demo),
       interaction_source: metadata.interaction_demo.source,
       interaction_trigger_label: metadata.interaction_demo.trigger_label,
       interaction_outcome: metadata.interaction_demo.outcome,
@@ -198,6 +200,7 @@ defmodule UnifiedExamples.Shared.Tooling do
       "family: #{metadata.family}",
       "phase: #{metadata.phase}",
       "interaction_family: #{metadata.interaction_family}",
+      "interaction_storytelling: #{metadata.interaction_storytelling}",
       "interaction_source: #{metadata.interaction_source}",
       "theme: #{metadata.theme_id}",
       "browser_runnable?: #{metadata.browser_runnable?}",

@@ -91,6 +91,12 @@ defmodule UnifiedExamples.Shared.Validation do
       "example app must declare the primary interaction family reviewers should exercise"
     )
     |> maybe_issue(
+      metadata.interaction_storytelling in [nil, ""],
+      :missing_interaction_storytelling,
+      metadata.directory,
+      "example app must declare whether its interaction story is source-driven or target-driven"
+    )
+    |> maybe_issue(
       metadata.interaction_outcome in [nil, ""],
       :missing_interaction_outcome,
       metadata.directory,
@@ -165,6 +171,7 @@ defmodule UnifiedExamples.Shared.Validation do
       "catalog_unexpected: #{Enum.join(report.catalog.unexpected_directories, ", ")}",
       "manifest_in_sync?: #{report.catalog.manifest_in_sync?}",
       "metadata_issues: #{length(report.metadata.issues)}",
+      "interaction_story_valid?: #{report.release.gates.interaction_story_continuity.passed?}",
       "release_valid?: #{report.release.valid?}"
     ]
     |> Enum.join("\n")
