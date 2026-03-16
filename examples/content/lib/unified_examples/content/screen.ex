@@ -9,7 +9,14 @@ defmodule UnifiedExamples.Content.Screen do
     summary: "Focused content-oriented example using the shared suite shell",
     widget: :content,
     notes:
-      "Content examples keep the shared shell while foregrounding one primary content container."
+      "Content examples keep the shared shell while foregrounding one primary content container.",
+    interaction_demo: %{
+      trigger_label: "Review the content story",
+      idle_prompt:
+        "Use the shared trigger to spotlight how the content container groups authored children into one reviewable story.",
+      outcome:
+        "The content example should make grouping and semantic containment obvious even before reading the underlying DSL."
+    }
 
   example_panel do
     UnifiedUi.Dsl.Composition.Box.Composition.Children.Content.content :content_example_primary_content do

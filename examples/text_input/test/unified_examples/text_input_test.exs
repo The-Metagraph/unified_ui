@@ -5,19 +5,19 @@ defmodule UnifiedExamples.TextInputTest do
   alias UnifiedExamples.Shared.Tooling
 
   test "text_input example exposes standalone example metadata" do
-    assert TextInput.metadata() == %{
-             id: :text_input_example_screen,
-             root_id: :text_input_example_screen_root,
-             title: "Text Input Widget Example",
-             summary: "Focused input-oriented example using the shared suite shell",
-             notes:
-               "Text input examples keep the shared shell while foregrounding one input control.",
-             widget: :text_input,
-             theme_id: :example_suite_default,
-             app: :unified_example_text_input,
-             directory: "examples/text_input",
-             purpose: :widget_proof
-           }
+    metadata = TextInput.metadata()
+
+    assert metadata.id == :text_input_example_screen
+    assert metadata.root_id == :text_input_example_screen_root
+    assert metadata.title == "Text Input Widget Example"
+    assert metadata.widget == :text_input
+    assert metadata.theme_id == :example_suite_default
+    assert metadata.app == :unified_example_text_input
+    assert metadata.directory == "examples/text_input"
+    assert metadata.purpose == :widget_proof
+    assert metadata.interaction_demo.mode == :custom
+    assert metadata.interaction_demo.family == :change
+    assert metadata.interaction_demo.source == :primary_widget
   end
 
   test "text_input example renders the shared shell and the focused input widget" do
@@ -30,6 +30,8 @@ defmodule UnifiedExamples.TextInputTest do
     assert html =~ "data-live-ui-widget=\"text-input\""
     assert html =~ "Type your note"
     assert html =~ "data-live-ui-variant=\"filled\""
+    assert html =~ "phx-change=\"canonical_interaction\""
+    assert html =~ "Meaningful Interaction Story"
   end
 
   test "text_input example boots through its Phoenix LiveView app entrypoint" do

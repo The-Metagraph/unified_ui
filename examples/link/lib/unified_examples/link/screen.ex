@@ -8,7 +8,14 @@ defmodule UnifiedExamples.Link.Screen do
     title: "Link Widget Example",
     summary: "Focused content-oriented example using the shared suite shell",
     widget: :link,
-    notes: "Link examples keep the shared shell while foregrounding one primary link widget."
+    notes: "Link examples keep the shared shell while foregrounding one primary link widget.",
+    interaction_demo: %{
+      trigger_label: "Review the link story",
+      idle_prompt:
+        "Use the shared trigger to review how the link example explains its authored destination before navigation.",
+      outcome:
+        "The link example should communicate the authored destination and make the navigation intent obvious before anyone follows it."
+    }
 
   example_panel do
     link :link_example_primary_link do

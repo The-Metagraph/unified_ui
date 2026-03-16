@@ -107,6 +107,59 @@ defmodule LiveUi.RendererTest do
     assert html =~ ~s(phx-value-element_id="inspect-button")
   end
 
+  test "renderer lowers canonical input interactions into LiveView change bindings when an event target is present" do
+    element =
+      Input.text_input(
+        name: "draft_note",
+        value: "review-ready",
+        placeholder: "Draft",
+        id: "draft-note-input",
+        interactions: [
+          UnifiedIUR.Interaction.change(intent: :draft_note, element_id: "draft-note-input")
+        ]
+      )
+
+    html =
+      render_component(&LiveUi.Renderer.render/1, %{
+        element: element,
+        event_target: "#runtime-host"
+      })
+
+    assert html =~ ~s(phx-change="canonical_interaction")
+    assert html =~ ~s(phx-target="#runtime-host")
+    assert html =~ ~s(phx-value-widget="text_input")
+    assert html =~ ~s(phx-value-element_id="draft-note-input")
+  end
+
+  test "renderer lowers canonical form interactions into LiveView form bindings when an event target is present" do
+    element =
+      Forms.form_builder(
+        [
+          Forms.field(
+            Input.text_input(name: "name", value: "Pascal"),
+            id: "name-field",
+            name: "name",
+            label: "Name"
+          )
+        ],
+        id: "profile-form",
+        interactions: [
+          UnifiedIUR.Interaction.change(intent: :review_form, element_id: "profile-form")
+        ]
+      )
+
+    html =
+      render_component(&LiveUi.Renderer.render/1, %{
+        element: element,
+        event_target: "#runtime-host"
+      })
+
+    assert html =~ ~s(phx-change="canonical_change_interaction")
+    assert html =~ ~s(phx-target="#runtime-host")
+    assert html =~ ~s(phx-value-widget="form_builder")
+    assert html =~ ~s(phx-value-element_id="profile-form")
+  end
+
   test "equivalent canonical inputs map deterministically into the same native structure" do
     left =
       Layout.row([

@@ -3,7 +3,7 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
   Shared interaction-demonstration contract for the standalone example-app suite.
   """
 
-  @type mode :: :shared_trigger | :custom
+  @type mode :: :shared_trigger | :form_shell | :custom
   @type source :: :shared_trigger | :primary_widget | :form_shell
   @type family ::
           :click
@@ -91,23 +91,44 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
   @spec default_for(entry()) :: t()
   def default_for(%{widget: widget, family: family}) do
     widget_label = widget_label(widget)
-    family_label = family_label(family)
+    interaction_family = interaction_family_for_widget(widget)
+    family_label = family_label(interaction_family)
 
-    %{
-      mode: :shared_trigger,
-      family: :click,
-      source: :shared_trigger,
-      widget: widget,
-      source_label: "Shared interaction trigger",
-      trigger_label: "Inspect #{widget_label} interaction",
-      idle_prompt:
-        "Use the shared interaction trigger to see how the #{widget_label} example explains its #{family_label} behavior and canonical signal meaning.",
-      outcome:
-        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible #{family_label} story.",
-      target_surface: "#{widget_label} review panel",
-      reviewer_hint:
-        "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
-    }
+    case mode_for_widget(widget, family) do
+      :form_shell ->
+        %{
+          mode: :form_shell,
+          family: interaction_family,
+          source: :form_shell,
+          widget: widget,
+          source_label: "Shared form shell",
+          trigger_label: nil,
+          idle_prompt:
+            "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the shared review story.",
+          outcome:
+            "The review panel should explain how the #{widget_label} example turns live form input into a browser-visible #{family_label} outcome.",
+          target_surface: "#{widget_label} review panel",
+          reviewer_hint:
+            "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+        }
+
+      :shared_trigger ->
+        %{
+          mode: :shared_trigger,
+          family: interaction_family,
+          source: :shared_trigger,
+          widget: widget,
+          source_label: "Shared interaction trigger",
+          trigger_label: "Inspect #{widget_label} interaction",
+          idle_prompt:
+            "Use the shared interaction trigger to see how the #{widget_label} example explains its #{family_label} behavior and canonical signal meaning.",
+          outcome:
+            "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible #{family_label} story.",
+          target_surface: "#{widget_label} review panel",
+          reviewer_hint:
+            "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+        }
+    end
   end
 
   @spec normalize(map() | nil, entry()) :: t()
@@ -125,6 +146,38 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
   @spec family_for_widget(atom()) :: atom()
   def family_for_widget(widget) when is_atom(widget) do
     Map.fetch!(@family_by_widget, widget)
+  end
+
+  @spec interaction_family_for_widget(atom()) :: family()
+  def interaction_family_for_widget(widget) when is_atom(widget) do
+    case widget do
+      widget when widget in [:button, :link] ->
+        :click
+
+      widget
+      when widget in [:text_input, :numeric_input, :date_input, :time_input, :file_input] ->
+        :change
+
+      widget when widget in [:checkbox, :toggle] ->
+        :change
+
+      widget when widget in [:select, :pick_list, :radio_group] ->
+        :selection
+
+      widget when widget in [:field, :field_group, :form_builder] ->
+        :change
+
+      _other ->
+        :click
+    end
+  end
+
+  defp mode_for_widget(widget, family) do
+    cond do
+      widget in [:button, :text_input] -> :shared_trigger
+      family in [:input, :forms] -> :form_shell
+      true -> :shared_trigger
+    end
   end
 
   @spec runtime_status(t(), map() | nil) :: String.t()

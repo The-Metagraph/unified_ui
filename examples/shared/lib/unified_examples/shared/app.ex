@@ -180,6 +180,17 @@ defmodule UnifiedExamples.Shared.App do
                   padding: 1.25rem;
                 }
 
+                [data-live-ui-runtime="screen"][data-example-demo-active="true"] {
+                  border-radius: 16px;
+                  box-shadow:
+                    inset 0 0 0 1px hsl(152 100% 50% / 0.25),
+                    0 0 0 1px hsl(152 100% 50% / 0.18);
+                }
+
+                [data-live-ui-runtime="screen"][data-example-demo-active="true"] [data-live-ui-widget] {
+                  box-shadow: 0 0 0 1px hsl(152 100% 50% / 0.18);
+                }
+
                 .example-app-kicker {
                   margin: 0 0 0.75rem;
                   color: var(--example-primary);
@@ -228,6 +239,23 @@ defmodule UnifiedExamples.Shared.App do
                     linear-gradient(180deg, hsl(192 100% 50% / 0.06) 0%, hsl(0 0% 9% / 0.98) 100%);
                 }
 
+                [data-live-ui-demo-story="true"] {
+                  margin-bottom: 1rem;
+                  border: 1px solid hsl(152 100% 50% / 0.18);
+                  border-radius: 14px;
+                  padding: 1rem;
+                  background:
+                    linear-gradient(180deg, hsl(152 100% 50% / 0.08) 0%, hsl(0 0% 8% / 0.98) 100%);
+                }
+
+                [data-live-ui-demo-story="true"] h2 {
+                  margin: 0 0 0.75rem;
+                  font-size: 0.8rem;
+                  letter-spacing: 0.12em;
+                  text-transform: uppercase;
+                  color: var(--example-primary);
+                }
+
                 [data-live-ui-signal-preview="true"] h2 {
                   margin: 0 0 0.75rem;
                   font-size: 0.8rem;
@@ -238,8 +266,10 @@ defmodule UnifiedExamples.Shared.App do
 
                 [data-live-ui-signal-status="true"],
                 [data-live-ui-signal-empty="true"],
-                [data-live-ui-signal-summary="true"],
-                [data-live-ui-signal-outcome="true"] {
+                [data-live-ui-demo-status="true"],
+                [data-live-ui-demo-empty="true"],
+                [data-live-ui-demo-outcome="true"],
+                [data-live-ui-demo-payload="true"] {
                   margin: 0.4rem 0 0;
                   line-height: 1.6;
                 }

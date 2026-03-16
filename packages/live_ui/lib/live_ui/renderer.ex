@@ -211,7 +211,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Widgets.Content.render>
     """
@@ -230,7 +230,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Widgets.Box.render>
     """
@@ -249,7 +249,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Layout.Row.render>
     """
@@ -268,7 +268,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Layout.Column.render>
     """
@@ -287,13 +287,20 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Layout.Grid.render>
     """
   end
 
   def render(%{element: %Element{kind: :form_builder}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :form_interaction_attrs,
+        form_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Forms.FormBuilder.render
       id={element_id(@element, "form-builder")}
@@ -302,9 +309,10 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@form_interaction_attrs}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Forms.FormBuilder.render>
     """
@@ -322,7 +330,7 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <%= for child <- child_elements(@element) do %>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Forms.FieldGroup.render>
     """
@@ -339,13 +347,13 @@ defmodule LiveUi.Renderer do
       class={style_class(@element)}
     >
       <:label :for={child <- child_elements(@element, :label)}>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       </:label>
       <:control :for={child <- child_elements(@element, :control)}>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       </:control>
       <:help :for={child <- child_elements(@element, :help)}>
-        <.render element={child} event_target={} />
+        <.render element={child} event_target={@event_target} />
       </:help>
     </LiveUi.Forms.Field.render>
     """
@@ -353,6 +361,13 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:text_input, :numeric_input, :date_input, :time_input, :file_input] do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.TextInput.render
       id={element_id(@element, "input")}
@@ -364,12 +379,20 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:toggle, :checkbox] do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.Toggle.render
       id={element_id(@element, "toggle")}
@@ -379,12 +402,20 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:select, :pick_list, :radio_group] do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.Select.render
       id={element_id(@element, "select")}
@@ -395,6 +426,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
@@ -1046,22 +1078,104 @@ defmodule LiveUi.Renderer do
   end
 
   defp primary_click_interaction(%Element{} = element) do
+    primary_interaction(element, [:click])
+  end
+
+  defp control_interaction_attrs(%Element{} = element, event_target) do
+    case {primary_interaction(element, [:change, :selection]), event_target} do
+      {%Interaction{} = interaction, target} when is_binary(target) ->
+        canonical_event_attrs(element, interaction, target, "interaction")
+        |> Map.put(:"phx-change", "canonical_interaction")
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp form_interaction_attrs(%Element{} = element, event_target) do
+    case event_target do
+      target when is_binary(target) ->
+        %{}
+        |> maybe_merge_form_interaction(
+          primary_interaction(element, [:change, :selection]),
+          element,
+          target,
+          :"phx-change",
+          "canonical_change_interaction",
+          :"phx-value-change-interaction"
+        )
+        |> maybe_merge_form_interaction(
+          primary_interaction(element, [:submit]),
+          element,
+          target,
+          :"phx-submit",
+          "canonical_submit_interaction",
+          :"phx-value-submit-interaction"
+        )
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp maybe_merge_form_interaction(
+         attrs,
+         %Interaction{} = interaction,
+         %Element{} = element,
+         target,
+         event_attr,
+         event_name,
+         value_attr
+       ) do
+    Map.merge(attrs, %{
+      event_attr => event_name,
+      :"phx-target" => target,
+      value_attr => encode_interaction(interaction),
+      :"phx-value-widget" => Atom.to_string(element.kind),
+      :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+    })
+  end
+
+  defp maybe_merge_form_interaction(
+         attrs,
+         nil,
+         _element,
+         _target,
+         _event_attr,
+         _event_name,
+         _value_attr
+       ),
+       do: attrs
+
+  defp primary_interaction(%Element{} = element, families) do
     element.attributes
     |> Map.get(:interactions, [])
     |> List.wrap()
-    |> Enum.find(&(&1.family == :click))
+    |> Enum.find(fn
+      %Interaction{family: family} -> family in families
+      _other -> false
+    end)
+  end
+
+  defp canonical_event_attrs(
+         %Element{} = element,
+         %Interaction{} = interaction,
+         target,
+         value_key
+       ) do
+    %{
+      :"phx-target" => target,
+      String.to_atom("phx-value-#{value_key}") => encode_interaction(interaction),
+      :"phx-value-widget" => Atom.to_string(element.kind),
+      :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+    }
   end
 
   defp interaction_event_attrs(%Element{} = element, event_target) do
     case {primary_click_interaction(element), event_target} do
       {%Interaction{} = interaction, target} when is_binary(target) ->
-        %{
-          :"phx-click" => "canonical_interaction",
-          :"phx-target" => target,
-          :"phx-value-interaction" => encode_interaction(interaction),
-          :"phx-value-widget" => Atom.to_string(element.kind),
-          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
-        }
+        canonical_event_attrs(element, interaction, target, "interaction")
+        |> Map.put(:"phx-click", "canonical_interaction")
 
       _other ->
         %{}

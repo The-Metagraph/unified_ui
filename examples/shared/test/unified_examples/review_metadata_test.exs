@@ -10,6 +10,7 @@ defmodule UnifiedExamples.ReviewMetadataTest do
 
   test "per-app review metadata stays traceable to the example catalog" do
     assert {:ok, button} = Tooling.review_metadata("button")
+    assert {:ok, checkbox} = Tooling.review_metadata("checkbox")
     assert {:ok, cluster_dashboard} = Tooling.review_metadata("cluster_dashboard")
 
     assert button.primary_subject == :button
@@ -23,6 +24,11 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert button.interaction_source == Catalog.entry!("button").interaction_demo.source
     assert button.interaction_outcome == Catalog.entry!("button").interaction_demo.outcome
     assert button.traceability.authored_dsl.package == :unified_ui
+
+    assert checkbox.primary_subject == :checkbox
+    assert checkbox.family == Catalog.entry!("checkbox").family
+    assert checkbox.interaction_family == Catalog.entry!("checkbox").interaction_demo.family
+    assert checkbox.interaction_source == Catalog.entry!("checkbox").interaction_demo.source
 
     assert cluster_dashboard.primary_subject == :cluster_dashboard
     assert cluster_dashboard.family == Catalog.entry!("cluster_dashboard").family
