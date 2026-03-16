@@ -5,6 +5,7 @@ defmodule UnifiedExamples.Shared.Validation do
 
   alias UnifiedExamples.Shared
   alias UnifiedExamples.Shared.Catalog
+  alias UnifiedExamples.Shared.ReleaseReadiness
   alias UnifiedExamples.Shared.Template
   alias UnifiedExamples.Shared.Tooling
 
@@ -18,6 +19,7 @@ defmodule UnifiedExamples.Shared.Validation do
   def report do
     catalog = catalog_findings(Catalog.directories(), Shared.app_directories())
     metadata_issues = Enum.flat_map(Catalog.directories(), &validate_directory/1)
+    release = ReleaseReadiness.report()
 
     %{
       catalog: Map.put(catalog, :manifest_in_sync?, manifest_in_sync?()),
@@ -25,11 +27,13 @@ defmodule UnifiedExamples.Shared.Validation do
         checked: length(Catalog.directories()),
         issues: metadata_issues
       },
+      release: release,
       valid?:
         catalog.missing_directories == [] and
           catalog.unexpected_directories == [] and
           manifest_in_sync?() and
-          metadata_issues == []
+          metadata_issues == [] and
+          release.valid?
     }
   end
 
@@ -96,7 +100,8 @@ defmodule UnifiedExamples.Shared.Validation do
       "catalog_missing: #{Enum.join(report.catalog.missing_directories, ", ")}",
       "catalog_unexpected: #{Enum.join(report.catalog.unexpected_directories, ", ")}",
       "manifest_in_sync?: #{report.catalog.manifest_in_sync?}",
-      "metadata_issues: #{length(report.metadata.issues)}"
+      "metadata_issues: #{length(report.metadata.issues)}",
+      "release_valid?: #{report.release.valid?}"
     ]
     |> Enum.join("\n")
   end
