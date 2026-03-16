@@ -194,18 +194,18 @@ defmodule UnifiedExamples.Shared.App do
         @live Module.concat(parent_module, "Live")
 
         pipeline :browser do
-          plug :accepts, ["html"]
-          plug :fetch_session
-          plug :fetch_live_flash
-          plug :put_root_layout, html: {@layouts, :root}
-          plug :protect_from_forgery
-          plug :put_secure_browser_headers
+          plug(:accepts, ["html"])
+          plug(:fetch_session)
+          plug(:fetch_live_flash)
+          plug(:put_root_layout, html: {@layouts, :root})
+          plug(:protect_from_forgery)
+          plug(:put_secure_browser_headers)
         end
 
         scope "/" do
-          pipe_through :browser
+          pipe_through(:browser)
 
-          live "/", @live, :show, as: :example
+          live("/", @live, :show, as: :example)
         end
       end
 
@@ -221,27 +221,30 @@ defmodule UnifiedExamples.Shared.App do
           signing_salt: "unified-example-session"
         ]
 
-        socket "/live", Phoenix.LiveView.Socket,
+        socket("/live", Phoenix.LiveView.Socket,
           websocket: [connect_info: [session: @session_options]]
+        )
 
-        plug Plug.Static,
+        plug(Plug.Static,
           at: "/",
           from: app,
           gzip: false,
           only: ~w()
+        )
 
-        plug Plug.RequestId
-        plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
+        plug(Plug.RequestId)
+        plug(Plug.Telemetry, event_prefix: [:phoenix, :endpoint])
 
-        plug Plug.Parsers,
+        plug(Plug.Parsers,
           parsers: [:urlencoded, :multipart, :json],
           pass: ["*/*"],
           json_decoder: Phoenix.json_library()
+        )
 
-        plug Plug.MethodOverride
-        plug Plug.Head
-        plug Plug.Session, @session_options
-        plug @router
+        plug(Plug.MethodOverride)
+        plug(Plug.Head)
+        plug(Plug.Session, @session_options)
+        plug(@router)
       end
 
       defmodule Application do

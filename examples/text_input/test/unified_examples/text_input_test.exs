@@ -1,7 +1,8 @@
 defmodule UnifiedExamples.TextInputTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias UnifiedExamples.TextInput
+  alias UnifiedExamples.Shared.Tooling
 
   test "text_input example exposes standalone example metadata" do
     assert TextInput.metadata() == %{
@@ -29,5 +30,14 @@ defmodule UnifiedExamples.TextInputTest do
     assert html =~ "data-live-ui-widget=\"text-input\""
     assert html =~ "Type your note"
     assert html =~ "data-live-ui-variant=\"filled\""
+  end
+
+  test "text_input example boots through its Phoenix LiveView app entrypoint" do
+    assert {:ok, smoke} = Tooling.smoke_launch("text_input")
+
+    assert smoke.status == 200
+    assert smoke.body =~ "data-example-directory=\"examples/text_input\""
+    assert smoke.body =~ "Text Input Widget Example"
+    assert smoke.body =~ "data-live-ui-widget=\"text-input\""
   end
 end

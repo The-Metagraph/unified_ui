@@ -23,6 +23,14 @@ defmodule UnifiedExamples.Shared.Tooling do
           live_module: module(),
           command: String.t()
         }
+  @type smoke_result :: %{
+          directory: String.t(),
+          status: non_neg_integer(),
+          path: String.t(),
+          url: String.t(),
+          body: String.t(),
+          launch_command: String.t()
+        }
   @type run_descriptor :: %{
           directory: String.t(),
           cwd: String.t(),
@@ -96,6 +104,31 @@ defmodule UnifiedExamples.Shared.Tooling do
     with {:ok, loaded} <- Loader.load(directory) do
       Loader.load_config(loaded)
       build_launch_descriptor(loaded, opts)
+    end
+  end
+
+  @spec smoke_launch(String.t() | atom(), keyword()) :: {:ok, smoke_result()} | {:error, term()}
+  def smoke_launch(directory, opts \\ []) do
+    with {:ok, loaded} <- Loader.load(directory) do
+      Loader.load_config(loaded)
+      launch = build_launch_descriptor(loaded, opts)
+
+      with_started_app(loaded, fn ->
+        conn =
+          Plug.Test.conn(:get, launch.url)
+          |> Plug.Conn.put_req_header("accept", "text/html")
+          |> launch.endpoint_module.call(launch.endpoint_module.init([]))
+
+        {:ok,
+         %{
+           directory: loaded.directory,
+           status: conn.status,
+           path: launch.path,
+           url: launch.url,
+           body: conn.resp_body,
+           launch_command: launch.command
+         }}
+      end)
     end
   end
 
@@ -216,5 +249,32 @@ defmodule UnifiedExamples.Shared.Tooling do
       function_exported?(app, :launch_url, 0),
       function_exported?(app, :endpoint_config, 0)
     ])
+  end
+
+  defp with_started_app(loaded, fun) do
+    supervisor_name = Module.concat(loaded.app.endpoint_module(), Supervisor)
+
+    case Process.whereis(supervisor_name) do
+      nil ->
+        case loaded.app.application_module().start(:normal, []) do
+          {:ok, pid} ->
+            try do
+              fun.()
+            after
+              if Process.alive?(pid) do
+                Supervisor.stop(pid, :normal, 5_000)
+              end
+            end
+
+          {:error, {:already_started, _pid}} ->
+            fun.()
+
+          {:error, reason} ->
+            {:error, reason}
+        end
+
+      _pid ->
+        fun.()
+    end
   end
 end
