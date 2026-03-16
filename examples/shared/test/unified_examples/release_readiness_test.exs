@@ -11,9 +11,11 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
 
     assert report.valid?
     assert report.metadata_load_failures == []
+    assert report.launch_failures == []
     assert report.gates.catalog_complete.passed?
     assert report.gates.primary_subject_coverage.passed?
     assert report.gates.shared_template_continuity.passed?
+    assert report.gates.browser_launch_continuity.passed?
     assert report.gates.shared_template_continuity.default_theme_id == Template.default_theme_id()
   end
 
@@ -45,5 +47,14 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
              :screen_theme,
              :style_profile
            ]
+
+    browser_launch_drift =
+      ReleaseReadiness.browser_launch_continuity([
+        {"button", {:ok, %{status: 200}}},
+        {"overlay", {:error, :not_bootable}}
+      ])
+
+    assert browser_launch_drift.passed? == false
+    assert browser_launch_drift.failures == [%{directory: "overlay", reason: :not_bootable}]
   end
 end

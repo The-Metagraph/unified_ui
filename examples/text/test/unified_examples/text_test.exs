@@ -1,7 +1,8 @@
 defmodule UnifiedExamples.TextTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias UnifiedExamples.Text
+  alias UnifiedExamples.Shared.Tooling
 
   test "text example exposes standalone example metadata" do
     assert Text.metadata() == %{
@@ -30,5 +31,14 @@ defmodule UnifiedExamples.TextTest do
     assert html =~ "Shared text example"
     assert html =~ "data-live-ui-widget=\"text\""
     assert html =~ "data-live-ui-variant=\"headline\""
+  end
+
+  test "text example boots through its Phoenix LiveView app entrypoint" do
+    assert {:ok, smoke} = Tooling.smoke_launch("text")
+
+    assert smoke.status == 200
+    assert smoke.body =~ "data-example-directory=\"examples/text\""
+    assert smoke.body =~ "Text Widget Example"
+    assert smoke.body =~ "data-live-ui-widget=\"text\""
   end
 end

@@ -19,12 +19,21 @@ defmodule UnifiedExamples.PickList.MixProject do
 
   def application do
     [
+      mod: {application_module(), []},
       extra_applications: [:logger]
     ]
   end
 
+  defp application_module do
+    UnifiedExamples.PickList.Application
+  end
+
   defp deps do
     [
+      {:phoenix, "~> 1.8"},
+      {:phoenix_html, "~> 4.3"},
+      {:phoenix_live_view, "~> 1.1"},
+      {:plug_cowboy, "~> 2.7"},
       {:unified_examples_shared, path: "../shared"},
       {:unified_ui, path: "../../packages/unified-ui"},
       {:unified_iur, path: "../../packages/unified_iur"},

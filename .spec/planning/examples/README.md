@@ -28,6 +28,7 @@ The plan aligns to:
 4. [Phase 4 - Display, Overlay, and Operational Example Apps](./phase-04-display-overlay-and-operational-example-apps.md): implement the display-system, overlay, and operational example applications together with the more advanced runtime flows they require.
 5. [Phase 5 - Suite Catalog, Tooling, and Validation Workflow](./phase-05-suite-catalog-tooling-and-validation-workflow.md): implement the suite index, app discovery tooling, per-app preview workflows, and validation checks that enforce catalog and template continuity.
 6. [Phase 6 - Documentation, Release Readiness, and Full Suite Integration](./phase-06-documentation-release-readiness-and-full-suite-integration.md): implement the final documentation surface, release-readiness gates, and full-suite integration coverage for the standalone example apps.
+7. [Phase 7 - Phoenix LiveView App Runtime Alignment](./phase-07-phoenix-liveview-app-runtime-alignment.md): retrofit every example directory into a runnable Phoenix LiveView app with its own endpoint, router, and browser launch workflow.
 
 ## Shared Conventions
 - Numbering:
@@ -45,7 +46,8 @@ The plan aligns to:
 ## Shared Assumptions and Defaults
 - The example suite lives at the repository root under `examples/` and not under `packages/`.
 - `examples/shared/` is a shared support library used by every example app.
-- Every example app is a standalone Mix project focused on one primary widget or construct.
+- Every example app is a standalone Phoenix LiveView app, packaged as its own Mix project and focused on one primary widget or construct.
 - Every example app uses one shared `unified_ui` DSL template, one shared default theme, and one shared default style profile.
 - The authored path for every example app is `unified_ui` DSL -> canonical `UnifiedIUR` -> `live_ui` runtime rendering.
+- Every example app should be directly launchable through its own Phoenix runtime entrypoint rather than only through shared preview helpers.
 - The catalog is complete only when every current `live_ui` widget or construct named in the example catalog has its own example app directory.

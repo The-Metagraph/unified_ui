@@ -11,6 +11,7 @@ It owns:
 - the shared default theme and default style profile for the suite
 - helper functions for compiling authored examples and mounting them through the
   canonical `live_ui` runtime path
+- shared helpers for booting each example as a standalone Phoenix LiveView app
 
 Main modules:
 
@@ -40,6 +41,10 @@ Shared template contract:
 Maintainer workflows:
 
 - `mix examples.list` prints the current suite catalog
+- `mix examples.launch <directory> --dry-run` prints the exact `mix phx.server`
+  command for one example app
+- `mix examples.launch <directory> --smoke-test` boots the example through its
+  Phoenix endpoint and verifies the LiveView entrypoint responds
 - `mix examples.preview <directory>` prints a preview report, metadata, or HTML
 - `mix examples.run <directory>` runs the target example app through its own
   `mix test` workflow
@@ -48,6 +53,16 @@ Maintainer workflows:
 - `mix examples.report` prints the cross-family review summary for the suite
 - `mix examples.release` runs the full maintainer workflow report and can fail
   strict release checks with `--strict`
+- `mix phx.server` remains the direct browser entrypoint from each
+  `examples/<widget_name>/` directory
+
+Phoenix launch helpers:
+
+- `UnifiedExamples.Shared.Tooling.launch_descriptor/2` builds the app-local
+  `mix phx.server` command and mount metadata for one example app
+- `UnifiedExamples.Shared.Tooling.smoke_launch/2` boots the example through the
+  shared Phoenix runtime contract and returns the response metadata used by the
+  maintainer smoke workflow
 
 Documentation checks:
 

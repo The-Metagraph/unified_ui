@@ -15,6 +15,8 @@ defmodule UnifiedExamples.MaintenanceTest do
 
     assert Enum.map(report.workflow_steps, & &1.command) == [
              "mix examples.list",
+             "mix examples.launch <directory> --dry-run",
+             "mix examples.launch <directory> --smoke-test",
              "mix examples.preview <directory>",
              "mix examples.report",
              "mix examples.validate --strict",
@@ -33,6 +35,7 @@ defmodule UnifiedExamples.MaintenanceTest do
       })
 
     assert summary =~ "Example suite maintainer workflow"
+    assert summary =~ "mix examples.launch <directory> --smoke-test"
     assert summary =~ "mix examples.preview <directory>"
     assert summary =~ "mix examples.release --strict"
   end

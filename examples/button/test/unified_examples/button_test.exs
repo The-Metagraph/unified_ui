@@ -1,7 +1,8 @@
 defmodule UnifiedExamples.ButtonTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias UnifiedExamples.Button
+  alias UnifiedExamples.Shared.Tooling
 
   test "button example exposes standalone example metadata" do
     assert Button.metadata() == %{
@@ -28,5 +29,14 @@ defmodule UnifiedExamples.ButtonTest do
     assert html =~ "data-live-ui-widget=\"button\""
     assert html =~ "Save profile"
     assert html =~ "data-live-ui-variant=\"quiet\""
+  end
+
+  test "button example boots through its Phoenix LiveView app entrypoint" do
+    assert {:ok, smoke} = Tooling.smoke_launch("button")
+
+    assert smoke.status == 200
+    assert smoke.body =~ "data-example-directory=\"examples/button\""
+    assert smoke.body =~ "Button Widget Example"
+    assert smoke.body =~ "data-live-ui-widget=\"button\""
   end
 end

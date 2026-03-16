@@ -29,13 +29,28 @@ defmodule UnifiedExamples.ValidationTest do
         theme_id: :rogue_theme,
         default_theme_id: :rogue_theme,
         uses_shared_template: false,
-        shell_kind: :box
+        shell_kind: :box,
+        browser_runnable?: false,
+        launch_path: "/rogue",
+        launch_command: "mix test",
+        launch_url: "http://127.0.0.1:4000/rogue",
+        application_module: Missing.Application,
+        endpoint_module: Missing.Endpoint,
+        router_module: Missing.Router,
+        live_module: Missing.Live
       })
 
     assert Enum.map(issues, & &1.code) == [
              :app_theme_mismatch,
              :screen_theme_mismatch,
-             :shared_template_divergence
+             :shared_template_divergence,
+             :not_browser_runnable,
+             :launch_path_mismatch,
+             :launch_command_mismatch,
+             :missing_application_module,
+             :missing_endpoint_module,
+             :missing_router_module,
+             :missing_live_module
            ]
   end
 end

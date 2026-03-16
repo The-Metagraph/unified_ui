@@ -16,6 +16,18 @@ defmodule UnifiedExamples.Shared.Maintenance do
         "Review the current catalog and confirm the suite entry exists in the shared index."
     },
     %{
+      name: :launch,
+      command: "mix examples.launch <directory> --dry-run",
+      description:
+        "Confirm the standalone Phoenix launch command and browser mount path before starting the app."
+    },
+    %{
+      name: :smoke_test,
+      command: "mix examples.launch <directory> --smoke-test",
+      description:
+        "Boot the example through its Phoenix endpoint and verify the LiveView entrypoint responds."
+    },
+    %{
       name: :preview,
       command: "mix examples.preview <directory>",
       description: "Preview one target app through the shared template and runtime path."
@@ -29,7 +41,7 @@ defmodule UnifiedExamples.Shared.Maintenance do
       name: :validate,
       command: "mix examples.validate --strict",
       description:
-        "Check catalog continuity, shared-template continuity, and release-readiness gates."
+        "Check catalog continuity, shared-template continuity, browser-launch continuity, and release-readiness gates."
     },
     %{
       name: :release,

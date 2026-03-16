@@ -18,8 +18,9 @@ defmodule UnifiedExamples.Shared.Validation do
   @spec report() :: map()
   def report do
     catalog = catalog_findings(Catalog.directories(), Shared.app_directories())
-    metadata_issues = Enum.flat_map(Catalog.directories(), &validate_directory/1)
-    release = ReleaseReadiness.report()
+    metadata_results = Enum.map(Catalog.directories(), &{&1, Tooling.review_metadata(&1)})
+    metadata_issues = Enum.flat_map(metadata_results, &validate_directory_result/1)
+    release = ReleaseReadiness.report(metadata_results)
 
     %{
       catalog: Map.put(catalog, :manifest_in_sync?, manifest_in_sync?()),
@@ -39,18 +40,9 @@ defmodule UnifiedExamples.Shared.Validation do
 
   @spec validate_directory(String.t() | atom()) :: [issue()]
   def validate_directory(directory) do
-    with {:ok, metadata} <- Tooling.review_metadata(directory) do
-      validate_review_metadata(metadata)
-    else
-      {:error, reason} ->
-        [
-          %{
-            code: :load_failed,
-            directory: normalize_directory(directory),
-            message: "unable to load review metadata: #{inspect(reason)}"
-          }
-        ]
-    end
+    directory
+    |> Tooling.review_metadata()
+    |> then(&validate_directory_result({normalize_directory(directory), &1}))
   end
 
   @spec validate_review_metadata(map()) :: [issue()]
@@ -79,6 +71,54 @@ defmodule UnifiedExamples.Shared.Validation do
       :unsupported_shell_kind,
       metadata.directory,
       "example app must report a supported shared shell kind"
+    )
+    |> maybe_issue(
+      metadata.browser_runnable? != true,
+      :not_browser_runnable,
+      metadata.directory,
+      "example app must expose a browser-runnable Phoenix LiveView baseline"
+    )
+    |> maybe_issue(
+      metadata.launch_path != "/",
+      :launch_path_mismatch,
+      metadata.directory,
+      "example app must mount its browser entrypoint at the shared root path"
+    )
+    |> maybe_issue(
+      not String.contains?(metadata.launch_command || "", "mix phx.server"),
+      :launch_command_mismatch,
+      metadata.directory,
+      "example app launch metadata must expose a mix phx.server command"
+    )
+    |> maybe_issue(
+      not String.contains?(metadata.launch_url || "", metadata.launch_path || "/"),
+      :launch_url_mismatch,
+      metadata.directory,
+      "example app launch metadata must expose a URL aligned with the mount path"
+    )
+    |> maybe_missing_module(
+      metadata.application_module,
+      :missing_application_module,
+      metadata.directory,
+      "example app must expose an application module for the Phoenix baseline"
+    )
+    |> maybe_missing_module(
+      metadata.endpoint_module,
+      :missing_endpoint_module,
+      metadata.directory,
+      "example app must expose an endpoint module for the Phoenix baseline"
+    )
+    |> maybe_missing_module(
+      metadata.router_module,
+      :missing_router_module,
+      metadata.directory,
+      "example app must expose a router module for the Phoenix baseline"
+    )
+    |> maybe_missing_module(
+      metadata.live_module,
+      :missing_live_module,
+      metadata.directory,
+      "example app must expose a LiveView module for the Phoenix baseline"
     )
   end
 
@@ -114,6 +154,24 @@ defmodule UnifiedExamples.Shared.Validation do
 
   defp maybe_issue(issues, true, code, directory, message) do
     issues ++ [%{code: code, directory: normalize_directory(directory), message: message}]
+  end
+
+  defp maybe_missing_module(issues, module, code, directory, message) do
+    maybe_issue(issues, not Code.ensure_loaded?(module), code, directory, message)
+  end
+
+  defp validate_directory_result({_directory, {:ok, metadata}}) do
+    validate_review_metadata(metadata)
+  end
+
+  defp validate_directory_result({directory, {:error, reason}}) do
+    [
+      %{
+        code: :load_failed,
+        directory: normalize_directory(directory),
+        message: "unable to load review metadata: #{inspect(reason)}"
+      }
+    ]
   end
 
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)

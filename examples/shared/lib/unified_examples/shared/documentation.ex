@@ -7,14 +7,17 @@ defmodule UnifiedExamples.Shared.Documentation do
   alias UnifiedExamples.Shared.Catalog
 
   @root_required_snippets [
+    "standalone Phoenix LiveView app",
     "shared authoring template",
     "shared default theme",
     "shared default style profile",
     "`examples/catalog.tsv`",
     "`examples/shared/`",
     "`mix examples.list`",
+    "`mix examples.launch <directory> --dry-run`",
     "`mix examples.preview <directory>`",
     "`mix examples.validate --strict`",
+    "`mix phx.server`",
     "`UnifiedUi` DSL -> canonical `UnifiedIUR` -> `LiveUi` rendering"
   ]
 
@@ -26,8 +29,11 @@ defmodule UnifiedExamples.Shared.Documentation do
     "`:example_form_shell`",
     "`example_panel/1`",
     "`example_form_panel/1`",
+    "`mix examples.launch <directory> --smoke-test`",
+    "`mix phx.server`",
     "`mix examples.report`",
-    "`UnifiedExamples.Shared.Documentation.report/0`"
+    "`UnifiedExamples.Shared.Documentation.report/0`",
+    "`UnifiedExamples.Shared.Tooling.smoke_launch/2`"
   ]
 
   @spec paths() :: %{shared_readme: String.t(), suite_index: String.t()}
