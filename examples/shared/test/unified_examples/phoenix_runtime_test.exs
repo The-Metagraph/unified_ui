@@ -28,6 +28,7 @@ defmodule UnifiedExamples.PhoenixRuntimeTest do
       assert {:ok, smoke} = Tooling.smoke_launch(directory)
 
       assert metadata.browser_runnable?
+      assert metadata.dev_server_enabled?
       assert metadata.default_theme_id == Template.default_theme_id()
       assert metadata.uses_shared_template
       assert smoke.status == 200
@@ -42,9 +43,19 @@ defmodule UnifiedExamples.PhoenixRuntimeTest do
       assert {:ok, smoke} = Tooling.smoke_launch(directory)
 
       assert metadata.browser_runnable?
+      assert metadata.dev_server_enabled?
       assert smoke.status == 200
       assert smoke.body =~ "data-example-directory=\"examples/#{directory}\""
       assert smoke.body =~ "data-live-ui-widget="
+    end)
+  end
+
+  test "proof apps enable the Phoenix endpoint server for direct mix phx.server launches" do
+    Enum.each(@proof_apps, fn directory ->
+      assert {:ok, metadata} = Tooling.review_metadata(directory)
+
+      assert metadata.dev_server_enabled?
+      assert metadata.launch_command =~ "mix phx.server"
     end)
   end
 end

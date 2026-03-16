@@ -110,67 +110,67 @@ defmodule UnifiedExamples.Shared.Template do
 
           palette_color do
             id(:surface)
-            color(rgb_color(17, 24, 39))
+            color(rgb_color(18, 18, 18))
           end
 
           palette_color do
             id(:accent)
-            color(rgb_color(37, 99, 235))
+            color(rgb_color(0, 255, 136))
           end
 
           palette_color do
             id(:success)
-            color(rgb_color(5, 150, 105))
+            color(rgb_color(0, 255, 136))
           end
 
           palette_color do
             id(:warning)
-            color(rgb_color(217, 119, 6))
+            color(rgb_color(255, 184, 0))
           end
 
           palette_color do
             id(:critical)
-            color(rgb_color(220, 38, 38))
+            color(rgb_color(235, 123, 123))
           end
 
           palette_color do
             id(:muted)
-            color(rgb_color(107, 114, 128))
+            color(rgb_color(102, 102, 102))
           end
 
           semantic_role do
             id(:surface)
-            value(rgb_color(17, 24, 39))
+            value(rgb_color(18, 18, 18))
           end
 
           semantic_role do
             id(:accent)
-            value(rgb_color(37, 99, 235))
+            value(rgb_color(0, 255, 136))
           end
 
           semantic_role do
             id(:success)
-            value(rgb_color(5, 150, 105))
+            value(rgb_color(0, 255, 136))
           end
 
           semantic_role do
             id(:warning)
-            value(rgb_color(217, 119, 6))
+            value(rgb_color(255, 184, 0))
           end
 
           semantic_role do
             id(:critical)
-            value(rgb_color(220, 38, 38))
+            value(rgb_color(235, 123, 123))
           end
 
           semantic_role do
             id(:muted)
-            value(rgb_color(107, 114, 128))
+            value(rgb_color(102, 102, 102))
           end
 
           semantic_role do
             id(:foreground)
-            value(rgb_color(249, 250, 251))
+            value(rgb_color(232, 232, 232))
           end
 
           token do
@@ -204,7 +204,8 @@ defmodule UnifiedExamples.Shared.Template do
 
             value(
               style_value(
-                foreground: role_ref(:accent),
+                background: role_ref(:accent),
+                foreground: rgb_color(10, 10, 10),
                 border_color: role_ref(:accent),
                 emphasis: %{tone: :accent}
               )
@@ -295,7 +296,7 @@ defmodule UnifiedExamples.Shared.Template do
           component_style do
             id(:example_primary_button)
             component(:button)
-            variant(:quiet)
+            variant(:solid)
 
             style(style_value(token_refs: [token_ref(:accent_action)]))
           end
@@ -423,67 +424,67 @@ defmodule UnifiedExamples.Shared.Template do
 
           palette_color do
             id(:surface)
-            color(rgb_color(17, 24, 39))
+            color(rgb_color(18, 18, 18))
           end
 
           palette_color do
             id(:accent)
-            color(rgb_color(37, 99, 235))
+            color(rgb_color(0, 255, 136))
           end
 
           palette_color do
             id(:success)
-            color(rgb_color(5, 150, 105))
+            color(rgb_color(0, 255, 136))
           end
 
           palette_color do
             id(:warning)
-            color(rgb_color(217, 119, 6))
+            color(rgb_color(255, 184, 0))
           end
 
           palette_color do
             id(:critical)
-            color(rgb_color(220, 38, 38))
+            color(rgb_color(235, 123, 123))
           end
 
           palette_color do
             id(:muted)
-            color(rgb_color(107, 114, 128))
+            color(rgb_color(102, 102, 102))
           end
 
           semantic_role do
             id(:surface)
-            value(rgb_color(17, 24, 39))
+            value(rgb_color(18, 18, 18))
           end
 
           semantic_role do
             id(:accent)
-            value(rgb_color(37, 99, 235))
+            value(rgb_color(0, 255, 136))
           end
 
           semantic_role do
             id(:success)
-            value(rgb_color(5, 150, 105))
+            value(rgb_color(0, 255, 136))
           end
 
           semantic_role do
             id(:warning)
-            value(rgb_color(217, 119, 6))
+            value(rgb_color(255, 184, 0))
           end
 
           semantic_role do
             id(:critical)
-            value(rgb_color(220, 38, 38))
+            value(rgb_color(235, 123, 123))
           end
 
           semantic_role do
             id(:muted)
-            value(rgb_color(107, 114, 128))
+            value(rgb_color(102, 102, 102))
           end
 
           semantic_role do
             id(:foreground)
-            value(rgb_color(249, 250, 251))
+            value(rgb_color(232, 232, 232))
           end
 
           token do
@@ -504,7 +505,8 @@ defmodule UnifiedExamples.Shared.Template do
 
             value(
               style_value(
-                foreground: role_ref(:accent),
+                background: role_ref(:accent),
+                foreground: rgb_color(10, 10, 10),
                 border_color: role_ref(:accent),
                 emphasis: %{tone: :accent}
               )
@@ -568,7 +570,7 @@ defmodule UnifiedExamples.Shared.Template do
           component_style do
             id(:example_primary_button)
             component(:button)
-            variant(:quiet)
+            variant(:solid)
 
             style(style_value(token_refs: [token_ref(:accent_action)]))
           end
