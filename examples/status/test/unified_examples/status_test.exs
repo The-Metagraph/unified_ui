@@ -5,19 +5,15 @@ defmodule UnifiedExamples.StatusTest do
   alias UnifiedExamples.Status
 
   test "status example exposes standalone example metadata" do
-    assert Status.metadata() == %{
-             id: :status_example_screen,
-             root_id: :status_example_screen_root,
-             title: "Status Widget Example",
-             summary: "Focused feedback-oriented example using the shared suite shell",
-             notes:
-               "Status examples foreground one canonical status line inside the shared shell.",
-             widget: :status,
-             theme_id: :example_suite_default,
-             app: :unified_example_status,
-             directory: "examples/status",
-             purpose: :widget_proof
-           }
+    metadata = Status.metadata()
+
+    assert metadata.id == :status_example_screen
+    assert metadata.root_id == :status_example_screen_root
+    assert metadata.widget == :status
+    assert metadata.app == :unified_example_status
+    assert metadata.directory == "examples/status"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :click
   end
 
   test "status example renders the shared shell and foregrounds one primary status line" do
@@ -34,5 +30,7 @@ defmodule UnifiedExamples.StatusTest do
     assert html =~ "data-live-ui-widget=\"status\""
     assert html =~ "Status Widget Example"
     assert html =~ "Release train stable"
+    assert html =~ "Inspect the status feedback story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end

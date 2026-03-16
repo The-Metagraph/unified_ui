@@ -93,6 +93,7 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
     widget_label = widget_label(widget)
     interaction_family = interaction_family_for_widget(widget)
     family_label = family_label(interaction_family)
+    default_copy = default_copy(family, widget_label, family_label, interaction_family)
 
     case mode_for_widget(widget, family) do
       :form_shell ->
@@ -103,10 +104,8 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
           widget: widget,
           source_label: "Shared form shell",
           trigger_label: nil,
-          idle_prompt:
-            "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the shared review story.",
-          outcome:
-            "The review panel should explain how the #{widget_label} example turns live form input into a browser-visible #{family_label} outcome.",
+          idle_prompt: default_copy.form_idle_prompt,
+          outcome: default_copy.form_outcome,
           target_surface: "#{widget_label} review panel",
           reviewer_hint:
             "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
@@ -119,11 +118,9 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
           source: :shared_trigger,
           widget: widget,
           source_label: "Shared interaction trigger",
-          trigger_label: "Inspect #{widget_label} interaction",
-          idle_prompt:
-            "Use the shared interaction trigger to see how the #{widget_label} example explains its #{family_label} behavior and canonical signal meaning.",
-          outcome:
-            "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible #{family_label} story.",
+          trigger_label: default_copy.trigger_label,
+          idle_prompt: default_copy.shared_idle_prompt,
+          outcome: default_copy.shared_outcome,
           target_surface: "#{widget_label} review panel",
           reviewer_hint:
             "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
@@ -167,6 +164,31 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
       widget when widget in [:field, :field_group, :form_builder] ->
         :change
 
+      widget when widget in [:menu, :tabs] ->
+        :navigation
+
+      :command_palette ->
+        :command
+
+      widget when widget in [:list, :table, :tree_view] ->
+        :selection
+
+      widget
+      when widget in [:markdown_viewer, :log_viewer, :viewport, :scroll_bar, :split_pane, :canvas] ->
+        :focus
+
+      widget when widget in [:overlay, :dialog, :alert_dialog, :context_menu, :toast] ->
+        :open
+
+      widget
+      when widget in [
+             :stream_widget,
+             :process_monitor,
+             :supervision_tree_viewer,
+             :cluster_dashboard
+           ] ->
+        :command
+
       _other ->
         :click
     end
@@ -178,6 +200,132 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
       family in [:input, :forms] -> :form_shell
       true -> :shared_trigger
     end
+  end
+
+  defp default_copy(_family, widget_label, family_label, :command) do
+    %{
+      trigger_label: "Review the #{widget_label} command story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} intent and the resulting reviewed command outcome.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible command story reviewers can follow quickly.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the command review story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible command outcome."
+    }
+  end
+
+  defp default_copy(:navigation, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Review the #{widget_label} navigation story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes and active-state meaning.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible navigation story with clear active-state meaning.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the current navigation story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible navigation outcome."
+    }
+  end
+
+  defp default_copy(:layout, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Review the #{widget_label} layout story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes in the surrounding composition.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible layout story.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the layout review story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible layout outcome."
+    }
+  end
+
+  defp default_copy(:data, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Inspect the #{widget_label} data story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes such as focus, filtering, or selection.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible data story reviewers can understand quickly.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the reviewed data state.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible data outcome."
+    }
+  end
+
+  defp default_copy(:feedback, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Inspect the #{widget_label} feedback story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes in metric or feedback meaning.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible feedback story.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the feedback story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible feedback outcome."
+    }
+  end
+
+  defp default_copy(:display, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Inspect the #{widget_label} display story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes in movement, focus, or rendering context.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible display-system story.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the display review story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible display outcome."
+    }
+  end
+
+  defp default_copy(:overlay, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Inspect the #{widget_label} overlay story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes in layered or contextual UI.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible overlay story.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the overlay review story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible overlay outcome."
+    }
+  end
+
+  defp default_copy(:operational, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Inspect the #{widget_label} monitoring story",
+      shared_idle_prompt:
+        "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes for inspection, refresh, or focus flows.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible operational story.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the operational review story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live interaction into a browser-visible operational outcome."
+    }
+  end
+
+  defp default_copy(_family, widget_label, family_label, _interaction_family) do
+    %{
+      trigger_label: "Inspect #{widget_label} interaction",
+      shared_idle_prompt:
+        "Use the shared interaction trigger to see how the #{widget_label} example explains its #{family_label} behavior and canonical signal meaning.",
+      shared_outcome:
+        "The review panel should explain how the #{widget_label} example turns an authored canonical interaction into a browser-visible #{family_label} story.",
+      form_idle_prompt:
+        "Interact with the #{widget_label} example to see how its authored #{family_label} signal updates the shared review story.",
+      form_outcome:
+        "The review panel should explain how the #{widget_label} example turns live form input into a browser-visible #{family_label} outcome."
+    }
   end
 
   @spec runtime_status(t(), map() | nil) :: String.t()
