@@ -67,6 +67,8 @@ Run these from `examples/shared/`:
 - `mix examples.validate --strict`: validate the current catalog, metadata, and
   shared-template continuity
 - `mix examples.report`: print the cross-family review summary
+- `mix examples.release --strict`: run the full documentation, traceability,
+  validation, and release-readiness workflow
 
 ## Catalog
 

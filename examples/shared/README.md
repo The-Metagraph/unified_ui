@@ -46,6 +46,8 @@ Maintainer workflows:
 - `mix examples.validate` checks catalog continuity and shared-template/theme
   reuse across the suite
 - `mix examples.report` prints the cross-family review summary for the suite
+- `mix examples.release` runs the full maintainer workflow report and can fail
+  strict release checks with `--strict`
 
 Documentation checks:
 
@@ -66,3 +68,9 @@ Cross-package traceability:
   and package spec files
 - see [guides/traceability.md](./guides/traceability.md) for the reviewer-facing
   traceability workflow
+
+Maintenance workflow:
+
+- see [guides/maintenance.md](./guides/maintenance.md) for the final repeatable
+  workflow for adding a new example app, reviewing shared-template changes, and
+  running the release gate

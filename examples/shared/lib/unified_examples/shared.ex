@@ -5,6 +5,7 @@ defmodule UnifiedExamples.Shared do
 
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Documentation
+  alias UnifiedExamples.Shared.Maintenance
   alias UnifiedExamples.Shared.ReleaseReadiness
   alias UnifiedExamples.Shared.Reporting
   alias UnifiedExamples.Shared.Traceability
@@ -96,6 +97,11 @@ defmodule UnifiedExamples.Shared do
   @spec traceability_report() :: map()
   def traceability_report do
     Traceability.report()
+  end
+
+  @spec maintenance_report() :: map()
+  def maintenance_report do
+    Maintenance.report()
   end
 
   @spec suite_report() :: map()
