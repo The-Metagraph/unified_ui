@@ -1,7 +1,7 @@
 # Examples
 
-This directory contains the standalone example-application suite for the
-unified ecosystem.
+This directory contains the standalone Phoenix LiveView example-application
+suite for the unified ecosystem.
 
 The suite is organized around one shared authoring template, one shared default
 theme, one shared default style profile, and one dedicated standalone app per
@@ -18,7 +18,7 @@ its own while still proving the same authored-to-canonical-to-runtime path:
 Directory convention:
 
 - every example app lives in `examples/<widget_name>/`
-- every example app is a standalone Mix project
+- every example app is a standalone Phoenix LiveView app and Mix project
 - every example app depends on `examples/shared/` plus the local package paths
   for `unified_ui`, `unified_iur`, and `live_ui`
 - every example app reuses the shared template in
@@ -61,6 +61,10 @@ specs, and governance contracts that define the example’s expected behavior.
 Run these from `examples/shared/`:
 
 - `mix examples.list`: print the current suite catalog
+- `mix examples.launch <directory> --dry-run`: print the standalone Phoenix
+  launch command for one app
+- `mix examples.launch <directory> --smoke-test`: boot one app through its
+  Phoenix endpoint and verify the LiveView entrypoint responds
 - `mix examples.preview <directory>`: inspect one app through the shared
   preview path
 - `mix examples.run <directory>`: run one app through its own test workflow
@@ -69,6 +73,19 @@ Run these from `examples/shared/`:
 - `mix examples.report`: print the cross-family review summary
 - `mix examples.release --strict`: run the full documentation, traceability,
   validation, and release-readiness workflow
+- `mix phx.server`: run from any `examples/<widget_name>/` directory to launch
+  that example directly in the browser
+
+Direct browser workflow for any example app:
+
+```bash
+cd /Users/Pascal/code/unified/examples/button
+mix deps.get
+mix phx.server
+```
+
+The default mount URL is `http://127.0.0.1:4000/`, and you can override the
+port with `PORT=4100 mix phx.server`.
 
 ## Catalog
 

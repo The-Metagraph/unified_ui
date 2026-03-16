@@ -13,26 +13,31 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
           message: String.t()
         }
 
-  @spec report() :: map()
-  def report do
+  @spec report([{String.t(), {:ok, map()} | {:error, term()}}] | nil) :: map()
+  def report(metadata_results \\ nil) do
     metadata_results =
-      Catalog.directories()
-      |> Enum.map(&{&1, Tooling.review_metadata(&1)})
+      metadata_results ||
+        Catalog.directories()
+        |> Enum.map(&{&1, Tooling.review_metadata(&1)})
 
     metadata = collect_metadata(metadata_results)
+    launch_results = Enum.map(Catalog.directories(), &{&1, Tooling.smoke_launch(&1)})
     catalog_gate = catalog_complete_gate()
     primary_subject_gate = primary_subject_gate(metadata)
     shared_template_gate = shared_template_gate(metadata)
+    browser_launch_gate = browser_launch_gate(launch_results)
 
     gates = %{
       catalog_complete: catalog_gate,
       primary_subject_coverage: primary_subject_gate,
-      shared_template_continuity: shared_template_gate
+      shared_template_continuity: shared_template_gate,
+      browser_launch_continuity: browser_launch_gate
     }
 
     %{
       checked_directories: Catalog.directories(),
       metadata_load_failures: metadata_load_failures(metadata_results),
+      launch_failures: launch_failures(launch_results),
       gates: gates,
       valid?: Enum.all?(Map.values(gates), & &1.passed?)
     }
@@ -45,7 +50,8 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       "valid?: #{report.valid?}",
       "catalog_complete?: #{report.gates.catalog_complete.passed?}",
       "primary_subject_coverage?: #{report.gates.primary_subject_coverage.passed?}",
-      "shared_template_continuity?: #{report.gates.shared_template_continuity.passed?}"
+      "shared_template_continuity?: #{report.gates.shared_template_continuity.passed?}",
+      "browser_launch_continuity?: #{report.gates.browser_launch_continuity.passed?}"
     ]
     |> Enum.join("\n")
   end
@@ -58,6 +64,11 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
   @spec shared_template_continuity([{String.t(), map()}]) :: gate()
   def shared_template_continuity(metadata) when is_list(metadata) do
     shared_template_gate(metadata)
+  end
+
+  @spec browser_launch_continuity([{String.t(), {:ok, map()} | {:error, term()}}]) :: gate()
+  def browser_launch_continuity(results) when is_list(results) do
+    browser_launch_gate(results)
   end
 
   defp catalog_complete_gate do
@@ -142,6 +153,28 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     }
   end
 
+  defp browser_launch_gate(results) do
+    failures =
+      Enum.flat_map(results, fn
+        {_directory, {:ok, %{status: 200}}} ->
+          []
+
+        {directory, {:ok, %{status: status}}} ->
+          [%{directory: directory, reason: {:bad_status, status}}]
+
+        {directory, {:error, reason}} ->
+          [%{directory: directory, reason: reason}]
+      end)
+
+    %{
+      passed?: failures == [],
+      checked: Enum.map(results, fn {directory, _result} -> directory end),
+      failures: failures,
+      message:
+        "every example app must boot a Phoenix endpoint and serve its LiveView entrypoint through the shared launch contract"
+    }
+  end
+
   defp collect_metadata(results) do
     results
     |> Enum.flat_map(fn
@@ -155,6 +188,20 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     |> Enum.flat_map(fn
       {_directory, {:ok, _metadata}} -> []
       {directory, {:error, reason}} -> [%{directory: directory, reason: reason}]
+    end)
+  end
+
+  defp launch_failures(results) do
+    results
+    |> Enum.flat_map(fn
+      {_directory, {:ok, %{status: 200}}} ->
+        []
+
+      {directory, {:ok, %{status: status}}} ->
+        [%{directory: directory, reason: {:bad_status, status}}]
+
+      {directory, {:error, reason}} ->
+        [%{directory: directory, reason: reason}]
     end)
   end
 

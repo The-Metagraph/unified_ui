@@ -18,8 +18,9 @@ defmodule UnifiedExamples.Shared.Validation do
   @spec report() :: map()
   def report do
     catalog = catalog_findings(Catalog.directories(), Shared.app_directories())
-    metadata_issues = Enum.flat_map(Catalog.directories(), &validate_directory/1)
-    release = ReleaseReadiness.report()
+    metadata_results = Enum.map(Catalog.directories(), &{&1, Tooling.review_metadata(&1)})
+    metadata_issues = Enum.flat_map(metadata_results, &validate_directory_result/1)
+    release = ReleaseReadiness.report(metadata_results)
 
     %{
       catalog: Map.put(catalog, :manifest_in_sync?, manifest_in_sync?()),
@@ -39,18 +40,9 @@ defmodule UnifiedExamples.Shared.Validation do
 
   @spec validate_directory(String.t() | atom()) :: [issue()]
   def validate_directory(directory) do
-    with {:ok, metadata} <- Tooling.review_metadata(directory) do
-      validate_review_metadata(metadata)
-    else
-      {:error, reason} ->
-        [
-          %{
-            code: :load_failed,
-            directory: normalize_directory(directory),
-            message: "unable to load review metadata: #{inspect(reason)}"
-          }
-        ]
-    end
+    directory
+    |> Tooling.review_metadata()
+    |> then(&validate_directory_result({normalize_directory(directory), &1}))
   end
 
   @spec validate_review_metadata(map()) :: [issue()]
@@ -166,6 +158,20 @@ defmodule UnifiedExamples.Shared.Validation do
 
   defp maybe_missing_module(issues, module, code, directory, message) do
     maybe_issue(issues, not Code.ensure_loaded?(module), code, directory, message)
+  end
+
+  defp validate_directory_result({_directory, {:ok, metadata}}) do
+    validate_review_metadata(metadata)
+  end
+
+  defp validate_directory_result({directory, {:error, reason}}) do
+    [
+      %{
+        code: :load_failed,
+        directory: normalize_directory(directory),
+        message: "unable to load review metadata: #{inspect(reason)}"
+      }
+    ]
   end
 
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)
