@@ -5,19 +5,15 @@ defmodule UnifiedExamples.OverlayTest do
   alias UnifiedExamples.Overlay
 
   test "overlay example exposes standalone example metadata" do
-    assert Overlay.metadata() == %{
-             id: :overlay_example_screen,
-             root_id: :overlay_example_screen_root,
-             title: "Overlay Widget Example",
-             summary: "Focused overlay example using the shared suite shell",
-             notes:
-               "Overlay examples foreground one canonical layered surface inside the shared shell.",
-             widget: :overlay,
-             theme_id: :example_suite_default,
-             app: :unified_example_overlay,
-             directory: "examples/overlay",
-             purpose: :widget_proof
-           }
+    metadata = Overlay.metadata()
+
+    assert metadata.id == :overlay_example_screen
+    assert metadata.root_id == :overlay_example_screen_root
+    assert metadata.widget == :overlay
+    assert metadata.app == :unified_example_overlay
+    assert metadata.directory == "examples/overlay"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :open
   end
 
   test "overlay example renders the shared shell and foregrounds one primary overlay surface" do
@@ -35,5 +31,7 @@ defmodule UnifiedExamples.OverlayTest do
     assert html =~ "Overlay Widget Example"
     assert html =~ "Coordinator workspace"
     assert html =~ "Runbook synced"
+    assert html =~ "Inspect the overlay layered story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end

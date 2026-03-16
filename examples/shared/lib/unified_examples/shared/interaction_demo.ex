@@ -288,7 +288,7 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
 
   defp default_copy(:overlay, widget_label, family_label, _interaction_family) do
     %{
-      trigger_label: "Inspect the #{widget_label} overlay story",
+      trigger_label: "Inspect the #{widget_label} layered story",
       shared_idle_prompt:
         "Use the shared trigger to see how the #{widget_label} example explains #{family_label} changes in layered or contextual UI.",
       shared_outcome:
