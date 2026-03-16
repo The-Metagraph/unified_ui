@@ -12,6 +12,8 @@ It owns:
 - helper functions for compiling authored examples and mounting them through the
   canonical `live_ui` runtime path
 - shared helpers for booting each example as a standalone Phoenix LiveView app
+- the shared interaction-story contract that keeps browser-visible outcomes and
+  canonical signal previews aligned across the suite
 
 Main modules:
 
@@ -37,6 +39,9 @@ Shared template contract:
   `example_form_panel/1`
 - every standalone app should inherit the same common notes, title, summary,
   and shell treatment unless the example-specific content itself needs to vary
+- every standalone app must explain one meaningful authored interaction using
+  either source-driven interaction storytelling or target-driven interaction
+  storytelling
 
 Maintainer workflows:
 
@@ -63,6 +68,16 @@ Phoenix launch helpers:
 - `UnifiedExamples.Shared.Tooling.smoke_launch/2` boots the example through the
   shared Phoenix runtime contract and returns the response metadata used by the
   maintainer smoke workflow
+
+Interaction storytelling:
+
+- source-driven interaction storytelling means the showcased widget originates
+  the primary interaction reviewers should try
+- target-driven interaction storytelling means a shared trigger or companion
+  control updates the showcased passive or structural surface in a browser-
+  visible way
+- every launched example must show both `Meaningful Interaction Story` and
+  `Canonical Signal Preview` panels in the browser
 
 Documentation checks:
 

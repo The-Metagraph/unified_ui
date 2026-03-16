@@ -16,6 +16,7 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
     assert report.gates.primary_subject_coverage.passed?
     assert report.gates.shared_template_continuity.passed?
     assert report.gates.browser_launch_continuity.passed?
+    assert report.gates.interaction_story_continuity.passed?
     assert report.gates.shared_template_continuity.default_theme_id == Template.default_theme_id()
   end
 
@@ -56,5 +57,31 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
 
     assert browser_launch_drift.passed? == false
     assert browser_launch_drift.failures == [%{directory: "overlay", reason: :not_bootable}]
+
+    interaction_story_drift =
+      ReleaseReadiness.interaction_story_continuity(
+        [
+          {"button",
+           {:ok,
+            %{
+              interaction_idle_prompt: "Click the primary button.",
+              interaction_trigger_label: nil
+            }}}
+        ],
+        [
+          {"button",
+           {:ok,
+            %{
+              body: "<section><h2>Canonical Signal Preview</h2></section>"
+            }}}
+        ]
+      )
+
+    assert interaction_story_drift.passed? == false
+
+    assert Enum.map(interaction_story_drift.failures, & &1.reason) == [
+             :missing_story_panel,
+             :missing_idle_prompt
+           ]
   end
 end

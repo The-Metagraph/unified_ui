@@ -3,6 +3,7 @@ defmodule UnifiedExamples.Shared.Documentation do
   Documentation checks for the standalone example-app suite.
   """
 
+  alias UnifiedExamples.Shared.AppReadme
   alias UnifiedExamples.Shared
   alias UnifiedExamples.Shared.Catalog
 
@@ -18,7 +19,8 @@ defmodule UnifiedExamples.Shared.Documentation do
     "`mix examples.preview <directory>`",
     "`mix examples.validate --strict`",
     "`mix phx.server`",
-    "`UnifiedUi` DSL -> canonical `UnifiedIUR` -> `LiveUi` rendering"
+    "`UnifiedUi` DSL -> canonical `UnifiedIUR` -> `LiveUi` rendering",
+    "meaningful authored interaction"
   ]
 
   @shared_required_snippets [
@@ -33,7 +35,9 @@ defmodule UnifiedExamples.Shared.Documentation do
     "`mix phx.server`",
     "`mix examples.report`",
     "`UnifiedExamples.Shared.Documentation.report/0`",
-    "`UnifiedExamples.Shared.Tooling.smoke_launch/2`"
+    "`UnifiedExamples.Shared.Tooling.smoke_launch/2`",
+    "source-driven interaction storytelling",
+    "target-driven interaction storytelling"
   ]
 
   @spec paths() :: %{shared_readme: String.t(), suite_index: String.t()}
@@ -64,6 +68,8 @@ defmodule UnifiedExamples.Shared.Documentation do
       missing_directories: []
     }
 
+    app_readmes = AppReadme.report()
+
     %{
       paths: paths(),
       root:
@@ -78,9 +84,10 @@ defmodule UnifiedExamples.Shared.Documentation do
           :synchronized?,
           shared.missing_snippets == []
         ),
+      app_readmes: app_readmes,
       valid?:
         root.missing_snippets == [] and root_missing_directories == [] and
-          shared.missing_snippets == []
+          shared.missing_snippets == [] and app_readmes.synchronized?
     }
   end
 
@@ -92,7 +99,8 @@ defmodule UnifiedExamples.Shared.Documentation do
       "root_missing_snippets: #{Enum.join(report.root.missing_snippets, ", ")}",
       "root_missing_directories: #{Enum.join(report.root.missing_directories, ", ")}",
       "shared_missing_snippets: #{Enum.join(report.shared.missing_snippets, ", ")}",
-      "shared_missing_directories: #{Enum.join(report.shared.missing_directories, ", ")}"
+      "shared_missing_directories: #{Enum.join(report.shared.missing_directories, ", ")}",
+      "app_readme_mismatches: #{Enum.join(report.app_readmes.mismatched_directories, ", ")}"
     ]
     |> Enum.join("\n")
   end

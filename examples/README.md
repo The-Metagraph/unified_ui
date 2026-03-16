@@ -35,11 +35,23 @@ The shared authoring template gives every example app the same review surface:
   `:title`, `:summary`, `:notes`, `:button`, and `:text_input`
 - shared runtime flow through `examples/shared/` helpers rather than
   app-specific boot code
+- one meaningful authored interaction story per example so reviewers can
+  understand what to try in the browser and what outcome to expect without
+  opening source files
 
 The point of the suite is not to let every app invent its own look and feel.
 The point is to demonstrate one widget or construct at a time under one common
 theme and style baseline so the rendered differences come from the widget
 itself.
+
+Every example app must now demonstrate a meaningful authored interaction.
+Examples may use:
+
+- source-driven interaction storytelling, where the showcased widget itself
+  originates the primary interaction
+- target-driven interaction storytelling, where a shared trigger or companion
+  control updates the showcased passive or structural surface in a reviewer-
+  visible way
 
 ## Cross-Package Traceability
 
@@ -86,6 +98,11 @@ mix phx.server
 
 The default mount URL is `http://127.0.0.1:4000/`, and you can override the
 port with `PORT=4100 mix phx.server`.
+
+When you launch an example, look for two shared review surfaces in the browser:
+
+- `Meaningful Interaction Story`: explains what changed in human terms
+- `Canonical Signal Preview`: shows the underlying canonical signal details
 
 ## Catalog
 

@@ -13,6 +13,7 @@ defmodule UnifiedExamples.ValidationTest do
     assert report.catalog.unexpected_directories == []
     assert report.catalog.manifest_in_sync?
     assert report.metadata.issues == []
+    assert report.release.gates.interaction_story_continuity.passed?
   end
 
   test "detects catalog drift when expected and actual directories diverge" do

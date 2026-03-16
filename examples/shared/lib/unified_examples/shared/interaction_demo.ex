@@ -5,6 +5,7 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
 
   @type mode :: :shared_trigger | :form_shell | :custom
   @type source :: :shared_trigger | :primary_widget | :form_shell
+  @type storytelling :: :source_driven | :target_driven
   @type family ::
           :click
           | :change
@@ -144,6 +145,15 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
   def family_for_widget(widget) when is_atom(widget) do
     Map.fetch!(@family_by_widget, widget)
   end
+
+  @spec storytelling(t() | source()) :: storytelling()
+  def storytelling(%{source: source}), do: storytelling(source)
+
+  def storytelling(source) when source in [:primary_widget, :form_shell] do
+    :source_driven
+  end
+
+  def storytelling(:shared_trigger), do: :target_driven
 
   @spec interaction_family_for_widget(atom()) :: family()
   def interaction_family_for_widget(widget) when is_atom(widget) do
