@@ -10,8 +10,7 @@ defmodule UnifiedExamples.SupervisionTreeViewer.MixProject do
       version: @version,
       elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
-      description:
-        "Standalone supervision-tree-viewer example app for the unified example suite.",
+      description: "Standalone supervision-tree-viewer example app for the unified example suite.",
       deps: deps(),
       docs: docs(),
       package: package()
@@ -20,12 +19,21 @@ defmodule UnifiedExamples.SupervisionTreeViewer.MixProject do
 
   def application do
     [
+      mod: {application_module(), []},
       extra_applications: [:logger]
     ]
   end
 
+  defp application_module do
+    UnifiedExamples.SupervisionTreeViewer.Application
+  end
+
   defp deps do
     [
+      {:phoenix, "~> 1.8"},
+      {:phoenix_html, "~> 4.3"},
+      {:phoenix_live_view, "~> 1.1"},
+      {:plug_cowboy, "~> 2.7"},
       {:unified_examples_shared, path: "../shared"},
       {:unified_ui, path: "../../packages/unified-ui"},
       {:unified_iur, path: "../../packages/unified_iur"},
