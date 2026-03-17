@@ -65,7 +65,11 @@ defmodule WebUi.Reference do
         validation_state: WebUi.Runtime.validation_state()
       },
       renderer: %{
-        responsibilities: WebUi.Renderer.responsibilities()
+        responsibilities: WebUi.Renderer.responsibilities(),
+        accepts: WebUi.Renderer.accepts(),
+        modules: WebUi.Renderer.modules(),
+        supported_kinds: WebUi.Renderer.supported_kinds(),
+        validation_state: WebUi.Renderer.validation_state()
       },
       transport: %{
         responsibilities: WebUi.Transport.responsibilities(),
@@ -74,6 +78,9 @@ defmodule WebUi.Reference do
       responsibilities: responsibilities(),
       tooling: %{
         capabilities: WebUi.Tooling.capabilities()
+      },
+      examples: %{
+        catalog: WebUi.Examples.catalog()
       },
       module_areas: WebUi.module_areas()
     }

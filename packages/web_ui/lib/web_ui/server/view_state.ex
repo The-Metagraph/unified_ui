@@ -5,12 +5,13 @@ defmodule WebUi.Server.ViewState do
 
   alias WebUi.Frontend
   alias WebUi.Server.Error
+  alias WebUi.Server.RenderModel
   alias WebUi.Widget
   alias WebUi.Widgets
 
   @type t :: %{
           screen: %{
-            id: atom(),
+            id: String.t() | atom(),
             title: String.t(),
             module: module(),
             mode: atom()
@@ -18,6 +19,7 @@ defmodule WebUi.Server.ViewState do
           assigns: map(),
           widgets: [Widget.t()],
           widget_summaries: [map()],
+          render_tree: [map()],
           bridge: map(),
           revision: non_neg_integer()
         }
@@ -29,17 +31,38 @@ defmodule WebUi.Server.ViewState do
       revision = Keyword.get(opts, :revision, 0)
       mode = Keyword.get(opts, :mode, :native)
 
+      from_widgets(
+        %{id: screen.id(), title: screen.title(), module: screen, mode: mode},
+        assigns,
+        widgets,
+        frontend_boot,
+        revision: revision,
+        mode: mode
+      )
+    end
+  end
+
+  @spec from_widgets(map(), map(), [Widget.t() | map() | keyword()], map() | keyword(), keyword()) ::
+          {:ok, t()} | {:error, Error.t()}
+  def from_widgets(screen, assigns, widgets, frontend_boot, opts \\ [])
+      when is_map(screen) and is_map(assigns) do
+    with {:ok, widgets} <- normalize_widgets(screen, widgets),
+         {:ok, frontend_boot} <- normalize_frontend_boot(screen, frontend_boot) do
+      revision = Keyword.get(opts, :revision, 0)
+      mode = Keyword.get(opts, :mode, Map.get(screen, :mode, :native))
+
       {:ok,
        %{
          screen: %{
-           id: screen.id(),
-           title: screen.title(),
-           module: screen,
+           id: Map.get(screen, :id),
+           title: Map.get(screen, :title, "Untitled"),
+           module: Map.get(screen, :module, __MODULE__),
            mode: mode
          },
          assigns: assigns,
          widgets: widgets,
          widget_summaries: Enum.map(widgets, &Widget.summary/1),
+         render_tree: Enum.map(widgets, &RenderModel.build/1),
          bridge: %{
            assets_root: Frontend.assets_root(),
            entry_module: Frontend.entry_module(),

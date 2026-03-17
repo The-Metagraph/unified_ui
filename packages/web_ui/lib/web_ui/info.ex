@@ -16,6 +16,7 @@ defmodule WebUi.Info do
         entry_module: WebUi.Frontend.entry_module(),
         boot_contract: WebUi.Frontend.boot_contract()
       },
+      example_ids: WebUi.Examples.catalog() |> Enum.map(& &1.id),
       widget_families: WebUi.Widgets.families(),
       validation_state: validation_state(),
       tooling: WebUi.Tooling.capabilities()
@@ -39,7 +40,8 @@ defmodule WebUi.Info do
     %{
       widgets: WebUi.Widgets.validation_state(),
       server: WebUi.Server.validation_state(),
-      frontend: WebUi.Frontend.validation_state()
+      frontend: WebUi.Frontend.validation_state(),
+      renderer: WebUi.Renderer.validation_state()
     }
   end
 end

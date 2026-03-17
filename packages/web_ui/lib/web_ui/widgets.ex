@@ -4,6 +4,7 @@ defmodule WebUi.Widgets do
   """
 
   alias WebUi.Widget
+  alias WebUi.Widgets.{Forms, Foundational, Input, Layout, Navigation}
 
   @type responsibility ::
           :native_widget_surface
@@ -15,9 +16,17 @@ defmodule WebUi.Widgets do
   @kind_family_catalog %{
     text: :foundational,
     label: :foundational,
+    icon: :foundational,
+    image: :foundational,
     button: :foundational,
     link: :foundational,
+    separator: :foundational,
+    spacer: :foundational,
+    content: :foundational,
     text_input: :input,
+    form_builder: :input,
+    field_group: :input,
+    field: :input,
     select: :input,
     checkbox: :input,
     tabs: :navigation,
@@ -99,7 +108,7 @@ defmodule WebUi.Widgets do
 
   @spec modules() :: [module()]
   def modules do
-    [Widget]
+    [Widget, Foundational, Input, Navigation, Layout, Forms]
   end
 
   @spec style_contract() :: map()
@@ -132,7 +141,12 @@ defmodule WebUi.Widgets do
     %{
       widget_definition: :ready,
       family_catalog: :ready,
-      metadata_contract: :ready
+      metadata_contract: :ready,
+      foundational_widgets: :ready,
+      input_widgets: :ready,
+      navigation_widgets: :ready,
+      form_composition: :ready,
+      layout_primitives: :ready
     }
   end
 

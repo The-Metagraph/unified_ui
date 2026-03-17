@@ -31,7 +31,7 @@ defmodule WebUi.Server.Error do
     })
   end
 
-  @spec invalid_view(module(), term()) :: t()
+  @spec invalid_view(term(), term()) :: t()
   def invalid_view(screen, view) do
     new(:invalid_view, "screen view must be a list of widget descriptor maps", %{
       screen: inspect(screen),
@@ -39,7 +39,7 @@ defmodule WebUi.Server.Error do
     })
   end
 
-  @spec invalid_widget(module(), term()) :: t()
+  @spec invalid_widget(term(), term()) :: t()
   def invalid_widget(screen, widget) do
     new(:invalid_widget, "widget descriptor must include at least :id and :kind", %{
       screen: inspect(screen),
@@ -47,7 +47,7 @@ defmodule WebUi.Server.Error do
     })
   end
 
-  @spec invalid_frontend_boot(module(), term()) :: t()
+  @spec invalid_frontend_boot(term(), term()) :: t()
   def invalid_frontend_boot(screen, boot) do
     new(:invalid_frontend_boot, "screen frontend boot metadata must be a map or keyword list", %{
       screen: inspect(screen),

@@ -13,7 +13,7 @@ defmodule WebUi.Frontend.Bootstrap do
   @spec boot_contract() :: map()
   def boot_contract do
     %{
-      required_keys: [:screen, :widgets, :widget_summaries, :bridge, :revision],
+      required_keys: [:screen, :widgets, :widget_summaries, :render_tree, :bridge, :revision],
       local_state_authoritative?: false
     }
   end
