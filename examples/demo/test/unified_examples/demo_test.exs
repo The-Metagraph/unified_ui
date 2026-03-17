@@ -97,8 +97,14 @@ defmodule UnifiedExamples.DemoTest do
       |> render_click()
 
     assert html =~ "data-demo-active-category=\"forms_and_input\""
+    assert html =~ "Forms and Input Gallery"
     assert html =~ "Forms and Input"
     assert html =~ "Structured data entry, field composition, and input-focused review flows."
+    assert html =~ "Display name"
+    assert html =~ "Region"
+    assert html =~ "data-live-ui-widget=\"form-builder\""
+    assert html =~ "data-live-ui-widget=\"text-input\""
+    assert html =~ "data-live-ui-widget=\"toggle\""
     assert html =~ "data-demo-category-panel=\"forms_and_input\""
   end
 end
