@@ -15,6 +15,8 @@ defmodule UnifiedExamples.DocumentationTest do
     assert report.root.missing_directories == []
     assert report.shared.missing_snippets == []
     assert report.shared.missing_directories == []
+    assert report.aggregate_demo.synchronized?
+    assert report.aggregate_demo.missing_snippets == []
     assert report.app_readmes.mismatched_directories == []
     assert report.paths.suite_index == Shared.suite_index_path()
   end
@@ -27,7 +29,8 @@ defmodule UnifiedExamples.DocumentationTest do
                missing_snippets: ["`UnifiedExamples.Shared.Template`"],
                missing_directories: ["overlay"]
              },
+             aggregate_demo: %{missing_snippets: ["Signal Lab"]},
              app_readmes: %{mismatched_directories: ["button"]}
-           }) =~ "root_missing_directories: button"
+           }) =~ "demo_missing_snippets: Signal Lab"
   end
 end

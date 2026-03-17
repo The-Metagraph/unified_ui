@@ -27,6 +27,16 @@ Main modules:
 Standalone widget apps under `examples/<widget_name>/` should depend on this
 package through a local path dependency.
 
+Aggregate review surface:
+
+- `examples/demo/` complements the focused widget apps with one tabbed overview
+  shell grouped by category
+- the aggregate demo should keep the same shared theme and style baseline as
+  the current button example
+- the aggregate demo should retain one dedicated Signal Lab tab for
+  cross-control interaction stories that remain traceable back to the focused
+  example apps
+
 Shared template contract:
 
 - the shared template entrypoint is `UnifiedExamples.Shared.Template`
@@ -102,5 +112,5 @@ Cross-package traceability:
 Maintenance workflow:
 
 - see [guides/maintenance.md](./guides/maintenance.md) for the final repeatable
-  workflow for adding a new example app, reviewing shared-template changes, and
-  running the release gate
+  workflow for adding a new example app, updating the aggregate demo, reviewing
+  shared-template changes, and running the release gate
