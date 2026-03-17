@@ -203,6 +203,27 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-demo-category-panel=\"overlays_and_operational\""
   end
 
+  test "signal lab tab mounts with all required story panels and reviewer-facing structure" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-signal_lab")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"signal_lab\""
+    assert html =~ "Signal Lab"
+    assert html =~ "Action to Feedback"
+    assert html =~ "Input to Preview"
+    assert html =~ "Selection to Filter"
+    assert html =~ "Toggle to Visibility / Enabled State"
+    assert html =~ "Source control"
+    assert html =~ "Outcome panel"
+    assert html =~ "Latest interaction summary"
+    assert html =~ "Canonical click meaning will appear here"
+    refute html =~ "raw debug panels"
+  end
+
   test "cross-category reviewer cues remain visible on every non-signal tab" do
     {:ok, view, html} = live(build_conn(), "/")
 

@@ -25,7 +25,7 @@ defmodule UnifiedExamples.Demo do
 
   @spec review_summary() :: String.t()
   def review_summary do
-    "Review #{Categories.count()} ordered control categories through one shared shell, with full galleries on every non-signal tab and the signal lab reserved for dedicated interaction stories."
+    "Review #{Categories.count()} ordered control categories through one shared shell, with full galleries on every non-signal tab and a dedicated signal lab for cross-control interaction stories."
   end
 
   @spec launch_descriptor(keyword()) :: map()
