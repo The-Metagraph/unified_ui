@@ -286,6 +286,18 @@ defmodule UnifiedExamples.Shared.App do
                   color: var(--example-muted);
                 }
 
+                .example-app-visually-hidden {
+                  position: absolute;
+                  width: 1px;
+                  height: 1px;
+                  padding: 0;
+                  margin: -1px;
+                  overflow: hidden;
+                  clip: rect(0, 0, 0, 0);
+                  white-space: nowrap;
+                  border: 0;
+                }
+
                 #button_example_screen_root-runtime-surface,
                 [id$="-runtime-surface"] {
                   min-width: 0;
@@ -386,6 +398,19 @@ defmodule UnifiedExamples.Shared.App do
                   color: var(--example-primary);
                   background: hsl(152 100% 50% / 0.08);
                   border-color: hsl(152 100% 50% / 0.22);
+                }
+
+                [data-demo-tablist="true"] {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 0.75rem;
+                }
+
+                [data-demo-tab-active="true"] {
+                  box-shadow:
+                    inset 0 1px 0 hsl(0 0% 100% / 0.18),
+                    0 0 0 1px hsl(152 100% 50% / 0.3),
+                    0 14px 30px hsl(152 100% 50% / 0.14);
                 }
 
                 [data-live-ui-signal-preview="true"] {

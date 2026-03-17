@@ -218,6 +218,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :box}} = assigns) do
+    assigns = assign(assigns, :accessibility_attrs, accessibility_attrs(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Box.render
       id={element_id(@element, "box")}
@@ -228,6 +230,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@accessibility_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -1103,6 +1106,24 @@ defmodule LiveUi.Renderer do
     NativeStyle.from_element(element)
   end
 
+  defp accessibility_attrs(%Element{} = element) do
+    accessibility = Map.get(element.attributes, :accessibility, %{})
+
+    []
+    |> maybe_attr(:role, accessibility[:role] || accessibility["role"])
+    |> maybe_attr(:"aria-label", accessibility[:label] || accessibility["label"])
+    |> maybe_attr(
+      :"aria-labelledby",
+      accessibility[:labelled_by] || accessibility["labelled_by"]
+    )
+    |> maybe_attr(
+      :"aria-describedby",
+      accessibility[:described_by] || accessibility["described_by"]
+    )
+    |> maybe_attr(:"aria-live", accessibility[:live] || accessibility["live"])
+    |> maybe_attr(:"aria-atomic", boolean_attr(accessibility[:atomic] || accessibility["atomic"]))
+  end
+
   defp content_text(%Element{} = element) do
     string_value(get_in(element.attributes, [:content, :text]), "")
   end
@@ -1125,6 +1146,10 @@ defmodule LiveUi.Renderer do
 
   defp string_optional(nil), do: nil
   defp string_optional(value), do: to_string(value)
+
+  defp boolean_attr(true), do: "true"
+  defp boolean_attr(false), do: "false"
+  defp boolean_attr(nil), do: nil
 
   defp placement_value(nil, default), do: default
 
@@ -1223,6 +1248,10 @@ defmodule LiveUi.Renderer do
          _value_attr
        ),
        do: attrs
+
+  defp maybe_attr(attrs, _key, nil), do: attrs
+  defp maybe_attr(attrs, _key, ""), do: attrs
+  defp maybe_attr(attrs, key, value), do: [{key, value} | attrs]
 
   defp primary_control_interaction(%Element{} = element) do
     primary_interaction(element, :change) || primary_interaction(element, :selection)

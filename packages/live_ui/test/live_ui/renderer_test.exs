@@ -3,7 +3,7 @@ defmodule LiveUi.RendererTest do
 
   import Phoenix.LiveViewTest
 
-  alias UnifiedIUR.{Container, Forms, Interaction, Layout}
+  alias UnifiedIUR.{Container, Element, Forms, Interaction, Layout}
   alias UnifiedIUR.Widgets.{Foundational, Input, Navigation}
 
   test "renderer maps foundational canonical widgets and layouts into native components" do
@@ -84,6 +84,34 @@ defmodule LiveUi.RendererTest do
     assert html =~ "data-live-ui-widget=\"column\""
     assert html =~ "data-live-ui-widget=\"label\""
     assert html =~ "data-live-ui-widget=\"select\""
+  end
+
+  test "renderer maps canonical accessibility metadata into native box semantics" do
+    element =
+      Element.new(:layout, :box,
+        id: "accessible-box",
+        attributes: %{
+          accessibility: %{
+            role: "region",
+            label: "Signal lab outcome region",
+            labelled_by: "outcome-title",
+            described_by: "outcome-copy",
+            live: "polite",
+            atomic: true
+          }
+        },
+        children: []
+      )
+
+    html = render_component(&LiveUi.Renderer.render/1, %{element: element})
+
+    assert html =~ ~s(id="accessible-box")
+    assert html =~ ~s(role="region")
+    assert html =~ ~s(aria-label="Signal lab outcome region")
+    assert html =~ ~s(aria-labelledby="outcome-title")
+    assert html =~ ~s(aria-describedby="outcome-copy")
+    assert html =~ ~s(aria-live="polite")
+    assert html =~ ~s(aria-atomic="true")
   end
 
   test "renderer lowers canonical button interactions into LiveView click bindings when a string event target is present" do

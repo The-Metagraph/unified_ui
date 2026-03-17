@@ -8,6 +8,8 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
   import UnifiedExamples.Shared.Template, only: [shared_theme_definition: 0]
 
   alias UnifiedExamples.Shared.Template
+  alias LiveUi.Runtime.State
+  alias UnifiedExamples.Demo.SignalLab, as: SignalLabRuntime
 
   @default_theme_id Template.default_theme_id()
   @shared_style_profile Template.default_style_profile()
@@ -155,6 +157,11 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
 
   @spec story_surface_registry() :: %{atom() => map()}
   def story_surface_registry, do: @story_surface_registry
+
+  @spec decorate_runtime_state(State.t()) :: State.t()
+  def decorate_runtime_state(%State{} = runtime_state) do
+    SignalLabRuntime.bootstrap_runtime_state(runtime_state)
+  end
 
   @spec story_contract_summary() :: map()
   def story_contract_summary do

@@ -25,10 +25,13 @@ defmodule UnifiedExamples.Shared.Runtime do
 
   @spec mount(module(), keyword()) :: {:ok, LiveUi.Runtime.State.t()} | {:error, term()}
   def mount(module, opts \\ []) when is_atom(module) do
-    module
-    |> iur!(opts)
-    |> renderable_element()
-    |> LiveUi.Runtime.mount_iur(opts)
+    with {:ok, runtime_state} <-
+           module
+           |> iur!(opts)
+           |> renderable_element()
+           |> LiveUi.Runtime.mount_iur(opts) do
+      {:ok, maybe_decorate_runtime_state(module, runtime_state)}
+    end
   end
 
   @spec component_assigns(module(), keyword()) :: {:ok, map()} | {:error, term()}
@@ -91,6 +94,14 @@ defmodule UnifiedExamples.Shared.Runtime do
   end
 
   def renderable_element(%Element{} = element), do: element
+
+  defp maybe_decorate_runtime_state(module, runtime_state) do
+    if function_exported?(module, :decorate_runtime_state, 1) do
+      module.decorate_runtime_state(runtime_state)
+    else
+      runtime_state
+    end
+  end
 
   defp filter_fragment_helpers(children) do
     descendant_ids =

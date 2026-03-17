@@ -118,6 +118,7 @@ defmodule UnifiedExamples.Demo.SignalLab do
   def sync_runtime_state(%State{} = runtime_state, state) when is_map(state) do
     updated_iur =
       runtime_state.assigns.iur
+      |> annotate_accessibility_regions()
       |> sync_action_story(state.action_to_feedback)
       |> sync_input_story(state.input_to_preview)
       |> sync_selection_story(state.selection_to_filter)
@@ -306,6 +307,46 @@ defmodule UnifiedExamples.Demo.SignalLab do
         end
 
       %{element | attributes: Map.put(element.attributes, :bindings, updated_bindings)}
+    end)
+  end
+
+  defp annotate_accessibility_regions(%Element{} = iur) do
+    Enum.reduce(SignalLabDefinition.story_registry(), iur, fn story, acc ->
+      surface = Map.fetch!(SignalLabDefinition.story_surface_registry(), story.id)
+      prefix = story_id_prefix(story.id)
+
+      acc
+      |> put_accessibility_region(story_panel_id(story.id), %{
+        role: "region",
+        labelled_by: "#{prefix}_title",
+        described_by: "#{prefix}_summary"
+      })
+      |> put_accessibility_region(surface.source_region_id, %{
+        role: "region",
+        label: "#{story.label} source control region",
+        described_by: "#{prefix}_summary"
+      })
+      |> put_accessibility_region(surface.outcome_region_id, %{
+        role: "region",
+        label: "#{story.label} outcome region",
+        described_by: "#{prefix}_summary",
+        live: "polite",
+        atomic: true
+      })
+      |> put_accessibility_region(interaction_region_id(story.id), %{
+        role: "region",
+        label: "#{story.label} latest interaction summary",
+        described_by: "#{surface.summary_id} #{surface.detail_id}",
+        live: "polite",
+        atomic: true
+      })
+    end)
+  end
+
+  defp put_accessibility_region(%Element{} = iur, element_id, accessibility)
+       when is_map(accessibility) do
+    Tree.update(iur, element_id, fn element ->
+      put_attr(element, [:accessibility], accessibility)
     end)
   end
 
@@ -518,6 +559,28 @@ defmodule UnifiedExamples.Demo.SignalLab do
         value
     end
   end
+
+  defp story_panel_id(:action_to_feedback), do: :signal_lab_action_to_feedback_story
+  defp story_panel_id(:input_to_preview), do: :signal_lab_input_to_preview_story
+  defp story_panel_id(:selection_to_filter), do: :signal_lab_selection_to_filter_story
+  defp story_panel_id(:toggle_to_visibility_or_enabled_state), do: :signal_lab_toggle_story
+
+  defp interaction_region_id(:action_to_feedback),
+    do: :signal_lab_action_to_feedback_interaction_region
+
+  defp interaction_region_id(:input_to_preview),
+    do: :signal_lab_input_to_preview_interaction_region
+
+  defp interaction_region_id(:selection_to_filter),
+    do: :signal_lab_selection_to_filter_interaction_region
+
+  defp interaction_region_id(:toggle_to_visibility_or_enabled_state),
+    do: :signal_lab_toggle_interaction_region
+
+  defp story_id_prefix(:action_to_feedback), do: "signal_lab_action_to_feedback"
+  defp story_id_prefix(:input_to_preview), do: "signal_lab_input_to_preview"
+  defp story_id_prefix(:selection_to_filter), do: "signal_lab_selection_to_filter"
+  defp story_id_prefix(:toggle_to_visibility_or_enabled_state), do: "signal_lab_toggle"
 
   defp put_runtime_assign(%State{} = runtime_state, key, value) do
     %{runtime_state | assigns: Map.put(runtime_state.assigns, key, value)}

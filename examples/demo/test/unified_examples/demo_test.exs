@@ -111,6 +111,42 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-demo-category-panel=\"forms_and_input\""
   end
 
+  test "category tabs expose accessible semantics and keyboard navigation" do
+    {:ok, view, html} = live(build_conn(), "/")
+
+    assert html =~ ~s(role="tablist")
+    assert html =~ ~s(aria-label="Examples demo control categories")
+    assert html =~ ~s(id="demo-category-tab-hint")
+    assert html =~ ~s(id="demo-category-tab-foundational_content")
+    assert html =~ ~s(role="tab")
+    assert html =~ ~s(aria-selected="true")
+    assert html =~ ~s(tabindex="0")
+    assert html =~ ~s(id="demo-category-active-panel")
+    assert html =~ ~s(role="tabpanel")
+    assert html =~ ~s(aria-labelledby="demo-category-tab-foundational_content")
+
+    html =
+      view
+      |> element("#demo-category-tab-foundational_content")
+      |> render_keydown(%{"key" => "ArrowRight"})
+
+    assert html =~ "data-demo-active-category=\"forms_and_input\""
+    assert html =~ "Moved focus and selection to the next category tab."
+    assert html =~ ~s(id="demo-category-tab-forms_and_input")
+    assert html =~ ~s(aria-selected="true")
+    assert html =~ ~s(tabindex="0")
+    assert html =~ ~s(aria-labelledby="demo-category-tab-forms_and_input")
+
+    html =
+      view
+      |> element("#demo-category-tab-forms_and_input")
+      |> render_keydown(%{"key" => "End"})
+
+    assert html =~ "data-demo-active-category=\"signal_lab\""
+    assert html =~ "Moved focus and selection to the last category tab."
+    assert html =~ ~s(aria-labelledby="demo-category-tab-signal_lab")
+  end
+
   test "layout and display gallery stays stable across tab switches" do
     {:ok, view, _html} = live(build_conn(), "/")
 

@@ -58,5 +58,13 @@ defmodule UnifiedExamples.SignalLabTest do
     assert html =~ ~s(data-live-ui-variant="solid")
     assert html =~ ~s(data-live-ui-variant="filled")
     assert html =~ ~s(data-live-ui-variant="panel")
+    assert html =~ ~s(role="region")
+    assert html =~ ~s(aria-live="polite")
+    assert html =~ ~s(aria-labelledby="signal_lab_action_to_feedback_title")
+    assert html =~ ~s(aria-describedby="signal_lab_action_to_feedback_summary")
+    assert html =~ ~s(aria-label="Action to Feedback outcome region")
+
+    assert html =~
+             ~s(aria-label="Toggle to Visibility / Enabled State latest interaction summary")
   end
 end
