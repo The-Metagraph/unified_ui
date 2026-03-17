@@ -128,4 +128,25 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"canvas\""
     assert html =~ "data-demo-category-panel=\"layout_and_display\""
   end
+
+  test "navigation and selection gallery renders through the aggregate tab shell" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-navigation_and_selection")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"navigation_and_selection\""
+    assert html =~ "Navigation and Selection Gallery"
+    assert html =~ "Menu active state"
+    assert html =~ "Tabs selected state"
+    assert html =~ "List selection state"
+    assert html =~ "Command palette focus state"
+    assert html =~ "data-live-ui-widget=\"menu\""
+    assert html =~ "data-live-ui-widget=\"tabs\""
+    assert html =~ "data-live-ui-widget=\"list\""
+    assert html =~ "data-live-ui-widget=\"command-palette\""
+    assert html =~ "data-demo-category-panel=\"navigation_and_selection\""
+  end
 end
