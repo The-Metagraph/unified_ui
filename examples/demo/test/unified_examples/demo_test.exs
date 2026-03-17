@@ -47,6 +47,9 @@ defmodule UnifiedExamples.DemoTest do
     assert metadata.launch_command == launch.command
     assert metadata.review_summary == Demo.review_summary()
     assert metadata.browser_runnable?
+    assert metadata.signal_lab_contract.valid?
+    assert metadata.signal_lab_contract.story_count == 4
+    assert metadata.signal_lab_contract.surface_count == 4
   end
 
   test "demo app renders the shared shell treatment through the LiveUi runtime" do

@@ -57,6 +57,40 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
   ]
 
   @story_registry_by_id Map.new(@story_registry, &{&1.id, &1})
+  @required_story_families %{
+    action_to_feedback: :click,
+    input_to_preview: :change,
+    selection_to_filter: :selection,
+    toggle_to_visibility_or_enabled_state: :change
+  }
+
+  @story_surface_registry %{
+    action_to_feedback: %{
+      source_region_id: :signal_lab_action_to_feedback_source_region,
+      outcome_region_id: :signal_lab_action_to_feedback_outcome_region,
+      summary_id: :signal_lab_action_feedback_latest_summary,
+      detail_id: :signal_lab_action_feedback_latest_detail
+    },
+    input_to_preview: %{
+      source_region_id: :signal_lab_input_to_preview_source_region,
+      outcome_region_id: :signal_lab_input_to_preview_outcome_region,
+      summary_id: :signal_lab_input_latest_summary,
+      detail_id: :signal_lab_input_latest_detail
+    },
+    selection_to_filter: %{
+      source_region_id: :signal_lab_selection_to_filter_source_region,
+      outcome_region_id: :signal_lab_selection_to_filter_outcome_region,
+      summary_id: :signal_lab_selection_latest_summary,
+      detail_id: :signal_lab_selection_latest_detail
+    },
+    toggle_to_visibility_or_enabled_state: %{
+      source_region_id: :signal_lab_toggle_source_region,
+      outcome_region_id: :signal_lab_toggle_outcome_region,
+      summary_id: :signal_lab_toggle_latest_summary,
+      detail_id: :signal_lab_toggle_latest_detail
+    }
+  }
+
   @action_to_feedback_summary Map.fetch!(@story_registry_by_id, :action_to_feedback).summary
   @input_to_preview_summary Map.fetch!(@story_registry_by_id, :input_to_preview).summary
   @selection_to_filter_summary Map.fetch!(@story_registry_by_id, :selection_to_filter).summary
@@ -114,6 +148,59 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
   @spec story!(atom()) :: map()
   def story!(story_id) when is_atom(story_id) do
     Map.fetch!(@story_registry_by_id, story_id)
+  end
+
+  @spec required_story_families() :: %{atom() => atom()}
+  def required_story_families, do: @required_story_families
+
+  @spec story_surface_registry() :: %{atom() => map()}
+  def story_surface_registry, do: @story_surface_registry
+
+  @spec story_contract_summary() :: map()
+  def story_contract_summary do
+    case validate_story_contract() do
+      :ok ->
+        %{
+          valid?: true,
+          story_count: length(@story_registry),
+          surface_count: map_size(@story_surface_registry),
+          errors: []
+        }
+
+      {:error, errors} ->
+        %{
+          valid?: false,
+          story_count: length(@story_registry),
+          surface_count: map_size(@story_surface_registry),
+          errors: errors
+        }
+    end
+  end
+
+  @spec validate_story_contract([map()], %{optional(atom()) => map()}) ::
+          :ok | {:error, [String.t()]}
+  def validate_story_contract(stories \\ @story_registry, surfaces \\ @story_surface_registry)
+      when is_list(stories) and is_map(surfaces) do
+    errors =
+      []
+      |> validate_required_story_ids(stories)
+      |> validate_story_definitions(stories)
+      |> validate_story_surfaces(stories, surfaces)
+      |> Enum.reverse()
+
+    if errors == [], do: :ok, else: {:error, errors}
+  end
+
+  @spec validate_story_contract!([map()], %{optional(atom()) => map()}) :: :ok
+  def validate_story_contract!(stories \\ @story_registry, surfaces \\ @story_surface_registry) do
+    case validate_story_contract(stories, surfaces) do
+      :ok ->
+        :ok
+
+      {:error, errors} ->
+        raise ArgumentError,
+              "signal lab story contract invalid: #{Enum.join(errors, "; ")}"
+    end
   end
 
   identity do
@@ -706,5 +793,74 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
         end
       end
     end
+  end
+
+  defp validate_required_story_ids(errors, stories) do
+    story_ids = Enum.map(stories, & &1.id)
+
+    Enum.reduce(Map.keys(@required_story_families), errors, fn story_id, acc ->
+      if story_id in story_ids do
+        acc
+      else
+        ["missing required story #{story_id}" | acc]
+      end
+    end)
+  end
+
+  defp validate_story_definitions(errors, stories) do
+    Enum.reduce(stories, errors, fn story, acc ->
+      acc
+      |> maybe_add_blank_error(story.id, :label, story[:label])
+      |> maybe_add_blank_error(story.id, :source_label, story[:source_label])
+      |> maybe_add_blank_error(story.id, :outcome_label, story[:outcome_label])
+      |> maybe_add_blank_error(story.id, :summary_label, story[:summary_label])
+      |> maybe_add_blank_error(story.id, :summary, story[:summary])
+      |> maybe_add_family_drift_error(story)
+    end)
+  end
+
+  defp validate_story_surfaces(errors, stories, surfaces) do
+    Enum.reduce(stories, errors, fn story, acc ->
+      case Map.get(surfaces, story.id) do
+        nil ->
+          ["missing surface registry for #{story.id}" | acc]
+
+        surface ->
+          acc
+          |> maybe_add_missing_surface_error(
+            story.id,
+            :source_region_id,
+            surface[:source_region_id]
+          )
+          |> maybe_add_missing_surface_error(
+            story.id,
+            :outcome_region_id,
+            surface[:outcome_region_id]
+          )
+          |> maybe_add_missing_surface_error(story.id, :summary_id, surface[:summary_id])
+          |> maybe_add_missing_surface_error(story.id, :detail_id, surface[:detail_id])
+      end
+    end)
+  end
+
+  defp maybe_add_blank_error(errors, story_id, field, value) when value in [nil, ""] do
+    ["story #{story_id} is missing #{field}" | errors]
+  end
+
+  defp maybe_add_blank_error(errors, _story_id, _field, _value), do: errors
+
+  defp maybe_add_family_drift_error(errors, %{id: story_id, family: family}) do
+    case Map.get(@required_story_families, story_id) do
+      ^family -> errors
+      expected -> ["story #{story_id} must use family #{expected}, got #{family}" | errors]
+    end
+  end
+
+  defp maybe_add_missing_surface_error(errors, _story_id, _key, value)
+       when is_atom(value) and not is_nil(value),
+       do: errors
+
+  defp maybe_add_missing_surface_error(errors, story_id, key, _value) do
+    ["story #{story_id} is missing #{key}" | errors]
   end
 end

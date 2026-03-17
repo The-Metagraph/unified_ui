@@ -69,7 +69,8 @@ defmodule UnifiedExamples.Demo do
     ])
     |> Map.merge(%{
       app_root: @app_root,
-      browser_runnable?: true
+      browser_runnable?: true,
+      signal_lab_contract: Categories.SignalLab.story_contract_summary()
     })
   end
 
