@@ -73,6 +73,9 @@ defmodule WebUi.Renderer do
     %{
       canonical_input: :ready,
       foundational_mapping: :ready,
+      advanced_mapping: :ready,
+      display_system_mapping: :ready,
+      layered_mapping: :ready,
       native_widget_reuse: :ready,
       coverage_boundaries: :ready
     }

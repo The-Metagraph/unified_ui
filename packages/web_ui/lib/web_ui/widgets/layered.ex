@@ -103,16 +103,15 @@ defmodule WebUi.Widgets.Layered do
     )
   end
 
-  @spec context_menu([keyword() | map()], keyword() | map()) :: WebUi.Widget.t()
-  def context_menu(items, opts \\ []) when is_list(items) do
+  @spec context_menu(
+          [keyword() | map()] | WebUi.Widget.t() | map() | keyword(),
+          keyword() | map()
+        ) ::
+          WebUi.Widget.t()
+  def context_menu(items_or_menu, opts \\ []) do
     opts = Builder.options(opts)
 
-    menu =
-      Navigation.menu(items,
-        id: Builder.option(opts, :menu_id, "#{Builder.require_id!(opts, :context_menu)}-menu"),
-        orientation: :vertical,
-        active_item: Builder.option(opts, :active_item)
-      )
+    menu = normalize_menu(items_or_menu, opts)
 
     Builder.widget(:context_menu,
       id: Builder.require_id!(opts, :context_menu),
@@ -127,6 +126,20 @@ defmodule WebUi.Widgets.Layered do
       style_hooks: Builder.style_hooks(opts),
       events: Builder.events(opts, close: :close, dismiss: :dismiss),
       metadata: Builder.metadata(opts, %{native_surface: :layer, layered?: true})
+    )
+  end
+
+  defp normalize_menu(%WebUi.Widget{} = menu, _opts), do: menu
+
+  defp normalize_menu(menu, _opts) when is_map(menu) do
+    Builder.child!(menu)
+  end
+
+  defp normalize_menu(items, opts) when is_list(items) do
+    Navigation.menu(items,
+      id: Builder.option(opts, :menu_id, "#{Builder.require_id!(opts, :context_menu)}-menu"),
+      orientation: :vertical,
+      active_item: Builder.option(opts, :active_item)
     )
   end
 end
