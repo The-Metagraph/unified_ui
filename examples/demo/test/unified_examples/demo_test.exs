@@ -81,4 +81,21 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-example-launch-url=\"#{Demo.launch_url()}\""
     assert html =~ "data-example-category-count=\"7\""
   end
+
+  test "tab selection updates the active category review content and labeling" do
+    {:ok, view, html} = live(build_conn(), "/")
+
+    assert html =~ "data-demo-active-category=\"foundational_content\""
+    assert html =~ "Active category: Foundational Content"
+
+    html =
+      view
+      |> element("#demo-category-tab-forms_and_input")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"forms_and_input\""
+    assert html =~ "Forms and Input"
+    assert html =~ "Structured data entry, field composition, and input-focused review flows."
+    assert html =~ "data-demo-category-panel=\"forms_and_input\""
+  end
 end

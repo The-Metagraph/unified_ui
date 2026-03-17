@@ -514,28 +514,45 @@ defmodule UnifiedExamples.Shared.App do
         def mount(_params, _session, socket) do
           metadata = @app_module.metadata()
 
-          case @app_module.component_assigns() do
-            {:ok, component_assigns} ->
-              {:ok,
-               socket
-               |> assign(component_assigns)
-               |> assign(:metadata, metadata)
-               |> assign(:page_title, metadata.title)
-               |> assign(:runtime_error, nil)}
+          socket =
+            case @app_module.component_assigns() do
+              {:ok, component_assigns} ->
+                socket
+                |> assign(component_assigns)
+                |> assign(:metadata, metadata)
+                |> assign(:page_title, metadata.title)
+                |> assign(:runtime_error, nil)
 
-            {:error, reason} ->
-              {:ok,
-               socket
-               |> assign(:id, "#{metadata.id}-runtime")
-               |> assign(:runtime_state, nil)
-               |> assign(:metadata, metadata)
-               |> assign(:page_title, metadata.title)
-               |> assign(:runtime_error, reason)}
+              {:error, reason} ->
+                socket
+                |> assign(:id, "#{metadata.id}-runtime")
+                |> assign(:runtime_state, nil)
+                |> assign(:metadata, metadata)
+                |> assign(:page_title, metadata.title)
+                |> assign(:runtime_error, reason)
+            end
+
+          {:ok, maybe_mount_live(socket)}
+        end
+
+        @impl true
+        def handle_event(event, params, socket) do
+          if function_exported?(@app_module, :handle_live_event, 3) do
+            @app_module.handle_live_event(event, params, socket)
+          else
+            {:noreply, socket}
           end
         end
 
         @impl true
         def render(var!(assigns)) do
+          var!(assigns) =
+            Phoenix.Component.assign(
+              var!(assigns),
+              :extra_content,
+              maybe_render_extra_content(@app_module, var!(assigns))
+            )
+
           ~H"""
           <main
             id={"#{@metadata.root_id}-liveview-app"}
@@ -579,8 +596,24 @@ defmodule UnifiedExamples.Shared.App do
                 <pre data-example-runtime-error="true"><%= inspect(@runtime_error) %></pre>
               <% end %>
             </section>
+
+            <%= @extra_content %>
           </main>
           """
+        end
+
+        defp maybe_mount_live(socket) do
+          if function_exported?(@app_module, :mount_live, 1) do
+            @app_module.mount_live(socket)
+          else
+            socket
+          end
+        end
+
+        defp maybe_render_extra_content(app_module, assigns) do
+          if function_exported?(app_module, :extra_content, 1) do
+            app_module.extra_content(assigns)
+          end
         end
 
         defp widget_label(widget) do
