@@ -121,8 +121,11 @@ defmodule LiveUi.Runtime.ScreenComponent do
              widget: Map.get(params, "widget"),
              payload: payload
            ) do
+      updated_runtime_state = maybe_apply_interaction_hook(runtime_state, translation)
+
       {:noreply,
        socket
+       |> assign(:runtime_state, updated_runtime_state)
        |> assign(:last_translation, translation)
        |> assign(:runtime_event_error, nil)}
     else
@@ -167,6 +170,20 @@ defmodule LiveUi.Runtime.ScreenComponent do
       "widget",
       "_target"
     ])
+  end
+
+  defp maybe_apply_interaction_hook(%State{} = runtime_state, translation)
+       when is_map(translation) do
+    case Map.get(runtime_state.assigns, :canonical_interaction_hook) do
+      hook when is_function(hook, 2) ->
+        case hook.(runtime_state, translation) do
+          %State{} = updated_runtime_state -> updated_runtime_state
+          _other -> runtime_state
+        end
+
+      _other ->
+        runtime_state
+    end
   end
 
   defp interaction_demo(%State{assigns: assigns}) when is_map(assigns) do

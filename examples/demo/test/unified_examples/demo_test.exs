@@ -203,6 +203,89 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-demo-category-panel=\"overlays_and_operational\""
   end
 
+  test "signal lab tab mounts with all required story panels and reviewer-facing structure" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-signal_lab")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"signal_lab\""
+    assert html =~ "Signal Lab"
+    assert html =~ "Action to Feedback"
+    assert html =~ "Input to Preview"
+    assert html =~ "Selection to Filter"
+    assert html =~ "Toggle to Visibility / Enabled State"
+    assert html =~ "Source control"
+    assert html =~ "Outcome panel"
+    assert html =~ "Latest interaction summary"
+    assert html =~ "data-live-ui-widget=\"button\""
+    assert html =~ "data-live-ui-widget=\"text-input\""
+    assert html =~ "data-live-ui-widget=\"select\""
+    assert html =~ "data-live-ui-widget=\"toggle\""
+    assert html =~ "Expected: canonical click meaning should update the feedback surface."
+  end
+
+  test "signal lab stories react visibly to click, change, selection, and toggle signals" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    view
+    |> element("#demo-category-tab-signal_lab")
+    |> render_click()
+
+    click_html =
+      view
+      |> element("#signal_lab_action_trigger")
+      |> render_click()
+
+    assert click_html =~ "Action signal acknowledged."
+    assert click_html =~ "Action to Feedback reacted to a canonical click signal."
+    assert click_html =~ "live_ui.click.action_to_feedback"
+
+    change_html =
+      view
+      |> form(
+        "#signal_lab_input_source_input-interaction-form",
+        %{"signal_lab_input_source_input" => "Signal lab note"}
+      )
+      |> render_change()
+
+    assert change_html =~ "Signal lab note"
+    assert change_html =~ "Input to Preview mirrored the latest canonical change signal."
+    assert change_html =~ "live_ui.change.input_to_preview"
+
+    selection_html =
+      view
+      |> form(
+        "#signal_lab_selection_source_select-interaction-form",
+        %{"signal_lab_selection_source_select" => "operational"}
+      )
+      |> render_change()
+
+    assert selection_html =~ "Showing 2 linked examples for operational stories."
+
+    assert selection_html =~
+             "Selection to Filter narrowed the linked example list from a canonical selection signal."
+
+    assert selection_html =~ "Availability and emphasis gate"
+
+    toggle_html =
+      view
+      |> form(
+        "#signal_lab_toggle_source_control-interaction-form",
+        %{"signal_lab_toggle_source_control" => "on"}
+      )
+      |> render_change()
+
+    assert toggle_html =~ "Run enabled follow-up"
+
+    assert toggle_html =~
+             "Toggle to Visibility / Enabled State updated the target control from a canonical change signal."
+
+    assert toggle_html =~ "live_ui.change.toggle_to_visibility_or_enabled_state"
+  end
+
   test "cross-category reviewer cues remain visible on every non-signal tab" do
     {:ok, view, html} = live(build_conn(), "/")
 
