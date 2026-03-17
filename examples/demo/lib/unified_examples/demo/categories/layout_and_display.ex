@@ -129,14 +129,14 @@ defmodule UnifiedExamples.Demo.Categories.LayoutAndDisplay do
       end
     end
 
-    box :layout_display_viewport_content do
+    box :layout_display_viewport_source do
       text :layout_display_viewport_copy do
         value("Viewport content for scroll review")
       end
     end
 
     viewport :layout_display_viewport do
-      content_ref(:layout_display_viewport_content)
+      content_ref(:layout_display_viewport_source)
       width(48)
       height(8)
       offset({0, 2})
@@ -157,9 +157,21 @@ defmodule UnifiedExamples.Demo.Categories.LayoutAndDisplay do
       variant(:solid)
     end
 
+    box :layout_display_split_primary do
+      text :layout_display_split_primary_copy do
+        value("Split primary review region")
+      end
+    end
+
+    box :layout_display_split_secondary do
+      text :layout_display_split_secondary_copy do
+        value("Split secondary review region")
+      end
+    end
+
     split_pane :layout_display_split do
-      primary_ref(:layout_display_box_demo)
-      secondary_ref(:layout_display_grid_demo)
+      primary_ref(:layout_display_split_primary)
+      secondary_ref(:layout_display_split_secondary)
       ratio(0.5)
       theme_ref(@default_theme_id)
       style_refs([:example_panel])

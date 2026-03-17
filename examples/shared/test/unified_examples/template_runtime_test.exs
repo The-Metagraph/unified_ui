@@ -3,6 +3,32 @@ defmodule UnifiedExamples.TemplateRuntimeTest do
 
   alias UnifiedExamples.Shared.Runtime
 
+  defmodule FragmentWithReferencedHelper do
+    use UnifiedUi.Dsl
+
+    identity do
+      id(:fragment_with_referenced_helper)
+      authored_ref([:tests, :fragment_with_referenced_helper])
+    end
+
+    composition do
+      root(:fragment_with_referenced_helper_root)
+      mode(:fragment)
+
+      box :fragment_helper_source do
+        text :fragment_helper_copy do
+          value("Referenced viewport content")
+        end
+      end
+
+      viewport :fragment_helper_viewport do
+        content_ref(:fragment_helper_source)
+        width(24)
+        height(6)
+      end
+    end
+  end
+
   defmodule ButtonExample do
     use UnifiedExamples.Shared.Template,
       id: :template_button_example,
@@ -66,5 +92,13 @@ defmodule UnifiedExamples.TemplateRuntimeTest do
     assert text_input_html =~ "data-live-ui-widget=\"text-input\""
     assert button_html =~ "data-live-ui-variant=\"quiet\""
     assert text_input_html =~ "data-live-ui-variant=\"filled\""
+  end
+
+  test "shared runtime fragment wrapper omits helper nodes already lowered into referenced slots" do
+    shell = Runtime.renderable_element(Runtime.iur!(FragmentWithReferencedHelper))
+    child_ids = Enum.map(shell.children, & &1.element.id)
+
+    assert :fragment_helper_viewport in child_ids
+    refute :fragment_helper_source in child_ids
   end
 end
