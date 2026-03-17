@@ -45,8 +45,22 @@ defmodule Mix.Tasks.ExamplesTasksTest do
         Mix.Tasks.Examples.Launch.run(["button", "--dry-run", "--port", "4110"])
       end)
 
+    assert output =~ "directory: button"
+    assert output =~ "url: http://127.0.0.1:4110/"
     assert output =~ "examples/button"
     assert output =~ "PORT=4110"
+    assert output =~ "mix phx.server"
+  end
+
+  test "mix examples.launch exposes the aggregate demo through dry-run launch metadata" do
+    output =
+      capture_io(fn ->
+        Mix.Tasks.Examples.Launch.run(["demo", "--dry-run", "--port", "4111"])
+      end)
+
+    assert output =~ "directory: demo"
+    assert output =~ "url: http://127.0.0.1:4111/"
+    assert output =~ "examples/demo"
     assert output =~ "mix phx.server"
   end
 

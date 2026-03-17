@@ -11,7 +11,7 @@ defmodule Mix.Tasks.Examples.Launch do
       mix examples.launch overlay --port 4104
   """
 
-  alias UnifiedExamples.Shared.Tooling
+  alias UnifiedExamples.Shared.{AggregateDemo, Tooling}
 
   @impl Mix.Task
   def run(args) do
@@ -26,11 +26,19 @@ defmodule Mix.Tasks.Examples.Launch do
 
     case positional do
       [directory] ->
-        descriptor = Tooling.launch_descriptor(directory, launch_opts)
+        descriptor = launch_descriptor(directory, launch_opts)
 
         cond do
           dry_run? ->
-            Mix.shell().info(descriptor.command)
+            Mix.shell().info(
+              [
+                "Example launch descriptor",
+                "directory: #{descriptor.directory}",
+                "url: #{descriptor.url}",
+                "launch_command: #{descriptor.command}"
+              ]
+              |> Enum.join("\n")
+            )
 
           smoke_test? ->
             case Tooling.smoke_launch(directory, launch_opts) do
@@ -66,4 +74,8 @@ defmodule Mix.Tasks.Examples.Launch do
         Mix.raise("usage: mix examples.launch DIRECTORY [--port PORT] [--dry-run] [--smoke-test]")
     end
   end
+
+  defp launch_descriptor("demo", opts), do: AggregateDemo.launch_descriptor(opts)
+  defp launch_descriptor(:demo, opts), do: AggregateDemo.launch_descriptor(opts)
+  defp launch_descriptor(directory, opts), do: Tooling.launch_descriptor(directory, opts)
 end

@@ -58,6 +58,7 @@ defmodule UnifiedExamples.Shared.App do
           directory: @example_directory,
           purpose: @example_purpose
         })
+        |> maybe_decorate_metadata()
       end
 
       @spec example_interaction_demo() :: map()
@@ -112,6 +113,14 @@ defmodule UnifiedExamples.Shared.App do
         }
 
         Keyword.update(opts, :assigns, shared_assigns, &Map.merge(shared_assigns, &1))
+      end
+
+      defp maybe_decorate_metadata(metadata) do
+        if function_exported?(__MODULE__, :decorate_metadata, 1) do
+          apply(__MODULE__, :decorate_metadata, [metadata])
+        else
+          metadata
+        end
       end
 
       defmodule Layouts do
@@ -535,6 +544,8 @@ defmodule UnifiedExamples.Shared.App do
             data-example-widget={@metadata.widget}
             data-example-launch={@metadata.app}
             data-example-interaction-family={@metadata.interaction_demo.family}
+            data-example-launch-url={Map.get(@metadata, :launch_url)}
+            data-example-category-count={Map.get(@metadata, :category_count)}
           >
             <header class="example-app-header">
               <div class="example-app-header-top">
@@ -544,6 +555,17 @@ defmodule UnifiedExamples.Shared.App do
               <h1 class="example-app-title"><%= @metadata.title %></h1>
               <p class="example-app-summary"><%= @metadata.summary %></p>
               <p :if={@metadata.notes} class="example-app-notes"><%= @metadata.notes %></p>
+              <section
+                :if={Map.get(@metadata, :review_summary) || Map.get(@metadata, :launch_url)}
+                class="example-app-review"
+              >
+                <p :if={Map.get(@metadata, :review_summary)} class="example-app-notes">
+                  <%= @metadata.review_summary %>
+                </p>
+                <p :if={Map.get(@metadata, :launch_url)} class="example-app-notes">
+                  Launch URL: <%= @metadata.launch_url %>
+                </p>
+              </section>
             </header>
 
             <section id={"#{@metadata.root_id}-runtime-surface"} class="example-app-runtime">

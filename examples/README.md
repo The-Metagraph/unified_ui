@@ -9,6 +9,10 @@ primary widget or construct. Every example app is meant to be understandable on
 its own while still proving the same authored-to-canonical-to-runtime path:
 `UnifiedUi` DSL -> canonical `UnifiedIUR` -> `LiveUi` rendering.
 
+`examples/demo/` is the aggregate category-oriented review surface. It uses the
+same shared theme and style baseline as the current button example and gives
+reviewers one browser-runnable shell for the ordered control categories.
+
 ## Layout
 
 - `shared/`: the shared support library that owns the common dependency wiring,
@@ -98,6 +102,21 @@ mix phx.server
 
 The default mount URL is `http://127.0.0.1:4000/`, and you can override the
 port with `PORT=4100 mix phx.server`.
+
+Aggregate demo workflow:
+
+```bash
+cd /Users/Pascal/code/unified/examples/demo
+mix deps.get
+mix phx.server
+```
+
+Or preview the demo launch contract from the shared tooling:
+
+```bash
+cd /Users/Pascal/code/unified/examples/shared
+mix examples.launch demo --dry-run
+```
 
 When you launch an example, look for two shared review surfaces in the browser:
 

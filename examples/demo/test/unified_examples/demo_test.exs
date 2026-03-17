@@ -34,6 +34,21 @@ defmodule UnifiedExamples.DemoTest do
     assert Demo.metadata().theme_id == Template.default_theme_id()
   end
 
+  test "demo app exposes launch metadata aligned with the root screen and category registry" do
+    metadata = Demo.review_metadata()
+    launch = Demo.launch_descriptor()
+
+    assert metadata.active_category_id == Categories.default_id()
+    assert metadata.category_count == Categories.count()
+    assert metadata.category_ids == Categories.ids()
+    assert Enum.map(metadata.category_registry, & &1.id) == Categories.ids()
+    assert metadata.launch_path == Demo.launch_path()
+    assert metadata.launch_url == Demo.launch_url()
+    assert metadata.launch_command == launch.command
+    assert metadata.review_summary == Demo.review_summary()
+    assert metadata.browser_runnable?
+  end
+
   test "demo app renders the shared shell treatment through the LiveUi runtime" do
     assert {:ok, runtime_state} = Demo.boot()
     assert {:ok, html} = Demo.render_html()
@@ -61,5 +76,9 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "Aggregate category-oriented control demo scaffold"
     assert html =~ "data-example-directory=\"examples/demo\""
     assert html =~ "data-example-interaction-family=\"navigation\""
+    assert html =~ Demo.review_summary()
+    assert html =~ Demo.launch_url()
+    assert html =~ "data-example-launch-url=\"#{Demo.launch_url()}\""
+    assert html =~ "data-example-category-count=\"7\""
   end
 end
