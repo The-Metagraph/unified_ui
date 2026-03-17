@@ -19,6 +19,9 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
     assert report.gates.interaction_story_continuity.passed?
     assert report.gates.aggregate_demo_continuity.passed?
     assert report.gates.shared_template_continuity.default_theme_id == Template.default_theme_id()
+    assert report.aggregate_demo_launch_failures == []
+    assert report.gates.aggregate_demo_continuity.smoke_launch.status == 200
+    assert report.gates.aggregate_demo_continuity.smoke_launch.path == "/"
   end
 
   test "release readiness detects primary-subject and template drift" do

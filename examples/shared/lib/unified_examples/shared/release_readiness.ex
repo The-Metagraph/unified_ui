@@ -28,6 +28,8 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       aggregate_demo_result ||
         {AggregateDemo.directory(), Tooling.review_metadata(AggregateDemo.directory())}
 
+    aggregate_demo_launch_result = {AggregateDemo.directory(), Tooling.smoke_launch(AggregateDemo.directory())}
+
     metadata = collect_metadata(metadata_results)
     launch_results = Enum.map(Catalog.directories(), &{&1, Tooling.smoke_launch(&1)})
     catalog_gate = catalog_complete_gate()
@@ -35,7 +37,7 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     shared_template_gate = shared_template_gate(metadata)
     browser_launch_gate = browser_launch_gate(launch_results)
     interaction_story_gate = interaction_story_gate(metadata_results, launch_results)
-    aggregate_demo_gate = aggregate_demo_gate(aggregate_demo_result)
+    aggregate_demo_gate = aggregate_demo_gate(aggregate_demo_result, aggregate_demo_launch_result)
 
     gates = %{
       catalog_complete: catalog_gate,
@@ -50,6 +52,7 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       checked_directories: Catalog.directories() ++ [AggregateDemo.directory()],
       metadata_load_failures: metadata_load_failures(metadata_results ++ [aggregate_demo_result]),
       launch_failures: launch_failures(launch_results),
+      aggregate_demo_launch_failures: launch_failures([aggregate_demo_launch_result]),
       gates: gates,
       valid?: Enum.all?(Map.values(gates), & &1.passed?)
     }
@@ -96,7 +99,7 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
 
   @spec aggregate_demo_continuity({String.t(), {:ok, map()} | {:error, term()}}) :: gate()
   def aggregate_demo_continuity(result) do
-    aggregate_demo_gate(result)
+    aggregate_demo_gate(result, nil)
   end
 
   defp catalog_complete_gate do
@@ -228,7 +231,7 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     }
   end
 
-  defp aggregate_demo_gate({directory, {:ok, metadata}}) do
+  defp aggregate_demo_gate({directory, {:ok, metadata}}, smoke_launch_result) do
     signal_lab_contract = Map.get(metadata, :signal_lab_contract, %{})
 
     failures =
@@ -270,17 +273,43 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
         Map.get(metadata, :linked_example_directories, []) == [],
         :missing_linked_examples
       )
+      |> maybe_story_failure(
+        directory,
+        smoke_launch_failure?(smoke_launch_result),
+        smoke_launch_failure_reason(smoke_launch_result)
+      )
+      |> maybe_story_failure(
+        directory,
+        smoke_launch_result_missing?(smoke_launch_result, "Examples Demo Application"),
+        :missing_demo_root
+      )
+      |> maybe_story_failure(
+        directory,
+        smoke_launch_result_missing?(smoke_launch_result, ~s(data-demo-tablist="true")),
+        :missing_tab_shell
+      )
+      |> maybe_story_failure(
+        directory,
+        smoke_launch_result_missing?(smoke_launch_result, "Signal Lab"),
+        :signal_lab_tab_unreachable
+      )
+      |> maybe_story_failure(
+        directory,
+        smoke_launch_result_missing?(smoke_launch_result, ~s(id="demo-category-tab-signal_lab")),
+        :signal_lab_tab_id_missing
+      )
 
     %{
       passed?: failures == [],
       checked: [directory],
+      smoke_launch: normalize_smoke_launch(smoke_launch_result),
       failures: failures,
       message:
-        "the aggregate demo must preserve its tabbed category registry, shared button-example theme continuity, and required signal-lab story inventory"
+        "the aggregate demo must preserve its tabbed category registry, shared button-example theme continuity, required signal-lab story inventory, and browser-runnable smoke-launch path"
     }
   end
 
-  defp aggregate_demo_gate({directory, {:error, reason}}) do
+  defp aggregate_demo_gate({directory, {:error, reason}}, _smoke_launch_result) do
     %{
       passed?: false,
       checked: [directory],
@@ -360,4 +389,21 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
   defp maybe_story_failure(failures, directory, true, reason) do
     failures ++ [%{directory: directory, reason: reason}]
   end
+
+  defp smoke_launch_failure?(nil), do: false
+  defp smoke_launch_failure?({_directory, {:ok, %{status: 200}}}), do: false
+  defp smoke_launch_failure?({_directory, {:ok, %{status: status}}}), do: {:bad_smoke_status, status}
+  defp smoke_launch_failure?({_directory, {:error, reason}}), do: {:smoke_launch_failed, reason}
+
+  defp smoke_launch_failure_reason(false), do: false
+  defp smoke_launch_failure_reason(reason), do: reason
+
+  defp smoke_launch_result_missing?(nil, _snippet), do: false
+  defp smoke_launch_result_missing?({_directory, {:ok, %{body: body}}}, snippet), do: not String.contains?(body, snippet)
+  defp smoke_launch_result_missing?({_directory, {:ok, _smoke}}, _snippet), do: true
+  defp smoke_launch_result_missing?({_directory, {:error, _reason}}, _snippet), do: false
+
+  defp normalize_smoke_launch(nil), do: nil
+  defp normalize_smoke_launch({_directory, {:ok, result}}), do: result
+  defp normalize_smoke_launch({_directory, {:error, reason}}), do: %{error: reason}
 end
