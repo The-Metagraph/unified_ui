@@ -3,6 +3,7 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
   Release-readiness gates for the standalone example-app suite.
   """
 
+  alias UnifiedExamples.Shared.AggregateDemo
   alias UnifiedExamples.Shared
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Template
@@ -13,12 +14,19 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
           message: String.t()
         }
 
-  @spec report([{String.t(), {:ok, map()} | {:error, term()}}] | nil) :: map()
-  def report(metadata_results \\ nil) do
+  @spec report(
+          [{String.t(), {:ok, map()} | {:error, term()}}] | nil,
+          {String.t(), {:ok, map()} | {:error, term()}} | nil
+        ) :: map()
+  def report(metadata_results \\ nil, aggregate_demo_result \\ nil) do
     metadata_results =
       metadata_results ||
         Catalog.directories()
         |> Enum.map(&{&1, Tooling.review_metadata(&1)})
+
+    aggregate_demo_result =
+      aggregate_demo_result ||
+        {AggregateDemo.directory(), Tooling.review_metadata(AggregateDemo.directory())}
 
     metadata = collect_metadata(metadata_results)
     launch_results = Enum.map(Catalog.directories(), &{&1, Tooling.smoke_launch(&1)})
@@ -27,18 +35,20 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     shared_template_gate = shared_template_gate(metadata)
     browser_launch_gate = browser_launch_gate(launch_results)
     interaction_story_gate = interaction_story_gate(metadata_results, launch_results)
+    aggregate_demo_gate = aggregate_demo_gate(aggregate_demo_result)
 
     gates = %{
       catalog_complete: catalog_gate,
       primary_subject_coverage: primary_subject_gate,
       shared_template_continuity: shared_template_gate,
       browser_launch_continuity: browser_launch_gate,
-      interaction_story_continuity: interaction_story_gate
+      interaction_story_continuity: interaction_story_gate,
+      aggregate_demo_continuity: aggregate_demo_gate
     }
 
     %{
-      checked_directories: Catalog.directories(),
-      metadata_load_failures: metadata_load_failures(metadata_results),
+      checked_directories: Catalog.directories() ++ [AggregateDemo.directory()],
+      metadata_load_failures: metadata_load_failures(metadata_results ++ [aggregate_demo_result]),
       launch_failures: launch_failures(launch_results),
       gates: gates,
       valid?: Enum.all?(Map.values(gates), & &1.passed?)
@@ -54,7 +64,8 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       "primary_subject_coverage?: #{report.gates.primary_subject_coverage.passed?}",
       "shared_template_continuity?: #{report.gates.shared_template_continuity.passed?}",
       "browser_launch_continuity?: #{report.gates.browser_launch_continuity.passed?}",
-      "interaction_story_continuity?: #{report.gates.interaction_story_continuity.passed?}"
+      "interaction_story_continuity?: #{report.gates.interaction_story_continuity.passed?}",
+      "aggregate_demo_continuity?: #{report.gates.aggregate_demo_continuity.passed?}"
     ]
     |> Enum.join("\n")
   end
@@ -83,9 +94,14 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
     interaction_story_gate(metadata_results, launch_results)
   end
 
+  @spec aggregate_demo_continuity({String.t(), {:ok, map()} | {:error, term()}}) :: gate()
+  def aggregate_demo_continuity(result) do
+    aggregate_demo_gate(result)
+  end
+
   defp catalog_complete_gate do
     expected = Catalog.directories()
-    actual = Shared.app_directories()
+    actual = Shared.app_directories() -- [AggregateDemo.directory()]
     missing = expected -- actual
     unexpected = actual -- expected
     manifest_in_sync? = Shared.catalog_manifest() == File.read!(Shared.catalog_manifest_path())
@@ -209,6 +225,67 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       failures: failures,
       message:
         "every example app must expose a meaningful interaction story panel, canonical signal preview, and reviewer-facing interaction copy in the browser"
+    }
+  end
+
+  defp aggregate_demo_gate({directory, {:ok, metadata}}) do
+    signal_lab_contract = Map.get(metadata, :signal_lab_contract, %{})
+
+    failures =
+      []
+      |> maybe_story_failure(
+        directory,
+        metadata.theme_id != Template.default_theme_id(),
+        :app_theme_mismatch
+      )
+      |> maybe_story_failure(
+        directory,
+        metadata.default_theme_id != Template.default_theme_id(),
+        :screen_theme_mismatch
+      )
+      |> maybe_story_failure(
+        directory,
+        metadata.uses_shared_template != true,
+        :style_profile_drift
+      )
+      |> maybe_story_failure(
+        directory,
+        Enum.sort(Map.get(metadata, :category_ids, [])) !=
+          Enum.sort(AggregateDemo.required_category_ids()),
+        :category_registry_mismatch
+      )
+      |> maybe_story_failure(
+        directory,
+        Map.get(signal_lab_contract, :valid?) != true,
+        :invalid_signal_lab_contract
+      )
+      |> maybe_story_failure(
+        directory,
+        Enum.sort(Map.get(signal_lab_contract, :story_ids, [])) !=
+          Enum.sort(AggregateDemo.required_signal_lab_story_ids()),
+        :signal_lab_story_inventory_mismatch
+      )
+      |> maybe_story_failure(
+        directory,
+        Map.get(metadata, :linked_example_directories, []) == [],
+        :missing_linked_examples
+      )
+
+    %{
+      passed?: failures == [],
+      checked: [directory],
+      failures: failures,
+      message:
+        "the aggregate demo must preserve its tabbed category registry, shared button-example theme continuity, and required signal-lab story inventory"
+    }
+  end
+
+  defp aggregate_demo_gate({directory, {:error, reason}}) do
+    %{
+      passed?: false,
+      checked: [directory],
+      failures: [%{directory: directory, reason: {:review_metadata_failed, reason}}],
+      message: "the aggregate demo must be loadable through the shared review-metadata workflow"
     }
   end
 

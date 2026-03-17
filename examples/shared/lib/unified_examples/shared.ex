@@ -85,7 +85,7 @@ defmodule UnifiedExamples.Shared do
     Tooling.smoke_launch(directory, opts)
   end
 
-  @spec review_metadata(String.t() | atom()) :: {:ok, map()}
+  @spec review_metadata(String.t() | atom()) :: {:ok, map()} | {:error, term()}
   def review_metadata(directory) do
     Tooling.review_metadata(directory)
   end

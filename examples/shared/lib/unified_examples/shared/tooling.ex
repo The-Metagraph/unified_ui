@@ -58,7 +58,10 @@ defmodule UnifiedExamples.Shared.Tooling do
     |> Enum.join("\n")
   end
 
-  @spec review_metadata(String.t() | atom()) :: {:ok, map()}
+  @spec review_metadata(String.t() | atom()) :: {:ok, map()} | {:error, term()}
+  def review_metadata("demo"), do: AggregateDemo.review_metadata()
+  def review_metadata(:demo), do: AggregateDemo.review_metadata()
+
   def review_metadata(directory) do
     with {:ok, loaded} <- Loader.load(directory) do
       Loader.load_config(loaded)

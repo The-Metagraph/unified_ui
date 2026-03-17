@@ -9,6 +9,7 @@ defmodule UnifiedExamples.Demo do
   alias UnifiedExamples.Demo.SignalLab, as: SignalLabRuntime
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Runtime
+  alias UnifiedExamples.Shared.Template
   alias Phoenix.LiveView.Socket
 
   @app_root Path.expand("../..", __DIR__)
@@ -46,6 +47,9 @@ defmodule UnifiedExamples.Demo do
 
   @spec review_metadata() :: map()
   def review_metadata do
+    category_registry = category_registry()
+    screen_module = screen_module()
+
     metadata()
     |> Map.take([
       :id,
@@ -69,7 +73,22 @@ defmodule UnifiedExamples.Demo do
     ])
     |> Map.merge(%{
       app_root: @app_root,
+      default_theme_id: screen_module.default_theme_id(),
+      style_profile: screen_module.shared_style_profile(),
+      uses_shared_template:
+        screen_module.shared_style_profile() == Template.default_style_profile(),
+      application_module: application_module(),
+      endpoint_module: endpoint_module(),
+      router_module: router_module(),
+      live_module: live_module(),
+      dev_server_enabled?: Keyword.get(endpoint_config(), :server, false) == true,
       browser_runnable?: true,
+      category_example_directories: Map.new(category_registry, &{&1.id, &1.example_directories}),
+      linked_example_directories:
+        category_registry
+        |> Enum.flat_map(& &1.example_directories)
+        |> Enum.uniq()
+        |> Enum.sort(),
       signal_lab_contract: Categories.SignalLab.story_contract_summary()
     })
   end

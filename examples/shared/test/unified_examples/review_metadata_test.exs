@@ -12,6 +12,7 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert {:ok, button} = Tooling.review_metadata("button")
     assert {:ok, checkbox} = Tooling.review_metadata("checkbox")
     assert {:ok, cluster_dashboard} = Tooling.review_metadata("cluster_dashboard")
+    assert {:ok, demo} = Tooling.review_metadata("demo")
 
     assert button.primary_subject == :button
     assert button.family == Catalog.entry!("button").family
@@ -42,6 +43,40 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert cluster_dashboard.interaction_storytelling == :target_driven
     assert is_binary(cluster_dashboard.interaction_idle_prompt)
     assert cluster_dashboard.traceability.runtime_library.package == :live_ui
+
+    assert demo.purpose == :aggregate_demo
+    assert demo.theme_id == Template.default_theme_id()
+    assert demo.default_theme_id == Template.default_theme_id()
+    assert demo.uses_shared_template
+    assert demo.category_count == 7
+
+    assert demo.category_ids == [
+             :foundational_content,
+             :forms_and_input,
+             :layout_and_display,
+             :navigation_and_selection,
+             :data_and_feedback,
+             :overlays_and_operational,
+             :signal_lab
+           ]
+
+    assert demo.signal_lab_contract.valid?
+
+    assert demo.signal_lab_contract.story_ids == [
+             :action_to_feedback,
+             :input_to_preview,
+             :selection_to_filter,
+             :toggle_to_visibility_or_enabled_state
+           ]
+
+    assert "button" in demo.linked_example_directories
+
+    assert demo.category_example_directories.signal_lab == [
+             "button",
+             "text_input",
+             "select",
+             "toggle"
+           ]
   end
 
   test "suite review report stays aligned with the catalog and root discovery surfaces" do
