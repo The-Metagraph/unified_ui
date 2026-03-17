@@ -5,6 +5,8 @@ defmodule WebUi.Server.ViewState do
 
   alias WebUi.Frontend
   alias WebUi.Server.Error
+  alias WebUi.Widget
+  alias WebUi.Widgets
 
   @type t :: %{
           screen: %{
@@ -14,7 +16,7 @@ defmodule WebUi.Server.ViewState do
             mode: atom()
           },
           assigns: map(),
-          widgets: [map()],
+          widgets: [Widget.t()],
           widget_summaries: [map()],
           bridge: map(),
           revision: non_neg_integer()
@@ -37,7 +39,7 @@ defmodule WebUi.Server.ViewState do
          },
          assigns: assigns,
          widgets: widgets,
-         widget_summaries: Enum.map(widgets, &widget_summary/1),
+         widget_summaries: Enum.map(widgets, &Widget.summary/1),
          bridge: %{
            assets_root: Frontend.assets_root(),
            entry_module: Frontend.entry_module(),
@@ -51,55 +53,22 @@ defmodule WebUi.Server.ViewState do
   defp normalize_widgets(screen, widgets) when is_list(widgets) do
     widgets
     |> Enum.reduce_while({:ok, []}, fn widget, {:ok, acc} ->
-      case normalize_widget(screen, widget) do
-        {:ok, normalized} -> {:cont, {:ok, acc ++ [normalized]}}
-        {:error, error} -> {:halt, {:error, error}}
+      case Widgets.normalize(widget) do
+        {:ok, normalized} -> {:cont, {:ok, [normalized | acc]}}
+        {:error, _reason} -> {:halt, {:error, Error.invalid_widget(screen, widget)}}
       end
     end)
+    |> case do
+      {:ok, normalized} -> {:ok, Enum.reverse(normalized)}
+      {:error, error} -> {:error, error}
+    end
   end
 
   defp normalize_widgets(screen, other), do: {:error, Error.invalid_view(screen, other)}
-
-  defp normalize_widget(screen, widget) when is_list(widget) do
-    screen
-    |> normalize_widget(Enum.into(widget, %{}))
-  end
-
-  defp normalize_widget(_screen, %{id: id, kind: kind} = widget) do
-    {:ok,
-     %{
-       id: id,
-       kind: kind,
-       props: normalize_map(Map.get(widget, :props, %{})),
-       slots: normalize_map(Map.get(widget, :slots, %{})),
-       style: normalize_map(Map.get(widget, :style, %{})),
-       events: normalize_map(Map.get(widget, :events, %{})),
-       metadata: normalize_map(Map.get(widget, :metadata, %{}))
-     }}
-  end
-
-  defp normalize_widget(screen, %{"id" => id, "kind" => kind} = widget) do
-    normalize_widget(screen, %{id: id, kind: kind, props: Map.get(widget, "props", %{})})
-  end
-
-  defp normalize_widget(screen, other), do: {:error, Error.invalid_widget(screen, other)}
 
   defp normalize_frontend_boot(_screen, boot) when is_map(boot), do: {:ok, Map.new(boot)}
   defp normalize_frontend_boot(_screen, boot) when is_list(boot), do: {:ok, Enum.into(boot, %{})}
 
   defp normalize_frontend_boot(screen, other),
     do: {:error, Error.invalid_frontend_boot(screen, other)}
-
-  defp normalize_map(map) when is_map(map), do: Map.new(map)
-  defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
-  defp normalize_map(_other), do: %{}
-
-  defp widget_summary(widget) do
-    %{
-      id: widget.id,
-      kind: widget.kind,
-      event_names: widget.events |> Map.keys() |> Enum.sort(),
-      slot_names: widget.slots |> Map.keys() |> Enum.sort()
-    }
-  end
 end

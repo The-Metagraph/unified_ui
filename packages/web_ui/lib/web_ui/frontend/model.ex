@@ -4,6 +4,7 @@ defmodule WebUi.Frontend.Model do
   """
 
   alias WebUi.Frontend.Error
+  alias WebUi.Widget
 
   @enforce_keys [:screen_id, :title, :widgets, :widget_summaries, :bridge, :server_revision]
   defstruct [
@@ -22,7 +23,7 @@ defmodule WebUi.Frontend.Model do
   @type t :: %__MODULE__{
           screen_id: atom(),
           title: String.t(),
-          widgets: [map()],
+          widgets: [Widget.t()],
           widget_summaries: [map()],
           bridge: map(),
           server_revision: non_neg_integer(),

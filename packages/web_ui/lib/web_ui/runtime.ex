@@ -3,6 +3,19 @@ defmodule WebUi.Runtime do
   Package-facing summary of the split `web_ui` runtime model.
   """
 
+  @spec modules() :: [module()]
+  def modules do
+    WebUi.Server.modules() ++ WebUi.Frontend.modules()
+  end
+
+  @spec validation_state() :: map()
+  def validation_state do
+    %{
+      server: WebUi.Server.validation_state(),
+      frontend: WebUi.Frontend.validation_state()
+    }
+  end
+
   @spec split?() :: true
   def split?, do: true
 

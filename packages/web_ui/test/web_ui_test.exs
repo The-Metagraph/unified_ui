@@ -23,9 +23,19 @@ defmodule WebUiTest do
   end
 
   test "reference and info surfaces stay aligned with the scaffold" do
-    assert %{package: %{app: :web_ui}, runtime: %{server: WebUi.Server, frontend: WebUi.Frontend}} =
-             WebUi.reference()
+    assert %{
+             package: %{app: :web_ui},
+             runtime: %{
+               sides: %{server: WebUi.Server, frontend: WebUi.Frontend},
+               browser_bridge: %{entry_module: "WebUi.Main"}
+             },
+             widgets: %{metadata_contract: %{required_keys: [:id, :kind]}}
+           } = WebUi.reference()
 
-    assert %{runtime_split?: true, assumptions: %{authoritative_server?: true}} = WebUi.info()
+    assert %{
+             runtime_split?: true,
+             assumptions: %{authoritative_server?: true},
+             browser_bridge: %{entry_module: "WebUi.Main"}
+           } = WebUi.info()
   end
 end
