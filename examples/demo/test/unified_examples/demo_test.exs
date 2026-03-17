@@ -202,4 +202,33 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"cluster-dashboard\""
     assert html =~ "data-demo-category-panel=\"overlays_and_operational\""
   end
+
+  test "cross-category reviewer cues remain visible on every non-signal tab" do
+    {:ok, view, html} = live(build_conn(), "/")
+
+    for category_id <- Categories.ids() -- [:signal_lab] do
+      html =
+        if category_id == Categories.default_id() do
+          html
+        else
+          view
+          |> element("#demo-category-tab-#{category_id}")
+          |> render_click()
+        end
+
+      entry = Categories.review_entry!(category_id)
+
+      assert html =~ ~s(data-demo-active-category="#{category_id}")
+      assert html =~ ~s(data-demo-category-index="#{entry.order}")
+      assert html =~ ~s(data-demo-category-count="#{Categories.count()}")
+      assert html =~ ~s(data-demo-linked-examples="#{entry.example_count}")
+      assert html =~ ~s(data-demo-panel-chrome="true")
+      assert html =~ "Linked example apps"
+      assert html =~ "Representative gallery"
+
+      for directory <- entry.example_directories do
+        assert html =~ ~s(data-demo-example-link="#{directory}")
+      end
+    end
+  end
 end

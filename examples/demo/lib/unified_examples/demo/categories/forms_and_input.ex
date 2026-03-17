@@ -11,12 +11,30 @@ defmodule UnifiedExamples.Demo.Categories.FormsAndInput do
 
   @default_theme_id Template.default_theme_id()
   @shared_style_profile Template.default_style_profile()
+  @example_directories [
+    "form_builder",
+    "field_group",
+    "field",
+    "text_input",
+    "numeric_input",
+    "checkbox",
+    "radio_group",
+    "select",
+    "pick_list",
+    "date_input",
+    "time_input",
+    "file_input",
+    "toggle"
+  ]
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: @default_theme_id
 
   @spec shared_style_profile() :: map()
   def shared_style_profile, do: @shared_style_profile
+
+  @spec example_directories() :: [String.t()]
+  def example_directories, do: @example_directories
 
   identity do
     id(:forms_and_input)

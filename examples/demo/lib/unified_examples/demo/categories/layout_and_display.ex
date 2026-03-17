@@ -11,12 +11,25 @@ defmodule UnifiedExamples.Demo.Categories.LayoutAndDisplay do
 
   @default_theme_id Template.default_theme_id()
   @shared_style_profile Template.default_style_profile()
+  @example_directories [
+    "box",
+    "row",
+    "column",
+    "grid",
+    "viewport",
+    "scroll_bar",
+    "split_pane",
+    "canvas"
+  ]
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: @default_theme_id
 
   @spec shared_style_profile() :: map()
   def shared_style_profile, do: @shared_style_profile
+
+  @spec example_directories() :: [String.t()]
+  def example_directories, do: @example_directories
 
   identity do
     id(:layout_and_display)
