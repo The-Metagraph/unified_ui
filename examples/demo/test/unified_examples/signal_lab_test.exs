@@ -51,5 +51,12 @@ defmodule UnifiedExamples.SignalLabTest do
     assert html =~ "data-live-ui-widget=\"list\""
     assert html =~ "Expected: canonical click meaning should update the feedback surface."
     assert html =~ "Expected: canonical selection meaning should filter the linked example list."
+    assert html =~ ~s(id="signal_lab_action_trigger")
+    assert html =~ ~s(id="signal_lab_input_source_input")
+    assert html =~ ~s(id="signal_lab_selection_source_select")
+    assert html =~ ~s(id="signal_lab_toggle_source_control")
+    assert html =~ ~s(data-live-ui-variant="solid")
+    assert html =~ ~s(data-live-ui-variant="filled")
+    assert html =~ ~s(data-live-ui-variant="panel")
   end
 end

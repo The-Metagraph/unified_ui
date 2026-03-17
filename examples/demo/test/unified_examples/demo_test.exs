@@ -242,6 +242,9 @@ defmodule UnifiedExamples.DemoTest do
     assert click_html =~ "Action signal acknowledged."
     assert click_html =~ "Action to Feedback reacted to a canonical click signal."
     assert click_html =~ "live_ui.click.action_to_feedback"
+    assert click_html =~ "Action to Feedback emitted a click signal"
+    assert click_html =~ "from Primary action control to Feedback surface"
+    assert click_html =~ "Payload detail: result = acknowledged."
 
     change_html =
       view
@@ -254,6 +257,9 @@ defmodule UnifiedExamples.DemoTest do
     assert change_html =~ "Signal lab note"
     assert change_html =~ "Input to Preview mirrored the latest canonical change signal."
     assert change_html =~ "live_ui.change.input_to_preview"
+    assert change_html =~ "Input to Preview emitted a change signal"
+    assert change_html =~ "from Draft input control to Preview surface"
+    assert change_html =~ "Payload detail: note = Signal lab note."
 
     selection_html =
       view
@@ -269,6 +275,9 @@ defmodule UnifiedExamples.DemoTest do
              "Selection to Filter narrowed the linked example list from a canonical selection signal."
 
     assert selection_html =~ "Availability and emphasis gate"
+    assert selection_html =~ "Selection to Filter emitted a selection signal"
+    assert selection_html =~ "from Selection control to Filtered target list"
+    assert selection_html =~ "Payload detail: filter = operational."
 
     toggle_html =
       view
@@ -284,6 +293,9 @@ defmodule UnifiedExamples.DemoTest do
              "Toggle to Visibility / Enabled State updated the target control from a canonical change signal."
 
     assert toggle_html =~ "live_ui.change.toggle_to_visibility_or_enabled_state"
+    assert toggle_html =~ "Toggle to Visibility / Enabled State emitted a change signal"
+    assert toggle_html =~ "from Toggle control to Visibility or enabled-state target"
+    assert toggle_html =~ "Payload detail: enabled = true."
   end
 
   test "cross-category reviewer cues remain visible on every non-signal tab" do
