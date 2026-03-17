@@ -44,8 +44,7 @@ defmodule WebUi.Examples.CanonicalFoundationalScreen do
                 id: "query-field",
                 name: :query,
                 label: "Search Query",
-                help:
-                  Foundational.text("Used for preview filtering", id: "query-input-help")
+                help: Foundational.text("Used for preview filtering", id: "query-input-help")
               ),
               Forms.field(
                 Input.checkbox(
