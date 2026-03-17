@@ -39,7 +39,8 @@ defmodule WebUi.Info do
     %{
       widgets: WebUi.Widgets.validation_state(),
       server: WebUi.Server.validation_state(),
-      frontend: WebUi.Frontend.validation_state()
+      frontend: WebUi.Frontend.validation_state(),
+      renderer: WebUi.Renderer.validation_state()
     }
   end
 end

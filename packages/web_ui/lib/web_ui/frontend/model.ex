@@ -33,7 +33,7 @@ defmodule WebUi.Frontend.Model do
   @type status :: :hydrated | :dirty
 
   @type t :: %__MODULE__{
-          screen_id: atom(),
+          screen_id: String.t() | atom(),
           title: String.t(),
           widgets: [Widget.t()],
           widget_summaries: [map()],
@@ -54,7 +54,7 @@ defmodule WebUi.Frontend.Model do
         bridge: bridge,
         revision: revision
       })
-      when is_atom(screen_id) and is_binary(title) and is_list(widgets) and
+      when (is_atom(screen_id) or is_binary(screen_id)) and is_binary(title) and is_list(widgets) and
              is_list(widget_summaries) and is_list(render_tree) and is_map(bridge) and
              is_integer(revision) do
     {:ok,
