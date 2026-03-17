@@ -5,6 +5,7 @@ defmodule UnifiedExamples.DemoTest do
   import Phoenix.LiveViewTest
 
   alias UnifiedExamples.Demo
+  alias UnifiedExamples.Shared.Template
 
   @endpoint UnifiedExamples.Demo.Endpoint
 
@@ -15,14 +16,21 @@ defmodule UnifiedExamples.DemoTest do
     assert metadata.root_id == :demo_example_screen_root
     assert metadata.title == "Examples Demo Application"
     assert metadata.widget == :demo
+    assert metadata.theme_id == :example_suite_default
     assert metadata.app == :unified_example_demo
     assert metadata.directory == "examples/demo"
     assert metadata.purpose == :aggregate_demo
-    assert metadata.interaction_demo.mode == :placeholder
-    assert metadata.interaction_demo.family == :select
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :navigation
   end
 
-  test "demo app renders the authored scaffold through the LiveUi runtime" do
+  test "demo app reuses the shared button-example theme and style contract" do
+    assert Demo.screen_module().default_theme_id() == Template.default_theme_id()
+    assert Demo.screen_module().shared_style_profile() == Template.default_style_profile()
+    assert Demo.metadata().theme_id == Template.default_theme_id()
+  end
+
+  test "demo app renders the shared shell treatment through the LiveUi runtime" do
     assert {:ok, runtime_state} = Demo.boot()
     assert {:ok, html} = Demo.render_html()
 
@@ -30,6 +38,9 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "Examples Demo Application"
     assert html =~ "Aggregate category-oriented control demo scaffold"
     assert html =~ "Standalone Phoenix LiveView scaffold is active."
+    assert html =~ "same shared theme and style profile as the current button example"
+    assert html =~ "Preview the aggregate demo shell"
+    assert html =~ "data-live-ui-variant=\"solid\""
     assert html =~ "data-live-ui-widget=\"box\""
     assert html =~ "data-live-ui-runtime=\"screen\""
   end

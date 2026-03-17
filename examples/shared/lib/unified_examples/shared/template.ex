@@ -29,6 +29,220 @@ defmodule UnifiedExamples.Shared.Template do
     }
   end
 
+  defmacro shared_theme_definition do
+    quote do
+      themes do
+        default_theme(unquote(@default_theme_id))
+
+        theme do
+          id(unquote(@default_theme_id))
+          summary("Shared default theme for the standalone example-app suite")
+
+          palette_color do
+            id(:surface)
+            color(rgb_color(18, 18, 18))
+          end
+
+          palette_color do
+            id(:accent)
+            color(rgb_color(0, 255, 136))
+          end
+
+          palette_color do
+            id(:success)
+            color(rgb_color(0, 255, 136))
+          end
+
+          palette_color do
+            id(:warning)
+            color(rgb_color(255, 184, 0))
+          end
+
+          palette_color do
+            id(:critical)
+            color(rgb_color(235, 123, 123))
+          end
+
+          palette_color do
+            id(:muted)
+            color(rgb_color(102, 102, 102))
+          end
+
+          semantic_role do
+            id(:surface)
+            value(rgb_color(18, 18, 18))
+          end
+
+          semantic_role do
+            id(:accent)
+            value(rgb_color(0, 255, 136))
+          end
+
+          semantic_role do
+            id(:success)
+            value(rgb_color(0, 255, 136))
+          end
+
+          semantic_role do
+            id(:warning)
+            value(rgb_color(255, 184, 0))
+          end
+
+          semantic_role do
+            id(:critical)
+            value(rgb_color(235, 123, 123))
+          end
+
+          semantic_role do
+            id(:muted)
+            value(rgb_color(102, 102, 102))
+          end
+
+          semantic_role do
+            id(:foreground)
+            value(rgb_color(232, 232, 232))
+          end
+
+          token do
+            id(:shell_surface)
+
+            value(
+              style_value(
+                background: token_ref(:surface),
+                foreground: role_ref(:foreground),
+                spacing: %{padding: 2, gap: 1},
+                border: %{width: 1, style: :solid}
+              )
+            )
+          end
+
+          token do
+            id(:panel_surface)
+
+            value(
+              style_value(
+                background: token_ref(:surface),
+                foreground: role_ref(:foreground),
+                spacing: %{padding: 2, gap: 1},
+                border: %{width: 1, style: :solid}
+              )
+            )
+          end
+
+          token do
+            id(:accent_action)
+
+            value(
+              style_value(
+                background: role_ref(:accent),
+                foreground: rgb_color(10, 10, 10),
+                border_color: role_ref(:accent),
+                emphasis: %{tone: :accent}
+              )
+            )
+          end
+
+          token do
+            id(:input_surface)
+
+            value(
+              style_value(
+                background: token_ref(:surface),
+                foreground: role_ref(:foreground),
+                border_color: role_ref(:muted)
+              )
+            )
+          end
+
+          component_style do
+            id(:example_shell)
+            component(:box)
+            variant(:panel)
+
+            style(
+              style_value(
+                token_refs: [token_ref(:shell_surface)],
+                sizing: %{width: :fill},
+                alignment: %{align: :stretch}
+              )
+            )
+          end
+
+          component_style do
+            id(:example_panel)
+            component(:box)
+            variant(:panel)
+
+            style(
+              style_value(
+                token_refs: [token_ref(:panel_surface)],
+                emphasis: %{tone: :surface}
+              )
+            )
+          end
+
+          component_style do
+            id(:example_form_shell)
+            component(:form_builder)
+            variant(:panel)
+
+            style(
+              style_value(
+                token_refs: [token_ref(:panel_surface)],
+                emphasis: %{tone: :surface}
+              )
+            )
+          end
+
+          component_style do
+            id(:example_title)
+            component(:text)
+            variant(:headline)
+
+            style(
+              style_value(
+                foreground: role_ref(:accent),
+                emphasis: %{weight: :strong}
+              )
+            )
+          end
+
+          component_style do
+            id(:example_summary)
+            component(:text)
+            variant(:body)
+
+            style(style_value(foreground: role_ref(:muted)))
+          end
+
+          component_style do
+            id(:example_notes)
+            component(:text)
+            variant(:body)
+
+            style(style_value(foreground: role_ref(:muted)))
+          end
+
+          component_style do
+            id(:example_primary_button)
+            component(:button)
+            variant(:solid)
+
+            style(style_value(token_refs: [token_ref(:accent_action)]))
+          end
+
+          component_style do
+            id(:example_primary_input)
+            component(:text_input)
+            variant(:filled)
+
+            style(style_value(token_refs: [token_ref(:input_surface)]))
+          end
+        end
+      end
+    end
+  end
+
   def interaction_demo(opts) when is_list(opts) do
     widget = Keyword.fetch!(opts, :widget)
 

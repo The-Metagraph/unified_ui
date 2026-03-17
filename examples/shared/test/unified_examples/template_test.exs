@@ -28,15 +28,17 @@ defmodule UnifiedExamples.TemplateTest do
     assert TextExample.default_theme_id() == :example_suite_default
     assert TextExample.shared_style_profile() == Template.default_style_profile()
 
-    assert TextExample.example_metadata() == %{
-             id: :template_text_example,
-             root_id: :template_text_example_root,
-             title: "Text Example",
-             summary: "Shared template proof for text content",
-             notes: "Text is the focused widget in this proof example.",
-             widget: :text,
-             theme_id: :example_suite_default
-           }
+    metadata = TextExample.example_metadata()
+
+    assert metadata.id == :template_text_example
+    assert metadata.root_id == :template_text_example_root
+    assert metadata.title == "Text Example"
+    assert metadata.summary == "Shared template proof for text content"
+    assert metadata.notes == "Text is the focused widget in this proof example."
+    assert metadata.widget == :text
+    assert metadata.theme_id == :example_suite_default
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :click
 
     assert result.identity.id == :template_text_example
     assert result.composition.root == :template_text_example_root
@@ -54,6 +56,7 @@ defmodule UnifiedExamples.TemplateTest do
 
     assert Compiler.listing(TextExample).authored.authored_ids == [
              :template_demo_text,
+             :template_text_example_interaction_trigger,
              :template_text_example_notes_text,
              :template_text_example_panel,
              :template_text_example_shell,
@@ -64,7 +67,7 @@ defmodule UnifiedExamples.TemplateTest do
     assert Reference.summarize_tree(result.iur).type_histogram == %{
              composite: 1,
              layout: 2,
-             widget: 4
+             widget: 5
            }
   end
 end
