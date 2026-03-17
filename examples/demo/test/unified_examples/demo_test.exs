@@ -107,4 +107,25 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"toggle\""
     assert html =~ "data-demo-category-panel=\"forms_and_input\""
   end
+
+  test "layout and display gallery stays stable across tab switches" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-layout_and_display")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"layout_and_display\""
+    assert html =~ "Layout and Display Gallery"
+    assert html =~ "data-live-ui-widget=\"box\""
+    assert html =~ "data-live-ui-widget=\"row\""
+    assert html =~ "data-live-ui-widget=\"column\""
+    assert html =~ "data-live-ui-widget=\"grid\""
+    assert html =~ "data-live-ui-widget=\"viewport\""
+    assert html =~ "data-live-ui-widget=\"scroll-bar\""
+    assert html =~ "data-live-ui-widget=\"split-pane\""
+    assert html =~ "data-live-ui-widget=\"canvas\""
+    assert html =~ "data-demo-category-panel=\"layout_and_display\""
+  end
 end
