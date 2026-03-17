@@ -6,6 +6,7 @@ defmodule UnifiedExamples.Demo do
   use Phoenix.Component
 
   alias UnifiedExamples.Demo.Categories
+  alias UnifiedExamples.Demo.SignalLab, as: SignalLabRuntime
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Runtime
   alias Phoenix.LiveView.Socket
@@ -193,13 +194,23 @@ defmodule UnifiedExamples.Demo do
       :active_category_examples,
       category_examples(entry.example_directories)
     )
-    |> Phoenix.Component.assign(:category_component, category_component(entry.fragment_module))
+    |> Phoenix.Component.assign(
+      :category_component,
+      category_component(entry.fragment_module)
+    )
   end
 
   defp category_component(fragment_module) do
     case Runtime.component_assigns(fragment_module) do
       {:ok, assigns} ->
-        assigns
+        if fragment_module == Categories.SignalLab do
+          %{
+            assigns
+            | runtime_state: SignalLabRuntime.bootstrap_runtime_state(assigns.runtime_state)
+          }
+        else
+          assigns
+        end
 
       {:error, reason} ->
         raise "unable to mount category fragment #{inspect(fragment_module)}: #{inspect(reason)}"
