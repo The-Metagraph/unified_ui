@@ -6,6 +6,7 @@ defmodule UnifiedExamples.Demo do
   use Phoenix.Component
 
   alias UnifiedExamples.Demo.Categories
+  alias UnifiedExamples.Demo.Fixtures
   alias UnifiedExamples.Demo.SignalLab, as: SignalLabRuntime
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Runtime
@@ -67,6 +68,7 @@ defmodule UnifiedExamples.Demo do
       :category_registry,
       :interaction_demo,
       :review_summary,
+      :fixture_contract,
       :launch_path,
       :launch_url,
       :launch_command
@@ -102,6 +104,7 @@ defmodule UnifiedExamples.Demo do
       category_count: Categories.count(),
       category_ids: Categories.ids(),
       category_registry: category_registry(),
+      fixture_contract: Fixtures.contract_summary(),
       review_summary: review_summary(),
       launch_path: launch.path,
       launch_url: launch.url,
@@ -138,6 +141,11 @@ defmodule UnifiedExamples.Demo do
       id="demo-category-review-shell"
       class="example-app-runtime"
       data-demo-active-category={@active_category.id}
+      data-demo-responsive-shell="true"
+      data-demo-responsive-digest={@metadata.fixture_contract.digest}
+      data-demo-two-column-min={@metadata.fixture_contract.responsive_layout.desktop_two_column_min_width}
+      data-demo-single-column-max={@metadata.fixture_contract.responsive_layout.compact_single_column_max_width}
+      data-demo-dense-stack-max={@metadata.fixture_contract.responsive_layout.dense_stack_max_width}
     >
       <section class="example-app-review">
         <div class="example-app-header-top">
@@ -191,6 +199,9 @@ defmodule UnifiedExamples.Demo do
           <p class="example-app-notes">
             Catalog linkage: <code><%= @active_category.id %></code> in the aggregate demo registry.
           </p>
+          <p class="example-app-notes" data-demo-fixture-digest="true">
+            Fixture digest: <code><%= @metadata.fixture_contract.digest %></code>
+          </p>
 
           <div
             class="example-app-example-links"
@@ -227,6 +238,9 @@ defmodule UnifiedExamples.Demo do
           </p>
           <p class="example-app-notes">
             Review focus: <%= @active_category.example_count %> linked example apps contribute to this category gallery.
+          </p>
+          <p class="example-app-notes" data-demo-responsive-contract="true">
+            Responsive contract: two columns at <%= @metadata.fixture_contract.responsive_layout.desktop_two_column_min_width %>px and above, stacked review below that, and denser linked-example flow at <%= @metadata.fixture_contract.responsive_layout.dense_stack_max_width %>px and below.
           </p>
         </div>
 

@@ -6,6 +6,7 @@ defmodule UnifiedExamples.DemoTest do
 
   alias UnifiedExamples.Demo
   alias UnifiedExamples.Demo.Categories
+  alias UnifiedExamples.Demo.Fixtures
   alias UnifiedExamples.Shared.Template
 
   @endpoint UnifiedExamples.Demo.Endpoint
@@ -50,6 +51,8 @@ defmodule UnifiedExamples.DemoTest do
     assert metadata.signal_lab_contract.valid?
     assert metadata.signal_lab_contract.story_count == 4
     assert metadata.signal_lab_contract.surface_count == 4
+    assert metadata.fixture_contract.digest == Fixtures.digest()
+    assert metadata.fixture_contract.responsive_layout.desktop_two_column_min_width == 980
   end
 
   test "demo app renders the shared shell treatment through the LiveUi runtime" do
@@ -81,9 +84,15 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-example-interaction-family=\"navigation\""
     assert html =~ Demo.review_summary()
     assert html =~ Demo.launch_url()
+    assert html =~ ~s(data-demo-responsive-shell="true")
+    assert html =~ ~s(data-demo-two-column-min="980")
+    assert html =~ ~s(data-demo-single-column-max="979")
+    assert html =~ ~s(data-demo-dense-stack-max="720")
     assert html =~ "Foundational Content Gallery"
     assert html =~ "Review shared CTA"
     assert html =~ "Open shared guidelines"
+    assert html =~ "Fixture digest:"
+    assert html =~ "Responsive contract:"
     assert html =~ "data-example-launch-url=\"#{Demo.launch_url()}\""
     assert html =~ "data-example-category-count=\"7\""
   end
