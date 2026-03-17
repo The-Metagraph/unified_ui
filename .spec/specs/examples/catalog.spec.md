@@ -6,6 +6,7 @@ application suite shall cover.
 ## Related General Specs
 
 - [Example Apps Suite](./package.spec.md)
+- [Examples Demo Application](../examples_demo/package.spec.md)
 - [Example Apps Structure](./structure.spec.md)
 - [Example Apps DSL Template](./dsl_template.spec.md)
 - [LiveUi Native Widgets](../live_ui/native_widgets.spec.md)
@@ -27,12 +28,12 @@ decisions:
 
 ```spec-requirements
 - id: repo.examples.catalog.complete_live_ui_widget_coverage
-  statement: The example-app suite shall include one primary example application for every widget or construct named in the catalog section of this subject.
+  statement: The example-app suite shall include one primary example application for every widget or construct named in the family-specific catalog sections of this subject.
   priority: must
   stability: stable
 
 - id: repo.examples.catalog.one_primary_subject_per_app
-  statement: Each catalog entry shall map to one dedicated example application directory whose primary subject matches the catalog entry name.
+  statement: Each focused widget or construct catalog entry shall map to one dedicated example application directory whose primary subject matches the catalog entry name.
   priority: must
   stability: stable
 
@@ -43,6 +44,11 @@ decisions:
 
 - id: repo.examples.catalog.family_traceability
   statement: The catalog shall group example applications by widget family or construct family so maintainers can review coverage by feature area rather than only by directory listing.
+  priority: must
+  stability: stable
+
+- id: repo.examples.catalog.aggregate_demo_traceability
+  statement: The catalog shall identify one aggregate demo application that groups the catalog entries by category and provides a dedicated signal-reactivity overview tab without replacing the per-widget applications.
   priority: must
   stability: stable
 ```
@@ -62,6 +68,12 @@ decisions:
 | `examples/separator/` | `separator` | content |
 | `examples/spacer/` | `spacer` | content |
 | `examples/content/` | `content` | layout/content |
+
+### Aggregate Review Application
+
+| Directory | Primary Subject | Family |
+| --- | --- | --- |
+| `examples/demo/` | `demo` | suite/showcase |
 
 ### Forms and Input
 
@@ -157,5 +169,6 @@ decisions:
     - repo.examples.catalog.one_primary_subject_per_app
     - repo.examples.catalog.common_template_continuity
     - repo.examples.catalog.family_traceability
+    - repo.examples.catalog.aggregate_demo_traceability
     - repo.examples.catalog.review_family_coverage
 ```

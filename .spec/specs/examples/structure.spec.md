@@ -7,6 +7,7 @@ standalone example applications under `examples/`.
 
 - [Repository Package](../package.spec.md)
 - [Example Apps Suite](./package.spec.md)
+- [Examples Demo Application](../examples_demo/package.spec.md)
 - [UnifiedUi Structure](../unified-ui/structure.spec.md)
 - [LiveUi Structure](../live_ui/structure.spec.md)
 
@@ -31,7 +32,12 @@ decisions:
   stability: stable
 
 - id: repo.examples.structure.example_app_directory
-  statement: Each example application shall live in its own subdirectory at `examples/<widget_name>/`, where `<widget_name>` matches the primary widget or construct name in snake_case.
+  statement: Each focused per-widget or per-construct example application shall live in its own subdirectory at `examples/<widget_name>/`, where `<widget_name>` matches the primary widget or construct name in snake_case.
+  priority: must
+  stability: stable
+
+- id: repo.examples.structure.aggregate_demo_directory
+  statement: The aggregate category-oriented demo application shall live at `examples/demo/` as a first-class member of the example suite rather than being embedded inside `examples/shared/` or a package directory.
   priority: must
   stability: stable
 
@@ -46,12 +52,12 @@ decisions:
   stability: stable
 
 - id: repo.examples.structure.example_screen_entrypoint
-  statement: Each example application shall expose one primary example-screen entrypoint that instantiates the shared DSL template with one focused widget or construct demonstration plus minimal supporting content.
+  statement: Each focused per-widget or per-construct example application shall expose one primary example-screen entrypoint that instantiates the shared DSL template with one focused widget or construct demonstration plus minimal supporting content.
   priority: must
   stability: stable
 
 - id: repo.examples.structure.narrow_demo_scope
-  statement: Each example application shall foreground one primary widget or construct and use any additional scaffolding widgets only to support understandable demonstration of that primary subject.
+  statement: Each focused per-widget or per-construct example application shall foreground one primary widget or construct and use any additional scaffolding widgets only to support understandable demonstration of that primary subject.
   priority: must
   stability: stable
 ```
@@ -73,6 +79,7 @@ decisions:
   covers:
     - repo.examples.structure.shared_library_layout
     - repo.examples.structure.example_app_directory
+    - repo.examples.structure.aggregate_demo_directory
     - repo.examples.structure.example_app_is_mix_project
     - repo.examples.structure.shared_dependencies
     - repo.examples.structure.example_screen_entrypoint
