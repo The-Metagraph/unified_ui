@@ -4,6 +4,7 @@ defmodule UnifiedExamples.Demo.SignalLab do
   signal lab.
   """
 
+  alias UnifiedExamples.Demo.Categories.SignalLab, as: SignalLabDefinition
   alias LiveUi.Runtime.State
   alias UnifiedIUR.{Binding, Element, Tree}
 
@@ -325,6 +326,9 @@ defmodule UnifiedExamples.Demo.SignalLab do
   end
 
   defp canonical_detail(translation) do
+    story_id = story_id(translation)
+    story = story_metadata(story_id)
+
     signal_type =
       case Map.get(translation, :signal) do
         %Jido.Signal{type: type} -> type
@@ -332,7 +336,23 @@ defmodule UnifiedExamples.Demo.SignalLab do
       end
 
     runtime_event = Map.get(translation, :runtime_event, "canonical_interaction")
-    "Signal #{signal_type} via #{runtime_event}."
+
+    payload_summary = payload_summary(story_id, translation)
+
+    "#{story.label} emitted a #{human_family(story.family)} signal (#{signal_type}) from #{story.source_label} to #{story.outcome_label} via #{runtime_event}. #{payload_summary}"
+  end
+
+  defp story_metadata(nil) do
+    %{
+      label: "Unknown interaction",
+      family: :change,
+      source_label: "source control",
+      outcome_label: "outcome panel"
+    }
+  end
+
+  defp story_metadata(story_id) when is_atom(story_id) do
+    SignalLabDefinition.story!(story_id)
   end
 
   defp fetch_payload_value(translation, keys, default) when is_list(keys) do
@@ -353,6 +373,80 @@ defmodule UnifiedExamples.Demo.SignalLab do
   defp fetch_payload_value(translation, key, default),
     do: fetch_payload_value(translation, [key], default)
 
+  defp payload_summary(:action_to_feedback, translation) when is_map(translation) do
+    result = fetch_payload_value(translation, [:result], :acknowledged)
+    "Payload detail: result = #{human_value(result)}."
+  end
+
+  defp payload_summary(:input_to_preview, translation) when is_map(translation) do
+    note =
+      fetch_payload_value(
+        translation,
+        [:note, "signal_lab_input_source_input", :signal_lab_input_source_input],
+        ""
+      )
+
+    "Payload detail: note = #{human_value(note)}."
+  end
+
+  defp payload_summary(:selection_to_filter, translation) when is_map(translation) do
+    filter =
+      fetch_payload_value(
+        translation,
+        [:filter, "signal_lab_selection_source_select", :signal_lab_selection_source_select],
+        :all
+      )
+
+    "Payload detail: filter = #{human_value(filter)}."
+  end
+
+  defp payload_summary(:toggle_to_visibility_or_enabled_state, translation)
+       when is_map(translation) do
+    enabled =
+      fetch_payload_value(
+        translation,
+        [:enabled, "signal_lab_toggle_source_control", :signal_lab_toggle_source_control],
+        false
+      )
+
+    "Payload detail: enabled = #{human_value(normalize_boolean(enabled))}."
+  end
+
+  defp payload_summary(_story_id, translation) when is_map(translation) do
+    payload =
+      case Map.get(translation, :signal) do
+        %Jido.Signal{data: data} -> Map.new(data)
+        _other -> Map.get(translation, :payload, %{})
+      end
+
+    payload_summary_from_map(payload)
+  end
+
+  defp payload_summary_from_map(payload) when map_size(payload) == 0 do
+    "Payload detail: no additional payload fields were captured."
+  end
+
+  defp payload_summary_from_map(payload) when is_map(payload) do
+    payload
+    |> Enum.reject(fn {key, _value} -> key in [:story, :source] end)
+    |> Enum.map(&payload_detail/1)
+    |> Enum.reject(&is_nil/1)
+    |> case do
+      [] ->
+        "Payload detail: the interaction meaning was carried without extra reviewer-visible fields."
+
+      details ->
+        "Payload detail: " <> Enum.join(details, "; ") <> "."
+    end
+  end
+
+  defp payload_detail({_key, %{kind: :binding_ref}}), do: nil
+  defp payload_detail({_key, %{"kind" => :binding_ref}}), do: nil
+
+  defp payload_detail({key, value}) do
+    "#{human_key(key)} = #{human_value(value)}"
+  end
+
   defp normalize_filter(value)
        when is_atom(value) and value in [:all, :interactive, :operational],
        do: value
@@ -366,6 +460,9 @@ defmodule UnifiedExamples.Demo.SignalLab do
   end
 
   defp normalize_filter(_other), do: :all
+
+  defp human_family(value) when is_atom(value), do: value |> Atom.to_string() |> humanize()
+  defp human_family(value), do: to_string(value)
 
   defp human_filter_label(:all), do: "all linked examples"
   defp human_filter_label(:interactive), do: "interactive stories"
@@ -387,6 +484,19 @@ defmodule UnifiedExamples.Demo.SignalLab do
   defp normalize_payload_value(value), do: value
 
   defp sentinel, do: :__missing_payload_value__
+
+  defp human_key(value) when is_atom(value), do: value |> Atom.to_string() |> humanize()
+  defp human_key(value), do: to_string(value)
+
+  defp human_value(value) when is_atom(value), do: value |> Atom.to_string() |> humanize()
+  defp human_value(value) when is_binary(value), do: value
+  defp human_value(value) when is_boolean(value), do: to_string(value)
+  defp human_value(value), do: inspect(value)
+
+  defp humanize(value) do
+    value
+    |> String.replace("_", " ")
+  end
 
   defp fetch_existing_atom_value(payload, key, default) do
     key
