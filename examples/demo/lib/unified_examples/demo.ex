@@ -6,6 +6,7 @@ defmodule UnifiedExamples.Demo do
   use Phoenix.Component
 
   alias UnifiedExamples.Demo.Categories
+  alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Runtime
   alias Phoenix.LiveView.Socket
 
@@ -24,7 +25,7 @@ defmodule UnifiedExamples.Demo do
 
   @spec review_summary() :: String.t()
   def review_summary do
-    "Review #{Categories.count()} ordered control categories through one shared shell before the full tab galleries arrive."
+    "Review #{Categories.count()} ordered control categories through one shared shell, with full galleries on every non-signal tab and the signal lab reserved for dedicated interaction stories."
   end
 
   @spec launch_descriptor(keyword()) :: map()
@@ -113,6 +114,11 @@ defmodule UnifiedExamples.Demo do
         </div>
 
         <div class="live-ui-box live-ui-box-panel">
+          <p class="example-app-kicker">
+            Category <span data-demo-category-index={@active_category.order}><%= @active_category.order %></span>
+            of <span data-demo-category-count={length(@category_registry)}><%= length(@category_registry) %></span>
+          </p>
+
           <div class="demo-category-tab-bar">
             <%= for entry <- @category_registry do %>
               <LiveUi.Widgets.Button.render
@@ -131,6 +137,24 @@ defmodule UnifiedExamples.Demo do
           <p class="example-app-notes">
             Catalog linkage: <code><%= @active_category.id %></code> in the aggregate demo registry.
           </p>
+
+          <div
+            class="example-app-example-links"
+            data-demo-linked-examples={@active_category.example_count}
+          >
+            <p class="example-app-kicker">Linked example apps</p>
+
+            <%= for example <- @active_category_examples do %>
+              <div
+                class="example-app-example-link"
+                data-demo-example-link={example.directory}
+                data-demo-example-widget={example.widget}
+              >
+                <code><%= example.directory %></code>
+                <span><%= example.widget %></span>
+              </div>
+            <% end %>
+          </div>
         </div>
       </section>
 
@@ -139,10 +163,13 @@ defmodule UnifiedExamples.Demo do
         class="example-app-runtime"
         data-demo-category-panel={@active_category.id}
       >
-        <div class="live-ui-box live-ui-box-panel">
+        <div class="live-ui-box live-ui-box-panel" data-demo-panel-chrome="true">
           <p class="example-app-kicker">Representative gallery</p>
           <p class="example-app-notes">
             The selected category renders through its own authored `UnifiedUi` fragment and `LiveUi` runtime surface.
+          </p>
+          <p class="example-app-notes">
+            Review focus: <%= @active_category.example_count %> linked example apps contribute to this category gallery.
           </p>
         </div>
 
@@ -157,11 +184,15 @@ defmodule UnifiedExamples.Demo do
   end
 
   defp assign_category(%Socket{} = socket, category_id) do
-    entry = Categories.entry!(category_id)
+    entry = Categories.review_entry!(category_id)
 
     socket
     |> Phoenix.Component.assign(:category_registry, category_registry())
     |> Phoenix.Component.assign(:active_category, entry)
+    |> Phoenix.Component.assign(
+      :active_category_examples,
+      category_examples(entry.example_directories)
+    )
     |> Phoenix.Component.assign(:category_component, category_component(entry.fragment_module))
   end
 
@@ -182,5 +213,9 @@ defmodule UnifiedExamples.Demo do
     |> String.to_existing_atom()
   rescue
     ArgumentError -> active_category_id()
+  end
+
+  defp category_examples(directories) do
+    Enum.map(directories, &Catalog.entry!/1)
   end
 end

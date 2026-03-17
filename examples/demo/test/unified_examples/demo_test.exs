@@ -128,4 +128,107 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"canvas\""
     assert html =~ "data-demo-category-panel=\"layout_and_display\""
   end
+
+  test "navigation and selection gallery renders through the aggregate tab shell" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-navigation_and_selection")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"navigation_and_selection\""
+    assert html =~ "Navigation and Selection Gallery"
+    assert html =~ "Menu active state"
+    assert html =~ "Tabs selected state"
+    assert html =~ "List selection state"
+    assert html =~ "Command palette focus state"
+    assert html =~ "data-live-ui-widget=\"menu\""
+    assert html =~ "data-live-ui-widget=\"tabs\""
+    assert html =~ "data-live-ui-widget=\"list\""
+    assert html =~ "data-live-ui-widget=\"command-palette\""
+    assert html =~ "data-demo-category-panel=\"navigation_and_selection\""
+  end
+
+  test "data and feedback gallery renders through the aggregate tab shell" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-data_and_feedback")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"data_and_feedback\""
+    assert html =~ "Data and Feedback Gallery"
+    assert html =~ "Tabular and hierarchical data"
+    assert html =~ "Narrative and log surfaces"
+    assert html =~ "Feedback state surfaces"
+    assert html =~ "Trend and chart surfaces"
+    assert html =~ "data-live-ui-widget=\"table\""
+    assert html =~ "data-live-ui-widget=\"tree-view\""
+    assert html =~ "data-live-ui-widget=\"markdown-viewer\""
+    assert html =~ "data-live-ui-widget=\"log-viewer\""
+    assert html =~ "data-live-ui-widget=\"status\""
+    assert html =~ "data-live-ui-widget=\"progress\""
+    assert html =~ "data-live-ui-widget=\"gauge\""
+    assert html =~ "data-live-ui-widget=\"inline-feedback\""
+    assert html =~ "data-live-ui-widget=\"sparkline\""
+    assert html =~ "data-live-ui-widget=\"bar-chart\""
+    assert html =~ "data-live-ui-widget=\"line-chart\""
+    assert html =~ "data-demo-category-panel=\"data_and_feedback\""
+  end
+
+  test "overlays and operational gallery renders through the aggregate tab shell" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-overlays_and_operational")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"overlays_and_operational\""
+    assert html =~ "Overlays and Operational Gallery"
+    assert html =~ "Layered context surfaces"
+    assert html =~ "Operational feeds"
+    assert html =~ "Topology and cluster state"
+    assert html =~ "data-live-ui-widget=\"dialog\""
+    assert html =~ "data-live-ui-widget=\"alert-dialog\""
+    assert html =~ "data-live-ui-widget=\"context-menu\""
+    assert html =~ "data-live-ui-widget=\"toast\""
+    assert html =~ "data-live-ui-widget=\"overlay-surface\""
+    assert html =~ "data-live-ui-widget=\"stream-widget\""
+    assert html =~ "data-live-ui-widget=\"process-monitor\""
+    assert html =~ "data-live-ui-widget=\"supervision-tree-viewer\""
+    assert html =~ "data-live-ui-widget=\"cluster-dashboard\""
+    assert html =~ "data-demo-category-panel=\"overlays_and_operational\""
+  end
+
+  test "cross-category reviewer cues remain visible on every non-signal tab" do
+    {:ok, view, html} = live(build_conn(), "/")
+
+    for category_id <- Categories.ids() -- [:signal_lab] do
+      html =
+        if category_id == Categories.default_id() do
+          html
+        else
+          view
+          |> element("#demo-category-tab-#{category_id}")
+          |> render_click()
+        end
+
+      entry = Categories.review_entry!(category_id)
+
+      assert html =~ ~s(data-demo-active-category="#{category_id}")
+      assert html =~ ~s(data-demo-category-index="#{entry.order}")
+      assert html =~ ~s(data-demo-category-count="#{Categories.count()}")
+      assert html =~ ~s(data-demo-linked-examples="#{entry.example_count}")
+      assert html =~ ~s(data-demo-panel-chrome="true")
+      assert html =~ "Linked example apps"
+      assert html =~ "Representative gallery"
+
+      for directory <- entry.example_directories do
+        assert html =~ ~s(data-demo-example-link="#{directory}")
+      end
+    end
+  end
 end

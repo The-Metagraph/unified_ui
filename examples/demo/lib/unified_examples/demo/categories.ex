@@ -30,6 +30,16 @@ defmodule UnifiedExamples.Demo.Categories do
           fragment_module: module()
         }
 
+  @type review_entry :: %{
+          id: category_id(),
+          label: String.t(),
+          order: pos_integer(),
+          summary: String.t(),
+          fragment_module: module(),
+          example_directories: [String.t()],
+          example_count: non_neg_integer()
+        }
+
   @entries [
     %{
       id: :foundational_content,
@@ -106,16 +116,32 @@ defmodule UnifiedExamples.Demo.Categories do
     for entry <- entries(), into: [], do: {entry.id, entry.label}
   end
 
-  @spec review_registry() :: [map()]
+  @spec review_registry() :: [review_entry()]
   def review_registry do
-    Enum.map(entries(), fn entry ->
-      %{
-        id: entry.id,
-        label: entry.label,
-        order: entry.order,
-        summary: entry.summary,
-        fragment_module: entry.fragment_module
-      }
-    end)
+    Enum.map(entries(), &review_entry!/1)
+  end
+
+  @spec review_entry!(category_id() | entry()) :: review_entry()
+  def review_entry!(%{} = entry) do
+    directories = fragment_example_directories(entry.fragment_module)
+
+    Map.merge(entry, %{
+      example_directories: directories,
+      example_count: length(directories)
+    })
+  end
+
+  def review_entry!(id) when is_atom(id) do
+    id
+    |> entry!()
+    |> review_entry!()
+  end
+
+  defp fragment_example_directories(fragment_module) do
+    if function_exported?(fragment_module, :example_directories, 0) do
+      fragment_module.example_directories()
+    else
+      []
+    end
   end
 end
