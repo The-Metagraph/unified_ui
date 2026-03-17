@@ -149,4 +149,32 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"command-palette\""
     assert html =~ "data-demo-category-panel=\"navigation_and_selection\""
   end
+
+  test "data and feedback gallery renders through the aggregate tab shell" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-data_and_feedback")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"data_and_feedback\""
+    assert html =~ "Data and Feedback Gallery"
+    assert html =~ "Tabular and hierarchical data"
+    assert html =~ "Narrative and log surfaces"
+    assert html =~ "Feedback state surfaces"
+    assert html =~ "Trend and chart surfaces"
+    assert html =~ "data-live-ui-widget=\"table\""
+    assert html =~ "data-live-ui-widget=\"tree-view\""
+    assert html =~ "data-live-ui-widget=\"markdown-viewer\""
+    assert html =~ "data-live-ui-widget=\"log-viewer\""
+    assert html =~ "data-live-ui-widget=\"status\""
+    assert html =~ "data-live-ui-widget=\"progress\""
+    assert html =~ "data-live-ui-widget=\"gauge\""
+    assert html =~ "data-live-ui-widget=\"inline-feedback\""
+    assert html =~ "data-live-ui-widget=\"sparkline\""
+    assert html =~ "data-live-ui-widget=\"bar-chart\""
+    assert html =~ "data-live-ui-widget=\"line-chart\""
+    assert html =~ "data-demo-category-panel=\"data_and_feedback\""
+  end
 end
