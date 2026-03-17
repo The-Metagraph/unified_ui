@@ -5,6 +5,7 @@ defmodule UnifiedExamples.Shared.Runtime do
 
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Container
   alias UnifiedUi.Compiler
 
   @spec compile(module(), keyword() | map()) :: {:ok, UnifiedUi.Compiler.Result.t()}
@@ -76,6 +77,15 @@ defmodule UnifiedExamples.Shared.Runtime do
         children: [%Child{slot: :default, element: %Element{} = element}]
       }) do
     element
+  end
+
+  def renderable_element(%Element{
+        type: :composite,
+        kind: :fragment,
+        id: id,
+        children: children
+      }) do
+    Container.box(children, id: :"#{id}_runtime_shell")
   end
 
   def renderable_element(%Element{} = element), do: element

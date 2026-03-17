@@ -78,6 +78,9 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-example-interaction-family=\"navigation\""
     assert html =~ Demo.review_summary()
     assert html =~ Demo.launch_url()
+    assert html =~ "Foundational Content Gallery"
+    assert html =~ "Review shared CTA"
+    assert html =~ "Open shared guidelines"
     assert html =~ "data-example-launch-url=\"#{Demo.launch_url()}\""
     assert html =~ "data-example-category-count=\"7\""
   end
