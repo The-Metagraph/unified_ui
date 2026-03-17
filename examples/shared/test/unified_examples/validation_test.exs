@@ -74,6 +74,7 @@ defmodule UnifiedExamples.ValidationTest do
     issues =
       Validation.validate_aggregate_demo_review_metadata(%{
         directory: "demo",
+        style_profile: :rogue_profile,
         theme_id: :rogue_theme,
         default_theme_id: :rogue_theme,
         uses_shared_template: false,
@@ -92,15 +93,17 @@ defmodule UnifiedExamples.ValidationTest do
       })
 
     assert Enum.map(issues, & &1.code) == [
+             :style_profile_mismatch,
              :app_theme_mismatch,
              :screen_theme_mismatch,
              :shared_template_divergence,
-             :category_registry_mismatch,
-             :category_count_mismatch,
-             :missing_category_traceability,
-             :missing_linked_examples,
-             :invalid_signal_lab_contract,
-             :signal_lab_story_inventory_mismatch
+              :category_registry_mismatch,
+              :category_count_mismatch,
+              :missing_category_traceability,
+              :missing_linked_examples,
+              :catalog_traceability_mismatch,
+              :invalid_signal_lab_contract,
+              :signal_lab_story_inventory_mismatch
            ]
   end
 end

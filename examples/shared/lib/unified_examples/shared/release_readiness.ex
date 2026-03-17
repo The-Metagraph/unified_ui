@@ -238,6 +238,11 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       []
       |> maybe_story_failure(
         directory,
+        Map.get(metadata, :style_profile) != Template.default_style_profile(),
+        :style_profile_mismatch
+      )
+      |> maybe_story_failure(
+        directory,
         metadata.theme_id != Template.default_theme_id(),
         :app_theme_mismatch
       )
@@ -275,6 +280,11 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       )
       |> maybe_story_failure(
         directory,
+        Enum.sort(Map.get(metadata, :linked_example_directories, [])) != Catalog.directories(),
+        :linked_examples_catalog_mismatch
+      )
+      |> maybe_story_failure(
+        directory,
         smoke_launch_failure?(smoke_launch_result),
         smoke_launch_failure_reason(smoke_launch_result)
       )
@@ -305,7 +315,7 @@ defmodule UnifiedExamples.Shared.ReleaseReadiness do
       smoke_launch: normalize_smoke_launch(smoke_launch_result),
       failures: failures,
       message:
-        "the aggregate demo must preserve its tabbed category registry, shared button-example theme continuity, required signal-lab story inventory, and browser-runnable smoke-launch path"
+        "the aggregate demo must preserve full catalog traceability, shared button-example theme and style continuity, required signal-lab story inventory, and its browser-runnable smoke-launch path"
     }
   end
 

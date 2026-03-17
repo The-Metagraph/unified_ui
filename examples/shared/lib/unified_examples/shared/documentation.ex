@@ -27,9 +27,13 @@ defmodule UnifiedExamples.Shared.Documentation do
     "aggregate category-oriented review surface",
     "Signal Lab",
     "same shared theme and style baseline as the current button example",
+    "`:example_suite_default`",
+    "`examples/catalog.tsv`",
     "`mix examples.launch demo --dry-run`",
+    "`mix examples.launch demo --smoke-test`",
     "`mix phx.server`",
     "Use the aggregate demo when you want a category-level overview",
+    "every focused example directory listed in `examples/catalog.tsv` should remain traceable through at least one category tab",
     "add a new representative control or signal-lab story"
   ]
 
