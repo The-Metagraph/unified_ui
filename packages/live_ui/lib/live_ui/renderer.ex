@@ -367,6 +367,7 @@ defmodule LiveUi.Renderer do
     ~H"""
     <%= if @change_interaction && @event_target do %>
       <form
+        id={interaction_form_id(@element, "input")}
         data-live-ui-interaction-form="true"
         phx-input="canonical_interaction"
         phx-change="canonical_interaction"
@@ -406,47 +407,82 @@ defmodule LiveUi.Renderer do
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:toggle, :checkbox] do
     assigns =
-      assign(
-        assigns,
-        :interaction_attrs,
-        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
-      )
+      assign(assigns, :change_interaction, primary_control_interaction(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Toggle.render
-      id={element_id(@element, "toggle")}
-      name={binding_name(@element)}
-      checked={boolean_default(binding_value(@element), false)}
-      tone={style_tone(@element)}
-      variant={theme_variant(@element)}
-      state={style_state(@element)}
-      class={style_class(@element)}
-      {@interaction_attrs}
-    />
+    <%= if @change_interaction && @event_target do %>
+      <form
+        id={interaction_form_id(@element, "toggle")}
+        data-live-ui-interaction-form="true"
+        phx-change="canonical_interaction"
+        phx-target={@event_target}
+      >
+        <input type="hidden" name="interaction" value={encode_interaction(@change_interaction)} />
+        <input type="hidden" name="element_id" value={element_id(@element, "element")} />
+        <input type="hidden" name="widget" value={to_string(@element.kind)} />
+        <LiveUi.Widgets.Toggle.render
+          id={element_id(@element, "toggle")}
+          name={binding_name(@element)}
+          checked={boolean_default(binding_value(@element), false)}
+          tone={style_tone(@element)}
+          variant={theme_variant(@element)}
+          state={style_state(@element)}
+          class={style_class(@element)}
+        />
+      </form>
+    <% else %>
+      <LiveUi.Widgets.Toggle.render
+        id={element_id(@element, "toggle")}
+        name={binding_name(@element)}
+        checked={boolean_default(binding_value(@element), false)}
+        tone={style_tone(@element)}
+        variant={theme_variant(@element)}
+        state={style_state(@element)}
+        class={style_class(@element)}
+      />
+    <% end %>
     """
   end
 
   def render(%{element: %Element{kind: kind}} = assigns)
       when kind in [:select, :pick_list, :radio_group] do
     assigns =
-      assign(
-        assigns,
-        :interaction_attrs,
-        control_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
-      )
+      assign(assigns, :change_interaction, primary_control_interaction(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Select.render
-      id={element_id(@element, "select")}
-      name={binding_name(@element)}
-      options={selection_options(@element)}
-      multiple={selection_multiple?(@element, @element.kind)}
-      tone={style_tone(@element)}
-      variant={theme_variant(@element)}
-      state={style_state(@element)}
-      class={style_class(@element)}
-      {@interaction_attrs}
-    />
+    <%= if @change_interaction && @event_target do %>
+      <form
+        id={interaction_form_id(@element, "select")}
+        data-live-ui-interaction-form="true"
+        phx-change="canonical_interaction"
+        phx-target={@event_target}
+      >
+        <input type="hidden" name="interaction" value={encode_interaction(@change_interaction)} />
+        <input type="hidden" name="element_id" value={element_id(@element, "element")} />
+        <input type="hidden" name="widget" value={to_string(@element.kind)} />
+        <LiveUi.Widgets.Select.render
+          id={element_id(@element, "select")}
+          name={binding_name(@element)}
+          options={selection_options(@element)}
+          multiple={selection_multiple?(@element, @element.kind)}
+          tone={style_tone(@element)}
+          variant={theme_variant(@element)}
+          state={style_state(@element)}
+          class={style_class(@element)}
+        />
+      </form>
+    <% else %>
+      <LiveUi.Widgets.Select.render
+        id={element_id(@element, "select")}
+        name={binding_name(@element)}
+        options={selection_options(@element)}
+        multiple={selection_multiple?(@element, @element.kind)}
+        tone={style_tone(@element)}
+        variant={theme_variant(@element)}
+        state={style_state(@element)}
+        class={style_class(@element)}
+      />
+    <% end %>
     """
   end
 
@@ -1133,22 +1169,6 @@ defmodule LiveUi.Renderer do
     boolean_default(get_in(element.attributes, [:state, key]), false)
   end
 
-  defp control_interaction_attrs(%Element{} = element, event_target) do
-    case {primary_control_interaction(element), event_target} do
-      {%Interaction{} = interaction, target} when is_binary(target) ->
-        %{
-          :"phx-change" => "canonical_interaction",
-          :"phx-target" => target,
-          :"phx-value-interaction" => encode_interaction(interaction),
-          :"phx-value-widget" => Atom.to_string(element.kind),
-          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
-        }
-
-      _other ->
-        %{}
-    end
-  end
-
   defp form_interaction_attrs(%Element{} = element, event_target) do
     case event_target do
       target when is_binary(target) ->
@@ -1210,5 +1230,9 @@ defmodule LiveUi.Renderer do
 
   defp primary_submit_interaction(%Element{} = element) do
     primary_interaction(element, :submit)
+  end
+
+  defp interaction_form_id(%Element{} = element, widget_name) when is_binary(widget_name) do
+    "#{element_id(element, widget_name)}-interaction-form"
   end
 end

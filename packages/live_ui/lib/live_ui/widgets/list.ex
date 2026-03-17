@@ -26,13 +26,19 @@ defmodule LiveUi.Widgets.List do
       <%= if @ordered do %>
         <ol>
           <%= for item <- @items do %>
-            <li data-item-id={item[:id]} data-selected={item[:selected]}><%= item[:label] || item[:value] %></li>
+            <li data-item-id={item[:id]} data-selected={item[:selected]}>
+              <span><%= item[:label] || item[:value] %></span>
+              <small :if={item[:description]}><%= item[:description] %></small>
+            </li>
           <% end %>
         </ol>
       <% else %>
         <ul>
           <%= for item <- @items do %>
-            <li data-item-id={item[:id]} data-selected={item[:selected]}><%= item[:label] || item[:value] %></li>
+            <li data-item-id={item[:id]} data-selected={item[:selected]}>
+              <span><%= item[:label] || item[:value] %></span>
+              <small :if={item[:description]}><%= item[:description] %></small>
+            </li>
           <% end %>
         </ul>
       <% end %>

@@ -1,6 +1,6 @@
 defmodule UnifiedExamples.Demo.Categories.SignalLab do
   @moduledoc """
-  Structured signal-lab fragment for the aggregate demo.
+  Authored signal-lab fragment for the aggregate demo.
   """
 
   use UnifiedUi.Dsl
@@ -18,7 +18,6 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
       id: :action_to_feedback,
       label: "Action to Feedback",
       family: :click,
-      signal_label: "Canonical click intent",
       source_label: "Primary action control",
       outcome_label: "Feedback surface",
       summary_label: "Latest interaction summary",
@@ -29,7 +28,6 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
       id: :input_to_preview,
       label: "Input to Preview",
       family: :change,
-      signal_label: "Canonical change intent",
       source_label: "Draft input control",
       outcome_label: "Preview surface",
       summary_label: "Latest interaction summary",
@@ -40,7 +38,6 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
       id: :selection_to_filter,
       label: "Selection to Filter",
       family: :selection,
-      signal_label: "Canonical selection intent",
       source_label: "Selection control",
       outcome_label: "Filtered target list",
       summary_label: "Latest interaction summary",
@@ -51,7 +48,6 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
       id: :toggle_to_visibility_or_enabled_state,
       label: "Toggle to Visibility / Enabled State",
       family: :change,
-      signal_label: "Canonical toggle intent",
       source_label: "Toggle control",
       outcome_label: "Visibility or enabled-state target",
       summary_label: "Latest interaction summary",
@@ -65,10 +61,40 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
   @input_to_preview_summary Map.fetch!(@story_registry_by_id, :input_to_preview).summary
   @selection_to_filter_summary Map.fetch!(@story_registry_by_id, :selection_to_filter).summary
 
-  @toggle_story_summary Map.fetch!(
-                          @story_registry_by_id,
-                          :toggle_to_visibility_or_enabled_state
-                        ).summary
+  @toggle_summary Map.fetch!(
+                    @story_registry_by_id,
+                    :toggle_to_visibility_or_enabled_state
+                  ).summary
+
+  @selection_options [
+    all: "All linked examples",
+    interactive: "Interactive",
+    operational: "Operational"
+  ]
+
+  @selection_items [
+    [
+      id: :button,
+      label: "Button",
+      description: "Primary action and feedback trigger",
+      selected?: true
+    ],
+    [
+      id: :text_input,
+      label: "Text Input",
+      description: "Draft preview source control"
+    ],
+    [
+      id: :select,
+      label: "Select",
+      description: "Selection-driven filter story"
+    ],
+    [
+      id: :toggle,
+      label: "Toggle",
+      description: "Availability and emphasis gate"
+    ]
+  ]
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: @default_theme_id
@@ -104,6 +130,96 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
 
   shared_theme_definition()
 
+  signals do
+    namespace(:examples_demo)
+
+    data_binding do
+      id(:signal_lab_draft_note)
+      path([:signal_lab, :draft_note])
+      scope([:fragment])
+      default("")
+    end
+
+    data_binding do
+      id(:signal_lab_selected_filter)
+      path([:signal_lab, :selected_filter])
+      scope([:fragment])
+      default(:all)
+    end
+
+    data_binding do
+      id(:signal_lab_toggle_enabled)
+      path([:signal_lab, :toggle_enabled])
+      scope([:fragment])
+      default(false)
+    end
+
+    interaction do
+      id(:signal_lab_action_click)
+      family(:click)
+      intent(:action_to_feedback)
+      source_context(element_id: :signal_lab_action_trigger, scope: :fragment)
+      target_intent(panel: :action_to_feedback, action: :update_feedback)
+      payload_mapping(story: :action_to_feedback, result: :acknowledged, source: :signal_lab)
+      summary("Update the feedback panel from the action story.")
+    end
+
+    interaction do
+      id(:signal_lab_input_change)
+      family(:change)
+      intent(:input_to_preview)
+      source_context(element_id: :signal_lab_input_source_input, scope: :fragment)
+      target_intent(binding: :signal_lab_draft_note, panel: :input_to_preview)
+
+      payload_mapping(
+        note: binding_ref(:signal_lab_draft_note),
+        story: :input_to_preview,
+        source: :signal_lab
+      )
+
+      binding_refs([:signal_lab_draft_note])
+      summary("Mirror the latest draft value into the preview story.")
+    end
+
+    interaction do
+      id(:signal_lab_selection_change)
+      family(:selection)
+      intent(:selection_to_filter)
+      source_context(element_id: :signal_lab_selection_source_select, scope: :fragment)
+      target_intent(binding: :signal_lab_selected_filter, panel: :selection_to_filter)
+
+      payload_mapping(
+        filter: binding_ref(:signal_lab_selected_filter),
+        story: :selection_to_filter,
+        source: :signal_lab
+      )
+
+      binding_refs([:signal_lab_selected_filter])
+      summary("Filter the linked example list from the selection story.")
+    end
+
+    interaction do
+      id(:signal_lab_toggle_change)
+      family(:change)
+      intent(:toggle_to_visibility_or_enabled_state)
+      source_context(element_id: :signal_lab_toggle_source_control, scope: :fragment)
+
+      target_intent(
+        binding: :signal_lab_toggle_enabled,
+        panel: :toggle_to_visibility_or_enabled_state
+      )
+
+      payload_mapping(
+        enabled: binding_ref(:signal_lab_toggle_enabled),
+        story: :toggle_to_visibility_or_enabled_state,
+        source: :signal_lab
+      )
+
+      binding_refs([:signal_lab_toggle_enabled])
+      summary("Toggle the target control availability from the signal story.")
+    end
+  end
+
   composition do
     root(:signal_lab_category_fragment_root)
     mode(:fragment)
@@ -126,7 +242,7 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
 
       text :signal_lab_summary do
         value(
-          "Review four required interaction stories that will demonstrate authored DSL signals changing other surfaces through the canonical runtime path."
+          "Review four required interaction stories that move from authored DSL signals to visible cross-control outcomes inside the aggregate demo."
         )
 
         theme_ref(@default_theme_id)
@@ -137,7 +253,7 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
 
       text :signal_lab_note do
         value(
-          "Each story panel reserves one source-control region, one outcome region, and one latest-interaction summary region so reactive behavior can be added without losing reviewer clarity."
+          "Each story keeps one source control region, one outcome region, and one latest-interaction summary so the runtime meaning stays readable."
         )
 
         theme_ref(@default_theme_id)
@@ -188,12 +304,13 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_action_to_feedback_source_copy do
-            value("Primary action control will render here in the next section.")
+          button :signal_lab_action_trigger do
+            label("Acknowledge signal")
+            interaction_refs([:signal_lab_action_click])
             theme_ref(@default_theme_id)
-            style_refs([:example_notes])
-            tone(:muted)
-            variant(:body)
+            style_refs([:example_primary_button])
+            tone(:accent)
+            variant(:solid)
           end
         end
 
@@ -211,8 +328,17 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_action_to_feedback_outcome_copy do
-            value("Feedback surface will explain the visible result of the click signal.")
+          status :signal_lab_action_feedback_status do
+            value("Waiting for action signal.")
+            severity(:warning)
+            status(:idle)
+            theme_ref(@default_theme_id)
+            tone(:surface)
+            variant(:quiet)
+          end
+
+          text :signal_lab_action_feedback_note do
+            value("Trigger the action control to acknowledge this story visibly.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
@@ -234,8 +360,16 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_action_to_feedback_interaction_copy do
-            value("Canonical click meaning will appear here alongside the visible outcome.")
+          text :signal_lab_action_feedback_latest_summary do
+            value("No click signal captured yet.")
+            theme_ref(@default_theme_id)
+            style_refs([:example_notes])
+            tone(:muted)
+            variant(:body)
+          end
+
+          text :signal_lab_action_feedback_latest_detail do
+            value("Expected: canonical click meaning should update the feedback surface.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
@@ -281,12 +415,15 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_input_to_preview_source_copy do
-            value("Draft input control will render here in the next section.")
+          text_input :signal_lab_input_source_input do
+            placeholder("Type a demo note")
+            value_path([:signal_lab, :draft_note])
+            default_value("")
+            interaction_refs([:signal_lab_input_change])
             theme_ref(@default_theme_id)
-            style_refs([:example_notes])
-            tone(:muted)
-            variant(:body)
+            style_refs([:example_primary_input])
+            tone(:surface)
+            variant(:filled)
           end
         end
 
@@ -304,13 +441,10 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_input_to_preview_outcome_copy do
-            value(
-              "Preview content will mirror the latest draft value once change events are wired."
-            )
-
+          text :signal_lab_input_preview_value do
+            value("Start typing to update the preview.")
             theme_ref(@default_theme_id)
-            style_refs([:example_notes])
+            style_refs([:example_summary])
             tone(:muted)
             variant(:body)
           end
@@ -330,11 +464,16 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_input_to_preview_interaction_copy do
-            value(
-              "Canonical change meaning will appear here with a reviewer-friendly draft summary."
-            )
+          text :signal_lab_input_latest_summary do
+            value("No change signal captured yet.")
+            theme_ref(@default_theme_id)
+            style_refs([:example_notes])
+            tone(:muted)
+            variant(:body)
+          end
 
+          text :signal_lab_input_latest_detail do
+            value("Expected: canonical change meaning should mirror the latest draft value.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
@@ -380,12 +519,15 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_selection_to_filter_source_copy do
-            value("Selection control will render here in the next section.")
+          select :signal_lab_selection_source_select do
+            options(@selection_options)
+            value_path([:signal_lab, :selected_filter])
+            default_value(:all)
+            interaction_refs([:signal_lab_selection_change])
             theme_ref(@default_theme_id)
-            style_refs([:example_notes])
-            tone(:muted)
-            variant(:body)
+            style_refs([:example_primary_input])
+            tone(:surface)
+            variant(:filled)
           end
         end
 
@@ -403,12 +545,20 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_selection_to_filter_outcome_copy do
-            value("Filtered list content will update here when selection meaning is applied.")
+          text :signal_lab_selection_filter_label do
+            value("Showing all linked examples.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
             variant(:body)
+          end
+
+          list :signal_lab_selection_filtered_list do
+            items(@selection_items)
+            selection_mode(:single)
+            theme_ref(@default_theme_id)
+            tone(:surface)
+            variant(:quiet)
           end
         end
 
@@ -426,8 +576,16 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_selection_to_filter_interaction_copy do
-            value("Canonical selection meaning will appear here with the chosen filter.")
+          text :signal_lab_selection_latest_summary do
+            value("No selection signal captured yet.")
+            theme_ref(@default_theme_id)
+            style_refs([:example_notes])
+            tone(:muted)
+            variant(:body)
+          end
+
+          text :signal_lab_selection_latest_detail do
+            value("Expected: canonical selection meaning should filter the linked example list.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
@@ -452,7 +610,7 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
         end
 
         text :signal_lab_toggle_summary do
-          value(@toggle_story_summary)
+          value(@toggle_summary)
           theme_ref(@default_theme_id)
           style_refs([:example_summary])
           tone(:muted)
@@ -473,12 +631,14 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_toggle_source_copy do
-            value("Toggle control will render here in the next section.")
+          toggle :signal_lab_toggle_source_control do
+            value_path([:signal_lab, :toggle_enabled])
+            default_value(false)
+            interaction_refs([:signal_lab_toggle_change])
             theme_ref(@default_theme_id)
-            style_refs([:example_notes])
-            tone(:muted)
-            variant(:body)
+            style_refs([:example_primary_input])
+            tone(:surface)
+            variant(:filled)
           end
         end
 
@@ -496,11 +656,17 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_toggle_outcome_copy do
-            value(
-              "A target control will change availability or emphasis here once toggle handling is active."
-            )
+          button :signal_lab_toggle_target_button do
+            label("Protected follow-up action")
+            disabled?(true)
+            theme_ref(@default_theme_id)
+            style_refs([:example_primary_button])
+            tone(:accent)
+            variant(:solid)
+          end
 
+          text :signal_lab_toggle_target_note do
+            value("Toggle the source control to enable this follow-up action.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
@@ -522,11 +688,16 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
             variant(:headline)
           end
 
-          text :signal_lab_toggle_interaction_copy do
-            value(
-              "Canonical toggle meaning will appear here together with the target state change."
-            )
+          text :signal_lab_toggle_latest_summary do
+            value("No toggle signal captured yet.")
+            theme_ref(@default_theme_id)
+            style_refs([:example_notes])
+            tone(:muted)
+            variant(:body)
+          end
 
+          text :signal_lab_toggle_latest_detail do
+            value("Expected: canonical toggle meaning should enable the follow-up action.")
             theme_ref(@default_theme_id)
             style_refs([:example_notes])
             tone(:muted)
