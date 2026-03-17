@@ -24,6 +24,11 @@ defmodule WebUi.Frontend do
     Path.expand("../assets/elm", __DIR__)
   end
 
+  @spec entry_module() :: String.t()
+  def entry_module do
+    "WebUi.Main"
+  end
+
   @spec namespace() :: module()
   def namespace, do: __MODULE__
 end
