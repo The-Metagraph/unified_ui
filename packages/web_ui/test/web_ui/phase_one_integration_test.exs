@@ -149,7 +149,7 @@ defmodule WebUi.PhaseOneIntegrationTest do
     assert info.assumptions.authoritative_server?
 
     assert info.browser_bridge.boot_contract.required_keys ==
-             [:screen, :widgets, :widget_summaries, :bridge, :revision]
+             [:screen, :widgets, :widget_summaries, :render_tree, :bridge, :revision]
 
     assert info.validation_state.widgets.widget_definition == :ready
     assert info.validation_state.server.server_state == :ready

@@ -5,6 +5,7 @@ defmodule WebUi.Server.ViewState do
 
   alias WebUi.Frontend
   alias WebUi.Server.Error
+  alias WebUi.Server.RenderModel
   alias WebUi.Widget
   alias WebUi.Widgets
 
@@ -18,6 +19,7 @@ defmodule WebUi.Server.ViewState do
           assigns: map(),
           widgets: [Widget.t()],
           widget_summaries: [map()],
+          render_tree: [map()],
           bridge: map(),
           revision: non_neg_integer()
         }
@@ -40,6 +42,7 @@ defmodule WebUi.Server.ViewState do
          assigns: assigns,
          widgets: widgets,
          widget_summaries: Enum.map(widgets, &Widget.summary/1),
+         render_tree: Enum.map(widgets, &RenderModel.build/1),
          bridge: %{
            assets_root: Frontend.assets_root(),
            entry_module: Frontend.entry_module(),

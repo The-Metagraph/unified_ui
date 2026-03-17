@@ -3,7 +3,7 @@ defmodule WebUi.Frontend do
   Package-facing entrypoint for the Elm frontend runtime boundary.
   """
 
-  alias WebUi.Frontend.{Bootstrap, Bridge, Model}
+  alias WebUi.Frontend.{Bootstrap, Bridge, Model, Realization}
 
   @type responsibility ::
           :elm_rendering
@@ -13,6 +13,7 @@ defmodule WebUi.Frontend do
 
   @type capability ::
           :hydrate
+          | :render_realization
           | :local_state_updates
           | :outbound_messages
           | :sync_ingestion
@@ -30,7 +31,14 @@ defmodule WebUi.Frontend do
 
   @spec capabilities() :: [capability()]
   def capabilities do
-    [:hydrate, :local_state_updates, :outbound_messages, :sync_ingestion, :browser_bridge]
+    [
+      :hydrate,
+      :render_realization,
+      :local_state_updates,
+      :outbound_messages,
+      :sync_ingestion,
+      :browser_bridge
+    ]
   end
 
   @spec assets_root() :: String.t()
@@ -59,6 +67,11 @@ defmodule WebUi.Frontend do
     Model.put_local(model, key, value)
   end
 
+  @spec realize([map()], map()) :: [map()]
+  def realize(render_tree, local_state \\ %{}) do
+    Realization.realize(render_tree, local_state)
+  end
+
   @spec outbound_message(Model.t(), String.t(), map(), keyword()) ::
           {:ok, map()} | {:error, WebUi.Frontend.Error.t()}
   def outbound_message(%Model{} = model, event, payload, opts \\ []) do
@@ -67,7 +80,7 @@ defmodule WebUi.Frontend do
 
   @spec modules() :: [module()]
   def modules do
-    [Bootstrap, Bridge, Model]
+    [Bootstrap, Bridge, Model, Realization]
   end
 
   @spec assumptions() :: map()
@@ -83,6 +96,7 @@ defmodule WebUi.Frontend do
   def validation_state do
     %{
       hydration: :ready,
+      foundational_realization: :ready,
       browser_bridge: :ready,
       local_state: :ready,
       outbound_messages: :ready

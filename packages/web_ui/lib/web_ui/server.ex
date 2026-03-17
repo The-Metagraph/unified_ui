@@ -3,7 +3,7 @@ defmodule WebUi.Server do
   Package-facing entrypoint for the Phoenix server-side runtime boundary.
   """
 
-  alias WebUi.Server.{Screen, State, Sync, ViewState}
+  alias WebUi.Server.{RenderModel, Screen, State, Sync, ViewState}
 
   @type responsibility ::
           :authoritative_runtime_state
@@ -14,6 +14,7 @@ defmodule WebUi.Server do
   @type capability ::
           :mount
           | :render_view_state
+          | :render_model_generation
           | :event_handling
           | :sync_envelopes
           | :screen_contract
@@ -30,7 +31,14 @@ defmodule WebUi.Server do
 
   @spec capabilities() :: [capability()]
   def capabilities do
-    [:mount, :render_view_state, :event_handling, :sync_envelopes, :screen_contract]
+    [
+      :mount,
+      :render_view_state,
+      :render_model_generation,
+      :event_handling,
+      :sync_envelopes,
+      :screen_contract
+    ]
   end
 
   @spec mount(module(), keyword()) :: {:ok, State.t()} | {:error, WebUi.Server.Error.t()}
@@ -56,7 +64,7 @@ defmodule WebUi.Server do
 
   @spec modules() :: [module()]
   def modules do
-    [Screen, State, ViewState, Sync]
+    [Screen, State, ViewState, RenderModel, Sync]
   end
 
   @spec assumptions() :: map()
@@ -74,6 +82,7 @@ defmodule WebUi.Server do
       screen_contract: :ready,
       server_state: :ready,
       view_state_generation: :ready,
+      render_models: :ready,
       sync_envelopes: :ready
     }
   end
