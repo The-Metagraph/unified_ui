@@ -23,6 +23,7 @@ defmodule WebUi.Widget do
           | :layout
           | :layer
           | :data
+          | :document
           | :feedback
           | :visualization
           | :operational

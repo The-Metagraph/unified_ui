@@ -1,7 +1,8 @@
 defmodule WebUi.NativeWidgetsTest do
   use ExUnit.Case, async: true
 
-  alias WebUi.Widgets.{Forms, Foundational, Input, Layout, Navigation}
+  alias WebUi.Widgets.{Data, Feedback, Forms, Foundational, Input, Layout, Navigation}
+  alias WebUi.Widgets.{Operational, Visualization}
 
   test "foundational constructors build direct-use widget contracts" do
     text = Foundational.text("Workspace", id: "workspace-title")
@@ -79,10 +80,71 @@ defmodule WebUi.NativeWidgetsTest do
     assert Navigation in modules
     assert Layout in modules
     assert Forms in modules
+    assert Data in modules
+    assert Feedback in modules
+    assert Visualization in modules
+    assert Operational in modules
 
     assert :content in WebUi.Widgets.kinds()
     assert :form_builder in WebUi.Widgets.kinds()
+    assert :markdown_viewer in WebUi.Widgets.kinds()
+    assert :bar_chart in WebUi.Widgets.kinds()
     assert :navigation in WebUi.Widgets.families()
+    assert :document in WebUi.Widgets.families()
     assert WebUi.Widgets.validation_state().form_composition == :ready
+  end
+
+  test "advanced widget families normalize deterministic data, document, and visualization props" do
+    table =
+      Data.table(
+        [
+          [id: :name, label: "Name", sortable?: true],
+          [id: :status, label: "Status"]
+        ],
+        [
+          [id: "node-a", cells: ["Node A", "healthy"], selected?: true],
+          [id: "node-b", cells: ["Node B", "degraded"]]
+        ],
+        id: "cluster-table",
+        sort_key: :name,
+        sort_direction: :asc,
+        filters: [[field: :status, operator: :eq, value: :healthy]],
+        page: 1,
+        page_size: 20,
+        total_entries: 42,
+        sort: "sort_cluster"
+      )
+
+    markdown =
+      Data.markdown_viewer(
+        "# Operations\n\nHealthy systems.",
+        id: "ops-doc",
+        anchors: [[id: "operations", label: "Operations", level: 1]]
+      )
+
+    progress = Feedback.progress(id: "deploy-progress", current: 3, total: 5, label: "Deploy")
+    sparkline = Visualization.sparkline([4, 5, 7, 6], id: "cpu-sparkline")
+
+    cluster =
+      Operational.cluster_dashboard(
+        [
+          [id: "node-a", status: :healthy],
+          [id: "node-b", status: :degraded]
+        ],
+        id: "cluster-dashboard",
+        summary: %{healthy: 1, degraded: 1}
+      )
+
+    assert table.family == :data
+    assert table.events == %{sort: "sort_cluster"}
+    assert table.props.sorting == %{key: :name, direction: :asc}
+    assert table.props.pagination.total_entries == 42
+    assert markdown.family == :document
+    assert hd(markdown.props.anchors).id == "operations"
+    assert progress.props.total == 5
+    assert sparkline.family == :visualization
+    assert hd(sparkline.props.series).values == [4, 5, 7, 6]
+    assert cluster.family == :operational
+    assert cluster.props.summary == %{healthy: 1, degraded: 1}
   end
 end
