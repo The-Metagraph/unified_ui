@@ -33,6 +33,7 @@ defmodule UnifiedExamples.Shared.InteractionDemo do
   @type entry :: %{directory: String.t(), widget: atom(), family: atom()}
 
   @family_by_widget %{
+    demo: :navigation,
     button: :content,
     text: :content,
     label: :content,

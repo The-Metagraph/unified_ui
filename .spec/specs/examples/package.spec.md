@@ -13,6 +13,7 @@ template.
 - [UnifiedUi Package](../unified-ui/package.spec.md)
 - [LiveUi Package](../live_ui/package.spec.md)
 - [LiveUi Tooling](../live_ui/tooling.spec.md)
+- [Examples Demo Application](../examples_demo/package.spec.md)
 
 ```spec-meta
 id: repo.examples
@@ -26,6 +27,7 @@ surface:
   - .spec/specs/examples/dsl_template.spec.md
   - .spec/specs/examples/catalog.spec.md
   - .spec/specs/examples/tooling.spec.md
+  - .spec/specs/examples_demo/package.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -45,6 +47,11 @@ decisions:
 
 - id: repo.examples.per_widget_app_contract
   statement: The example suite shall include one example application subdirectory for each widget or display construct named in the example catalog, with each application focusing on one primary widget or construct while reusing the common template and style system.
+  priority: must
+  stability: stable
+
+- id: repo.examples.aggregate_demo_application
+  statement: The example suite shall also include one aggregate demo application under `examples/demo/` that groups controls by category and provides a dedicated signal-reactivity tab alongside the per-widget example applications.
   priority: must
   stability: stable
 
@@ -82,6 +89,7 @@ decisions:
     - repo.examples.root_examples_directory
     - repo.examples.shared_support_library
     - repo.examples.per_widget_app_contract
+    - repo.examples.aggregate_demo_application
     - repo.examples.live_ui_runtime_boundary
     - repo.examples.shared_default_theme_and_style
     - repo.examples.traceable_to_root_contract

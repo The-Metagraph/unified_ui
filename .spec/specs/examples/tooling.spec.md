@@ -7,6 +7,7 @@ example-app suite.
 
 - [Example Apps Suite](./package.spec.md)
 - [Example Apps Catalog](./catalog.spec.md)
+- [Examples Demo Application](../examples_demo/package.spec.md)
 - [LiveUi Tooling](../live_ui/tooling.spec.md)
 - [Spec System](../spec_system.spec.md)
 
@@ -44,6 +45,11 @@ decisions:
   statement: Suite tooling shall allow maintainers to map any example application back to its primary widget or construct, family, and shared review metadata.
   priority: must
   stability: stable
+
+- id: repo.examples.tooling.aggregate_demo_discovery
+  statement: The example-suite tooling shall expose the aggregate demo application as the category-oriented review surface and distinguish it from the focused per-widget example applications.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -65,5 +71,6 @@ decisions:
     - repo.examples.tooling.independent_run_surface
     - repo.examples.tooling.shared_validation
     - repo.examples.tooling.catalog_traceability
+    - repo.examples.tooling.aggregate_demo_discovery
     - repo.examples.tooling.review_example_suite
 ```
