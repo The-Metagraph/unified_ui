@@ -5,6 +5,7 @@ defmodule UnifiedExamples.DemoTest do
   import Phoenix.LiveViewTest
 
   alias UnifiedExamples.Demo
+  alias UnifiedExamples.Demo.Categories
   alias UnifiedExamples.Shared.Template
 
   @endpoint UnifiedExamples.Demo.Endpoint
@@ -17,6 +18,9 @@ defmodule UnifiedExamples.DemoTest do
     assert metadata.title == "Examples Demo Application"
     assert metadata.widget == :demo
     assert metadata.theme_id == :example_suite_default
+    assert metadata.active_category_id == :foundational_content
+    assert metadata.category_count == 7
+    assert metadata.category_ids == Categories.ids()
     assert metadata.app == :unified_example_demo
     assert metadata.directory == "examples/demo"
     assert metadata.purpose == :aggregate_demo
@@ -40,8 +44,13 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "Standalone Phoenix LiveView scaffold is active."
     assert html =~ "same shared theme and style profile as the current button example"
     assert html =~ "Preview the aggregate demo shell"
+    assert html =~ "Category Registry Backbone"
+    assert html =~ "Foundational Content"
+    assert html =~ "Signal Lab"
+    assert html =~ "Active category: Foundational Content"
     assert html =~ "data-live-ui-variant=\"solid\""
     assert html =~ "data-live-ui-widget=\"box\""
+    assert html =~ "data-live-ui-widget=\"tabs\""
     assert html =~ "data-live-ui-runtime=\"screen\""
   end
 
@@ -51,5 +60,6 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "Examples Demo Application"
     assert html =~ "Aggregate category-oriented control demo scaffold"
     assert html =~ "data-example-directory=\"examples/demo\""
+    assert html =~ "data-example-interaction-family=\"navigation\""
   end
 end

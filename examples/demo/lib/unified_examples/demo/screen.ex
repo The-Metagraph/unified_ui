@@ -6,8 +6,13 @@ defmodule UnifiedExamples.Demo.Screen do
   use UnifiedUi.Dsl
   import UnifiedExamples.Shared.Template, only: [shared_theme_definition: 0]
 
+  alias UnifiedExamples.Demo.Categories
   alias UnifiedExamples.Shared.Template
 
+  @category_entries Categories.review_registry()
+  @category_items Categories.tab_items()
+  @active_category_id Categories.default_id()
+  @active_category_entry Categories.entry!(@active_category_id)
   @default_theme_id Template.default_theme_id()
   @shared_style_profile Template.default_style_profile()
 
@@ -17,9 +22,13 @@ defmodule UnifiedExamples.Demo.Screen do
     title: "Examples Demo Application",
     summary: "Aggregate category-oriented control demo scaffold",
     notes:
-      "Phase 1 establishes the standalone app, launch contract, and authored root screen for the aggregate demo.",
+      "Phase 1 establishes the standalone app, launch contract, category registry, and authored root screen for the aggregate demo.",
     widget: :demo,
     theme_id: @default_theme_id,
+    active_category_id: @active_category_id,
+    category_count: Categories.count(),
+    category_ids: Categories.ids(),
+    category_registry: @category_entries,
     interaction_demo: %{
       mode: :shared_trigger,
       family: :navigation,
@@ -57,6 +66,27 @@ defmodule UnifiedExamples.Demo.Screen do
   end
 
   shared_theme_definition()
+
+  signals do
+    namespace(:examples_demo)
+
+    data_binding do
+      id(:active_category_tab)
+      path([:navigation, :active_category_tab])
+      scope([:screen])
+      default(@active_category_id)
+    end
+
+    interaction do
+      id(:preview_demo_shell)
+      family(:navigation)
+      intent(:preview_demo_shell)
+      source_context(element_id: :demo_example_theme_preview_trigger, scope: :screen)
+      target_intent(binding: :active_category_tab, route: @active_category_id)
+      payload_mapping(category: @active_category_id, review_surface: :aggregate_demo)
+      binding_refs([:active_category_tab])
+    end
+  end
 
   composition do
     root(:demo_example_screen_root)
@@ -113,7 +143,10 @@ defmodule UnifiedExamples.Demo.Screen do
         end
 
         text :demo_example_screen_next_step do
-          value("Later phases will add the category registry, tabbed galleries, and signal lab.")
+          value(
+            "Later phases will add the full category galleries and signal-reactivity stories."
+          )
+
           theme_ref(@default_theme_id)
           style_refs([:example_notes])
           tone(:muted)
@@ -121,8 +154,61 @@ defmodule UnifiedExamples.Demo.Screen do
         end
       end
 
+      box :demo_example_category_registry_panel do
+        summary("Ordered category registry preview")
+        theme_ref(@default_theme_id)
+        style_refs([:example_panel])
+        tone(:surface)
+        variant(:panel)
+
+        text :demo_example_category_registry_title do
+          value("Category Registry Backbone")
+          theme_ref(@default_theme_id)
+          style_refs([:example_title])
+          tone(:accent)
+          variant(:headline)
+        end
+
+        text :demo_example_category_registry_summary do
+          value(
+            "The aggregate demo now tracks #{Categories.count()} ordered review tabs and defaults to #{@active_category_entry.label}."
+          )
+
+          theme_ref(@default_theme_id)
+          style_refs([:example_summary])
+          tone(:muted)
+          variant(:body)
+        end
+
+        tabs :demo_example_category_tabs do
+          items(@category_items)
+          active_item(@active_category_id)
+          interaction_refs([:preview_demo_shell])
+          theme_ref(@default_theme_id)
+          tone(:accent)
+          variant(:solid)
+        end
+
+        text :demo_example_active_category_label do
+          value("Active category: #{@active_category_entry.label}")
+          theme_ref(@default_theme_id)
+          style_refs([:example_title])
+          tone(:accent)
+          variant(:headline)
+        end
+
+        text :demo_example_active_category_summary do
+          value(@active_category_entry.summary)
+          theme_ref(@default_theme_id)
+          style_refs([:example_summary])
+          tone(:muted)
+          variant(:body)
+        end
+      end
+
       button :demo_example_theme_preview_trigger do
         label("Preview the aggregate demo shell")
+        interaction_refs([:preview_demo_shell])
         theme_ref(@default_theme_id)
         style_refs([:example_primary_button])
         tone(:accent)
