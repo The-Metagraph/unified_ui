@@ -5,8 +5,11 @@ defmodule WebUi.Examples do
   """
 
   alias WebUi.Examples.{
+    AdvancedContinuity,
+    CanonicalAdvancedOperationsScreen,
     CanonicalFoundationalScreen,
     FoundationalContinuity,
+    NativeAdvancedOperationsScreen,
     NativeFoundationalScreen
   }
 
@@ -15,7 +18,10 @@ defmodule WebUi.Examples do
     [
       NativeFoundationalScreen.metadata(),
       CanonicalFoundationalScreen.metadata(),
-      FoundationalContinuity.metadata()
+      FoundationalContinuity.metadata(),
+      NativeAdvancedOperationsScreen.metadata(),
+      CanonicalAdvancedOperationsScreen.metadata(),
+      AdvancedContinuity.metadata()
     ]
   end
 
@@ -27,4 +33,13 @@ defmodule WebUi.Examples do
 
   @spec foundational_continuity() :: module()
   def foundational_continuity, do: FoundationalContinuity
+
+  @spec native_advanced_operations() :: module()
+  def native_advanced_operations, do: NativeAdvancedOperationsScreen
+
+  @spec canonical_advanced_operations() :: module()
+  def canonical_advanced_operations, do: CanonicalAdvancedOperationsScreen
+
+  @spec advanced_continuity() :: module()
+  def advanced_continuity, do: AdvancedContinuity
 end
