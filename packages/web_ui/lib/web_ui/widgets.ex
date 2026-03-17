@@ -12,6 +12,7 @@ defmodule WebUi.Widgets do
     Foundational,
     Input,
     Layout,
+    Layered,
     Navigation,
     Operational,
     Visualization
@@ -44,7 +45,16 @@ defmodule WebUi.Widgets do
     menu: :navigation,
     row: :layout,
     column: :layout,
+    grid: :layout,
+    stack: :layout,
+    viewport: :layout,
+    scroll_bar: :layout,
+    split_pane: :layout,
+    overlay: :layer,
     dialog: :layer,
+    toast: :layer,
+    alert_dialog: :layer,
+    context_menu: :layer,
     table: :data,
     tree_view: :data,
     markdown_viewer: :document,
@@ -138,6 +148,7 @@ defmodule WebUi.Widgets do
       Input,
       Navigation,
       Layout,
+      Layered,
       Forms,
       Data,
       Feedback,
@@ -178,7 +189,10 @@ defmodule WebUi.Widgets do
         :sort,
         :filter,
         :paginate,
-        :expand
+        :expand,
+        :scroll,
+        :resize,
+        :dismiss
       ]
     }
   end
@@ -194,6 +208,8 @@ defmodule WebUi.Widgets do
       navigation_widgets: :ready,
       form_composition: :ready,
       layout_primitives: :ready,
+      display_systems: :ready,
+      layered_composition: :ready,
       advanced_data_widgets: :ready,
       advanced_feedback_widgets: :ready,
       advanced_visualization_widgets: :ready,

@@ -6,6 +6,7 @@ defmodule WebUi.Widgets.Builder do
   @type opts :: keyword() | map()
 
   @spec options(opts()) :: map()
+  def options(nil), do: %{}
   def options(opts) when is_list(opts), do: Enum.into(opts, %{})
   def options(opts) when is_map(opts), do: Map.new(opts)
 

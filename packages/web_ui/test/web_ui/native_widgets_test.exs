@@ -79,6 +79,7 @@ defmodule WebUi.NativeWidgetsTest do
     assert Input in modules
     assert Navigation in modules
     assert Layout in modules
+    assert WebUi.Widgets.Layered in modules
     assert Forms in modules
     assert Data in modules
     assert Feedback in modules
@@ -146,5 +147,57 @@ defmodule WebUi.NativeWidgetsTest do
     assert hd(sparkline.props.series).values == [4, 5, 7, 6]
     assert cluster.family == :operational
     assert cluster.props.summary == %{healthy: 1, degraded: 1}
+  end
+
+  test "layout and layer entrypoints expose advanced display and overlay primitives" do
+    viewport =
+      WebUi.Layout.viewport(
+        Data.log_viewer(
+          [[id: "log-1", message: "Connected", severity: :info]],
+          id: "ops-log-viewer"
+        ),
+        id: "log-viewport",
+        offset: {0, 240},
+        height: 24,
+        scrollbars: :auto,
+        sync_group: :logs,
+        scroll: "scroll_logs"
+      )
+
+    split =
+      WebUi.Layout.split_pane(
+        viewport,
+        Foundational.content([Foundational.text("Details", id: "details-text")],
+          id: "details-panel"
+        ),
+        id: "operations-split",
+        ratio: 0.6,
+        resize: "resize_split"
+      )
+
+    dialog =
+      WebUi.Layer.dialog(
+        Foundational.content([Foundational.text("Inspect node", id: "dialog-copy")],
+          id: "dialog-content"
+        ),
+        id: "inspect-dialog",
+        title: "Inspect Node",
+        modal?: true
+      )
+
+    overlay = WebUi.Layer.overlay(split, [dialog], id: "operations-overlay", dismiss: "dismiss")
+    scroll_bar = WebUi.Layout.scroll_bar(id: "log-scrollbar", viewport_ref: "log-viewport")
+
+    assert WebUi.module_for(:layout) == {:ok, WebUi.Layout}
+    assert WebUi.module_for(:layer) == {:ok, WebUi.Layer}
+    assert viewport.kind == :viewport
+    assert viewport.props.offset == %{x: 0, y: 240}
+    assert viewport.events == %{scroll: "scroll_logs"}
+    assert split.slots.primary == [viewport]
+    assert split.events == %{resize: "resize_split"}
+    assert overlay.kind == :overlay
+    assert overlay.slots.layers == [dialog]
+    assert overlay.events == %{dismiss: "dismiss"}
+    assert scroll_bar.kind == :scroll_bar
   end
 end

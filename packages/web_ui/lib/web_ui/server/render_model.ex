@@ -83,9 +83,19 @@ defmodule WebUi.Server.RenderModel do
   defp dom_tag(:tabs), do: "div"
   defp dom_tag(:row), do: "div"
   defp dom_tag(:column), do: "div"
+  defp dom_tag(:grid), do: "div"
+  defp dom_tag(:stack), do: "div"
+  defp dom_tag(:viewport), do: "section"
+  defp dom_tag(:scroll_bar), do: "div"
+  defp dom_tag(:split_pane), do: "section"
   defp dom_tag(:form_builder), do: "form"
   defp dom_tag(:field_group), do: "fieldset"
   defp dom_tag(:field), do: "div"
+  defp dom_tag(:overlay), do: "section"
+  defp dom_tag(:dialog), do: "dialog"
+  defp dom_tag(:toast), do: "aside"
+  defp dom_tag(:alert_dialog), do: "dialog"
+  defp dom_tag(:context_menu), do: "section"
   defp dom_tag(:table), do: "table"
   defp dom_tag(:tree_view), do: "ul"
   defp dom_tag(:markdown_viewer), do: "article"
@@ -116,9 +126,19 @@ defmodule WebUi.Server.RenderModel do
   defp dom_role(:tabs), do: "tablist"
   defp dom_role(:row), do: "group"
   defp dom_role(:column), do: "group"
+  defp dom_role(:grid), do: "grid"
+  defp dom_role(:stack), do: "group"
+  defp dom_role(:viewport), do: "region"
+  defp dom_role(:scroll_bar), do: "scrollbar"
+  defp dom_role(:split_pane), do: "group"
   defp dom_role(:form_builder), do: "form"
   defp dom_role(:field_group), do: "group"
   defp dom_role(:field), do: "group"
+  defp dom_role(:overlay), do: "presentation"
+  defp dom_role(:dialog), do: "dialog"
+  defp dom_role(:toast), do: "status"
+  defp dom_role(:alert_dialog), do: "alertdialog"
+  defp dom_role(:context_menu), do: "menu"
   defp dom_role(:table), do: "table"
   defp dom_role(:tree_view), do: "tree"
   defp dom_role(:markdown_viewer), do: "document"
@@ -151,6 +171,18 @@ defmodule WebUi.Server.RenderModel do
     |> maybe_put(:placeholder, Map.get(widget.props, :placeholder))
     |> maybe_put(:orientation, Map.get(widget.props, :orientation))
     |> maybe_put(:active_item, Map.get(widget.props, :active_item))
+    |> maybe_put(:stacking, Map.get(widget.props, :stacking))
+    |> maybe_put(:axis, Map.get(widget.props, :axis))
+    |> maybe_put(:clip, Map.get(widget.props, :clip?))
+    |> maybe_put(:scrollbars, Map.get(widget.props, :scrollbars))
+    |> maybe_put(:sync_group, Map.get(widget.props, :sync_group))
+    |> maybe_put(:viewport_ref, Map.get(widget.props, :viewport_ref))
+    |> maybe_put(:direction, Map.get(widget.props, :direction))
+    |> maybe_put(:ratio, Map.get(widget.props, :ratio))
+    |> maybe_put(:modal, Map.get(widget.props, :modal?))
+    |> maybe_put(:dismissible, Map.get(widget.props, :dismissible?))
+    |> maybe_put(:focus_scope, Map.get(widget.props, :focus_scope))
+    |> maybe_put(:placement, Map.get(widget.props, :placement))
     |> maybe_put(:selection_mode, Map.get(widget.props, :selection_mode))
     |> maybe_put(:sort_key, get_in(widget.props, [:sorting, :key]))
     |> maybe_put(:sort_direction, get_in(widget.props, [:sorting, :direction]))
@@ -176,6 +208,14 @@ defmodule WebUi.Server.RenderModel do
       :menu,
       :tabs,
       :form_builder,
+      :viewport,
+      :scroll_bar,
+      :split_pane,
+      :overlay,
+      :dialog,
+      :toast,
+      :alert_dialog,
+      :context_menu,
       :table,
       :tree_view,
       :log_viewer,
@@ -195,6 +235,12 @@ defmodule WebUi.Server.RenderModel do
       :select,
       :menu,
       :tabs,
+      :viewport,
+      :scroll_bar,
+      :split_pane,
+      :dialog,
+      :alert_dialog,
+      :context_menu,
       :table,
       :tree_view,
       :log_viewer,
@@ -204,11 +250,20 @@ defmodule WebUi.Server.RenderModel do
   end
 
   defp editable_kinds do
-    [:text_input, :checkbox, :select, :command_palette]
+    [:text_input, :checkbox, :select, :scroll_bar, :command_palette]
   end
 
   defp navigable_kinds do
-    [:link, :menu, :tabs, :tree_view, :command_palette, :supervision_tree_viewer]
+    [
+      :link,
+      :menu,
+      :tabs,
+      :tree_view,
+      :viewport,
+      :context_menu,
+      :command_palette,
+      :supervision_tree_viewer
+    ]
   end
 
   defp build_semantics(%Widget{} = widget) do
@@ -217,18 +272,115 @@ defmodule WebUi.Server.RenderModel do
       sorting: empty_map_to_nil(Map.get(widget.props, :sorting, %{})),
       filters: Map.get(widget.props, :filters, []),
       pagination: empty_map_to_nil(Map.get(widget.props, :pagination, %{})),
+      display: display_semantics(widget),
+      layer: layer_semantics(widget),
       metrics: content_metrics(widget),
       capabilities: %{
         document?: widget.family == :document,
         data_view?: widget.family in [:data, :document],
         visual?: widget.family == :visualization,
-        diagnostic?: widget.family == :operational
+        diagnostic?: widget.family == :operational,
+        display_system?: widget.kind in [:grid, :stack, :viewport, :scroll_bar, :split_pane],
+        layered?: widget.family == :layer
       }
     }
   end
 
+  defp display_semantics(%Widget{kind: kind, props: props})
+       when kind in [:grid, :stack, :viewport, :scroll_bar, :split_pane] do
+    props
+    |> Map.take([
+      :columns,
+      :rows,
+      :auto_flow,
+      :gap,
+      :stacking,
+      :axis,
+      :offset,
+      :clip?,
+      :scrollbars,
+      :width,
+      :height,
+      :sync_group,
+      :independent_scroll?,
+      :orientation,
+      :position,
+      :viewport_size,
+      :content_size,
+      :viewport_ref,
+      :direction,
+      :ratio,
+      :resizable?,
+      :min_primary,
+      :min_secondary,
+      :primary_size,
+      :secondary_size,
+      :divider,
+      :sync_scroll
+    ])
+    |> empty_map_to_nil()
+  end
+
+  defp display_semantics(_widget), do: nil
+
+  defp layer_semantics(%Widget{family: :layer, props: props}) do
+    props
+    |> Map.take([
+      :mode,
+      :background_fill,
+      :dismissible?,
+      :focus_scope,
+      :z_order,
+      :title,
+      :modal?,
+      :size,
+      :placement,
+      :duration_ms,
+      :severity,
+      :transient?,
+      :requires_confirmation?,
+      :anchor
+    ])
+    |> empty_map_to_nil()
+  end
+
+  defp layer_semantics(_widget), do: nil
+
   defp content_metrics(%Widget{kind: :table, props: props}) do
     %{columns: length(Map.get(props, :columns, [])), rows: length(Map.get(props, :rows, []))}
+  end
+
+  defp content_metrics(%Widget{kind: kind, slots: slots})
+       when kind in [:grid, :stack, :overlay] do
+    %{children: slots |> Map.values() |> List.flatten() |> length()}
+  end
+
+  defp content_metrics(%Widget{kind: :viewport, props: props, slots: slots}) do
+    %{
+      content_widgets: length(Map.get(slots, :content, [])),
+      offset: Map.get(props, :offset)
+    }
+  end
+
+  defp content_metrics(%Widget{kind: :scroll_bar, props: props}) do
+    %{viewport_size: Map.get(props, :viewport_size), content_size: Map.get(props, :content_size)}
+  end
+
+  defp content_metrics(%Widget{kind: :split_pane, props: props, slots: slots}) do
+    %{
+      ratio: Map.get(props, :ratio),
+      panes:
+        Enum.count([Map.get(slots, :primary), Map.get(slots, :secondary)], &(&1 not in [nil, []]))
+    }
+  end
+
+  defp content_metrics(%Widget{kind: kind, slots: slots})
+       when kind in [:dialog, :toast, :alert_dialog] do
+    %{content_widgets: length(Map.get(slots, :content, []))}
+  end
+
+  defp content_metrics(%Widget{kind: :context_menu, slots: slots}) do
+    %{menu_widgets: length(Map.get(slots, :menu, []))}
   end
 
   defp content_metrics(%Widget{kind: kind, props: props})
