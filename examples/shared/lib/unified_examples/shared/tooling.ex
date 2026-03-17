@@ -3,6 +3,7 @@ defmodule UnifiedExamples.Shared.Tooling do
   Discovery, preview, and run tooling for the standalone example-app suite.
   """
 
+  alias UnifiedExamples.Shared.AggregateDemo
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.InteractionDemo
   alias UnifiedExamples.Shared.Loader
@@ -44,14 +45,23 @@ defmodule UnifiedExamples.Shared.Tooling do
     [
       "Example suite catalog",
       "",
+      "Focused widget apps",
+      "",
       Enum.map_join(Catalog.entries(), "\n", fn entry ->
         "#{entry.directory}\twidget=#{entry.widget}\tfamily=#{entry.family}\tphase=#{entry.phase}\tshell=#{entry.shell_kind}"
-      end)
+      end),
+      "",
+      "Aggregate review surfaces",
+      "",
+      AggregateDemo.catalog_line()
     ]
     |> Enum.join("\n")
   end
 
-  @spec review_metadata(String.t() | atom()) :: {:ok, map()}
+  @spec review_metadata(String.t() | atom()) :: {:ok, map()} | {:error, term()}
+  def review_metadata("demo"), do: AggregateDemo.review_metadata()
+  def review_metadata(:demo), do: AggregateDemo.review_metadata()
+
   def review_metadata(directory) do
     with {:ok, loaded} <- Loader.load(directory) do
       Loader.load_config(loaded)
@@ -101,7 +111,11 @@ defmodule UnifiedExamples.Shared.Tooling do
   end
 
   @spec launch_descriptor(String.t() | atom(), keyword()) :: launch_descriptor()
-  def launch_descriptor(directory, opts \\ []) do
+  def launch_descriptor(directory, opts \\ [])
+  def launch_descriptor("demo", opts), do: AggregateDemo.launch_descriptor(opts)
+  def launch_descriptor(:demo, opts), do: AggregateDemo.launch_descriptor(opts)
+
+  def launch_descriptor(directory, opts) do
     with {:ok, loaded} <- Loader.load(directory) do
       Loader.load_config(loaded)
       build_launch_descriptor(loaded, opts)
@@ -185,6 +199,9 @@ defmodule UnifiedExamples.Shared.Tooling do
       endpoint_module: launch.endpoint_module,
       router_module: launch.router_module,
       live_module: launch.live_module,
+      aggregate_demo_directory: AggregateDemo.directory(),
+      aggregate_demo_categories: AggregateDemo.category_ids_for(entry.directory),
+      aggregate_demo_category_labels: AggregateDemo.category_labels_for(entry.directory),
       pubsub_server: app.pubsub_server(),
       endpoint_config: app.endpoint_config(),
       runtime_contract: phoenix_runtime,

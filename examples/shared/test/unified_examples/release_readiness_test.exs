@@ -17,6 +17,7 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
     assert report.gates.shared_template_continuity.passed?
     assert report.gates.browser_launch_continuity.passed?
     assert report.gates.interaction_story_continuity.passed?
+    assert report.gates.aggregate_demo_continuity.passed?
     assert report.gates.shared_template_continuity.default_theme_id == Template.default_theme_id()
   end
 
@@ -82,6 +83,32 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
     assert Enum.map(interaction_story_drift.failures, & &1.reason) == [
              :missing_story_panel,
              :missing_idle_prompt
+           ]
+
+    aggregate_demo_drift =
+      ReleaseReadiness.aggregate_demo_continuity(
+        {"demo",
+         {:ok,
+          %{
+            theme_id: :rogue_theme,
+            default_theme_id: :rogue_theme,
+            uses_shared_template: false,
+            category_ids: [:foundational_content],
+            signal_lab_contract: %{valid?: false, story_ids: [:action_to_feedback]},
+            linked_example_directories: []
+          }}}
+      )
+
+    assert aggregate_demo_drift.passed? == false
+
+    assert Enum.map(aggregate_demo_drift.failures, & &1.reason) == [
+             :app_theme_mismatch,
+             :screen_theme_mismatch,
+             :style_profile_drift,
+             :category_registry_mismatch,
+             :invalid_signal_lab_contract,
+             :signal_lab_story_inventory_mismatch,
+             :missing_linked_examples
            ]
   end
 end

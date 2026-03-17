@@ -138,6 +138,8 @@ defmodule UnifiedExamples.Demo.Categories do
   end
 
   defp fragment_example_directories(fragment_module) do
+    Code.ensure_loaded(fragment_module)
+
     if function_exported?(fragment_module, :example_directories, 0) do
       fragment_module.example_directories()
     else

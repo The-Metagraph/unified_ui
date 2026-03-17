@@ -164,6 +164,8 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
           valid?: true,
           story_count: length(@story_registry),
           surface_count: map_size(@story_surface_registry),
+          story_ids: story_ids(),
+          example_directories: example_directories(),
           errors: []
         }
 
@@ -172,6 +174,8 @@ defmodule UnifiedExamples.Demo.Categories.SignalLab do
           valid?: false,
           story_count: length(@story_registry),
           surface_count: map_size(@story_surface_registry),
+          story_ids: story_ids(),
+          example_directories: example_directories(),
           errors: errors
         }
     end
