@@ -78,7 +78,54 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-example-interaction-family=\"navigation\""
     assert html =~ Demo.review_summary()
     assert html =~ Demo.launch_url()
+    assert html =~ "Foundational Content Gallery"
+    assert html =~ "Review shared CTA"
+    assert html =~ "Open shared guidelines"
     assert html =~ "data-example-launch-url=\"#{Demo.launch_url()}\""
     assert html =~ "data-example-category-count=\"7\""
+  end
+
+  test "tab selection updates the active category review content and labeling" do
+    {:ok, view, html} = live(build_conn(), "/")
+
+    assert html =~ "data-demo-active-category=\"foundational_content\""
+    assert html =~ "Active category: Foundational Content"
+
+    html =
+      view
+      |> element("#demo-category-tab-forms_and_input")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"forms_and_input\""
+    assert html =~ "Forms and Input Gallery"
+    assert html =~ "Forms and Input"
+    assert html =~ "Structured data entry, field composition, and input-focused review flows."
+    assert html =~ "Display name"
+    assert html =~ "Region"
+    assert html =~ "data-live-ui-widget=\"form-builder\""
+    assert html =~ "data-live-ui-widget=\"text-input\""
+    assert html =~ "data-live-ui-widget=\"toggle\""
+    assert html =~ "data-demo-category-panel=\"forms_and_input\""
+  end
+
+  test "layout and display gallery stays stable across tab switches" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-layout_and_display")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"layout_and_display\""
+    assert html =~ "Layout and Display Gallery"
+    assert html =~ "data-live-ui-widget=\"box\""
+    assert html =~ "data-live-ui-widget=\"row\""
+    assert html =~ "data-live-ui-widget=\"column\""
+    assert html =~ "data-live-ui-widget=\"grid\""
+    assert html =~ "data-live-ui-widget=\"viewport\""
+    assert html =~ "data-live-ui-widget=\"scroll-bar\""
+    assert html =~ "data-live-ui-widget=\"split-pane\""
+    assert html =~ "data-live-ui-widget=\"canvas\""
+    assert html =~ "data-demo-category-panel=\"layout_and_display\""
   end
 end
