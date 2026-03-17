@@ -177,4 +177,29 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"line-chart\""
     assert html =~ "data-demo-category-panel=\"data_and_feedback\""
   end
+
+  test "overlays and operational gallery renders through the aggregate tab shell" do
+    {:ok, view, _html} = live(build_conn(), "/")
+
+    html =
+      view
+      |> element("#demo-category-tab-overlays_and_operational")
+      |> render_click()
+
+    assert html =~ "data-demo-active-category=\"overlays_and_operational\""
+    assert html =~ "Overlays and Operational Gallery"
+    assert html =~ "Layered context surfaces"
+    assert html =~ "Operational feeds"
+    assert html =~ "Topology and cluster state"
+    assert html =~ "data-live-ui-widget=\"dialog\""
+    assert html =~ "data-live-ui-widget=\"alert-dialog\""
+    assert html =~ "data-live-ui-widget=\"context-menu\""
+    assert html =~ "data-live-ui-widget=\"toast\""
+    assert html =~ "data-live-ui-widget=\"overlay-surface\""
+    assert html =~ "data-live-ui-widget=\"stream-widget\""
+    assert html =~ "data-live-ui-widget=\"process-monitor\""
+    assert html =~ "data-live-ui-widget=\"supervision-tree-viewer\""
+    assert html =~ "data-live-ui-widget=\"cluster-dashboard\""
+    assert html =~ "data-demo-category-panel=\"overlays_and_operational\""
+  end
 end
