@@ -10,6 +10,7 @@ defmodule UnifiedExamples.ReviewMetadataTest do
 
   test "per-app review metadata stays traceable to the example catalog" do
     assert {:ok, button} = Tooling.review_metadata("button")
+    assert {:ok, checkbox} = Tooling.review_metadata("checkbox")
     assert {:ok, cluster_dashboard} = Tooling.review_metadata("cluster_dashboard")
 
     assert button.primary_subject == :button
@@ -19,7 +20,17 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert button.browser_runnable?
     assert button.launch_path == "/"
     assert button.launch_command =~ "mix phx.server"
+    assert button.interaction_family == Catalog.entry!("button").interaction_demo.family
+    assert button.interaction_storytelling == :source_driven
+    assert button.interaction_source == Catalog.entry!("button").interaction_demo.source
+    assert button.interaction_outcome == Catalog.entry!("button").interaction_demo.outcome
     assert button.traceability.authored_dsl.package == :unified_ui
+
+    assert checkbox.primary_subject == :checkbox
+    assert checkbox.family == Catalog.entry!("checkbox").family
+    assert checkbox.interaction_family == Catalog.entry!("checkbox").interaction_demo.family
+    assert checkbox.interaction_storytelling == :source_driven
+    assert checkbox.interaction_source == Catalog.entry!("checkbox").interaction_demo.source
 
     assert cluster_dashboard.primary_subject == :cluster_dashboard
     assert cluster_dashboard.family == Catalog.entry!("cluster_dashboard").family
@@ -27,6 +38,9 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert cluster_dashboard.default_theme_id == Template.default_theme_id()
     assert cluster_dashboard.browser_runnable?
     assert cluster_dashboard.launch_url =~ "http://127.0.0.1:"
+    assert cluster_dashboard.interaction_family == :command
+    assert cluster_dashboard.interaction_storytelling == :target_driven
+    assert is_binary(cluster_dashboard.interaction_idle_prompt)
     assert cluster_dashboard.traceability.runtime_library.package == :live_ui
   end
 
@@ -41,6 +55,9 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert report.template.default_theme_id == Template.default_theme_id()
     assert report.runtime.launchable_total == length(Catalog.entries())
     assert report.runtime.mount_paths["button"] == "/"
+    assert "button" in report.interaction_stories.source_driven_directories
+    assert "overlay" in report.interaction_stories.target_driven_directories
+    assert report.interaction_stories.follow_up_directories == []
     assert report.traceability.valid?
     assert report.validation.valid?
   end

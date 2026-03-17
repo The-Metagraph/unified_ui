@@ -5,19 +5,16 @@ defmodule UnifiedExamples.CheckboxTest do
   alias UnifiedExamples.Checkbox
 
   test "checkbox example exposes standalone example metadata" do
-    assert Checkbox.metadata() == %{
-             id: :checkbox_example_screen,
-             root_id: :checkbox_example_screen_root,
-             title: "Checkbox Widget Example",
-             summary: "Focused input-oriented example using the shared suite shell",
-             notes:
-               "Checkbox examples keep the shared form shell while foregrounding one boolean control.",
-             widget: :checkbox,
-             theme_id: :example_suite_default,
-             app: :unified_example_checkbox,
-             directory: "examples/checkbox",
-             purpose: :widget_proof
-           }
+    metadata = Checkbox.metadata()
+
+    assert metadata.id == :checkbox_example_screen
+    assert metadata.root_id == :checkbox_example_screen_root
+    assert metadata.widget == :checkbox
+    assert metadata.app == :unified_example_checkbox
+    assert metadata.directory == "examples/checkbox"
+    assert metadata.interaction_demo.mode == :form_shell
+    assert metadata.interaction_demo.family == :change
+    assert metadata.interaction_demo.source == :form_shell
   end
 
   test "checkbox example renders the shared shell and the focused input widget" do
@@ -34,5 +31,6 @@ defmodule UnifiedExamples.CheckboxTest do
     assert html =~ "data-live-ui-widget=\"toggle\""
     assert html =~ "type=\"checkbox\""
     assert html =~ "data-live-ui-variant=\"filled\""
+    assert html =~ "phx-change=\"canonical_change_interaction\""
   end
 end

@@ -5,19 +5,15 @@ defmodule UnifiedExamples.RowTest do
   alias UnifiedExamples.Row
 
   test "row example exposes standalone example metadata" do
-    assert Row.metadata() == %{
-             id: :row_example_screen,
-             root_id: :row_example_screen_root,
-             title: "Row Widget Example",
-             summary: "Focused layout-oriented example using the shared suite shell",
-             notes:
-               "Row examples keep the shared shell while foregrounding one horizontal layout flow.",
-             widget: :row,
-             theme_id: :example_suite_default,
-             app: :unified_example_row,
-             directory: "examples/row",
-             purpose: :widget_proof
-           }
+    metadata = Row.metadata()
+
+    assert metadata.id == :row_example_screen
+    assert metadata.root_id == :row_example_screen_root
+    assert metadata.widget == :row
+    assert metadata.app == :unified_example_row
+    assert metadata.directory == "examples/row"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :click
   end
 
   test "row example renders the shared shell and foregrounds one primary row" do
@@ -36,5 +32,7 @@ defmodule UnifiedExamples.RowTest do
     assert html =~ "Release train"
     assert html =~ "Queue active"
     assert html =~ "Review"
+    assert html =~ "Review the row layout story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end

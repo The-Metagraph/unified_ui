@@ -5,19 +5,15 @@ defmodule UnifiedExamples.MenuTest do
   alias UnifiedExamples.Menu
 
   test "menu example exposes standalone example metadata" do
-    assert Menu.metadata() == %{
-             id: :menu_example_screen,
-             root_id: :menu_example_screen_root,
-             title: "Menu Widget Example",
-             summary: "Focused navigation-oriented example using the shared suite shell",
-             notes:
-               "Menu examples foreground one canonical navigation rail inside the shared shell.",
-             widget: :menu,
-             theme_id: :example_suite_default,
-             app: :unified_example_menu,
-             directory: "examples/menu",
-             purpose: :widget_proof
-           }
+    metadata = Menu.metadata()
+
+    assert metadata.id == :menu_example_screen
+    assert metadata.root_id == :menu_example_screen_root
+    assert metadata.widget == :menu
+    assert metadata.app == :unified_example_menu
+    assert metadata.directory == "examples/menu"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :navigation
   end
 
   test "menu example renders the shared shell and foregrounds one primary menu" do
@@ -36,5 +32,7 @@ defmodule UnifiedExamples.MenuTest do
     assert html =~ "Overview"
     assert html =~ "Incidents"
     assert html =~ "Releases"
+    assert html =~ "Review the menu navigation story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end

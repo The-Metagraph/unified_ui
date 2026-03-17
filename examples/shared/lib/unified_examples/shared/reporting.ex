@@ -15,6 +15,7 @@ defmodule UnifiedExamples.Shared.Reporting do
     validation = Validation.report()
     families = Catalog.by_family()
     runtime = runtime_report()
+    interaction_stories = interaction_story_report()
 
     %{
       index: %{
@@ -47,6 +48,7 @@ defmodule UnifiedExamples.Shared.Reporting do
           |> Enum.sort()
       },
       runtime: runtime,
+      interaction_stories: interaction_stories,
       traceability: Traceability.report(),
       validation: validation
     }
@@ -68,6 +70,9 @@ defmodule UnifiedExamples.Shared.Reporting do
       "aligned_apps: #{length(report.template.aligned_apps)}",
       "divergent_apps: #{Enum.join(report.template.divergent_apps, ", ")}",
       "browser_launchable: #{report.runtime.launchable_total}",
+      "source_driven: #{Enum.join(report.interaction_stories.source_driven_directories, ", ")}",
+      "target_driven: #{Enum.join(report.interaction_stories.target_driven_directories, ", ")}",
+      "story_follow_up: #{Enum.join(report.interaction_stories.follow_up_directories, ", ")}",
       "traceability_valid?: #{report.traceability.valid?}",
       "validation_valid?: #{report.validation.valid?}"
     ]
@@ -96,6 +101,50 @@ defmodule UnifiedExamples.Shared.Reporting do
         Map.new(launches, fn {directory, metadata} ->
           {directory, metadata.launch_path}
         end)
+    }
+  end
+
+  defp interaction_story_report do
+    stories =
+      Catalog.directories()
+      |> Enum.flat_map(fn directory ->
+        case Tooling.review_metadata(directory) do
+          {:ok, metadata} -> [{directory, metadata}]
+          {:error, _reason} -> []
+        end
+      end)
+
+    grouped =
+      Enum.group_by(stories, fn {_directory, metadata} -> metadata.interaction_storytelling end)
+
+    follow_up_directories =
+      stories
+      |> Enum.flat_map(fn {directory, metadata} ->
+        cond do
+          metadata.interaction_outcome in [nil, ""] -> [directory]
+          metadata.interaction_idle_prompt in [nil, ""] -> [directory]
+          true -> []
+        end
+      end)
+      |> Enum.uniq()
+      |> Enum.sort()
+
+    %{
+      storytelling_counts:
+        Map.new(grouped, fn {mode, items} ->
+          {mode, length(items)}
+        end),
+      source_driven_directories:
+        grouped
+        |> Map.get(:source_driven, [])
+        |> Enum.map(fn {directory, _metadata} -> directory end)
+        |> Enum.sort(),
+      target_driven_directories:
+        grouped
+        |> Map.get(:target_driven, [])
+        |> Enum.map(fn {directory, _metadata} -> directory end)
+        |> Enum.sort(),
+      follow_up_directories: follow_up_directories
     }
   end
 end

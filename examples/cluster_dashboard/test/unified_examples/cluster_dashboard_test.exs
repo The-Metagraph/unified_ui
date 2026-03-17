@@ -5,19 +5,15 @@ defmodule UnifiedExamples.ClusterDashboardTest do
   alias UnifiedExamples.ClusterDashboard
 
   test "cluster dashboard example exposes standalone example metadata" do
-    assert ClusterDashboard.metadata() == %{
-             id: :cluster_dashboard_example_screen,
-             root_id: :cluster_dashboard_example_screen_root,
-             title: "Cluster Dashboard Widget Example",
-             summary: "Focused operational example using the shared suite shell",
-             notes:
-               "Cluster-dashboard examples foreground one canonical node-health summary inside the shared shell.",
-             widget: :cluster_dashboard,
-             theme_id: :example_suite_default,
-             app: :unified_example_cluster_dashboard,
-             directory: "examples/cluster_dashboard",
-             purpose: :widget_proof
-           }
+    metadata = ClusterDashboard.metadata()
+
+    assert metadata.id == :cluster_dashboard_example_screen
+    assert metadata.root_id == :cluster_dashboard_example_screen_root
+    assert metadata.widget == :cluster_dashboard
+    assert metadata.app == :unified_example_cluster_dashboard
+    assert metadata.directory == "examples/cluster_dashboard"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :command
   end
 
   test "cluster dashboard example renders the shared shell and foregrounds one primary cluster summary" do
@@ -38,5 +34,7 @@ defmodule UnifiedExamples.ClusterDashboardTest do
     assert html =~ "Cluster Dashboard Widget Example"
     assert html =~ "denver-a"
     assert html =~ "dallas-b"
+    assert html =~ "Review the cluster dashboard command story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end

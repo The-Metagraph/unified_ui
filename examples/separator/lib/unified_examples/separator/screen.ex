@@ -9,7 +9,14 @@ defmodule UnifiedExamples.Separator.Screen do
     summary: "Focused content-oriented example using the shared suite shell",
     widget: :separator,
     notes:
-      "Separator examples keep the shared shell while foregrounding one primary separator widget."
+      "Separator examples keep the shared shell while foregrounding one primary separator widget.",
+    interaction_demo: %{
+      trigger_label: "Highlight the separator story",
+      idle_prompt:
+        "Use the shared trigger to call out how the separator organizes the reviewed content.",
+      outcome:
+        "The separator example should explain the authored visual boundary and why it matters in the surrounding composition."
+    }
 
   example_panel do
     separator :separator_example_primary_separator do

@@ -5,15 +5,29 @@ defmodule UnifiedExamples.ToolingTest do
 
   test "builds review metadata for representative apps from multiple families" do
     assert {:ok, button} = Tooling.review_metadata("button")
+    assert {:ok, checkbox} = Tooling.review_metadata("checkbox")
     assert {:ok, overlay} = Tooling.review_metadata("overlay")
 
     assert button.family == :content
     assert button.widget == :button
     assert button.uses_shared_template
+    assert button.interaction_family == :click
+    assert button.interaction_storytelling == :source_driven
+    assert button.interaction_source in [:shared_trigger, :primary_widget]
+    assert is_binary(button.interaction_outcome)
 
     assert overlay.family == :overlay
     assert overlay.widget == :overlay
     assert overlay.uses_shared_template
+    assert overlay.interaction_family == :open
+    assert overlay.interaction_storytelling == :target_driven
+    assert is_binary(overlay.interaction_idle_prompt)
+
+    assert checkbox.family == :input
+    assert checkbox.widget == :checkbox
+    assert checkbox.interaction_family == :change
+    assert checkbox.interaction_storytelling == :source_driven
+    assert checkbox.interaction_source == :form_shell
   end
 
   test "previews representative apps through one shared workflow" do
@@ -23,6 +37,8 @@ defmodule UnifiedExamples.ToolingTest do
 
     assert report =~ "directory: button"
     assert report =~ "widget: button"
+    assert report =~ "interaction_family: click"
+    assert report =~ "interaction_storytelling: source_driven"
     assert html =~ ~s(data-live-ui-widget="overlay-surface")
     assert metadata.family == :operational
     assert metadata.widget == :cluster_dashboard

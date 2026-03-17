@@ -23,12 +23,40 @@ defmodule UnifiedExamples.Shared.Template do
       title: [:example_title],
       summary: [:example_summary],
       notes: [:example_notes],
+      interaction_button: [:example_primary_button],
       button: [:example_primary_button],
       text_input: [:example_primary_input]
     }
   end
 
+  def interaction_demo(opts) when is_list(opts) do
+    widget = Keyword.fetch!(opts, :widget)
+
+    UnifiedExamples.Shared.InteractionDemo.normalize(
+      Keyword.get(opts, :interaction_demo),
+      %{
+        directory: Atom.to_string(Keyword.fetch!(opts, :id)),
+        widget: widget,
+        family: UnifiedExamples.Shared.InteractionDemo.family_for_widget(widget)
+      }
+    )
+  end
+
   defmacro __using__(opts) do
+    opts =
+      case Keyword.fetch(opts, :interaction_demo) do
+        {:ok, interaction_demo} ->
+          if Macro.quoted_literal?(interaction_demo) do
+            {evaluated, _binding} = Code.eval_quoted(interaction_demo, [], __CALLER__)
+            Keyword.put(opts, :interaction_demo, evaluated)
+          else
+            opts
+          end
+
+        _other ->
+          opts
+      end
+
     opts = Keyword.put_new(opts, :notes, default_notes())
     Module.put_attribute(__CALLER__.module, :example_template_opts, opts)
 
@@ -53,6 +81,7 @@ defmodule UnifiedExamples.Shared.Template do
     summary = Keyword.fetch!(opts, :summary)
     widget = Keyword.fetch!(opts, :widget)
     notes = Keyword.get(opts, :notes, default_notes())
+    interaction_demo = interaction_demo(opts)
 
     root_id = String.to_atom("#{id}_root")
     shell_id = String.to_atom("#{id}_shell")
@@ -60,6 +89,8 @@ defmodule UnifiedExamples.Shared.Template do
     summary_id = String.to_atom("#{id}_summary")
     panel_id = String.to_atom("#{id}_panel")
     notes_text_id = String.to_atom("#{id}_notes_text")
+    interaction_button_id = String.to_atom("#{id}_interaction_trigger")
+    interaction_id = String.to_atom("#{id}_interaction")
 
     notes_block =
       if notes in [nil, ""] do
@@ -76,6 +107,59 @@ defmodule UnifiedExamples.Shared.Template do
         end
       end
 
+    interaction_block =
+      case interaction_demo.mode do
+        :shared_trigger ->
+          quote do
+            signals do
+              namespace(:examples)
+
+              interaction do
+                id(unquote(interaction_id))
+                family(unquote(interaction_demo.family))
+                intent(unquote(String.to_atom("inspect_#{widget}")))
+
+                source_context(
+                  element_id: unquote(interaction_button_id),
+                  scope: :screen
+                )
+
+                target_intent(action: :review_example)
+
+                payload_mapping(
+                  widget: unquote(widget),
+                  example: unquote(widget),
+                  outcome: unquote(interaction_demo.outcome),
+                  source: :shared_example_trigger
+                )
+
+                summary(unquote(interaction_demo.idle_prompt))
+              end
+            end
+          end
+
+        _other ->
+          quote(do: nil)
+      end
+
+    interaction_button_block =
+      case interaction_demo.mode do
+        :shared_trigger ->
+          quote do
+            button unquote(interaction_button_id) do
+              label(unquote(interaction_demo.trigger_label))
+              interaction_refs([unquote(interaction_id)])
+              theme_ref(unquote(@default_theme_id))
+              style_refs([:example_primary_button])
+              tone(:accent)
+              variant(:solid)
+            end
+          end
+
+        _other ->
+          quote(do: nil)
+      end
+
     quote do
       @example_metadata %{
         id: unquote(id),
@@ -84,10 +168,12 @@ defmodule UnifiedExamples.Shared.Template do
         summary: unquote(summary),
         notes: unquote(notes),
         widget: unquote(widget),
-        theme_id: unquote(@default_theme_id)
+        theme_id: unquote(@default_theme_id),
+        interaction_demo: unquote(Macro.escape(interaction_demo))
       }
 
       def example_metadata, do: @example_metadata
+      def example_interaction_demo, do: @example_metadata.interaction_demo
 
       def default_theme_id, do: unquote(@default_theme_id)
 
@@ -100,6 +186,8 @@ defmodule UnifiedExamples.Shared.Template do
         authored_ref([:examples, unquote(id)])
         tags([:example, unquote(widget)])
       end
+
+      unquote(interaction_block)
 
       themes do
         default_theme(unquote(@default_theme_id))
@@ -347,6 +435,8 @@ defmodule UnifiedExamples.Shared.Template do
             unquote(demo_ast)
           end
 
+          unquote(interaction_button_block)
+
           unquote(notes_block)
         end
       end
@@ -367,6 +457,7 @@ defmodule UnifiedExamples.Shared.Template do
     summary = Keyword.fetch!(opts, :summary)
     widget = Keyword.fetch!(opts, :widget)
     notes = Keyword.get(opts, :notes, default_notes())
+    interaction_demo = interaction_demo(opts)
 
     root_id = String.to_atom("#{id}_root")
     shell_id = String.to_atom("#{id}_shell")
@@ -374,6 +465,8 @@ defmodule UnifiedExamples.Shared.Template do
     summary_id = String.to_atom("#{id}_summary")
     spacer_id = String.to_atom("#{id}_form_gap")
     notes_text_id = String.to_atom("#{id}_notes_text")
+    interaction_button_id = String.to_atom("#{id}_interaction_trigger")
+    interaction_id = String.to_atom("#{id}_interaction")
 
     notes_block =
       if notes in [nil, ""] do
@@ -390,6 +483,99 @@ defmodule UnifiedExamples.Shared.Template do
         end
       end
 
+    interaction_block =
+      case interaction_demo.mode do
+        :shared_trigger ->
+          quote do
+            signals do
+              namespace(:examples)
+
+              interaction do
+                id(unquote(interaction_id))
+                family(unquote(interaction_demo.family))
+                intent(unquote(String.to_atom("inspect_#{widget}")))
+
+                source_context(
+                  element_id: unquote(interaction_button_id),
+                  scope: :screen
+                )
+
+                target_intent(action: :review_example)
+
+                payload_mapping(
+                  widget: unquote(widget),
+                  example: unquote(widget),
+                  outcome: unquote(interaction_demo.outcome),
+                  source: :shared_example_trigger
+                )
+
+                summary(unquote(interaction_demo.idle_prompt))
+              end
+            end
+          end
+
+        :form_shell ->
+          quote do
+            signals do
+              namespace(:examples)
+
+              interaction do
+                id(unquote(interaction_id))
+                family(unquote(interaction_demo.family))
+                intent(unquote(String.to_atom("inspect_#{widget}")))
+
+                source_context(
+                  element_id: unquote(shell_id),
+                  scope: :screen
+                )
+
+                target_intent(action: :review_example)
+
+                payload_mapping(
+                  widget: unquote(widget),
+                  example: unquote(widget),
+                  outcome: unquote(interaction_demo.outcome),
+                  source: :shared_form_shell
+                )
+
+                summary(unquote(interaction_demo.idle_prompt))
+              end
+            end
+          end
+
+        _other ->
+          quote(do: nil)
+      end
+
+    interaction_button_block =
+      case interaction_demo.mode do
+        :shared_trigger ->
+          quote do
+            button unquote(interaction_button_id) do
+              label(unquote(interaction_demo.trigger_label))
+              interaction_refs([unquote(interaction_id)])
+              theme_ref(unquote(@default_theme_id))
+              style_refs([:example_primary_button])
+              tone(:accent)
+              variant(:solid)
+            end
+          end
+
+        _other ->
+          quote(do: nil)
+      end
+
+    shell_interaction_block =
+      case interaction_demo.mode do
+        :form_shell ->
+          quote do
+            interaction_refs([unquote(interaction_id)])
+          end
+
+        _other ->
+          quote(do: nil)
+      end
+
     quote do
       @example_metadata %{
         id: unquote(id),
@@ -398,10 +584,12 @@ defmodule UnifiedExamples.Shared.Template do
         summary: unquote(summary),
         notes: unquote(notes),
         widget: unquote(widget),
-        theme_id: unquote(@default_theme_id)
+        theme_id: unquote(@default_theme_id),
+        interaction_demo: unquote(Macro.escape(interaction_demo))
       }
 
       def example_metadata, do: @example_metadata
+      def example_interaction_demo, do: @example_metadata.interaction_demo
 
       def default_theme_id, do: unquote(@default_theme_id)
 
@@ -414,6 +602,8 @@ defmodule UnifiedExamples.Shared.Template do
         authored_ref([:examples, unquote(id)])
         tags([:example, unquote(widget)])
       end
+
+      unquote(interaction_block)
 
       themes do
         default_theme(unquote(@default_theme_id))
@@ -596,6 +786,7 @@ defmodule UnifiedExamples.Shared.Template do
           style_refs([:example_form_shell])
           tone(:surface)
           variant(:panel)
+          unquote(shell_interaction_block)
 
           text unquote(title_id) do
             value(unquote(title))
@@ -618,6 +809,8 @@ defmodule UnifiedExamples.Shared.Template do
           end
 
           unquote(demo_ast)
+
+          unquote(interaction_button_block)
 
           unquote(notes_block)
         end

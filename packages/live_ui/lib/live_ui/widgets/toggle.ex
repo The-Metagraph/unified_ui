@@ -20,9 +20,8 @@ defmodule LiveUi.Widgets.Toggle do
       data-live-ui-variant={@variant}
       data-live-ui-state={@state}
       class={@class}
-      {@rest}
     >
-      <input type="checkbox" name={@name} checked={@checked} disabled={@disabled} />
+      <input type="checkbox" name={@name} checked={@checked} disabled={@disabled} {@rest} />
       <span data-live-ui-toggle-state={if @checked, do: "on", else: "off"}></span>
     </label>
     """

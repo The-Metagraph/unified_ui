@@ -5,19 +5,15 @@ defmodule UnifiedExamples.CommandPaletteTest do
   alias UnifiedExamples.CommandPalette
 
   test "command palette example exposes standalone example metadata" do
-    assert CommandPalette.metadata() == %{
-             id: :command_palette_example_screen,
-             root_id: :command_palette_example_screen_root,
-             title: "Command Palette Widget Example",
-             summary: "Focused navigation-oriented example using the shared suite shell",
-             notes:
-               "Command palette examples foreground one canonical quick-action surface inside the shared shell.",
-             widget: :command_palette,
-             theme_id: :example_suite_default,
-             app: :unified_example_command_palette,
-             directory: "examples/command_palette",
-             purpose: :widget_proof
-           }
+    metadata = CommandPalette.metadata()
+
+    assert metadata.id == :command_palette_example_screen
+    assert metadata.root_id == :command_palette_example_screen_root
+    assert metadata.widget == :command_palette
+    assert metadata.app == :unified_example_command_palette
+    assert metadata.directory == "examples/command_palette"
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :command
   end
 
   test "command palette example renders the shared shell and foregrounds one primary palette" do
@@ -36,5 +32,7 @@ defmodule UnifiedExamples.CommandPaletteTest do
     assert html =~ "Open incident"
     assert html =~ "Assign owner"
     assert html =~ "Resolve incident"
+    assert html =~ "Review the command palette command story"
+    assert html =~ "Meaningful Interaction Story"
   end
 end

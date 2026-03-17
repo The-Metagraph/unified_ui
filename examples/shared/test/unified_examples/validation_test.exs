@@ -13,6 +13,7 @@ defmodule UnifiedExamples.ValidationTest do
     assert report.catalog.unexpected_directories == []
     assert report.catalog.manifest_in_sync?
     assert report.metadata.issues == []
+    assert report.release.gates.interaction_story_continuity.passed?
   end
 
   test "detects catalog drift when expected and actual directories diverge" do
@@ -32,6 +33,11 @@ defmodule UnifiedExamples.ValidationTest do
         shell_kind: :box,
         browser_runnable?: false,
         dev_server_enabled?: false,
+        interaction_demo: nil,
+        interaction_family: nil,
+        interaction_storytelling: nil,
+        interaction_outcome: nil,
+        interaction_idle_prompt: nil,
         launch_path: "/rogue",
         launch_command: "mix test",
         launch_url: "http://127.0.0.1:4000/rogue",
@@ -47,6 +53,11 @@ defmodule UnifiedExamples.ValidationTest do
              :shared_template_divergence,
              :not_browser_runnable,
              :dev_server_disabled,
+             :missing_interaction_demo,
+             :missing_interaction_family,
+             :missing_interaction_storytelling,
+             :missing_interaction_outcome,
+             :missing_interaction_prompt,
              :launch_path_mismatch,
              :launch_command_mismatch,
              :missing_application_module,

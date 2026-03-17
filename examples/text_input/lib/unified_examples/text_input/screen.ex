@@ -8,7 +8,19 @@ defmodule UnifiedExamples.TextInput.Screen do
     title: "Text Input Widget Example",
     summary: "Focused input-oriented example using the shared suite shell",
     widget: :text_input,
-    notes: "Type in the field to inspect the canonical change signal compiled from the authored DSL."
+    notes:
+      "Type in the field to inspect the canonical change signal compiled from the authored DSL.",
+    interaction_demo: %{
+      mode: :custom,
+      family: :change,
+      source: :primary_widget,
+      source_label: "Primary text input",
+      trigger_label: nil,
+      idle_prompt:
+        "Type into the draft field to capture the authored change signal and latest value.",
+      outcome:
+        "The text input example should mirror the live draft value and explain the emitted change signal clearly."
+    }
 
   signals do
     namespace(:examples)
