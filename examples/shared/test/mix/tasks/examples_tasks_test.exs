@@ -15,8 +15,12 @@ defmodule Mix.Tasks.ExamplesTasksTest do
       end)
 
     assert output =~ "Example suite catalog"
+    assert output =~ "Focused widget apps"
+    assert output =~ "Aggregate review surfaces"
     assert output =~ "button"
     assert output =~ "overlay"
+    assert output =~ "demo"
+    assert output =~ "purpose=aggregate_demo"
   end
 
   test "mix examples.preview routes preview output for representative apps" do

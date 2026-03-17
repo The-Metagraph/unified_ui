@@ -4,6 +4,34 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
   """
 
   @demo_root Path.expand("../../../../demo", __DIR__)
+  @catalog_entry %{
+    directory: "demo",
+    widget: :demo,
+    family: :aggregate_demo,
+    phase: :overview,
+    shell: :tabbed,
+    purpose: :aggregate_demo,
+    summary:
+      "Category-oriented review shell that complements the focused per-widget example apps."
+  }
+
+  @spec catalog_entry() :: map()
+  def catalog_entry, do: @catalog_entry
+
+  @spec catalog_line() :: String.t()
+  def catalog_line do
+    entry = catalog_entry()
+
+    [
+      entry.directory,
+      "widget=#{entry.widget}",
+      "family=#{entry.family}",
+      "phase=#{entry.phase}",
+      "shell=#{entry.shell}",
+      "purpose=#{entry.purpose}"
+    ]
+    |> Enum.join("\t")
+  end
 
   @spec launch_descriptor(keyword()) :: map()
   def launch_descriptor(opts \\ []) do

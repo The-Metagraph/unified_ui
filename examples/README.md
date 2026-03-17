@@ -12,6 +12,9 @@ its own while still proving the same authored-to-canonical-to-runtime path:
 `examples/demo/` is the aggregate category-oriented review surface. It uses the
 same shared theme and style baseline as the current button example and gives
 reviewers one browser-runnable shell for the ordered control categories.
+Use it when you want an overview by control family; use the focused
+`examples/<widget_name>/` apps when you want one widget's interaction story in
+detail.
 
 ## Layout
 

@@ -3,6 +3,16 @@ defmodule UnifiedExamples.ToolingTest do
 
   alias UnifiedExamples.Shared.Tooling
 
+  test "catalog report includes the aggregate demo alongside focused widget apps" do
+    report = Tooling.catalog_report()
+
+    assert report =~ "Focused widget apps"
+    assert report =~ "Aggregate review surfaces"
+    assert report =~ "button\twidget=button"
+    assert report =~ "demo\twidget=demo"
+    assert report =~ "purpose=aggregate_demo"
+  end
+
   test "builds review metadata for representative apps from multiple families" do
     assert {:ok, button} = Tooling.review_metadata("button")
     assert {:ok, checkbox} = Tooling.review_metadata("checkbox")
@@ -60,6 +70,7 @@ defmodule UnifiedExamples.ToolingTest do
   test "builds deterministic launch descriptors for browser-runnable example apps" do
     button = Tooling.launch_descriptor("button")
     overlay = Tooling.launch_descriptor("overlay", port: 4104)
+    demo = Tooling.launch_descriptor("demo", port: 4105)
 
     assert button.cwd =~ "/examples/button"
     assert button.argv == ["mix", "phx.server"]
@@ -72,5 +83,10 @@ defmodule UnifiedExamples.ToolingTest do
     assert overlay.env == [{"PORT", "4104"}]
     assert overlay.url == "http://127.0.0.1:4104/"
     assert overlay.command =~ "PORT=4104 mix phx.server"
+
+    assert demo.cwd =~ "/examples/demo"
+    assert demo.env == [{"PORT", "4105"}]
+    assert demo.url == "http://127.0.0.1:4105/"
+    assert demo.command =~ "PORT=4105 mix phx.server"
   end
 end

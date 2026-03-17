@@ -3,6 +3,7 @@ defmodule UnifiedExamples.Shared.Tooling do
   Discovery, preview, and run tooling for the standalone example-app suite.
   """
 
+  alias UnifiedExamples.Shared.AggregateDemo
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.InteractionDemo
   alias UnifiedExamples.Shared.Loader
@@ -44,9 +45,15 @@ defmodule UnifiedExamples.Shared.Tooling do
     [
       "Example suite catalog",
       "",
+      "Focused widget apps",
+      "",
       Enum.map_join(Catalog.entries(), "\n", fn entry ->
         "#{entry.directory}\twidget=#{entry.widget}\tfamily=#{entry.family}\tphase=#{entry.phase}\tshell=#{entry.shell_kind}"
-      end)
+      end),
+      "",
+      "Aggregate review surfaces",
+      "",
+      AggregateDemo.catalog_line()
     ]
     |> Enum.join("\n")
   end
@@ -101,7 +108,11 @@ defmodule UnifiedExamples.Shared.Tooling do
   end
 
   @spec launch_descriptor(String.t() | atom(), keyword()) :: launch_descriptor()
-  def launch_descriptor(directory, opts \\ []) do
+  def launch_descriptor(directory, opts \\ [])
+  def launch_descriptor("demo", opts), do: AggregateDemo.launch_descriptor(opts)
+  def launch_descriptor(:demo, opts), do: AggregateDemo.launch_descriptor(opts)
+
+  def launch_descriptor(directory, opts) do
     with {:ok, loaded} <- Loader.load(directory) do
       Loader.load_config(loaded)
       build_launch_descriptor(loaded, opts)
