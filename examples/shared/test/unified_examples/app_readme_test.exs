@@ -12,6 +12,9 @@ defmodule UnifiedExamples.AppReadmeTest do
     assert button =~ "Click Save profile to emit the authored canonical button signal."
     assert button =~ "## Expect"
     assert button =~ "The button example should make the primary action feel live"
+    assert button =~ "## Aggregate Demo"
+    assert button =~ "`examples/demo/`"
+    assert button =~ "Foundational Content, Signal Lab"
 
     assert overlay =~ "# Unified Examples Overlay"
     assert overlay =~ "target-driven interaction storytelling"
@@ -21,5 +24,7 @@ defmodule UnifiedExamples.AppReadmeTest do
 
     assert overlay =~
              "If the example uses the shared trigger, click `Inspect the overlay layered story`."
+
+    assert overlay =~ "Overlays and Operational"
   end
 end

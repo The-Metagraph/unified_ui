@@ -25,7 +25,12 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert button.interaction_storytelling == :source_driven
     assert button.interaction_source == Catalog.entry!("button").interaction_demo.source
     assert button.interaction_outcome == Catalog.entry!("button").interaction_demo.outcome
+    assert button.aggregate_demo_directory == "demo"
+    assert button.aggregate_demo_categories == [:foundational_content, :signal_lab]
+    assert button.aggregate_demo_category_labels == ["Foundational Content", "Signal Lab"]
     assert button.traceability.authored_dsl.package == :unified_ui
+    assert button.traceability.aggregate_demo.category_ids == [:foundational_content, :signal_lab]
+    assert button.traceability.aggregate_demo.readme_path =~ "/examples/demo/README.md"
 
     assert checkbox.primary_subject == :checkbox
     assert checkbox.family == Catalog.entry!("checkbox").family
@@ -42,6 +47,7 @@ defmodule UnifiedExamples.ReviewMetadataTest do
     assert cluster_dashboard.interaction_family == :command
     assert cluster_dashboard.interaction_storytelling == :target_driven
     assert is_binary(cluster_dashboard.interaction_idle_prompt)
+    assert cluster_dashboard.aggregate_demo_categories == [:overlays_and_operational]
     assert cluster_dashboard.traceability.runtime_library.package == :live_ui
 
     assert demo.purpose == :aggregate_demo

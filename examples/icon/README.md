@@ -27,6 +27,13 @@ The icon example should explain the authored glyph choice and make the visual em
 The browser should keep both the `Meaningful Interaction Story` panel and the
 `Canonical Signal Preview` panel visible while you review the example.
 
+## Aggregate Demo
+
+Review this widget from the aggregate overview in `examples/demo/`.
+
+This example appears in the aggregate demo categories:
+Foundational Content
+
 ## Validate
 
 `mix test`

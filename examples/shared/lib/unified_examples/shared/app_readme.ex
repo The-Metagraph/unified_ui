@@ -52,6 +52,13 @@ defmodule UnifiedExamples.Shared.AppReadme do
     The browser should keep both the `Meaningful Interaction Story` panel and the
     `Canonical Signal Preview` panel visible while you review the example.
 
+    ## Aggregate Demo
+
+    Review this widget from the aggregate overview in `examples/demo/`.
+
+    This example appears in the aggregate demo categories:
+    #{aggregate_demo_categories(directory)}
+
     ## Validate
 
     `mix test`
@@ -95,6 +102,15 @@ defmodule UnifiedExamples.Shared.AppReadme do
 
   defp storytelling_sentence(:target_driven) do
     "target-driven interaction storytelling"
+  end
+
+  defp aggregate_demo_categories(directory) do
+    directory
+    |> UnifiedExamples.Shared.AggregateDemo.category_labels_for()
+    |> case do
+      [] -> "No aggregate demo category is currently registered."
+      labels -> Enum.join(labels, ", ")
+    end
   end
 
   defp trigger_hint(%{trigger_label: nil}), do: ""

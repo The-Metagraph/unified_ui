@@ -22,6 +22,7 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
   ]
   @metadata_start_marker "__UNIFIED_EXAMPLES_DEMO_METADATA_START__"
   @metadata_end_marker "__UNIFIED_EXAMPLES_DEMO_METADATA_END__"
+  @metadata_cache_key {__MODULE__, :review_metadata}
   @catalog_entry %{
     directory: @demo_directory,
     widget: :demo,
@@ -62,6 +63,51 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
 
   @spec review_metadata() :: {:ok, map()} | {:error, term()}
   def review_metadata do
+    case :persistent_term.get(@metadata_cache_key, :missing) do
+      {:ok, metadata} ->
+        {:ok, metadata}
+
+      :missing ->
+        load_review_metadata()
+    end
+  end
+
+  @spec category_example_directories() :: %{optional(atom()) => [String.t()]}
+  def category_example_directories do
+    with {:ok, metadata} <- review_metadata() do
+      Map.get(metadata, :category_example_directories, %{})
+    else
+      _ -> %{}
+    end
+  end
+
+  @spec category_ids_for(String.t() | atom()) :: [atom()]
+  def category_ids_for(directory) do
+    directory = normalize_directory(directory)
+
+    category_example_directories()
+    |> Enum.flat_map(fn {category_id, directories} ->
+      if directory in directories, do: [category_id], else: []
+    end)
+    |> Enum.sort()
+  end
+
+  @spec category_labels_for(String.t() | atom()) :: [String.t()]
+  def category_labels_for(directory) do
+    directory = normalize_directory(directory)
+
+    with {:ok, metadata} <- review_metadata() do
+      metadata
+      |> Map.get(:category_registry, [])
+      |> Enum.flat_map(fn entry ->
+        if directory in entry.example_directories, do: [entry.label], else: []
+      end)
+    else
+      _ -> []
+    end
+  end
+
+  defp load_review_metadata do
     expression = """
     UnifiedExamples.Demo.review_metadata()
     |> :erlang.term_to_binary()
@@ -85,6 +131,7 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
             |> Base.decode64!()
             |> :erlang.binary_to_term()
 
+          :persistent_term.put(@metadata_cache_key, {:ok, metadata})
           {:ok, metadata}
         else
           _ -> {:error, {:demo_review_metadata_unparseable, encoded}}
@@ -118,4 +165,7 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
   rescue
     ArgumentError -> 4000
   end
+
+  defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)
+  defp normalize_directory(directory) when is_binary(directory), do: directory
 end

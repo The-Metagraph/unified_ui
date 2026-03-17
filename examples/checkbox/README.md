@@ -27,6 +27,13 @@ The review panel should explain how the checkbox example turns live form input i
 The browser should keep both the `Meaningful Interaction Story` panel and the
 `Canonical Signal Preview` panel visible while you review the example.
 
+## Aggregate Demo
+
+Review this widget from the aggregate overview in `examples/demo/`.
+
+This example appears in the aggregate demo categories:
+Forms and Input
+
 ## Validate
 
 `mix test`

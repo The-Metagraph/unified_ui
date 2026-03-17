@@ -3,6 +3,7 @@ defmodule UnifiedExamples.Shared.Traceability do
   Cross-package traceability for the standalone example-app suite.
   """
 
+  alias UnifiedExamples.Shared.AggregateDemo
   alias UnifiedExamples.Shared
 
   @package_specs %{
@@ -107,6 +108,12 @@ defmodule UnifiedExamples.Shared.Traceability do
         app_module: app_module,
         runtime_module: LiveUi.Runtime,
         renderer_module: LiveUi.Renderer
+      },
+      aggregate_demo: %{
+        directory: AggregateDemo.directory(),
+        category_ids: AggregateDemo.category_ids_for(directory),
+        category_labels: AggregateDemo.category_labels_for(directory),
+        readme_path: Path.join(Shared.suite_root(), "demo/README.md")
       },
       governance_paths: governance_paths(),
       general_spec_paths: general_spec_paths()

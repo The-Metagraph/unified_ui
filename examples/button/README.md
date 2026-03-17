@@ -27,6 +27,13 @@ The button example should make the primary action feel live and explain the emit
 The browser should keep both the `Meaningful Interaction Story` panel and the
 `Canonical Signal Preview` panel visible while you review the example.
 
+## Aggregate Demo
+
+Review this widget from the aggregate overview in `examples/demo/`.
+
+This example appears in the aggregate demo categories:
+Foundational Content, Signal Lab
+
 ## Validate
 
 `mix test`
