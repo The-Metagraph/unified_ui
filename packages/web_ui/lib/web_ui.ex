@@ -4,6 +4,7 @@ defmodule WebUi do
   """
 
   alias WebUi.{
+    Examples,
     Frontend,
     Info,
     Reference,
@@ -24,6 +25,7 @@ defmodule WebUi do
           | :transport
           | :reference
           | :info
+          | :examples
           | :tooling
 
   @module_areas %{
@@ -35,6 +37,7 @@ defmodule WebUi do
     transport: Transport,
     reference: Reference,
     info: Info,
+    examples: Examples,
     tooling: Tooling
   }
 
@@ -80,6 +83,9 @@ defmodule WebUi do
 
   @spec tooling() :: module()
   def tooling, do: Tooling
+
+  @spec examples() :: module()
+  def examples, do: Examples
 
   @spec reference() :: map()
   def reference, do: Reference.package_reference()

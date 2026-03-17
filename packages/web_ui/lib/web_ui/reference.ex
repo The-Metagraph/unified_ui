@@ -79,6 +79,9 @@ defmodule WebUi.Reference do
       tooling: %{
         capabilities: WebUi.Tooling.capabilities()
       },
+      examples: %{
+        catalog: WebUi.Examples.catalog()
+      },
       module_areas: WebUi.module_areas()
     }
   end
