@@ -28,7 +28,8 @@ defmodule UnifiedExamples.Phase6IntegrationTest do
   }
 
   test "full widget catalog stays represented by runnable app directories and review metadata" do
-    assert Shared.app_directories() == Catalog.directories()
+    # The aggregate demo app directory exists but is not a catalog entry
+    assert Shared.app_directories() -- ["demo"] == Catalog.directories()
 
     Enum.each(Catalog.entries(), fn entry ->
       assert File.dir?(Path.join(Shared.suite_root(), entry.directory))

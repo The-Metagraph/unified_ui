@@ -48,9 +48,21 @@ defmodule UnifiedExamples.Phase5IntegrationTest do
         theme_id: :rogue_theme,
         default_theme_id: :rogue_theme,
         uses_shared_template: false,
-        shell_kind: :box
+        shell_kind: :box,
+        browser_runnable?: true,
+        dev_server_enabled?: true,
+        interaction_demo: %{
+          mode: :source,
+          family: :click,
+          source: "test",
+          outcome: "test",
+          trigger_label: "test"
+        },
+        interaction_family: :click,
+        interaction_storytelling: :source
       })
 
+    # The rogue app should have theme/template issues but pass the new field checks
     assert Enum.map(issues, & &1.code) == [
              :app_theme_mismatch,
              :screen_theme_mismatch,

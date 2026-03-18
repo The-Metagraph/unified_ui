@@ -19,6 +19,9 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
     assert report.gates.interaction_story_continuity.passed?
     assert report.gates.aggregate_demo_continuity.passed?
     assert report.gates.shared_template_continuity.default_theme_id == Template.default_theme_id()
+    assert report.aggregate_demo_launch_failures == []
+    assert report.gates.aggregate_demo_continuity.smoke_launch.status == 200
+    assert report.gates.aggregate_demo_continuity.smoke_launch.path == "/"
   end
 
   test "release readiness detects primary-subject and template drift" do
@@ -90,6 +93,7 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
         {"demo",
          {:ok,
           %{
+            style_profile: :rogue_profile,
             theme_id: :rogue_theme,
             default_theme_id: :rogue_theme,
             uses_shared_template: false,
@@ -102,13 +106,15 @@ defmodule UnifiedExamples.ReleaseReadinessTest do
     assert aggregate_demo_drift.passed? == false
 
     assert Enum.map(aggregate_demo_drift.failures, & &1.reason) == [
+             :style_profile_mismatch,
              :app_theme_mismatch,
              :screen_theme_mismatch,
              :style_profile_drift,
              :category_registry_mismatch,
              :invalid_signal_lab_contract,
              :signal_lab_story_inventory_mismatch,
-             :missing_linked_examples
+             :missing_linked_examples,
+             :linked_examples_catalog_mismatch
            ]
   end
 end

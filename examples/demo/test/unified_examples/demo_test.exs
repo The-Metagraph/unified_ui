@@ -6,6 +6,7 @@ defmodule UnifiedExamples.DemoTest do
 
   alias UnifiedExamples.Demo
   alias UnifiedExamples.Demo.Categories
+  alias UnifiedExamples.Demo.Fixtures
   alias UnifiedExamples.Shared.Template
 
   @endpoint UnifiedExamples.Demo.Endpoint
@@ -50,6 +51,8 @@ defmodule UnifiedExamples.DemoTest do
     assert metadata.signal_lab_contract.valid?
     assert metadata.signal_lab_contract.story_count == 4
     assert metadata.signal_lab_contract.surface_count == 4
+    assert metadata.fixture_contract.digest == Fixtures.digest()
+    assert metadata.fixture_contract.responsive_layout.desktop_two_column_min_width == 980
   end
 
   test "demo app renders the shared shell treatment through the LiveUi runtime" do
@@ -81,9 +84,15 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-example-interaction-family=\"navigation\""
     assert html =~ Demo.review_summary()
     assert html =~ Demo.launch_url()
+    assert html =~ ~s(data-demo-responsive-shell="true")
+    assert html =~ ~s(data-demo-two-column-min="980")
+    assert html =~ ~s(data-demo-single-column-max="979")
+    assert html =~ ~s(data-demo-dense-stack-max="720")
     assert html =~ "Foundational Content Gallery"
     assert html =~ "Review shared CTA"
     assert html =~ "Open shared guidelines"
+    assert html =~ "Fixture digest:"
+    assert html =~ "Responsive contract:"
     assert html =~ "data-example-launch-url=\"#{Demo.launch_url()}\""
     assert html =~ "data-example-category-count=\"7\""
   end
@@ -109,6 +118,42 @@ defmodule UnifiedExamples.DemoTest do
     assert html =~ "data-live-ui-widget=\"text-input\""
     assert html =~ "data-live-ui-widget=\"toggle\""
     assert html =~ "data-demo-category-panel=\"forms_and_input\""
+  end
+
+  test "category tabs expose accessible semantics and keyboard navigation" do
+    {:ok, view, html} = live(build_conn(), "/")
+
+    assert html =~ ~s(role="tablist")
+    assert html =~ ~s(aria-label="Examples demo control categories")
+    assert html =~ ~s(id="demo-category-tab-hint")
+    assert html =~ ~s(id="demo-category-tab-foundational_content")
+    assert html =~ ~s(role="tab")
+    assert html =~ ~s(aria-selected="true")
+    assert html =~ ~s(tabindex="0")
+    assert html =~ ~s(id="demo-category-active-panel")
+    assert html =~ ~s(role="tabpanel")
+    assert html =~ ~s(aria-labelledby="demo-category-tab-foundational_content")
+
+    html =
+      view
+      |> element("#demo-category-tab-foundational_content")
+      |> render_keydown(%{"key" => "ArrowRight"})
+
+    assert html =~ "data-demo-active-category=\"forms_and_input\""
+    assert html =~ "Moved focus and selection to the next category tab."
+    assert html =~ ~s(id="demo-category-tab-forms_and_input")
+    assert html =~ ~s(aria-selected="true")
+    assert html =~ ~s(tabindex="0")
+    assert html =~ ~s(aria-labelledby="demo-category-tab-forms_and_input")
+
+    html =
+      view
+      |> element("#demo-category-tab-forms_and_input")
+      |> render_keydown(%{"key" => "End"})
+
+    assert html =~ "data-demo-active-category=\"signal_lab\""
+    assert html =~ "Moved focus and selection to the last category tab."
+    assert html =~ ~s(aria-labelledby="demo-category-tab-signal_lab")
   end
 
   test "layout and display gallery stays stable across tab switches" do

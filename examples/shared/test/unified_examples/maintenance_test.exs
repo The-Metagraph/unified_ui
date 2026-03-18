@@ -12,6 +12,9 @@ defmodule UnifiedExamples.MaintenanceTest do
     assert report.documentation.valid?
     assert report.traceability.valid?
     assert report.validation.valid?
+    assert report.validation.aggregate_demo.issues == []
+    assert report.validation.release.gates.aggregate_demo_continuity.passed?
+    assert report.validation.release.aggregate_demo_launch_failures == []
 
     assert Enum.map(report.workflow_steps, & &1.command) == [
              "mix examples.list",

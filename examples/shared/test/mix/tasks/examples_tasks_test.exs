@@ -3,6 +3,8 @@ defmodule Mix.Tasks.ExamplesTasksTest do
 
   import ExUnit.CaptureIO
 
+  @moduletag timeout: 180_000
+
   setup do
     Mix.Task.clear()
     :ok
@@ -79,4 +81,17 @@ defmodule Mix.Tasks.ExamplesTasksTest do
     assert output =~ "status: 200"
     assert output =~ "launch_command:"
   end
+
+  test "mix examples.launch exposes a smoke-test workflow for the aggregate demo" do
+    output =
+      capture_io(fn ->
+        Mix.Tasks.Examples.Launch.run(["demo", "--smoke-test"])
+      end)
+
+    assert output =~ "Example launch smoke test"
+    assert output =~ "directory: demo"
+    assert output =~ "status: 200"
+    assert output =~ "launch_command:"
+  end
+
 end

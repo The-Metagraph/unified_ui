@@ -286,6 +286,18 @@ defmodule UnifiedExamples.Shared.App do
                   color: var(--example-muted);
                 }
 
+                .example-app-visually-hidden {
+                  position: absolute;
+                  width: 1px;
+                  height: 1px;
+                  padding: 0;
+                  margin: -1px;
+                  overflow: hidden;
+                  clip: rect(0, 0, 0, 0);
+                  white-space: nowrap;
+                  border: 0;
+                }
+
                 #button_example_screen_root-runtime-surface,
                 [id$="-runtime-surface"] {
                   min-width: 0;
@@ -388,6 +400,44 @@ defmodule UnifiedExamples.Shared.App do
                   border-color: hsl(152 100% 50% / 0.22);
                 }
 
+                [data-demo-tablist="true"] {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 0.75rem;
+                }
+
+                [data-demo-tab-active="true"] {
+                  box-shadow:
+                    inset 0 1px 0 hsl(0 0% 100% / 0.18),
+                    0 0 0 1px hsl(152 100% 50% / 0.3),
+                    0 14px 30px hsl(152 100% 50% / 0.14);
+                }
+
+                [data-demo-responsive-shell="true"] {
+                  display: grid;
+                  gap: 1rem;
+                }
+
+                .example-app-example-links {
+                  display: grid;
+                  gap: 0.6rem;
+                }
+
+                .example-app-example-link {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  gap: 0.75rem;
+                  padding: 0.7rem 0.8rem;
+                  border: 1px solid hsl(192 100% 50% / 0.15);
+                  border-radius: 12px;
+                  background: hsl(0 0% 100% / 0.02);
+                }
+
+                .example-app-example-link code {
+                  color: var(--example-cyan);
+                }
+
                 [data-live-ui-signal-preview="true"] {
                   border: 1px solid hsl(192 100% 50% / 0.18);
                   border-radius: 14px;
@@ -457,6 +507,18 @@ defmodule UnifiedExamples.Shared.App do
                   line-height: 1.55;
                 }
 
+                @media (min-width: 980px) {
+                  [data-demo-responsive-shell="true"] {
+                    grid-template-columns: minmax(18rem, 0.95fr) minmax(0, 1.25fr);
+                    align-items: start;
+                  }
+
+                  [data-demo-responsive-shell="true"] .example-app-review,
+                  [data-demo-responsive-shell="true"] #demo-category-active-panel {
+                    min-width: 0;
+                  }
+                }
+
                 @media (max-width: 720px) {
                   .example-app-shell {
                     width: min(100% - 1rem, 72rem);
@@ -472,6 +534,15 @@ defmodule UnifiedExamples.Shared.App do
                   .example-app-header,
                   .example-app-runtime {
                     padding: 1rem;
+                  }
+
+                  .example-app-example-link {
+                    flex-direction: column;
+                    align-items: flex-start;
+                  }
+
+                  [data-demo-tablist="true"] {
+                    gap: 0.55rem;
                   }
                 }
               </style>

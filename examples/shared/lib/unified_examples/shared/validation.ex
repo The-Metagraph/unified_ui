@@ -70,6 +70,12 @@ defmodule UnifiedExamples.Shared.Validation do
 
     []
     |> maybe_issue(
+      metadata.style_profile != Template.default_style_profile(),
+      :style_profile_mismatch,
+      metadata.directory,
+      "aggregate demo style profile must stay aligned with the shared button-example baseline"
+    )
+    |> maybe_issue(
       metadata.theme_id != Template.default_theme_id(),
       :app_theme_mismatch,
       metadata.directory,
@@ -140,6 +146,12 @@ defmodule UnifiedExamples.Shared.Validation do
       :missing_linked_examples,
       metadata.directory,
       "aggregate demo must expose linked focused example directories for traceability"
+    )
+    |> maybe_issue(
+      Enum.sort(Map.get(metadata, :linked_example_directories, [])) != Catalog.directories(),
+      :catalog_traceability_mismatch,
+      metadata.directory,
+      "aggregate demo must keep every focused catalog entry traceable through at least one category tab"
     )
     |> maybe_issue(
       signal_lab_contract == %{} or signal_lab_contract.valid? != true,

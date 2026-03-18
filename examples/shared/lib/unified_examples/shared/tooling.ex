@@ -123,7 +123,11 @@ defmodule UnifiedExamples.Shared.Tooling do
   end
 
   @spec smoke_launch(String.t() | atom(), keyword()) :: {:ok, smoke_result()} | {:error, term()}
-  def smoke_launch(directory, opts \\ []) do
+  def smoke_launch(directory, opts \\ [])
+  def smoke_launch("demo", opts), do: AggregateDemo.smoke_launch(opts)
+  def smoke_launch(:demo, opts), do: AggregateDemo.smoke_launch(opts)
+
+  def smoke_launch(directory, opts) do
     with {:ok, loaded} <- Loader.load(directory) do
       Loader.load_config(loaded)
       launch = build_launch_descriptor(loaded, opts)

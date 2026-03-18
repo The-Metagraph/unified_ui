@@ -6,6 +6,7 @@ defmodule UnifiedExamples.Demo do
   use Phoenix.Component
 
   alias UnifiedExamples.Demo.Categories
+  alias UnifiedExamples.Demo.Fixtures
   alias UnifiedExamples.Demo.SignalLab, as: SignalLabRuntime
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Runtime
@@ -67,6 +68,7 @@ defmodule UnifiedExamples.Demo do
       :category_registry,
       :interaction_demo,
       :review_summary,
+      :fixture_contract,
       :launch_path,
       :launch_url,
       :launch_command
@@ -102,6 +104,7 @@ defmodule UnifiedExamples.Demo do
       category_count: Categories.count(),
       category_ids: Categories.ids(),
       category_registry: category_registry(),
+      fixture_contract: Fixtures.contract_summary(),
       review_summary: review_summary(),
       launch_path: launch.path,
       launch_url: launch.url,
@@ -119,6 +122,17 @@ defmodule UnifiedExamples.Demo do
     {:noreply, assign_category(socket, normalize_category_id(category_id))}
   end
 
+  def handle_live_event(
+        "navigate_category_tabs",
+        %{"category" => category_id, "key" => key},
+        %Socket{} = socket
+      ) do
+    {:noreply,
+     socket
+     |> assign_category(next_category_id(normalize_category_id(category_id), key))
+     |> Phoenix.Component.assign(:tab_navigation_hint, keyboard_navigation_hint(key))}
+  end
+
   def handle_live_event(_event, _params, %Socket{} = socket), do: {:noreply, socket}
 
   def extra_content(assigns) do
@@ -127,6 +141,11 @@ defmodule UnifiedExamples.Demo do
       id="demo-category-review-shell"
       class="example-app-runtime"
       data-demo-active-category={@active_category.id}
+      data-demo-responsive-shell="true"
+      data-demo-responsive-digest={@metadata.fixture_contract.digest}
+      data-demo-two-column-min={@metadata.fixture_contract.responsive_layout.desktop_two_column_min_width}
+      data-demo-single-column-max={@metadata.fixture_contract.responsive_layout.compact_single_column_max_width}
+      data-demo-dense-stack-max={@metadata.fixture_contract.responsive_layout.dense_stack_max_width}
     >
       <section class="example-app-review">
         <div class="example-app-header-top">
@@ -140,7 +159,18 @@ defmodule UnifiedExamples.Demo do
             of <span data-demo-category-count={length(@category_registry)}><%= length(@category_registry) %></span>
           </p>
 
-          <div class="demo-category-tab-bar">
+          <p id="demo-category-tab-hint" class="example-app-visually-hidden">
+            Use Tab to focus the active category tab. Use Left and Right Arrow to move between
+            categories, Home to jump to the first tab, and End to jump to the last tab.
+          </p>
+
+          <div
+            class="demo-category-tab-bar"
+            role="tablist"
+            aria-label="Examples demo control categories"
+            aria-describedby="demo-category-tab-hint"
+            data-demo-tablist="true"
+          >
             <%= for entry <- @category_registry do %>
               <LiveUi.Widgets.Button.render
                 id={"demo-category-tab-#{entry.id}"}
@@ -148,15 +178,29 @@ defmodule UnifiedExamples.Demo do
                 tone="accent"
                 variant={if entry.id == @active_category.id, do: "solid", else: "quiet"}
                 phx-click="select_category"
+                phx-keydown="navigate_category_tabs"
                 phx-value-category={entry.id}
+                role="tab"
+                aria-selected={to_string(entry.id == @active_category.id)}
+                aria-controls="demo-category-active-panel"
+                aria-describedby="demo-category-tab-hint"
+                tabindex={if entry.id == @active_category.id, do: "0", else: "-1"}
+                data-demo-tab-active={to_string(entry.id == @active_category.id)}
               />
             <% end %>
           </div>
+
+          <p :if={@tab_navigation_hint} class="example-app-notes" data-demo-tab-navigation-hint="true">
+            <%= @tab_navigation_hint %>
+          </p>
 
           <h2 class="example-app-title"><%= @active_category.label %></h2>
           <p class="example-app-summary"><%= @active_category.summary %></p>
           <p class="example-app-notes">
             Catalog linkage: <code><%= @active_category.id %></code> in the aggregate demo registry.
+          </p>
+          <p class="example-app-notes" data-demo-fixture-digest="true">
+            Fixture digest: <code><%= @metadata.fixture_contract.digest %></code>
           </p>
 
           <div
@@ -180,9 +224,12 @@ defmodule UnifiedExamples.Demo do
       </section>
 
       <section
-        id="demo-category-gallery-panel"
+        id="demo-category-active-panel"
         class="example-app-runtime"
         data-demo-category-panel={@active_category.id}
+        role="tabpanel"
+        aria-labelledby={"demo-category-tab-#{@active_category.id}"}
+        tabindex="0"
       >
         <div class="live-ui-box live-ui-box-panel" data-demo-panel-chrome="true">
           <p class="example-app-kicker">Representative gallery</p>
@@ -191,6 +238,9 @@ defmodule UnifiedExamples.Demo do
           </p>
           <p class="example-app-notes">
             Review focus: <%= @active_category.example_count %> linked example apps contribute to this category gallery.
+          </p>
+          <p class="example-app-notes" data-demo-responsive-contract="true">
+            Responsive contract: two columns at <%= @metadata.fixture_contract.responsive_layout.desktop_two_column_min_width %>px and above, stacked review below that, and denser linked-example flow at <%= @metadata.fixture_contract.responsive_layout.dense_stack_max_width %>px and below.
           </p>
         </div>
 
@@ -218,6 +268,7 @@ defmodule UnifiedExamples.Demo do
       :category_component,
       category_component(entry.fragment_module)
     )
+    |> Phoenix.Component.assign(:tab_navigation_hint, nil)
   end
 
   defp category_component(fragment_module) do
@@ -245,6 +296,33 @@ defmodule UnifiedExamples.Demo do
   rescue
     ArgumentError -> active_category_id()
   end
+
+  defp next_category_id(current_id, key) do
+    ids = Categories.ids()
+    current_index = Enum.find_index(ids, &(&1 == current_id)) || 0
+
+    case key do
+      "ArrowRight" -> Enum.at(ids, rem(current_index + 1, length(ids)))
+      "ArrowLeft" -> Enum.at(ids, rem(current_index - 1 + length(ids), length(ids)))
+      "Home" -> hd(ids)
+      "End" -> List.last(ids)
+      _other -> current_id
+    end
+  end
+
+  defp keyboard_navigation_hint("ArrowRight"),
+    do: "Moved focus and selection to the next category tab."
+
+  defp keyboard_navigation_hint("ArrowLeft"),
+    do: "Moved focus and selection to the previous category tab."
+
+  defp keyboard_navigation_hint("Home"),
+    do: "Moved focus and selection to the first category tab."
+
+  defp keyboard_navigation_hint("End"),
+    do: "Moved focus and selection to the last category tab."
+
+  defp keyboard_navigation_hint(_other), do: nil
 
   defp category_examples(directories) do
     Enum.map(directories, &Catalog.entry!/1)

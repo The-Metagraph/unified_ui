@@ -22,6 +22,8 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
   ]
   @metadata_start_marker "__UNIFIED_EXAMPLES_DEMO_METADATA_START__"
   @metadata_end_marker "__UNIFIED_EXAMPLES_DEMO_METADATA_END__"
+  @smoke_start_marker "__UNIFIED_EXAMPLES_DEMO_SMOKE_START__"
+  @smoke_end_marker "__UNIFIED_EXAMPLES_DEMO_SMOKE_END__"
   @metadata_cache_key {__MODULE__, :review_metadata}
   @catalog_entry %{
     directory: @demo_directory,
@@ -157,6 +159,79 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
       url: url,
       command: "cd #{@demo_root} && PORT=#{port} mix phx.server"
     }
+  end
+
+  @spec smoke_launch(keyword()) :: {:ok, map()} | {:error, term()}
+  def smoke_launch(opts \\ []) do
+    descriptor = launch_descriptor(opts)
+    port = Keyword.get(opts, :port, default_port())
+
+    expression = """
+    launch = UnifiedExamples.Demo.launch_descriptor(port: #{port})
+
+    Application.put_env(
+      :unified_example_demo,
+      UnifiedExamples.Demo.Endpoint,
+      Keyword.put(UnifiedExamples.Demo.endpoint_config(), :server, false)
+    )
+
+    case Application.ensure_all_started(:unified_example_demo) do
+      {:ok, _started} ->
+        try do
+          conn =
+            Plug.Test.conn(:get, launch.url)
+            |> Plug.Conn.put_req_header("accept", "text/html")
+            |> UnifiedExamples.Demo.Endpoint.call(UnifiedExamples.Demo.Endpoint.init([]))
+
+          result = %{
+            directory: "demo",
+            status: conn.status,
+            path: launch.path,
+            url: launch.url,
+            body: conn.resp_body,
+            launch_command: launch.command
+          }
+
+          result
+          |> :erlang.term_to_binary()
+          |> Base.encode64()
+          |> then(&IO.puts("#{@smoke_start_marker}" <> &1 <> "#{@smoke_end_marker}"))
+        after
+          Application.stop(:unified_example_demo)
+          Application.stop(:phoenix_live_view)
+          Application.stop(:phoenix)
+          Application.stop(:phoenix_pubsub)
+          Application.stop(:plug_cowboy)
+          Application.stop(:cowboy_telemetry)
+          Application.stop(:cowboy)
+          Application.stop(:plug)
+          Application.stop(:telemetry)
+        end
+
+      {:error, reason} ->
+        IO.puts("aggregate demo smoke launch failed: " <> inspect(reason))
+        System.halt(1)
+    end
+    """
+
+    case System.cmd("mix", ["run", "--no-start", "-e", expression],
+           cd: @demo_root,
+           env: [{"MIX_ENV", "dev"}, {"PORT", Integer.to_string(port)}],
+           stderr_to_stdout: true
+         ) do
+      {output, 0} ->
+        with [_, payload] <- Regex.run(~r/#{@smoke_start_marker}(.*?)#{@smoke_end_marker}/s, output) do
+          payload
+          |> Base.decode64!()
+          |> :erlang.binary_to_term()
+          |> then(&{:ok, &1})
+        else
+          _ -> {:error, {:aggregate_demo_smoke_unparseable, descriptor.url, output}}
+        end
+
+      {output, status} ->
+        {:error, {:aggregate_demo_smoke_failed, status, descriptor.url, output}}
+    end
   end
 
   defp default_port do

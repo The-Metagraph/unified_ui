@@ -9,7 +9,9 @@ want to inspect one widget’s authored interaction in detail.
 
 The app reuses the same shared theme and style baseline as the current button
 example and keeps that continuity visible across every tab, gallery, and Signal
-Lab story.
+Lab story. The baseline is anchored to the shared `:example_suite_default`
+theme and the same shared shell and panel style profile used by the focused
+button example.
 
 ## What It Shows
 
@@ -56,15 +58,22 @@ Shared suite support lives in `../shared`.
 
 When the examples catalog changes:
 
-1. add a new representative control or signal-lab story to the appropriate demo
+1. every focused example directory listed in `examples/catalog.tsv` should remain traceable through at least one category tab and linked example directory list
+2. add a new representative control or signal-lab story to the appropriate demo
    category fragment
-2. keep the same shared theme and style baseline as the current button example
-3. update the linked example directories and category review copy so the new
+3. keep the same shared theme and style baseline as the current button example,
+   anchored to `:example_suite_default`
+4. update the linked example directories and category review copy so the new
    control is traceable from overview to focused app
-4. run `mix examples.launch demo --dry-run` from `../shared`
-5. run `mix examples.validate --strict` from `../shared`
+5. run `mix examples.launch demo --dry-run` from `../shared`
+6. run `mix examples.launch demo --smoke-test` from `../shared`
+7. run `mix examples.validate --strict` from `../shared`
 
 When the Signal Lab evolves, add a new representative control or signal-lab
 story only if it still demonstrates authored `UnifiedUi` interactions compiled
 to canonical `UnifiedIUR` and rendered through `LiveUi` with a reviewer-visible
 outcome.
+
+When the shared button-example styling baseline changes, update the aggregate
+demo shell, tabs, and gallery chrome in the same change so the demo continues
+to present the same theme and style contract as the focused suite.
