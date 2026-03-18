@@ -83,7 +83,9 @@ defmodule WebUi.Server do
       server_state: :ready,
       view_state_generation: :ready,
       render_models: :ready,
-      sync_envelopes: :ready
+      sync_envelopes: :ready,
+      display_systems: :ready,
+      layered_composition: :ready
     }
   end
 

@@ -7,6 +7,8 @@ defmodule WebUi do
     Examples,
     Frontend,
     Info,
+    Layer,
+    Layout,
     Reference,
     Renderer,
     Runtime,
@@ -18,6 +20,8 @@ defmodule WebUi do
 
   @type module_area ::
           :widgets
+          | :layout
+          | :layer
           | :server_runtime
           | :frontend_runtime
           | :runtime
@@ -30,6 +34,8 @@ defmodule WebUi do
 
   @module_areas %{
     widgets: Widgets,
+    layout: Layout,
+    layer: Layer,
     server_runtime: Server,
     frontend_runtime: Frontend,
     runtime: Runtime,
@@ -65,6 +71,12 @@ defmodule WebUi do
 
   @spec widgets() :: module()
   def widgets, do: Widgets
+
+  @spec layout() :: module()
+  def layout, do: Layout
+
+  @spec layer() :: module()
+  def layer, do: Layer
 
   @spec server() :: module()
   def server, do: Server

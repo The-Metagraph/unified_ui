@@ -4,7 +4,19 @@ defmodule WebUi.Widgets do
   """
 
   alias WebUi.Widget
-  alias WebUi.Widgets.{Forms, Foundational, Input, Layout, Navigation}
+
+  alias WebUi.Widgets.{
+    Data,
+    Feedback,
+    Forms,
+    Foundational,
+    Input,
+    Layout,
+    Layered,
+    Navigation,
+    Operational,
+    Visualization
+  }
 
   @type responsibility ::
           :native_widget_surface
@@ -33,11 +45,33 @@ defmodule WebUi.Widgets do
     menu: :navigation,
     row: :layout,
     column: :layout,
+    grid: :layout,
+    stack: :layout,
+    viewport: :layout,
+    scroll_bar: :layout,
+    split_pane: :layout,
+    overlay: :layer,
     dialog: :layer,
+    toast: :layer,
+    alert_dialog: :layer,
+    context_menu: :layer,
     table: :data,
+    tree_view: :data,
+    markdown_viewer: :document,
+    log_viewer: :document,
     status: :feedback,
+    progress: :feedback,
+    inline_feedback: :feedback,
     gauge: :visualization,
-    stream_widget: :operational
+    sparkline: :visualization,
+    bar_chart: :visualization,
+    line_chart: :visualization,
+    canvas: :visualization,
+    stream_widget: :operational,
+    process_monitor: :operational,
+    cluster_dashboard: :operational,
+    command_palette: :operational,
+    supervision_tree_viewer: :operational
   }
 
   @spec responsibilities() :: [responsibility()]
@@ -108,7 +142,19 @@ defmodule WebUi.Widgets do
 
   @spec modules() :: [module()]
   def modules do
-    [Widget, Foundational, Input, Navigation, Layout, Forms]
+    [
+      Widget,
+      Foundational,
+      Input,
+      Navigation,
+      Layout,
+      Layered,
+      Forms,
+      Data,
+      Feedback,
+      Visualization,
+      Operational
+    ]
   end
 
   @spec style_contract() :: map()
@@ -132,7 +178,22 @@ defmodule WebUi.Widgets do
   def events_contract do
     %{
       event_payload_shape: :map,
-      event_names: [:change, :submit, :open, :close, :focus, :navigation, :command]
+      event_names: [
+        :change,
+        :submit,
+        :open,
+        :close,
+        :focus,
+        :navigation,
+        :command,
+        :sort,
+        :filter,
+        :paginate,
+        :expand,
+        :scroll,
+        :resize,
+        :dismiss
+      ]
     }
   end
 
@@ -146,7 +207,13 @@ defmodule WebUi.Widgets do
       input_widgets: :ready,
       navigation_widgets: :ready,
       form_composition: :ready,
-      layout_primitives: :ready
+      layout_primitives: :ready,
+      display_systems: :ready,
+      layered_composition: :ready,
+      advanced_data_widgets: :ready,
+      advanced_feedback_widgets: :ready,
+      advanced_visualization_widgets: :ready,
+      advanced_operational_widgets: :ready
     }
   end
 

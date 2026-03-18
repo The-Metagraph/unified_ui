@@ -78,4 +78,17 @@ defmodule WebUi.Server.Error do
       value: inspect(envelope)
     })
   end
+
+  @spec invalid_display_configuration(term(), atom(), map()) :: t()
+  def invalid_display_configuration(screen, reason, details) do
+    new(
+      :invalid_display_configuration,
+      "display-system or layered widget configuration is invalid for web_ui runtime realization",
+      %{
+        screen: inspect(screen),
+        reason: reason
+      }
+      |> Map.merge(Map.new(details))
+    )
+  end
 end

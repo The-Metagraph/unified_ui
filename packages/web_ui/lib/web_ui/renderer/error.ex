@@ -32,7 +32,7 @@ defmodule WebUi.Renderer.Error do
 
   @spec missing_identity(UnifiedIUR.Element.t()) :: t()
   def missing_identity(element) do
-    new(:missing_identity, "canonical elements need stable ids for Phase 2 rendering", %{
+    new(:missing_identity, "canonical elements need stable ids for web_ui rendering", %{
       type: element.type,
       kind: element.kind
     })
@@ -40,7 +40,7 @@ defmodule WebUi.Renderer.Error do
 
   @spec unsupported_kind(UnifiedIUR.Element.t(), [atom()]) :: t()
   def unsupported_kind(element, supported_kinds) do
-    new(:unsupported_kind, "canonical kind is not supported by the Phase 2 renderer", %{
+    new(:unsupported_kind, "canonical kind is not supported by the current web_ui renderer", %{
       id: element.id,
       type: element.type,
       kind: element.kind,
@@ -50,7 +50,7 @@ defmodule WebUi.Renderer.Error do
 
   @spec invalid_field(UnifiedIUR.Element.t(), atom()) :: t()
   def invalid_field(element, missing_slot) do
-    new(:invalid_field_shape, "canonical field elements require expected child slots", %{
+    new(:invalid_field_shape, "canonical elements require expected child slots", %{
       id: element.id,
       kind: element.kind,
       missing_slot: missing_slot

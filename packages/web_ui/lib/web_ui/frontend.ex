@@ -97,6 +97,9 @@ defmodule WebUi.Frontend do
     %{
       hydration: :ready,
       foundational_realization: :ready,
+      advanced_realization: :ready,
+      display_systems: :ready,
+      layered_composition: :ready,
       browser_bridge: :ready,
       local_state: :ready,
       outbound_messages: :ready
