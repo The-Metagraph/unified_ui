@@ -175,6 +175,7 @@ defmodule UnifiedExamples.Demo do
               <LiveUi.Widgets.Button.render
                 id={"demo-category-tab-#{entry.id}"}
                 label={entry.label}
+                class={"live-ui-button live-ui-button-#{if entry.id == @active_category.id, do: "solid", else: "quiet"}"}
                 tone="accent"
                 variant={if entry.id == @active_category.id, do: "solid", else: "quiet"}
                 phx-click="select_category"
