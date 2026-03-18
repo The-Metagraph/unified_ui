@@ -25,7 +25,9 @@ defmodule UnifiedExamples.SharedTest do
 
     assert Shared.shared_root() == shared_root
     assert Shared.suite_root() == Path.expand("..", shared_root)
-    assert Shared.app_directories() == Catalog.directories()
+
+    # The aggregate demo app directory exists but is not a catalog entry
+    assert Shared.app_directories() -- ["demo"] == Catalog.directories()
   end
 
   test "exposes the advanced review sweep directories separately from the full catalog" do

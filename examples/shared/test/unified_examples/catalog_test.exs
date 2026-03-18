@@ -123,69 +123,77 @@ defmodule UnifiedExamples.CatalogTest do
              "cluster_dashboard"
            ]
 
-    assert Catalog.entry!("numeric_input") == %{
-             directory: "numeric_input",
-             widget: :numeric_input,
-             family: :input,
-             phase: 2,
-             shell_kind: :form_builder
-           }
+    # Check core catalog fields (interaction_demo is optional metadata)
+    assert_catalog_fields(Catalog.entry!("numeric_input"), %{
+      directory: "numeric_input",
+      widget: :numeric_input,
+      family: :input,
+      phase: 2,
+      shell_kind: :form_builder
+    })
 
-    assert Catalog.entry!("grid") == %{
-             directory: "grid",
-             widget: :grid,
-             family: :layout,
-             phase: 3,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("grid"), %{
+      directory: "grid",
+      widget: :grid,
+      family: :layout,
+      phase: 3,
+      shell_kind: :box
+    })
 
-    assert Catalog.entry!("command_palette") == %{
-             directory: "command_palette",
-             widget: :command_palette,
-             family: :navigation,
-             phase: 3,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("command_palette"), %{
+      directory: "command_palette",
+      widget: :command_palette,
+      family: :navigation,
+      phase: 3,
+      shell_kind: :box
+    })
 
-    assert Catalog.entry!("table") == %{
-             directory: "table",
-             widget: :table,
-             family: :data,
-             phase: 3,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("table"), %{
+      directory: "table",
+      widget: :table,
+      family: :data,
+      phase: 3,
+      shell_kind: :box
+    })
 
-    assert Catalog.entry!("status") == %{
-             directory: "status",
-             widget: :status,
-             family: :feedback,
-             phase: 3,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("status"), %{
+      directory: "status",
+      widget: :status,
+      family: :feedback,
+      phase: 3,
+      shell_kind: :box
+    })
 
-    assert Catalog.entry!("viewport") == %{
-             directory: "viewport",
-             widget: :viewport,
-             family: :display,
-             phase: 4,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("viewport"), %{
+      directory: "viewport",
+      widget: :viewport,
+      family: :display,
+      phase: 4,
+      shell_kind: :box
+    })
 
-    assert Catalog.entry!("dialog") == %{
-             directory: "dialog",
-             widget: :dialog,
-             family: :overlay,
-             phase: 4,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("dialog"), %{
+      directory: "dialog",
+      widget: :dialog,
+      family: :overlay,
+      phase: 4,
+      shell_kind: :box
+    })
 
-    assert Catalog.entry!("stream_widget") == %{
-             directory: "stream_widget",
-             widget: :stream_widget,
-             family: :operational,
-             phase: 4,
-             shell_kind: :box
-           }
+    assert_catalog_fields(Catalog.entry!("stream_widget"), %{
+      directory: "stream_widget",
+      widget: :stream_widget,
+      family: :operational,
+      phase: 4,
+      shell_kind: :box
+    })
+  end
+
+  defp assert_catalog_fields(entry, expected) do
+    for {key, value} <- expected do
+      assert Map.get(entry, key) == value,
+             "Expected #{key}: #{inspect(value)}, got #{inspect(Map.get(entry, key))} for #{entry.directory}"
+    end
   end
 
   test "derives app modules, screen modules, and source files from directory names" do

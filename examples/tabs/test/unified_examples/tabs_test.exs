@@ -5,19 +5,19 @@ defmodule UnifiedExamples.TabsTest do
   alias UnifiedExamples.Tabs
 
   test "tabs example exposes standalone example metadata" do
-    assert Tabs.metadata() == %{
-             id: :tabs_example_screen,
-             root_id: :tabs_example_screen_root,
-             title: "Tabs Widget Example",
-             summary: "Focused navigation-oriented example using the shared suite shell",
-             notes:
-               "Tabs examples keep the shared shell while foregrounding one canonical view switcher.",
-             widget: :tabs,
-             theme_id: :example_suite_default,
-             app: :unified_example_tabs,
-             directory: "examples/tabs",
-             purpose: :widget_proof
-           }
+    metadata = Tabs.metadata()
+
+    # Check core fields (interaction_demo is populated from defaults)
+    assert metadata.id == :tabs_example_screen
+    assert metadata.root_id == :tabs_example_screen_root
+    assert metadata.title == "Tabs Widget Example"
+    assert metadata.summary == "Focused navigation-oriented example using the shared suite shell"
+    assert metadata.notes == "Tabs examples keep the shared shell while foregrounding one canonical view switcher."
+    assert metadata.widget == :tabs
+    assert metadata.theme_id == :example_suite_default
+    assert metadata.app == :unified_example_tabs
+    assert metadata.directory == "examples/tabs"
+    assert metadata.purpose == :widget_proof
   end
 
   test "tabs example renders the shared shell and foregrounds one primary tab set" do
