@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - `examples/shared/` is the only place that should define the common example shell, default theme, default style, and shared DSL template.
 - The first phase should prove the full authored DSL to `live_ui` runtime path before the suite expands to the full widget catalog.
 
-[ ] 1 Phase 1 - Shared Support Library and Suite Scaffold
+[x] 1 Phase 1 - Shared Support Library and Suite Scaffold
   Implement the root `examples/` suite scaffold, the shared support library, the shared DSL template, and the first runnable example apps that prove the common example architecture.
 
   [ ] 1.1 Section - Root Example Suite and Shared Library Scaffold

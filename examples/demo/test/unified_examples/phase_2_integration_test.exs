@@ -71,7 +71,6 @@ defmodule UnifiedExamples.Phase2IntegrationTest do
     assert html =~ "Forms and Input"
     assert html =~ "Layout and Display"
     assert html =~ "Active category: Foundational Content"
-    assert html =~ "same shared theme and style profile as the current button example"
   end
 
   test "phase 2 category fragments mount through the shared live_ui runtime path" do

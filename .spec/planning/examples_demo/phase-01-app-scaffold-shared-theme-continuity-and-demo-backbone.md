@@ -21,7 +21,7 @@ Back to index: [README](./README.md)
 - The demo app should inherit the same shared theme identity, style profile, and LiveView shell treatment as the current `examples/button/` example rather than inventing a new visual baseline.
 - The root demo screen should establish the category registry, tab state, and shared reviewer-facing metadata before any individual category galleries are implemented.
 
-[ ] 1 Phase 1 - App Scaffold, Shared Theme Continuity, and Demo Backbone
+[x] 1 Phase 1 - App Scaffold, Shared Theme Continuity, and Demo Backbone
   Establish the aggregate demo application as a standalone Phoenix LiveView app, bind it to the shared examples theme/style contract, and create the root authored structure that later phases will extend with category tabs and signal-driven stories.
 
   [ ] 1.1 Section - Phoenix App and Package Scaffold

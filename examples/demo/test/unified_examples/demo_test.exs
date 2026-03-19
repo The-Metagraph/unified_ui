@@ -62,9 +62,7 @@ defmodule UnifiedExamples.DemoTest do
     assert runtime_state.assigns.iur.id == :demo_example_screen_shell
     assert html =~ "Examples Demo Application"
     assert html =~ "Aggregate category-oriented control demo scaffold"
-    assert html =~ "Standalone Phoenix LiveView scaffold is active."
-    assert html =~ "same shared theme and style profile as the current button example"
-    assert html =~ "Preview the aggregate demo shell"
+    assert html =~ "Widget catalog with individual widget detail pages is active."
     assert html =~ "Category Registry Backbone"
     assert html =~ "Foundational Content"
     assert html =~ "Signal Lab"

@@ -1,6 +1,7 @@
 defmodule UnifiedExamples.Demo.Screen do
   @moduledoc """
-  Phase 1 scaffold screen for the aggregate examples demo application.
+  Aggregate demo screen for the unified examples suite.
+  Phase 6: Widget catalog with detail pages.
   """
 
   use UnifiedUi.Dsl
@@ -21,8 +22,7 @@ defmodule UnifiedExamples.Demo.Screen do
     root_id: :demo_example_screen_root,
     title: "Examples Demo Application",
     summary: "Aggregate category-oriented control demo scaffold",
-    notes:
-      "Phase 1 establishes the standalone app, launch contract, category registry, and authored root screen for the aggregate demo.",
+    notes: "Phase 6: Widget catalog with individual widget detail pages.",
     widget: :demo,
     theme_id: @default_theme_id,
     active_category_id: @active_category_id,
@@ -34,14 +34,11 @@ defmodule UnifiedExamples.Demo.Screen do
       family: :navigation,
       source: :shared_trigger,
       source_label: "Shared interaction trigger",
-      trigger_label: "Preview the aggregate demo shell",
-      idle_prompt:
-        "Use the shared trigger to review how the aggregate demo will present category tabs and shared styling.",
-      outcome:
-        "The aggregate demo scaffold should already look and feel like part of the shared example suite before category tabs and signal stories are added.",
+      trigger_label: "Browse the widget catalog",
+      idle_prompt: "Browse the widget catalog and explore individual components.",
+      outcome: "The widget catalog allows interactive exploration of all UI components.",
       target_surface: "Aggregate demo scaffold shell",
-      reviewer_hint:
-        "The aggregate demo should already reuse the shared button-example theme and panel language during Phase 1."
+      reviewer_hint: "The aggregate demo provides a widget catalog browser."
     }
   }
 
@@ -91,14 +88,14 @@ defmodule UnifiedExamples.Demo.Screen do
   composition do
     root(:demo_example_screen_root)
     mode(:screen)
-    summary("Aggregate demo application scaffold")
+    summary("Aggregate demo application shell")
 
     box :demo_example_screen_shell do
       theme_ref(@default_theme_id)
       style_refs([:example_shell])
       tone(:surface)
       variant(:panel)
-      summary("Phase 1 demo shell")
+      summary("Phase 6 demo shell with widget catalog")
 
       text :demo_example_screen_title do
         value("Examples Demo Application")
@@ -124,7 +121,7 @@ defmodule UnifiedExamples.Demo.Screen do
         variant(:panel)
 
         text :demo_example_screen_status do
-          value("Standalone Phoenix LiveView scaffold is active.")
+          value("Widget catalog with individual widget detail pages is active.")
           theme_ref(@default_theme_id)
           style_refs([:example_title])
           tone(:accent)
@@ -133,29 +130,17 @@ defmodule UnifiedExamples.Demo.Screen do
 
         text :demo_example_screen_shell_note do
           value(
-            "This root shell now uses the same shared theme and style profile as the current button example."
+            "Browse widgets by category and click on any widget to see its detail page with events and attributes."
           )
-
           theme_ref(@default_theme_id)
           style_refs([:example_summary])
-          tone(:muted)
-          variant(:body)
-        end
-
-        text :demo_example_screen_next_step do
-          value(
-            "Later phases will add the full category galleries and signal-reactivity stories."
-          )
-
-          theme_ref(@default_theme_id)
-          style_refs([:example_notes])
           tone(:muted)
           variant(:body)
         end
       end
 
       box :demo_example_category_registry_panel do
-        summary("Ordered category registry preview")
+        summary("Category registry and navigation")
         theme_ref(@default_theme_id)
         style_refs([:example_panel])
         tone(:surface)
@@ -171,9 +156,8 @@ defmodule UnifiedExamples.Demo.Screen do
 
         text :demo_example_category_registry_summary do
           value(
-            "The aggregate demo now tracks #{Categories.count()} ordered review tabs and defaults to #{@active_category_entry.label}."
+            "The aggregate demo tracks #{Categories.count()} ordered review tabs and defaults to #{@active_category_entry.label}."
           )
-
           theme_ref(@default_theme_id)
           style_refs([:example_summary])
           tone(:muted)
@@ -207,7 +191,7 @@ defmodule UnifiedExamples.Demo.Screen do
       end
 
       button :demo_example_theme_preview_trigger do
-        label("Preview the aggregate demo shell")
+        label("Browse the widget catalog")
         interaction_refs([:preview_demo_shell])
         theme_ref(@default_theme_id)
         style_refs([:example_primary_button])

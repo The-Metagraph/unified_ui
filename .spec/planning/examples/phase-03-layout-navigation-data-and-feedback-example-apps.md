@@ -16,7 +16,7 @@ Back to index: [README](./README.md)
 - Layout, navigation, data, and feedback examples still use one primary subject per app, even when surrounding scaffolding is needed to make the subject understandable.
 - The suite index and shared metadata are updated continuously as new example apps are added.
 
-[ ] 3 Phase 3 - Layout, Navigation, Data, and Feedback Example Apps
+[x] 3 Phase 3 - Layout, Navigation, Data, and Feedback Example Apps
   Implement the example applications for layout, navigation, data, and feedback constructs while preserving the shared shell, shared theme, and one-primary-subject-per-app rule.
 
   [ ] 3.1 Section - Layout Example Apps

@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - The demo app should be easy to discover through the existing examples-suite tooling without obscuring the focused per-widget example applications.
 - Validation should treat the category tabs, button-example style continuity, and signal-lab story inventory as first-class demo-app requirements.
 
-[ ] 5 Phase 5 - Tooling, Documentation, and Suite Traceability
+[x] 5 Phase 5 - Tooling, Documentation, and Suite Traceability
   Integrate the aggregate demo app into the shared examples tooling and documentation so maintainers can discover it, launch it, validate it, and trace it back to the suite catalog and per-widget examples.
 
   [ ] 5.1 Section - Examples Index and Launcher Integration
