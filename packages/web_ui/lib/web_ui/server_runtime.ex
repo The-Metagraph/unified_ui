@@ -16,9 +16,10 @@ defmodule WebUi.ServerRuntime do
   * `Channel` - Phoenix channel for browser-server communication
   * `BrowserBridge` - Server-side browser bridge coordination
   * `Diagnostics` - Runtime validation and diagnostics helpers
+  * `ViewState` - View state generation for foundational widgets
   """
 
-  alias WebUi.ServerRuntime.{State, Error, FrontendSync, Channel, BrowserBridge, Diagnostics}
+  alias WebUi.ServerRuntime.{State, Error, FrontendSync, Channel, BrowserBridge, Diagnostics, ViewState}
 
   @type state :: State.t()
   @type error :: Error.t()
