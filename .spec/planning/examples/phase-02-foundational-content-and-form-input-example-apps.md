@@ -16,7 +16,7 @@ Back to index: [README](./README.md)
 - Each example app still focuses on one primary widget or construct, even when supporting form scaffolding is required around it.
 - The shared default theme and style profile remain the baseline for all example apps in this phase.
 
-[ ] 2 Phase 2 - Foundational Content and Form Input Example Apps
+[x] 2 Phase 2 - Foundational Content and Form Input Example Apps
   Implement the foundational content, form, and input example applications that establish the suite-wide app shape for the largest baseline widget families.
 
   [ ] 2.1 Section - Foundational Content Example Apps

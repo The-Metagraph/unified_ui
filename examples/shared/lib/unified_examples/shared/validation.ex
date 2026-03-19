@@ -67,96 +67,98 @@ defmodule UnifiedExamples.Shared.Validation do
     required_story_ids = AggregateDemo.required_signal_lab_story_ids()
     category_ids = Map.get(metadata, :category_ids, [])
     signal_lab_contract = Map.get(metadata, :signal_lab_contract, %{})
+    style_profile = Map.get(metadata, :style_profile)
+    directory = Map.get(metadata, :directory, "unknown")
 
     []
     |> maybe_issue(
-      metadata.style_profile != Template.default_style_profile(),
+      style_profile != nil and style_profile != Template.default_style_profile(),
       :style_profile_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo style profile must stay aligned with the shared button-example baseline"
     )
     |> maybe_issue(
-      metadata.theme_id != Template.default_theme_id(),
+      Map.get(metadata, :theme_id) != Template.default_theme_id(),
       :app_theme_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo theme_id must stay aligned with the shared default theme"
     )
     |> maybe_issue(
-      metadata.default_theme_id != Template.default_theme_id(),
+      Map.get(metadata, :default_theme_id) != Template.default_theme_id(),
       :screen_theme_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo default theme must stay aligned with the shared default theme"
     )
     |> maybe_issue(
-      metadata.uses_shared_template != true,
+      Map.get(metadata, :uses_shared_template) != true,
       :shared_template_divergence,
-      metadata.directory,
+      directory,
       "aggregate demo must continue using the shared template style profile"
     )
     |> maybe_issue(
-      metadata.browser_runnable? != true,
+      Map.get(metadata, :browser_runnable?) != true,
       :not_browser_runnable,
-      metadata.directory,
+      directory,
       "aggregate demo must remain browser-runnable through Phoenix LiveView"
     )
     |> maybe_issue(
-      metadata.dev_server_enabled? != true,
+      Map.get(metadata, :dev_server_enabled?) != true,
       :dev_server_disabled,
-      metadata.directory,
+      directory,
       "aggregate demo must enable its Phoenix endpoint server in dev so mix phx.server works"
     )
     |> maybe_issue(
-      metadata.launch_path != "/",
+      Map.get(metadata, :launch_path) != "/",
       :launch_path_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo must mount at the shared root path"
     )
     |> maybe_issue(
-      not String.contains?(metadata.launch_command || "", "mix phx.server"),
+      not String.contains?(Map.get(metadata, :launch_command, ""), "mix phx.server"),
       :launch_command_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo launch metadata must expose a mix phx.server command"
     )
     |> maybe_issue(
       Enum.sort(category_ids) != Enum.sort(required_category_ids),
       :category_registry_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo must expose the full required ordered category tab registry"
     )
     |> maybe_issue(
       Map.get(metadata, :category_count) != length(required_category_ids),
       :category_count_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo category count must stay aligned with the required category registry"
     )
     |> maybe_issue(
-      not is_list(metadata.category_registry) or metadata.category_registry == [],
+      not is_list(Map.get(metadata, :category_registry)) or Map.get(metadata, :category_registry, []) == [],
       :missing_category_registry,
-      metadata.directory,
+      directory,
       "aggregate demo must expose category review metadata for each tab"
     )
     |> maybe_issue(
       Enum.any?(Map.get(metadata, :category_registry, []), &(&1.example_count < 1)),
       :missing_category_traceability,
-      metadata.directory,
+      directory,
       "aggregate demo category metadata must link every tab back to at least one focused example app"
     )
     |> maybe_issue(
       Map.get(metadata, :linked_example_directories, []) == [],
       :missing_linked_examples,
-      metadata.directory,
+      directory,
       "aggregate demo must expose linked focused example directories for traceability"
     )
     |> maybe_issue(
       Enum.sort(Map.get(metadata, :linked_example_directories, [])) != Catalog.directories(),
       :catalog_traceability_mismatch,
-      metadata.directory,
+      directory,
       "aggregate demo must keep every focused catalog entry traceable through at least one category tab"
     )
     |> maybe_issue(
-      signal_lab_contract == %{} or signal_lab_contract.valid? != true,
+      signal_lab_contract == %{} or Map.get(signal_lab_contract, :valid?) != true,
       :invalid_signal_lab_contract,
-      metadata.directory,
+      directory,
       "aggregate demo signal lab contract must stay valid"
     )
     |> maybe_issue(

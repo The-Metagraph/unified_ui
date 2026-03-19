@@ -634,6 +634,7 @@ defmodule UnifiedExamples.Shared.App do
             data-example-interaction-family={@metadata.interaction_demo.family}
             data-example-launch-url={Map.get(@metadata, :launch_url)}
             data-example-category-count={Map.get(@metadata, :category_count)}
+            data-demo-active-category={assigns[:active_category] && assigns.active_category.id || Map.get(@metadata, :active_category_id)}
           >
             <header class="example-app-header">
               <div class="example-app-header-top">
@@ -668,7 +669,7 @@ defmodule UnifiedExamples.Shared.App do
               <% end %>
             </section>
 
-            <%= @extra_content %>
+            <%= @extra_content || "" %>
           </main>
           """
         end
@@ -717,6 +718,7 @@ defmodule UnifiedExamples.Shared.App do
           pipe_through(:browser)
 
           live("/", @live, :show, as: :example)
+          live("/widget/:widget_name", UnifiedExamples.Demo.WidgetLive, :show, as: :widget)
         end
       end
 

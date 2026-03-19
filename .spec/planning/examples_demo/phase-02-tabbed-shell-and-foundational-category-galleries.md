@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - The aggregate demo shell should be tab-driven and browser-readable before the more advanced category galleries and signal stories are added.
 - The first implementation pass should cover the categories reviewers are most likely to use first: foundational content, forms/input, and layout/display.
 
-[ ] 2 Phase 2 - Tabbed Shell and Foundational Category Galleries
+[x] 2 Phase 2 - Tabbed Shell and Foundational Category Galleries
   Implement the tabbed shell, category switching behavior, and the first set of category galleries so the aggregate demo already serves as a useful browser-review surface for the most common control families.
 
   [ ] 2.1 Section - Tabbed Shell and Active-Category Flow

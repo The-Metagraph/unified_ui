@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - This phase covers the most structurally complex example apps in the suite.
 - Even advanced apps still rely on the shared example shell, shared theme, and one-primary-subject-per-app rule.
 
-[ ] 4 Phase 4 - Display, Overlay, and Operational Example Apps
+[x] 4 Phase 4 - Display, Overlay, and Operational Example Apps
   Implement the display-system, overlay, and operational example applications together with the more advanced runtime flows they require.
 
   [ ] 4.1 Section - Display-System Example Apps

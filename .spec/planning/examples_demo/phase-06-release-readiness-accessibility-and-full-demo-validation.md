@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - The final phase should harden the demo app for long-term maintenance by covering accessibility, deterministic fixtures, responsive browsing, and release workflows.
 - The aggregate demo app should remain a browser-runnable review surface that complements the rest of the examples suite without introducing hidden operational complexity.
 
-[ ] 6 Phase 6 - Release Readiness, Accessibility, and Full Demo Validation
+[x] 6 Phase 6 - Release Readiness, Accessibility, and Full Demo Validation
   Finish the aggregate demo app with the accessibility, fixture stability, release workflows, and full integration coverage required to keep it maintainable as the examples suite and control catalog evolve.
 
   [ ] 6.1 Section - Accessibility and Tab Usability

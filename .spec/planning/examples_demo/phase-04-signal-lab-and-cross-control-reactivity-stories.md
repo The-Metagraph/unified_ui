@@ -16,7 +16,7 @@ Back to index: [README](./README.md)
 - The signal lab must use authored `unified_ui` interactions compiled to canonical `UnifiedIUR` and translated through `live_ui`, not ad hoc runtime-only event handlers.
 - Signal-driven stories should be reviewer-friendly first, with clear visible outcomes and readable explanations, while still exposing canonical interaction meaning.
 
-[ ] 4 Phase 4 - Signal Lab and Cross-Control Reactivity Stories
+[x] 4 Phase 4 - Signal Lab and Cross-Control Reactivity Stories
   Implement the dedicated signal-lab tab so the aggregate demo app proves authored canonical signal flows through visible cross-control reactivity rather than only static showcase rendering.
 
   [ ] 4.1 Section - Signal Lab Authored Backbone

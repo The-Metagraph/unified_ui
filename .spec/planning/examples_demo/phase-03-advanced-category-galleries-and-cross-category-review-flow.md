@@ -16,7 +16,7 @@ Back to index: [README](./README.md)
 - The remaining categories should preserve the same shell and reviewer-facing gallery pattern rather than branching into category-specific page layouts.
 - Cross-category reviewer cues should help users navigate the full control surface without losing the single-app browsing advantage.
 
-[ ] 3 Phase 3 - Advanced Category Galleries and Cross-Category Review Flow
+[x] 3 Phase 3 - Advanced Category Galleries and Cross-Category Review Flow
   Implement the remaining category tabs and the shared review cues that connect them, turning the aggregate demo into a full catalog browser for the current control families.
 
   [ ] 3.1 Section - Navigation and Selection Gallery
