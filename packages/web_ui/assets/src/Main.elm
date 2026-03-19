@@ -1,18 +1,28 @@
 module Main exposing (main)
 
--- Main entrypoint for web_ui Elm frontend
--- This is a placeholder - actual implementation will come in later phases
+{-| Main entrypoint for web_ui Elm frontend.
+
+This module provides the boot process and initial runtime setup
+for the web_ui Elm application.
+
+-}
 
 
-main : Program () () Msg
+import Browser
+import Json.Decode as Decode
+import Json.Encode as Encode
+import WebUi.Elm.Runtime as Runtime
+
+
+
+-- MAIN
+
+
+main : Program Encode.Value Runtime.Model Runtime.Msg
 main =
-    Platform.worker
-        { init = \_ -> ( (), Cmd.none )
-        , update = \_ _ -> ( (), Cmd.none )
-        , subscriptions = \_ -> Sub.none
+    Browser.element
+        { init = Runtime.init
+        , update = Runtime.update
+        , view = Runtime.view
+        , subscriptions = Runtime.subscriptions
         }
-
-
-
-type Msg
-    = NoOp
