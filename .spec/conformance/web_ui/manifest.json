@@ -1,451 +1,507 @@
 {
   "package": "web_ui",
   "version": "1",
+  "ci_enforcement": "warn",
   "requirements": [
     {
       "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of web_ui.package.not_dsl_or_iur_owner."
     },
     {
       "requirement_id": "ecosystem.architecture.iur_exchange_boundary",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.accepts_canonical_iur."
     },
     {
       "requirement_id": "ecosystem.architecture.renderer_packages_consume_iur",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.accepts_canonical_iur."
     },
     {
       "requirement_id": "ecosystem.architecture.runtime_libraries_native_surface",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.native_runtime_library",
+      "notes": "Shares the current conformance status of web_ui.package.native_runtime_library."
     },
     {
       "requirement_id": "ecosystem.architecture.runtime_libraries_iur_renderer",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.iur_renderer_entrypoint",
+      "notes": "Shares the current conformance status of web_ui.package.iur_renderer_entrypoint."
     },
     {
       "requirement_id": "ecosystem.architecture.shared_transport_contract",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of web_ui.transport.canonical_boundary_events."
     },
     {
       "requirement_id": "ecosystem.platform_runtimes.widget_libraries_independent",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of web_ui.package.not_dsl_or_iur_owner."
     },
     {
       "requirement_id": "ecosystem.platform_runtimes.native_surface_covers_iur",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.covers_canonical_iur_surface."
     },
     {
       "requirement_id": "ecosystem.platform_runtimes.native_surface_usable_without_iur",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.direct_native_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.direct_native_surface."
     },
     {
       "requirement_id": "ecosystem.platform_runtimes.iur_interpretation",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.accepts_canonical_iur."
     },
     {
       "requirement_id": "ecosystem.platform_runtimes.web_ui_runtime_split",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.phoenix_elm_split",
+      "notes": "Shares the current conformance status of web_ui.package.phoenix_elm_split."
     },
     {
       "requirement_id": "ecosystem.signal_transport.jido_signal_canonical",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of web_ui.transport.canonical_boundary_events."
     },
     {
       "requirement_id": "ecosystem.signal_transport.dsl_event_bindings",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of web_ui.transport.canonical_boundary_events."
     },
     {
       "requirement_id": "ecosystem.signal_transport.web_bridge",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.server_frontend_bridge",
+      "notes": "Shares the current conformance status of web_ui.transport.server_frontend_bridge."
     },
     {
       "requirement_id": "ecosystem.signal_transport.native_signal_models_allowed",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.native_web_event_model",
+      "notes": "Shares the current conformance status of web_ui.transport.native_web_event_model."
     },
     {
       "requirement_id": "ecosystem.signal_transport.local_state_not_contract",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.frontend_runtime.local_state_bounded",
+      "notes": "Shares the current conformance status of web_ui.frontend_runtime.local_state_bounded."
     },
     {
       "requirement_id": "web_ui.package.library_identity",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "status": "waived",
+      "notes": "Explicitly waived while the package stays intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed and will be reintroduced through a new implementation track.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.package.native_runtime_library",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.package.iur_renderer_entrypoint",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.package.phoenix_elm_split",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.package.not_dsl_or_iur_owner",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "status": "verified",
+      "notes": "Verified as a guardrail while the package remains intentionally absent after reset.",
+      "evidence": [
+        {
+          "kind": "path_absent",
+          "path": "packages/web_ui"
+        },
+        {
+          "kind": "command",
+          "run": "test -d packages/unified-ui && test -d packages/unified_iur",
+          "cwd": "."
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.package.traceable_to_root_specs",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "status": "verified",
+      "notes": "Verified by the maintained package spec set and root-spec references.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/web_ui/*.spec.md"
+        },
+        {
+          "kind": "command",
+          "run": "rg -n \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/web_ui/*.spec.md",
+          "cwd": "."
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.structure.mix_and_frontend_layout",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "status": "waived",
+      "notes": "Explicitly waived while the package layout is intentionally absent after the reset.",
+      "waiver": {
+        "reason": "The `web_ui` package directory was intentionally removed after reset and its structure will return only with the renewed implementation.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.structure.server_frontend_boundary",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.structure.native_widget_module_boundary",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.structure.transport_translation_modules",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.structure.frontend_bridge_modules",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.structure.no_dsl_or_iur_authorship",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "status": "verified",
+      "notes": "Verified as a maintained boundary contract while implementation is reset.",
+      "evidence": [
+        {
+          "kind": "path_absent",
+          "path": "packages/web_ui"
+        },
+        {
+          "kind": "command",
+          "run": "rg -n \"not own the authored DSL boundary|not introduce authored DSL ownership\" .spec/specs/web_ui/package.spec.md .spec/specs/web_ui/structure.spec.md",
+          "cwd": "."
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.native_widgets.direct_native_surface",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.native_widgets.server_client_composition",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.native_widgets.theme_and_style_surface",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.native_widgets.interaction_surface",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.server_runtime.authoritative_server_representation",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.server_runtime.coordinate_frontend_rendering",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.server_runtime.handle_boundary_events",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.server_runtime.direct_and_iur_entrypoints_share_runtime",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.server_runtime.browser_state_is_bounded",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.frontend_runtime.elm_rendering_layer",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.frontend_runtime.local_state_bounded",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.frontend_runtime.native_and_iur_entrypoints_share_frontend",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.frontend_runtime.browser_capabilities",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.frontend_runtime.canonical_meaning_preserved",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.iur_renderer.full_construct_coverage",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.iur_renderer.deterministic_mapping",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.iur_renderer.meaning_preservation",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.iur_renderer.native_widget_reuse",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.transport.canonical_boundary_events",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.transport.native_web_event_model",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.transport.server_frontend_bridge",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.transport.no_boundary_leakage",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.transport.direct_native_usage_allowed",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.tooling.reference_examples",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.tooling.preview_and_inspection",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.tooling.validation_workflow",
       "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
     },
     {
       "requirement_id": "web_ui.tooling.documentation_surface",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "status": "verified",
+      "notes": "Verified by the maintained `web_ui` package specs and planning surfaces.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/web_ui/*.spec.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": ".spec/planning/web_ui/README.md"
+        }
+      ]
     },
     {
       "requirement_id": "unified_iur.widgets.input_and_navigation",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.interaction_surface."
     },
     {
       "requirement_id": "unified_iur.widgets.overlay_and_feedback",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.interaction_surface."
     },
     {
       "requirement_id": "unified_iur.widgets.data_and_document_views",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.covers_canonical_iur_surface."
     },
     {
       "requirement_id": "unified_iur.widgets.visualization",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.covers_canonical_iur_surface."
     },
     {
       "requirement_id": "unified_iur.widgets.operational_views",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.covers_canonical_iur_surface."
     },
     {
       "requirement_id": "unified_iur.widgets.widget_semantics_preserved",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.meaning_preservation",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.meaning_preservation."
     },
     {
       "requirement_id": "unified_iur.display_systems.layout_primitives",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.full_construct_coverage."
     },
     {
       "requirement_id": "unified_iur.display_systems.layering_primitives",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.full_construct_coverage."
     },
     {
       "requirement_id": "unified_iur.display_systems.viewport_and_clipping",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.full_construct_coverage."
     },
     {
       "requirement_id": "unified_iur.display_systems.canvas_surface",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.full_construct_coverage."
     },
     {
       "requirement_id": "unified_iur.display_systems.compose_with_widgets",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.meaning_preservation",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.meaning_preservation."
     },
     {
       "requirement_id": "unified_iur.theming.theme_structure",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.theme_and_style_surface."
     },
     {
       "requirement_id": "unified_iur.theming.color_model",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.theme_and_style_surface."
     },
     {
       "requirement_id": "unified_iur.theming.text_style_attributes",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.theme_and_style_surface."
     },
     {
       "requirement_id": "unified_iur.theming.semantic_roles",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.theme_and_style_surface."
     },
     {
       "requirement_id": "unified_iur.theming.component_variants",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.theme_and_style_surface."
     },
     {
       "requirement_id": "unified_iur.theming.inheritance_and_overrides",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.theme_and_style_surface."
     },
     {
       "requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of web_ui.transport.canonical_boundary_events."
     },
     {
       "requirement_id": "unified_iur.interactions.element_binding_attachment",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.accepts_canonical_iur."
     },
     {
       "requirement_id": "unified_iur.interactions.renderer_independent_payload_mapping",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.no_boundary_leakage",
+      "notes": "Shares the current conformance status of web_ui.transport.no_boundary_leakage."
     },
     {
       "requirement_id": "unified_iur.interactions.standard_interaction_families",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.interaction_surface."
     },
     {
       "requirement_id": "unified_iur.interactions.data_binding_representation",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.interaction_surface."
     },
     {
       "requirement_id": "unified_ui.package.library_identity",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of web_ui.package.not_dsl_or_iur_owner."
     },
     {
       "requirement_id": "unified_ui.package.dsl_boundary_only",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of web_ui.package.not_dsl_or_iur_owner."
     },
     {
       "requirement_id": "unified_ui.package.canonical_iur_dependency",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of web_ui.iur_renderer.accepts_canonical_iur."
     },
     {
       "requirement_id": "unified_ui.package.standalone_authoring_api",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of web_ui.package.not_dsl_or_iur_owner."
     },
     {
       "requirement_id": "unified_ui.package.traceable_to_root_specs",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.package.traceable_to_root_specs",
+      "notes": "Shares the current conformance status of web_ui.package.traceable_to_root_specs."
     },
     {
       "requirement_id": "unified_ui.signals.canonical_descriptor_shape",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of web_ui.transport.canonical_boundary_events."
     },
     {
       "requirement_id": "unified_ui.signals.authoring_event_semantics",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of web_ui.transport.canonical_boundary_events."
     },
     {
       "requirement_id": "unified_ui.signals.standard_interaction_families",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of web_ui.native_widgets.interaction_surface."
     },
     {
       "requirement_id": "unified_ui.signals.validation_and_introspection",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.tooling.preview_and_inspection",
+      "notes": "Shares the current conformance status of web_ui.tooling.preview_and_inspection."
     },
     {
       "requirement_id": "unified_ui.signals.no_runtime_local_event_leakage",
-      "status": "planned",
-      "notes": "Seeded from the authoritative web_ui plan traceability manifest."
+      "inherits_from_requirement_id": "web_ui.transport.no_boundary_leakage",
+      "notes": "Shares the current conformance status of web_ui.transport.no_boundary_leakage."
     }
   ]
 }

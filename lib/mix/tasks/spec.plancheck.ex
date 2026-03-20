@@ -1,12 +1,15 @@
 defmodule Mix.Tasks.Spec.Plancheck do
   use Mix.Task
 
+  alias Unified.SpecCompliance.Output
+
   @shortdoc "Checks that a package plan fully covers its applicable requirements"
   @moduledoc """
   Checks package-scoped plan coverage using the machine-readable planning manifest.
 
       mix spec.plancheck web_ui
       mix spec.plancheck web_ui --refresh-state
+      mix spec.plancheck web_ui --format json --output tmp/web_ui-plancheck.json
   """
 
   @impl true
@@ -15,21 +18,24 @@ defmodule Mix.Tasks.Spec.Plancheck do
 
     {opts, rest, invalid} =
       OptionParser.parse(args,
-        strict: [refresh_state: :boolean, root: :string],
+        strict: [refresh_state: :boolean, root: :string, format: :string, output: :string],
         aliases: [r: :root]
       )
 
     validate_args!(rest, invalid)
     package = List.first(rest)
     report = Unified.SpecCompliance.plancheck(package, opts)
+    format = format!(opts)
+    content = Output.render(report, format)
 
-    Mix.shell().info(
-      "spec.plancheck package=#{package} status=#{report.status} applicable=#{report.summary.applicable_requirements} findings=#{report.summary.findings}"
-    )
+    case Keyword.get(opts, :output) do
+      nil ->
+        Mix.shell().info(content)
 
-    Enum.each(report.findings, fn finding ->
-      Mix.shell().info(format_finding(finding))
-    end)
+      output_path ->
+        absolute_path = Output.write!(content, output_path, Keyword.get(opts, :root, File.cwd!()))
+        Mix.shell().info("wrote spec.plancheck report to #{absolute_path}")
+    end
 
     if report.status == :fail do
       Mix.raise("Spec plancheck failed: #{length(report.findings)} finding(s)")
@@ -45,10 +51,11 @@ defmodule Mix.Tasks.Spec.Plancheck do
     Mix.raise("Invalid arguments for spec.plancheck: #{details}")
   end
 
-  defp format_finding(finding) do
-    code = finding[:code] || finding["code"] || "finding"
-    requirement_id = finding[:requirement_id] || finding["requirement_id"] || "-"
-    message = finding[:message] || finding["message"] || ""
-    "[ERROR] #{requirement_id} #{code} :: #{message}"
+  defp format!(opts) do
+    case Keyword.get(opts, :format, "text") do
+      "text" -> :text
+      "json" -> :json
+      other -> Mix.raise("Unsupported format for spec.plancheck: #{inspect(other)}")
+    end
   end
 end

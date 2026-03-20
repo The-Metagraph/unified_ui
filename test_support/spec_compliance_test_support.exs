@@ -90,6 +90,15 @@ defmodule SpecComplianceTestSupport do
     }
   end
 
+  @spec write_traceability_markdown!(String.t(), String.t(), map()) :: String.t()
+  def write_traceability_markdown!(root, package, manifest) do
+    write_file!(
+      root,
+      ".spec/planning/#{package}/spec-traceability.md",
+      Unified.SpecCompliance.Traceability.render(package, manifest)
+    )
+  end
+
   @spec mapping(String.t(), String.t(), String.t(), [String.t()], [String.t()]) :: map()
   def mapping(requirement_id, scope, source_file, primary_refs, supporting_refs \\ []) do
     %{
@@ -102,11 +111,12 @@ defmodule SpecComplianceTestSupport do
     }
   end
 
-  @spec conformance_manifest(String.t(), [map()]) :: map()
-  def conformance_manifest(package, requirements) do
+  @spec conformance_manifest(String.t(), [map()], String.t()) :: map()
+  def conformance_manifest(package, requirements, ci_enforcement \\ "warn") do
     %{
       "package" => package,
       "version" => "1",
+      "ci_enforcement" => ci_enforcement,
       "requirements" => requirements
     }
   end
@@ -126,5 +136,10 @@ defmodule SpecComplianceTestSupport do
       "requirement_id" => requirement_id,
       "inherits_from_requirement_id" => target_id
     }
+  end
+
+  @spec path_exists(String.t()) :: map()
+  def path_exists(path) do
+    %{"kind" => "path_exists", "path" => path}
   end
 end

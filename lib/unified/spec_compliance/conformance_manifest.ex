@@ -3,6 +3,7 @@ defmodule Unified.SpecCompliance.ConformanceManifest do
 
   alias Unified.SpecCompliance.{Evidence, Manifest}
 
+  @ci_enforcement_values ["warn", "required"]
   @statuses ["planned", "implemented", "verified", "waived"]
 
   @spec load(String.t(), String.t()) :: {:ok, map(), [map()]} | {:error, [map()]}
@@ -89,7 +90,9 @@ defmodule Unified.SpecCompliance.ConformanceManifest do
     findings = []
     findings = require_string(findings, data, "package", file, "missing_package")
     findings = require_string(findings, data, "version", file, "missing_version")
+    findings = require_string(findings, data, "ci_enforcement", file, "missing_ci_enforcement")
     findings = validate_package(findings, data, package, file)
+    findings = validate_ci_enforcement(findings, data, file)
     findings = validate_requirements(findings, data, file)
     findings = findings ++ validate_aliases(data, file)
     findings
@@ -145,6 +148,28 @@ defmodule Unified.SpecCompliance.ConformanceManifest do
           }
           | findings
         ]
+    end
+  end
+
+  defp validate_ci_enforcement(findings, data, file) do
+    case data["ci_enforcement"] do
+      value when value in @ci_enforcement_values ->
+        findings
+
+      value when is_binary(value) ->
+        [
+          %{
+            code: "invalid_ci_enforcement",
+            severity: :error,
+            file: file,
+            message:
+              "Unsupported ci_enforcement #{inspect(value)}. Expected one of #{Enum.join(@ci_enforcement_values, ", ")}"
+          }
+          | findings
+        ]
+
+      _ ->
+        findings
     end
   end
 
@@ -372,7 +397,9 @@ defmodule Unified.SpecCompliance.ConformanceManifest do
   end
 
   defp normalize(data) do
-    update_in(data, ["requirements"], fn requirements ->
+    data
+    |> Map.put_new("ci_enforcement", "warn")
+    |> update_in(["requirements"], fn requirements ->
       Enum.map(requirements || [], fn requirement ->
         requirement
         |> Map.update("evidence", [], &(&1 || []))

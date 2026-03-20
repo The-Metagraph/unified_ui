@@ -1,7 +1,7 @@
 defmodule Unified.SpecCompliance.Compliance do
   @moduledoc false
 
-  alias Unified.SpecCompliance.{ConformanceManifest, Evidence, Plancheck}
+  alias Unified.SpecCompliance.{ConformanceManifest, Evidence, Manifest, Plancheck}
 
   @spec run(String.t(), Keyword.t()) :: map()
   def run(package, opts \\ []) do
@@ -74,28 +74,45 @@ defmodule Unified.SpecCompliance.Compliance do
       Map.new(entries_by_id, fn {requirement_id, [entry | _]} -> {requirement_id, entry} end)
 
     applicable_ids
-    |> Enum.reduce({[], %{verified: 0, waived: 0, planned: 0, implemented: 0}}, fn requirement_id,
-                                                                                   {findings,
-                                                                                    counts} ->
-      case Map.get(entry_map, requirement_id) do
-        nil ->
-          {findings, counts}
+    |> Enum.sort()
+    |> Enum.reduce(
+      {[], %{verified: 0, waived: 0, planned: 0, implemented: 0, aliases: 0, concrete: 0}, [],
+       %{}},
+      fn requirement_id, {findings, counts, results, cache} ->
+        case Map.get(entry_map, requirement_id) do
+          nil ->
+            {findings, counts, results, cache}
 
-        %{"inherits_from_requirement_id" => target_id} ->
-          concrete = Map.get(entry_map, target_id)
+          %{"inherits_from_requirement_id" => target_id} ->
+            concrete = Map.get(entry_map, target_id)
 
-          {entry_findings, bucket} =
-            evaluate_concrete_entry(requirement_id, concrete, root, opts, aliased?: true)
+            {entry_findings, bucket, next_cache} =
+              evaluate_concrete_entry(requirement_id, concrete, root, opts, cache)
 
-          {findings ++ entry_findings, increment_bucket(counts, bucket)}
+            result = result_entry(requirement_id, "alias", bucket, target_id, entry_findings)
 
-        entry ->
-          {entry_findings, bucket} =
-            evaluate_concrete_entry(requirement_id, entry, root, opts, aliased?: false)
+            {
+              findings ++ entry_findings,
+              counts |> increment_bucket(bucket) |> Map.update!(:aliases, &(&1 + 1)),
+              results ++ [result],
+              next_cache
+            }
 
-          {findings ++ entry_findings, increment_bucket(counts, bucket)}
+          entry ->
+            {entry_findings, bucket, next_cache} =
+              evaluate_concrete_entry(requirement_id, entry, root, opts, cache)
+
+            result = result_entry(requirement_id, "concrete", bucket, nil, entry_findings)
+
+            {
+              findings ++ entry_findings,
+              counts |> increment_bucket(bucket) |> Map.update!(:concrete, &(&1 + 1)),
+              results ++ [result],
+              next_cache
+            }
+        end
       end
-    end)
+    )
   end
 
   defp build_compliance_report(package, plan_report, manifest, manifest_findings, root, opts) do
@@ -108,21 +125,37 @@ defmodule Unified.SpecCompliance.Compliance do
       |> Kernel.++(missing_entry_findings(applicable_ids, entries_by_id))
       |> Kernel.++(unexpected_entry_findings(entries_by_id, applicable_ids))
 
-    {evaluation_findings, summary_counts} =
+    {evaluation_findings, summary_counts, results, _cache} =
       evaluate_entries(manifest, entries_by_id, applicable_ids, root, opts)
 
     findings = Enum.sort_by(findings ++ evaluation_findings, &finding_sort_key/1)
     status = if findings == [], do: :pass, else: :fail
+    status_counts = Map.take(summary_counts, [:verified, :waived, :planned, :implemented])
 
     %{
+      kind: :compliance,
       status: status,
       package: package,
-      summary:
-        Map.merge(summary_counts, %{
-          applicable_requirements: MapSet.size(applicable_ids),
-          findings: length(findings)
-        }),
+      summary: %{
+        applicable_requirements: MapSet.size(applicable_ids),
+        findings: length(findings),
+        aliases: summary_counts.aliases,
+        concrete: summary_counts.concrete,
+        status_counts: status_counts,
+        blocking_requirement_ids: blocking_requirement_ids(findings),
+        finding_counts_by_code: finding_counts_by_code(findings),
+        ci_enforcement: manifest["ci_enforcement"],
+        skipped_commands: Enum.count(findings, &((&1[:code] || &1["code"]) == "command_skipped"))
+      },
       findings: findings,
+      manifests: %{
+        plan: plan_report.manifests.plan,
+        conformance: %{
+          path: Manifest.relative_path(ConformanceManifest.manifest_path(root, package)),
+          version: manifest["version"]
+        }
+      },
+      results: results,
       plan_report: plan_report,
       manifest: manifest
     }
@@ -130,28 +163,40 @@ defmodule Unified.SpecCompliance.Compliance do
 
   defp plan_failure_report(package, plan_report) do
     %{
+      kind: :compliance,
       status: :fail,
       package: package,
-      summary: Map.put(plan_report.summary, :phase, :plancheck),
+      summary:
+        plan_report.summary
+        |> Map.put(:phase, :plancheck)
+        |> Map.put(:blocking_requirement_ids, blocking_requirement_ids(plan_report.findings))
+        |> Map.put(:finding_counts_by_code, finding_counts_by_code(plan_report.findings)),
       findings: plan_report.findings,
-      plan_report: plan_report
+      manifests: plan_report[:manifests],
+      plan_report: plan_report,
+      results: []
     }
   end
 
   defp manifest_failure_report(package, plan_report, findings) do
     %{
+      kind: :compliance,
       status: :fail,
       package: package,
       summary: %{
         applicable_requirements: MapSet.size(plan_report.applicable_requirement_ids),
-        findings: length(findings)
+        findings: length(findings),
+        blocking_requirement_ids: blocking_requirement_ids(findings),
+        finding_counts_by_code: finding_counts_by_code(findings)
       },
       findings: Enum.sort_by(findings, &finding_sort_key/1),
-      plan_report: plan_report
+      manifests: plan_report[:manifests],
+      plan_report: plan_report,
+      results: []
     }
   end
 
-  defp evaluate_concrete_entry(requirement_id, %{"status" => "planned"}, _root, _opts, _options) do
+  defp evaluate_concrete_entry(requirement_id, %{"status" => "planned"}, _root, _opts, cache) do
     {[
        %{
          code: "status_planned",
@@ -159,7 +204,7 @@ defmodule Unified.SpecCompliance.Compliance do
          requirement_id: requirement_id,
          message: "Requirement #{inspect(requirement_id)} is still marked as planned"
        }
-     ], :planned}
+     ], :planned, cache}
   end
 
   defp evaluate_concrete_entry(
@@ -167,9 +212,10 @@ defmodule Unified.SpecCompliance.Compliance do
          %{"status" => "implemented"} = entry,
          root,
          opts,
-         _options
+         cache
        ) do
-    evidence_findings = Evidence.run(entry["evidence"] || [], root, opts, requirement_id)
+    {evidence_findings, next_cache} =
+      Evidence.run_with_cache(entry["evidence"] || [], root, opts, requirement_id, cache)
 
     findings =
       evidence_findings ++
@@ -182,7 +228,7 @@ defmodule Unified.SpecCompliance.Compliance do
           }
         ]
 
-    {findings, :implemented}
+    {findings, :implemented, next_cache}
   end
 
   defp evaluate_concrete_entry(
@@ -190,14 +236,15 @@ defmodule Unified.SpecCompliance.Compliance do
          %{"status" => "verified"} = entry,
          root,
          opts,
-         _options
+         cache
        ) do
-    evidence_findings = Evidence.run(entry["evidence"] || [], root, opts, requirement_id)
+    {evidence_findings, next_cache} =
+      Evidence.run_with_cache(entry["evidence"] || [], root, opts, requirement_id, cache)
 
     if evidence_findings == [] do
-      {[], :verified}
+      {[], :verified, next_cache}
     else
-      {evidence_findings, :verified}
+      {evidence_findings, :verified, next_cache}
     end
   end
 
@@ -206,7 +253,7 @@ defmodule Unified.SpecCompliance.Compliance do
          %{"status" => "waived", "waiver" => waiver},
          _root,
          _opts,
-         _options
+         cache
        ) do
     case waiver_expired?(waiver) do
       true ->
@@ -217,14 +264,14 @@ defmodule Unified.SpecCompliance.Compliance do
              requirement_id: requirement_id,
              message: "Waiver for #{inspect(requirement_id)} has expired"
            }
-         ], :waived}
+         ], :waived, cache}
 
       false ->
-        {[], :waived}
+        {[], :waived, cache}
     end
   end
 
-  defp evaluate_concrete_entry(requirement_id, _entry, _root, _opts, _options) do
+  defp evaluate_concrete_entry(requirement_id, _entry, _root, _opts, cache) do
     {[
        %{
          code: "invalid_requirement_entry",
@@ -232,7 +279,7 @@ defmodule Unified.SpecCompliance.Compliance do
          requirement_id: requirement_id,
          message: "Requirement entry could not be evaluated"
        }
-     ], :planned}
+     ], :planned, cache}
   end
 
   defp increment_bucket(counts, bucket) do
@@ -251,5 +298,31 @@ defmodule Unified.SpecCompliance.Compliance do
 
   defp finding_sort_key(finding) do
     {finding[:requirement_id] || "", finding[:code] || "", finding[:message] || ""}
+  end
+
+  defp result_entry(requirement_id, entry_type, bucket, target_id, findings) do
+    %{
+      requirement_id: requirement_id,
+      entry_type: entry_type,
+      target_requirement_id: target_id,
+      effective_status: bucket,
+      compliant?: findings == [] and bucket in [:verified, :waived],
+      findings: Enum.map(findings, &Map.take(&1, [:code, :message, :severity]))
+    }
+  end
+
+  defp blocking_requirement_ids(findings) do
+    findings
+    |> Enum.map(&(&1[:requirement_id] || &1["requirement_id"]))
+    |> Enum.reject(&is_nil/1)
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  defp finding_counts_by_code(findings) do
+    Enum.reduce(findings, %{}, fn finding, counts ->
+      code = finding[:code] || finding["code"] || "finding"
+      Map.update(counts, code, 1, &(&1 + 1))
+    end)
   end
 end

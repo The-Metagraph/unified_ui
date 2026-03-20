@@ -22,10 +22,19 @@ defmodule Unified.SpecCompliance.Evidence do
 
   @spec run([map()], String.t(), Keyword.t(), String.t()) :: [map()]
   def run(evidence, root, opts, requirement_id) do
+    {findings, _cache} = run_with_cache(evidence, root, opts, requirement_id, %{})
+    findings
+  end
+
+  @spec run_with_cache([map()], String.t(), Keyword.t(), String.t(), map()) :: {[map()], map()}
+  def run_with_cache(evidence, root, opts, requirement_id, cache) do
     run_commands? = Keyword.get(opts, :run_commands, true)
 
-    Enum.flat_map(evidence, fn item ->
-      run_item(item, root, run_commands?, requirement_id)
+    Enum.reduce(evidence, {[], cache}, fn item, {findings, acc_cache} ->
+      {item_findings, next_cache} =
+        run_item_with_cache(item, root, run_commands?, requirement_id, acc_cache)
+
+      {findings ++ item_findings, next_cache}
     end)
   end
 
@@ -210,6 +219,47 @@ defmodule Unified.SpecCompliance.Evidence do
   end
 
   defp run_item(_item, _root, _run_commands?, _requirement_id), do: []
+
+  defp run_item_with_cache(
+         %{"kind" => "command"} = item,
+         root,
+         run_commands?,
+         requirement_id,
+         cache
+       ) do
+    key = command_cache_key(item, root, run_commands?)
+
+    case Map.fetch(cache, key) do
+      {:ok, cached_findings} ->
+        {restore_requirement_id(cached_findings, requirement_id), cache}
+
+      :error ->
+        findings = run_item(item, root, run_commands?, requirement_id)
+        {findings, Map.put(cache, key, strip_requirement_id(findings))}
+    end
+  end
+
+  defp run_item_with_cache(item, root, run_commands?, requirement_id, cache) do
+    {run_item(item, root, run_commands?, requirement_id), cache}
+  end
+
+  defp command_cache_key(item, root, run_commands?) do
+    {
+      run_commands?,
+      Path.expand(item["cwd"] || ".", root),
+      item["run"],
+      item["expect_exit_status"] || 0,
+      item["expect_stdout_contains"]
+    }
+  end
+
+  defp strip_requirement_id(findings) do
+    Enum.map(findings, &Map.delete(&1, :requirement_id))
+  end
+
+  defp restore_requirement_id(findings, requirement_id) do
+    Enum.map(findings, &Map.put(&1, :requirement_id, requirement_id))
+  end
 
   defp require_string(map, key, file, requirement_id, code) do
     case map[key] do

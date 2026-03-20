@@ -12,15 +12,20 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     requirements = [requirement("demo.package.one", ".spec/specs/demo/package.spec.md")]
     write_json!(root, ".spec/state.json", state(requirements))
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    plan_manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      plan_manifest
     )
+
+    write_traceability_markdown!(root, "demo", plan_manifest)
 
     write_json!(root, ".spec/conformance/demo/manifest.json", conformance_manifest("demo", []))
 
@@ -41,16 +46,21 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     write_json!(root, ".spec/state.json", state(requirements))
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    plan_manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"]),
           mapping("demo.package.two", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      plan_manifest
     )
+
+    write_traceability_markdown!(root, "demo", plan_manifest)
 
     write_json!(
       root,
@@ -78,16 +88,21 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     write_json!(root, ".spec/state.json", state(requirements))
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    plan_manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"]),
           mapping("demo.package.two", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      plan_manifest
     )
+
+    write_traceability_markdown!(root, "demo", plan_manifest)
 
     write_json!(
       root,
@@ -124,18 +139,33 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert Enum.any?(report.findings, &(&1.code == "command_stdout_mismatch"))
   end
 
-  test "live web_ui plancheck passes and compliance remains deterministically non-compliant" do
+  test "live web_ui plancheck passes and compliance now reports a mixed non-compliant state" do
     plan_report = Unified.SpecCompliance.plancheck("web_ui")
-    compliance_report = Unified.SpecCompliance.compliance("web_ui", run_commands: false)
+    compliance_report = Unified.SpecCompliance.compliance("web_ui", run_commands: true)
 
     assert plan_report.status == :pass
     assert compliance_report.status == :fail
     assert compliance_report.summary.applicable_requirements == 89
+    assert compliance_report.summary.status_counts.verified == 10
+    assert compliance_report.summary.status_counts.waived == 2
+    assert compliance_report.summary.status_counts.planned == 77
+    assert compliance_report.summary.aliases == 48
     assert Enum.any?(compliance_report.findings, &(&1.code == "status_planned"))
 
-    assert Enum.any?(
+    refute Enum.any?(
              compliance_report.findings,
-             &(&1.requirement_id == "web_ui.package.library_identity")
+             &(&1.requirement_id == "web_ui.package.traceable_to_root_specs")
            )
+  end
+
+  test "live live_ui plancheck and compliance both pass" do
+    plan_report = Unified.SpecCompliance.plancheck("live_ui")
+    compliance_report = Unified.SpecCompliance.compliance("live_ui", run_commands: true)
+
+    assert plan_report.status == :pass
+    assert compliance_report.status == :pass
+    assert compliance_report.summary.applicable_requirements == 83
+    assert compliance_report.summary.status_counts.verified == 83
+    assert compliance_report.summary.aliases == 48
   end
 end

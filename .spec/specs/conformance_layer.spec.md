@@ -12,6 +12,7 @@ surface:
   - .spec/conformance/README.md
   - .spec/conformance/**/*.json
   - .spec/planning/**/spec-traceability.json
+  - .spec/planning/**/spec-traceability.md
 decisions:
   - repo.governance.contract_policy
 ```
@@ -38,6 +39,16 @@ decisions:
   statement: Implementation conformance manifests shall reference indexed requirement ids and join to planning coverage by requirement id rather than duplicating plan refs.
   priority: must
   stability: stable
+
+- id: repo.conformance.ci_enforcement_metadata
+  statement: Package implementation conformance manifests shall declare package-local CI enforcement as either warn or required.
+  priority: must
+  stability: stable
+
+- id: repo.conformance.generated_traceability_mirrors
+  statement: Review-facing package traceability markdown shall be generated from the authoritative JSON planning coverage manifest rather than maintained as a second source of truth.
+  priority: must
+  stability: stable
 ```
 
 ## Verification
@@ -48,12 +59,15 @@ decisions:
   covers:
     - repo.conformance.separate_from_governance
     - repo.conformance.requirement_id_join
+    - repo.conformance.generated_traceability_mirrors
 
 - kind: source_file
   target: .spec/conformance/README.md
   covers:
     - repo.conformance.package_manifests
     - repo.conformance.separate_from_governance
+    - repo.conformance.ci_enforcement_metadata
+    - repo.conformance.generated_traceability_mirrors
 
 - kind: source_file
   target: .spec/planning/web_ui/spec-traceability.json
@@ -61,8 +75,31 @@ decisions:
     - repo.conformance.plan_coverage_manifests
 
 - kind: source_file
+  target: .spec/planning/web_ui/spec-traceability.md
+  covers:
+    - repo.conformance.generated_traceability_mirrors
+
+- kind: source_file
+  target: .spec/planning/live_ui/spec-traceability.json
+  covers:
+    - repo.conformance.plan_coverage_manifests
+
+- kind: source_file
+  target: .spec/planning/live_ui/spec-traceability.md
+  covers:
+    - repo.conformance.generated_traceability_mirrors
+
+- kind: source_file
   target: .spec/conformance/web_ui/manifest.json
   covers:
     - repo.conformance.package_manifests
     - repo.conformance.requirement_id_join
+    - repo.conformance.ci_enforcement_metadata
+
+- kind: source_file
+  target: .spec/conformance/live_ui/manifest.json
+  covers:
+    - repo.conformance.package_manifests
+    - repo.conformance.requirement_id_join
+    - repo.conformance.ci_enforcement_metadata
 ```
