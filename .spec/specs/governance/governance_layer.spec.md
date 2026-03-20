@@ -33,7 +33,7 @@ decisions:
   stability: stable
 
 - id: repo.governance.conformance_separate
-  statement: Conformance shall be introduced as a separate future layer rather than embedded inside governance contracts.
+  statement: Conformance shall remain a separate layer rather than being embedded inside governance contracts.
   priority: must
   stability: stable
 ```

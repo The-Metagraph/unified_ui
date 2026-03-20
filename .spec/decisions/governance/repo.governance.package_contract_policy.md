@@ -30,7 +30,7 @@ the package contract changes.
    package change contract may require corresponding updates in the paired
    package subject set in the same change set.
 5. Package governance contracts describe authored package intent and change
-   policy; executable conformance remains a separate future layer.
+   policy; executable conformance remains a separate active layer.
 
 ## Consequences
 

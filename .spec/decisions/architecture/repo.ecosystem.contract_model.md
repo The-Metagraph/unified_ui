@@ -24,7 +24,7 @@ The repository defines one authored DSL package, one canonical intermediate repr
 5. Each runtime library includes a renderer that loads canonical `unified_iur` and realizes it through that library's own native widgets and native signals.
 6. Cross-package interaction semantics use `Jido.Signal` and CloudEvents-compatible event conventions as the canonical boundary contract.
 7. Runtime libraries may translate between the canonical boundary contract and their own native local signal models, but they must preserve canonical event meaning at ecosystem boundaries.
-8. Governance for these ecosystem boundaries lives in the root `.spec` workspace, and executable conformance is introduced later as a separate layer.
+8. Governance for these ecosystem boundaries lives in the root `.spec` workspace, and executable conformance lives beside it as a separate layer.
 
 ## Consequences
 

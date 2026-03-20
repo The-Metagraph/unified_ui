@@ -39,7 +39,7 @@ decisions:
   stability: stable
 
 - id: repo.governance.contract.conformance_not_embedded
-  statement: Governance contracts shall define durable policy and authored obligations, while conformance evidence will be added later in a separate layer.
+  statement: Governance contracts shall define durable policy and authored obligations, while conformance evidence shall live in a separate layer.
   priority: must
   stability: stable
 ```

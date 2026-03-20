@@ -20,10 +20,10 @@ The root `.spec` workspace already defines authored subjects and durable decisio
 1. Repository-wide governance will live as authored `.spec.md` subjects under `.spec/specs/governance/`.
 2. Durable, cross-cutting governance rationale will continue to live under `.spec/decisions/` as ADRs.
 3. Governance contracts will use the same `spec-meta`, `spec-requirements`, `spec-verification`, and `spec-exceptions` blocks as other authored subjects.
-4. Conformance will be introduced later as a separate layer rather than merged into governance contracts.
+4. Conformance lives as a separate layer rather than being merged into governance contracts.
 
 ## Consequences
 
 - The root `.spec` workspace gains an explicit governance layer without changing `spec_led_ex` parsing rules.
 - Governance policy remains current-truth and machine-indexable.
-- Future conformance work has a reserved place in the model but is not forced into this change set.
+- Conformance can evolve independently from governance contracts without changing the governance authoring model.
