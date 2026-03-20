@@ -31,6 +31,9 @@ The plan aligns to:
 5. [Phase 5 - Native Styling, Runtime Inspection, and Native-IUR Continuity](./phase-05-native-styling-runtime-inspection-and-native-iur-continuity.md): implement native theming and styling, cross-runtime inspection surfaces, and deterministic continuity between direct native and canonical rendering paths.
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows.
 
+## Supporting Docs
+- [Spec Traceability Matrix](./spec-traceability.md): maps direct `web_ui` requirements, inherited ecosystem requirements, and upstream canonical-input constraints to the exact phase, section, and task coverage in this plan.
+
 ## Shared Conventions
 - Numbering:
   - Phases: `N`
