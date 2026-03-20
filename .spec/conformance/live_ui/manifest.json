@@ -1,7 +1,7 @@
 {
   "package": "live_ui",
   "version": "1",
-  "ci_enforcement": "warn",
+  "ci_enforcement": "required",
   "requirements": [
     {
       "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
