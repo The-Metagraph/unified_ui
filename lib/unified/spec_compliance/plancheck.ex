@@ -1,7 +1,7 @@
 defmodule Unified.SpecCompliance.Plancheck do
   @moduledoc false
 
-  alias Unified.SpecCompliance.{PlanManifest, PlanRefs, State}
+  alias Unified.SpecCompliance.{Manifest, PlanManifest, PlanRefs, State, Traceability}
 
   @spec run(String.t(), Keyword.t()) :: map()
   def run(package, opts \\ []) do
@@ -12,6 +12,7 @@ defmodule Unified.SpecCompliance.Plancheck do
       findings = manifest_findings
       {plan_refs, plan_files, plan_findings} = PlanRefs.extract(root, package)
       requirements_by_id = State.requirements_by_id(state)
+      traceability = Traceability.check_drift(root, package, manifest)
 
       {applicable_ids, applicability_findings} =
         PlanManifest.applicable_requirement_ids(manifest, requirements_by_id)
@@ -29,10 +30,12 @@ defmodule Unified.SpecCompliance.Plancheck do
         )
         |> Kernel.++(source_file_findings(mappings_by_id, requirements_by_id))
         |> Kernel.++(plan_ref_findings(mappings_by_id, plan_refs))
+        |> Kernel.++(traceability.findings)
 
       status = if findings == [], do: :pass, else: :fail
 
       %{
+        kind: :plancheck,
         status: status,
         package: package,
         summary: %{
@@ -40,9 +43,21 @@ defmodule Unified.SpecCompliance.Plancheck do
           mappings: map_size(mappings_by_id),
           plan_refs: MapSet.size(plan_refs),
           plan_files: plan_files,
-          findings: length(findings)
+          findings: length(findings),
+          blocking_requirement_ids: blocking_requirement_ids(findings),
+          finding_counts_by_code: finding_counts_by_code(findings),
+          traceability_markdown_in_sync: traceability.matches?
         },
         findings: Enum.sort_by(findings, &finding_sort_key/1),
+        manifests: %{
+          plan: %{
+            path: Manifest.relative_path(PlanManifest.manifest_path(root, package)),
+            version: manifest["version"]
+          },
+          traceability_markdown: %{
+            path: traceability.path
+          }
+        },
         manifest: manifest,
         applicable_requirement_ids: applicable_ids,
         requirements_by_id: requirements_by_id
@@ -50,22 +65,33 @@ defmodule Unified.SpecCompliance.Plancheck do
     else
       {:error, [_finding | _] = findings} ->
         %{
+          kind: :plancheck,
           status: :fail,
           package: package,
           summary: %{
             applicable_requirements: 0,
             mappings: 0,
             plan_refs: 0,
-            findings: length(findings)
+            findings: length(findings),
+            blocking_requirement_ids: blocking_requirement_ids(findings),
+            finding_counts_by_code: finding_counts_by_code(findings)
           },
           findings: Enum.sort_by(findings, &finding_sort_key/1)
         }
 
       {:error, finding} ->
         %{
+          kind: :plancheck,
           status: :fail,
           package: package,
-          summary: %{applicable_requirements: 0, mappings: 0, plan_refs: 0, findings: 1},
+          summary: %{
+            applicable_requirements: 0,
+            mappings: 0,
+            plan_refs: 0,
+            findings: 1,
+            blocking_requirement_ids: blocking_requirement_ids([finding]),
+            finding_counts_by_code: finding_counts_by_code([finding])
+          },
           findings: [finding]
         }
     end
@@ -205,5 +231,20 @@ defmodule Unified.SpecCompliance.Plancheck do
 
   defp finding_sort_key(finding) do
     {finding[:requirement_id] || "", finding[:code] || "", finding[:message] || ""}
+  end
+
+  defp blocking_requirement_ids(findings) do
+    findings
+    |> Enum.map(&(&1[:requirement_id] || &1["requirement_id"]))
+    |> Enum.reject(&is_nil/1)
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  defp finding_counts_by_code(findings) do
+    Enum.reduce(findings, %{}, fn finding, counts ->
+      code = finding[:code] || finding["code"] || "finding"
+      Map.update(counts, code, 1, &(&1 + 1))
+    end)
   end
 end

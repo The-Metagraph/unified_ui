@@ -1,0 +1,851 @@
+{
+  "package": "live_ui",
+  "version": "1",
+  "ci_enforcement": "warn",
+  "requirements": [
+    {
+      "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
+      "inherits_from_requirement_id": "live_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of live_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.iur_exchange_boundary",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.renderer_packages_consume_iur",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.runtime_libraries_native_surface",
+      "inherits_from_requirement_id": "live_ui.package.native_runtime_library",
+      "notes": "Shares the current conformance status of live_ui.package.native_runtime_library."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.runtime_libraries_iur_renderer",
+      "inherits_from_requirement_id": "live_ui.package.iur_renderer_entrypoint",
+      "notes": "Shares the current conformance status of live_ui.package.iur_renderer_entrypoint."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.shared_transport_contract",
+      "inherits_from_requirement_id": "live_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of live_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.widget_libraries_independent",
+      "inherits_from_requirement_id": "live_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of live_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.native_surface_covers_iur",
+      "inherits_from_requirement_id": "live_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.native_surface_usable_without_iur",
+      "inherits_from_requirement_id": "live_ui.native_widgets.direct_native_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.direct_native_surface."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.iur_interpretation",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.live_ui_runtime",
+      "inherits_from_requirement_id": "live_ui.runtime.server_authoritative_model",
+      "notes": "Shares the current conformance status of live_ui.runtime.server_authoritative_model."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.jido_signal_canonical",
+      "inherits_from_requirement_id": "live_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of live_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.dsl_event_bindings",
+      "inherits_from_requirement_id": "live_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of live_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.live_bridge",
+      "inherits_from_requirement_id": "live_ui.transport.server_authority_preserved",
+      "notes": "Shares the current conformance status of live_ui.transport.server_authority_preserved."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.native_signal_models_allowed",
+      "inherits_from_requirement_id": "live_ui.transport.native_liveview_event_model",
+      "notes": "Shares the current conformance status of live_ui.transport.native_liveview_event_model."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.local_state_not_contract",
+      "inherits_from_requirement_id": "live_ui.runtime.server_authoritative_model",
+      "notes": "Shares the current conformance status of live_ui.runtime.server_authoritative_model."
+    },
+    {
+      "requirement_id": "live_ui.package.library_identity",
+      "status": "verified",
+      "notes": "Verified by the maintained package identity files.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/mix.exs"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.package.native_runtime_library",
+      "status": "verified",
+      "notes": "Verified by the maintained native widget, forms, layout, and styling surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/forms.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/layout.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/style.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.package.iur_renderer_entrypoint",
+      "status": "verified",
+      "notes": "Verified by the maintained canonical renderer entrypoint.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/canonical_screen.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.package.not_dsl_or_iur_owner",
+      "status": "verified",
+      "notes": "Verified by keeping authored DSL and canonical IUR ownership outside the package.",
+      "evidence": [
+        {
+          "kind": "path_absent",
+          "path": "packages/live_ui/lib/live_ui/dsl.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.package.traceable_to_root_specs",
+      "status": "verified",
+      "notes": "Verified by maintained package specs that link back to root ecosystem subjects.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/live_ui/*.spec.md"
+        },
+        {
+          "kind": "command",
+          "run": "rg -n \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/live_ui/*.spec.md",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.mix_library_layout",
+      "status": "verified",
+      "notes": "Verified by the package Mix layout, guides, and tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/mix.exs"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/**/*.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/test/**/*.exs"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/guides/*.md"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.native_widget_module_boundary",
+      "status": "verified",
+      "notes": "Verified by separate native widget and renderer module trees.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/widgets/*.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.liveview_runtime_modules",
+      "status": "verified",
+      "notes": "Verified by dedicated runtime modules for mounting, state, lifecycle, and rendering.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/runtime/*.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/screen.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.hooks_are_isolated",
+      "status": "verified",
+      "notes": "Verified by the bounded browser-bridge runtime layer.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/browser_bridge.ex"
+        },
+        {
+          "kind": "command",
+          "run": "if rg -n \"browser_bridge\" packages/live_ui/lib/live_ui/widgets packages/live_ui/lib/live_ui/renderer packages/live_ui/lib/live_ui/forms; then exit 1; else exit 0; fi",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.transport_translation_modules",
+      "status": "verified",
+      "notes": "Verified by dedicated transport translation modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/transport.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/transport/*.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.no_dsl_or_iur_authorship",
+      "status": "verified",
+      "notes": "Verified by keeping authored DSL and canonical IUR ownership outside the package.",
+      "evidence": [
+        {
+          "kind": "path_absent",
+          "path": "packages/live_ui/lib/live_ui/dsl.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.direct_native_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained native widget, layout, layer, theme, and style surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/layout.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/layer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/style.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.covers_canonical_iur_surface",
+      "status": "verified",
+      "notes": "Verified by the broad native widget surface and advanced renderer coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/widgets/*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/advanced_renderer_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.liveview_native_composition",
+      "status": "verified",
+      "notes": "Verified by LiveView-native component and screen composition entrypoints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/screen_component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/screen.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "status": "verified",
+      "notes": "Verified by the native theme and style modules plus their focused tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/style.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/style_test.exs test/live_ui/theme_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.interaction_surface",
+      "status": "verified",
+      "notes": "Verified by maintained forms, navigation, signals, and transport surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/forms.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widgets/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/transport.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.runtime.server_authoritative_model",
+      "status": "verified",
+      "notes": "Verified by the server-authoritative runtime modules and focused transport/runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/state.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/runtime_test.exs test/live_ui/runtime_transport_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.runtime.liveview_component_execution",
+      "status": "verified",
+      "notes": "Verified by LiveView component entrypoints and focused component tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/screen_component.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/component_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.runtime.hooks_only_where_necessary",
+      "status": "verified",
+      "notes": "Verified by the bounded browser-bridge runtime layer and transport/runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/browser_bridge.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/runtime_transport_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.runtime.native_and_iur_entrypoints_share_runtime",
+      "status": "verified",
+      "notes": "Verified by shared runtime entrypoints for native and canonical screens.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/canonical_screen.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.runtime.state_and_render_continuity",
+      "status": "verified",
+      "notes": "Verified by the phase 5 continuity integration tests.",
+      "evidence": [
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/phase_5_integration_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
+      "status": "verified",
+      "notes": "Verified by the maintained canonical renderer entrypoint.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/renderer_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.full_construct_coverage",
+      "status": "verified",
+      "notes": "Verified by advanced renderer coverage and the maintained widget surface.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/widgets/*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/advanced_renderer_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.deterministic_mapping",
+      "status": "verified",
+      "notes": "Verified by renderer determinism and style-focused test coverage.",
+      "evidence": [
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/renderer_test.exs test/live_ui/renderer_style_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.meaning_preservation",
+      "status": "verified",
+      "notes": "Verified by continuity and advanced renderer integration coverage.",
+      "evidence": [
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/phase_5_integration_test.exs test/live_ui/advanced_renderer_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.native_widget_reuse",
+      "status": "verified",
+      "notes": "Verified by the renderer and widget surfaces reusing one native stack.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widgets.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.transport.canonical_boundary_events",
+      "status": "verified",
+      "notes": "Verified by transport modules and focused transport tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/transport.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/transport/*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/transport_test.exs test/live_ui/runtime_transport_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.transport.native_liveview_event_model",
+      "status": "verified",
+      "notes": "Verified by maintained signals and transport entrypoints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/transport.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.transport.server_authority_preserved",
+      "status": "verified",
+      "notes": "Verified by runtime transport tests that keep server authority primary.",
+      "evidence": [
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/runtime_transport_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.transport.no_boundary_leakage",
+      "status": "verified",
+      "notes": "Verified by transport diagnostics coverage.",
+      "evidence": [
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/transport_diagnostics_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.transport.direct_native_usage_allowed",
+      "status": "verified",
+      "notes": "Verified by maintained transport-focused examples and tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/examples/mixed_boundary_transport.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/transport_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.tooling.reference_examples",
+      "status": "verified",
+      "notes": "Verified by the maintained native, canonical, and mixed example catalog.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/examples.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/live_ui/examples/*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/examples_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.tooling.preview_and_inspection",
+      "status": "verified",
+      "notes": "Verified by the tooling module and package mix task coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/tooling.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/lib/mix/tasks/live_ui.*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/mix/tasks/live_ui_tasks_test.exs test/live_ui/tooling_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.tooling.validation_workflow",
+      "status": "verified",
+      "notes": "Verified by the validation task and validation report coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/mix/tasks/live_ui.validate.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/mix/tasks/live_ui_validate_task_test.exs test/live_ui/validation_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.tooling.documentation_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained package README and guide set.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/README.md"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/live_ui/guides/*.md"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.input_and_navigation",
+      "inherits_from_requirement_id": "live_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.overlay_and_feedback",
+      "inherits_from_requirement_id": "live_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.data_and_document_views",
+      "inherits_from_requirement_id": "live_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.visualization",
+      "inherits_from_requirement_id": "live_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.operational_views",
+      "inherits_from_requirement_id": "live_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.widget_semantics_preserved",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.meaning_preservation",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.meaning_preservation."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layout_primitives",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layering_primitives",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.viewport_and_clipping",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.canvas_surface",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.compose_with_widgets",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.meaning_preservation",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.meaning_preservation."
+    },
+    {
+      "requirement_id": "unified_iur.theming.theme_structure",
+      "inherits_from_requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.color_model",
+      "inherits_from_requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.text_style_attributes",
+      "inherits_from_requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.semantic_roles",
+      "inherits_from_requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.component_variants",
+      "inherits_from_requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.inheritance_and_overrides",
+      "inherits_from_requirement_id": "live_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "inherits_from_requirement_id": "live_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of live_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.element_binding_attachment",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.renderer_independent_payload_mapping",
+      "inherits_from_requirement_id": "live_ui.transport.no_boundary_leakage",
+      "notes": "Shares the current conformance status of live_ui.transport.no_boundary_leakage."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.standard_interaction_families",
+      "inherits_from_requirement_id": "live_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.data_binding_representation",
+      "inherits_from_requirement_id": "live_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_ui.package.library_identity",
+      "inherits_from_requirement_id": "live_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of live_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "unified_ui.package.dsl_boundary_only",
+      "inherits_from_requirement_id": "live_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of live_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "unified_ui.package.canonical_iur_dependency",
+      "inherits_from_requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of live_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "unified_ui.package.standalone_authoring_api",
+      "inherits_from_requirement_id": "live_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of live_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "unified_ui.package.traceable_to_root_specs",
+      "inherits_from_requirement_id": "live_ui.package.traceable_to_root_specs",
+      "notes": "Shares the current conformance status of live_ui.package.traceable_to_root_specs."
+    },
+    {
+      "requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "inherits_from_requirement_id": "live_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of live_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "unified_ui.signals.authoring_event_semantics",
+      "inherits_from_requirement_id": "live_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of live_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "unified_ui.signals.standard_interaction_families",
+      "inherits_from_requirement_id": "live_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of live_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_ui.signals.validation_and_introspection",
+      "inherits_from_requirement_id": "live_ui.tooling.preview_and_inspection",
+      "notes": "Shares the current conformance status of live_ui.tooling.preview_and_inspection."
+    },
+    {
+      "requirement_id": "unified_ui.signals.no_runtime_local_event_leakage",
+      "inherits_from_requirement_id": "live_ui.transport.no_boundary_leakage",
+      "notes": "Shares the current conformance status of live_ui.transport.no_boundary_leakage."
+    }
+  ]
+}

@@ -21,15 +21,20 @@ defmodule Mix.Tasks.SpecTasksTest do
       state([requirement("demo.package.one", ".spec/specs/demo/package.spec.md")])
     )
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      manifest
     )
+
+    write_traceability_markdown!(root, "demo", manifest)
 
     output =
       capture_io(fn ->
@@ -37,6 +42,7 @@ defmodule Mix.Tasks.SpecTasksTest do
         Plancheck.run(["demo", "--root", root])
       end)
 
+    assert output =~ "package=demo"
     assert output =~ "status=pass"
   end
 
@@ -50,15 +56,20 @@ defmodule Mix.Tasks.SpecTasksTest do
       state([requirement("demo.package.one", ".spec/specs/demo/package.spec.md")])
     )
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    plan_manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      plan_manifest
     )
+
+    write_traceability_markdown!(root, "demo", plan_manifest)
 
     write_json!(
       root,
@@ -84,5 +95,52 @@ defmodule Mix.Tasks.SpecTasksTest do
       Mix.Task.reenable("spec.compliance")
       Compliance.run([])
     end
+  end
+
+  test "spec.plancheck supports json output and file export" do
+    root = tmp_root!("task_plancheck_json")
+    write_minimal_plan_docs!(root, "demo")
+
+    write_json!(
+      root,
+      ".spec/state.json",
+      state([requirement("demo.package.one", ".spec/specs/demo/package.spec.md")])
+    )
+
+    manifest =
+      plan_manifest("demo",
+        mappings: [
+          mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
+        ]
+      )
+
+    write_json!(root, ".spec/planning/demo/spec-traceability.json", manifest)
+    write_traceability_markdown!(root, "demo", manifest)
+
+    output =
+      capture_io(fn ->
+        Mix.Task.reenable("spec.plancheck")
+
+        Plancheck.run([
+          "demo",
+          "--root",
+          root,
+          "--format",
+          "json",
+          "--output",
+          "tmp/plancheck.json"
+        ])
+      end)
+
+    assert output =~ "wrote spec.plancheck report"
+
+    payload =
+      root
+      |> Path.join("tmp/plancheck.json")
+      |> File.read!()
+      |> JSON.decode!()
+
+    assert payload["kind"] == "plancheck"
+    assert payload["status"] == "pass"
   end
 end

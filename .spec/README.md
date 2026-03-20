@@ -10,6 +10,8 @@ This folder is the repository-local Spec Led layer for the unified monorepo.
 - `AGENTS.md` (authored, local operating guidance for agents working in this folder)
 - `conformance/README.md` (authored, package-scoped compliance and conformance guidance)
 - `conformance/*/manifest.json` (authored machine-readable implementation evidence manifests)
+- `planning/*/spec-traceability.json` (authored machine-readable package plan coverage manifests)
+- `planning/*/spec-traceability.md` (generated review-facing mirrors of the package plan coverage manifests)
 - `decisions/README.md` (authored ADR guidance for this workspace)
 - `decisions/**/*.md` (authored durable cross-cutting ADRs, including governance decisions)
 - `specs/spec_system.spec.md` (authored, meta-spec for this folder)
@@ -25,6 +27,7 @@ This repository adds a governance layer on top of the default Spec Led scaffold.
 - Durable governance contracts live under `.spec/specs/governance/`.
 - Durable cross-cutting rationale remains in `.spec/decisions/` as ADRs.
 - Machine-readable plan coverage may live under `.spec/planning/<package>/spec-traceability.json`.
+- Generated review-facing plan coverage mirrors may live under `.spec/planning/<package>/spec-traceability.md`.
 - Machine-readable implementation conformance lives under `.spec/conformance/<package>/manifest.json`.
 - The conformance layer remains separate from governance contracts and authored current-truth specs.
 

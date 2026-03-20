@@ -27,9 +27,7 @@ defmodule Unified.SpecCompliance.PlancheckTest do
 
     write_json!(root, ".spec/state.json", state(requirements))
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    manifest =
       plan_manifest("demo",
         inherited_requirement_ids: ["ecosystem.architecture.shared_transport_contract"],
         upstream_requirement_ids: ["unified_ui.signals.canonical_descriptor_shape"],
@@ -50,7 +48,14 @@ defmodule Unified.SpecCompliance.PlancheckTest do
           )
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      manifest
     )
+
+    write_traceability_markdown!(root, "demo", manifest)
 
     report = Plancheck.run("demo", root: root)
 
@@ -71,15 +76,20 @@ defmodule Unified.SpecCompliance.PlancheckTest do
       ])
     )
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      manifest
     )
+
+    write_traceability_markdown!(root, "demo", manifest)
 
     report = Plancheck.run("demo", root: root)
 
@@ -97,9 +107,7 @@ defmodule Unified.SpecCompliance.PlancheckTest do
       state([requirement("demo.package.one", ".spec/specs/demo/package.spec.md")])
     )
 
-    write_json!(
-      root,
-      ".spec/planning/demo/spec-traceability.json",
+    manifest =
       plan_manifest("demo",
         mappings: [
           mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"]),
@@ -107,7 +115,14 @@ defmodule Unified.SpecCompliance.PlancheckTest do
           mapping("demo.package.ghost", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
         ]
       )
+
+    write_json!(
+      root,
+      ".spec/planning/demo/spec-traceability.json",
+      manifest
     )
+
+    write_traceability_markdown!(root, "demo", manifest)
 
     report = Plancheck.run("demo", root: root)
 
@@ -115,5 +130,32 @@ defmodule Unified.SpecCompliance.PlancheckTest do
     assert Enum.any?(report.findings, &(&1.code == "duplicate_mapping"))
     assert Enum.any?(report.findings, &(&1.code == "unknown_mapping_requirement_id"))
     assert Enum.any?(report.findings, &(&1.code == "invalid_plan_ref"))
+  end
+
+  test "fails when generated traceability markdown drifts from the authoritative json" do
+    root = tmp_root!("traceability_drift")
+    write_minimal_plan_docs!(root, "demo")
+
+    write_json!(
+      root,
+      ".spec/state.json",
+      state([requirement("demo.package.one", ".spec/specs/demo/package.spec.md")])
+    )
+
+    manifest =
+      plan_manifest("demo",
+        mappings: [
+          mapping("demo.package.one", "direct", ".spec/specs/demo/package.spec.md", ["1.1.1"])
+        ]
+      )
+
+    write_json!(root, ".spec/planning/demo/spec-traceability.json", manifest)
+    write_traceability_markdown!(root, "demo", manifest)
+    write_file!(root, ".spec/planning/demo/spec-traceability.md", "# drifted\n")
+
+    report = Plancheck.run("demo", root: root)
+
+    assert report.status == :fail
+    assert Enum.any?(report.findings, &(&1.code == "traceability_markdown_drift"))
   end
 end

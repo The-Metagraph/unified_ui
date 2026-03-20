@@ -1,16 +1,15 @@
-defmodule Mix.Tasks.Spec.Compliance do
+defmodule Mix.Tasks.Spec.Compliance.Ci do
   use Mix.Task
 
   alias Unified.SpecCompliance.Output
 
-  @shortdoc "Checks package implementation compliance using conformance evidence"
+  @shortdoc "Runs changed-package plan and compliance checks for CI"
   @moduledoc """
-  Checks package-scoped implementation compliance using a conformance manifest.
+  Runs package-scoped plan and implementation compliance for changed packages.
 
-      mix spec.compliance web_ui
-      mix spec.compliance web_ui --no-run-commands
-      mix spec.compliance web_ui --refresh-state
-      mix spec.compliance web_ui --format json --output tmp/web_ui-compliance.json
+      mix spec.compliance.ci --base origin/main
+      mix spec.compliance.ci --changed-file packages/live_ui/lib/live_ui.ex
+      mix spec.compliance.ci --base origin/main --format json --output tmp/spec-compliance-ci.json
   """
 
   @impl true
@@ -20,6 +19,9 @@ defmodule Mix.Tasks.Spec.Compliance do
     {opts, rest, invalid} =
       OptionParser.parse(args,
         strict: [
+          base: :string,
+          head: :string,
+          changed_file: :keep,
           refresh_state: :boolean,
           run_commands: :boolean,
           root: :string,
@@ -30,8 +32,7 @@ defmodule Mix.Tasks.Spec.Compliance do
       )
 
     validate_args!(rest, invalid)
-    package = List.first(rest)
-    report = Unified.SpecCompliance.compliance(package, normalize_command_options(opts))
+    report = Unified.SpecCompliance.ci(normalize_command_options(opts))
     format = format!(opts)
     content = Output.render(report, format)
 
@@ -41,21 +42,21 @@ defmodule Mix.Tasks.Spec.Compliance do
 
       output_path ->
         absolute_path = Output.write!(content, output_path, Keyword.get(opts, :root, File.cwd!()))
-        Mix.shell().info("wrote spec.compliance report to #{absolute_path}")
+        Mix.shell().info("wrote spec.compliance.ci report to #{absolute_path}")
     end
 
     if report.status == :fail do
-      Mix.raise("Spec compliance failed: #{length(report.findings)} finding(s)")
+      Mix.raise("Spec compliance CI failed: #{length(report.findings)} finding(s)")
     end
   end
 
-  defp validate_args!([_package], []), do: :ok
+  defp validate_args!([], []), do: :ok
 
   defp validate_args!(rest, invalid) do
     invalid_flags = Enum.map(invalid, fn {flag, _value} -> flag end)
     extra_args = Enum.map(rest, &inspect/1)
     details = Enum.join(invalid_flags ++ extra_args, ", ")
-    Mix.raise("Invalid arguments for spec.compliance: #{details}")
+    Mix.raise("Invalid arguments for spec.compliance.ci: #{details}")
   end
 
   defp normalize_command_options(opts) do
@@ -69,7 +70,7 @@ defmodule Mix.Tasks.Spec.Compliance do
     case Keyword.get(opts, :format, "text") do
       "text" -> :text
       "json" -> :json
-      other -> Mix.raise("Unsupported format for spec.compliance: #{inspect(other)}")
+      other -> Mix.raise("Unsupported format for spec.compliance.ci: #{inspect(other)}")
     end
   end
 end
