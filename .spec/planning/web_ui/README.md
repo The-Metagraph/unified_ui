@@ -32,7 +32,8 @@ The plan aligns to:
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows.
 
 ## Supporting Docs
-- [Spec Traceability Matrix](./spec-traceability.md): maps direct `web_ui` requirements, inherited ecosystem requirements, and upstream canonical-input constraints to the exact phase, section, and task coverage in this plan.
+- [Spec Traceability Manifest](./spec-traceability.json): authoritative machine-readable mapping from applicable requirements into this plan.
+- [Spec Traceability Matrix](./spec-traceability.md): human-facing mirror of the traceability manifest for review and discussion.
 
 ## Shared Conventions
 - Numbering:

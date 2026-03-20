@@ -1,5 +1,7 @@
 # WebUi Spec Traceability Matrix
 
+Authoritative machine-readable source: [spec-traceability.json](./spec-traceability.json)
+
 This document maps the `web_ui` implementation plan to the specs referenced by
 the planning index. It makes explicit which requirements are delivered directly
 by the `web_ui` plan, which ones are inherited from root ecosystem contracts,
