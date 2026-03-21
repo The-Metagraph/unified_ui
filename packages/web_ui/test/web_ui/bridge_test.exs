@@ -47,6 +47,26 @@ defmodule WebUi.BridgeTest do
              })
   end
 
+  test "server runtime rejects frontend payloads that leak renderer-local keys" do
+    assert {:ok, state} =
+             WebUi.Runtime.mount_native_screen(WebUi.Examples.native_counter_screen())
+
+    leaked_message =
+      Message.new(
+        :event,
+        %{
+          family: :click,
+          intent: :increment,
+          boundary: :local,
+          widget_id: :increment,
+          payload: %{phx_value_step: 1}
+        }
+      )
+
+    assert {:error, %ServerRuntime.Error{reason: :frontend_payload_leakage}} =
+             ServerRuntime.handle_frontend_event(state, leaked_message)
+  end
+
   test "frontend bridge decodes incoming envelopes through the shared message contract" do
     model = %Model{
       runtime_id: "incoming-runtime",
@@ -93,6 +113,71 @@ defmodule WebUi.BridgeTest do
     assert event_message.metadata.boundary == :boundary
     assert event_message.payload.family == :command
     assert event_message.payload.type == "web_ui.command.run"
+  end
+
+  test "frontend runtime dispatches interactions with bounded local responsiveness" do
+    assert {:ok, runtime_state} =
+             WebUi.Runtime.mount_native_screen(
+               WebUi.Examples.native_counter_screen(),
+               runtime_id: "native-runtime"
+             )
+
+    assert {:ok, model} = WebUi.Runtime.hydrate_frontend(runtime_state)
+
+    assert {:ok, updated_model, event_message} =
+             WebUi.FrontendRuntime.dispatch_interaction(model,
+               family: :change,
+               intent: :filter,
+               widget_id: :search_input,
+               payload: %{query: "ops"}
+             )
+
+    assert updated_model.local_state.focused_id == :search_input
+    assert :search_input in updated_model.local_state.editing_ids
+    assert updated_model.local_state.flash.scope == :local_feedback
+    assert event_message.kind == :event
+    assert event_message.payload.family == :change
+  end
+
+  test "frontend runtime applies server acknowledgements without becoming canonical authority" do
+    assert {:ok, runtime_state} =
+             WebUi.Runtime.mount_native_screen(
+               WebUi.Examples.native_counter_screen(),
+               runtime_id: "canonical-runtime"
+             )
+
+    assert {:ok, %Model{} = hydrated_model} = WebUi.Runtime.hydrate_frontend(runtime_state)
+
+    model = %Model{
+      hydrated_model
+      | source_kind: :canonical,
+        boundary_mode: :canonical_boundary,
+        local_state:
+          Map.merge(hydrated_model.local_state, %{
+            focused_id: :ops_command_palette,
+            flash: %{scope: :pending_server_sync},
+            pending_boundary_event: %{family: :command, intent: :run}
+          })
+    }
+
+    ack_message =
+      Message.new(
+        :ack,
+        %{
+          runtime_id: "canonical-runtime",
+          family: :command,
+          intent: :run,
+          runtime_event: "command:run",
+          server_authority: true,
+          diagnostics: [%{level: :info, message: "acknowledged"}]
+        }
+      )
+
+    assert {:ok, updated_model} = WebUi.FrontendRuntime.apply_server_message(model, ack_message)
+    refute Map.has_key?(updated_model.local_state, :pending_boundary_event)
+    assert updated_model.local_state.last_server_ack.runtime_id == "canonical-runtime"
+    assert updated_model.local_state.flash.scope == :server_ack
+    assert updated_model.diagnostics == [%{level: :info, message: "acknowledged"}]
   end
 
   test "frontend runtime accepts canonical hydration envelopes" do

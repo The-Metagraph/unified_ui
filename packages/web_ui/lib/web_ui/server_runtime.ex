@@ -55,6 +55,34 @@ defmodule WebUi.ServerRuntime do
     SyncBoundary.receive_frontend_message(state, payload)
   end
 
+  @spec handle_frontend_event(State.t(), map()) :: {:ok, State.t(), map()} | {:error, Error.t()}
+  def handle_frontend_event(%State{} = state, payload) do
+    with {:ok, message} <- SyncBoundary.receive_frontend_message(state, payload),
+         {:ok, translation} <- SyncBoundary.translation_for_message(state, message),
+         {:ok, next_state} <- handle_event(state, translation) do
+      {:ok, next_state, SyncBoundary.acknowledgement_envelope(next_state, translation)}
+    end
+  end
+
+  @spec handle_boundary_envelope(State.t(), map()) ::
+          {:ok, State.t(), map()} | {:error, Error.t()}
+  def handle_boundary_envelope(%State{} = state, envelope) when is_map(envelope) do
+    with {:ok, signal} <- WebUi.Transport.Bridge.inbound_boundary_envelope(envelope),
+         {:ok, translation} <- WebUi.Transport.from_boundary_signal(signal),
+         {:ok, next_state} <- handle_event(state, translation) do
+      {:ok, next_state, SyncBoundary.acknowledgement_envelope(next_state, translation)}
+    else
+      {:error, %Error{} = error} ->
+        {:error, error}
+
+      {:error, reason} ->
+        {:error,
+         Error.new(:invalid_boundary_envelope, "Unable to route boundary envelope", %{
+           reason: reason
+         })}
+    end
+  end
+
   @spec handle_event(State.t(), map()) :: {:ok, State.t()} | {:error, Error.t()}
   def handle_event(%State{} = state, translation) do
     with {:ok, route} <- EventRouter.route(state, translation) do

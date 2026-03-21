@@ -12,12 +12,30 @@ defmodule WebUi.FrontendRuntime do
 
   @spec capabilities() :: [atom()]
   def capabilities do
-    [:elm_bootstrap, :bounded_local_state, :bridge_translation, :foundational_realization]
+    [
+      :elm_bootstrap,
+      :bounded_local_state,
+      :bridge_translation,
+      :bounded_browser_event_dispatch,
+      :server_acknowledgement_handling,
+      :foundational_realization
+    ]
   end
 
   @spec hydrate(map()) :: {:ok, Model.t()} | {:error, Error.t()}
   def hydrate(payload) when is_map(payload) do
     Boot.hydrate(payload)
+  end
+
+  @spec dispatch_interaction(Model.t(), keyword() | map()) ::
+          {:ok, Model.t(), map()} | {:error, Error.t() | term()}
+  def dispatch_interaction(%Model{} = model, attrs) do
+    Bridge.dispatch_interaction(model, attrs)
+  end
+
+  @spec apply_server_message(Model.t(), map()) :: {:ok, Model.t()} | {:error, Error.t()}
+  def apply_server_message(%Model{} = model, payload) do
+    Bridge.apply_server_message(model, payload)
   end
 
   @spec put_local_state(Model.t(), atom(), term()) :: {:ok, Model.t()}

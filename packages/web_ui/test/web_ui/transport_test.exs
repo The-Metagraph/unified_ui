@@ -123,4 +123,32 @@ defmodule WebUi.TransportTest do
     assert envelope.payload.family == :navigation
     assert envelope.payload.runtime_event == "navigation:open_settings"
   end
+
+  test "transport bridge round-trips canonical boundary envelopes for phoenix transport" do
+    assert {:ok, translation} =
+             WebUi.Transport.from_native_event(
+               family: :submit,
+               intent: :save,
+               widget_id: :save_button,
+               screen: "settings",
+               runtime_id: "settings-runtime",
+               payload: %{valid: true},
+               boundary: :boundary
+             )
+
+    assert {:ok, envelope} =
+             WebUi.Transport.Bridge.boundary_envelope(translation,
+               transport: :phoenix_socket,
+               topic: "web_ui:settings",
+               event: "settings:submit"
+             )
+
+    assert envelope.kind == :canonical_boundary
+    assert envelope.transport == :phoenix_socket
+    assert envelope.topic == "web_ui:settings"
+    assert envelope.event == "settings:submit"
+
+    assert {:ok, signal} = WebUi.Transport.Bridge.inbound_boundary_envelope(envelope)
+    assert signal.type == "web_ui.submit.save"
+  end
 end

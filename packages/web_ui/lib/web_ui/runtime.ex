@@ -22,7 +22,14 @@ defmodule WebUi.Runtime do
 
   @spec capabilities() :: [atom()]
   def capabilities do
-    [:native_mount, :canonical_mount, :frontend_hydration, :transport_translation]
+    [
+      :native_mount,
+      :canonical_mount,
+      :frontend_hydration,
+      :transport_translation,
+      :frontend_event_flow,
+      :boundary_envelope_flow
+    ]
   end
 
   @spec assumptions() :: map()
@@ -72,5 +79,17 @@ defmodule WebUi.Runtime do
     with {:ok, translation} <- Transport.from_native_event(attrs) do
       ServerRuntime.handle_event(runtime_state, translation)
     end
+  end
+
+  @spec handle_frontend_event(WebUi.ServerRuntime.State.t(), map()) ::
+          {:ok, WebUi.ServerRuntime.State.t(), map()} | {:error, WebUi.ServerRuntime.Error.t()}
+  def handle_frontend_event(runtime_state, payload) when is_map(payload) do
+    ServerRuntime.handle_frontend_event(runtime_state, payload)
+  end
+
+  @spec handle_boundary_envelope(WebUi.ServerRuntime.State.t(), map()) ::
+          {:ok, WebUi.ServerRuntime.State.t(), map()} | {:error, WebUi.ServerRuntime.Error.t()}
+  def handle_boundary_envelope(runtime_state, envelope) when is_map(envelope) do
+    ServerRuntime.handle_boundary_envelope(runtime_state, envelope)
   end
 end

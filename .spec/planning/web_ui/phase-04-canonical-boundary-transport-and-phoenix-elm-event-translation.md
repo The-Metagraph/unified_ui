@@ -37,22 +37,22 @@ Back to index: [README](./README.md)
       [x] 4.1.2.2 Subtask - Keep direct-native event handling ergonomic without weakening the canonical translation contract.
       [x] 4.1.2.3 Subtask - Verify canonical translation does not require separate transport or runtime stacks for native and canonical screens.
 
-  [ ] 4.2 Section - Server and Frontend Event Flow
+  [x] 4.2 Section - Server and Frontend Event Flow
     Implement the runtime event-handling flow that preserves Phoenix authority while supporting bounded Elm participation.
 
-    [ ] 4.2.1 Task - Implement server-side transport orchestration
+    [x] 4.2.1 Task - Implement server-side transport orchestration
       Define how browser events, Phoenix handlers, and canonical boundary transport work together under one authoritative server runtime.
 
-      [ ] 4.2.1.1 Subtask - Implement runtime event flow for native widget callbacks through Phoenix handlers and server-side state transitions.
-      [ ] 4.2.1.2 Subtask - Implement channel, socket, or bridge helpers for canonical cross-package event exchange where needed.
-      [ ] 4.2.1.3 Subtask - Ensure server-side routing preserves canonical intent and does not expose renderer-local event names externally.
+      [x] 4.2.1.1 Subtask - Implement runtime event flow for native widget callbacks through Phoenix handlers and server-side state transitions.
+      [x] 4.2.1.2 Subtask - Implement channel, socket, or bridge helpers for canonical cross-package event exchange where needed.
+      [x] 4.2.1.3 Subtask - Ensure server-side routing preserves canonical intent and does not expose renderer-local event names externally.
 
-    [ ] 4.2.2 Task - Implement bounded Elm-side event participation
+    [x] 4.2.2 Task - Implement bounded Elm-side event participation
       Keep Elm-side event handling useful but subordinate to server authority and canonical event translation.
 
-      [ ] 4.2.2.1 Subtask - Implement frontend message handling for browser interactions that need local responsiveness before or alongside server coordination.
-      [ ] 4.2.2.2 Subtask - Translate frontend-originated interaction data into package-local event flow without making the frontend the source of canonical truth.
-      [ ] 4.2.2.3 Subtask - Add diagnostics for unsupported frontend payloads, leaked renderer-local keys, and invalid boundary envelopes.
+      [x] 4.2.2.1 Subtask - Implement frontend message handling for browser interactions that need local responsiveness before or alongside server coordination.
+      [x] 4.2.2.2 Subtask - Translate frontend-originated interaction data into package-local event flow without making the frontend the source of canonical truth.
+      [x] 4.2.2.3 Subtask - Add diagnostics for unsupported frontend payloads, leaked renderer-local keys, and invalid boundary envelopes.
 
   [ ] 4.3 Section - Actionable Boundary Diagnostics and Validation
     Implement diagnostics and validation rules that keep the transport layer honest across the split runtime.
