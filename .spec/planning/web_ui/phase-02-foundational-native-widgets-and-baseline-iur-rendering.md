@@ -70,15 +70,15 @@ Back to index: [README](./README.md)
       [x] 2.3.2.2 Subtask - Align widget identity, style hooks, and interaction wiring across native and canonical paths.
       [x] 2.3.2.3 Subtask - Define continuity checks that compare native and canonical rendering for the same foundational widget families.
 
-  [ ] 2.4 Section - Foundational Reference Examples
+  [x] 2.4 Section - Foundational Reference Examples
     Implement maintained examples that exercise foundational direct-native and canonical rendering workflows.
 
-    [ ] 2.4.1 Task - Implement foundational native and canonical examples
+    [x] 2.4.1 Task - Implement foundational native and canonical examples
       Provide review-friendly examples that demonstrate the baseline `web_ui` runtime model and the first canonical renderer path.
 
-      [ ] 2.4.1.1 Subtask - Create direct-native foundational examples that exercise content, action, form, and navigation widgets.
-      [ ] 2.4.1.2 Subtask - Create canonical foundational examples that render equivalent `UnifiedIUR` structures through the same runtime.
-      [ ] 2.4.1.3 Subtask - Create comparison artifacts that make foundational native versus canonical behavior reviewable.
+      [x] 2.4.1.1 Subtask - Create direct-native foundational examples that exercise content, action, form, and navigation widgets.
+      [x] 2.4.1.2 Subtask - Create canonical foundational examples that render equivalent `UnifiedIUR` structures through the same runtime.
+      [x] 2.4.1.3 Subtask - Create comparison artifacts that make foundational native versus canonical behavior reviewable.
 
   [ ] 2.5 Section - Phase 2 Integration Tests
     Validate foundational native widgets, split-runtime rendering, and baseline canonical coverage end to end.
