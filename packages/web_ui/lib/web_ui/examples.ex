@@ -663,6 +663,271 @@ defmodule WebUi.Examples do
     )
   end
 
+  @spec native_styling_screen() :: map()
+  def native_styling_screen do
+    %{
+      id: "styling-workbench",
+      title: "Native Styling Review",
+      root:
+        Widgets.column(
+          "styling-workbench",
+          [
+            Widgets.content(
+              "styling-header",
+              [
+                Widgets.text("styling-title", "Styling Workbench",
+                  tone: :accent,
+                  style_hooks: [:theme_tokens],
+                  theme_tokens: %{text: [:text, :hero]}
+                ),
+                Widgets.inline_feedback(
+                  "styling-banner",
+                  "Server theme meaning stays authoritative.",
+                  severity: :info,
+                  tone: :info,
+                  background: :accent_tint,
+                  emphasis: :strong
+                )
+              ],
+              surface: :panel,
+              background: :panel
+            ),
+            Widgets.form("styling-form", [
+              Widgets.field_group(
+                "styling-group",
+                [
+                  Widgets.field(
+                    "style-query-field",
+                    Widgets.text_input("style-query",
+                      name: :query,
+                      value: "cluster:west",
+                      focused: true,
+                      style_hooks: [:state_variants, :theme_tokens],
+                      theme_tokens: %{surface: [:surface, :default]},
+                      state_variants: %{focused: %{border: :focus_ring}}
+                    ),
+                    name: :query,
+                    label: "Query"
+                  )
+                ],
+                legend: "Styling Filters"
+              )
+            ]),
+            WebUi.Layer.overlay(
+              "styling-overlay",
+              Widgets.content(
+                "styling-surface",
+                [
+                  Widgets.row(
+                    "styling-actions",
+                    [
+                      Widgets.button("primary-action", "Deploy",
+                        variant: :primary,
+                        style_hooks: [:theme_tokens],
+                        theme_tokens: %{button: [:button, :primary]}
+                      ),
+                      Widgets.button("quiet-action", "Preview",
+                        variant: :quiet,
+                        tone: :muted
+                      )
+                    ],
+                    gap: :md
+                  ),
+                  Widgets.status("styling-status", "Theme ready",
+                    severity: :info,
+                    tone: :info
+                  )
+                ],
+                surface: :elevated,
+                background: :panel
+              ),
+              [
+                WebUi.Layer.dialog(
+                  "style-inspector",
+                  Widgets.content(
+                    "style-dialog-content",
+                    [
+                      Widgets.text(
+                        "style-dialog-text",
+                        "Resolved styles remain aligned.",
+                        typography: :body,
+                        tone: :content
+                      )
+                    ],
+                    surface: :elevated,
+                    background: :panel
+                  ),
+                  title: "Style Inspector",
+                  modal: true,
+                  size: :md,
+                  background: :panel,
+                  border: :strong
+                )
+              ],
+              background: :scrim,
+              emphasis: :intense,
+              on_dismiss: %{intent: :dismiss_style_overlay}
+            )
+          ],
+          gap: :lg
+        ),
+      metadata: %{source: :native_styling, bridge: :phoenix_elm, theme: :midnight}
+    }
+  end
+
+  @spec canonical_styling_screen() :: Element.t()
+  def canonical_styling_screen do
+    Element.new(:layout, :column,
+      id: "styling-workbench",
+      attributes: %{gap: :lg},
+      children: [
+        Element.new(:widget, :content,
+          id: "styling-header",
+          attributes: %{
+            styles: %{surface: :panel, background: :panel}
+          },
+          children: [
+            Element.new(:widget, :text,
+              id: "styling-title",
+              attributes: %{
+                content: "Styling Workbench",
+                styles: %{tone: :accent, theme_tokens: %{text: [:text, :hero]}},
+                style_hooks: [:theme_tokens]
+              }
+            ),
+            Element.new(:widget, :inline_feedback,
+              id: "styling-banner",
+              attributes: %{
+                message: "Server theme meaning stays authoritative.",
+                severity: :info,
+                styles: %{tone: :info, background: :accent_tint, emphasis: :strong}
+              }
+            )
+          ]
+        ),
+        Element.new(:composite, :form,
+          id: "styling-form",
+          children: [
+            Element.new(:composite, :field_group,
+              id: "styling-group",
+              attributes: %{legend: "Styling Filters"},
+              children: [
+                Element.new(:composite, :field,
+                  id: "style-query-field",
+                  attributes: %{name: :query},
+                  children: [
+                    Child.new(
+                      :label,
+                      Element.new(:widget, :label,
+                        id: "style-query-label",
+                        attributes: %{content: "Query"}
+                      )
+                    ),
+                    Child.new(
+                      :control,
+                      Element.new(:widget, :text_input,
+                        id: "style-query",
+                        attributes: %{
+                          name: :query,
+                          value: "cluster:west",
+                          state: %{focused: true},
+                          styles: %{
+                            theme_tokens: %{surface: [:surface, :default]},
+                            state_variants: %{focused: %{border: :focus_ring}}
+                          },
+                          style_hooks: [:state_variants, :theme_tokens]
+                        }
+                      )
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
+        ),
+        Element.new(:layer, :overlay,
+          id: "styling-overlay",
+          attributes: %{
+            styles: %{background: :scrim, emphasis: :intense},
+            events: %{dismiss: %{intent: :dismiss_style_overlay}}
+          },
+          children: [
+            Child.new(
+              :base,
+              Element.new(:widget, :content,
+                id: "styling-surface",
+                attributes: %{styles: %{surface: :elevated, background: :panel}},
+                children: [
+                  Element.new(:layout, :row,
+                    id: "styling-actions",
+                    attributes: %{gap: :md},
+                    children: [
+                      Element.new(:widget, :button,
+                        id: "primary-action",
+                        attributes: %{
+                          label: "Deploy",
+                          styles: %{
+                            variant: :primary,
+                            theme_tokens: %{button: [:button, :primary]}
+                          },
+                          style_hooks: [:theme_tokens]
+                        }
+                      ),
+                      Element.new(:widget, :button,
+                        id: "quiet-action",
+                        attributes: %{
+                          label: "Preview",
+                          styles: %{variant: :quiet, tone: :muted}
+                        }
+                      )
+                    ]
+                  ),
+                  Element.new(:widget, :status,
+                    id: "styling-status",
+                    attributes: %{
+                      text: "Theme ready",
+                      severity: :info,
+                      styles: %{tone: :info}
+                    }
+                  )
+                ]
+              )
+            ),
+            Child.new(
+              :layers,
+              Element.new(:layer, :dialog,
+                id: "style-inspector",
+                attributes: %{
+                  title: "Style Inspector",
+                  modal: true,
+                  styles: %{background: :panel, border: :strong}
+                },
+                children: [
+                  Child.new(
+                    :content,
+                    Element.new(:widget, :content,
+                      id: "style-dialog-content",
+                      attributes: %{styles: %{surface: :elevated, background: :panel}},
+                      children: [
+                        Element.new(:widget, :text,
+                          id: "style-dialog-text",
+                          attributes: %{
+                            content: "Resolved styles remain aligned.",
+                            styles: %{typography: :body, tone: :content}
+                          }
+                        )
+                      ]
+                    )
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      ]
+    )
+  end
+
   @spec comparison_examples() :: map()
   def comparison_examples do
     %{
@@ -676,7 +941,10 @@ defmodule WebUi.Examples do
       mixed_transport: mixed_transport_comparison(),
       native_advanced: native_advanced_screen(),
       canonical_advanced: canonical_advanced_screen(),
-      advanced_continuity: advanced_comparison()
+      advanced_continuity: advanced_comparison(),
+      native_styling: native_styling_screen(),
+      canonical_styling: canonical_styling_screen(),
+      styling_continuity: styling_comparison()
     }
   end
 
@@ -685,6 +953,7 @@ defmodule WebUi.Examples do
     [
       %{id: :canonical_foundational, summary: "Canonical foundational workspace"},
       %{id: :canonical_advanced, summary: "Canonical advanced operations workspace"},
+      %{id: :canonical_styling, summary: "Canonical styling review workspace"},
       %{id: :canonical_transport, summary: "Canonical transport-focused workspace"},
       %{id: :canonical_welcome, summary: "Canonical welcome message"},
       %{id: :advanced_continuity, summary: "Native and canonical advanced comparison"},
@@ -693,7 +962,9 @@ defmodule WebUi.Examples do
       %{id: :native_advanced, summary: "Direct-native advanced operations workspace"},
       %{id: :native_counter, summary: "Minimal native counter"},
       %{id: :native_foundational, summary: "Direct-native foundational workspace"},
-      %{id: :native_transport, summary: "Direct-native transport-focused workspace"}
+      %{id: :native_styling, summary: "Direct-native styling review workspace"},
+      %{id: :native_transport, summary: "Direct-native transport-focused workspace"},
+      %{id: :styling_continuity, summary: "Native and canonical styling comparison"}
     ]
   end
 
@@ -817,6 +1088,38 @@ defmodule WebUi.Examples do
     }
   end
 
+  @spec styling_comparison() :: map()
+  def styling_comparison do
+    {:ok, native_state} =
+      WebUi.Runtime.mount_native_screen(native_styling_screen(), runtime_id: "native-styling")
+
+    {:ok, canonical_state} =
+      WebUi.Runtime.mount_iur_screen(
+        canonical_styling_screen(),
+        runtime_id: "canonical-styling",
+        theme: :midnight
+      )
+
+    {:ok, report} =
+      WebUi.Continuity.compare(
+        native_state,
+        canonical_state,
+        native_local_state: %{focused_id: "style-query", editing_ids: ["style-query"]},
+        canonical_local_state: %{focused_id: "style-query", editing_ids: ["style-query"]}
+      )
+
+    Map.put(
+      report,
+      :review_artifact,
+      review_artifact(report, [
+        "styling-title",
+        "style-query",
+        "primary-action",
+        "style-inspector"
+      ])
+    )
+  end
+
   defp snapshot(widget_tree, frontend_tree) do
     %{
       widget_ids: collect_widget_ids(widget_tree),
@@ -854,5 +1157,29 @@ defmodule WebUi.Examples do
       (node.slots
        |> Enum.flat_map(& &1.children)
        |> Enum.flat_map(&collect_render_tags/1))
+  end
+
+  defp review_artifact(report, ids) do
+    %{
+      ids: ids,
+      server: %{
+        native: select_style_nodes(report.native.server.style_nodes, ids),
+        canonical: select_style_nodes(report.canonical.server.style_nodes, ids)
+      },
+      frontend: %{
+        native: select_style_nodes(report.native.frontend.style_nodes, ids),
+        canonical: select_style_nodes(report.canonical.frontend.style_nodes, ids)
+      },
+      continuity: %{
+        shared_ids: Enum.filter(ids, &(&1 in report.continuity.shared_ids)),
+        validation: report.continuity.validation
+      }
+    }
+  end
+
+  defp select_style_nodes(nodes, ids) do
+    nodes
+    |> Enum.filter(&(to_string(&1.id) in ids))
+    |> Enum.sort_by(&to_string(&1.id))
   end
 end
