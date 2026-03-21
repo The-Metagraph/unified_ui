@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - Layering, scrolling, viewport behavior, and overlay semantics must stay coherent across the Phoenix server and Elm frontend split.
 - Broader canonical coverage should follow the runtime seams already established for native widgets, renderer interpretation, and browser coordination.
 
-[ ] 3 Phase 3 - Advanced Widgets, Display Systems, and Layered Web Runtime Behavior
+[x] 3 Phase 3 - Advanced Widgets, Display Systems, and Layered Web Runtime Behavior
   Implement advanced data, feedback, overlay, viewport, split-pane, scroll, canvas, and layered runtime behavior together with broader canonical renderer coverage.
 
   [x] 3.1 Section - Advanced Widget Families
@@ -81,19 +81,19 @@ Back to index: [README](./README.md)
       [x] 3.4.1.2 Subtask - Create canonical advanced examples that render equivalent `UnifiedIUR` structures through the same runtime architecture.
       [x] 3.4.1.3 Subtask - Create comparison artifacts that make advanced native versus canonical behavior reviewable.
 
-  [ ] 3.5 Section - Phase 3 Integration Tests
+  [x] 3.5 Section - Phase 3 Integration Tests
     Validate advanced widget families, display systems, layering, and broader canonical coverage end to end.
 
-    [ ] 3.5.1 Task - Advanced native runtime scenarios
+    [x] 3.5.1 Task - Advanced native runtime scenarios
       Verify advanced widgets and layered compositions behave coherently through the Phoenix and Elm runtime split.
 
-      [ ] 3.5.1.1 Subtask - Verify advanced data, feedback, and visualization widgets render deterministically and preserve widget identity.
-      [ ] 3.5.1.2 Subtask - Verify viewport, split, scroll, overlay, and dialog behavior remain coherent across server authority and frontend realization.
-      [ ] 3.5.1.3 Subtask - Verify invalid advanced widget and display-system wiring fails with actionable diagnostics.
+      [x] 3.5.1.1 Subtask - Verify advanced data, feedback, and visualization widgets render deterministically and preserve widget identity.
+      [x] 3.5.1.2 Subtask - Verify viewport, split, scroll, overlay, and dialog behavior remain coherent across server authority and frontend realization.
+      [x] 3.5.1.3 Subtask - Verify invalid advanced widget and display-system wiring fails with actionable diagnostics.
 
-    [ ] 3.5.2 Task - Advanced canonical renderer scenarios
+    [x] 3.5.2 Task - Advanced canonical renderer scenarios
       Verify advanced canonical IUR input maps into the same advanced widget model used by direct native rendering.
 
-      [ ] 3.5.2.1 Subtask - Verify advanced canonical widgets and display nodes render through native widget and layer reuse rather than a separate renderer stack.
-      [ ] 3.5.2.2 Subtask - Verify native and canonical advanced examples preserve the same hierarchy, layering, and interaction meaning.
-      [ ] 3.5.2.3 Subtask - Verify unsupported advanced canonical inputs fail deterministically with coverage-oriented diagnostics.
+      [x] 3.5.2.1 Subtask - Verify advanced canonical widgets and display nodes render through native widget and layer reuse rather than a separate renderer stack.
+      [x] 3.5.2.2 Subtask - Verify native and canonical advanced examples preserve the same hierarchy, layering, and interaction meaning.
+      [x] 3.5.2.3 Subtask - Verify unsupported advanced canonical inputs fail deterministically with coverage-oriented diagnostics.
