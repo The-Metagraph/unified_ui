@@ -47,8 +47,10 @@ defmodule WebUi.Reference do
       package: WebUi,
       widgets: %{
         families: widget_families(),
+        kinds: WebUi.Widgets.kinds(),
         modules: WebUi.Widgets.modules(),
-        contract: widget_contract()
+        contract: widget_contract(),
+        validation_state: WebUi.Widgets.validation_state()
       },
       runtime: %{
         capabilities: WebUi.Runtime.capabilities(),

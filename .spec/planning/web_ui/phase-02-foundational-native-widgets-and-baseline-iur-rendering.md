@@ -19,22 +19,22 @@ Back to index: [README](./README.md)
 [ ] 2 Phase 2 - Foundational Native Widgets and Baseline IUR Rendering
   Implement foundational native widgets, baseline forms and navigation, and the first canonical `UnifiedIUR` rendering path across the split `web_ui` runtime.
 
-  [ ] 2.1 Section - Foundational Native Widget Families
+  [x] 2.1 Section - Foundational Native Widget Families
     Implement the core widget families that make direct-use `web_ui` useful before advanced display systems arrive.
 
-    [ ] 2.1.1 Task - Implement foundational content and action widgets
+    [x] 2.1.1 Task - Implement foundational content and action widgets
       Define the baseline native widgets for text-bearing, image-bearing, icon-bearing, button-like, link-like, separator, spacer, and content-container rendering.
 
-      [ ] 2.1.1.1 Subtask - Implement native widget contracts and rendering support for foundational content, action, and content-container widgets.
-      [ ] 2.1.1.2 Subtask - Define shared state, slot, accessibility, and browser interaction behavior for these foundational widgets.
-      [ ] 2.1.1.3 Subtask - Define how foundational widget state is represented on the server side and realized on the Elm side.
+      [x] 2.1.1.1 Subtask - Implement native widget contracts and rendering support for foundational content, action, and content-container widgets.
+      [x] 2.1.1.2 Subtask - Define shared state, slot, accessibility, and browser interaction behavior for these foundational widgets.
+      [x] 2.1.1.3 Subtask - Define how foundational widget state is represented on the server side and realized on the Elm side.
 
-    [ ] 2.1.2 Task - Implement baseline forms and navigation widgets
+    [x] 2.1.2 Task - Implement baseline forms and navigation widgets
       Define the first native form and navigation controls needed for direct package usage and early canonical parity.
 
-      [ ] 2.1.2.1 Subtask - Implement native widget support for text input, grouped form composition, button actions, and simple selection controls.
-      [ ] 2.1.2.2 Subtask - Implement baseline navigation widgets such as tabs, menu-like navigation, and command-triggering controls.
-      [ ] 2.1.2.3 Subtask - Keep the initial form and navigation APIs ergonomic for direct native usage without weakening canonical parity requirements.
+      [x] 2.1.2.1 Subtask - Implement native widget support for text input, grouped form composition, button actions, and simple selection controls.
+      [x] 2.1.2.2 Subtask - Implement baseline navigation widgets such as tabs, menu-like navigation, and command-triggering controls.
+      [x] 2.1.2.3 Subtask - Keep the initial form and navigation APIs ergonomic for direct native usage without weakening canonical parity requirements.
 
   [ ] 2.2 Section - Foundational Server and Frontend Rendering Pipeline
     Implement the split rendering pipeline that makes foundational native widgets work coherently across Phoenix and Elm.
