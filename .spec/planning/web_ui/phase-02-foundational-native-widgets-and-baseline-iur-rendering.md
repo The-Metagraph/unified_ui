@@ -16,7 +16,7 @@ Back to index: [README](./README.md)
 - Direct native rendering and canonical `UnifiedIUR` rendering should begin converging as soon as foundational widget families exist.
 - The Phoenix side should shape authoritative view state while the Elm side realizes foundational widget rendering and browser interaction.
 
-[ ] 2 Phase 2 - Foundational Native Widgets and Baseline IUR Rendering
+[x] 2 Phase 2 - Foundational Native Widgets and Baseline IUR Rendering
   Implement foundational native widgets, baseline forms and navigation, and the first canonical `UnifiedIUR` rendering path across the split `web_ui` runtime.
 
   [x] 2.1 Section - Foundational Native Widget Families
@@ -80,19 +80,19 @@ Back to index: [README](./README.md)
       [x] 2.4.1.2 Subtask - Create canonical foundational examples that render equivalent `UnifiedIUR` structures through the same runtime.
       [x] 2.4.1.3 Subtask - Create comparison artifacts that make foundational native versus canonical behavior reviewable.
 
-  [ ] 2.5 Section - Phase 2 Integration Tests
+  [x] 2.5 Section - Phase 2 Integration Tests
     Validate foundational native widgets, split-runtime rendering, and baseline canonical coverage end to end.
 
-    [ ] 2.5.1 Task - Foundational native rendering scenarios
+    [x] 2.5.1 Task - Foundational native rendering scenarios
       Verify foundational widgets, forms, and navigation controls render and behave coherently through the package runtime.
 
-      [ ] 2.5.1.1 Subtask - Verify foundational native widgets render deterministically through the Phoenix and Elm runtime split.
-      [ ] 2.5.1.2 Subtask - Verify baseline form editing and navigation interactions update authoritative server state and frontend rendering correctly.
-      [ ] 2.5.1.3 Subtask - Verify invalid foundational widget declarations or unsupported state shape fail with actionable diagnostics.
+      [x] 2.5.1.1 Subtask - Verify foundational native widgets render deterministically through the Phoenix and Elm runtime split.
+      [x] 2.5.1.2 Subtask - Verify baseline form editing and navigation interactions update authoritative server state and frontend rendering correctly.
+      [x] 2.5.1.3 Subtask - Verify invalid foundational widget declarations or unsupported state shape fail with actionable diagnostics.
 
-    [ ] 2.5.2 Task - Foundational canonical renderer scenarios
+    [x] 2.5.2 Task - Foundational canonical renderer scenarios
       Verify foundational canonical IUR input maps into the same widget model used by direct native rendering.
 
-      [ ] 2.5.2.1 Subtask - Verify foundational canonical widgets render through native `web_ui` widget reuse rather than a separate renderer stack.
-      [ ] 2.5.2.2 Subtask - Verify native and canonical foundational examples preserve the same visual and interaction meaning.
-      [ ] 2.5.2.3 Subtask - Verify unsupported canonical inputs fail deterministically with coverage-oriented diagnostics.
+      [x] 2.5.2.1 Subtask - Verify foundational canonical widgets render through native `web_ui` widget reuse rather than a separate renderer stack.
+      [x] 2.5.2.2 Subtask - Verify native and canonical foundational examples preserve the same visual and interaction meaning.
+      [x] 2.5.2.3 Subtask - Verify unsupported canonical inputs fail deterministically with coverage-oriented diagnostics.
