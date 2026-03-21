@@ -2,7 +2,18 @@ defmodule WebUiTest do
   use ExUnit.Case, async: true
 
   test "package reference exposes split runtime and renderer areas" do
-    assert [:widgets, :layout, :layer, :runtime, :renderer, :signals, :transport, :tooling] =
+    assert [
+             :widgets,
+             :layout,
+             :layer,
+             :runtime,
+             :renderer,
+             :signals,
+             :transport,
+             :style,
+             :theme,
+             :tooling
+           ] =
              WebUi.package_areas()
 
     assert %{
@@ -12,7 +23,9 @@ defmodule WebUiTest do
              layer: %{kinds: layer_kinds},
              signals: %{families: signal_families},
              runtime: %{capabilities: runtime_capabilities},
-             transport: %{modes: [:native_local, :canonical_boundary]}
+             transport: %{modes: [:native_local, :canonical_boundary]},
+             style: %{hooks: style_hooks},
+             theme: %{catalog: theme_catalog}
            } = WebUi.reference()
 
     assert :content in families
@@ -20,10 +33,12 @@ defmodule WebUiTest do
     assert :dialog in layer_kinds
     assert :command in signal_families
     assert :native_mount in runtime_capabilities
+    assert :theme_tokens in style_hooks
+    assert :default in theme_catalog
   end
 
   test "package summary reports package identity" do
-    assert %{package: :web_ui, namespace: WebUi} = WebUi.info()
+    assert %{package: :web_ui, namespace: WebUi, theme: %{default: :default}} = WebUi.info()
   end
 
   test "package exposes maintained native and canonical examples" do

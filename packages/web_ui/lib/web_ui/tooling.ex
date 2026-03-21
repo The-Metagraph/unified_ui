@@ -10,7 +10,7 @@ defmodule WebUi.Tooling do
 
   @spec preview_surfaces() :: [module()]
   def preview_surfaces do
-    [WebUi.Reference, WebUi.Info, WebUi.Examples]
+    [WebUi.Reference, WebUi.Info, WebUi.Style, WebUi.Theme, WebUi.Examples]
   end
 
   @spec mix_tasks() :: [String.t()]

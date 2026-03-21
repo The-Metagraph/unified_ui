@@ -14,17 +14,39 @@ defmodule WebUi do
     Runtime,
     Server,
     Signals,
+    Style,
+    Theme,
     Tooling,
     Transport,
     Widgets
   }
 
   @type package_area ::
-          :widgets | :layout | :layer | :runtime | :renderer | :signals | :transport | :tooling
+          :widgets
+          | :layout
+          | :layer
+          | :runtime
+          | :renderer
+          | :signals
+          | :transport
+          | :style
+          | :theme
+          | :tooling
 
   @spec package_areas() :: [package_area()]
   def package_areas do
-    [:widgets, :layout, :layer, :runtime, :renderer, :signals, :transport, :tooling]
+    [
+      :widgets,
+      :layout,
+      :layer,
+      :runtime,
+      :renderer,
+      :signals,
+      :transport,
+      :style,
+      :theme,
+      :tooling
+    ]
   end
 
   @spec widgets() :: module()
@@ -53,6 +75,12 @@ defmodule WebUi do
 
   @spec transport() :: module()
   def transport, do: Transport
+
+  @spec style() :: module()
+  def style, do: Style
+
+  @spec theme() :: module()
+  def theme, do: Theme
 
   @spec tooling() :: module()
   def tooling, do: Tooling

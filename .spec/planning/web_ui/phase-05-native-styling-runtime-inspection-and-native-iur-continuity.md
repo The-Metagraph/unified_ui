@@ -20,22 +20,22 @@ Back to index: [README](./README.md)
 [ ] 5 Phase 5 - Native Styling, Runtime Inspection, and Native-IUR Continuity
   Implement native theming and styling, cross-runtime inspection surfaces, and deterministic continuity between direct native and canonical rendering paths.
 
-  [ ] 5.1 Section - Native Styling and Theming Surface
+  [x] 5.1 Section - Native Styling and Theming Surface
     Implement the style and theme system that native widgets and canonical rendering will share.
 
-    [ ] 5.1.1 Task - Implement native style primitives and widget style hooks
+    [x] 5.1.1 Task - Implement native style primitives and widget style hooks
       Define the style primitives, widget-level style hooks, and state-variant behavior required across native widget families.
 
-      [ ] 5.1.1.1 Subtask - Implement native style primitives for typography, color, spacing, sizing, alignment, borders, background treatment, visibility, and emphasis.
-      [ ] 5.1.1.2 Subtask - Define how widget families expose variant, tone, state, and composition-aware style hooks across the split runtime.
-      [ ] 5.1.1.3 Subtask - Keep style primitives portable enough to preserve canonical styling meaning without becoming renderer-local escape hatches.
+      [x] 5.1.1.1 Subtask - Implement native style primitives for typography, color, spacing, sizing, alignment, borders, background treatment, visibility, and emphasis.
+      [x] 5.1.1.2 Subtask - Define how widget families expose variant, tone, state, and composition-aware style hooks across the split runtime.
+      [x] 5.1.1.3 Subtask - Keep style primitives portable enough to preserve canonical styling meaning without becoming renderer-local escape hatches.
 
-    [ ] 5.1.2 Task - Implement native theme and token support
+    [x] 5.1.2 Task - Implement native theme and token support
       Define the native theming surface needed for coherent package styling and canonical theme interpretation.
 
-      [ ] 5.1.2.1 Subtask - Implement native theme definitions, palette roles, token references, and component-style defaults.
-      [ ] 5.1.2.2 Subtask - Define how the server runtime carries authoritative theme meaning while the frontend realizes browser-facing style output.
-      [ ] 5.1.2.3 Subtask - Define continuity rules for theme inheritance, token resolution, and style fallback behavior.
+      [x] 5.1.2.1 Subtask - Implement native theme definitions, palette roles, token references, and component-style defaults.
+      [x] 5.1.2.2 Subtask - Define how the server runtime carries authoritative theme meaning while the frontend realizes browser-facing style output.
+      [x] 5.1.2.3 Subtask - Define continuity rules for theme inheritance, token resolution, and style fallback behavior.
 
   [ ] 5.2 Section - Cross-Runtime Style Realization
     Implement the Phoenix-side and Elm-side coordination needed to realize styling and theming coherently.
