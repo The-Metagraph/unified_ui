@@ -2,16 +2,21 @@ defmodule WebUiTest do
   use ExUnit.Case, async: true
 
   test "package reference exposes split runtime and renderer areas" do
-    assert [:widgets, :runtime, :renderer, :transport, :tooling] = WebUi.package_areas()
+    assert [:widgets, :layout, :layer, :runtime, :renderer, :transport, :tooling] =
+             WebUi.package_areas()
 
     assert %{
              package: WebUi,
              widgets: %{families: families},
+             layout: %{kinds: layout_kinds},
+             layer: %{kinds: layer_kinds},
              runtime: %{capabilities: runtime_capabilities},
              transport: %{modes: [:native_local, :canonical_boundary]}
            } = WebUi.reference()
 
     assert :content in families
+    assert :viewport in layout_kinds
+    assert :dialog in layer_kinds
     assert :native_mount in runtime_capabilities
   end
 

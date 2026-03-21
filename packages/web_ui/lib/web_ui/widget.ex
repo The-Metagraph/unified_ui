@@ -6,6 +6,7 @@ defmodule WebUi.Widget do
   @type family ::
           :content
           | :layout
+          | :layer
           | :interaction
           | :feedback
           | :input
@@ -55,9 +56,25 @@ defmodule WebUi.Widget do
         :checked,
         :loading,
         :streaming,
-        :paused
+        :paused,
+        :open,
+        :scrolled
       ],
-      slots: [:default, :label, :control, :help, :header, :body, :navigation],
+      slots: [
+        :default,
+        :label,
+        :control,
+        :help,
+        :header,
+        :body,
+        :navigation,
+        :content,
+        :primary,
+        :secondary,
+        :base,
+        :layers,
+        :menu
+      ],
       styles: [:tone, :size, :spacing, :surface, :hooks],
       events: [
         :click,
@@ -70,7 +87,11 @@ defmodule WebUi.Widget do
         :paginate,
         :close,
         :expand,
-        :command
+        :command,
+        :scroll,
+        :resize,
+        :open,
+        :dismiss
       ]
     }
   end
@@ -156,7 +177,22 @@ defmodule WebUi.Widget do
   end
 
   @spec family_for(atom()) :: family()
-  def family_for(kind) when kind in [:stack, :panel, :container, :row, :column], do: :layout
+  def family_for(kind)
+      when kind in [
+             :stack,
+             :panel,
+             :container,
+             :row,
+             :column,
+             :viewport,
+             :scroll_bar,
+             :split_pane
+           ],
+      do: :layout
+
+  def family_for(kind) when kind in [:overlay, :dialog, :toast, :alert_dialog, :context_menu],
+    do: :layer
+
   def family_for(kind) when kind in [:button, :link, :form], do: :interaction
 
   def family_for(kind) when kind in [:text_input, :checkbox, :select, :field, :field_group],

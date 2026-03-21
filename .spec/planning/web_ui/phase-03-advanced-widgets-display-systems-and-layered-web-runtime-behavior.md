@@ -37,22 +37,22 @@ Back to index: [README](./README.md)
       [x] 3.1.2.2 Subtask - Implement operational or diagnostic widgets such as stream-oriented and cluster-oriented views through the same runtime model.
       [x] 3.1.2.3 Subtask - Keep advanced widget coverage extensible so new canonical widgets can be added without destabilizing the package structure.
 
-  [ ] 3.2 Section - Display Systems and Layered Composition
+  [x] 3.2 Section - Display Systems and Layered Composition
     Implement advanced layout, viewport, scroll, split, overlay, and dialog behavior for complex web experiences.
 
-    [ ] 3.2.1 Task - Implement viewport, scroll, and split composition behavior
+    [x] 3.2.1 Task - Implement viewport, scroll, and split composition behavior
       Define the runtime behavior for large, scrollable, or multi-pane web compositions.
 
-      [ ] 3.2.1.1 Subtask - Implement native support for viewport, scroll-bar, and split-pane display-system behavior.
-      [ ] 3.2.1.2 Subtask - Define how viewport offset, clipping, and pane coordination are represented across server state and frontend realization.
-      [ ] 3.2.1.3 Subtask - Add diagnostics for invalid display-system configuration, unsupported nesting, and inconsistent runtime state.
+      [x] 3.2.1.1 Subtask - Implement native support for viewport, scroll-bar, and split-pane display-system behavior.
+      [x] 3.2.1.2 Subtask - Define how viewport offset, clipping, and pane coordination are represented across server state and frontend realization.
+      [x] 3.2.1.3 Subtask - Add diagnostics for invalid display-system configuration, unsupported nesting, and inconsistent runtime state.
 
-    [ ] 3.2.2 Task - Implement overlay and dialog layering behavior
+    [x] 3.2.2 Task - Implement overlay and dialog layering behavior
       Define the runtime behavior for dialogs, alert dialogs, overlays, and z-order-sensitive composition.
 
-      [ ] 3.2.2.1 Subtask - Implement native support for dialog, alert-dialog, toast, overlay, and related layered composition primitives.
-      [ ] 3.2.2.2 Subtask - Define how focus scope, modal state, background scrims, and dismissal semantics remain coherent across the runtime split.
-      [ ] 3.2.2.3 Subtask - Preserve canonical layering meaning without letting browser-only implementation shortcuts redefine package behavior.
+      [x] 3.2.2.1 Subtask - Implement native support for dialog, alert-dialog, toast, overlay, and related layered composition primitives.
+      [x] 3.2.2.2 Subtask - Define how focus scope, modal state, background scrims, and dismissal semantics remain coherent across the runtime split.
+      [x] 3.2.2.3 Subtask - Preserve canonical layering meaning without letting browser-only implementation shortcuts redefine package behavior.
 
   [ ] 3.3 Section - Advanced Canonical Renderer Coverage
     Implement broader `UnifiedIUR` renderer coverage for advanced widgets, layouts, display systems, and layering constructs.

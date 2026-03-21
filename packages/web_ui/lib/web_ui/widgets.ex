@@ -4,7 +4,7 @@ defmodule WebUi.Widgets do
   """
 
   alias WebUi.Widget
-  alias WebUi.Widgets.{Data, Feedback, Forms, Foundational, Input, Layout, Navigation}
+  alias WebUi.Widgets.{Data, Feedback, Forms, Foundational, Input, Layered, Layout, Navigation}
   alias WebUi.Widgets.{Operational, Visualization}
 
   @type family :: Widget.family()
@@ -25,6 +25,7 @@ defmodule WebUi.Widgets do
       Input,
       Navigation,
       Layout,
+      Layered,
       Forms,
       Data,
       Feedback,
@@ -40,6 +41,7 @@ defmodule WebUi.Widgets do
       Input.kinds(),
       Navigation.kinds(),
       Layout.kinds(),
+      Layered.kinds(),
       Forms.kinds(),
       Data.kinds(),
       Feedback.kinds(),
@@ -72,7 +74,10 @@ defmodule WebUi.Widgets do
       advanced_document_widgets: :ready,
       advanced_feedback_widgets: :ready,
       advanced_visualization_widgets: :ready,
-      advanced_operational_widgets: :ready
+      advanced_operational_widgets: :ready,
+      display_system_widgets: :ready,
+      layered_composition_widgets: :ready,
+      layered_runtime_diagnostics: :ready
     }
   end
 
@@ -207,6 +212,26 @@ defmodule WebUi.Widgets do
     Layout.column(id, children, opts)
   end
 
+  @spec viewport(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def viewport(id, content, opts \\ []) do
+    Layout.viewport(id, content, opts)
+  end
+
+  @spec scroll_bar(String.t() | atom(), keyword()) :: Widget.t()
+  def scroll_bar(id, opts \\ []) do
+    Layout.scroll_bar(id, opts)
+  end
+
+  @spec split_pane(
+          String.t() | atom(),
+          Widget.t() | map() | keyword(),
+          Widget.t() | map() | keyword(),
+          keyword()
+        ) :: Widget.t()
+  def split_pane(id, primary, secondary, opts \\ []) do
+    Layout.split_pane(id, primary, secondary, opts)
+  end
+
   @spec menu(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def menu(id, items, opts \\ []) do
     Navigation.menu(id, items, opts)
@@ -215,6 +240,37 @@ defmodule WebUi.Widgets do
   @spec tabs(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def tabs(id, items, opts \\ []) do
     Navigation.tabs(id, items, opts)
+  end
+
+  @spec overlay(
+          String.t() | atom(),
+          Widget.t() | map() | keyword(),
+          [Widget.t() | map() | keyword()],
+          keyword()
+        ) :: Widget.t()
+  def overlay(id, base, layers, opts \\ []) do
+    Layered.overlay(id, base, layers, opts)
+  end
+
+  @spec dialog(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def dialog(id, content, opts \\ []) do
+    Layered.dialog(id, content, opts)
+  end
+
+  @spec toast(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def toast(id, content, opts \\ []) do
+    Layered.toast(id, content, opts)
+  end
+
+  @spec alert_dialog(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) ::
+          Widget.t()
+  def alert_dialog(id, content, opts \\ []) do
+    Layered.alert_dialog(id, content, opts)
+  end
+
+  @spec context_menu(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def context_menu(id, items, opts \\ []) do
+    Layered.context_menu(id, items, opts)
   end
 
   @spec table(String.t() | atom(), [keyword() | map()], [keyword() | map()], keyword()) ::

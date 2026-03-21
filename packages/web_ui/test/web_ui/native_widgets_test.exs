@@ -69,6 +69,7 @@ defmodule WebUi.NativeWidgetsTest do
     assert WebUi.Widgets.Input in modules
     assert WebUi.Widgets.Navigation in modules
     assert WebUi.Widgets.Layout in modules
+    assert WebUi.Widgets.Layered in modules
     assert WebUi.Widgets.Forms in modules
     assert WebUi.Widgets.Data in modules
     assert WebUi.Widgets.Feedback in modules
@@ -77,13 +78,17 @@ defmodule WebUi.NativeWidgetsTest do
 
     assert :content in WebUi.Widgets.kinds()
     assert :form in WebUi.Widgets.kinds()
+    assert :viewport in WebUi.Widgets.kinds()
+    assert :dialog in WebUi.Widgets.kinds()
     assert :markdown_viewer in WebUi.Widgets.kinds()
     assert :bar_chart in WebUi.Widgets.kinds()
     assert :navigation in WebUi.Widgets.families()
     assert :document in WebUi.Widgets.families()
+    assert :layer in WebUi.Widgets.families()
     assert :operational in WebUi.Widgets.families()
     assert WebUi.Widgets.validation_state().form_composition == :ready
     assert WebUi.Widgets.validation_state().advanced_data_widgets == :ready
+    assert WebUi.Widgets.validation_state().display_system_widgets == :ready
   end
 
   test "advanced widget families normalize deterministic data, feedback, visualization, and operational state" do
@@ -142,5 +147,99 @@ defmodule WebUi.NativeWidgetsTest do
     assert palette.family == :operational
     assert palette.events == %{command: %{intent: :run_command}}
     assert palette.attributes.query == "rest"
+  end
+
+  test "layout and layer entrypoints expose advanced display and overlay primitives" do
+    viewport =
+      WebUi.Layout.viewport(
+        "log-viewport",
+        WebUi.Widgets.log_viewer(
+          "ops-log-viewer",
+          [[id: "log-1", message: "Connected", severity: :info]]
+        ),
+        offset: {0, 240},
+        height: 24,
+        scrollbars: :auto,
+        sync_group: :logs,
+        on_scroll: %{intent: :scroll_logs}
+      )
+
+    split =
+      WebUi.Layout.split_pane(
+        "operations-split",
+        viewport,
+        WebUi.Widgets.content("details-panel", [
+          WebUi.Widgets.text("details-text", "Details")
+        ]),
+        ratio: 0.6,
+        on_resize: %{intent: :resize_split}
+      )
+
+    dialog =
+      WebUi.Layer.dialog(
+        "inspect-dialog",
+        WebUi.Widgets.content("dialog-content", [
+          WebUi.Widgets.text("dialog-copy", "Inspect node")
+        ]),
+        title: "Inspect Node",
+        modal: true
+      )
+
+    toast =
+      WebUi.Layer.toast(
+        "ops-toast",
+        WebUi.Widgets.text("toast-copy", "Node restarted"),
+        placement: :top_end
+      )
+
+    overlay =
+      WebUi.Layer.overlay("operations-overlay", split, [dialog, toast],
+        on_dismiss: %{intent: :dismiss}
+      )
+
+    scroll_bar = WebUi.Layout.scroll_bar("log-scrollbar", viewport_ref: "log-viewport")
+
+    assert WebUi.layout() == WebUi.Layout
+    assert WebUi.layer() == WebUi.Layer
+    assert viewport.kind == :viewport
+    assert viewport.attributes.offset == %{x: 0, y: 240}
+    assert viewport.events == %{scroll: %{intent: :scroll_logs}}
+    assert split.slot_children.primary == [viewport]
+    assert split.events == %{resize: %{intent: :resize_split}}
+    assert dialog.kind == :dialog
+    assert dialog.attributes.modal
+    assert overlay.kind == :overlay
+    assert Enum.map(overlay.slot_children.layers, & &1.kind) == [:dialog, :toast]
+    assert overlay.events == %{dismiss: %{intent: :dismiss}}
+    assert scroll_bar.kind == :scroll_bar
+  end
+
+  test "display-system and layer widgets reject invalid configuration with actionable diagnostics" do
+    viewport =
+      WebUi.Layout.viewport(
+        "primary-viewport",
+        WebUi.Widgets.content("primary-content", [WebUi.Widgets.text("copy", "Primary")])
+      )
+
+    content =
+      WebUi.Widgets.content("secondary-content", [
+        WebUi.Widgets.text("secondary-copy", "Secondary")
+      ])
+
+    assert_raise ArgumentError, ~r/split_pane widgets require a :ratio between 0 and 1/, fn ->
+      WebUi.Layout.split_pane("invalid-split", viewport, content, ratio: 1.2)
+    end
+
+    assert_raise ArgumentError,
+                 ~r/scroll_bar widgets require either :viewport_ref or :sync_group/,
+                 fn ->
+                   WebUi.Layout.scroll_bar("invalid-scroll")
+                 end
+
+    assert_raise ArgumentError,
+                 ~r/overlay widgets require every overlay layer to use the :layer family/,
+                 fn ->
+                   WebUi.Layer.overlay("invalid-overlay", content, [content])
+                 end
   end
 end

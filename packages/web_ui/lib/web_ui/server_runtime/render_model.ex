@@ -66,6 +66,14 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_tag(:form), do: "form"
   defp dom_tag(:field_group), do: "fieldset"
   defp dom_tag(:field), do: "div"
+  defp dom_tag(:viewport), do: "div"
+  defp dom_tag(:scroll_bar), do: "div"
+  defp dom_tag(:split_pane), do: "div"
+  defp dom_tag(:overlay), do: "div"
+  defp dom_tag(:dialog), do: "dialog"
+  defp dom_tag(:toast), do: "aside"
+  defp dom_tag(:alert_dialog), do: "dialog"
+  defp dom_tag(:context_menu), do: "div"
   defp dom_tag(:table), do: "table"
   defp dom_tag(:tree_view), do: "ul"
   defp dom_tag(:markdown_viewer), do: "article"
@@ -98,6 +106,14 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_role(:field_group), do: "group"
   defp dom_role(:field), do: "group"
   defp dom_role(:panel), do: "region"
+  defp dom_role(:viewport), do: "region"
+  defp dom_role(:scroll_bar), do: "scrollbar"
+  defp dom_role(:split_pane), do: "group"
+  defp dom_role(:overlay), do: "presentation"
+  defp dom_role(:dialog), do: "dialog"
+  defp dom_role(:toast), do: "status"
+  defp dom_role(:alert_dialog), do: "alertdialog"
+  defp dom_role(:context_menu), do: "menu"
   defp dom_role(:table), do: "grid"
   defp dom_role(:tree_view), do: "tree"
   defp dom_role(:markdown_viewer), do: "document"
@@ -131,6 +147,12 @@ defmodule WebUi.ServerRuntime.RenderModel do
     |> maybe_put(:orientation, Map.get(widget.attributes, :orientation))
     |> maybe_put(:active_item, Map.get(widget.attributes, :active_item))
     |> maybe_put(:legend, Map.get(widget.attributes, :legend))
+    |> maybe_put(:open, Map.get(widget.state, :open))
+    |> maybe_put(:modal, Map.get(widget.attributes, :modal))
+    |> maybe_put(:title, Map.get(widget.attributes, :title))
+    |> maybe_put(:placement, Map.get(widget.attributes, :placement))
+    |> maybe_put(:viewport_ref, Map.get(widget.attributes, :viewport_ref))
+    |> maybe_put(:ratio, Map.get(widget.attributes, :ratio))
     |> maybe_put(:value, dom_value(widget))
     |> maybe_put(:max, dom_max(widget))
   end
@@ -145,6 +167,14 @@ defmodule WebUi.ServerRuntime.RenderModel do
       :menu,
       :tabs,
       :form,
+      :viewport,
+      :scroll_bar,
+      :split_pane,
+      :overlay,
+      :dialog,
+      :toast,
+      :alert_dialog,
+      :context_menu,
       :table,
       :tree_view,
       :log_viewer,
@@ -164,6 +194,12 @@ defmodule WebUi.ServerRuntime.RenderModel do
       :select,
       :menu,
       :tabs,
+      :viewport,
+      :scroll_bar,
+      :split_pane,
+      :dialog,
+      :alert_dialog,
+      :context_menu,
       :table,
       :tree_view,
       :log_viewer,
@@ -179,7 +215,7 @@ defmodule WebUi.ServerRuntime.RenderModel do
   end
 
   defp navigable_kinds do
-    [:link, :menu, :tabs, :tree_view]
+    [:link, :menu, :tabs, :tree_view, :context_menu]
   end
 
   defp dom_value(%Widget{kind: :progress, attributes: attributes}) do
