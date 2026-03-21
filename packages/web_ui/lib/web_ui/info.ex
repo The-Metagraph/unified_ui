@@ -19,6 +19,10 @@ defmodule WebUi.Info do
         catalog: WebUi.Theme.catalog_ids(),
         default: WebUi.Theme.default_theme().id
       },
+      inspection: %{
+        helpers: WebUi.Inspection.helpers(),
+        continuity_seams: WebUi.Continuity.seams()
+      },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         mix_tasks: WebUi.Tooling.mix_tasks()

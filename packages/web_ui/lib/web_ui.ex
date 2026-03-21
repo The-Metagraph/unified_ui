@@ -4,9 +4,11 @@ defmodule WebUi do
   """
 
   alias WebUi.{
+    Continuity,
     Examples,
     Frontend,
     Info,
+    Inspection,
     Layer,
     Layout,
     Reference,
@@ -31,6 +33,7 @@ defmodule WebUi do
           | :transport
           | :style
           | :theme
+          | :inspection
           | :tooling
 
   @spec package_areas() :: [package_area()]
@@ -45,6 +48,7 @@ defmodule WebUi do
       :transport,
       :style,
       :theme,
+      :inspection,
       :tooling
     ]
   end
@@ -81,6 +85,12 @@ defmodule WebUi do
 
   @spec theme() :: module()
   def theme, do: Theme
+
+  @spec inspection() :: module()
+  def inspection, do: Inspection
+
+  @spec continuity() :: module()
+  def continuity, do: Continuity
 
   @spec tooling() :: module()
   def tooling, do: Tooling

@@ -101,6 +101,11 @@ defmodule WebUi.Reference do
         continuity_rules: WebUi.Theme.continuity_rules(),
         runtime_contract: WebUi.Theme.runtime_contract()
       },
+      inspection: %{
+        helpers: WebUi.Inspection.helpers(),
+        package_overview: WebUi.Inspection.package_overview(),
+        continuity_contract: WebUi.Continuity.contract()
+      },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         preview_surfaces: WebUi.Tooling.preview_surfaces(),

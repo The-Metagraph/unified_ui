@@ -12,6 +12,7 @@ defmodule WebUiTest do
              :transport,
              :style,
              :theme,
+             :inspection,
              :tooling
            ] =
              WebUi.package_areas()
@@ -25,7 +26,8 @@ defmodule WebUiTest do
              runtime: %{capabilities: runtime_capabilities},
              transport: %{modes: [:native_local, :canonical_boundary]},
              style: %{hooks: style_hooks},
-             theme: %{catalog: theme_catalog}
+             theme: %{catalog: theme_catalog},
+             inspection: %{helpers: inspection_helpers}
            } = WebUi.reference()
 
     assert :content in families
@@ -35,10 +37,18 @@ defmodule WebUiTest do
     assert :native_mount in runtime_capabilities
     assert :theme_tokens in style_hooks
     assert :default in theme_catalog
+    assert :runtime_snapshot in inspection_helpers
   end
 
   test "package summary reports package identity" do
-    assert %{package: :web_ui, namespace: WebUi, theme: %{default: :default}} = WebUi.info()
+    assert %{
+             package: :web_ui,
+             namespace: WebUi,
+             theme: %{default: :default},
+             inspection: %{continuity_seams: continuity_seams}
+           } = WebUi.info()
+
+    assert :server_style_resolution in continuity_seams
   end
 
   test "package exposes maintained native and canonical examples" do
