@@ -13,7 +13,8 @@ defmodule WebUi.ServerRuntime.ViewState do
       title: state.title,
       source_kind: state.source_kind,
       boundary_mode: state.boundary_mode,
-      tree: RenderModel.build(state.rendered_tree),
+      tree:
+        RenderModel.build(state.rendered_tree, theme: Map.get(state.metadata, :theme, :default)),
       local_state: %{
         focused_id: nil,
         editing_ids: [],

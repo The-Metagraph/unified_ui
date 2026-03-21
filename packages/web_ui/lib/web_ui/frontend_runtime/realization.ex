@@ -4,8 +4,12 @@ defmodule WebUi.FrontendRuntime.Realization do
   node descriptions.
   """
 
+  alias WebUi.FrontendRuntime.StyleRealization
+
   @spec realize(map(), map()) :: map()
   def realize(render_tree, local_state \\ %{}) when is_map(render_tree) and is_map(local_state) do
+    browser_style = StyleRealization.realize(render_tree, local_state)
+
     %{
       id: render_tree.id,
       family: render_tree.family,
@@ -15,14 +19,21 @@ defmodule WebUi.FrontendRuntime.Realization do
       attrs: render_tree.dom.attributes,
       attributes: render_tree.attributes,
       state: render_tree.state,
-      styles: render_tree.styles,
+      styles: %{
+        authored: render_tree.styles,
+        resolved: Map.get(render_tree, :resolved_styles, %{}),
+        browser: browser_style
+      },
+      theme: Map.get(render_tree, :theme, %{}),
+      diagnostics: Map.get(render_tree, :diagnostics, %{}),
       browser: %{
         interactive?: render_tree.interactions.interactive?,
         focusable?: render_tree.interactions.focusable?,
         editable?: render_tree.interactions.editable?,
         navigable?: render_tree.interactions.navigable?,
         focused?: Map.get(local_state, :focused_id) == render_tree.id,
-        editing?: editing?(local_state, render_tree.id, render_tree.state)
+        editing?: editing?(local_state, render_tree.id, render_tree.state),
+        style: browser_style
       },
       slots:
         Enum.map(render_tree.slots, fn slot ->

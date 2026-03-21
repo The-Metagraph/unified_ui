@@ -37,22 +37,22 @@ Back to index: [README](./README.md)
       [x] 5.1.2.2 Subtask - Define how the server runtime carries authoritative theme meaning while the frontend realizes browser-facing style output.
       [x] 5.1.2.3 Subtask - Define continuity rules for theme inheritance, token resolution, and style fallback behavior.
 
-  [ ] 5.2 Section - Cross-Runtime Style Realization
+  [x] 5.2 Section - Cross-Runtime Style Realization
     Implement the Phoenix-side and Elm-side coordination needed to realize styling and theming coherently.
 
-    [ ] 5.2.1 Task - Implement authoritative style resolution on the server side
+    [x] 5.2.1 Task - Implement authoritative style resolution on the server side
       Define how style defaults, theme tokens, and resolved presentation meaning are computed before frontend realization.
 
-      [ ] 5.2.1.1 Subtask - Implement server-side resolution for style defaults, theme tokens, and state-aware widget styling.
-      [ ] 5.2.1.2 Subtask - Define deterministic resolved style payloads sent to the frontend runtime for browser realization.
-      [ ] 5.2.1.3 Subtask - Add diagnostics for unresolved tokens, incompatible style combinations, and invalid state-variant wiring.
+      [x] 5.2.1.1 Subtask - Implement server-side resolution for style defaults, theme tokens, and state-aware widget styling.
+      [x] 5.2.1.2 Subtask - Define deterministic resolved style payloads sent to the frontend runtime for browser realization.
+      [x] 5.2.1.3 Subtask - Add diagnostics for unresolved tokens, incompatible style combinations, and invalid state-variant wiring.
 
-    [ ] 5.2.2 Task - Implement frontend style realization and browser continuity
+    [x] 5.2.2 Task - Implement frontend style realization and browser continuity
       Define how the frontend runtime realizes server-provided style meaning while supporting bounded browser responsiveness.
 
-      [ ] 5.2.2.1 Subtask - Implement Elm-side style realization for resolved widget, layout, and layer styling.
-      [ ] 5.2.2.2 Subtask - Implement bounded browser-facing transitions, responsive layout behavior, and local visual feedback without redefining canonical style meaning.
-      [ ] 5.2.2.3 Subtask - Ensure frontend style realization remains reviewable and deterministic for the same authoritative input state.
+      [x] 5.2.2.1 Subtask - Implement Elm-side style realization for resolved widget, layout, and layer styling.
+      [x] 5.2.2.2 Subtask - Implement bounded browser-facing transitions, responsive layout behavior, and local visual feedback without redefining canonical style meaning.
+      [x] 5.2.2.3 Subtask - Ensure frontend style realization remains reviewable and deterministic for the same authoritative input state.
 
   [ ] 5.3 Section - Runtime Inspection and Diagnostics
     Implement inspection surfaces that expose native widget styling, server state, frontend realization, and canonical mapping details.

@@ -4,10 +4,18 @@ defmodule WebUi.ServerRuntime.RenderModel do
   widgets.
   """
 
-  alias WebUi.Widget
+  alias WebUi.{Widget}
+  alias WebUi.ServerRuntime.StyleResolver
 
   @spec build(Widget.t()) :: map()
   def build(%Widget{} = widget) do
+    build(widget, [])
+  end
+
+  @spec build(Widget.t(), keyword()) :: map()
+  def build(%Widget{} = widget, opts) do
+    resolution = StyleResolver.resolve(widget, theme: Keyword.get(opts, :theme, :default))
+
     %{
       id: widget.id,
       family: widget.family,
@@ -20,6 +28,12 @@ defmodule WebUi.ServerRuntime.RenderModel do
       attributes: widget.attributes,
       state: widget.state,
       styles: widget.styles,
+      resolved_styles: resolution.resolved,
+      theme: %{
+        id: resolution.theme,
+        token_refs: resolution.token_refs,
+        active_states: resolution.active_states
+      },
       events: widget.events,
       metadata: widget.metadata,
       interactions: %{
@@ -34,13 +48,14 @@ defmodule WebUi.ServerRuntime.RenderModel do
         |> Enum.map(fn {slot, children} ->
           %{
             name: slot,
-            children: Enum.map(children, &build/1)
+            children: Enum.map(children, &build(&1, opts))
           }
         end),
       diagnostics: %{
         event_names: widget.events |> Map.keys() |> Enum.sort(),
         slot_names: widget.slots |> Enum.map(&to_string/1) |> Enum.sort(),
-        style_keys: widget.styles |> Map.keys() |> Enum.map(&to_string/1) |> Enum.sort()
+        style_keys: widget.styles |> Map.keys() |> Enum.map(&to_string/1) |> Enum.sort(),
+        style_diagnostics: resolution.diagnostics
       }
     }
   end
