@@ -94,7 +94,7 @@
         },
         {
           "kind": "command",
-          "run": "rg -n \"app: :web_ui|defmodule WebUi\" packages/web_ui/mix.exs packages/web_ui/lib/web_ui.ex",
+          "run": "grep -nE \"app: :web_ui|defmodule WebUi\" packages/web_ui/mix.exs packages/web_ui/lib/web_ui.ex",
           "cwd": "."
         }
       ]
@@ -174,7 +174,7 @@
         },
         {
           "kind": "command",
-          "run": "! rg -n \"defmodule (UnifiedUi|UnifiedIUR)\" packages/web_ui/lib",
+          "run": "! grep -R -nE \"defmodule (UnifiedUi|UnifiedIUR)\" packages/web_ui/lib",
           "cwd": "."
         }
       ]
@@ -190,7 +190,7 @@
         },
         {
           "kind": "command",
-          "run": "rg -n \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/web_ui/*.spec.md",
+          "run": "grep -nE \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/web_ui/*.spec.md",
           "cwd": "."
         }
       ]
@@ -301,7 +301,7 @@
         },
         {
           "kind": "command",
-          "run": "! rg -n \"defmodule (UnifiedUi|UnifiedIUR)\" packages/web_ui/lib",
+          "run": "! grep -R -nE \"defmodule (UnifiedUi|UnifiedIUR)\" packages/web_ui/lib",
           "cwd": "."
         }
       ]
@@ -759,7 +759,7 @@
         },
         {
           "kind": "command",
-          "run": "rg -n \"native_counter_screen|canonical_welcome_screen\" packages/web_ui/lib/web_ui/examples.ex",
+          "run": "grep -nE \"native_counter_screen|canonical_welcome_screen\" packages/web_ui/lib/web_ui/examples.ex",
           "cwd": "."
         }
       ]

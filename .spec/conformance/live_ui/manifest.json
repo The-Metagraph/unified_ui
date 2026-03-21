@@ -166,7 +166,7 @@
         },
         {
           "kind": "command",
-          "run": "rg -n \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/live_ui/*.spec.md",
+          "run": "grep -nE \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/live_ui/*.spec.md",
           "cwd": "."
         }
       ]
@@ -239,7 +239,7 @@
         },
         {
           "kind": "command",
-          "run": "if rg -n \"browser_bridge\" packages/live_ui/lib/live_ui/widgets packages/live_ui/lib/live_ui/renderer packages/live_ui/lib/live_ui/forms; then exit 1; else exit 0; fi",
+          "run": "if grep -R -n \"browser_bridge\" packages/live_ui/lib/live_ui/widgets packages/live_ui/lib/live_ui/renderer packages/live_ui/lib/live_ui/forms; then exit 1; else exit 0; fi",
           "cwd": "."
         }
       ]
@@ -316,7 +316,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/advanced_renderer_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/advanced_renderer_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -355,7 +355,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/style_test.exs test/live_ui/theme_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/style_test.exs test/live_ui/theme_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -398,7 +398,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/runtime_test.exs test/live_ui/runtime_transport_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/runtime_test.exs test/live_ui/runtime_transport_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -418,7 +418,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/component_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/component_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -434,7 +434,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/runtime_transport_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/runtime_transport_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -465,7 +465,7 @@
       "evidence": [
         {
           "kind": "command",
-          "run": "mix test test/live_ui/phase_5_integration_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/phase_5_integration_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -481,7 +481,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/renderer_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/renderer_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -497,7 +497,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/advanced_renderer_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/advanced_renderer_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -509,7 +509,7 @@
       "evidence": [
         {
           "kind": "command",
-          "run": "mix test test/live_ui/renderer_test.exs test/live_ui/renderer_style_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/renderer_test.exs test/live_ui/renderer_style_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -521,7 +521,7 @@
       "evidence": [
         {
           "kind": "command",
-          "run": "mix test test/live_ui/phase_5_integration_test.exs test/live_ui/advanced_renderer_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/phase_5_integration_test.exs test/live_ui/advanced_renderer_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -556,7 +556,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/transport_test.exs test/live_ui/runtime_transport_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/transport_test.exs test/live_ui/runtime_transport_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -583,7 +583,7 @@
       "evidence": [
         {
           "kind": "command",
-          "run": "mix test test/live_ui/runtime_transport_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/runtime_transport_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -595,7 +595,7 @@
       "evidence": [
         {
           "kind": "command",
-          "run": "mix test test/live_ui/transport_diagnostics_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/transport_diagnostics_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -611,7 +611,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/transport_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/transport_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -631,7 +631,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/live_ui/examples_test.exs",
+          "run": "mix deps.get && mix test test/live_ui/examples_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -651,7 +651,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/mix/tasks/live_ui_tasks_test.exs test/live_ui/tooling_test.exs",
+          "run": "mix deps.get && mix test test/mix/tasks/live_ui_tasks_test.exs test/live_ui/tooling_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
@@ -667,7 +667,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/mix/tasks/live_ui_validate_task_test.exs test/live_ui/validation_test.exs",
+          "run": "mix deps.get && mix test test/mix/tasks/live_ui_validate_task_test.exs test/live_ui/validation_test.exs",
           "cwd": "packages/live_ui"
         }
       ]
