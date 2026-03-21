@@ -139,19 +139,19 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert Enum.any?(report.findings, &(&1.code == "command_stdout_mismatch"))
   end
 
-  test "live web_ui plancheck passes and compliance reports a reset-aware waived state" do
+  test "live web_ui plancheck passes and compliance reports a scaffold-backed mixed state" do
     plan_report = Unified.SpecCompliance.plancheck("web_ui")
     compliance_report = Unified.SpecCompliance.compliance("web_ui", run_commands: true)
 
     assert plan_report.status == :pass
     assert compliance_report.status == :pass
     assert compliance_report.summary.applicable_requirements == 89
-    assert compliance_report.summary.status_counts.verified == 10
-    assert compliance_report.summary.status_counts.waived == 79
+    assert compliance_report.summary.status_counts.verified == 68
+    assert compliance_report.summary.status_counts.waived == 21
     assert compliance_report.summary.status_counts.planned == 0
     assert compliance_report.summary.aliases == 48
-    assert length(compliance_report.summary.waived_requirement_ids) == 79
-    assert length(compliance_report.summary.waived_source_requirement_ids) == 37
+    assert length(compliance_report.summary.waived_requirement_ids) == 21
+    assert length(compliance_report.summary.waived_source_requirement_ids) == 5
     assert compliance_report.findings == []
 
     native_runtime_requirement =
@@ -160,10 +160,10 @@ defmodule Unified.SpecCompliance.ComplianceTest do
         &(&1.requirement_id == "web_ui.package.native_runtime_library")
       )
 
-    assert native_runtime_requirement.effective_status == :waived
+    assert native_runtime_requirement.effective_status == :verified
     assert native_runtime_requirement.compliant?
 
-    assert "web_ui.package.native_runtime_library" in compliance_report.summary.waived_source_requirement_ids
+    assert "web_ui.native_widgets.covers_canonical_iur_surface" in compliance_report.summary.waived_source_requirement_ids
 
     refute Enum.any?(
              compliance_report.findings,

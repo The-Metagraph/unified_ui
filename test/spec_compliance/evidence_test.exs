@@ -41,4 +41,25 @@ defmodule Unified.SpecCompliance.EvidenceTest do
 
     assert Enum.any?(findings, &(&1.code == "command_stdout_mismatch"))
   end
+
+  test "runs command evidence with a portable shell override" do
+    root = tmp_root!("command_shell")
+    shell = System.find_executable("sh")
+
+    assert is_binary(shell)
+
+    assert [] ==
+             Evidence.run(
+               [
+                 %{
+                   "kind" => "command",
+                   "run" => "! test -f missing.txt",
+                   "cwd" => "."
+                 }
+               ],
+               root,
+               [run_commands: true, shell: shell],
+               "demo.package.portable_shell"
+             )
+  end
 end

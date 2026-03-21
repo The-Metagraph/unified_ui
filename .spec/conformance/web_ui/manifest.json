@@ -85,60 +85,96 @@
     },
     {
       "requirement_id": "web_ui.package.library_identity",
-      "status": "waived",
-      "notes": "Explicitly waived while the package stays intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed and will be reintroduced through a new implementation track.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored `packages/web_ui` package identity and top-level `WebUi` namespace.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/mix.exs"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"app: :web_ui|defmodule WebUi\" packages/web_ui/mix.exs packages/web_ui/lib/web_ui.ex",
+          "cwd": "."
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.package.native_runtime_library",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored native widget surface, examples, and package-local runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.package.iur_renderer_entrypoint",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored canonical renderer entrypoint and package-local renderer tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.package.phoenix_elm_split",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored Phoenix-side runtime modules, Elm asset scaffold, and shared runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/elm.json"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.package.not_dsl_or_iur_owner",
       "status": "verified",
-      "notes": "Verified as a guardrail while the package remains intentionally absent after reset.",
+      "notes": "Verified as a maintained boundary guardrail in the restored package scaffold.",
       "evidence": [
         {
-          "kind": "path_absent",
-          "path": "packages/web_ui"
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui.ex"
         },
         {
           "kind": "command",
-          "run": "test -d packages/unified-ui && test -d packages/unified_iur",
+          "run": "! grep -R -nE \"defmodule (UnifiedUi|UnifiedIUR)\" packages/web_ui/lib",
           "cwd": "."
         }
       ]
@@ -154,92 +190,145 @@
         },
         {
           "kind": "command",
-          "run": "rg -n \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/web_ui/*.spec.md",
+          "run": "grep -nE \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/web_ui/*.spec.md",
           "cwd": "."
         }
       ]
     },
     {
       "requirement_id": "web_ui.structure.mix_and_frontend_layout",
-      "status": "waived",
-      "notes": "Explicitly waived while the package layout is intentionally absent after the reset.",
-      "waiver": {
-        "reason": "The `web_ui` package directory was intentionally removed after reset and its structure will return only with the renewed implementation.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored Mix package, frontend asset layout, guides, and package tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/mix.exs"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/src/Main.elm"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/test/web_ui/runtime_test.exs"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.structure.server_frontend_boundary",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by distinct server runtime, frontend runtime, and Elm bridge boundaries.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/src/WebUi/Bridge.elm"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.structure.native_widget_module_boundary",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by distinct native widget and canonical renderer module areas.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer/canonical.ex"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.structure.transport_translation_modules",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by dedicated transport translation modules for signal handling and frontend/server bridging.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/bridge.ex"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.structure.frontend_bridge_modules",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by isolated frontend boot and bridge modules plus Elm-side bridge assets.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/boot.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/src/WebUi/Bridge.elm"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.structure.no_dsl_or_iur_authorship",
       "status": "verified",
-      "notes": "Verified as a maintained boundary contract while implementation is reset.",
+      "notes": "Verified as a maintained boundary contract in the restored package scaffold.",
       "evidence": [
         {
-          "kind": "path_absent",
-          "path": "packages/web_ui"
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui.ex"
         },
         {
           "kind": "command",
-          "run": "rg -n \"not own the authored DSL boundary|not introduce authored DSL ownership\" .spec/specs/web_ui/package.spec.md .spec/specs/web_ui/structure.spec.md",
+          "run": "! grep -R -nE \"defmodule (UnifiedUi|UnifiedIUR)\" packages/web_ui/lib",
           "cwd": "."
         }
       ]
     },
     {
       "requirement_id": "web_ui.native_widgets.direct_native_surface",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored native widget API and direct-native example screens.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
@@ -254,14 +343,23 @@
     },
     {
       "requirement_id": "web_ui.native_widgets.server_client_composition",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the shared native screen mount, hydration, and runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.native_widgets.theme_and_style_surface",
@@ -276,113 +374,198 @@
     },
     {
       "requirement_id": "web_ui.native_widgets.interaction_surface",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored native event descriptors and transport translation tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.server_runtime.authoritative_server_representation",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored server runtime state model and runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime/state.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.server_runtime.coordinate_frontend_rendering",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored server-to-frontend hydration pipeline.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime/view_state.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/boot.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.server_runtime.handle_boundary_events",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by server runtime handling of translated canonical boundary signals in package-local tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.server_runtime.direct_and_iur_entrypoints_share_runtime",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the shared native and canonical mount entrypoints in `WebUi.Runtime`.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.server_runtime.browser_state_is_bounded",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the explicit server state model and bounded frontend-local state shape.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime/state.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/model.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.frontend_runtime.elm_rendering_layer",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored Elm asset scaffold and frontend runtime modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/elm.json"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/src/Main.elm"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.frontend_runtime.local_state_bounded",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the bounded frontend model and hydration/runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/model.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.frontend_runtime.native_and_iur_entrypoints_share_frontend",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the shared frontend hydration path for native and canonical runtime entrypoints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.frontend_runtime.browser_capabilities",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the frontend bridge and Elm asset scaffold that handle browser-facing runtime concerns inside the package.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/assets/src/Main.elm"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.frontend_runtime.canonical_meaning_preserved",
@@ -397,14 +580,23 @@
     },
     {
       "requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored canonical renderer entrypoint and package-local renderer tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.iur_renderer.full_construct_coverage",
@@ -419,14 +611,19 @@
     },
     {
       "requirement_id": "web_ui.iur_renderer.deterministic_mapping",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by deterministic renderer tests against equivalent canonical input.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.iur_renderer.meaning_preservation",
@@ -441,107 +638,175 @@
     },
     {
       "requirement_id": "web_ui.iur_renderer.native_widget_reuse",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the renderer returning the package's native `WebUi.Widget` structures.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.transport.canonical_boundary_events",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by native-to-`Jido.Signal` boundary translation in package-local tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.transport.native_web_event_model",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the restored native-local web event translation path.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.transport.server_frontend_bridge",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by dedicated frontend and transport bridge envelopes.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/bridge.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.transport.no_boundary_leakage",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by server-facing transport envelopes that strip renderer-local event details at the boundary.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.transport.direct_native_usage_allowed",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by local-native transport flows that stay inside the package runtime until the canonical boundary is crossed.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/transport/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.tooling.reference_examples",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by maintained native and canonical example inputs in the package.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"native_counter_screen|canonical_welcome_screen\" packages/web_ui/lib/web_ui/examples.ex",
+          "cwd": "."
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.tooling.preview_and_inspection",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by package reference, info, and tooling inspection helpers.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/reference.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/info.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/tooling.ex"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.tooling.validation_workflow",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by documented tooling workflows and package-local test coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/tooling.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/test/web_ui/runtime_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.tooling.documentation_surface",
       "status": "verified",
-      "notes": "Verified by the maintained `web_ui` package specs and planning surfaces.",
+      "notes": "Verified by the maintained `web_ui` package docs, guides, specs, and planning surfaces.",
       "evidence": [
         {
           "kind": "path_glob_nonempty",
@@ -550,6 +815,10 @@
         {
           "kind": "path_exists",
           "path": ".spec/planning/web_ui/README.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/README.md"
         }
       ]
     },
