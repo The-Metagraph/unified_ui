@@ -7,6 +7,8 @@ defmodule WebUi do
     Examples,
     Frontend,
     Info,
+    Layer,
+    Layout,
     Reference,
     Renderer,
     Runtime,
@@ -16,15 +18,21 @@ defmodule WebUi do
     Widgets
   }
 
-  @type package_area :: :widgets | :runtime | :renderer | :transport | :tooling
+  @type package_area :: :widgets | :layout | :layer | :runtime | :renderer | :transport | :tooling
 
   @spec package_areas() :: [package_area()]
   def package_areas do
-    [:widgets, :runtime, :renderer, :transport, :tooling]
+    [:widgets, :layout, :layer, :runtime, :renderer, :transport, :tooling]
   end
 
   @spec widgets() :: module()
   def widgets, do: Widgets
+
+  @spec layout() :: module()
+  def layout, do: Layout
+
+  @spec layer() :: module()
+  def layer, do: Layer
 
   @spec server() :: module()
   def server, do: Server

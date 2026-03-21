@@ -27,6 +27,8 @@ defmodule WebUi.Reference do
   def responsibilities do
     %{
       direct_native: [:native_widgets, :phoenix_server_runtime, :elm_frontend_runtime],
+      display_systems: WebUi.Layout.responsibilities(),
+      layering: WebUi.Layer.responsibilities(),
       canonical_renderer: WebUi.Renderer.responsibilities()
     }
   end
@@ -51,6 +53,16 @@ defmodule WebUi.Reference do
         modules: WebUi.Widgets.modules(),
         contract: widget_contract(),
         validation_state: WebUi.Widgets.validation_state()
+      },
+      layout: %{
+        kinds: WebUi.Layout.kinds(),
+        modules: WebUi.Layout.modules(),
+        responsibilities: WebUi.Layout.responsibilities()
+      },
+      layer: %{
+        kinds: WebUi.Layer.kinds(),
+        modules: WebUi.Layer.modules(),
+        responsibilities: WebUi.Layer.responsibilities()
       },
       runtime: %{
         capabilities: WebUi.Runtime.capabilities(),

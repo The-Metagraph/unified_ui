@@ -4,7 +4,8 @@ defmodule WebUi.Widgets do
   """
 
   alias WebUi.Widget
-  alias WebUi.Widgets.{Forms, Foundational, Input, Layout, Navigation}
+  alias WebUi.Widgets.{Data, Feedback, Forms, Foundational, Input, Layered, Layout, Navigation}
+  alias WebUi.Widgets.{Operational, Visualization}
 
   @type family :: Widget.family()
 
@@ -18,7 +19,19 @@ defmodule WebUi.Widgets do
 
   @spec modules() :: [module()]
   def modules do
-    [Widget, Foundational, Input, Navigation, Layout, Forms]
+    [
+      Widget,
+      Foundational,
+      Input,
+      Navigation,
+      Layout,
+      Layered,
+      Forms,
+      Data,
+      Feedback,
+      Visualization,
+      Operational
+    ]
   end
 
   @spec kinds() :: [atom()]
@@ -28,7 +41,12 @@ defmodule WebUi.Widgets do
       Input.kinds(),
       Navigation.kinds(),
       Layout.kinds(),
-      Forms.kinds()
+      Layered.kinds(),
+      Forms.kinds(),
+      Data.kinds(),
+      Feedback.kinds(),
+      Visualization.kinds(),
+      Operational.kinds()
     ]
     |> List.flatten()
     |> Enum.uniq()
@@ -51,7 +69,15 @@ defmodule WebUi.Widgets do
       input_widgets: :ready,
       navigation_widgets: :ready,
       form_composition: :ready,
-      layout_primitives: :ready
+      layout_primitives: :ready,
+      advanced_data_widgets: :ready,
+      advanced_document_widgets: :ready,
+      advanced_feedback_widgets: :ready,
+      advanced_visualization_widgets: :ready,
+      advanced_operational_widgets: :ready,
+      display_system_widgets: :ready,
+      layered_composition_widgets: :ready,
+      layered_runtime_diagnostics: :ready
     }
   end
 
@@ -186,6 +212,26 @@ defmodule WebUi.Widgets do
     Layout.column(id, children, opts)
   end
 
+  @spec viewport(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def viewport(id, content, opts \\ []) do
+    Layout.viewport(id, content, opts)
+  end
+
+  @spec scroll_bar(String.t() | atom(), keyword()) :: Widget.t()
+  def scroll_bar(id, opts \\ []) do
+    Layout.scroll_bar(id, opts)
+  end
+
+  @spec split_pane(
+          String.t() | atom(),
+          Widget.t() | map() | keyword(),
+          Widget.t() | map() | keyword(),
+          keyword()
+        ) :: Widget.t()
+  def split_pane(id, primary, secondary, opts \\ []) do
+    Layout.split_pane(id, primary, secondary, opts)
+  end
+
   @spec menu(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def menu(id, items, opts \\ []) do
     Navigation.menu(id, items, opts)
@@ -194,6 +240,124 @@ defmodule WebUi.Widgets do
   @spec tabs(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def tabs(id, items, opts \\ []) do
     Navigation.tabs(id, items, opts)
+  end
+
+  @spec overlay(
+          String.t() | atom(),
+          Widget.t() | map() | keyword(),
+          [Widget.t() | map() | keyword()],
+          keyword()
+        ) :: Widget.t()
+  def overlay(id, base, layers, opts \\ []) do
+    Layered.overlay(id, base, layers, opts)
+  end
+
+  @spec dialog(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def dialog(id, content, opts \\ []) do
+    Layered.dialog(id, content, opts)
+  end
+
+  @spec toast(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def toast(id, content, opts \\ []) do
+    Layered.toast(id, content, opts)
+  end
+
+  @spec alert_dialog(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) ::
+          Widget.t()
+  def alert_dialog(id, content, opts \\ []) do
+    Layered.alert_dialog(id, content, opts)
+  end
+
+  @spec context_menu(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def context_menu(id, items, opts \\ []) do
+    Layered.context_menu(id, items, opts)
+  end
+
+  @spec table(String.t() | atom(), [keyword() | map()], [keyword() | map()], keyword()) ::
+          Widget.t()
+  def table(id, columns, rows, opts \\ []) do
+    Data.table(id, columns, rows, opts)
+  end
+
+  @spec tree_view(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def tree_view(id, nodes, opts \\ []) do
+    Data.tree_view(id, nodes, opts)
+  end
+
+  @spec markdown_viewer(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def markdown_viewer(id, markdown, opts \\ []) do
+    Data.markdown_viewer(id, markdown, opts)
+  end
+
+  @spec log_viewer(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def log_viewer(id, entries, opts \\ []) do
+    Data.log_viewer(id, entries, opts)
+  end
+
+  @spec status(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def status(id, text, opts \\ []) do
+    Feedback.status(id, text, opts)
+  end
+
+  @spec progress(String.t() | atom(), keyword()) :: Widget.t()
+  def progress(id, opts \\ []) do
+    Feedback.progress(id, opts)
+  end
+
+  @spec inline_feedback(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def inline_feedback(id, message, opts \\ []) do
+    Feedback.inline_feedback(id, message, opts)
+  end
+
+  @spec gauge(String.t() | atom(), keyword()) :: Widget.t()
+  def gauge(id, opts \\ []) do
+    Visualization.gauge(id, opts)
+  end
+
+  @spec sparkline(String.t() | atom(), [number()], keyword()) :: Widget.t()
+  def sparkline(id, series, opts \\ []) do
+    Visualization.sparkline(id, series, opts)
+  end
+
+  @spec bar_chart(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def bar_chart(id, series, opts \\ []) do
+    Visualization.bar_chart(id, series, opts)
+  end
+
+  @spec line_chart(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def line_chart(id, series, opts \\ []) do
+    Visualization.line_chart(id, series, opts)
+  end
+
+  @spec canvas(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def canvas(id, operations, opts \\ []) do
+    Visualization.canvas(id, operations, opts)
+  end
+
+  @spec stream_widget(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def stream_widget(id, entries, opts \\ []) do
+    Operational.stream_widget(id, entries, opts)
+  end
+
+  @spec process_monitor(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def process_monitor(id, processes, opts \\ []) do
+    Operational.process_monitor(id, processes, opts)
+  end
+
+  @spec cluster_dashboard(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def cluster_dashboard(id, nodes, opts \\ []) do
+    Operational.cluster_dashboard(id, nodes, opts)
+  end
+
+  @spec command_palette(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def command_palette(id, commands, opts \\ []) do
+    Operational.command_palette(id, commands, opts)
+  end
+
+  @spec supervision_tree_viewer(String.t() | atom(), [keyword() | map()], keyword()) ::
+          Widget.t()
+  def supervision_tree_viewer(id, nodes, opts \\ []) do
+    Operational.supervision_tree_viewer(id, nodes, opts)
   end
 
   @spec screen(String.t() | atom(), String.t(), [Widget.t()], keyword()) :: map()

@@ -3,7 +3,18 @@ defmodule WebUi.Widget do
   Native renderer-facing widget representation for `web_ui`.
   """
 
-  @type family :: :content | :layout | :interaction | :feedback | :input | :navigation
+  @type family ::
+          :content
+          | :layout
+          | :layer
+          | :interaction
+          | :feedback
+          | :input
+          | :navigation
+          | :data
+          | :document
+          | :visualization
+          | :operational
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -34,11 +45,54 @@ defmodule WebUi.Widget do
   @spec contract() :: map()
   def contract do
     %{
-      metadata: [:label, :description, :role, :variant],
-      state: [:disabled, :selected, :expanded, :focused, :editing, :current, :checked],
-      slots: [:default, :label, :control, :help, :header, :body, :navigation],
+      metadata: [:label, :description, :role, :variant, :native_surface],
+      state: [
+        :disabled,
+        :selected,
+        :expanded,
+        :focused,
+        :editing,
+        :current,
+        :checked,
+        :loading,
+        :streaming,
+        :paused,
+        :open,
+        :scrolled
+      ],
+      slots: [
+        :default,
+        :label,
+        :control,
+        :help,
+        :header,
+        :body,
+        :navigation,
+        :content,
+        :primary,
+        :secondary,
+        :base,
+        :layers,
+        :menu
+      ],
       styles: [:tone, :size, :spacing, :surface, :hooks],
-      events: [:click, :change, :submit, :navigation, :focus]
+      events: [
+        :click,
+        :change,
+        :submit,
+        :navigation,
+        :focus,
+        :sort,
+        :filter,
+        :paginate,
+        :close,
+        :expand,
+        :command,
+        :scroll,
+        :resize,
+        :open,
+        :dismiss
+      ]
     }
   end
 
@@ -123,13 +177,46 @@ defmodule WebUi.Widget do
   end
 
   @spec family_for(atom()) :: family()
-  def family_for(kind) when kind in [:stack, :panel, :container, :row, :column], do: :layout
+  def family_for(kind)
+      when kind in [
+             :stack,
+             :panel,
+             :container,
+             :row,
+             :column,
+             :viewport,
+             :scroll_bar,
+             :split_pane
+           ],
+      do: :layout
+
+  def family_for(kind) when kind in [:overlay, :dialog, :toast, :alert_dialog, :context_menu],
+    do: :layer
+
   def family_for(kind) when kind in [:button, :link, :form], do: :interaction
 
   def family_for(kind) when kind in [:text_input, :checkbox, :select, :field, :field_group],
     do: :input
 
   def family_for(kind) when kind in [:tabs, :menu], do: :navigation
+  def family_for(kind) when kind in [:table, :tree_view], do: :data
+  def family_for(kind) when kind in [:markdown_viewer, :log_viewer], do: :document
+  def family_for(kind) when kind in [:status, :progress, :inline_feedback], do: :feedback
+
+  def family_for(kind)
+      when kind in [:gauge, :sparkline, :bar_chart, :line_chart, :canvas],
+      do: :visualization
+
+  def family_for(kind)
+      when kind in [
+             :stream_widget,
+             :process_monitor,
+             :cluster_dashboard,
+             :command_palette,
+             :supervision_tree_viewer
+           ],
+      do: :operational
+
   def family_for(_kind), do: :content
 
   defp normalize_map(nil), do: %{}

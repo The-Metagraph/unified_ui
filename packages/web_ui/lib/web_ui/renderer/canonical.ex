@@ -188,6 +188,265 @@ defmodule WebUi.Renderer.Canonical do
      )}
   end
 
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:table, "table"] do
+    sorting = map_attr(element, :sorting)
+    pagination = map_attr(element, :pagination)
+
+    {:ok,
+     Widgets.table(
+       element.id,
+       attr(element, :columns, []),
+       attr(element, :rows, []),
+       Keyword.merge(base_opts(element),
+         dense: attr(element, :dense, false),
+         selection_mode: attr(element, :selection_mode, :single),
+         sort_key: attr(element, :sort_key, map_get(sorting, :key)),
+         sort_direction: attr(element, :sort_direction, map_get(sorting, :direction)),
+         filters: attr(element, :filters, []),
+         page: attr(element, :page, map_get(pagination, :page)),
+         page_size: attr(element, :page_size, map_get(pagination, :page_size)),
+         total_entries: attr(element, :total_entries, map_get(pagination, :total_entries))
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:tree_view, "tree_view"] do
+    {:ok,
+     Widgets.tree_view(
+       element.id,
+       attr(element, :nodes, []),
+       Keyword.merge(base_opts(element),
+         selection_mode: attr(element, :selection_mode, :single),
+         filters: attr(element, :filters, []),
+         query: attr(element, :query),
+         expand_all: attr(element, :expand_all, false)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:markdown_viewer, "markdown_viewer"] do
+    {:ok,
+     Widgets.markdown_viewer(
+       element.id,
+       attr(element, :source, attr(element, :content, "")),
+       Keyword.merge(base_opts(element),
+         mode: attr(element, :mode, :rendered),
+         anchors: attr(element, :anchors, [])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:log_viewer, "log_viewer"] do
+    pagination = map_attr(element, :pagination)
+
+    {:ok,
+     Widgets.log_viewer(
+       element.id,
+       attr(element, :entries, []),
+       Keyword.merge(base_opts(element),
+         wrap: attr(element, :wrap, true),
+         show_timestamps: attr(element, :show_timestamps, true),
+         follow: attr(element, :follow, false),
+         filters: attr(element, :filters, []),
+         page: attr(element, :page, map_get(pagination, :page)),
+         page_size: attr(element, :page_size, map_get(pagination, :page_size)),
+         total_entries: attr(element, :total_entries, map_get(pagination, :total_entries))
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:status, "status"] do
+    {:ok,
+     Widgets.status(
+       element.id,
+       attr(element, :text, attr(element, :content, "")),
+       Keyword.merge(base_opts(element),
+         severity: attr(element, :severity, :info),
+         status: attr(element, :status, :idle),
+         icon: attr(element, :icon)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:progress, "progress"] do
+    {:ok,
+     Widgets.progress(
+       element.id,
+       Keyword.merge(base_opts(element),
+         current: attr(element, :current),
+         total: attr(element, :total),
+         indeterminate: attr(element, :indeterminate, false),
+         label: attr(element, :label),
+         severity: attr(element, :severity),
+         status: attr(element, :status)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:inline_feedback, "inline_feedback"] do
+    {:ok,
+     Widgets.inline_feedback(
+       element.id,
+       attr(element, :message, attr(element, :content, "")),
+       Keyword.merge(base_opts(element),
+         title: attr(element, :title),
+         severity: attr(element, :severity, :info),
+         status: attr(element, :status)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:gauge, "gauge"] do
+    {:ok,
+     Widgets.gauge(
+       element.id,
+       Keyword.merge(base_opts(element),
+         value: attr(element, :value),
+         min: attr(element, :min, 0),
+         max: attr(element, :max, 100),
+         label: attr(element, :label),
+         severity: attr(element, :severity),
+         status: attr(element, :status)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:sparkline, "sparkline"] do
+    series = attr(element, :series, [])
+
+    {:ok,
+     Widgets.sparkline(
+       element.id,
+       sparkline_values(series),
+       Keyword.merge(base_opts(element),
+         series_id: sparkline_series_id(series),
+         axes: attr(element, :axes, %{}),
+         legend: attr(element, :legend, %{}),
+         scale: attr(element, :scale, %{})
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:bar_chart, "bar_chart"] do
+    {:ok,
+     Widgets.bar_chart(
+       element.id,
+       attr(element, :series, []),
+       Keyword.merge(base_opts(element),
+         axes: attr(element, :axes, %{}),
+         legend: attr(element, :legend, %{}),
+         scale: attr(element, :scale, %{})
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:line_chart, "line_chart"] do
+    {:ok,
+     Widgets.line_chart(
+       element.id,
+       attr(element, :series, []),
+       Keyword.merge(base_opts(element),
+         axes: attr(element, :axes, %{}),
+         legend: attr(element, :legend, %{}),
+         scale: attr(element, :scale, %{})
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:canvas, "canvas"] do
+    {:ok,
+     Widgets.canvas(
+       element.id,
+       attr(element, :operations, []),
+       Keyword.merge(base_opts(element),
+         width: attr(element, :width),
+         height: attr(element, :height),
+         unit: attr(element, :unit, :cell),
+         background: attr(element, :background),
+         clip: attr(element, :clip, true)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:stream_widget, "stream_widget"] do
+    {:ok,
+     Widgets.stream_widget(
+       element.id,
+       attr(element, :entries, []),
+       Keyword.merge(base_opts(element),
+         ordering: attr(element, :ordering, :append_only),
+         severity_field: attr(element, :severity_field),
+         timestamp_field: attr(element, :timestamp_field)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:process_monitor, "process_monitor"] do
+    {:ok,
+     Widgets.process_monitor(
+       element.id,
+       attr(element, :processes, []),
+       Keyword.merge(base_opts(element),
+         sort_by: attr(element, :sort_by),
+         severity: attr(element, :severity)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:cluster_dashboard, "cluster_dashboard"] do
+    {:ok,
+     Widgets.cluster_dashboard(
+       element.id,
+       attr(element, :nodes, []),
+       Keyword.merge(base_opts(element),
+         summary: attr(element, :summary, %{}),
+         severity: attr(element, :severity)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:command_palette, "command_palette"] do
+    {:ok,
+     Widgets.command_palette(
+       element.id,
+       attr(element, :commands, []),
+       Keyword.merge(base_opts(element),
+         query: attr(element, :query),
+         active_command: attr(element, :active_command),
+         placeholder: attr(element, :placeholder)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:supervision_tree_viewer, "supervision_tree_viewer"] do
+    {:ok,
+     Widgets.supervision_tree_viewer(
+       element.id,
+       attr(element, :nodes, []),
+       Keyword.merge(base_opts(element),
+         expanded: attr(element, :expanded, true),
+         show_restarts: attr(element, :show_restarts, true)
+       )
+     )}
+  end
+
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:row, "row"] do
     with {:ok, children} <- map_children(default_children(element)) do
@@ -205,8 +464,7 @@ defmodule WebUi.Renderer.Canonical do
   end
 
   defp do_render(%Element{type: type, kind: kind} = element)
-       when type in [:layout, "layout"] and
-              kind in [:column, "column", :stack, "stack", :container, "container"] do
+       when type in [:layout, "layout"] and kind in [:column, "column", :container, "container"] do
     with {:ok, children} <- map_children(default_children(element)) do
       {:ok,
        Widgets.column(
@@ -216,6 +474,84 @@ defmodule WebUi.Renderer.Canonical do
            gap: attr(element, :gap),
            align: attr(element, :align),
            justify: attr(element, :justify)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layout, "layout"] and kind in [:stack, "stack"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       Widgets.stack(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           direction: attr(element, :direction, :column),
+           gap: attr(element, :gap)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layout, "layout"] and kind in [:viewport, "viewport"] do
+    with {:ok, content} <- required_slot_child(element, :content) do
+      {:ok,
+       Widgets.viewport(
+         element.id,
+         content,
+         Keyword.merge(base_opts(element),
+           axis: attr(element, :axis, :vertical),
+           offset: attr(element, :offset, 0),
+           clip: attr(element, :clip, true),
+           scrollbars: attr(element, :scrollbars, :auto),
+           width: attr(element, :width),
+           height: attr(element, :height),
+           sync_group: attr(element, :sync_group),
+           independent_scroll: attr(element, :independent_scroll, false)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:widget, :layout, "widget", "layout"] and kind in [:scroll_bar, "scroll_bar"] do
+    {:ok,
+     Widgets.scroll_bar(
+       element.id,
+       Keyword.merge(base_opts(element),
+         orientation: attr(element, :orientation, :vertical),
+         position: attr(element, :position, 0),
+         viewport_size: attr(element, :viewport_size),
+         content_size: attr(element, :content_size),
+         viewport_ref: attr(element, :viewport_ref),
+         sync_group: attr(element, :sync_group)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layout, "layout"] and kind in [:split_pane, "split_pane"] do
+    with {:ok, primary} <- required_slot_child(element, :primary),
+         {:ok, secondary} <- required_slot_child(element, :secondary) do
+      {:ok,
+       Widgets.split_pane(
+         element.id,
+         primary,
+         secondary,
+         Keyword.merge(base_opts(element),
+           direction: attr(element, :direction, :horizontal),
+           ratio: attr(element, :ratio, 0.5),
+           resizable: attr(element, :resizable, true),
+           min_primary: attr(element, :min_primary),
+           min_secondary: attr(element, :min_secondary),
+           primary_size: attr(element, :primary_size),
+           secondary_size: attr(element, :secondary_size),
+           divider: attr(element, :divider, %{}),
+           divider_size: map_get(map_attr(element, :divider), :size),
+           divider_style: map_get(map_attr(element, :divider), :style),
+           sync_scroll: attr(element, :sync_scroll, false)
          )
        )}
     end
@@ -270,6 +606,97 @@ defmodule WebUi.Renderer.Canonical do
     end
   end
 
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layer, :widget, "layer", "widget"] and kind in [:overlay, "overlay"] do
+    with {:ok, base} <- required_slot_child(element, :base),
+         {:ok, layers} <- required_layer_children(element) do
+      {:ok,
+       Widgets.overlay(
+         element.id,
+         base,
+         layers,
+         Keyword.merge(base_opts(element),
+           mode: attr(element, :mode, :stacked),
+           background_fill: attr(element, :background_fill, :transparent),
+           dismissible: attr(element, :dismissible, true),
+           focus_scope: attr(element, :focus_scope),
+           z_order: attr(element, :z_order, :overlay)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layer, :widget, "layer", "widget"] and kind in [:dialog, "dialog"] do
+    with {:ok, content} <- required_slot_child(element, :content) do
+      {:ok,
+       Widgets.dialog(
+         element.id,
+         content,
+         Keyword.merge(base_opts(element),
+           title: attr(element, :title),
+           modal: attr(element, :modal, true),
+           dismissible: attr(element, :dismissible, true),
+           size: attr(element, :size, :md),
+           background_fill: attr(element, :background_fill, :scrim),
+           focus_scope: attr(element, :focus_scope, :dialog)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layer, :widget, "layer", "widget"] and kind in [:toast, "toast"] do
+    with {:ok, content} <- required_slot_child(element, :content) do
+      {:ok,
+       Widgets.toast(
+         element.id,
+         content,
+         Keyword.merge(base_opts(element),
+           placement: attr(element, :placement, :top_end),
+           duration_ms: attr(element, :duration_ms, 5_000),
+           severity: attr(element, :severity, :info),
+           transient: attr(element, :transient, true)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layer, :widget, "layer", "widget"] and
+              kind in [:alert_dialog, "alert_dialog"] do
+    with {:ok, content} <- required_slot_child(element, :content) do
+      {:ok,
+       Widgets.alert_dialog(
+         element.id,
+         content,
+         Keyword.merge(base_opts(element),
+           title: attr(element, :title),
+           severity: attr(element, :severity, :warning),
+           requires_confirmation: attr(element, :requires_confirmation, true),
+           background_fill: attr(element, :background_fill, :scrim),
+           focus_scope: attr(element, :focus_scope, :alert_dialog)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layer, :widget, "layer", "widget"] and
+              kind in [:context_menu, "context_menu"] do
+    {:ok,
+     Widgets.context_menu(
+       element.id,
+       attr(element, :items, []),
+       Keyword.merge(base_opts(element),
+         anchor: attr(element, :anchor, %{}),
+         placement: attr(element, :placement, :bottom_start),
+         dismissible: attr(element, :dismissible, true),
+         background_fill: attr(element, :background_fill, :none)
+       )
+     )}
+  end
+
   defp do_render(%Element{} = element) do
     {:error, Error.unsupported_kind(element, WebUi.Renderer.supported_kinds())}
   end
@@ -277,6 +704,12 @@ defmodule WebUi.Renderer.Canonical do
   defp base_opts(%Element{} = element) do
     [
       description: element.metadata && element.metadata.description,
+      tags: element.metadata && Map.get(element.metadata, :tags),
+      annotations: element.metadata && Map.get(element.metadata, :annotations),
+      state: attr(element, :state, %{}),
+      styles: attr(element, :styles, %{}),
+      events: attr(element, :events, %{}),
+      style_hooks: attr(element, :style_hooks, []),
       metadata: %{
         canonical_source: %{
           id: element.id,
@@ -285,12 +718,15 @@ defmodule WebUi.Renderer.Canonical do
         }
       }
     ]
-    |> Enum.reject(fn {_key, value} -> value in [nil, %{}] end)
+    |> Enum.reject(fn {_key, value} -> value in [nil, %{}, []] end)
   end
 
   defp default_children(%Element{} = element) do
     element.children
-    |> Enum.filter(&(&1.slot in [:default, "default"]))
+    |> Enum.filter(fn
+      %Child{slot: slot} -> slot in [:default, "default"]
+      %Element{} -> true
+    end)
   end
 
   defp map_children(children) do
@@ -308,31 +744,109 @@ defmodule WebUi.Renderer.Canonical do
   end
 
   defp required_slot_child(%Element{} = element, slot) do
-    case optional_slot_child(element, slot) do
-      nil -> {:error, Error.missing_required_slot(element, slot)}
-      widget -> {:ok, widget}
+    case slot_child(element, slot) do
+      {:ok, nil} -> {:error, Error.missing_required_slot(element, slot)}
+      {:ok, widget} -> {:ok, widget}
+      {:error, error} -> {:error, error}
+    end
+  end
+
+  defp required_layer_children(%Element{} = element) do
+    layers =
+      element.children
+      |> Enum.filter(fn
+        %Child{slot: slot} -> slot in [:layers, "layers"]
+        _other -> false
+      end)
+
+    layers =
+      if layers == [] do
+        Enum.filter(element.children, fn
+          %Child{slot: slot} -> slot not in [:base, "base"]
+          _other -> false
+        end)
+      else
+        layers
+      end
+
+    case layers do
+      [] -> {:error, Error.missing_required_slot(element, :layers)}
+      children -> map_children(children)
     end
   end
 
   defp optional_slot_child(%Element{} = element, slot) do
+    case slot_child(element, slot) do
+      {:ok, widget} -> widget
+      {:error, _error} -> nil
+    end
+  end
+
+  defp slot_child(%Element{} = element, slot) do
     element.children
-    |> Enum.find(&(&1.slot == slot))
+    |> Enum.find(fn
+      %Child{slot: child_slot} -> child_slot == slot or child_slot == Atom.to_string(slot)
+      _other -> false
+    end)
     |> case do
       %Child{element: %Element{} = child} ->
-        case do_render(child) do
-          {:ok, widget} -> widget
-          {:error, _error} -> nil
-        end
+        do_render(child)
+
+      %Element{} = child ->
+        do_render(child)
 
       _other ->
-        nil
+        {:ok, nil}
     end
   end
 
   defp render_child(%Child{element: %Element{} = element}), do: do_render(element)
   defp render_child(%Element{} = element), do: do_render(element)
 
+  defp sparkline_values(series) when is_list(series) do
+    case List.first(series) do
+      %{values: values} when is_list(values) -> values
+      %{"values" => values} when is_list(values) -> values
+      first when is_number(first) -> series
+      _other -> []
+    end
+  end
+
+  defp sparkline_values(_series), do: []
+
+  defp sparkline_series_id(series) when is_list(series) do
+    case List.first(series) do
+      %{id: id} -> id
+      %{"id" => id} -> id
+      _other -> :primary
+    end
+  end
+
+  defp sparkline_series_id(_series), do: :primary
+
+  defp map_attr(%Element{} = element, key) do
+    element
+    |> attr(key, %{})
+    |> normalize_map()
+  end
+
+  defp map_get(map, key, default \\ nil) when is_map(map) do
+    cond do
+      Map.has_key?(map, key) -> Map.get(map, key)
+      Map.has_key?(map, Atom.to_string(key)) -> Map.get(map, Atom.to_string(key))
+      true -> default
+    end
+  end
+
+  defp normalize_map(nil), do: %{}
+  defp normalize_map(map) when is_map(map), do: Map.new(map)
+  defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
+
   defp attr(%Element{attributes: attrs}, key, default \\ nil) do
-    Map.get(attrs, key) || Map.get(attrs, Atom.to_string(key)) || default
+    cond do
+      Map.has_key?(attrs, key) -> Map.get(attrs, key)
+      Map.has_key?(attrs, Atom.to_string(key)) -> Map.get(attrs, Atom.to_string(key))
+      true -> default
+    end
   end
 end
