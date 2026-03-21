@@ -20,22 +20,22 @@ Back to index: [README](./README.md)
 [ ] 3 Phase 3 - Advanced Widgets, Display Systems, and Layered Web Runtime Behavior
   Implement advanced data, feedback, overlay, viewport, split-pane, scroll, canvas, and layered runtime behavior together with broader canonical renderer coverage.
 
-  [ ] 3.1 Section - Advanced Widget Families
+  [x] 3.1 Section - Advanced Widget Families
     Implement the native advanced widget families needed for data-heavy, feedback-heavy, and operational web experiences.
 
-    [ ] 3.1.1 Task - Implement data, feedback, and document-oriented widgets
+    [x] 3.1.1 Task - Implement data, feedback, and document-oriented widgets
       Define native support for data tables, trees, markdown, logs, status, progress, and related review-oriented widgets.
 
-      [ ] 3.1.1.1 Subtask - Implement native widget support for table, tree, markdown, log, status, and progress-oriented rendering.
-      [ ] 3.1.1.2 Subtask - Define shared sorting, filtering, pagination, selection, and document-view behavior where those semantics belong in the package.
-      [ ] 3.1.1.3 Subtask - Define how these advanced widget families are represented on the server side and realized through the Elm frontend runtime.
+      [x] 3.1.1.1 Subtask - Implement native widget support for table, tree, markdown, log, status, and progress-oriented rendering.
+      [x] 3.1.1.2 Subtask - Define shared sorting, filtering, pagination, selection, and document-view behavior where those semantics belong in the package.
+      [x] 3.1.1.3 Subtask - Define how these advanced widget families are represented on the server side and realized through the Elm frontend runtime.
 
-    [ ] 3.1.2 Task - Implement visualization and operational widgets
+    [x] 3.1.2 Task - Implement visualization and operational widgets
       Define native support for gauges, sparklines, charts, canvas, and operational or diagnostic widget families.
 
-      [ ] 3.1.2.1 Subtask - Implement native widget support for gauge, sparkline, bar chart, line chart, and canvas-oriented rendering.
-      [ ] 3.1.2.2 Subtask - Implement operational or diagnostic widgets such as stream-oriented and cluster-oriented views through the same runtime model.
-      [ ] 3.1.2.3 Subtask - Keep advanced widget coverage extensible so new canonical widgets can be added without destabilizing the package structure.
+      [x] 3.1.2.1 Subtask - Implement native widget support for gauge, sparkline, bar chart, line chart, and canvas-oriented rendering.
+      [x] 3.1.2.2 Subtask - Implement operational or diagnostic widgets such as stream-oriented and cluster-oriented views through the same runtime model.
+      [x] 3.1.2.3 Subtask - Keep advanced widget coverage extensible so new canonical widgets can be added without destabilizing the package structure.
 
   [ ] 3.2 Section - Display Systems and Layered Composition
     Implement advanced layout, viewport, scroll, split, overlay, and dialog behavior for complex web experiences.

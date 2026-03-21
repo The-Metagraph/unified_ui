@@ -75,6 +75,46 @@ defmodule WebUi.RenderPipelineTest do
     assert editing_model.render_tree == model.render_tree
   end
 
+  test "advanced widgets reuse the same server and frontend render pipeline" do
+    screen =
+      WebUi.Widgets.screen("ops-dashboard", "Ops Dashboard", [
+        WebUi.Widgets.table(
+          "cluster-table",
+          [[id: :name, label: "Name"], [id: :status, label: "Status"]],
+          [[id: "node-a", cells: ["Node A", "healthy"]]],
+          on_sort: %{intent: :sort_cluster}
+        ),
+        WebUi.Widgets.progress("deploy-progress", current: 3, total: 5, label: "Deploy"),
+        WebUi.Widgets.command_palette(
+          "ops-command-palette",
+          [[id: :restart, label: "Restart Node"]],
+          placeholder: "Run command",
+          on_command: %{intent: :run_command}
+        )
+      ])
+
+    assert {:ok, state} = WebUi.Runtime.mount_native_screen(screen)
+
+    payload = WebUi.ServerRuntime.frontend_payload(state)
+    table_node = find_node(payload.tree, "cluster-table")
+    progress_node = find_node(payload.tree, "deploy-progress")
+    palette_node = find_node(payload.tree, "ops-command-palette")
+
+    assert table_node.dom.tag == "table"
+    assert table_node.dom.role == "grid"
+    assert progress_node.dom.tag == "progress"
+    assert progress_node.dom.attributes.value == 3
+    assert progress_node.dom.attributes.max == 5
+    assert palette_node.dom.role == "combobox"
+    assert palette_node.interactions.focusable?
+    assert palette_node.interactions.editable?
+
+    assert {:ok, model} = WebUi.Runtime.hydrate_frontend(state)
+
+    assert find_node(model.tree, "ops-command-palette").browser.focusable?
+    assert find_node(model.tree, "cluster-table").tag == "table"
+  end
+
   defp find_node(node, id) when is_map(node) do
     if node.id == id do
       node

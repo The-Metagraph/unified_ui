@@ -70,10 +70,77 @@ defmodule WebUi.NativeWidgetsTest do
     assert WebUi.Widgets.Navigation in modules
     assert WebUi.Widgets.Layout in modules
     assert WebUi.Widgets.Forms in modules
+    assert WebUi.Widgets.Data in modules
+    assert WebUi.Widgets.Feedback in modules
+    assert WebUi.Widgets.Visualization in modules
+    assert WebUi.Widgets.Operational in modules
 
     assert :content in WebUi.Widgets.kinds()
     assert :form in WebUi.Widgets.kinds()
+    assert :markdown_viewer in WebUi.Widgets.kinds()
+    assert :bar_chart in WebUi.Widgets.kinds()
     assert :navigation in WebUi.Widgets.families()
+    assert :document in WebUi.Widgets.families()
+    assert :operational in WebUi.Widgets.families()
     assert WebUi.Widgets.validation_state().form_composition == :ready
+    assert WebUi.Widgets.validation_state().advanced_data_widgets == :ready
+  end
+
+  test "advanced widget families normalize deterministic data, feedback, visualization, and operational state" do
+    table =
+      WebUi.Widgets.table(
+        "cluster-table",
+        [
+          [id: :name, label: "Name", sortable: true],
+          [id: :status, label: "Status"]
+        ],
+        [
+          [id: "node-a", cells: ["Node A", "healthy"], selected: true],
+          [id: "node-b", cells: ["Node B", "degraded"]]
+        ],
+        sort_key: :name,
+        sort_direction: :asc,
+        filters: [[field: :status, operator: :eq, value: :healthy]],
+        page: 1,
+        page_size: 20,
+        total_entries: 42,
+        on_sort: %{intent: :sort_cluster}
+      )
+
+    markdown =
+      WebUi.Widgets.markdown_viewer(
+        "ops-doc",
+        "# Operations\n\nHealthy systems.",
+        anchors: [[id: "operations", label: "Operations", level: 1]]
+      )
+
+    progress = WebUi.Widgets.progress("deploy-progress", current: 3, total: 5, label: "Deploy")
+    sparkline = WebUi.Widgets.sparkline("cpu-sparkline", [4, 5, 7, 6])
+
+    palette =
+      WebUi.Widgets.command_palette(
+        "ops-command-palette",
+        [
+          [id: :restart_node, label: "Restart Node"],
+          [id: :drain_node, label: "Drain Node"]
+        ],
+        query: "rest",
+        placeholder: "Run command",
+        on_command: %{intent: :run_command}
+      )
+
+    assert table.family == :data
+    assert table.events == %{sort: %{intent: :sort_cluster}}
+    assert table.attributes.sorting == %{key: :name, direction: :asc}
+    assert table.attributes.pagination.total_entries == 42
+    assert markdown.family == :document
+    assert hd(markdown.attributes.anchors).id == "operations"
+    assert progress.family == :feedback
+    assert progress.attributes.total == 5
+    assert sparkline.family == :visualization
+    assert hd(sparkline.attributes.series).values == [4, 5, 7, 6]
+    assert palette.family == :operational
+    assert palette.events == %{command: %{intent: :run_command}}
+    assert palette.attributes.query == "rest"
   end
 end

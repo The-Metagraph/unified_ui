@@ -1,6 +1,6 @@
 defmodule WebUi.ServerRuntime.RenderModel do
   @moduledoc """
-  Deterministic server-side render model generation for foundational `web_ui`
+  Deterministic server-side render model generation for native `web_ui`
   widgets.
   """
 
@@ -66,6 +66,23 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_tag(:form), do: "form"
   defp dom_tag(:field_group), do: "fieldset"
   defp dom_tag(:field), do: "div"
+  defp dom_tag(:table), do: "table"
+  defp dom_tag(:tree_view), do: "ul"
+  defp dom_tag(:markdown_viewer), do: "article"
+  defp dom_tag(:log_viewer), do: "pre"
+  defp dom_tag(:status), do: "div"
+  defp dom_tag(:progress), do: "progress"
+  defp dom_tag(:inline_feedback), do: "aside"
+  defp dom_tag(:gauge), do: "figure"
+  defp dom_tag(:sparkline), do: "figure"
+  defp dom_tag(:bar_chart), do: "figure"
+  defp dom_tag(:line_chart), do: "figure"
+  defp dom_tag(:canvas), do: "canvas"
+  defp dom_tag(:stream_widget), do: "section"
+  defp dom_tag(:process_monitor), do: "section"
+  defp dom_tag(:cluster_dashboard), do: "section"
+  defp dom_tag(:command_palette), do: "section"
+  defp dom_tag(:supervision_tree_viewer), do: "section"
   defp dom_tag(_kind), do: "div"
 
   defp dom_role(:text), do: "text"
@@ -81,6 +98,23 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_role(:field_group), do: "group"
   defp dom_role(:field), do: "group"
   defp dom_role(:panel), do: "region"
+  defp dom_role(:table), do: "grid"
+  defp dom_role(:tree_view), do: "tree"
+  defp dom_role(:markdown_viewer), do: "document"
+  defp dom_role(:log_viewer), do: "log"
+  defp dom_role(:status), do: "status"
+  defp dom_role(:progress), do: "progressbar"
+  defp dom_role(:inline_feedback), do: "alert"
+  defp dom_role(:gauge), do: "img"
+  defp dom_role(:sparkline), do: "img"
+  defp dom_role(:bar_chart), do: "img"
+  defp dom_role(:line_chart), do: "img"
+  defp dom_role(:canvas), do: "img"
+  defp dom_role(:stream_widget), do: "log"
+  defp dom_role(:process_monitor), do: "table"
+  defp dom_role(:cluster_dashboard), do: "region"
+  defp dom_role(:command_palette), do: "combobox"
+  defp dom_role(:supervision_tree_viewer), do: "tree"
   defp dom_role(_kind), do: "presentation"
 
   defp dom_attributes(%Widget{} = widget) do
@@ -97,22 +131,79 @@ defmodule WebUi.ServerRuntime.RenderModel do
     |> maybe_put(:orientation, Map.get(widget.attributes, :orientation))
     |> maybe_put(:active_item, Map.get(widget.attributes, :active_item))
     |> maybe_put(:legend, Map.get(widget.attributes, :legend))
+    |> maybe_put(:value, dom_value(widget))
+    |> maybe_put(:max, dom_max(widget))
   end
 
   defp interactive_kinds do
-    [:button, :link, :text_input, :checkbox, :select, :menu, :tabs, :form]
+    [
+      :button,
+      :link,
+      :text_input,
+      :checkbox,
+      :select,
+      :menu,
+      :tabs,
+      :form,
+      :table,
+      :tree_view,
+      :log_viewer,
+      :stream_widget,
+      :process_monitor,
+      :command_palette,
+      :supervision_tree_viewer
+    ]
   end
 
   defp focusable_kinds do
-    [:button, :link, :text_input, :checkbox, :select, :menu, :tabs]
+    [
+      :button,
+      :link,
+      :text_input,
+      :checkbox,
+      :select,
+      :menu,
+      :tabs,
+      :table,
+      :tree_view,
+      :log_viewer,
+      :stream_widget,
+      :process_monitor,
+      :command_palette,
+      :supervision_tree_viewer
+    ]
   end
 
   defp editable_kinds do
-    [:text_input, :checkbox, :select]
+    [:text_input, :checkbox, :select, :command_palette]
   end
 
   defp navigable_kinds do
-    [:link, :menu, :tabs]
+    [:link, :menu, :tabs, :tree_view]
+  end
+
+  defp dom_value(%Widget{kind: :progress, attributes: attributes}) do
+    Map.get(attributes, :current)
+  end
+
+  defp dom_value(%Widget{kind: :gauge, attributes: attributes}) do
+    Map.get(attributes, :value)
+  end
+
+  defp dom_value(%Widget{attributes: attributes}) do
+    Map.get(attributes, :value)
+  end
+
+  defp dom_max(%Widget{kind: :progress, attributes: attributes}) do
+    Map.get(attributes, :total)
+  end
+
+  defp dom_max(%Widget{kind: :gauge, attributes: attributes}) do
+    Map.get(attributes, :max)
+  end
+
+  defp dom_max(%Widget{}) do
+    nil
   end
 
   defp maybe_put(map, _key, nil), do: map

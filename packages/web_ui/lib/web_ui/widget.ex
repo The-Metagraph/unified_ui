@@ -3,7 +3,17 @@ defmodule WebUi.Widget do
   Native renderer-facing widget representation for `web_ui`.
   """
 
-  @type family :: :content | :layout | :interaction | :feedback | :input | :navigation
+  @type family ::
+          :content
+          | :layout
+          | :interaction
+          | :feedback
+          | :input
+          | :navigation
+          | :data
+          | :document
+          | :visualization
+          | :operational
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -34,11 +44,34 @@ defmodule WebUi.Widget do
   @spec contract() :: map()
   def contract do
     %{
-      metadata: [:label, :description, :role, :variant],
-      state: [:disabled, :selected, :expanded, :focused, :editing, :current, :checked],
+      metadata: [:label, :description, :role, :variant, :native_surface],
+      state: [
+        :disabled,
+        :selected,
+        :expanded,
+        :focused,
+        :editing,
+        :current,
+        :checked,
+        :loading,
+        :streaming,
+        :paused
+      ],
       slots: [:default, :label, :control, :help, :header, :body, :navigation],
       styles: [:tone, :size, :spacing, :surface, :hooks],
-      events: [:click, :change, :submit, :navigation, :focus]
+      events: [
+        :click,
+        :change,
+        :submit,
+        :navigation,
+        :focus,
+        :sort,
+        :filter,
+        :paginate,
+        :close,
+        :expand,
+        :command
+      ]
     }
   end
 
@@ -130,6 +163,24 @@ defmodule WebUi.Widget do
     do: :input
 
   def family_for(kind) when kind in [:tabs, :menu], do: :navigation
+  def family_for(kind) when kind in [:table, :tree_view], do: :data
+  def family_for(kind) when kind in [:markdown_viewer, :log_viewer], do: :document
+  def family_for(kind) when kind in [:status, :progress, :inline_feedback], do: :feedback
+
+  def family_for(kind)
+      when kind in [:gauge, :sparkline, :bar_chart, :line_chart, :canvas],
+      do: :visualization
+
+  def family_for(kind)
+      when kind in [
+             :stream_widget,
+             :process_monitor,
+             :cluster_dashboard,
+             :command_palette,
+             :supervision_tree_viewer
+           ],
+      do: :operational
+
   def family_for(_kind), do: :content
 
   defp normalize_map(nil), do: %{}

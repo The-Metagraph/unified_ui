@@ -66,7 +66,15 @@ defmodule WebUi.PhaseOneIntegrationTest do
       )
 
     assert :hydration_envelope in reference.runtime.bridge_boundaries
-    assert reference.widgets.contract.metadata == [:label, :description, :role, :variant]
+
+    assert reference.widgets.contract.metadata == [
+             :label,
+             :description,
+             :role,
+             :variant,
+             :native_surface
+           ]
+
     assert info.bridge.boundaries == [:hydration_envelope, :event_envelope, :acknowledgement]
     assert WebUi.Info.widget_summary(widget).event_keys == [:click]
   end
