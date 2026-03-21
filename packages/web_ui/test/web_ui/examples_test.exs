@@ -6,11 +6,14 @@ defmodule WebUi.ExamplesTest do
              :advanced_continuity,
              :canonical_advanced,
              :canonical_foundational,
+             :canonical_transport,
              :canonical_welcome,
              :foundational_continuity,
+             :mixed_transport,
              :native_advanced,
              :native_counter,
-             :native_foundational
+             :native_foundational,
+             :native_transport
            ] =
              WebUi.Examples.catalog()
              |> Enum.map(& &1.id)
@@ -63,5 +66,23 @@ defmodule WebUi.ExamplesTest do
     assert Enum.any?(model.tree.slots, fn slot ->
              Enum.any?(slot.children, &(&1.id == "operations-overlay"))
            end)
+  end
+
+  test "mixed transport example compares local native flow and canonical boundary flow" do
+    comparison = WebUi.Examples.mixed_transport_comparison()
+
+    assert comparison.native.boundary == :local
+    assert comparison.native.mode == :local
+    assert comparison.native.frontend_scope == :local_feedback
+
+    assert comparison.canonical.boundary == :boundary
+    assert comparison.canonical.mode == :boundary
+    assert comparison.canonical.frontend_scope == :pending_server_sync
+    assert comparison.canonical.signal_type == "web_ui.submit.save_workspace"
+
+    assert comparison.continuity.same_family?
+    assert comparison.continuity.same_intent?
+    assert comparison.continuity.local_and_boundary_paths_diverge?
+    assert comparison.continuity.server_authority_preserved?
   end
 end

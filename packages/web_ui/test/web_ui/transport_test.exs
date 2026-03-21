@@ -10,11 +10,13 @@ defmodule WebUi.TransportTest do
                family: :click,
                intent: :open,
                widget_id: :dialog_trigger,
-               boundary: :local
+               source_kind: :native
              )
 
     assert translation.boundary == :local
     assert translation.family == :click
+    assert translation.server_action.kind == :local_runtime_event
+    assert translation.frontend_update.mode == :bounded_local_feedback
 
     assert {:ok, %{native_event: %{widget_id: :dialog_trigger}}} =
              WebUi.Transport.to_server_message(translation)
@@ -33,11 +35,67 @@ defmodule WebUi.TransportTest do
 
     assert translation.boundary == :boundary
     assert %Signal{} = translation.signal
+    assert is_binary(translation.cloud_event.specversion)
+    assert String.starts_with?(translation.cloud_event.specversion, "1.0")
+    assert translation.server_action.kind == :canonical_boundary_event
 
     assert {:ok, message} = WebUi.Transport.to_server_message(translation.signal)
     assert message.type == "web_ui.submit.save"
     assert message.family == :submit
     refute Map.has_key?(message, :native_event)
+  end
+
+  test "signal helpers expose the full planned family surface and convergence defaults" do
+    assert WebUi.Signals.families() == [
+             :click,
+             :change,
+             :submit,
+             :open,
+             :close,
+             :navigation,
+             :selection,
+             :command
+           ]
+
+    assert WebUi.Signals.local_default_families() == [:click, :change, :open, :close]
+
+    assert WebUi.Signals.boundary_crossing_families() == [
+             :submit,
+             :navigation,
+             :selection,
+             :command
+           ]
+
+    assert {:ok, native_translation} =
+             WebUi.Signals.from_native_event(
+               family: :open,
+               intent: :inspect,
+               widget_id: :inspect_dialog,
+               source_kind: :native
+             )
+
+    assert native_translation.boundary == :local
+    assert native_translation.runtime_event == "open:inspect"
+
+    assert {:ok, canonical_translation} =
+             WebUi.Signals.from_native_event(
+               family: :command,
+               intent: :run,
+               widget_id: :ops_command_palette,
+               source_kind: :canonical,
+               runtime_id: "canonical-runtime",
+               screen: "advanced-operations"
+             )
+
+    assert canonical_translation.boundary == :boundary
+    assert canonical_translation.signal.type == "web_ui.command.run"
+
+    assert {:ok, boundary_translation} =
+             WebUi.Signals.from_boundary_signal(canonical_translation.signal)
+
+    assert boundary_translation.server_action.kind == :canonical_boundary_event
+    assert boundary_translation.frontend_update.mode == :server_sync
+    assert boundary_translation.runtime_event == "command:run"
   end
 
   test "frontend bridge builds outgoing envelopes through the shared transport" do
@@ -64,5 +122,33 @@ defmodule WebUi.TransportTest do
     assert envelope.metadata.runtime_id == "bridge-runtime"
     assert envelope.payload.family == :navigation
     assert envelope.payload.runtime_event == "navigation:open_settings"
+  end
+
+  test "transport bridge round-trips canonical boundary envelopes for phoenix transport" do
+    assert {:ok, translation} =
+             WebUi.Transport.from_native_event(
+               family: :submit,
+               intent: :save,
+               widget_id: :save_button,
+               screen: "settings",
+               runtime_id: "settings-runtime",
+               payload: %{valid: true},
+               boundary: :boundary
+             )
+
+    assert {:ok, envelope} =
+             WebUi.Transport.Bridge.boundary_envelope(translation,
+               transport: :phoenix_socket,
+               topic: "web_ui:settings",
+               event: "settings:submit"
+             )
+
+    assert envelope.kind == :canonical_boundary
+    assert envelope.transport == :phoenix_socket
+    assert envelope.topic == "web_ui:settings"
+    assert envelope.event == "settings:submit"
+
+    assert {:ok, signal} = WebUi.Transport.Bridge.inbound_boundary_envelope(envelope)
+    assert signal.type == "web_ui.submit.save"
   end
 end

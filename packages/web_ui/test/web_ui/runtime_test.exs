@@ -67,6 +67,88 @@ defmodule WebUi.RuntimeTest do
     assert boundary_state.last_boundary_signal.type == "web_ui.click.submit"
   end
 
+  test "runtime infers canonical-boundary translation for canonical command events" do
+    element =
+      Element.new(:widget, :command_palette,
+        id: :ops_command_palette,
+        attributes: %{commands: [%{id: :deploy, label: "Deploy"}]}
+      )
+
+    assert {:ok, runtime_state} =
+             Runtime.mount_iur_screen(element, runtime_id: "canonical-runtime")
+
+    assert {:ok, next_state} =
+             Runtime.handle_native_event(runtime_state,
+               family: :command,
+               intent: :run,
+               widget_id: :ops_command_palette,
+               payload: %{command: :deploy}
+             )
+
+    assert Enum.at(next_state.event_log, -1).mode == :boundary
+    assert next_state.last_boundary_signal.type == "web_ui.command.run"
+  end
+
+  test "runtime handles frontend event envelopes through the authoritative server runtime" do
+    assert {:ok, runtime_state} =
+             Runtime.mount_native_screen(
+               WebUi.Examples.native_counter_screen(),
+               runtime_id: "native-runtime"
+             )
+
+    assert {:ok, frontend_model} = Runtime.hydrate_frontend(runtime_state)
+
+    assert {:ok, _updated_model, event_message} =
+             WebUi.FrontendRuntime.dispatch_interaction(frontend_model,
+               family: :click,
+               intent: :increment,
+               widget_id: :increment,
+               boundary: :local
+             )
+
+    assert {:ok, next_state, ack_message} =
+             Runtime.handle_frontend_event(runtime_state, event_message)
+
+    assert Enum.at(next_state.event_log, -1).mode == :local
+    assert ack_message.kind == :ack
+    assert ack_message.payload.server_authority
+    assert ack_message.payload.family == :click
+  end
+
+  test "runtime handles canonical boundary envelopes through the same server runtime" do
+    element =
+      Element.new(:widget, :command_palette,
+        id: :ops_command_palette,
+        attributes: %{commands: [%{id: :deploy, label: "Deploy"}]}
+      )
+
+    assert {:ok, runtime_state} =
+             Runtime.mount_iur_screen(element, runtime_id: "canonical-runtime")
+
+    assert {:ok, translation} =
+             WebUi.Transport.from_native_event(
+               family: :command,
+               intent: :run,
+               widget_id: :ops_command_palette,
+               screen: runtime_state.screen_id,
+               runtime_id: runtime_state.runtime_id,
+               source_kind: :canonical,
+               boundary_mode: :canonical_boundary,
+               payload: %{command: :deploy}
+             )
+
+    assert {:ok, envelope} =
+             WebUi.Transport.Bridge.boundary_envelope(translation, topic: "web_ui:canonical")
+
+    assert {:ok, next_state, ack_message} =
+             Runtime.handle_boundary_envelope(runtime_state, envelope)
+
+    assert Enum.at(next_state.event_log, -1).mode == :boundary
+    assert next_state.last_boundary_signal.type == "web_ui.command.run"
+    assert ack_message.kind == :ack
+    assert ack_message.payload.boundary == :boundary
+  end
+
   test "frontend runtime returns deterministic hydration diagnostics" do
     assert {:error, %FrontendRuntime.Error{reason: :invalid_hydration_payload}} =
              FrontendRuntime.hydrate(%{runtime_id: "missing-fields"})

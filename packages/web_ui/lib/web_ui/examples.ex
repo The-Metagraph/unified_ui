@@ -197,6 +197,135 @@ defmodule WebUi.Examples do
     )
   end
 
+  @spec native_transport_screen() :: map()
+  def native_transport_screen do
+    Widgets.screen(
+      "transport-workspace",
+      "Native Transport Workspace",
+      [
+        Widgets.content("transport-header", [
+          Widgets.text("transport-title", "Transport Workspace"),
+          Widgets.inline_feedback(
+            "transport-feedback",
+            "Direct native usage keeps this workflow local."
+          )
+        ]),
+        Widgets.form(
+          "transport-form",
+          [
+            Widgets.field_group(
+              "transport-group",
+              [
+                Widgets.field(
+                  "transport-query-field",
+                  Widgets.text_input("transport-query-input",
+                    name: :query,
+                    value: "status:ready",
+                    placeholder: "Filter nodes",
+                    on_change: %{family: :change, intent: :refine_query, boundary: :local}
+                  ),
+                  name: :query,
+                  label: "Query"
+                )
+              ],
+              legend: "Transport Filter"
+            )
+          ],
+          on_submit: %{family: :submit, intent: :save_workspace, boundary: :local}
+        ),
+        Widgets.row(
+          "transport-actions",
+          [
+            Widgets.button("preview-button", "Preview",
+              on_click: %{family: :open, intent: :open_preview, boundary: :local}
+            ),
+            Widgets.button("save-button", "Save Workspace",
+              on_click: %{family: :submit, intent: :save_workspace, boundary: :local}
+            )
+          ],
+          justify: :end,
+          gap: :md
+        )
+      ],
+      source: :native_transport,
+      bridge: :phoenix_elm
+    )
+  end
+
+  @spec canonical_transport_screen() :: Element.t()
+  def canonical_transport_screen do
+    Element.new(:layout, :column,
+      id: "transport-workspace",
+      attributes: %{gap: :md},
+      children: [
+        Element.new(:widget, :content,
+          id: "transport-header",
+          children: [
+            Element.new(:widget, :text,
+              id: "transport-title",
+              attributes: %{content: "Transport Workspace"}
+            ),
+            Element.new(:widget, :inline_feedback,
+              id: "transport-feedback",
+              attributes: %{
+                message: "Canonical rendering crosses the boundary for the same workflow."
+              }
+            )
+          ]
+        ),
+        Element.new(:composite, :form,
+          id: "transport-form",
+          children: [
+            Element.new(:composite, :field_group,
+              id: "transport-group",
+              attributes: %{legend: "Transport Filter"},
+              children: [
+                Element.new(:composite, :field,
+                  id: "transport-query-field",
+                  attributes: %{name: :query},
+                  children: [
+                    Child.new(
+                      :label,
+                      Element.new(:widget, :label,
+                        id: "transport-query-label",
+                        attributes: %{content: "Query"}
+                      )
+                    ),
+                    Child.new(
+                      :control,
+                      Element.new(:widget, :text_input,
+                        id: "transport-query-input",
+                        attributes: %{
+                          name: :query,
+                          value: "status:ready",
+                          placeholder: "Filter nodes"
+                        }
+                      )
+                    )
+                  ]
+                )
+              ]
+            )
+          ]
+        ),
+        Element.new(:layout, :row,
+          id: "transport-actions",
+          attributes: %{justify: :end, gap: :md},
+          children: [
+            Element.new(:widget, :button,
+              id: "preview-button",
+              attributes: %{label: "Preview"}
+            ),
+            Element.new(:widget, :button,
+              id: "save-button",
+              attributes: %{label: "Save Workspace"}
+            )
+          ]
+        )
+      ]
+    )
+  end
+
   @spec native_advanced_screen() :: map()
   def native_advanced_screen do
     %{
@@ -231,7 +360,9 @@ defmodule WebUi.Examples do
                         severity: :warning,
                         timestamp: "2026-03-21T09:02:00Z"
                       ]
-                    ], follow: true),
+                    ],
+                    follow: true
+                  ),
                   offset: {0, 120},
                   height: 24,
                   sync_group: :logs
@@ -262,7 +393,9 @@ defmodule WebUi.Examples do
                         ),
                         Widgets.gauge("cluster-gauge", value: 72, label: "Cluster Health"),
                         Widgets.sparkline("throughput-sparkline", [12, 16, 18, 17])
-                      ], gap: :lg),
+                      ],
+                      gap: :lg
+                    ),
                     Widgets.bar_chart("requests-chart", [
                       [id: :requests, label: "Requests", values: [12, 18, 16]],
                       [id: :errors, label: "Errors", values: [1, 0, 2]]
@@ -272,20 +405,29 @@ defmodule WebUi.Examples do
                       [
                         [id: :deploy, label: "Deploy", value: :deploy],
                         [id: :rollback, label: "Rollback", value: :rollback]
-                      ], query: "deploy"),
+                      ],
+                      query: "deploy"
+                    ),
                     Widgets.canvas(
                       "cluster-canvas",
                       [
                         [kind: :cell, position: {0, 0}, text: "A", style_refs: [:accent]],
                         [kind: :cell, position: {1, 0}, text: "B"]
-                      ], width: 20, height: 10),
+                      ],
+                      width: 20,
+                      height: 10
+                    ),
                     Widgets.cluster_dashboard(
                       "cluster-dashboard",
                       [
                         [id: "node-a", status: :healthy],
                         [id: "node-b", status: :degraded]
-                      ], summary: %{healthy: 1, degraded: 1})
-                  ], gap: :lg),
+                      ],
+                      summary: %{healthy: 1, degraded: 1}
+                    )
+                  ],
+                  gap: :lg
+                ),
                 ratio: 0.6
               ),
               [
@@ -311,7 +453,9 @@ defmodule WebUi.Examples do
               content_size: 120,
               sync_group: :logs
             )
-          ], gap: :lg),
+          ],
+          gap: :lg
+        ),
       metadata: %{source: :native_advanced, bridge: :phoenix_elm}
     }
   end
@@ -527,6 +671,9 @@ defmodule WebUi.Examples do
       native_foundational: native_foundational_screen(),
       canonical_foundational: canonical_foundational_screen(),
       foundational_continuity: foundational_comparison(),
+      native_transport: native_transport_screen(),
+      canonical_transport: canonical_transport_screen(),
+      mixed_transport: mixed_transport_comparison(),
       native_advanced: native_advanced_screen(),
       canonical_advanced: canonical_advanced_screen(),
       advanced_continuity: advanced_comparison()
@@ -538,12 +685,15 @@ defmodule WebUi.Examples do
     [
       %{id: :canonical_foundational, summary: "Canonical foundational workspace"},
       %{id: :canonical_advanced, summary: "Canonical advanced operations workspace"},
+      %{id: :canonical_transport, summary: "Canonical transport-focused workspace"},
       %{id: :canonical_welcome, summary: "Canonical welcome message"},
       %{id: :advanced_continuity, summary: "Native and canonical advanced comparison"},
       %{id: :foundational_continuity, summary: "Native and canonical foundational comparison"},
+      %{id: :mixed_transport, summary: "Native and canonical transport workflow comparison"},
       %{id: :native_advanced, summary: "Direct-native advanced operations workspace"},
       %{id: :native_counter, summary: "Minimal native counter"},
-      %{id: :native_foundational, summary: "Direct-native foundational workspace"}
+      %{id: :native_foundational, summary: "Direct-native foundational workspace"},
+      %{id: :native_transport, summary: "Direct-native transport-focused workspace"}
     ]
   end
 
@@ -597,6 +747,72 @@ defmodule WebUi.Examples do
           |> Enum.filter(&(&1 in canonical.widget_ids))
           |> Enum.uniq()
           |> Enum.sort()
+      }
+    }
+  end
+
+  @spec mixed_transport_comparison() :: map()
+  def mixed_transport_comparison do
+    {:ok, native_state} =
+      WebUi.Runtime.mount_native_screen(native_transport_screen(), runtime_id: "native-transport")
+
+    {:ok, native_frontend} = WebUi.Runtime.hydrate_frontend(native_state)
+
+    {:ok, native_frontend_after_dispatch, native_event_message} =
+      WebUi.FrontendRuntime.dispatch_interaction(native_frontend,
+        family: :submit,
+        intent: :save_workspace,
+        boundary: :local,
+        widget_id: "save-button",
+        payload: %{mode: :draft}
+      )
+
+    {:ok, native_state_after_event, native_ack} =
+      WebUi.Runtime.handle_frontend_event(native_state, native_event_message)
+
+    {:ok, canonical_state} =
+      WebUi.Runtime.mount_iur_screen(
+        canonical_transport_screen(),
+        runtime_id: "canonical-transport"
+      )
+
+    {:ok, canonical_frontend} = WebUi.Runtime.hydrate_frontend(canonical_state)
+
+    {:ok, canonical_frontend_after_dispatch, canonical_event_message} =
+      WebUi.FrontendRuntime.dispatch_interaction(canonical_frontend,
+        family: :submit,
+        intent: :save_workspace,
+        widget_id: "save-button",
+        payload: %{mode: :commit}
+      )
+
+    {:ok, canonical_state_after_event, canonical_ack} =
+      WebUi.Runtime.handle_frontend_event(canonical_state, canonical_event_message)
+
+    %{
+      native: %{
+        screen_id: native_state_after_event.screen_id,
+        boundary: native_event_message.metadata.boundary,
+        mode: List.last(native_state_after_event.event_log).mode,
+        ack: native_ack.payload,
+        frontend_scope: native_frontend_after_dispatch.local_state.flash.scope
+      },
+      canonical: %{
+        screen_id: canonical_state_after_event.screen_id,
+        boundary: canonical_event_message.metadata.boundary,
+        mode: List.last(canonical_state_after_event.event_log).mode,
+        ack: canonical_ack.payload,
+        signal_type: canonical_state_after_event.last_boundary_signal.type,
+        frontend_scope: canonical_frontend_after_dispatch.local_state.flash.scope
+      },
+      continuity: %{
+        same_family?: native_ack.payload.family == canonical_ack.payload.family,
+        same_intent?: native_ack.payload.intent == canonical_ack.payload.intent,
+        local_and_boundary_paths_diverge?:
+          native_event_message.metadata.boundary == :local and
+            canonical_event_message.metadata.boundary == :boundary,
+        server_authority_preserved?:
+          native_ack.payload.server_authority and canonical_ack.payload.server_authority
       }
     }
   end

@@ -40,13 +40,12 @@ defmodule WebUi.ServerRuntime.EventRouter do
     {:error, Error.new(:invalid_event_route, "Runtime translations must include a runtime_event")}
   end
 
-  defp validate_translation(%{family: family, boundary: boundary})
-       when family in [:click, :change, :submit, :navigation] and boundary in [:local, :boundary] do
-    :ok
-  end
-
-  defp validate_translation(_translation) do
-    {:error, Error.new(:invalid_event_route, "Unsupported translation family or boundary")}
+  defp validate_translation(%{family: family, boundary: boundary}) do
+    if family in WebUi.Transport.families() and boundary in [:local, :boundary] do
+      :ok
+    else
+      {:error, Error.new(:invalid_event_route, "Unsupported translation family or boundary")}
+    end
   end
 
   defp route_for(%{boundary: :boundary}), do: :canonical_boundary
