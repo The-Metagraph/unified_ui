@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - The runtime split between server authority and frontend rendering must remain explicit even when interactions cross channels, sockets, or browser bridges.
 - Canonical event translation should support both direct-native and canonical `UnifiedIUR` rendering paths through the same runtime model.
 
-[ ] 4 Phase 4 - Canonical Boundary Transport and Phoenix-Elm Event Translation
+[x] 4 Phase 4 - Canonical Boundary Transport and Phoenix-Elm Event Translation
   Implement the canonical boundary transport model, split-runtime event translation surfaces, and diagnostics that let `web_ui` speak ecosystem-wide canonical event meaning.
 
   [x] 4.1 Section - Canonical Event Translation Backbone
@@ -74,19 +74,19 @@ Back to index: [README](./README.md)
       [x] 4.4.1.2 Subtask - Create canonical-rendered examples that emit and consume boundary events through canonical translation.
       [x] 4.4.1.3 Subtask - Create mixed examples that compare native and canonical event paths for the same workflow across the server and frontend split.
 
-  [ ] 4.5 Section - Phase 4 Integration Tests
+  [x] 4.5 Section - Phase 4 Integration Tests
     Validate event translation, split-runtime participation, and canonical transport behavior end to end.
 
-    [ ] 4.5.1 Task - Native and canonical event translation scenarios
+    [x] 4.5.1 Task - Native and canonical event translation scenarios
       Verify event translation remains canonical where boundaries are crossed and ergonomic where interactions stay local.
 
-      [ ] 4.5.1.1 Subtask - Verify direct-native interactions can remain local without compromising later canonical translation.
-      [ ] 4.5.1.2 Subtask - Verify canonical boundary events use `Jido.Signal` and preserve family and intent meaning.
-      [ ] 4.5.1.3 Subtask - Verify invalid boundary leakage fails with actionable diagnostics.
+      [x] 4.5.1.1 Subtask - Verify direct-native interactions can remain local without compromising later canonical translation.
+      [x] 4.5.1.2 Subtask - Verify canonical boundary events use `Jido.Signal` and preserve family and intent meaning.
+      [x] 4.5.1.3 Subtask - Verify invalid boundary leakage fails with actionable diagnostics.
 
-    [ ] 4.5.2 Task - Split-runtime event coordination scenarios
+    [x] 4.5.2 Task - Split-runtime event coordination scenarios
       Verify the frontend runtime participates in event flow without displacing server authority.
 
-      [ ] 4.5.2.1 Subtask - Verify server-side runtime state remains authoritative across translated events and frontend updates.
-      [ ] 4.5.2.2 Subtask - Verify bounded Elm-side behavior contributes browser responsiveness rather than canonical runtime decisions.
-      [ ] 4.5.2.3 Subtask - Verify canonical event handling is consistent across direct-native and canonical-rendered screens.
+      [x] 4.5.2.1 Subtask - Verify server-side runtime state remains authoritative across translated events and frontend updates.
+      [x] 4.5.2.2 Subtask - Verify bounded Elm-side behavior contributes browser responsiveness rather than canonical runtime decisions.
+      [x] 4.5.2.3 Subtask - Verify canonical event handling is consistent across direct-native and canonical-rendered screens.
