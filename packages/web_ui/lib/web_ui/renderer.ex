@@ -15,6 +15,8 @@ defmodule WebUi.Renderer do
       :accept_canonical_iur,
       :deterministic_native_mapping,
       :native_widget_reuse,
+      :advanced_widget_reuse,
+      :layered_runtime_coordination,
       :coverage_oriented_diagnostics
     ]
   end
@@ -40,9 +42,34 @@ defmodule WebUi.Renderer do
       :column,
       :container,
       :stack,
+      :viewport,
+      :scroll_bar,
+      :split_pane,
       :form,
       :field_group,
-      :field
+      :field,
+      :table,
+      :tree_view,
+      :markdown_viewer,
+      :log_viewer,
+      :status,
+      :progress,
+      :inline_feedback,
+      :gauge,
+      :sparkline,
+      :bar_chart,
+      :line_chart,
+      :canvas,
+      :stream_widget,
+      :process_monitor,
+      :cluster_dashboard,
+      :command_palette,
+      :supervision_tree_viewer,
+      :overlay,
+      :dialog,
+      :toast,
+      :alert_dialog,
+      :context_menu
     ]
   end
 

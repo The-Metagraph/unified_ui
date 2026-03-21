@@ -41,8 +41,8 @@ defmodule WebUi.PhaseTwoIntegrationTest do
 
   test "unsupported canonical inputs fail with coverage-oriented diagnostics" do
     unsupported =
-      Element.new(:widget, :dialog,
-        id: "dialog-root",
+      Element.new(:widget, :timeline,
+        id: "timeline-root",
         attributes: %{title: "Unsupported"}
       )
 
@@ -51,7 +51,7 @@ defmodule WebUi.PhaseTwoIntegrationTest do
              WebUi.Runtime.mount_iur_screen(unsupported)
 
     assert details.renderer_code == :unsupported_kind
-    assert details.renderer_details.kind == :dialog
+    assert details.renderer_details.kind == :timeline
     assert :text_input in details.renderer_details.supported_kinds
   end
 

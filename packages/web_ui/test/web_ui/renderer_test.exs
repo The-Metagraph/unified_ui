@@ -19,9 +19,10 @@ defmodule WebUi.RendererTest do
   end
 
   test "renderer rejects unsupported canonical kinds with structured diagnostics" do
-    element = Element.new(:widget, :dialog, id: :dialog_root, attributes: %{title: "Unsupported"})
+    element =
+      Element.new(:widget, :timeline, id: :timeline_root, attributes: %{title: "Unsupported"})
 
-    assert {:error, %Error{code: :unsupported_kind, details: %{kind: :dialog}}} =
+    assert {:error, %Error{code: :unsupported_kind, details: %{kind: :timeline}}} =
              WebUi.Renderer.render(element)
   end
 end

@@ -54,22 +54,22 @@ Back to index: [README](./README.md)
       [x] 3.2.2.2 Subtask - Define how focus scope, modal state, background scrims, and dismissal semantics remain coherent across the runtime split.
       [x] 3.2.2.3 Subtask - Preserve canonical layering meaning without letting browser-only implementation shortcuts redefine package behavior.
 
-  [ ] 3.3 Section - Advanced Canonical Renderer Coverage
+  [x] 3.3 Section - Advanced Canonical Renderer Coverage
     Implement broader `UnifiedIUR` renderer coverage for advanced widgets, layouts, display systems, and layering constructs.
 
-    [ ] 3.3.1 Task - Implement advanced canonical widget and display interpretation
+    [x] 3.3.1 Task - Implement advanced canonical widget and display interpretation
       Extend the canonical renderer to cover advanced widgets, layered compositions, and display-system nodes through native widget reuse.
 
-      [ ] 3.3.1.1 Subtask - Implement canonical interpretation for data, feedback, visualization, operational, and layered widget families.
-      [ ] 3.3.1.2 Subtask - Implement canonical interpretation for viewport, split, scroll, overlay, and dialog display-system constructs.
-      [ ] 3.3.1.3 Subtask - Keep the renderer deterministic and aligned with native widget, layout, and layer semantics.
+      [x] 3.3.1.1 Subtask - Implement canonical interpretation for data, feedback, visualization, operational, and layered widget families.
+      [x] 3.3.1.2 Subtask - Implement canonical interpretation for viewport, split, scroll, overlay, and dialog display-system constructs.
+      [x] 3.3.1.3 Subtask - Keep the renderer deterministic and aligned with native widget, layout, and layer semantics.
 
-    [ ] 3.3.2 Task - Implement advanced server and frontend coordination for complex views
+    [x] 3.3.2 Task - Implement advanced server and frontend coordination for complex views
       Ensure advanced runtime behavior remains coherent when server authority and frontend responsiveness both matter.
 
-      [ ] 3.3.2.1 Subtask - Define the authoritative server-state shape for layered and advanced widget compositions.
-      [ ] 3.3.2.2 Subtask - Define the bounded frontend-local behavior needed for smooth browser interaction without redefining canonical meaning.
-      [ ] 3.3.2.3 Subtask - Add coordination diagnostics for mismatched advanced widget state, layered invalidation, and stale frontend realization.
+      [x] 3.3.2.1 Subtask - Define the authoritative server-state shape for layered and advanced widget compositions.
+      [x] 3.3.2.2 Subtask - Define the bounded frontend-local behavior needed for smooth browser interaction without redefining canonical meaning.
+      [x] 3.3.2.3 Subtask - Add coordination diagnostics for mismatched advanced widget state, layered invalidation, and stale frontend realization.
 
   [ ] 3.4 Section - Advanced Comparison Examples
     Implement maintained advanced examples that demonstrate layered, data-heavy, and display-system-heavy workflows.
