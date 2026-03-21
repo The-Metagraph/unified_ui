@@ -53,22 +53,22 @@ Back to index: [README](./README.md)
       [x] 2.2.2.2 Subtask - Implement bounded local browser behavior for focus, editing, and simple interaction feedback.
       [x] 2.2.2.3 Subtask - Preserve the separation between frontend rendering concerns and server-side meaning or event authority.
 
-  [ ] 2.3 Section - Baseline Canonical IUR Rendering
+  [x] 2.3 Section - Baseline Canonical IUR Rendering
     Implement the first canonical renderer path that maps foundational `UnifiedIUR` widgets into native `web_ui` widgets.
 
-    [ ] 2.3.1 Task - Implement foundational canonical widget interpretation
+    [x] 2.3.1 Task - Implement foundational canonical widget interpretation
       Define the first canonical IUR renderer coverage for foundational widgets, simple layouts, and baseline form composition.
 
-      [ ] 2.3.1.1 Subtask - Implement canonical IUR interpretation for foundational visual widgets, simple layout nodes, and baseline form composition.
-      [ ] 2.3.1.2 Subtask - Map canonical widget attributes, children, and metadata into native server and frontend rendering state deterministically.
-      [ ] 2.3.1.3 Subtask - Reject canonical inputs that require unsupported widget or layout coverage with actionable diagnostics.
+      [x] 2.3.1.1 Subtask - Implement canonical IUR interpretation for foundational visual widgets, simple layout nodes, and baseline form composition.
+      [x] 2.3.1.2 Subtask - Map canonical widget attributes, children, and metadata into native server and frontend rendering state deterministically.
+      [x] 2.3.1.3 Subtask - Reject canonical inputs that require unsupported widget or layout coverage with actionable diagnostics.
 
-    [ ] 2.3.2 Task - Implement native and canonical rendering convergence
+    [x] 2.3.2 Task - Implement native and canonical rendering convergence
       Ensure direct native rendering and canonical rendering reuse the same widget model instead of diverging early.
 
-      [ ] 2.3.2.1 Subtask - Reuse native widget registration and rendering logic when realizing canonical IUR inputs.
-      [ ] 2.3.2.2 Subtask - Align widget identity, style hooks, and interaction wiring across native and canonical paths.
-      [ ] 2.3.2.3 Subtask - Define continuity checks that compare native and canonical rendering for the same foundational widget families.
+      [x] 2.3.2.1 Subtask - Reuse native widget registration and rendering logic when realizing canonical IUR inputs.
+      [x] 2.3.2.2 Subtask - Align widget identity, style hooks, and interaction wiring across native and canonical paths.
+      [x] 2.3.2.3 Subtask - Define continuity checks that compare native and canonical rendering for the same foundational widget families.
 
   [ ] 2.4 Section - Foundational Reference Examples
     Implement maintained examples that exercise foundational direct-native and canonical rendering workflows.
