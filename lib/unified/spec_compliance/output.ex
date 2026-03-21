@@ -10,6 +10,7 @@ defmodule Unified.SpecCompliance.Output do
     [
       header_line(report),
       summary_block(report),
+      requirement_lists_block(report),
       findings_block(report)
     ]
     |> Enum.reject(&(&1 in [nil, ""]))
@@ -115,6 +116,63 @@ defmodule Unified.SpecCompliance.Output do
   end
 
   defp package_lines(_report), do: []
+
+  defp requirement_lists_block(%{summary: summary}) when is_map(summary) do
+    []
+    |> append_requirement_list(
+      "Blocking Requirements",
+      summary[:blocking_requirement_ids] || summary["blocking_requirement_ids"]
+    )
+    |> append_waived_requirement_list(summary)
+    |> case do
+      [] -> nil
+      blocks -> Enum.join(blocks, "\n\n")
+    end
+  end
+
+  defp requirement_lists_block(_report), do: nil
+
+  defp append_requirement_list(blocks, _label, ids) when ids in [nil, []], do: blocks
+
+  defp append_requirement_list(blocks, label, ids) when is_list(ids) do
+    blocks ++
+      [
+        [
+          "#{label} (#{length(ids)}):",
+          Enum.map(ids, &"  - #{&1}")
+        ]
+        |> List.flatten()
+        |> Enum.join("\n")
+      ]
+  end
+
+  defp append_requirement_list(blocks, _label, _ids), do: blocks
+
+  defp append_waived_requirement_list(blocks, summary) do
+    effective_ids = summary[:waived_requirement_ids] || summary["waived_requirement_ids"] || []
+
+    source_ids =
+      summary[:waived_source_requirement_ids] || summary["waived_source_requirement_ids"] || []
+
+    cond do
+      source_ids != [] ->
+        blocks ++
+          [
+            [
+              "Waived Requirements (#{length(source_ids)} source, #{length(effective_ids)} effective):",
+              Enum.map(source_ids, &"  - #{&1}")
+            ]
+            |> List.flatten()
+            |> Enum.join("\n")
+          ]
+
+      effective_ids != [] ->
+        append_requirement_list(blocks, "Waived Requirements", effective_ids)
+
+      true ->
+        blocks
+    end
+  end
 
   defp findings_block(%{findings: []}), do: "Findings:\n  none"
 

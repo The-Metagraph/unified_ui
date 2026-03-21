@@ -143,6 +143,8 @@ defmodule Unified.SpecCompliance.Compliance do
         concrete: summary_counts.concrete,
         status_counts: status_counts,
         blocking_requirement_ids: blocking_requirement_ids(findings),
+        waived_requirement_ids: requirement_ids_for_status(results, :waived),
+        waived_source_requirement_ids: requirement_ids_for_status(results, :waived, "concrete"),
         finding_counts_by_code: finding_counts_by_code(findings),
         ci_enforcement: manifest["ci_enforcement"],
         skipped_commands: Enum.count(findings, &((&1[:code] || &1["code"]) == "command_skipped"))
@@ -316,6 +318,20 @@ defmodule Unified.SpecCompliance.Compliance do
     |> Enum.map(&(&1[:requirement_id] || &1["requirement_id"]))
     |> Enum.reject(&is_nil/1)
     |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  defp requirement_ids_for_status(results, status) do
+    requirement_ids_for_status(results, status, nil)
+  end
+
+  defp requirement_ids_for_status(results, status, entry_type) do
+    results
+    |> Enum.filter(fn result ->
+      result.effective_status == status and
+        (is_nil(entry_type) or result.entry_type == entry_type)
+    end)
+    |> Enum.map(& &1.requirement_id)
     |> Enum.sort()
   end
 
