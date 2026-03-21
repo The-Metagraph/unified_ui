@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - Inspection surfaces should make the Phoenix and Elm split reviewable instead of hiding server state, frontend state, or canonical mapping details.
 - Native and canonical continuity should be validated explicitly so the package does not drift into separate direct-native and canonical experiences.
 
-[ ] 5 Phase 5 - Native Styling, Runtime Inspection, and Native-IUR Continuity
+[x] 5 Phase 5 - Native Styling, Runtime Inspection, and Native-IUR Continuity
   Implement native theming and styling, cross-runtime inspection surfaces, and deterministic continuity between direct native and canonical rendering paths.
 
   [x] 5.1 Section - Native Styling and Theming Surface
@@ -81,19 +81,19 @@ Back to index: [README](./README.md)
       [x] 5.4.1.2 Subtask - Create canonical-rendered styling examples that exercise equivalent theme and style meaning through `UnifiedIUR`.
       [x] 5.4.1.3 Subtask - Create comparison artifacts that show resolved style state, frontend realization state, and continuity outcomes side by side.
 
-  [ ] 5.5 Section - Phase 5 Integration Tests
+  [x] 5.5 Section - Phase 5 Integration Tests
     Validate styling, theming, inspection surfaces, and native-IUR continuity end to end.
 
-    [ ] 5.5.1 Task - Styling and theming integration scenarios
+    [x] 5.5.1 Task - Styling and theming integration scenarios
       Verify the style and theme system behaves coherently across the server and frontend runtimes.
 
-      [ ] 5.5.1.1 Subtask - Verify server-side style resolution and frontend realization produce deterministic results for the same widget state.
-      [ ] 5.5.1.2 Subtask - Verify themes, tokens, and state variants preserve canonical styling meaning for both native and canonical paths.
-      [ ] 5.5.1.3 Subtask - Verify invalid style combinations, unresolved tokens, and theme drift fail with actionable diagnostics.
+      [x] 5.5.1.1 Subtask - Verify server-side style resolution and frontend realization produce deterministic results for the same widget state.
+      [x] 5.5.1.2 Subtask - Verify themes, tokens, and state variants preserve canonical styling meaning for both native and canonical paths.
+      [x] 5.5.1.3 Subtask - Verify invalid style combinations, unresolved tokens, and theme drift fail with actionable diagnostics.
 
-    [ ] 5.5.2 Task - Continuity and inspection integration scenarios
+    [x] 5.5.2 Task - Continuity and inspection integration scenarios
       Verify maintainers can inspect and compare native versus canonical behavior without hidden runtime seams.
 
-      [ ] 5.5.2.1 Subtask - Verify inspection surfaces expose widget catalogs, resolved style state, and frontend realization state.
-      [ ] 5.5.2.2 Subtask - Verify continuity reports detect mismatches between direct native and canonical rendering paths.
-      [ ] 5.5.2.3 Subtask - Verify styling-heavy examples remain reviewable through comparison artifacts and package-facing tooling.
+      [x] 5.5.2.1 Subtask - Verify inspection surfaces expose widget catalogs, resolved style state, and frontend realization state.
+      [x] 5.5.2.2 Subtask - Verify continuity reports detect mismatches between direct native and canonical rendering paths.
+      [x] 5.5.2.3 Subtask - Verify styling-heavy examples remain reviewable through comparison artifacts and package-facing tooling.
