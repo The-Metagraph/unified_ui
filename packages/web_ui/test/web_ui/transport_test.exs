@@ -61,7 +61,7 @@ defmodule WebUi.TransportTest do
              )
 
     assert envelope.kind == :event
-    assert envelope.runtime_id == "bridge-runtime"
+    assert envelope.metadata.runtime_id == "bridge-runtime"
     assert envelope.payload.family == :navigation
     assert envelope.payload.runtime_event == "navigation:open_settings"
   end

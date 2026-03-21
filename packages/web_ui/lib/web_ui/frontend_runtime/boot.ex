@@ -3,7 +3,7 @@ defmodule WebUi.FrontendRuntime.Boot do
   Frontend hydration and boot diagnostics.
   """
 
-  alias WebUi.FrontendRuntime.{Error, Model}
+  alias WebUi.FrontendRuntime.{Error, Message, Model}
 
   @required_fields ~w[runtime_id title source_kind boundary_mode tree local_state diagnostics metadata]a
 
@@ -36,6 +36,27 @@ defmodule WebUi.FrontendRuntime.Boot do
 
   def hydrate(_payload) do
     {:error, Error.new(:invalid_hydration_payload, "Expected hydration payload to be a map")}
+  end
+
+  @spec hydrate_message(map()) :: {:ok, Model.t()} | {:error, Error.t()}
+  def hydrate_message(message) when is_map(message) do
+    with {:ok, %{kind: :hydrate, payload: payload}} <- Message.from_payload(message) do
+      hydrate(payload)
+    else
+      {:ok, %{kind: other_kind}} ->
+        {:error,
+         Error.new(
+           :invalid_boot_order,
+           "Expected a hydrate message before other frontend messages",
+           %{
+             kind: other_kind
+           }
+         )}
+
+      {:error, reason} ->
+        {:error,
+         Error.new(:invalid_hydration_payload, "Invalid hydration message", %{reason: reason})}
+    end
   end
 
   defp fetch(map, key) do

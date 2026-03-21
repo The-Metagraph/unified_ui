@@ -3,7 +3,7 @@ defmodule WebUi.FrontendRuntime.Bridge do
   Browser bridge helpers for outgoing interaction envelopes.
   """
 
-  alias WebUi.FrontendRuntime.Model
+  alias WebUi.FrontendRuntime.{Message, Model}
   alias WebUi.Transport
 
   @spec outgoing_interaction(Model.t(), keyword() | map()) :: {:ok, map()} | {:error, term()}
@@ -17,5 +17,10 @@ defmodule WebUi.FrontendRuntime.Bridge do
     with {:ok, translation} <- Transport.from_native_event(attrs) do
       {:ok, WebUi.Transport.Bridge.event_message(model, translation)}
     end
+  end
+
+  @spec incoming_message(map()) :: {:ok, Message.t()} | {:error, term()}
+  def incoming_message(payload) do
+    Message.from_payload(payload)
   end
 end

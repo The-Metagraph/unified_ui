@@ -3,11 +3,11 @@ defmodule WebUi.FrontendRuntime do
   Elm-facing frontend runtime scaffold for `web_ui`.
   """
 
-  alias WebUi.FrontendRuntime.{Boot, Bridge, Error, Model}
+  alias WebUi.FrontendRuntime.{Boot, Bridge, Error, Message, Model}
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, Boot, Bridge, Model, Error]
+    [__MODULE__, Boot, Bridge, Message, Model, Error]
   end
 
   @spec capabilities() :: [atom()]

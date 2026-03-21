@@ -4,12 +4,12 @@ defmodule WebUi.ServerRuntime do
   """
 
   alias UnifiedIUR.Element
-  alias WebUi.ServerRuntime.{Error, State, ViewState}
+  alias WebUi.ServerRuntime.{Error, EventRouter, State, SyncBoundary, ViewState}
   alias WebUi.Widget
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, State, ViewState, Error]
+    [__MODULE__, State, ViewState, EventRouter, SyncBoundary, Error]
   end
 
   @spec mount_native_screen(map(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
@@ -36,20 +36,21 @@ defmodule WebUi.ServerRuntime do
     ViewState.to_frontend_payload(state)
   end
 
+  @spec frontend_envelope(State.t()) :: map()
+  def frontend_envelope(%State{} = state) do
+    SyncBoundary.hydration_envelope(state)
+  end
+
+  @spec receive_frontend_message(State.t(), map()) :: {:ok, map()} | {:error, Error.t()}
+  def receive_frontend_message(%State{} = state, payload) do
+    SyncBoundary.receive_frontend_message(state, payload)
+  end
+
   @spec handle_event(State.t(), map()) :: {:ok, State.t()} | {:error, Error.t()}
-  def handle_event(%State{} = state, %{boundary: :local} = translation) do
-    {:ok, State.record_event(state, %{mode: :local, family: translation.family})}
-  end
-
-  def handle_event(%State{} = state, %{boundary: :boundary, signal: signal} = translation) do
-    {:ok,
-     state
-     |> State.record_event(%{mode: :boundary, family: translation.family})
-     |> State.record_boundary_signal(signal)}
-  end
-
-  def handle_event(_state, _translation) do
-    {:error, Error.new(:invalid_event, "Unsupported runtime event translation")}
+  def handle_event(%State{} = state, translation) do
+    with {:ok, route} <- EventRouter.route(state, translation) do
+      apply_route(state, route)
+    end
   end
 
   defp validate_screen(%{id: _id, title: _title, root: %Widget{}}), do: :ok
@@ -75,5 +76,20 @@ defmodule WebUi.ServerRuntime do
       event_log: [],
       metadata: Map.get(screen, :metadata, %{})
     }
+  end
+
+  defp apply_route(%State{} = state, %{route: :local_runtime, family: family}) do
+    {:ok, State.record_event(state, %{mode: :local, family: family})}
+  end
+
+  defp apply_route(%State{} = state, %{
+         route: :canonical_boundary,
+         family: family,
+         translation: translation
+       }) do
+    {:ok,
+     state
+     |> State.record_event(%{mode: :boundary, family: family})
+     |> State.record_boundary_signal(translation.signal)}
   end
 end
