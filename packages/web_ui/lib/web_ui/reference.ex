@@ -8,6 +8,11 @@ defmodule WebUi.Reference do
     WebUi.Widgets.families()
   end
 
+  @spec widget_contract() :: map()
+  def widget_contract do
+    WebUi.Widget.contract()
+  end
+
   @spec runtime_modules() :: [module()]
   def runtime_modules do
     WebUi.Runtime.modules()
@@ -31,18 +36,25 @@ defmodule WebUi.Reference do
     WebUi.Runtime.assumptions()
   end
 
+  @spec browser_bridge_boundaries() :: [atom()]
+  def browser_bridge_boundaries do
+    [:hydration_envelope, :event_envelope, :acknowledgement]
+  end
+
   @spec package_reference() :: map()
   def package_reference do
     %{
       package: WebUi,
       widgets: %{
         families: widget_families(),
-        modules: WebUi.Widgets.modules()
+        modules: WebUi.Widgets.modules(),
+        contract: widget_contract()
       },
       runtime: %{
         capabilities: WebUi.Runtime.capabilities(),
         modules: runtime_modules(),
-        assumptions: runtime_assumptions()
+        assumptions: runtime_assumptions(),
+        bridge_boundaries: browser_bridge_boundaries()
       },
       renderer: %{
         accepts: WebUi.Renderer.accepts(),

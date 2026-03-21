@@ -21,6 +21,7 @@ defmodule WebUi.Widgets do
   def text(id, content, opts \\ []) do
     Widget.new(:text,
       id: id,
+      metadata: %{label: "text"},
       attributes: %{content: content},
       styles: Keyword.get(opts, :styles, %{})
     )
@@ -30,6 +31,8 @@ defmodule WebUi.Widgets do
   def button(id, label, opts \\ []) do
     Widget.new(:button,
       id: id,
+      metadata: %{label: label, role: :action},
+      state: %{disabled: Keyword.get(opts, :disabled, false)},
       attributes: %{label: label},
       styles: Keyword.get(opts, :styles, %{}),
       events: build_events(opts)
@@ -40,6 +43,8 @@ defmodule WebUi.Widgets do
   def stack(id, children, opts \\ []) do
     Widget.new(:stack,
       id: id,
+      metadata: %{label: "stack"},
+      slots: [:default],
       attributes: %{direction: Keyword.get(opts, :direction, :column)},
       styles: Keyword.get(opts, :styles, %{}),
       children: children
@@ -50,6 +55,8 @@ defmodule WebUi.Widgets do
   def panel(id, title, children, opts \\ []) do
     Widget.new(:panel,
       id: id,
+      metadata: %{label: title, role: :panel},
+      slots: [:header, :body],
       attributes: %{title: title},
       styles: Keyword.get(opts, :styles, %{}),
       children: children
