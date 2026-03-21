@@ -150,6 +150,8 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.status_counts.waived == 79
     assert compliance_report.summary.status_counts.planned == 0
     assert compliance_report.summary.aliases == 48
+    assert length(compliance_report.summary.waived_requirement_ids) == 79
+    assert length(compliance_report.summary.waived_source_requirement_ids) == 37
     assert compliance_report.findings == []
 
     native_runtime_requirement =
@@ -160,6 +162,8 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     assert native_runtime_requirement.effective_status == :waived
     assert native_runtime_requirement.compliant?
+
+    assert "web_ui.package.native_runtime_library" in compliance_report.summary.waived_source_requirement_ids
 
     refute Enum.any?(
              compliance_report.findings,
