@@ -56,7 +56,8 @@ defmodule WebUi.Reference do
         capabilities: WebUi.Runtime.capabilities(),
         modules: runtime_modules(),
         assumptions: runtime_assumptions(),
-        bridge_boundaries: browser_bridge_boundaries()
+        bridge_boundaries: browser_bridge_boundaries(),
+        frontend_capabilities: WebUi.FrontendRuntime.capabilities()
       },
       renderer: %{
         accepts: WebUi.Renderer.accepts(),

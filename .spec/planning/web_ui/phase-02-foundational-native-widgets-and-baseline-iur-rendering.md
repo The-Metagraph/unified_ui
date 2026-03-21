@@ -36,22 +36,22 @@ Back to index: [README](./README.md)
       [x] 2.1.2.2 Subtask - Implement baseline navigation widgets such as tabs, menu-like navigation, and command-triggering controls.
       [x] 2.1.2.3 Subtask - Keep the initial form and navigation APIs ergonomic for direct native usage without weakening canonical parity requirements.
 
-  [ ] 2.2 Section - Foundational Server and Frontend Rendering Pipeline
+  [x] 2.2 Section - Foundational Server and Frontend Rendering Pipeline
     Implement the split rendering pipeline that makes foundational native widgets work coherently across Phoenix and Elm.
 
-    [ ] 2.2.1 Task - Implement server-side foundational view-state generation
+    [x] 2.2.1 Task - Implement server-side foundational view-state generation
       Define how the server runtime turns native widget declarations into authoritative frontend-view state.
 
-      [ ] 2.2.1.1 Subtask - Implement server-side view-model generation for foundational widgets, forms, and navigation primitives.
-      [ ] 2.2.1.2 Subtask - Define deterministic state shape for widget identity, slots, styles, and interaction wiring.
-      [ ] 2.2.1.3 Subtask - Keep server-generated view state stable enough for diff-friendly review and renderer diagnostics.
+      [x] 2.2.1.1 Subtask - Implement server-side view-model generation for foundational widgets, forms, and navigation primitives.
+      [x] 2.2.1.2 Subtask - Define deterministic state shape for widget identity, slots, styles, and interaction wiring.
+      [x] 2.2.1.3 Subtask - Keep server-generated view state stable enough for diff-friendly review and renderer diagnostics.
 
-    [ ] 2.2.2 Task - Implement frontend foundational widget realization
+    [x] 2.2.2 Task - Implement frontend foundational widget realization
       Define how the Elm runtime renders foundational server-provided widget state and local browser behavior.
 
-      [ ] 2.2.2.1 Subtask - Implement Elm view modules for foundational widgets and baseline form and navigation primitives.
-      [ ] 2.2.2.2 Subtask - Implement bounded local browser behavior for focus, editing, and simple interaction feedback.
-      [ ] 2.2.2.3 Subtask - Preserve the separation between frontend rendering concerns and server-side meaning or event authority.
+      [x] 2.2.2.1 Subtask - Implement Elm view modules for foundational widgets and baseline form and navigation primitives.
+      [x] 2.2.2.2 Subtask - Implement bounded local browser behavior for focus, editing, and simple interaction feedback.
+      [x] 2.2.2.3 Subtask - Preserve the separation between frontend rendering concerns and server-side meaning or event authority.
 
   [ ] 2.3 Section - Baseline Canonical IUR Rendering
     Implement the first canonical renderer path that maps foundational `UnifiedIUR` widgets into native `web_ui` widgets.

@@ -1,0 +1,89 @@
+defmodule WebUi.RenderPipelineTest do
+  use ExUnit.Case, async: true
+
+  test "server view state produces a deterministic foundational render tree" do
+    screen =
+      WebUi.Widgets.screen("native-workspace", "Native Workspace", [
+        WebUi.Widgets.content("workspace-header", [
+          WebUi.Widgets.text("workspace-title", "Workspace"),
+          WebUi.Widgets.tabs(
+            "workspace-tabs",
+            [
+              [id: :overview, label: "Overview", active: true],
+              [id: :activity, label: "Activity"]
+            ],
+            active_item: :overview,
+            on_navigate: %{intent: :switch_tab}
+          )
+        ]),
+        WebUi.Widgets.form("workspace-form", [
+          WebUi.Widgets.field_group("query-group", [
+            WebUi.Widgets.field(
+              "query-field",
+              WebUi.Widgets.text_input("query-input",
+                name: :query,
+                value: "Pascal",
+                on_focus: %{intent: :focus_query},
+                on_change: %{intent: :rename_query}
+              ),
+              name: :query,
+              label: "Search Query",
+              help: "Used for preview filtering"
+            )
+          ])
+        ])
+      ])
+
+    assert {:ok, state} = WebUi.Runtime.mount_native_screen(screen)
+
+    payload = WebUi.ServerRuntime.frontend_payload(state)
+    input_node = find_node(payload.tree, "query-input")
+
+    assert payload.tree.dom.tag == "div"
+    assert input_node.dom.tag == "input"
+    assert input_node.interactions.focusable?
+    assert input_node.interactions.editable?
+    assert input_node.diagnostics.event_names == [:change, :focus]
+  end
+
+  test "frontend realization layers bounded browser state onto the server render tree" do
+    screen =
+      WebUi.Widgets.screen("native-dashboard", "Native Dashboard", [
+        WebUi.Widgets.text_input("query-input",
+          name: :query,
+          value: "",
+          on_focus: %{intent: :focus_query}
+        )
+      ])
+
+    assert {:ok, state} = WebUi.Runtime.mount_native_screen(screen)
+    assert {:ok, model} = WebUi.Runtime.hydrate_frontend(state)
+
+    assert find_node(model.tree, "query-input").browser.focused? == false
+
+    assert {:ok, focused_model} =
+             WebUi.FrontendRuntime.put_local_state(model, :focused_id, "query-input")
+
+    assert {:ok, editing_model} =
+             WebUi.FrontendRuntime.put_local_state(focused_model, :editing_ids, ["query-input"])
+
+    query_node = find_node(editing_model.tree, "query-input")
+
+    assert query_node.tag == "input"
+    assert query_node.browser.focused?
+    assert query_node.browser.editing?
+    assert editing_model.render_tree == model.render_tree
+  end
+
+  defp find_node(node, id) when is_map(node) do
+    if node.id == id do
+      node
+    else
+      node.slots
+      |> Enum.flat_map(& &1.children)
+      |> Enum.find_value(&find_node(&1, id))
+    end
+  end
+
+  defp find_node(nil, _id), do: nil
+end

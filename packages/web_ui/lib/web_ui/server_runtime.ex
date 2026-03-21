@@ -4,12 +4,12 @@ defmodule WebUi.ServerRuntime do
   """
 
   alias UnifiedIUR.Element
-  alias WebUi.ServerRuntime.{Error, EventRouter, State, SyncBoundary, ViewState}
+  alias WebUi.ServerRuntime.{Error, EventRouter, RenderModel, State, SyncBoundary, ViewState}
   alias WebUi.Widget
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, State, ViewState, EventRouter, SyncBoundary, Error]
+    [__MODULE__, State, ViewState, RenderModel, EventRouter, SyncBoundary, Error]
   end
 
   @spec mount_native_screen(map(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}

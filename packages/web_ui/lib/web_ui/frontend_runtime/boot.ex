@@ -3,7 +3,7 @@ defmodule WebUi.FrontendRuntime.Boot do
   Frontend hydration and boot diagnostics.
   """
 
-  alias WebUi.FrontendRuntime.{Error, Message, Model}
+  alias WebUi.FrontendRuntime.{Error, Message, Model, Realization}
 
   @required_fields ~w[runtime_id title source_kind boundary_mode tree local_state diagnostics metadata]a
 
@@ -16,14 +16,18 @@ defmodule WebUi.FrontendRuntime.Boot do
 
     case missing do
       [] ->
+        render_tree = fetch(payload, :tree)
+        local_state = fetch(payload, :local_state)
+
         {:ok,
          %Model{
            runtime_id: fetch(payload, :runtime_id),
            title: fetch(payload, :title),
            source_kind: fetch(payload, :source_kind),
            boundary_mode: fetch(payload, :boundary_mode),
-           tree: fetch(payload, :tree),
-           local_state: fetch(payload, :local_state),
+           render_tree: render_tree,
+           tree: Realization.realize(render_tree, local_state),
+           local_state: local_state,
            diagnostics: fetch(payload, :diagnostics),
            metadata: fetch(payload, :metadata)
          }}

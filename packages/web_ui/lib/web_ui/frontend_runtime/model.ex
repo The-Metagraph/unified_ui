@@ -9,6 +9,7 @@ defmodule WebUi.FrontendRuntime.Model do
           title: String.t(),
           source_kind: :native | :canonical,
           boundary_mode: :native_local | :canonical_boundary,
+          render_tree: tree(),
           tree: tree(),
           local_state: map(),
           diagnostics: [map()],
@@ -19,8 +20,20 @@ defmodule WebUi.FrontendRuntime.Model do
             title: "",
             source_kind: :native,
             boundary_mode: :native_local,
+            render_tree: %{},
             tree: %{},
-            local_state: %{focused_id: nil, flash: nil},
+            local_state: %{focused_id: nil, editing_ids: [], flash: nil},
             diagnostics: [],
             metadata: %{}
+
+  @spec put_local_state(t(), atom(), term()) :: t()
+  def put_local_state(%__MODULE__{} = model, key, value) do
+    local_state = Map.put(model.local_state, key, value)
+
+    %{
+      model
+      | local_state: local_state,
+        tree: WebUi.FrontendRuntime.Realization.realize(model.render_tree, local_state)
+    }
+  end
 end
