@@ -71,6 +71,30 @@ defmodule WebUi.BridgeTest do
              WebUi.FrontendRuntime.Bridge.incoming_message(event_message)
   end
 
+  test "frontend bridge infers canonical boundary translation for canonical models" do
+    model = %Model{
+      runtime_id: "canonical-runtime",
+      title: "Canonical Screen",
+      source_kind: :canonical,
+      boundary_mode: :canonical_boundary,
+      tree: %{},
+      local_state: %{focused_id: nil, flash: nil},
+      diagnostics: [],
+      metadata: %{}
+    }
+
+    {:ok, event_message} =
+      WebUi.FrontendRuntime.Bridge.outgoing_interaction(model,
+        family: :command,
+        intent: :run,
+        widget_id: :ops_command_palette
+      )
+
+    assert event_message.metadata.boundary == :boundary
+    assert event_message.payload.family == :command
+    assert event_message.payload.type == "web_ui.command.run"
+  end
+
   test "frontend runtime accepts canonical hydration envelopes" do
     element = Element.new(:widget, :text, id: :canonical_message, attributes: %{content: "Hi"})
     assert {:ok, state} = WebUi.Runtime.mount_iur_screen(element)

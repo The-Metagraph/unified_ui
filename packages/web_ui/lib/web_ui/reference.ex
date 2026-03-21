@@ -29,6 +29,7 @@ defmodule WebUi.Reference do
       direct_native: [:native_widgets, :phoenix_server_runtime, :elm_frontend_runtime],
       display_systems: WebUi.Layout.responsibilities(),
       layering: WebUi.Layer.responsibilities(),
+      canonical_signals: WebUi.Signals.responsibilities(),
       canonical_renderer: WebUi.Renderer.responsibilities()
     }
   end
@@ -75,6 +76,12 @@ defmodule WebUi.Reference do
         accepts: WebUi.Renderer.accepts(),
         supported_kinds: WebUi.Renderer.supported_kinds(),
         responsibilities: WebUi.Renderer.responsibilities()
+      },
+      signals: %{
+        families: WebUi.Signals.families(),
+        local_default_families: WebUi.Signals.local_default_families(),
+        boundary_crossing_families: WebUi.Signals.boundary_crossing_families(),
+        responsibilities: WebUi.Signals.responsibilities()
       },
       transport: %{
         modes: WebUi.Transport.modes(),

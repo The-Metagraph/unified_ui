@@ -61,6 +61,14 @@ defmodule WebUi.Runtime do
   @spec handle_native_event(WebUi.ServerRuntime.State.t(), keyword() | map()) ::
           {:ok, WebUi.ServerRuntime.State.t()} | {:error, WebUi.ServerRuntime.Error.t()}
   def handle_native_event(runtime_state, attrs) do
+    attrs =
+      attrs
+      |> Enum.into(%{})
+      |> Map.put_new(:source_kind, runtime_state.source_kind)
+      |> Map.put_new(:boundary_mode, runtime_state.boundary_mode)
+      |> Map.put_new(:runtime_id, runtime_state.runtime_id)
+      |> Map.put_new(:screen, runtime_state.screen_id)
+
     with {:ok, translation} <- Transport.from_native_event(attrs) do
       ServerRuntime.handle_event(runtime_state, translation)
     end

@@ -4,6 +4,7 @@ defmodule WebUi.Transport do
   """
 
   alias Jido.Signal
+  alias WebUi.Transport.Signals, as: SignalTranslations
 
   @type boundary :: :local | :boundary
 
@@ -14,26 +15,46 @@ defmodule WebUi.Transport do
 
   @spec families() :: [atom()]
   def families do
-    [:click, :change, :submit, :navigation]
+    SignalTranslations.families()
   end
 
   @spec integration_points() :: [atom()]
   def integration_points do
-    [:frontend_bridge, :server_runtime, :canonical_boundary]
+    [:frontend_bridge, :server_runtime, :canonical_boundary, :signal_translation]
   end
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, WebUi.Transport.Signals, WebUi.Transport.Bridge]
+    [__MODULE__, WebUi.Signals, WebUi.Transport.Signals, WebUi.Transport.Bridge]
+  end
+
+  @spec local_default_families() :: [atom()]
+  def local_default_families do
+    SignalTranslations.local_default_families()
+  end
+
+  @spec boundary_crossing_families() :: [atom()]
+  def boundary_crossing_families do
+    SignalTranslations.boundary_crossing_families()
   end
 
   @spec from_native_event(keyword() | map()) :: {:ok, map()} | {:error, term()}
   def from_native_event(attrs) do
-    WebUi.Transport.Signals.from_native_event(attrs)
+    SignalTranslations.from_native_event(attrs)
+  end
+
+  @spec from_boundary_signal(Signal.t() | map()) :: {:ok, map()} | {:error, term()}
+  def from_boundary_signal(signal) do
+    SignalTranslations.from_boundary_signal(signal)
   end
 
   @spec to_server_message(Signal.t() | map()) :: {:ok, map()} | {:error, term()}
   def to_server_message(event) do
-    WebUi.Transport.Signals.to_server_message(event)
+    SignalTranslations.to_server_message(event)
+  end
+
+  @spec cloud_event_envelope(Signal.t()) :: map()
+  def cloud_event_envelope(signal) do
+    SignalTranslations.cloud_event_envelope(signal)
   end
 end

@@ -20,22 +20,22 @@ Back to index: [README](./README.md)
 [ ] 4 Phase 4 - Canonical Boundary Transport and Phoenix-Elm Event Translation
   Implement the canonical boundary transport model, split-runtime event translation surfaces, and diagnostics that let `web_ui` speak ecosystem-wide canonical event meaning.
 
-  [ ] 4.1 Section - Canonical Event Translation Backbone
+  [x] 4.1 Section - Canonical Event Translation Backbone
     Implement the translation layer between native Phoenix-and-Elm interactions and canonical `Jido.Signal` meaning.
 
-    [ ] 4.1.1 Task - Implement canonical signal translation primitives
+    [x] 4.1.1 Task - Implement canonical signal translation primitives
       Define the package-local translation model for canonical event families, payload meaning, and runtime action mapping.
 
-      [ ] 4.1.1.1 Subtask - Implement translation helpers for click, change, submit, open, close, navigation, selection, and command interaction families.
-      [ ] 4.1.1.2 Subtask - Define how native Phoenix-and-Elm events map into canonical `Jido.Signal` values and CloudEvents-compatible envelopes.
-      [ ] 4.1.1.3 Subtask - Define how canonical boundary events map back into server-side runtime actions, frontend updates, and widget behavior.
+      [x] 4.1.1.1 Subtask - Implement translation helpers for click, change, submit, open, close, navigation, selection, and command interaction families.
+      [x] 4.1.1.2 Subtask - Define how native Phoenix-and-Elm events map into canonical `Jido.Signal` values and CloudEvents-compatible envelopes.
+      [x] 4.1.1.3 Subtask - Define how canonical boundary events map back into server-side runtime actions, frontend updates, and widget behavior.
 
-    [ ] 4.1.2 Task - Implement direct-native and canonical event convergence
+    [x] 4.1.2 Task - Implement direct-native and canonical event convergence
       Ensure direct native interactions and canonical-rendered interactions share translation rules where package boundaries are crossed.
 
-      [ ] 4.1.2.1 Subtask - Define which native interactions remain package-local and which cross the canonical boundary.
-      [ ] 4.1.2.2 Subtask - Keep direct-native event handling ergonomic without weakening the canonical translation contract.
-      [ ] 4.1.2.3 Subtask - Verify canonical translation does not require separate transport or runtime stacks for native and canonical screens.
+      [x] 4.1.2.1 Subtask - Define which native interactions remain package-local and which cross the canonical boundary.
+      [x] 4.1.2.2 Subtask - Keep direct-native event handling ergonomic without weakening the canonical translation contract.
+      [x] 4.1.2.3 Subtask - Verify canonical translation does not require separate transport or runtime stacks for native and canonical screens.
 
   [ ] 4.2 Section - Server and Frontend Event Flow
     Implement the runtime event-handling flow that preserves Phoenix authority while supporting bounded Elm participation.

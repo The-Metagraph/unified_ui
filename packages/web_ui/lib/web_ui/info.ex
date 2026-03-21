@@ -49,6 +49,7 @@ defmodule WebUi.Info do
   def bridge_summary do
     %{
       boundaries: WebUi.Reference.browser_bridge_boundaries(),
+      signal_families: WebUi.Signals.families(),
       frontend_modules: WebUi.Frontend.modules(),
       server_modules: WebUi.Server.modules()
     }

@@ -13,6 +13,8 @@ defmodule WebUi.FrontendRuntime.Bridge do
       |> Enum.into(%{})
       |> Map.put_new(:screen, model.title)
       |> Map.put_new(:runtime_id, model.runtime_id)
+      |> Map.put_new(:source_kind, model.source_kind)
+      |> Map.put_new(:boundary_mode, model.boundary_mode)
 
     with {:ok, translation} <- Transport.from_native_event(attrs) do
       {:ok, WebUi.Transport.Bridge.event_message(model, translation)}
