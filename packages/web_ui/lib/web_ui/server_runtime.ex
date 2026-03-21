@@ -4,12 +4,12 @@ defmodule WebUi.ServerRuntime do
   """
 
   alias UnifiedIUR.Element
-  alias WebUi.ServerRuntime.{Error, EventRouter, State, SyncBoundary, ViewState}
+  alias WebUi.ServerRuntime.{Error, EventRouter, RenderModel, State, SyncBoundary, ViewState}
   alias WebUi.Widget
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, State, ViewState, EventRouter, SyncBoundary, Error]
+    [__MODULE__, State, ViewState, RenderModel, EventRouter, SyncBoundary, Error]
   end
 
   @spec mount_native_screen(map(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
@@ -21,14 +21,23 @@ defmodule WebUi.ServerRuntime do
 
   @spec mount_iur_screen(Element.t(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
   def mount_iur_screen(%Element{} = element, opts \\ []) do
-    screen = %{
-      id: element.id || "canonical-screen",
-      title: Keyword.get(opts, :title, "Canonical Screen"),
-      root: WebUi.Renderer.render(element),
-      metadata: %{source: :canonical, bridge: :phoenix_elm}
-    }
+    with {:ok, root} <- WebUi.Renderer.render(element) do
+      screen = %{
+        id: element.id || "canonical-screen",
+        title: Keyword.get(opts, :title, "Canonical Screen"),
+        root: root,
+        metadata: %{source: :canonical, bridge: :phoenix_elm}
+      }
 
-    {:ok, build_state(:canonical, screen, element, opts)}
+      {:ok, build_state(:canonical, screen, element, opts)}
+    else
+      {:error, error} ->
+        {:error,
+         Error.new(:invalid_canonical_screen, error.message, %{
+           renderer_code: error.code,
+           renderer_details: error.details
+         })}
+    end
   end
 
   @spec frontend_payload(State.t()) :: map()

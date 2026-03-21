@@ -37,6 +37,9 @@ defmodule WebUi.Info do
       metadata: widget.metadata,
       state: widget.state,
       slots: widget.slots,
+      slot_children:
+        Map.new(widget.slot_children, fn {slot, children} -> {slot, length(children)} end),
+      attribute_keys: Map.keys(widget.attributes),
       style_keys: Map.keys(widget.styles),
       event_keys: Map.keys(widget.events)
     }

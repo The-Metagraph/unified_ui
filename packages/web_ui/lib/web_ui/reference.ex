@@ -47,14 +47,17 @@ defmodule WebUi.Reference do
       package: WebUi,
       widgets: %{
         families: widget_families(),
+        kinds: WebUi.Widgets.kinds(),
         modules: WebUi.Widgets.modules(),
-        contract: widget_contract()
+        contract: widget_contract(),
+        validation_state: WebUi.Widgets.validation_state()
       },
       runtime: %{
         capabilities: WebUi.Runtime.capabilities(),
         modules: runtime_modules(),
         assumptions: runtime_assumptions(),
-        bridge_boundaries: browser_bridge_boundaries()
+        bridge_boundaries: browser_bridge_boundaries(),
+        frontend_capabilities: WebUi.FrontendRuntime.capabilities()
       },
       renderer: %{
         accepts: WebUi.Renderer.accepts(),
