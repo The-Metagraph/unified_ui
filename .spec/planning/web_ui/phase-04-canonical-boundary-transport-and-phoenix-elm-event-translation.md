@@ -64,15 +64,15 @@ Back to index: [README](./README.md)
       [x] 4.3.1.2 Subtask - Implement validation for malformed canonical signal families, missing event context, and invalid payload mapping.
       [x] 4.3.1.3 Subtask - Implement diagnostics that clearly distinguish native local handling failures from canonical-boundary translation failures.
 
-  [ ] 4.4 Section - Maintained Boundary Examples
+  [x] 4.4 Section - Maintained Boundary Examples
     Implement maintained examples that demonstrate direct-native and canonical boundary event translation.
 
-    [ ] 4.4.1 Task - Implement transport-focused examples
+    [x] 4.4.1 Task - Implement transport-focused examples
       Provide reference examples that exercise direct native events, canonical-boundary translation, and mixed runtime flows across Phoenix and Elm.
 
-      [ ] 4.4.1.1 Subtask - Create direct-native examples that keep events package-local while preserving canonical interaction family meaning.
-      [ ] 4.4.1.2 Subtask - Create canonical-rendered examples that emit and consume boundary events through canonical translation.
-      [ ] 4.4.1.3 Subtask - Create mixed examples that compare native and canonical event paths for the same workflow across the server and frontend split.
+      [x] 4.4.1.1 Subtask - Create direct-native examples that keep events package-local while preserving canonical interaction family meaning.
+      [x] 4.4.1.2 Subtask - Create canonical-rendered examples that emit and consume boundary events through canonical translation.
+      [x] 4.4.1.3 Subtask - Create mixed examples that compare native and canonical event paths for the same workflow across the server and frontend split.
 
   [ ] 4.5 Section - Phase 4 Integration Tests
     Validate event translation, split-runtime participation, and canonical transport behavior end to end.
