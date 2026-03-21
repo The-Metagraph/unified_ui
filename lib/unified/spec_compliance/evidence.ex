@@ -28,11 +28,14 @@ defmodule Unified.SpecCompliance.Evidence do
 
   @spec run_with_cache([map()], String.t(), Keyword.t(), String.t(), map()) :: {[map()], map()}
   def run_with_cache(evidence, root, opts, requirement_id, cache) do
-    run_commands? = Keyword.get(opts, :run_commands, true)
+    command_opts = %{
+      run_commands: Keyword.get(opts, :run_commands, true),
+      shell: Keyword.get(opts, :shell)
+    }
 
     Enum.reduce(evidence, {[], cache}, fn item, {findings, acc_cache} ->
       {item_findings, next_cache} =
-        run_item_with_cache(item, root, run_commands?, requirement_id, acc_cache)
+        run_item_with_cache(item, root, command_opts, requirement_id, acc_cache)
 
       {findings ++ item_findings, next_cache}
     end)
@@ -101,7 +104,7 @@ defmodule Unified.SpecCompliance.Evidence do
     ]
   end
 
-  defp run_item(%{"kind" => "path_exists", "path" => path}, root, _run_commands?, requirement_id) do
+  defp run_item(%{"kind" => "path_exists", "path" => path}, root, _command_opts, requirement_id) do
     absolute_path = Path.expand(path, root)
 
     if File.exists?(absolute_path) do
@@ -119,7 +122,7 @@ defmodule Unified.SpecCompliance.Evidence do
     end
   end
 
-  defp run_item(%{"kind" => "path_absent", "path" => path}, root, _run_commands?, requirement_id) do
+  defp run_item(%{"kind" => "path_absent", "path" => path}, root, _command_opts, requirement_id) do
     absolute_path = Path.expand(path, root)
 
     if File.exists?(absolute_path) do
@@ -140,7 +143,7 @@ defmodule Unified.SpecCompliance.Evidence do
   defp run_item(
          %{"kind" => "path_glob_nonempty", "glob" => glob},
          root,
-         _run_commands?,
+         _command_opts,
          requirement_id
        ) do
     if root |> Path.join(glob) |> Path.wildcard() |> Enum.any?() do
@@ -158,7 +161,7 @@ defmodule Unified.SpecCompliance.Evidence do
     end
   end
 
-  defp run_item(%{"kind" => "command"} = item, _root, false, requirement_id) do
+  defp run_item(%{"kind" => "command"} = item, _root, %{run_commands: false}, requirement_id) do
     [
       %{
         code: "command_skipped",
@@ -171,81 +174,101 @@ defmodule Unified.SpecCompliance.Evidence do
     ]
   end
 
-  defp run_item(%{"kind" => "command"} = item, root, true, requirement_id) do
+  defp run_item(
+         %{"kind" => "command"} = item,
+         root,
+         %{run_commands: true, shell: shell_override},
+         requirement_id
+       ) do
     cwd = Path.expand(item["cwd"] || ".", root)
     expected_exit_status = item["expect_exit_status"] || 0
     expected_stdout = item["expect_stdout_contains"]
 
-    {output, exit_status} =
-      System.cmd("zsh", ["-lc", item["run"]], cd: cwd, stderr_to_stdout: true)
+    case command_shell(root, shell_override) do
+      {:ok, shell} ->
+        {output, exit_status} =
+          System.cmd(shell, ["-c", item["run"]], cd: cwd, stderr_to_stdout: true)
 
-    findings = []
+        findings = []
 
-    findings =
-      if exit_status == expected_exit_status do
-        findings
-      else
+        findings =
+          if exit_status == expected_exit_status do
+            findings
+          else
+            [
+              %{
+                code: "command_exit_status_mismatch",
+                severity: :error,
+                requirement_id: requirement_id,
+                command: item["run"],
+                message:
+                  "Expected command #{inspect(item["run"])} to exit with #{expected_exit_status}, got #{exit_status}"
+              }
+              | findings
+            ]
+          end
+
+        findings =
+          if is_binary(expected_stdout) and not String.contains?(output, expected_stdout) do
+            [
+              %{
+                code: "command_stdout_mismatch",
+                severity: :error,
+                requirement_id: requirement_id,
+                command: item["run"],
+                message:
+                  "Expected command #{inspect(item["run"])} output to include #{inspect(expected_stdout)}"
+              }
+              | findings
+            ]
+          else
+            findings
+          end
+
+        Enum.reverse(findings)
+
+      {:error, message} ->
         [
           %{
-            code: "command_exit_status_mismatch",
+            code: "command_shell_unavailable",
             severity: :error,
             requirement_id: requirement_id,
             command: item["run"],
-            message:
-              "Expected command #{inspect(item["run"])} to exit with #{expected_exit_status}, got #{exit_status}"
+            message: message
           }
-          | findings
         ]
-      end
-
-    findings =
-      if is_binary(expected_stdout) and not String.contains?(output, expected_stdout) do
-        [
-          %{
-            code: "command_stdout_mismatch",
-            severity: :error,
-            requirement_id: requirement_id,
-            command: item["run"],
-            message:
-              "Expected command #{inspect(item["run"])} output to include #{inspect(expected_stdout)}"
-          }
-          | findings
-        ]
-      else
-        findings
-      end
-
-    Enum.reverse(findings)
+    end
   end
 
-  defp run_item(_item, _root, _run_commands?, _requirement_id), do: []
+  defp run_item(_item, _root, _command_opts, _requirement_id), do: []
 
   defp run_item_with_cache(
          %{"kind" => "command"} = item,
          root,
-         run_commands?,
+         command_opts,
          requirement_id,
          cache
        ) do
-    key = command_cache_key(item, root, run_commands?)
+    key = command_cache_key(item, root, command_opts)
 
     case Map.fetch(cache, key) do
       {:ok, cached_findings} ->
         {restore_requirement_id(cached_findings, requirement_id), cache}
 
       :error ->
-        findings = run_item(item, root, run_commands?, requirement_id)
+        findings = run_item(item, root, command_opts, requirement_id)
         {findings, Map.put(cache, key, strip_requirement_id(findings))}
     end
   end
 
-  defp run_item_with_cache(item, root, run_commands?, requirement_id, cache) do
-    {run_item(item, root, run_commands?, requirement_id), cache}
+  defp run_item_with_cache(item, root, command_opts, requirement_id, cache) do
+    {run_item(item, root, command_opts, requirement_id), cache}
   end
 
-  defp command_cache_key(item, root, run_commands?) do
+  defp command_cache_key(item, root, command_opts) do
     {
-      run_commands?,
+      command_opts.run_commands,
+      command_opts.shell,
       Path.expand(item["cwd"] || ".", root),
       item["run"],
       item["expect_exit_status"] || 0,
@@ -259,6 +282,51 @@ defmodule Unified.SpecCompliance.Evidence do
 
   defp restore_requirement_id(findings, requirement_id) do
     Enum.map(findings, &Map.put(&1, :requirement_id, requirement_id))
+  end
+
+  defp command_shell(root, shell_override) do
+    candidates =
+      [
+        shell_override,
+        System.get_env("SHELL"),
+        System.find_executable("zsh"),
+        System.find_executable("bash"),
+        System.find_executable("sh")
+      ]
+      |> Enum.flat_map(&normalize_shell_candidate(&1, root))
+      |> Enum.uniq()
+
+    case Enum.find(candidates, &File.exists?/1) do
+      nil ->
+        {:error,
+         "No supported command shell was found. Expected one of SHELL, zsh, bash, or sh to be available"}
+
+      shell ->
+        {:ok, shell}
+    end
+  end
+
+  defp normalize_shell_candidate(nil, _root), do: []
+  defp normalize_shell_candidate("", _root), do: []
+
+  defp normalize_shell_candidate(shell, root) do
+    shell
+    |> String.trim()
+    |> case do
+      "" ->
+        []
+
+      value ->
+        expanded =
+          if Path.type(value) == :absolute do
+            value
+          else
+            Path.expand(value, root)
+          end
+
+        [value, System.find_executable(value), expanded]
+        |> Enum.filter(&(&1 != ""))
+    end
   end
 
   defp require_string(map, key, file, requirement_id, code) do
