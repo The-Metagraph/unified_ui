@@ -71,15 +71,15 @@ Back to index: [README](./README.md)
       [x] 3.3.2.2 Subtask - Define the bounded frontend-local behavior needed for smooth browser interaction without redefining canonical meaning.
       [x] 3.3.2.3 Subtask - Add coordination diagnostics for mismatched advanced widget state, layered invalidation, and stale frontend realization.
 
-  [ ] 3.4 Section - Advanced Comparison Examples
+  [x] 3.4 Section - Advanced Comparison Examples
     Implement maintained advanced examples that demonstrate layered, data-heavy, and display-system-heavy workflows.
 
-    [ ] 3.4.1 Task - Implement advanced native and canonical examples
+    [x] 3.4.1 Task - Implement advanced native and canonical examples
       Provide review-friendly advanced examples that exercise the broadened runtime and renderer surface.
 
-      [ ] 3.4.1.1 Subtask - Create direct-native advanced examples for data, feedback, layered, and visualization-heavy workflows.
-      [ ] 3.4.1.2 Subtask - Create canonical advanced examples that render equivalent `UnifiedIUR` structures through the same runtime architecture.
-      [ ] 3.4.1.3 Subtask - Create comparison artifacts that make advanced native versus canonical behavior reviewable.
+      [x] 3.4.1.1 Subtask - Create direct-native advanced examples for data, feedback, layered, and visualization-heavy workflows.
+      [x] 3.4.1.2 Subtask - Create canonical advanced examples that render equivalent `UnifiedIUR` structures through the same runtime architecture.
+      [x] 3.4.1.3 Subtask - Create comparison artifacts that make advanced native versus canonical behavior reviewable.
 
   [ ] 3.5 Section - Phase 3 Integration Tests
     Validate advanced widget families, display systems, layering, and broader canonical coverage end to end.
