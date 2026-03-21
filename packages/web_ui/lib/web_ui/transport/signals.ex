@@ -5,6 +5,7 @@ defmodule WebUi.Transport.Signals do
   """
 
   alias Jido.Signal
+  alias WebUi.Transport.Diagnostics
 
   @families [:click, :change, :submit, :open, :close, :navigation, :selection, :command]
   @local_default_families [:click, :change, :open, :close]
@@ -23,10 +24,15 @@ defmodule WebUi.Transport.Signals do
   def from_native_event(attrs) do
     attrs = normalize_map(attrs)
     family = attrs |> fetch(:family, :click) |> normalize_family()
+    boundary = resolve_boundary(attrs, family)
 
-    with :ok <- validate_family(family) do
+    attrs =
+      attrs
+      |> Map.put(:family, family)
+      |> Map.put(:boundary, boundary)
+
+    with :ok <- Diagnostics.validate_native_event(attrs, @families) do
       intent = fetch(attrs, :intent, family)
-      boundary = resolve_boundary(attrs, family)
       payload = fetch(attrs, :payload, %{}) |> normalize_map()
       target = fetch(attrs, :target, %{}) |> normalize_map()
       runtime_event = fetch(attrs, :runtime_event, default_runtime_event(family, intent))
@@ -75,7 +81,7 @@ defmodule WebUi.Transport.Signals do
   def from_boundary_signal(%Signal{} = signal) do
     family = signal |> fetch_extension(:web_ui_family, :click) |> normalize_family()
 
-    with :ok <- validate_family(family) do
+    with :ok <- Diagnostics.validate_boundary_signal(signal, @families) do
       intent = fetch_extension(signal, :web_ui_intent, family)
 
       runtime_event =
@@ -106,7 +112,16 @@ defmodule WebUi.Transport.Signals do
   end
 
   def from_boundary_signal(%{signal: %Signal{} = signal}), do: from_boundary_signal(signal)
-  def from_boundary_signal(_signal), do: {:error, :invalid_boundary_signal}
+
+  def from_boundary_signal(attrs) when is_map(attrs) or is_list(attrs) do
+    case Signal.new(attrs) do
+      {:ok, signal} -> from_boundary_signal(signal)
+      {:error, _reason} -> {:error, WebUi.Transport.Error.invalid_boundary_signal(attrs)}
+    end
+  end
+
+  def from_boundary_signal(_signal),
+    do: {:error, WebUi.Transport.Error.invalid_boundary_signal(:invalid_boundary_signal)}
 
   @spec cloud_event_envelope(Signal.t()) :: map()
   def cloud_event_envelope(%Signal{} = signal) do
@@ -226,9 +241,6 @@ defmodule WebUi.Transport.Signals do
     fetch(attrs, :source_kind) in [:canonical, "canonical"] or
       fetch(attrs, :boundary_mode) in [:canonical_boundary, "canonical_boundary"]
   end
-
-  defp validate_family(family) when family in @families, do: :ok
-  defp validate_family(_family), do: {:error, :unsupported_transport_family}
 
   defp default_runtime_event(family, intent), do: "#{family}:#{intent}"
 

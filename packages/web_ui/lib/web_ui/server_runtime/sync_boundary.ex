@@ -6,6 +6,8 @@ defmodule WebUi.ServerRuntime.SyncBoundary do
   alias WebUi.FrontendRuntime.Message
   alias WebUi.ServerRuntime.{Error, State, ViewState}
   alias WebUi.Transport
+  alias WebUi.Transport.Diagnostics, as: TransportDiagnostics
+  alias WebUi.Transport.Error, as: TransportError
 
   @spec hydration_envelope(State.t()) :: map()
   def hydration_envelope(%State{} = state) do
@@ -52,7 +54,7 @@ defmodule WebUi.ServerRuntime.SyncBoundary do
       |> Map.put_new(:source_kind, state.source_kind)
       |> Map.put_new(:boundary_mode, state.boundary_mode)
 
-    with :ok <- validate_frontend_payload(payload) do
+    with :ok <- TransportDiagnostics.validate_frontend_payload(payload) do
       case normalize_boundary(fetch(payload, :boundary)) do
         :boundary ->
           boundary_signal = fetch(payload, :cloud_event) || fetch(payload, :signal)
@@ -71,26 +73,51 @@ defmodule WebUi.ServerRuntime.SyncBoundary do
                  |> Map.put_new(:runtime_id, state.runtime_id)
                  |> Map.put_new(:screen, state.screen_id)}
 
+              {:error, %TransportError{} = error} ->
+                {:error,
+                 Error.new(:invalid_boundary_translation, error.message, %{
+                   reason: error.reason,
+                   transport_details: error.details
+                 })}
+
               {:error, reason} ->
                 {:error,
-                 Error.new(:invalid_event_route, "Unable to translate boundary frontend event", %{
-                   reason: reason
-                 })}
+                 Error.new(
+                   :invalid_boundary_translation,
+                   "Unable to translate boundary frontend event",
+                   %{
+                     reason: reason
+                   }
+                 )}
             end
           end
 
         _local ->
-          case Transport.from_native_event(payload |> Map.put(:boundary, :local)) do
+          case Transport.from_native_event(local_event_attrs(payload)) do
             {:ok, translation} ->
               {:ok, translation}
 
+            {:error, %TransportError{} = error} ->
+              {:error,
+               Error.new(:invalid_local_event, error.message, %{
+                 reason: error.reason,
+                 transport_details: error.details
+               })}
+
             {:error, reason} ->
               {:error,
-               Error.new(:invalid_event_route, "Unable to translate frontend event", %{
+               Error.new(:invalid_local_event, "Unable to translate frontend event", %{
                  reason: reason
                })}
           end
       end
+    else
+      {:error, %TransportError{} = error} ->
+        {:error,
+         Error.new(:invalid_frontend_payload, error.message, %{
+           reason: error.reason,
+           transport_details: error.details
+         })}
     end
   end
 
@@ -131,40 +158,24 @@ defmodule WebUi.ServerRuntime.SyncBoundary do
   defp normalize_boundary("boundary"), do: :boundary
   defp normalize_boundary(_value), do: :local
 
-  defp validate_frontend_payload(payload) do
-    leaked_keys =
-      payload
-      |> leaked_keys()
-      |> Kernel.++(payload |> fetch(:payload, %{}) |> normalize_map() |> leaked_keys())
-      |> Enum.uniq()
-
-    if leaked_keys == [] do
-      :ok
-    else
-      {:error,
-       Error.new(
-         :frontend_payload_leakage,
-         "Frontend event payload leaked renderer-local keys",
-         %{keys: leaked_keys}
-       )}
-    end
+  defp local_event_attrs(payload) do
+    %{
+      family: fetch(payload, :family),
+      intent: fetch(payload, :intent),
+      boundary: :local,
+      runtime_event: fetch(payload, :runtime_event),
+      payload: fetch(payload, :payload),
+      target: fetch(payload, :target, %{}),
+      widget_id:
+        fetch(payload, :widget_id) || fetch(fetch(payload, :native_event, %{}), :widget_id),
+      runtime_id: fetch(payload, :runtime_id),
+      screen: fetch(payload, :screen),
+      source_kind: fetch(payload, :source_kind),
+      boundary_mode: fetch(payload, :boundary_mode)
+    }
+    |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+    |> Map.new()
   end
-
-  defp leaked_keys(map) when is_map(map) do
-    map
-    |> Map.keys()
-    |> Enum.filter(&renderer_local_key?/1)
-  end
-
-  defp leaked_keys(_value), do: []
-
-  defp renderer_local_key?(key) when is_atom(key), do: renderer_local_key?(Atom.to_string(key))
-
-  defp renderer_local_key?(key) when is_binary(key) do
-    Enum.any?(["phx_", "elm_", "browser_", "dom_"], &String.starts_with?(key, &1))
-  end
-
-  defp renderer_local_key?(_key), do: false
 
   defp fetch(map, key) do
     Map.get(map, key) || Map.get(map, Atom.to_string(key))

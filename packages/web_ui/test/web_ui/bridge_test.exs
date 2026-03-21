@@ -63,7 +63,7 @@ defmodule WebUi.BridgeTest do
         }
       )
 
-    assert {:error, %ServerRuntime.Error{reason: :frontend_payload_leakage}} =
+    assert {:error, %ServerRuntime.Error{reason: :invalid_frontend_payload}} =
              ServerRuntime.handle_frontend_event(state, leaked_message)
   end
 

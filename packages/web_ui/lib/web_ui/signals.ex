@@ -15,7 +15,8 @@ defmodule WebUi.Signals do
       :canonical_signal_translation,
       :cloud_event_envelopes,
       :runtime_action_mapping,
-      :native_and_canonical_event_convergence
+      :native_and_canonical_event_convergence,
+      :boundary_validation
     ]
   end
 

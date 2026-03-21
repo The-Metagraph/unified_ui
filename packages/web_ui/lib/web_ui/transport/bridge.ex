@@ -5,6 +5,7 @@ defmodule WebUi.Transport.Bridge do
 
   alias Jido.Signal
   alias WebUi.FrontendRuntime.Model
+  alias WebUi.Transport.Diagnostics
 
   @spec event_message(Model.t(), map()) :: map()
   def event_message(%Model{} = model, translation) when is_map(translation) do
@@ -55,17 +56,19 @@ defmodule WebUi.Transport.Bridge do
   def boundary_envelope(_signal_or_translation, _opts), do: {:error, :invalid_boundary_envelope}
 
   @spec inbound_boundary_envelope(map()) :: {:ok, Signal.t()} | {:error, term()}
-  def inbound_boundary_envelope(%{kind: :canonical_boundary, signal: signal_attrs}),
-    do: build_signal(signal_attrs)
+  def inbound_boundary_envelope(envelope) when is_map(envelope) do
+    envelope = normalize_map(envelope)
 
-  def inbound_boundary_envelope(%{"kind" => "canonical_boundary", "signal" => signal_attrs}),
-    do: build_signal(signal_attrs)
+    with :ok <- Diagnostics.validate_boundary_envelope(envelope, WebUi.Transport.families()),
+         {:ok, signal} <- build_signal(fetch(envelope, :signal)) do
+      {:ok, signal}
+    else
+      {:error, _reason} = error -> error
+    end
+  end
 
-  def inbound_boundary_envelope(%{"kind" => :canonical_boundary, "signal" => signal_attrs}),
-    do: build_signal(signal_attrs)
-
-  def inbound_boundary_envelope(%{signal: signal_attrs}), do: build_signal(signal_attrs)
-  def inbound_boundary_envelope(_envelope), do: {:error, :invalid_boundary_envelope}
+  def inbound_boundary_envelope(envelope),
+    do: {:error, WebUi.Transport.Error.invalid_boundary_envelope(envelope)}
 
   defp payload_for(%{boundary: :boundary, signal: signal}) do
     {:ok, message} = WebUi.Transport.to_server_message(signal)
@@ -83,7 +86,8 @@ defmodule WebUi.Transport.Bridge do
     Signal.new(attrs)
   end
 
-  defp build_signal(_attrs), do: {:error, :invalid_boundary_signal}
+  defp build_signal(_attrs),
+    do: {:error, WebUi.Transport.Error.invalid_boundary_signal(:invalid_boundary_signal)}
 
   defp signal_map(%Signal{} = signal) do
     signal

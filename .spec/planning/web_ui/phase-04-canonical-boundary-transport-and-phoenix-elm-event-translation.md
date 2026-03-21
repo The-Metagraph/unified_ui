@@ -54,15 +54,15 @@ Back to index: [README](./README.md)
       [x] 4.2.2.2 Subtask - Translate frontend-originated interaction data into package-local event flow without making the frontend the source of canonical truth.
       [x] 4.2.2.3 Subtask - Add diagnostics for unsupported frontend payloads, leaked renderer-local keys, and invalid boundary envelopes.
 
-  [ ] 4.3 Section - Actionable Boundary Diagnostics and Validation
+  [x] 4.3 Section - Actionable Boundary Diagnostics and Validation
     Implement diagnostics and validation rules that keep the transport layer honest across the split runtime.
 
-    [ ] 4.3.1 Task - Implement canonical-boundary validation
+    [x] 4.3.1 Task - Implement canonical-boundary validation
       Reject transport behavior that would leak renderer-local semantics or undermine the server and frontend boundary contract.
 
-      [ ] 4.3.1.1 Subtask - Implement validation for leaked renderer-local event names, frontend-only payload keys, and package-local envelope details.
-      [ ] 4.3.1.2 Subtask - Implement validation for malformed canonical signal families, missing event context, and invalid payload mapping.
-      [ ] 4.3.1.3 Subtask - Implement diagnostics that clearly distinguish native local handling failures from canonical-boundary translation failures.
+      [x] 4.3.1.1 Subtask - Implement validation for leaked renderer-local event names, frontend-only payload keys, and package-local envelope details.
+      [x] 4.3.1.2 Subtask - Implement validation for malformed canonical signal families, missing event context, and invalid payload mapping.
+      [x] 4.3.1.3 Subtask - Implement diagnostics that clearly distinguish native local handling failures from canonical-boundary translation failures.
 
   [ ] 4.4 Section - Maintained Boundary Examples
     Implement maintained examples that demonstrate direct-native and canonical boundary event translation.

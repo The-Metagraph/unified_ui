@@ -20,12 +20,19 @@ defmodule WebUi.Transport do
 
   @spec integration_points() :: [atom()]
   def integration_points do
-    [:frontend_bridge, :server_runtime, :canonical_boundary, :signal_translation]
+    [:frontend_bridge, :server_runtime, :canonical_boundary, :signal_translation, :diagnostics]
   end
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, WebUi.Signals, WebUi.Transport.Signals, WebUi.Transport.Bridge]
+    [
+      __MODULE__,
+      WebUi.Signals,
+      WebUi.Transport.Signals,
+      WebUi.Transport.Bridge,
+      WebUi.Transport.Diagnostics,
+      WebUi.Transport.Error
+    ]
   end
 
   @spec local_default_families() :: [atom()]

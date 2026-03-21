@@ -75,6 +75,13 @@ defmodule WebUi.ServerRuntime do
       {:error, %Error{} = error} ->
         {:error, error}
 
+      {:error, %WebUi.Transport.Error{} = error} ->
+        {:error,
+         Error.new(:invalid_boundary_envelope, error.message, %{
+           reason: error.reason,
+           transport_details: error.details
+         })}
+
       {:error, reason} ->
         {:error,
          Error.new(:invalid_boundary_envelope, "Unable to route boundary envelope", %{
