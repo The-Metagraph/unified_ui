@@ -96,18 +96,36 @@
     },
     {
       "requirement_id": "web_ui.package.native_runtime_library",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.package.iur_renderer_entrypoint",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.package.phoenix_elm_split",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.package.not_dsl_or_iur_owner",
@@ -154,23 +172,47 @@
     },
     {
       "requirement_id": "web_ui.structure.server_frontend_boundary",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.structure.native_widget_module_boundary",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.structure.transport_translation_modules",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.structure.frontend_bridge_modules",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.structure.no_dsl_or_iur_authorship",
@@ -190,143 +232,311 @@
     },
     {
       "requirement_id": "web_ui.native_widgets.direct_native_surface",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.native_widgets.server_client_composition",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.native_widgets.theme_and_style_surface",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.native_widgets.interaction_surface",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.server_runtime.authoritative_server_representation",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.server_runtime.coordinate_frontend_rendering",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.server_runtime.handle_boundary_events",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.server_runtime.direct_and_iur_entrypoints_share_runtime",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.server_runtime.browser_state_is_bounded",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.frontend_runtime.elm_rendering_layer",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.frontend_runtime.local_state_bounded",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.frontend_runtime.native_and_iur_entrypoints_share_frontend",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.frontend_runtime.browser_capabilities",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.frontend_runtime.canonical_meaning_preserved",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.iur_renderer.full_construct_coverage",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.iur_renderer.deterministic_mapping",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.iur_renderer.meaning_preservation",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.iur_renderer.native_widget_reuse",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.transport.canonical_boundary_events",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.transport.native_web_event_model",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.transport.server_frontend_bridge",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.transport.no_boundary_leakage",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.transport.direct_native_usage_allowed",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.tooling.reference_examples",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.tooling.preview_and_inspection",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.tooling.validation_workflow",
-      "status": "planned",
-      "notes": "Awaiting renewed `packages/web_ui` implementation work after the intentional package reset."
+      "status": "waived",
+      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
+      "waiver": {
+        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
+        "approved_by": "Pascal",
+        "approved_on": "2026-03-20",
+        "expires_on": "2026-06-30"
+      }
     },
     {
       "requirement_id": "web_ui.tooling.documentation_surface",
