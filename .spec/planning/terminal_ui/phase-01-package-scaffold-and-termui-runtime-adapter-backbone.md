@@ -48,26 +48,26 @@ Back to index: [README](./README.md)
       [x] 1.1.2.2 Subtask - Establish public naming conventions for runtime entry points, backend modules, native widget namespaces, and package-facing helper modules.
       [x] 1.1.2.3 Subtask - Prevent the package structure from taking ownership of authored DSL concerns or canonical IUR model definitions.
 
-  [ ] 1.2 Section - Shared TermUI Runtime Adapter Backbone
+  [x] 1.2 Section - Shared TermUI Runtime Adapter Backbone
     Implement the shared runtime model that later native widgets, canonical
     rendering, and capability-aware behavior will reuse.
 
-    [ ] 1.2.1 Task - Implement runtime entrypoints and state boundaries
+    [x] 1.2.1 Task - Implement runtime entrypoints and state boundaries
       Define the baseline terminal runtime surface for direct native screens
       and renderer-driven screens.
 
-      [ ] 1.2.1.1 Subtask - Create runtime modules for application start, runtime boot, terminal initialization, and shutdown handling.
-      [ ] 1.2.1.2 Subtask - Define authoritative runtime state boundaries for backend mode, focus state, redraw scheduling, capability snapshots, and screen realization.
-      [ ] 1.2.1.3 Subtask - Define package-local error handling and lifecycle behavior for invalid runtime state, missing widgets, and boot failures.
+      [x] 1.2.1.1 Subtask - Create runtime modules for application start, runtime boot, terminal initialization, and shutdown handling.
+      [x] 1.2.1.2 Subtask - Define authoritative runtime state boundaries for backend mode, focus state, redraw scheduling, capability snapshots, and screen realization.
+      [x] 1.2.1.3 Subtask - Define package-local error handling and lifecycle behavior for invalid runtime state, missing widgets, and boot failures.
 
-    [ ] 1.2.2 Task - Implement shared terminal event-loop scaffolding
+    [x] 1.2.2 Task - Implement shared terminal event-loop scaffolding
       Create the minimum shared runtime mechanics needed to coordinate redraws,
       input polling, and terminal lifecycle before full transport translation
       exists.
 
-      [ ] 1.2.2.1 Subtask - Create package-local modules for event polling, redraw requests, input dispatch scaffolding, and frame coordination.
-      [ ] 1.2.2.2 Subtask - Create bounded placeholders for focus changes, paste handling, resize callbacks, and mouse fallback behavior that later transport translation can reuse.
-      [ ] 1.2.2.3 Subtask - Define diagnostics for invalid event-loop state, unsupported callback payloads, and mismatched runtime initialization order.
+      [x] 1.2.2.1 Subtask - Create package-local modules for event polling, redraw requests, input dispatch scaffolding, and frame coordination.
+      [x] 1.2.2.2 Subtask - Create bounded placeholders for focus changes, paste handling, resize callbacks, and mouse fallback behavior that later transport translation can reuse.
+      [x] 1.2.2.3 Subtask - Define diagnostics for invalid event-loop state, unsupported callback payloads, and mismatched runtime initialization order.
 
   [ ] 1.3 Section - Backend and Capability Seams
     Implement explicit richer and limited backend seams so terminal variation
