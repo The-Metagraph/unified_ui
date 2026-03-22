@@ -5,7 +5,7 @@ defmodule WebUi.Widgets.Forms do
 
   alias WebUi.Widgets.{Builder, Foundational}
 
-  @kinds [:form, :field_group, :field]
+  @kinds [:form_builder, :form, :field_group, :field]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -16,6 +16,29 @@ defmodule WebUi.Widgets.Forms do
     opts = Builder.options(Map.put(Builder.options(opts), :id, id))
 
     Builder.widget(:form,
+      id: id,
+      attributes: %{
+        mode: Builder.option(opts, :mode, :grouped),
+        autocomplete: Builder.option(opts, :autocomplete, true)
+      },
+      slot_children: %{default: Builder.children!(children)},
+      state: Builder.state(opts),
+      styles: Builder.styles(opts),
+      events: Builder.events(opts, on_submit: :submit),
+      metadata: Builder.metadata(opts, %{native_surface: :forms})
+    )
+  end
+
+  @spec form_builder(
+          String.t() | atom(),
+          [WebUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) ::
+          WebUi.Widget.t()
+  def form_builder(id, children, opts \\ []) when is_list(children) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:form_builder,
       id: id,
       attributes: %{
         mode: Builder.option(opts, :mode, :grouped),

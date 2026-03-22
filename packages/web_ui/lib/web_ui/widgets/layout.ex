@@ -6,7 +6,7 @@ defmodule WebUi.Widgets.Layout do
 
   alias WebUi.Widgets.Builder
 
-  @kinds [:stack, :panel, :row, :column, :viewport, :scroll_bar, :split_pane]
+  @kinds [:stack, :panel, :row, :column, :grid, :viewport, :scroll_bar, :split_pane]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -60,6 +60,27 @@ defmodule WebUi.Widgets.Layout do
           WebUi.Widget.t()
   def column(id, children, opts \\ []) when is_list(children) do
     build_linear(:column, id, children, opts, :vertical)
+  end
+
+  @spec grid(String.t() | atom(), [WebUi.Widget.t() | map() | keyword()], keyword() | map()) ::
+          WebUi.Widget.t()
+  def grid(id, children, opts \\ []) when is_list(children) do
+    opts = Builder.options(opts)
+
+    Builder.widget(:grid,
+      id: id,
+      attributes: %{
+        columns: Builder.option(opts, :columns),
+        rows: Builder.option(opts, :rows),
+        auto_flow: Builder.option(opts, :auto_flow, :row),
+        gap: Builder.option(opts, :gap),
+        align: Builder.option(opts, :align),
+        justify: Builder.option(opts, :justify)
+      },
+      slot_children: %{default: Builder.children!(children)},
+      styles: Builder.styles(opts),
+      metadata: Builder.metadata(opts, %{native_surface: :layout, display_system: true})
+    )
   end
 
   @spec viewport(String.t() | atom(), WebUi.Widget.t() | map() | keyword(), keyword() | map()) ::

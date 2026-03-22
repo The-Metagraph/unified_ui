@@ -166,14 +166,54 @@ defmodule WebUi.Widgets do
     Input.text_input(id, opts)
   end
 
+  @spec numeric_input(String.t() | atom(), keyword()) :: Widget.t()
+  def numeric_input(id, opts \\ []) do
+    Input.numeric_input(id, opts)
+  end
+
+  @spec date_input(String.t() | atom(), keyword()) :: Widget.t()
+  def date_input(id, opts \\ []) do
+    Input.date_input(id, opts)
+  end
+
+  @spec time_input(String.t() | atom(), keyword()) :: Widget.t()
+  def time_input(id, opts \\ []) do
+    Input.time_input(id, opts)
+  end
+
+  @spec file_input(String.t() | atom(), keyword()) :: Widget.t()
+  def file_input(id, opts \\ []) do
+    Input.file_input(id, opts)
+  end
+
+  @spec slider(String.t() | atom(), keyword()) :: Widget.t()
+  def slider(id, opts \\ []) do
+    Input.slider(id, opts)
+  end
+
+  @spec toggle(String.t() | atom(), keyword()) :: Widget.t()
+  def toggle(id, opts \\ []) do
+    Input.toggle(id, opts)
+  end
+
   @spec checkbox(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def checkbox(id, label, opts \\ []) do
     Input.checkbox(id, label, opts)
   end
 
+  @spec radio_group(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def radio_group(id, options, opts \\ []) do
+    Input.radio_group(id, options, opts)
+  end
+
   @spec select(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def select(id, options, opts \\ []) do
     Input.select(id, options, opts)
+  end
+
+  @spec pick_list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def pick_list(id, options, opts \\ []) do
+    Input.pick_list(id, options, opts)
   end
 
   @spec field(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
@@ -190,6 +230,12 @@ defmodule WebUi.Widgets do
   @spec form(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) :: Widget.t()
   def form(id, children, opts \\ []) do
     Forms.form(id, children, opts)
+  end
+
+  @spec form_builder(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def form_builder(id, children, opts \\ []) do
+    Forms.form_builder(id, children, opts)
   end
 
   @spec stack(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
@@ -210,6 +256,11 @@ defmodule WebUi.Widgets do
   @spec column(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) :: Widget.t()
   def column(id, children, opts \\ []) do
     Layout.column(id, children, opts)
+  end
+
+  @spec grid(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) :: Widget.t()
+  def grid(id, children, opts \\ []) do
+    Layout.grid(id, children, opts)
   end
 
   @spec viewport(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
@@ -277,6 +328,11 @@ defmodule WebUi.Widgets do
           Widget.t()
   def table(id, columns, rows, opts \\ []) do
     Data.table(id, columns, rows, opts)
+  end
+
+  @spec list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def list(id, items, opts \\ []) do
+    Data.list(id, items, opts)
   end
 
   @spec tree_view(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()

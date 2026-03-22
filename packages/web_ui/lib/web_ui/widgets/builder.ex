@@ -81,11 +81,22 @@ defmodule WebUi.Widgets.Builder do
 
   @spec styles(map()) :: map()
   def styles(opts) do
-    hooks =
+    base_styles =
       opts
-      |> option(:style_hooks, [])
+      |> option(:styles, %{})
+      |> normalize_map()
+
+    hooks =
+      base_styles
+      |> Map.get(:hooks, [])
       |> List.wrap()
-      |> Enum.reject(&is_nil/1)
+      |> Kernel.++(
+        opts
+        |> option(:style_hooks, [])
+        |> List.wrap()
+        |> Enum.reject(&is_nil/1)
+      )
+      |> Enum.uniq()
 
     explicit =
       %{}
@@ -106,10 +117,9 @@ defmodule WebUi.Widgets.Builder do
       |> maybe_put(:state_variants, option(opts, :state_variants))
       |> maybe_put(:composition, option(opts, :composition))
       |> maybe_put(:hooks, hooks)
+      |> compact_map()
 
-    opts
-    |> option(:styles, %{})
-    |> normalize_map()
+    base_styles
     |> Map.merge(explicit)
     |> WebUi.Style.normalize()
     |> compact_map()

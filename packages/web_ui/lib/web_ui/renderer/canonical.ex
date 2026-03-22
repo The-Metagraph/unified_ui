@@ -18,7 +18,7 @@ defmodule WebUi.Renderer.Canonical do
   defp do_render(%Element{type: :widget, kind: kind} = element)
        when kind in [:text, "text"] do
     {:ok,
-     Widgets.text(element.id, attr(element, :content, inspect(element.id)), base_opts(element))}
+     Widgets.text(element.id, content_text(element, inspect(element.id)), base_opts(element))}
   end
 
   defp do_render(%Element{type: :widget, kind: kind} = element)
@@ -26,10 +26,14 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.label(
        element.id,
-       attr(element, :content, inspect(element.id)),
+       content_text(element, inspect(element.id)),
        Keyword.merge(base_opts(element),
-         for: attr(element, :for),
-         relationship: attr(element, :relationship, :label)
+         for: first_present([group_attr(element, :label, :for), attr(element, :for)]),
+         relationship:
+           first_present(
+             [group_attr(element, :label, :relationship), attr(element, :relationship)],
+             :label
+           )
        )
      )}
   end
@@ -39,10 +43,17 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.icon(
        element.id,
-       attr(element, :name, attr(element, :icon, :unknown)),
+       first_present(
+         [group_attr(element, :icon, :name), attr(element, :name), attr(element, :icon)],
+         :unknown
+       ),
        Keyword.merge(base_opts(element),
-         set: attr(element, :set),
-         fallback_text: attr(element, :fallback_text)
+         set: first_present([group_attr(element, :icon, :set), attr(element, :set)]),
+         fallback_text:
+           first_present([
+             group_attr(element, :icon, :fallback_text),
+             attr(element, :fallback_text)
+           ])
        )
      )}
   end
@@ -52,10 +63,13 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.image(
        element.id,
-       attr(element, :src, attr(element, :source, "")),
+       first_present(
+         [group_attr(element, :image, :source), attr(element, :src), attr(element, :source)],
+         ""
+       ),
        Keyword.merge(base_opts(element),
-         alt: attr(element, :alt, ""),
-         fit: attr(element, :fit, :cover)
+         alt: first_present([group_attr(element, :image, :alt_text), attr(element, :alt)], ""),
+         fit: first_present([group_attr(element, :image, :fit), attr(element, :fit)], :cover)
        )
      )}
   end
@@ -65,7 +79,7 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.button(
        element.id,
-       attr(element, :label, attr(element, :content, "Button")),
+       first_present([attr(element, :label), content_text(element)], "Button"),
        base_opts(element)
      )}
   end
@@ -75,9 +89,15 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.link(
        element.id,
-       attr(element, :label, attr(element, :content, "Link")),
-       attr(element, :href, "#"),
-       Keyword.merge(base_opts(element), external: attr(element, :external, false))
+       first_present([attr(element, :label), content_text(element)], "Link"),
+       first_present([group_attr(element, :link, :target), attr(element, :href)], "#"),
+       Keyword.merge(base_opts(element),
+         external:
+           first_present(
+             [group_attr(element, :link, :external?), attr(element, :external)],
+             false
+           )
+       )
      )}
   end
 
@@ -87,8 +107,16 @@ defmodule WebUi.Renderer.Canonical do
      Widgets.separator(
        element.id,
        Keyword.merge(base_opts(element),
-         orientation: attr(element, :orientation, :horizontal),
-         decorative: attr(element, :decorative, true)
+         orientation:
+           first_present(
+             [group_attr(element, :separator, :orientation), attr(element, :orientation)],
+             :horizontal
+           ),
+         decorative:
+           first_present(
+             [group_attr(element, :separator, :decorative?), attr(element, :decorative)],
+             true
+           )
        )
      )}
   end
@@ -99,8 +127,8 @@ defmodule WebUi.Renderer.Canonical do
      Widgets.spacer(
        element.id,
        Keyword.merge(base_opts(element),
-         size: attr(element, :size, :md),
-         grow: attr(element, :grow, 0)
+         size: first_present([group_attr(element, :spacer, :size), attr(element, :size)], :md),
+         grow: first_present([group_attr(element, :spacer, :grow), attr(element, :grow)], 0)
        )
      )}
   end
@@ -113,24 +141,110 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           role: attr(element, :role, :content),
-           presentation: attr(element, :presentation, :body)
+           role:
+             first_present(
+               [group_attr(element, :container, :role), attr(element, :role)],
+               :content
+             ),
+           presentation:
+             first_present(
+               [group_attr(element, :container, :presentation), attr(element, :presentation)],
+               :body
+             )
          )
        )}
     end
   end
 
   defp do_render(%Element{type: :widget, kind: kind} = element)
-       when kind in [:text_input, "text_input"] do
+       when kind in [
+              :text_input,
+              "text_input",
+              :numeric_input,
+              "numeric_input",
+              :date_input,
+              "date_input",
+              :time_input,
+              "time_input"
+            ] do
     {:ok,
-     Widgets.text_input(
+     renderer_input(kind).(
        element.id,
        Keyword.merge(base_opts(element),
-         name: attr(element, :name),
-         value: attr(element, :value, ""),
-         placeholder: attr(element, :placeholder),
-         multiline: attr(element, :multiline, false),
-         input_mode: attr(element, :input_mode, :text)
+         name: first_present([attr(element, :name), binding_name(element)]),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         placeholder:
+           first_present([group_attr(element, :input, :placeholder), attr(element, :placeholder)]),
+         multiline:
+           first_present(
+             [group_attr(element, :input, :multiline?), attr(element, :multiline)],
+             false
+           ),
+         input_mode:
+           first_present(
+             [group_attr(element, :input, :input_mode), attr(element, :input_mode)],
+             :text
+           ),
+         min: first_present([group_attr(element, :input, :min), attr(element, :min)]),
+         max: first_present([group_attr(element, :input, :max), attr(element, :max)]),
+         step: first_present([group_attr(element, :input, :step), attr(element, :step)]),
+         format: first_present([group_attr(element, :input, :format), attr(element, :format)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:file_input, "file_input"] do
+    {:ok,
+     Widgets.file_input(
+       element.id,
+       Keyword.merge(base_opts(element),
+         name: first_present([attr(element, :name), binding_name(element)]),
+         accept: first_present([group_attr(element, :file, :accept), attr(element, :accept)], []),
+         multiple:
+           first_present(
+             [group_attr(element, :file, :multiple?), attr(element, :multiple)],
+             false
+           ),
+         capture: first_present([group_attr(element, :file, :capture), attr(element, :capture)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:slider, "slider"] do
+    {:ok,
+     Widgets.slider(
+       element.id,
+       Keyword.merge(base_opts(element),
+         name: first_present([attr(element, :name), binding_name(element)]),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         min: first_present([group_attr(element, :input, :min), attr(element, :min)], 0),
+         max: first_present([group_attr(element, :input, :max), attr(element, :max)], 100),
+         step: first_present([group_attr(element, :input, :step), attr(element, :step)], 1)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:toggle, "toggle"] do
+    {:ok,
+     Widgets.toggle(
+       element.id,
+       Keyword.merge(base_opts(element),
+         name: first_present([attr(element, :name), binding_name(element)]),
+         label: first_present([attr(element, :label), content_text(element)]),
+         checked: first_present([attr(element, :checked), binding_value(element)], false),
+         checked_value:
+           first_present(
+             [group_attr(element, :input, :checked_value), attr(element, :checked_value)],
+             true
+           ),
+         unchecked_value:
+           first_present(
+             [group_attr(element, :input, :unchecked_value), attr(element, :unchecked_value)],
+             false
+           )
        )
      )}
   end
@@ -140,24 +254,32 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.checkbox(
        element.id,
-       attr(element, :label, "Checkbox"),
+       first_present([attr(element, :label), content_text(element)], "Checkbox"),
        Keyword.merge(base_opts(element),
-         name: attr(element, :name),
-         checked: attr(element, :checked, attr(element, :value, false))
+         name: first_present([attr(element, :name), binding_name(element)]),
+         checked:
+           first_present(
+             [attr(element, :checked), attr(element, :value), binding_value(element)],
+             false
+           )
        )
      )}
   end
 
   defp do_render(%Element{type: :widget, kind: kind} = element)
-       when kind in [:select, "select"] do
+       when kind in [:select, "select", :radio_group, "radio_group", :pick_list, "pick_list"] do
     {:ok,
-     Widgets.select(
+     renderer_selection(kind).(
        element.id,
-       attr(element, :options, []),
+       first_present([group_attr(element, :selection, :options), attr(element, :options)], []),
        Keyword.merge(base_opts(element),
-         name: attr(element, :name),
-         value: attr(element, :value),
-         multiple: attr(element, :multiple, false)
+         name: first_present([attr(element, :name), binding_name(element)]),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         multiple:
+           first_present(
+             [group_attr(element, :selection, :multiple?), attr(element, :multiple)],
+             false
+           )
        )
      )}
   end
@@ -167,10 +289,18 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.menu(
        element.id,
-       attr(element, :items, []),
+       first_present([group_attr(element, :navigation, :items), attr(element, :items)], []),
        Keyword.merge(base_opts(element),
-         active_item: attr(element, :active_item),
-         orientation: attr(element, :orientation, :vertical)
+         active_item:
+           first_present([
+             group_attr(element, :navigation, :active_item),
+             attr(element, :active_item)
+           ]),
+         orientation:
+           first_present(
+             [group_attr(element, :navigation, :orientation), attr(element, :orientation)],
+             :vertical
+           )
        )
      )}
   end
@@ -180,10 +310,36 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.tabs(
        element.id,
-       attr(element, :items, []),
+       first_present([group_attr(element, :navigation, :items), attr(element, :items)], []),
        Keyword.merge(base_opts(element),
-         active_item: attr(element, :active_item),
-         orientation: attr(element, :orientation, :horizontal)
+         active_item:
+           first_present([
+             group_attr(element, :navigation, :active_item),
+             attr(element, :active_item)
+           ]),
+         orientation:
+           first_present(
+             [group_attr(element, :navigation, :orientation), attr(element, :orientation)],
+             :horizontal
+           )
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:list, "list"] do
+    {:ok,
+     Widgets.list(
+       element.id,
+       first_present([group_attr(element, :list, :items), attr(element, :items)], []),
+       Keyword.merge(base_opts(element),
+         ordered:
+           first_present([group_attr(element, :list, :ordered?), attr(element, :ordered)], false),
+         selection_mode:
+           first_present(
+             [group_attr(element, :list, :selection_mode), attr(element, :selection_mode)],
+             :single
+           )
        )
      )}
   end
@@ -196,11 +352,16 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.table(
        element.id,
-       attr(element, :columns, []),
-       attr(element, :rows, []),
+       first_present([group_attr(element, :table, :columns), attr(element, :columns)], []),
+       first_present([group_attr(element, :table, :rows), attr(element, :rows)], []),
        Keyword.merge(base_opts(element),
-         dense: attr(element, :dense, false),
-         selection_mode: attr(element, :selection_mode, :single),
+         dense:
+           first_present([group_attr(element, :table, :dense?), attr(element, :dense)], false),
+         selection_mode:
+           first_present(
+             [group_attr(element, :table, :selection_mode), attr(element, :selection_mode)],
+             :single
+           ),
          sort_key: attr(element, :sort_key, map_get(sorting, :key)),
          sort_direction: attr(element, :sort_direction, map_get(sorting, :direction)),
          filters: attr(element, :filters, []),
@@ -216,9 +377,13 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.tree_view(
        element.id,
-       attr(element, :nodes, []),
+       first_present([group_attr(element, :tree, :nodes), attr(element, :nodes)], []),
        Keyword.merge(base_opts(element),
-         selection_mode: attr(element, :selection_mode, :single),
+         selection_mode:
+           first_present(
+             [group_attr(element, :tree, :selection_mode), attr(element, :selection_mode)],
+             :single
+           ),
          filters: attr(element, :filters, []),
          query: attr(element, :query),
          expand_all: attr(element, :expand_all, false)
@@ -264,10 +429,18 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.status(
        element.id,
-       attr(element, :text, attr(element, :content, "")),
+       first_present(
+         [group_attr(element, :feedback, :text), content_text(element), attr(element, :text)],
+         ""
+       ),
        Keyword.merge(base_opts(element),
-         severity: attr(element, :severity, :info),
-         status: attr(element, :status, :idle),
+         severity:
+           first_present(
+             [group_attr(element, :feedback, :severity), attr(element, :severity)],
+             :info
+           ),
+         status:
+           first_present([group_attr(element, :feedback, :status), attr(element, :status)], :idle),
          icon: attr(element, :icon)
        )
      )}
@@ -279,12 +452,18 @@ defmodule WebUi.Renderer.Canonical do
      Widgets.progress(
        element.id,
        Keyword.merge(base_opts(element),
-         current: attr(element, :current),
-         total: attr(element, :total),
-         indeterminate: attr(element, :indeterminate, false),
-         label: attr(element, :label),
-         severity: attr(element, :severity),
-         status: attr(element, :status)
+         current:
+           first_present([group_attr(element, :progress, :current), attr(element, :current)]),
+         total: first_present([group_attr(element, :progress, :total), attr(element, :total)]),
+         indeterminate:
+           first_present(
+             [group_attr(element, :progress, :indeterminate?), attr(element, :indeterminate)],
+             false
+           ),
+         label: first_present([group_attr(element, :progress, :label), attr(element, :label)]),
+         severity:
+           first_present([group_attr(element, :feedback, :severity), attr(element, :severity)]),
+         status: first_present([group_attr(element, :feedback, :status), attr(element, :status)])
        )
      )}
   end
@@ -294,11 +473,22 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.inline_feedback(
        element.id,
-       attr(element, :message, attr(element, :content, "")),
+       first_present(
+         [
+           group_attr(element, :feedback, :message),
+           content_text(element),
+           attr(element, :message)
+         ],
+         ""
+       ),
        Keyword.merge(base_opts(element),
-         title: attr(element, :title),
-         severity: attr(element, :severity, :info),
-         status: attr(element, :status)
+         title: first_present([group_attr(element, :feedback, :title), attr(element, :title)]),
+         severity:
+           first_present(
+             [group_attr(element, :feedback, :severity), attr(element, :severity)],
+             :info
+           ),
+         status: first_present([group_attr(element, :feedback, :status), attr(element, :status)])
        )
      )}
   end
@@ -309,12 +499,13 @@ defmodule WebUi.Renderer.Canonical do
      Widgets.gauge(
        element.id,
        Keyword.merge(base_opts(element),
-         value: attr(element, :value),
-         min: attr(element, :min, 0),
-         max: attr(element, :max, 100),
-         label: attr(element, :label),
-         severity: attr(element, :severity),
-         status: attr(element, :status)
+         value: first_present([group_attr(element, :gauge, :value), attr(element, :value)]),
+         min: first_present([group_attr(element, :gauge, :min), attr(element, :min)], 0),
+         max: first_present([group_attr(element, :gauge, :max), attr(element, :max)], 100),
+         label: first_present([group_attr(element, :gauge, :label), attr(element, :label)]),
+         severity:
+           first_present([group_attr(element, :feedback, :severity), attr(element, :severity)]),
+         status: first_present([group_attr(element, :feedback, :status), attr(element, :status)])
        )
      )}
   end
@@ -326,12 +517,14 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.sparkline(
        element.id,
-       sparkline_values(series),
+       sparkline_values(first_present([group_attr(element, :chart, :series), series], [])),
        Keyword.merge(base_opts(element),
-         series_id: sparkline_series_id(series),
-         axes: attr(element, :axes, %{}),
-         legend: attr(element, :legend, %{}),
-         scale: attr(element, :scale, %{})
+         series_id:
+           sparkline_series_id(first_present([group_attr(element, :chart, :series), series], [])),
+         axes: first_present([group_attr(element, :chart, :axes), attr(element, :axes)], %{}),
+         legend:
+           first_present([group_attr(element, :chart, :legend), attr(element, :legend)], %{}),
+         scale: first_present([group_attr(element, :chart, :scale), attr(element, :scale)], %{})
        )
      )}
   end
@@ -341,11 +534,12 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.bar_chart(
        element.id,
-       attr(element, :series, []),
+       first_present([group_attr(element, :chart, :series), attr(element, :series)], []),
        Keyword.merge(base_opts(element),
-         axes: attr(element, :axes, %{}),
-         legend: attr(element, :legend, %{}),
-         scale: attr(element, :scale, %{})
+         axes: first_present([group_attr(element, :chart, :axes), attr(element, :axes)], %{}),
+         legend:
+           first_present([group_attr(element, :chart, :legend), attr(element, :legend)], %{}),
+         scale: first_present([group_attr(element, :chart, :scale), attr(element, :scale)], %{})
        )
      )}
   end
@@ -355,11 +549,12 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.line_chart(
        element.id,
-       attr(element, :series, []),
+       first_present([group_attr(element, :chart, :series), attr(element, :series)], []),
        Keyword.merge(base_opts(element),
-         axes: attr(element, :axes, %{}),
-         legend: attr(element, :legend, %{}),
-         scale: attr(element, :scale, %{})
+         axes: first_present([group_attr(element, :chart, :axes), attr(element, :axes)], %{}),
+         legend:
+           first_present([group_attr(element, :chart, :legend), attr(element, :legend)], %{}),
+         scale: first_present([group_attr(element, :chart, :scale), attr(element, :scale)], %{})
        )
      )}
   end
@@ -369,13 +564,14 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.canvas(
        element.id,
-       attr(element, :operations, []),
+       first_present([group_attr(element, :canvas, :operations), attr(element, :operations)], []),
        Keyword.merge(base_opts(element),
-         width: attr(element, :width),
-         height: attr(element, :height),
-         unit: attr(element, :unit, :cell),
-         background: attr(element, :background),
-         clip: attr(element, :clip, true)
+         width: first_present([group_attr(element, :canvas, :width), attr(element, :width)]),
+         height: first_present([group_attr(element, :canvas, :height), attr(element, :height)]),
+         unit: first_present([group_attr(element, :canvas, :unit), attr(element, :unit)], :cell),
+         background:
+           first_present([group_attr(element, :canvas, :background), attr(element, :background)]),
+         clip: first_present([group_attr(element, :canvas, :clip?), attr(element, :clip)], true)
        )
      )}
   end
@@ -385,11 +581,23 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.stream_widget(
        element.id,
-       attr(element, :entries, []),
+       first_present([group_attr(element, :stream, :entries), attr(element, :entries)], []),
        Keyword.merge(base_opts(element),
-         ordering: attr(element, :ordering, :append_only),
-         severity_field: attr(element, :severity_field),
-         timestamp_field: attr(element, :timestamp_field)
+         ordering:
+           first_present(
+             [group_attr(element, :stream, :ordering), attr(element, :ordering)],
+             :append_only
+           ),
+         severity_field:
+           first_present([
+             group_attr(element, :stream, :severity_field),
+             attr(element, :severity_field)
+           ]),
+         timestamp_field:
+           first_present([
+             group_attr(element, :stream, :timestamp_field),
+             attr(element, :timestamp_field)
+           ])
        )
      )}
   end
@@ -399,10 +607,12 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.process_monitor(
        element.id,
-       attr(element, :processes, []),
+       first_present([group_attr(element, :monitor, :processes), attr(element, :processes)], []),
        Keyword.merge(base_opts(element),
-         sort_by: attr(element, :sort_by),
-         severity: attr(element, :severity)
+         sort_by:
+           first_present([group_attr(element, :monitor, :sort_by), attr(element, :sort_by)]),
+         severity:
+           first_present([group_attr(element, :monitor, :severity), attr(element, :severity)])
        )
      )}
   end
@@ -412,10 +622,12 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.cluster_dashboard(
        element.id,
-       attr(element, :nodes, []),
+       first_present([group_attr(element, :cluster, :nodes), attr(element, :nodes)], []),
        Keyword.merge(base_opts(element),
-         summary: attr(element, :summary, %{}),
-         severity: attr(element, :severity)
+         summary:
+           first_present([group_attr(element, :cluster, :summary), attr(element, :summary)], %{}),
+         severity:
+           first_present([group_attr(element, :cluster, :severity), attr(element, :severity)])
        )
      )}
   end
@@ -425,11 +637,23 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.command_palette(
        element.id,
-       attr(element, :commands, []),
+       first_present(
+         [group_attr(element, :command_palette, :commands), attr(element, :commands)],
+         []
+       ),
        Keyword.merge(base_opts(element),
-         query: attr(element, :query),
-         active_command: attr(element, :active_command),
-         placeholder: attr(element, :placeholder)
+         query:
+           first_present([group_attr(element, :command_palette, :query), attr(element, :query)]),
+         active_command:
+           first_present([
+             group_attr(element, :command_palette, :active_command),
+             attr(element, :active_command)
+           ]),
+         placeholder:
+           first_present([
+             group_attr(element, :command_palette, :placeholder),
+             attr(element, :placeholder)
+           ])
        )
      )}
   end
@@ -439,10 +663,18 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.supervision_tree_viewer(
        element.id,
-       attr(element, :nodes, []),
+       first_present([group_attr(element, :inspection, :nodes), attr(element, :nodes)], []),
        Keyword.merge(base_opts(element),
-         expanded: attr(element, :expanded, true),
-         show_restarts: attr(element, :show_restarts, true)
+         expanded:
+           first_present(
+             [group_attr(element, :inspection, :expanded?), attr(element, :expanded)],
+             true
+           ),
+         show_restarts:
+           first_present(
+             [group_attr(element, :inspection, :show_restarts?), attr(element, :show_restarts)],
+             true
+           )
        )
      )}
   end
@@ -455,9 +687,10 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           gap: attr(element, :gap),
-           align: attr(element, :align),
-           justify: attr(element, :justify)
+           gap: first_present([group_attr(element, :layout, :gap), attr(element, :gap)]),
+           align: first_present([group_attr(element, :layout, :align), attr(element, :align)]),
+           justify:
+             first_present([group_attr(element, :layout, :justify), attr(element, :justify)])
          )
        )}
     end
@@ -471,9 +704,35 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           gap: attr(element, :gap),
-           align: attr(element, :align),
-           justify: attr(element, :justify)
+           gap: first_present([group_attr(element, :layout, :gap), attr(element, :gap)]),
+           align: first_present([group_attr(element, :layout, :align), attr(element, :align)]),
+           justify:
+             first_present([group_attr(element, :layout, :justify), attr(element, :justify)])
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layout, "layout"] and kind in [:grid, "grid"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       Widgets.grid(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           columns:
+             first_present([group_attr(element, :layout, :columns), attr(element, :columns)]),
+           rows: first_present([group_attr(element, :layout, :rows), attr(element, :rows)]),
+           auto_flow:
+             first_present(
+               [group_attr(element, :layout, :auto_flow), attr(element, :auto_flow)],
+               :row
+             ),
+           gap: first_present([group_attr(element, :layout, :gap), attr(element, :gap)]),
+           align: first_present([group_attr(element, :layout, :align), attr(element, :align)]),
+           justify:
+             first_present([group_attr(element, :layout, :justify), attr(element, :justify)])
          )
        )}
     end
@@ -487,8 +746,12 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           direction: attr(element, :direction, :column),
-           gap: attr(element, :gap)
+           direction:
+             first_present(
+               [group_attr(element, :layout, :direction), attr(element, :direction)],
+               :column
+             ),
+           gap: first_present([group_attr(element, :layout, :gap), attr(element, :gap)])
          )
        )}
     end
@@ -517,14 +780,36 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          content,
          Keyword.merge(base_opts(element),
-           axis: attr(element, :axis, :vertical),
-           offset: attr(element, :offset, 0),
-           clip: attr(element, :clip, true),
-           scrollbars: attr(element, :scrollbars, :auto),
-           width: attr(element, :width),
-           height: attr(element, :height),
-           sync_group: attr(element, :sync_group),
-           independent_scroll: attr(element, :independent_scroll, false)
+           axis:
+             first_present(
+               [group_attr(element, :viewport, :axis), attr(element, :axis)],
+               :vertical
+             ),
+           offset:
+             first_present([group_attr(element, :viewport, :offset), attr(element, :offset)], 0),
+           clip:
+             first_present([group_attr(element, :viewport, :clip?), attr(element, :clip)], true),
+           scrollbars:
+             first_present(
+               [group_attr(element, :viewport, :scrollbars), attr(element, :scrollbars)],
+               :auto
+             ),
+           width: first_present([group_attr(element, :viewport, :width), attr(element, :width)]),
+           height:
+             first_present([group_attr(element, :viewport, :height), attr(element, :height)]),
+           sync_group:
+             first_present([
+               group_attr(element, :viewport, :sync_group),
+               attr(element, :sync_group)
+             ]),
+           independent_scroll:
+             first_present(
+               [
+                 group_attr(element, :viewport, :independent_scroll?),
+                 attr(element, :independent_scroll)
+               ],
+               false
+             )
          )
        )}
     end
@@ -536,12 +821,36 @@ defmodule WebUi.Renderer.Canonical do
      Widgets.scroll_bar(
        element.id,
        Keyword.merge(base_opts(element),
-         orientation: attr(element, :orientation, :vertical),
-         position: attr(element, :position, 0),
-         viewport_size: attr(element, :viewport_size),
-         content_size: attr(element, :content_size),
-         viewport_ref: attr(element, :viewport_ref),
-         sync_group: attr(element, :sync_group)
+         orientation:
+           first_present(
+             [group_attr(element, :scroll_bar, :orientation), attr(element, :orientation)],
+             :vertical
+           ),
+         position:
+           first_present(
+             [group_attr(element, :scroll_bar, :position), attr(element, :position)],
+             0
+           ),
+         viewport_size:
+           first_present([
+             group_attr(element, :scroll_bar, :viewport_size),
+             attr(element, :viewport_size)
+           ]),
+         content_size:
+           first_present([
+             group_attr(element, :scroll_bar, :content_size),
+             attr(element, :content_size)
+           ]),
+         viewport_ref:
+           first_present([
+             group_attr(element, :scroll_bar, :viewport_ref),
+             attr(element, :viewport_ref)
+           ]),
+         sync_group:
+           first_present([
+             group_attr(element, :scroll_bar, :sync_group),
+             attr(element, :sync_group)
+           ])
        )
      )}
   end
@@ -556,33 +865,87 @@ defmodule WebUi.Renderer.Canonical do
          primary,
          secondary,
          Keyword.merge(base_opts(element),
-           direction: attr(element, :direction, :horizontal),
-           ratio: attr(element, :ratio, 0.5),
-           resizable: attr(element, :resizable, true),
-           min_primary: attr(element, :min_primary),
-           min_secondary: attr(element, :min_secondary),
-           primary_size: attr(element, :primary_size),
-           secondary_size: attr(element, :secondary_size),
-           divider: attr(element, :divider, %{}),
+           direction:
+             first_present(
+               [group_attr(element, :split, :direction), attr(element, :direction)],
+               :horizontal
+             ),
+           ratio:
+             first_present([group_attr(element, :split, :ratio), attr(element, :ratio)], 0.5),
+           resizable:
+             first_present(
+               [group_attr(element, :split, :resizable?), attr(element, :resizable)],
+               true
+             ),
+           min_primary:
+             first_present([
+               group_attr(element, :split, :min_primary),
+               attr(element, :min_primary)
+             ]),
+           min_secondary:
+             first_present([
+               group_attr(element, :split, :min_secondary),
+               attr(element, :min_secondary)
+             ]),
+           primary_size:
+             first_present([
+               group_attr(element, :split, :primary_size),
+               attr(element, :primary_size)
+             ]),
+           secondary_size:
+             first_present([
+               group_attr(element, :split, :secondary_size),
+               attr(element, :secondary_size)
+             ]),
+           divider:
+             first_present([group_attr(element, :split, :divider), attr(element, :divider)], %{}),
            divider_size: map_get(map_attr(element, :divider), :size),
            divider_style: map_get(map_attr(element, :divider), :style),
-           sync_scroll: attr(element, :sync_scroll, false)
+           sync_scroll:
+             first_present(
+               [group_attr(element, :split, :sync_scroll), attr(element, :sync_scroll)],
+               false
+             )
          )
        )}
     end
   end
 
   defp do_render(%Element{type: type, kind: kind} = element)
-       when type in [:composite, "composite"] and
-              kind in [:form, "form", :form_builder, "form_builder"] do
+       when type in [:composite, "composite"] and kind in [:form, "form"] do
     with {:ok, children} <- map_children(default_children(element)) do
       {:ok,
        Widgets.form(
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           mode: attr(element, :mode, :grouped),
-           autocomplete: attr(element, :autocomplete, true)
+           mode:
+             first_present([group_attr(element, :form, :mode), attr(element, :mode)], :grouped),
+           autocomplete:
+             first_present(
+               [group_attr(element, :form, :autocomplete?), attr(element, :autocomplete)],
+               true
+             )
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:form_builder, "form_builder"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       Widgets.form_builder(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           mode:
+             first_present([group_attr(element, :form, :mode), attr(element, :mode)], :grouped),
+           autocomplete:
+             first_present(
+               [group_attr(element, :form, :autocomplete?), attr(element, :autocomplete)],
+               true
+             )
          )
        )}
     end
@@ -596,9 +959,17 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           legend: attr(element, :legend),
-           group_description: attr(element, :description),
-           collapsible: attr(element, :collapsible, false)
+           legend: first_present([group_attr(element, :group, :legend), attr(element, :legend)]),
+           group_description:
+             first_present([
+               group_attr(element, :group, :description),
+               attr(element, :description)
+             ]),
+           collapsible:
+             first_present(
+               [group_attr(element, :group, :collapsible?), attr(element, :collapsible)],
+               false
+             )
          )
        )}
     end
@@ -612,8 +983,9 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          control,
          Keyword.merge(base_opts(element),
-           name: attr(element, :name),
-           control_id: attr(element, :control_id),
+           name: first_present([group_attr(element, :field, :name), attr(element, :name)]),
+           control_id:
+             first_present([group_attr(element, :field, :control_id), attr(element, :control_id)]),
            label: optional_slot_child(element, :label),
            help: optional_slot_child(element, :help)
          )
@@ -631,10 +1003,23 @@ defmodule WebUi.Renderer.Canonical do
          base,
          layers,
          Keyword.merge(base_opts(element),
-           mode: attr(element, :mode, :stacked),
-           background_fill: attr(element, :background_fill, :transparent),
-           dismissible: attr(element, :dismissible, true),
-           focus_scope: attr(element, :focus_scope),
+           mode:
+             first_present([group_attr(element, :overlay, :mode), attr(element, :mode)], :stacked),
+           background_fill:
+             first_present(
+               [group_attr(element, :overlay, :background_fill), attr(element, :background_fill)],
+               :transparent
+             ),
+           dismissible:
+             first_present(
+               [group_attr(element, :overlay, :dismissible?), attr(element, :dismissible)],
+               true
+             ),
+           focus_scope:
+             first_present([
+               group_attr(element, :overlay, :focus_scope),
+               attr(element, :focus_scope)
+             ]),
            z_order: attr(element, :z_order, :overlay)
          )
        )}
@@ -649,12 +1034,25 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          content,
          Keyword.merge(base_opts(element),
-           title: attr(element, :title),
-           modal: attr(element, :modal, true),
-           dismissible: attr(element, :dismissible, true),
-           size: attr(element, :size, :md),
-           background_fill: attr(element, :background_fill, :scrim),
-           focus_scope: attr(element, :focus_scope, :dialog)
+           title: first_present([group_attr(element, :dialog, :title), attr(element, :title)]),
+           modal:
+             first_present([group_attr(element, :dialog, :modal?), attr(element, :modal)], true),
+           dismissible:
+             first_present(
+               [group_attr(element, :dialog, :dismissible?), attr(element, :dismissible)],
+               true
+             ),
+           size: first_present([group_attr(element, :dialog, :size), attr(element, :size)], :md),
+           background_fill:
+             first_present(
+               [group_attr(element, :dialog, :background_fill), attr(element, :background_fill)],
+               :scrim
+             ),
+           focus_scope:
+             first_present(
+               [group_attr(element, :dialog, :focus_scope), attr(element, :focus_scope)],
+               :dialog
+             )
          )
        )}
     end
@@ -668,10 +1066,26 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          content,
          Keyword.merge(base_opts(element),
-           placement: attr(element, :placement, :top_end),
-           duration_ms: attr(element, :duration_ms, 5_000),
-           severity: attr(element, :severity, :info),
-           transient: attr(element, :transient, true)
+           placement:
+             first_present(
+               [group_attr(element, :toast, :placement), attr(element, :placement)],
+               :top_end
+             ),
+           duration_ms:
+             first_present(
+               [group_attr(element, :toast, :duration_ms), attr(element, :duration_ms)],
+               5_000
+             ),
+           severity:
+             first_present(
+               [group_attr(element, :toast, :severity), attr(element, :severity)],
+               :info
+             ),
+           transient:
+             first_present(
+               [group_attr(element, :toast, :transient?), attr(element, :transient)],
+               true
+             )
          )
        )}
     end
@@ -686,11 +1100,34 @@ defmodule WebUi.Renderer.Canonical do
          element.id,
          content,
          Keyword.merge(base_opts(element),
-           title: attr(element, :title),
-           severity: attr(element, :severity, :warning),
-           requires_confirmation: attr(element, :requires_confirmation, true),
-           background_fill: attr(element, :background_fill, :scrim),
-           focus_scope: attr(element, :focus_scope, :alert_dialog)
+           title:
+             first_present([group_attr(element, :alert_dialog, :title), attr(element, :title)]),
+           severity:
+             first_present(
+               [group_attr(element, :alert_dialog, :severity), attr(element, :severity)],
+               :warning
+             ),
+           requires_confirmation:
+             first_present(
+               [
+                 group_attr(element, :alert_dialog, :requires_confirmation?),
+                 attr(element, :requires_confirmation)
+               ],
+               true
+             ),
+           background_fill:
+             first_present(
+               [
+                 group_attr(element, :alert_dialog, :background_fill),
+                 attr(element, :background_fill)
+               ],
+               :scrim
+             ),
+           focus_scope:
+             first_present(
+               [group_attr(element, :alert_dialog, :focus_scope), attr(element, :focus_scope)],
+               :alert_dialog
+             )
          )
        )}
     end
@@ -702,12 +1139,31 @@ defmodule WebUi.Renderer.Canonical do
     {:ok,
      Widgets.context_menu(
        element.id,
-       attr(element, :items, []),
+       context_menu_items(element),
        Keyword.merge(base_opts(element),
-         anchor: attr(element, :anchor, %{}),
-         placement: attr(element, :placement, :bottom_start),
-         dismissible: attr(element, :dismissible, true),
-         background_fill: attr(element, :background_fill, :none)
+         anchor:
+           first_present(
+             [group_attr(element, :context_menu, :anchor), attr(element, :anchor)],
+             %{}
+           ),
+         placement:
+           first_present(
+             [group_attr(element, :context_menu, :placement), attr(element, :placement)],
+             :bottom_start
+           ),
+         dismissible:
+           first_present(
+             [group_attr(element, :context_menu, :dismissible?), attr(element, :dismissible)],
+             true
+           ),
+         background_fill:
+           first_present(
+             [
+               group_attr(element, :context_menu, :background_fill),
+               attr(element, :background_fill)
+             ],
+             :none
+           )
        )
      )}
   end
@@ -717,14 +1173,17 @@ defmodule WebUi.Renderer.Canonical do
   end
 
   defp base_opts(%Element{} = element) do
+    styles = canonical_styles(element)
+    events = canonical_events(element)
+
     [
       description: element.metadata && element.metadata.description,
       tags: element.metadata && Map.get(element.metadata, :tags),
       annotations: element.metadata && Map.get(element.metadata, :annotations),
       state: attr(element, :state, %{}),
-      styles: attr(element, :styles, %{}),
-      events: attr(element, :events, %{}),
-      style_hooks: attr(element, :style_hooks, []),
+      styles: styles,
+      events: events,
+      style_hooks: Map.get(styles, :hooks, []),
       metadata: %{
         canonical_source: %{
           id: element.id,
@@ -839,6 +1298,191 @@ defmodule WebUi.Renderer.Canonical do
 
   defp sparkline_series_id(_series), do: :primary
 
+  defp renderer_input(kind) when kind in [:text_input, "text_input"], do: &Widgets.text_input/2
+
+  defp renderer_input(kind) when kind in [:numeric_input, "numeric_input"],
+    do: &Widgets.numeric_input/2
+
+  defp renderer_input(kind) when kind in [:date_input, "date_input"], do: &Widgets.date_input/2
+  defp renderer_input(kind) when kind in [:time_input, "time_input"], do: &Widgets.time_input/2
+
+  defp renderer_selection(kind) when kind in [:select, "select"], do: &Widgets.select/3
+
+  defp renderer_selection(kind) when kind in [:radio_group, "radio_group"],
+    do: &Widgets.radio_group/3
+
+  defp renderer_selection(kind) when kind in [:pick_list, "pick_list"], do: &Widgets.pick_list/3
+
+  defp context_menu_items(%Element{} = element) do
+    first_present([group_attr(element, :context_menu, :items), attr(element, :items)], []) ||
+      case slot_child(element, :menu) do
+        {:ok, %WebUi.Widget{attributes: %{items: items}}} -> items
+        _other -> []
+      end
+  end
+
+  defp binding_name(%Element{} = element) do
+    case primary_binding(element) do
+      nil ->
+        nil
+
+      binding ->
+        first_present([map_get(binding, :name), List.last(List.wrap(map_get(binding, :path)))])
+    end
+  end
+
+  defp binding_value(%Element{} = element) do
+    case primary_binding(element) do
+      nil -> nil
+      binding -> first_present([map_get(binding, :value), map_get(binding, :default)])
+    end
+  end
+
+  defp primary_binding(%Element{} = element) do
+    element
+    |> attr(:bindings, [])
+    |> List.wrap()
+    |> Enum.map(&normalize_map/1)
+    |> List.first()
+  end
+
+  defp canonical_events(%Element{} = element) do
+    interactions =
+      element
+      |> attr(:interactions, [])
+      |> List.wrap()
+      |> Enum.map(&normalize_map/1)
+      |> Enum.reduce(%{}, fn interaction, acc ->
+        case map_get(interaction, :family) do
+          nil ->
+            acc
+
+          family ->
+            Map.put(acc, normalize_key(family), compact_map(Map.delete(interaction, :family)))
+        end
+      end)
+
+    interactions
+    |> Map.merge(normalize_map(attr(element, :events, %{})))
+    |> compact_map()
+  end
+
+  defp canonical_styles(%Element{} = element) do
+    direct_styles = normalize_map(attr(element, :styles, %{}))
+    direct_hooks = List.wrap(attr(element, :style_hooks, []))
+    translated_style = translate_style_attachment(attr(element, :style, %{}))
+    translated_theme = translate_theme_attachment(attr(element, :theme, %{}))
+
+    hooks =
+      direct_styles
+      |> Map.get(:hooks, [])
+      |> List.wrap()
+      |> Kernel.++(direct_hooks)
+      |> Kernel.++(Map.get(translated_style, :hooks, []))
+      |> Kernel.++(Map.get(translated_theme, :hooks, []))
+      |> Enum.uniq()
+
+    direct_styles
+    |> deep_merge(Map.drop(translated_style, [:hooks]))
+    |> deep_merge(Map.drop(translated_theme, [:hooks]))
+    |> maybe_put(:hooks, if(hooks == [], do: nil, else: hooks))
+    |> compact_map()
+  end
+
+  defp translate_style_attachment(style) when style == %{}, do: %{}
+
+  defp translate_style_attachment(style) do
+    style = normalize_map(style)
+    text = normalize_map(map_get(style, :text, %{}))
+    visibility = normalize_map(map_get(style, :visibility, %{}))
+    emphasis = normalize_map(map_get(style, :emphasis, %{}))
+    state_variants = normalize_map(map_get(style, :state_variants, %{}))
+
+    translated =
+      %{}
+      |> maybe_put(:tone, map_get(emphasis, :tone))
+      |> maybe_put(:visibility, if(map_get(visibility, :hidden?) == true, do: :hidden, else: nil))
+      |> maybe_put(:emphasis, text_emphasis(text))
+      |> maybe_put(:state_variants, translate_state_variants(state_variants))
+
+    hooks =
+      []
+      |> maybe_list_add(:state_variants, map_size(Map.get(translated, :state_variants, %{})) > 0)
+
+    maybe_put(translated, :hooks, if(hooks == [], do: nil, else: hooks))
+  end
+
+  defp translate_theme_attachment(theme) when theme == %{}, do: %{}
+
+  defp translate_theme_attachment(theme) do
+    theme = normalize_map(theme)
+
+    token_refs =
+      theme
+      |> map_get(:token_refs, [])
+      |> List.wrap()
+      |> Enum.map(&normalize_map/1)
+      |> Enum.map(fn token_ref ->
+        path = List.wrap(map_get(token_ref, :path))
+        {Enum.join(Enum.map(path, &to_string/1), "_"), path}
+      end)
+      |> Enum.reject(fn {_key, path} -> path == [] end)
+      |> Map.new()
+
+    hooks = [] |> maybe_list_add(:theme_tokens, token_refs != %{})
+
+    %{}
+    |> maybe_put(:variant, map_get(theme, :variant))
+    |> maybe_put(:theme_tokens, if(token_refs == %{}, do: nil, else: token_refs))
+    |> maybe_put(:hooks, if(hooks == [], do: nil, else: hooks))
+  end
+
+  defp translate_state_variants(state_variants) when map_size(state_variants) == 0, do: %{}
+
+  defp translate_state_variants(state_variants) do
+    Map.new(state_variants, fn {state, value} ->
+      {normalize_key(state),
+       value |> normalize_map() |> translate_style_attachment() |> Map.drop([:hooks])}
+    end)
+  end
+
+  defp text_emphasis(text) do
+    cond do
+      map_get(text, :bold?) == true -> :strong
+      map_get(text, :dim?) == true -> :subtle
+      true -> nil
+    end
+  end
+
+  defp content_text(%Element{} = element, default \\ nil) do
+    first_present([group_attr(element, :content, :text), attr(element, :content)], default)
+  end
+
+  defp group_attr(%Element{} = element, group, key, default \\ nil) do
+    case attr(element, group, %{}) do
+      value when is_list(value) or is_map(value) or is_struct(value) ->
+        value
+        |> normalize_map()
+        |> map_get(key, default)
+
+      _other ->
+        default
+    end
+  end
+
+  defp first_present(values, default \\ nil) do
+    case Enum.reduce_while(values, :not_found, fn value, _acc ->
+           if value in [nil, [], %{}] do
+             {:cont, :not_found}
+           else
+             {:halt, value}
+           end
+         end) do
+      :not_found -> default
+      value -> value
+    end
+  end
+
   defp map_attr(%Element{} = element, key) do
     element
     |> attr(key, %{})
@@ -853,7 +1497,11 @@ defmodule WebUi.Renderer.Canonical do
     end
   end
 
+  defp normalize_key(key) when is_binary(key), do: String.to_atom(key)
+  defp normalize_key(key), do: key
+
   defp normalize_map(nil), do: %{}
+  defp normalize_map(%_{} = struct), do: struct |> Map.from_struct() |> normalize_map()
   defp normalize_map(map) when is_map(map), do: Map.new(map)
   defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
 
@@ -864,4 +1512,31 @@ defmodule WebUi.Renderer.Canonical do
       true -> default
     end
   end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, _key, value) when is_map(value) and map_size(value) == 0, do: map
+  defp maybe_put(map, _key, []), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
+
+  defp compact_map(map) do
+    map
+    |> Enum.reject(fn {_key, value} -> value in [nil, [], %{}] end)
+    |> Map.new()
+  end
+
+  defp deep_merge(left, right) when left == %{}, do: right
+  defp deep_merge(left, right) when right == %{}, do: left
+
+  defp deep_merge(left, right) when is_map(left) and is_map(right) do
+    Map.merge(left, right, fn _key, left_value, right_value ->
+      if is_map(left_value) and is_map(right_value) do
+        deep_merge(left_value, right_value)
+      else
+        right_value
+      end
+    end)
+  end
+
+  defp maybe_list_add(list, _value, false), do: list
+  defp maybe_list_add(list, value, true), do: list ++ [value]
 end

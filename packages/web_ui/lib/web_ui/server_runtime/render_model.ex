@@ -70,15 +70,25 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_tag(:spacer), do: "div"
   defp dom_tag(:content), do: "section"
   defp dom_tag(:text_input), do: "input"
+  defp dom_tag(:numeric_input), do: "input"
+  defp dom_tag(:date_input), do: "input"
+  defp dom_tag(:time_input), do: "input"
+  defp dom_tag(:file_input), do: "input"
+  defp dom_tag(:slider), do: "input"
+  defp dom_tag(:toggle), do: "input"
   defp dom_tag(:checkbox), do: "input"
+  defp dom_tag(:radio_group), do: "div"
   defp dom_tag(:select), do: "select"
+  defp dom_tag(:pick_list), do: "select"
   defp dom_tag(:menu), do: "nav"
   defp dom_tag(:tabs), do: "div"
   defp dom_tag(:row), do: "div"
   defp dom_tag(:column), do: "div"
+  defp dom_tag(:grid), do: "div"
   defp dom_tag(:stack), do: "div"
   defp dom_tag(:panel), do: "section"
   defp dom_tag(:form), do: "form"
+  defp dom_tag(:form_builder), do: "form"
   defp dom_tag(:field_group), do: "fieldset"
   defp dom_tag(:field), do: "div"
   defp dom_tag(:viewport), do: "div"
@@ -89,6 +99,7 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_tag(:toast), do: "aside"
   defp dom_tag(:alert_dialog), do: "dialog"
   defp dom_tag(:context_menu), do: "div"
+  defp dom_tag(:list), do: "ul"
   defp dom_tag(:table), do: "table"
   defp dom_tag(:tree_view), do: "ul"
   defp dom_tag(:markdown_viewer), do: "article"
@@ -113,11 +124,21 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_role(:button), do: "button"
   defp dom_role(:link), do: "link"
   defp dom_role(:text_input), do: "textbox"
+  defp dom_role(:numeric_input), do: "spinbutton"
+  defp dom_role(:date_input), do: "textbox"
+  defp dom_role(:time_input), do: "textbox"
+  defp dom_role(:file_input), do: "textbox"
+  defp dom_role(:slider), do: "slider"
+  defp dom_role(:toggle), do: "switch"
   defp dom_role(:checkbox), do: "checkbox"
+  defp dom_role(:radio_group), do: "radiogroup"
   defp dom_role(:select), do: "listbox"
+  defp dom_role(:pick_list), do: "listbox"
   defp dom_role(:menu), do: "navigation"
   defp dom_role(:tabs), do: "tablist"
+  defp dom_role(:grid), do: "grid"
   defp dom_role(:form), do: "form"
+  defp dom_role(:form_builder), do: "form"
   defp dom_role(:field_group), do: "group"
   defp dom_role(:field), do: "group"
   defp dom_role(:panel), do: "region"
@@ -129,6 +150,7 @@ defmodule WebUi.ServerRuntime.RenderModel do
   defp dom_role(:toast), do: "status"
   defp dom_role(:alert_dialog), do: "alertdialog"
   defp dom_role(:context_menu), do: "menu"
+  defp dom_role(:list), do: "list"
   defp dom_role(:table), do: "grid"
   defp dom_role(:tree_view), do: "tree"
   defp dom_role(:markdown_viewer), do: "document"
@@ -177,11 +199,20 @@ defmodule WebUi.ServerRuntime.RenderModel do
       :button,
       :link,
       :text_input,
+      :numeric_input,
+      :date_input,
+      :time_input,
+      :file_input,
+      :slider,
+      :toggle,
       :checkbox,
+      :radio_group,
       :select,
+      :pick_list,
       :menu,
       :tabs,
       :form,
+      :form_builder,
       :viewport,
       :scroll_bar,
       :split_pane,
@@ -205,10 +236,19 @@ defmodule WebUi.ServerRuntime.RenderModel do
       :button,
       :link,
       :text_input,
+      :numeric_input,
+      :date_input,
+      :time_input,
+      :file_input,
+      :slider,
+      :toggle,
       :checkbox,
+      :radio_group,
       :select,
+      :pick_list,
       :menu,
       :tabs,
+      :form_builder,
       :viewport,
       :scroll_bar,
       :split_pane,
@@ -226,11 +266,24 @@ defmodule WebUi.ServerRuntime.RenderModel do
   end
 
   defp editable_kinds do
-    [:text_input, :checkbox, :select, :command_palette]
+    [
+      :text_input,
+      :numeric_input,
+      :date_input,
+      :time_input,
+      :file_input,
+      :slider,
+      :toggle,
+      :checkbox,
+      :radio_group,
+      :select,
+      :pick_list,
+      :command_palette
+    ]
   end
 
   defp navigable_kinds do
-    [:link, :menu, :tabs, :tree_view, :context_menu]
+    [:link, :menu, :tabs, :tree_view, :context_menu, :list]
   end
 
   defp dom_value(%Widget{kind: :progress, attributes: attributes}) do

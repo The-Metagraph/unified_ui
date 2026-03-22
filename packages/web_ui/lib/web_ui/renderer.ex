@@ -21,57 +21,32 @@ defmodule WebUi.Renderer do
     ]
   end
 
+  @spec required_canonical_kinds() :: [atom()]
+  def required_canonical_kinds do
+    [
+      UnifiedIUR.Widgets.Foundational.kinds(),
+      UnifiedIUR.Widgets.Input.kinds(),
+      UnifiedIUR.Widgets.Navigation.kinds(),
+      UnifiedIUR.Forms.kinds(),
+      UnifiedIUR.Layout.kinds(),
+      UnifiedIUR.Viewport.kinds(),
+      UnifiedIUR.Widgets.Data.kinds(),
+      UnifiedIUR.Widgets.Feedback.kinds(),
+      UnifiedIUR.Canvas.kinds(),
+      UnifiedIUR.Widgets.Advanced.kinds(),
+      UnifiedIUR.Layer.kinds()
+    ]
+    |> List.flatten()
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
   @spec supported_kinds() :: [atom()]
   def supported_kinds do
-    [
-      :text,
-      :label,
-      :icon,
-      :image,
-      :button,
-      :link,
-      :separator,
-      :spacer,
-      :content,
-      :text_input,
-      :checkbox,
-      :select,
-      :menu,
-      :tabs,
-      :row,
-      :column,
-      :container,
-      :stack,
-      :panel,
-      :viewport,
-      :scroll_bar,
-      :split_pane,
-      :form,
-      :field_group,
-      :field,
-      :table,
-      :tree_view,
-      :markdown_viewer,
-      :log_viewer,
-      :status,
-      :progress,
-      :inline_feedback,
-      :gauge,
-      :sparkline,
-      :bar_chart,
-      :line_chart,
-      :canvas,
-      :stream_widget,
-      :process_monitor,
-      :cluster_dashboard,
-      :command_palette,
-      :supervision_tree_viewer,
-      :overlay,
-      :dialog,
-      :toast,
-      :alert_dialog,
-      :context_menu
-    ]
+    required_canonical_kinds()
+    |> Kernel.++([:container, :form, :panel])
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   @spec render(Element.t(), keyword()) :: {:ok, WebUi.Widget.t()} | {:error, Error.t()}

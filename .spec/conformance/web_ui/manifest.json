@@ -1,7 +1,7 @@
 {
   "package": "web_ui",
   "version": "1",
-  "ci_enforcement": "warn",
+  "ci_enforcement": "required",
   "requirements": [
     {
       "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
@@ -332,14 +332,23 @@
     },
     {
       "requirement_id": "web_ui.native_widgets.covers_canonical_iur_surface",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the expanded native widget catalog and coverage validation proving the direct native surface spans the canonical widget set.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/validate.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/web_ui/native_widgets_test.exs test/web_ui/canonical_renderer_test.exs",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.native_widgets.server_client_composition",
@@ -363,14 +372,31 @@
     },
     {
       "requirement_id": "web_ui.native_widgets.theme_and_style_surface",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by the native style/theme surface and continuity tests that keep authored theme tokens and state variants intact across the split runtime.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/style.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/server_runtime/style_resolver.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/style_realization.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/web_ui/phase_five_integration_test.exs test/web_ui/runtime_test.exs",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.native_widgets.interaction_surface",
@@ -569,14 +595,23 @@
     },
     {
       "requirement_id": "web_ui.frontend_runtime.canonical_meaning_preserved",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by canonical renderer and runtime hydration tests that preserve the authored canonical meaning through the frontend realization path.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/frontend_runtime/model.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/web_ui/canonical_renderer_test.exs test/web_ui/runtime_test.exs",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.iur_renderer.accepts_canonical_iur",
@@ -600,14 +635,23 @@
     },
     {
       "requirement_id": "web_ui.iur_renderer.full_construct_coverage",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by direct canonical renderer coverage tests and the coverage validator that now checks the renderer against the full canonical kind set.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/validate.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/web_ui/native_widgets_test.exs test/web_ui/canonical_renderer_test.exs",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.iur_renderer.deterministic_mapping",
@@ -627,14 +671,23 @@
     },
     {
       "requirement_id": "web_ui.iur_renderer.meaning_preservation",
-      "status": "waived",
-      "notes": "Temporarily waived while `web_ui` remains intentionally reset pending a fresh implementation line.",
-      "waiver": {
-        "reason": "The earlier exploratory `web_ui` package implementation was intentionally removed after reset. This requirement will be reactivated when a new `web_ui` implementation track begins.",
-        "approved_by": "Pascal",
-        "approved_on": "2026-03-20",
-        "expires_on": "2026-06-30"
-      }
+      "status": "verified",
+      "notes": "Verified by canonical renderer and continuity tests that confirm canonical interactions, theme attachments, layout meaning, and hydration roles survive translation into native widgets.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/web_ui/lib/web_ui/continuity.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/web_ui/canonical_renderer_test.exs test/web_ui/phase_five_integration_test.exs",
+          "cwd": "packages/web_ui"
+        }
+      ]
     },
     {
       "requirement_id": "web_ui.iur_renderer.native_widget_reuse",
