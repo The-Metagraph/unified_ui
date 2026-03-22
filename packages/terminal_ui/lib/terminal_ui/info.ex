@@ -41,6 +41,13 @@ defmodule TerminalUi.Info do
         catalog: TerminalUi.Theme.catalog_ids(),
         default: TerminalUi.Theme.default_theme().id
       },
+      inspection: %{
+        helpers: TerminalUi.Inspection.helpers()
+      },
+      continuity: %{
+        seams: TerminalUi.Continuity.seams(),
+        diagnostic_kinds: TerminalUi.Continuity.diagnostic_kinds()
+      },
       transport: %{
         families: TerminalUi.Transport.families(),
         input_families: TerminalUi.Transport.input_families(),

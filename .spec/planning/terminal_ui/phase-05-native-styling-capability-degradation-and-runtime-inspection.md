@@ -63,26 +63,26 @@ Back to index: [README](./README.md)
       [x] 5.2.2.2 Subtask - Preserve shared runtime, canonical rendering, and input-normalization semantics underneath capability-specific behavior.
       [x] 5.2.2.3 Subtask - Add continuity diagnostics for capability-specific behavior that risks semantic drift.
 
-  [ ] 5.3 Section - Runtime Inspection and Continuity Diagnostics
+  [x] 5.3 Section - Runtime Inspection and Continuity Diagnostics
     Implement tooling surfaces that help maintainers inspect styling, runtime
     continuity, and capability-specific behavior without losing semantic
     alignment.
 
-    [ ] 5.3.1 Task - Implement styling and capability inspection surfaces
+    [x] 5.3.1 Task - Implement styling and capability inspection surfaces
       Provide package-local inspection helpers for native styling, canonical
       styling realization, and bounded capability behavior.
 
-      [ ] 5.3.1.1 Subtask - Implement inspection helpers that summarize effective styles, themes, degradations, and component variants for direct-native and canonical rendering.
-      [ ] 5.3.1.2 Subtask - Implement inspection helpers that show where backend and capability behavior diverge underneath shared semantics.
-      [ ] 5.3.1.3 Subtask - Keep inspection output aligned with maintained examples and later validation workflows.
+      [x] 5.3.1.1 Subtask - Implement inspection helpers that summarize effective styles, themes, degradations, and component variants for direct-native and canonical rendering.
+      [x] 5.3.1.2 Subtask - Implement inspection helpers that show where backend and capability behavior diverge underneath shared semantics.
+      [x] 5.3.1.3 Subtask - Keep inspection output aligned with maintained examples and later validation workflows.
 
-    [ ] 5.3.2 Task - Implement native and canonical continuity diagnostics
+    [x] 5.3.2 Task - Implement native and canonical continuity diagnostics
       Expose whether the same terminal meaning is preserved across
       direct-native, canonical, and cross-capability execution paths.
 
-      [ ] 5.3.2.1 Subtask - Implement continuity helpers that compare direct-native and canonical widget, style, degradation, and interaction realization.
-      [ ] 5.3.2.2 Subtask - Implement cross-capability continuity helpers that compare the same screen intent across richer and limited terminal semantics.
-      [ ] 5.3.2.3 Subtask - Report deterministic diagnostics for styling, renderer, or capability behavior that drifts from shared package meaning.
+      [x] 5.3.2.1 Subtask - Implement continuity helpers that compare direct-native and canonical widget, style, degradation, and interaction realization.
+      [x] 5.3.2.2 Subtask - Implement cross-capability continuity helpers that compare the same screen intent across richer and limited terminal semantics.
+      [x] 5.3.2.3 Subtask - Report deterministic diagnostics for styling, renderer, or capability behavior that drifts from shared package meaning.
 
   [ ] 5.4 Section - Styling and Degradation Examples
     Implement maintained examples that compare styling, theming, and

@@ -10,6 +10,8 @@ defmodule TerminalUiTest do
              :degradation,
              :style,
              :theme,
+             :inspection,
+             :continuity,
              :layout,
              :layer,
              :renderer,
@@ -27,6 +29,8 @@ defmodule TerminalUiTest do
              degradation: %{modules: degradation_modules},
              style: %{hooks: style_hooks},
              theme: %{catalog: theme_catalog},
+             inspection: %{helpers: inspection_helpers},
+             continuity: %{seams: continuity_seams},
              layout: %{kinds: layout_kinds, module: TerminalUi.Layout},
              layer: %{kinds: layer_kinds, module: TerminalUi.Layer},
              renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
@@ -50,6 +54,8 @@ defmodule TerminalUiTest do
     assert TerminalUi.Degradation in degradation_modules
     assert :theme_tokens in style_hooks
     assert :high_contrast in theme_catalog
+    assert :runtime_snapshot in inspection_helpers
+    assert :style_resolution in continuity_seams
     assert :viewport in layout_kinds
     assert :overlay in layer_kinds
 
@@ -80,6 +86,8 @@ defmodule TerminalUiTest do
              degradation: %{diagnostics: degradation_diagnostics},
              style: %{primitives: style_primitives},
              theme: %{catalog: theme_catalog, default: default_theme},
+             inspection: %{helpers: inspection_helpers},
+             continuity: %{seams: continuity_seams, diagnostic_kinds: diagnostic_kinds},
              examples: %{comparison_ids: comparison_ids},
              documentation: %{guides: guides},
              tooling: %{workflows: workflows}
@@ -92,6 +100,9 @@ defmodule TerminalUiTest do
     assert :high_contrast in theme_catalog
     assert default_theme == :terminal_default
     assert degradation_diagnostics.plan.glyph_set == :unicode
+    assert :runtime_snapshot in inspection_helpers
+    assert :degradation_boundaries in continuity_seams
+    assert :resolved_style_mismatch in diagnostic_kinds
     assert :canvas_surface in layout_kinds
     assert :context_menu in layer_kinds
 

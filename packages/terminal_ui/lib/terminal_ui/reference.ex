@@ -48,6 +48,14 @@ defmodule TerminalUi.Reference do
         default: TerminalUi.Theme.default_theme().id,
         continuity_rules: TerminalUi.Theme.continuity_rules()
       },
+      inspection: %{
+        helpers: TerminalUi.Inspection.helpers(),
+        package_overview: TerminalUi.Inspection.package_overview()
+      },
+      continuity: %{
+        seams: TerminalUi.Continuity.seams(),
+        contract: TerminalUi.Continuity.contract()
+      },
       layout: %{kinds: TerminalUi.Layout.kinds(), module: TerminalUi.Layout},
       layer: %{kinds: TerminalUi.Layer.kinds(), module: TerminalUi.Layer},
       renderer: %{

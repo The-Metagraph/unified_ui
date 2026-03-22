@@ -6,9 +6,11 @@ defmodule TerminalUi do
   alias TerminalUi.{
     Backend,
     Capabilities,
+    Continuity,
     Degradation,
     Examples,
     Info,
+    Inspection,
     Style,
     Theme,
     Layout,
@@ -29,6 +31,8 @@ defmodule TerminalUi do
           | :degradation
           | :style
           | :theme
+          | :inspection
+          | :continuity
           | :layout
           | :layer
           | :renderer
@@ -45,6 +49,8 @@ defmodule TerminalUi do
       :degradation,
       :style,
       :theme,
+      :inspection,
+      :continuity,
       :layout,
       :layer,
       :renderer,
@@ -73,6 +79,12 @@ defmodule TerminalUi do
 
   @spec theme() :: module()
   def theme, do: Theme
+
+  @spec inspection() :: module()
+  def inspection, do: Inspection
+
+  @spec continuity() :: module()
+  def continuity, do: Continuity
 
   @spec layout() :: module()
   def layout, do: Layout
