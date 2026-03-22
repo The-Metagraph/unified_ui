@@ -18,7 +18,7 @@ Back to index: [README](./README.md)
 - Degradation workflows should remain distinct from runtime logic so fallback
   concerns do not redefine package behavior accidentally.
 
-[ ] 5 Phase 5 - Native Styling, Capability Degradation, and Runtime Inspection
+[x] 5 Phase 5 - Native Styling, Capability Degradation, and Runtime Inspection
   Implement native theming and styling, explicit capability degradation,
   runtime continuity diagnostics, and inspectable behavior across richer and
   limited terminal environments.
@@ -105,22 +105,22 @@ Back to index: [README](./README.md)
       [x] 5.4.2.2 Subtask - Add helper workflows that summarize explicit degradation decisions instead of accidental output loss.
       [x] 5.4.2.3 Subtask - Document where tooling and validation workflows will extend the comparison surface in later phases.
 
-  [ ] 5.5 Section - Phase 5 Integration Tests
+  [x] 5.5 Section - Phase 5 Integration Tests
     Validate styling, bounded capability variation, degradation workflows, and
     runtime continuity end to end.
 
-    [ ] 5.5.1 Task - Styling and degradation integration scenarios
+    [x] 5.5.1 Task - Styling and degradation integration scenarios
       Verify native styling meaning and explicit degradation workflows stay
       aligned with the package contract.
 
-      [ ] 5.5.1.1 Subtask - Verify native and canonical styling resolve through the same theme and style model.
-      [ ] 5.5.1.2 Subtask - Verify Unicode-versus-ASCII and color-depth degradation remain explicit and repeatable per capability profile.
-      [ ] 5.5.1.3 Subtask - Verify degradation workflows do not redefine runtime, widget, or transport semantics.
+      [x] 5.5.1.1 Subtask - Verify native and canonical styling resolve through the same theme and style model.
+      [x] 5.5.1.2 Subtask - Verify Unicode-versus-ASCII and color-depth degradation remain explicit and repeatable per capability profile.
+      [x] 5.5.1.3 Subtask - Verify degradation workflows do not redefine runtime, widget, or transport semantics.
 
-    [ ] 5.5.2 Task - Cross-capability continuity integration scenarios
+    [x] 5.5.2 Task - Cross-capability continuity integration scenarios
       Verify the same terminal screen meaning remains coherent across supported
       capability profiles and entry paths.
 
-      [ ] 5.5.2.1 Subtask - Verify direct-native and canonical rendering preserve styling, structure, and interaction meaning through one shared runtime model.
-      [ ] 5.5.2.2 Subtask - Verify bounded capability variation does not break shared runtime semantics across richer and limited terminals.
-      [ ] 5.5.2.3 Subtask - Verify inspection and continuity helpers surface semantic drift with deterministic diagnostics.
+      [x] 5.5.2.1 Subtask - Verify direct-native and canonical rendering preserve styling, structure, and interaction meaning through one shared runtime model.
+      [x] 5.5.2.2 Subtask - Verify bounded capability variation does not break shared runtime semantics across richer and limited terminals.
+      [x] 5.5.2.3 Subtask - Verify inspection and continuity helpers surface semantic drift with deterministic diagnostics.
