@@ -21,7 +21,7 @@ Back to index: [README](./README.md)
 - Backend-specific callbacks and capability concerns must remain bounded behind
   explicit module seams from the start.
 
-[ ] 1 Phase 1 - Package Scaffold and TermUI Runtime Adapter Backbone
+[x] 1 Phase 1 - Package Scaffold and TermUI Runtime Adapter Backbone
   Implement the Mix package scaffold, shared `term_ui` runtime adapter
   backbone, backend and capability seams, and baseline reference surfaces that
   every later `terminal_ui` phase depends on.
