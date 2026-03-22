@@ -138,7 +138,7 @@ defmodule TerminalUi.Widget do
   end
 
   @spec family_for(atom()) :: family()
-  def family_for(kind) when kind in [:container, :column], do: :layout
+  def family_for(kind) when kind in [:container, :column, :row, :stack], do: :layout
   def family_for(kind) when kind in [:button, :toggle, :link, :command], do: :action
   def family_for(kind) when kind in [:text_input, :checkbox, :radio_group, :select], do: :input
   def family_for(kind) when kind in [:menu, :tabs, :breadcrumbs, :list], do: :navigation

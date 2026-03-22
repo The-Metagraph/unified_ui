@@ -35,6 +35,8 @@ defmodule TerminalUi.NativeWidgetsTest do
 
     assert :action in TerminalUi.Widgets.families()
     assert :feedback in TerminalUi.Widgets.families()
+    assert :row in TerminalUi.Widgets.kinds()
+    assert :stack in TerminalUi.Widgets.kinds()
     assert :dialog in TerminalUi.Widgets.kinds()
     assert TerminalUi.Widgets.validation_state().widget_contract == :ready
 

@@ -64,25 +64,25 @@ Back to index: [README](./README.md)
       [x] 2.2.2.2 Subtask - Reuse the same runtime surfaces for direct-native screens and future canonical renderer output.
       [x] 2.2.2.3 Subtask - Add diagnostics for unsupported foundational widgets, invalid layout state, and realization mismatches.
 
-  [ ] 2.3 Section - Baseline Canonical IUR Rendering
+  [x] 2.3 Section - Baseline Canonical IUR Rendering
     Implement the first canonical `UnifiedIUR` rendering path using the same
     native widget and runtime model already used by direct-native screens.
 
-    [ ] 2.3.1 Task - Implement foundational canonical mapper coverage
+    [x] 2.3.1 Task - Implement foundational canonical mapper coverage
       Map foundational canonical widgets, layout primitives, bindings, and
       interaction descriptors into the native `terminal_ui` surface.
 
-      [ ] 2.3.1.1 Subtask - Implement canonical mapping for foundational content, action, form, and navigation widgets.
-      [ ] 2.3.1.2 Subtask - Implement canonical mapping for foundational layout and display primitives needed by the first screen compositions.
-      [ ] 2.3.1.3 Subtask - Accept canonical bindings and interaction descriptors without requiring authored DSL modules inside `terminal_ui`.
+      [x] 2.3.1.1 Subtask - Implement canonical mapping for foundational content, action, form, and navigation widgets.
+      [x] 2.3.1.2 Subtask - Implement canonical mapping for foundational layout and display primitives needed by the first screen compositions.
+      [x] 2.3.1.3 Subtask - Accept canonical bindings and interaction descriptors without requiring authored DSL modules inside `terminal_ui`.
 
-    [ ] 2.3.2 Task - Implement deterministic native-widget reuse for canonical rendering
+    [x] 2.3.2 Task - Implement deterministic native-widget reuse for canonical rendering
       Reuse the same native runtime realization model so canonical input and
       direct-native screens converge on one rendering stack.
 
-      [ ] 2.3.2.1 Subtask - Reuse foundational native widget modules and runtime realization paths for canonical rendering output.
-      [ ] 2.3.2.2 Subtask - Define deterministic canonical-to-native mapping expectations for widget structure, focus behavior, style hooks, and initial degradation hooks.
-      [ ] 2.3.2.3 Subtask - Add diagnostics for unsupported canonical constructs, invalid bindings, and renderer-native mismatches.
+      [x] 2.3.2.1 Subtask - Reuse foundational native widget modules and runtime realization paths for canonical rendering output.
+      [x] 2.3.2.2 Subtask - Define deterministic canonical-to-native mapping expectations for widget structure, focus behavior, style hooks, and initial degradation hooks.
+      [x] 2.3.2.3 Subtask - Add diagnostics for unsupported canonical constructs, invalid bindings, and renderer-native mismatches.
 
   [ ] 2.4 Section - Foundational Reference Examples
     Implement maintained foundational examples that compare direct-native and

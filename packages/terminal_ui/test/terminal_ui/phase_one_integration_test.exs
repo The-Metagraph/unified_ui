@@ -41,7 +41,7 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert state.backend_adapter.mode == :raw
   end
 
-  test "invalid boot data and canonical mount placeholders fail with deterministic diagnostics" do
+  test "invalid boot data and unsupported canonical constructs fail with deterministic diagnostics" do
     invalid_screen = %{id: "broken", title: "Broken", root: %{label: "missing widget contract"}}
 
     assert {:error, %Error{} = invalid_root_error} =
@@ -58,13 +58,13 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert invalid_backend_error.reason == :unsupported_backend_mode
     assert invalid_backend_error.details.backend_mode == :serial
 
-    element = Element.new(:widget, :text, id: "status", attributes: %{content: "Ready"})
+    element = Element.new(:widget, :table, id: "status")
 
     assert {:error, %Error{} = canonical_error} =
              TerminalUi.Runtime.mount_iur_screen(element, backend_mode: :raw)
 
-    assert canonical_error.reason == :canonical_rendering_not_ready
-    assert canonical_error.details.phase == 1
+    assert canonical_error.reason == :unsupported_canonical_construct
+    assert canonical_error.details.kind == :table
   end
 
   test "reference and info helpers expose runtime, capability, and backend seams without renderer coverage" do
@@ -76,6 +76,7 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert reference.backend.modes == [:raw, :tty]
     assert reference.transport.modes == [:native_local, :canonical_boundary]
     assert :capability_snapshot in reference.runtime.capabilities
+    assert :foundational_canonical_mapping in reference.renderer.responsibilities
     assert :rich_terminal in reference.capabilities.profiles
 
     assert summary.package == :terminal_ui

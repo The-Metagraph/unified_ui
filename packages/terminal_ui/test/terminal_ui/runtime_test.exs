@@ -12,6 +12,7 @@ defmodule TerminalUi.RuntimeTest do
     assert TerminalUi.Runtime.State in Runtime.modules()
     assert Runtime.validation_state() == :foundational_realization_ready
     assert :shared_realization_model in Runtime.capabilities()
+    assert :canonical_foundational_rendering in Runtime.capabilities()
   end
 
   test "runtime mounts a native screen through the shared term_ui-backed backbone" do
@@ -41,13 +42,13 @@ defmodule TerminalUi.RuntimeTest do
     assert runtime_state.lifecycle.boot == :initialized
   end
 
-  test "runtime returns deterministic diagnostics for malformed screens and unavailable renderer paths" do
+  test "runtime returns deterministic diagnostics for malformed screens and unsupported canonical constructs" do
     assert {:error, %TerminalUi.Runtime.Error{reason: :invalid_screen}} =
              Runtime.mount_native_screen(%{id: :broken, title: "Broken"})
 
-    element = Element.new(:widget, :text, id: :hello, attributes: %{content: "Hello"})
+    element = Element.new(:widget, :table, id: :hello, attributes: %{})
 
-    assert {:error, %TerminalUi.Runtime.Error{reason: :canonical_rendering_not_ready}} =
+    assert {:error, %TerminalUi.Runtime.Error{reason: :unsupported_canonical_construct}} =
              Runtime.mount_iur_screen(element)
   end
 end

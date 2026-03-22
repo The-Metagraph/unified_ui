@@ -27,7 +27,7 @@ defmodule TerminalUi.Widgets do
       Foundational.kinds(),
       Input.kinds(),
       Navigation.kinds(),
-      [:container, :column, :dialog]
+      [:container, :column, :row, :stack, :dialog]
     ]
     |> List.flatten()
     |> Enum.uniq()
@@ -162,6 +162,33 @@ defmodule TerminalUi.Widgets do
       family: :layout,
       metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
       attributes: %{gap: Keyword.get(opts, :gap, :sm)},
+      slot_children: %{default: children},
+      styles: Builder.styles(opts)
+    )
+  end
+
+  @spec row(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def row(id, children, opts \\ []) do
+    Widget.new(:row,
+      id: id,
+      family: :layout,
+      metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
+      attributes: %{gap: Keyword.get(opts, :gap, :sm), direction: :horizontal},
+      slot_children: %{default: children},
+      styles: Builder.styles(opts)
+    )
+  end
+
+  @spec stack(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def stack(id, children, opts \\ []) do
+    Widget.new(:stack,
+      id: id,
+      family: :layout,
+      metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
+      attributes: %{
+        gap: Keyword.get(opts, :gap, :sm),
+        stacking: Keyword.get(opts, :stacking, :overlay)
+      },
       slot_children: %{default: children},
       styles: Builder.styles(opts)
     )

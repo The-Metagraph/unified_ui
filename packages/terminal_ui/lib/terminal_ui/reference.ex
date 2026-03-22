@@ -32,7 +32,11 @@ defmodule TerminalUi.Reference do
         profiles: TerminalUi.Capabilities.profiles(),
         contract: TerminalUi.Capabilities.capability_contract()
       },
-      renderer: %{accepts: TerminalUi.Renderer.accepts()},
+      renderer: %{
+        accepts: TerminalUi.Renderer.accepts(),
+        responsibilities: TerminalUi.Renderer.responsibilities(),
+        mapper: TerminalUi.Renderer.Mapper
+      },
       transport: %{modes: TerminalUi.Transport.modes()},
       documentation: %{guides: TerminalUi.Tooling.documentation_surface()},
       tooling: %{

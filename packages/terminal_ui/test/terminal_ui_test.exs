@@ -12,7 +12,7 @@ defmodule TerminalUiTest do
              runtime: %{assumptions: runtime_assumptions, modules: runtime_modules},
              backend: %{modes: backend_modes},
              capabilities: %{categories: capability_categories},
-             renderer: %{accepts: UnifiedIUR.Element},
+             renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
              transport: %{modes: [:native_local, :canonical_boundary]},
              tooling: %{guides: guides, workflows: workflows}
            } = TerminalUi.reference()

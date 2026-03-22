@@ -33,6 +33,7 @@ defmodule TerminalUi.Runtime do
       :event_loop_scaffold,
       :screen_composition,
       :shared_realization_model,
+      :canonical_foundational_rendering,
       :focus_traversal,
       :binding_surface,
       :deterministic_runtime_errors
