@@ -20,7 +20,7 @@ Back to index: [README](./README.md)
 - Canonical coverage expansion should continue to reuse the native widget stack
   and preserve terminal meaning across supported capability profiles.
 
-[ ] 3 Phase 3 - Advanced Widgets, Display Systems, and Capability-Aware Terminal Behavior
+[x] 3 Phase 3 - Advanced Widgets, Display Systems, and Capability-Aware Terminal Behavior
   Implement advanced widget families, display systems, layered terminal
   behavior, and broader canonical renderer coverage across the shared runtime.
 
@@ -105,22 +105,22 @@ Back to index: [README](./README.md)
       [x] 3.4.2.2 Subtask - Add helper workflows that summarize where backend or terminal capability behavior is allowed to differ underneath shared semantics.
       [x] 3.4.2.3 Subtask - Document where transport and tooling workflows will extend the comparison surface in later phases.
 
-  [ ] 3.5 Section - Phase 3 Integration Tests
+  [x] 3.5 Section - Phase 3 Integration Tests
     Validate advanced widgets, display systems, layered terminal behavior, and
     expanded canonical renderer coverage end to end.
 
-    [ ] 3.5.1 Task - Advanced widget and display integration scenarios
+    [x] 3.5.1 Task - Advanced widget and display integration scenarios
       Verify the package can realize advanced terminal flows directly and from
       canonical `UnifiedIUR` through the same runtime model.
 
-      [ ] 3.5.1.1 Subtask - Verify advanced direct-native terminal flows render with working layering, selection, viewport, and fallback behavior.
-      [ ] 3.5.1.2 Subtask - Verify advanced canonical screens map into the same native widget and shared runtime realization model.
-      [ ] 3.5.1.3 Subtask - Verify unsupported advanced constructs or invalid layered state fail with deterministic diagnostics.
+      [x] 3.5.1.1 Subtask - Verify advanced direct-native terminal flows render with working layering, selection, viewport, and fallback behavior.
+      [x] 3.5.1.2 Subtask - Verify advanced canonical screens map into the same native widget and shared runtime realization model.
+      [x] 3.5.1.3 Subtask - Verify unsupported advanced constructs or invalid layered state fail with deterministic diagnostics.
 
-    [ ] 3.5.2 Task - Advanced comparison and capability-semantics scenarios
+    [x] 3.5.2 Task - Advanced comparison and capability-semantics scenarios
       Verify maintained advanced examples keep terminal semantics coherent
       across supported capability profiles.
 
-      [ ] 3.5.2.1 Subtask - Verify advanced examples report the expected widget and display coverage.
-      [ ] 3.5.2.2 Subtask - Verify cross-capability comparison helpers distinguish bounded terminal variation from semantic drift.
-      [ ] 3.5.2.3 Subtask - Verify layered runtime and degradation assumptions remain visible through package-facing helper APIs.
+      [x] 3.5.2.1 Subtask - Verify advanced examples report the expected widget and display coverage.
+      [x] 3.5.2.2 Subtask - Verify cross-capability comparison helpers distinguish bounded terminal variation from semantic drift.
+      [x] 3.5.2.3 Subtask - Verify layered runtime and degradation assumptions remain visible through package-facing helper APIs.
