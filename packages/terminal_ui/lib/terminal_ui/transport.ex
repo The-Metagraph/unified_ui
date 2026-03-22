@@ -4,7 +4,7 @@ defmodule TerminalUi.Transport do
   """
 
   alias Jido.Signal
-  alias TerminalUi.Transport.{Error, Normalize}
+  alias TerminalUi.Transport.{Diagnostics, Error, Normalize}
   alias TerminalUi.Transport.Signal, as: TransportSignal
   alias UnifiedIUR.Interaction
 
@@ -25,12 +25,17 @@ defmodule TerminalUi.Transport do
 
   @spec integration_points() :: [atom()]
   def integration_points do
-    [:runtime, :native_input_normalization, :canonical_signal_translation]
+    [
+      :runtime,
+      :native_input_normalization,
+      :canonical_signal_translation,
+      :transport_diagnostics
+    ]
   end
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, Normalize, TransportSignal, Error]
+    [__MODULE__, Normalize, TransportSignal, Diagnostics, Error]
   end
 
   @spec normalize_native_event(keyword() | map()) :: {:ok, map()} | {:error, Error.t()}
@@ -54,4 +59,21 @@ defmodule TerminalUi.Transport do
 
   @spec cloud_event_envelope(Signal.t()) :: map()
   def cloud_event_envelope(signal), do: TransportSignal.cloud_event_envelope(signal)
+
+  @spec diagnostics() :: map()
+  def diagnostics do
+    %{
+      mapping_summary: Diagnostics.mapping_summary(),
+      normalized_event_families: Diagnostics.normalized_event_families()
+    }
+  end
+
+  @spec validate_native_event(keyword() | map()) :: :ok | {:error, Error.t()}
+  def validate_native_event(attrs), do: Diagnostics.validate_native_event(attrs)
+
+  @spec validate_translation(map()) :: :ok | {:error, Error.t()}
+  def validate_translation(translation), do: Diagnostics.validate_translation(translation)
+
+  @spec validate_boundary_signal(Signal.t() | map()) :: :ok | {:error, Error.t()}
+  def validate_boundary_signal(signal), do: Diagnostics.validate_boundary_signal(signal)
 end

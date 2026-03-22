@@ -29,6 +29,11 @@ defmodule TerminalUi.Info do
         profiles: TerminalUi.Capabilities.profiles(),
         diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      transport: %{
+        families: TerminalUi.Transport.families(),
+        input_families: TerminalUi.Transport.input_families(),
+        diagnostics: TerminalUi.Transport.diagnostics()
+      },
       layout: %{kinds: TerminalUi.Layout.kinds()},
       layer: %{kinds: TerminalUi.Layer.kinds()},
       examples: %{

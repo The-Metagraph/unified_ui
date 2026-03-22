@@ -62,25 +62,25 @@ Back to index: [README](./README.md)
       [x] 4.2.2.2 Subtask - Distinguish local native event handling from boundary-crossing signals without changing interaction family meaning.
       [x] 4.2.2.3 Subtask - Add diagnostics for leaked renderer-local event names, raw terminal payloads, and invalid boundary/local routing decisions.
 
-  [ ] 4.3 Section - Transport Diagnostics and Contract Hygiene
+  [x] 4.3 Section - Transport Diagnostics and Contract Hygiene
     Implement inspection and validation surfaces that keep the terminal
     transport layer deterministic and free of boundary leakage.
 
-    [ ] 4.3.1 Task - Implement transport diagnostics and validation helpers
+    [x] 4.3.1 Task - Implement transport diagnostics and validation helpers
       Provide package-local tooling that inspects boundary signal mappings,
       normalization rules, and no-leakage guarantees.
 
-      [ ] 4.3.1.1 Subtask - Implement inspection helpers that list canonical-to-native interaction mappings and normalized event families.
-      [ ] 4.3.1.2 Subtask - Implement validation helpers that catch raw backend leakage at the package boundary.
-      [ ] 4.3.1.3 Subtask - Report deterministic diagnostics for unsupported canonical events, ambiguous routing, and invalid signal payloads.
+      [x] 4.3.1.1 Subtask - Implement inspection helpers that list canonical-to-native interaction mappings and normalized event families.
+      [x] 4.3.1.2 Subtask - Implement validation helpers that catch raw backend leakage at the package boundary.
+      [x] 4.3.1.3 Subtask - Report deterministic diagnostics for unsupported canonical events, ambiguous routing, and invalid signal payloads.
 
-    [ ] 4.3.2 Task - Implement transport-focused reference summaries
+    [x] 4.3.2 Task - Implement transport-focused reference summaries
       Keep transport boundaries visible to maintainers as the runtime grows
       more complex.
 
-      [ ] 4.3.2.1 Subtask - Expose transport summaries through package reference helpers and tooling surfaces.
-      [ ] 4.3.2.2 Subtask - Highlight where local native event families remain local and where canonical translation is required.
-      [ ] 4.3.2.3 Subtask - Keep transport summaries aligned with later validation and release-readiness workflows.
+      [x] 4.3.2.1 Subtask - Expose transport summaries through package reference helpers and tooling surfaces.
+      [x] 4.3.2.2 Subtask - Highlight where local native event families remain local and where canonical translation is required.
+      [x] 4.3.2.3 Subtask - Keep transport summaries aligned with later validation and release-readiness workflows.
 
   [ ] 4.4 Section - Transport Comparison Examples
     Implement maintained examples that compare native-local handling and
