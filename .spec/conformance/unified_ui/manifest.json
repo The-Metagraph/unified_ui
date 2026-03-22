@@ -1,0 +1,976 @@
+{
+  "package": "unified_ui",
+  "version": "1",
+  "ci_enforcement": "required",
+  "requirements": [
+    {
+      "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
+      "inherits_from_requirement_id": "unified_ui.package.standalone_authoring_api",
+      "notes": "Shares the current conformance status of unified_ui.package.standalone_authoring_api."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.iur_exchange_boundary",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.shared_transport_contract",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares the current conformance status of unified_ui.widgets.iur_surface_parity."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares the current conformance status of unified_ui.widgets.iur_surface_parity."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares the current conformance status of unified_ui.widgets.iur_surface_parity."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares the current conformance status of unified_ui.widgets.iur_surface_parity."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.jido_signal_canonical",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.dsl_event_bindings",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_ui.package.library_identity",
+      "status": "verified",
+      "notes": "Verified by the maintained package identity and top-level UnifiedUi namespace.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/mix.exs"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"app: :unified_ui|defmodule UnifiedUi\" packages/unified-ui/mix.exs packages/unified-ui/lib/unified_ui.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.package.canonical_iur_dependency",
+      "status": "verified",
+      "notes": "Verified by the explicit UnifiedIUR dependency in the package Mix configuration.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/mix.exs"
+        },
+        {
+          "kind": "command",
+          "run": "grep -n \"unified_iur\" packages/unified-ui/mix.exs",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.package.dsl_boundary_only",
+      "status": "verified",
+      "notes": "Verified by the maintained authored-only package surface and absence of runtime or renderer modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified-ui/lib/unified_ui/renderer.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified-ui/lib/unified_ui/runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "if grep -R -nE \"defmodule UnifiedUi\\.(Runtime|Server|Frontend|Renderer)\" packages/unified-ui/lib; then exit 1; else exit 0; fi",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.package.standalone_authoring_api",
+      "status": "verified",
+      "notes": "Verified by the author-facing DSL, widget, and example package entrypoints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.package.traceable_to_root_specs",
+      "status": "verified",
+      "notes": "Verified by the maintained package spec set and planning index references to the root ecosystem contracts.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/unified-ui/*.spec.md"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"Architecture|DSL and IUR Symbiosis|UnifiedIUR Package|UnifiedIUR Widgets|UnifiedIUR Display Systems|UnifiedIUR Theming|UnifiedIUR Interactions|UnifiedIUR Tooling\" .spec/planning/unified_ui/README.md",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.structure.mix_package_layout",
+      "status": "verified",
+      "notes": "Verified by the maintained Mix package layout, guides, and test tree.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/mix.exs"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/lib/**/*.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/test/**/*.exs"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/guides/*.md"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.structure.dsl_modules",
+      "status": "verified",
+      "notes": "Verified by the dedicated DSL module tree for sections, entities, and verifiers.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/lib/unified_ui/dsl/**/*.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.structure.compiler_modules",
+      "status": "verified",
+      "notes": "Verified by the dedicated compiler entrypoint and compiler pass modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/compiler.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/lib/unified_ui/compiler/*.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.structure.signal_modules",
+      "status": "verified",
+      "notes": "Verified by the dedicated signal, binding, and descriptor modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/signal.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/binding.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/lib/unified_ui/signals/*.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.structure.introspection_and_reference",
+      "status": "verified",
+      "notes": "Verified by the dedicated reference, info, tooling, and export module surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/reference.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/info.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/tooling.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/export.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.structure.no_required_long_lived_runtime",
+      "status": "verified",
+      "notes": "Verified by the pure-library identity and explicit empty runtime-service surface.",
+      "evidence": [
+        {
+          "kind": "path_absent",
+          "path": "packages/unified-ui/lib/unified_ui/runtime.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified-ui/lib/unified_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified-ui/lib/unified_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix run -e 'if UnifiedUi.required_runtime_services() == [], do: IO.puts(\"ok\"), else: raise \"runtime services present\"'",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "ok"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.dsl.authoring_extensibility",
+      "status": "verified",
+      "notes": "Verified by the section registry, extension module, and construct-family registration helpers.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/extension.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/section_registry.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.dsl.compile_time_validation",
+      "status": "verified",
+      "notes": "Verified by the maintained compile-time verifier modules and focused validation tests.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/lib/unified_ui/dsl/verifiers/*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_ui/dsl/invariants_test.exs test/unified_ui/theme_signal_validation_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.dsl.interaction_binding",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.spark_style_authoring_surface",
+      "status": "verified",
+      "notes": "Verified by the Spark-backed DSL entrypoint and extension implementation.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/extension.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"use Spark\\.Dsl|use Spark\\.Dsl\\.Extension\" packages/unified-ui/lib/unified_ui/dsl.ex packages/unified-ui/lib/unified_ui/dsl/extension.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.dsl.styling_and_theming",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.widgets_layouts_layers",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.canvas_surface",
+      "status": "verified",
+      "notes": "Verified by the dedicated canvas authoring modules and display-system coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/canvas.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/canvas.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.feedback_navigation_data_surface",
+      "status": "verified",
+      "notes": "Verified by the data, feedback, advanced, and navigation module surfaces together with package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/widgets/data.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/widgets/feedback.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/widgets/advanced.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.foundational_visual_surface",
+      "status": "verified",
+      "notes": "Verified by the foundational widget surface and maintained foundational example coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/examples/foundational_screen.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.input_surface",
+      "status": "verified",
+      "notes": "Verified by the dedicated input, forms, and navigation module surfaces together with package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/forms.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/input.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/forms.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "status": "verified",
+      "notes": "Verified by the maintained parity helper and package validation workflow.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/parity.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.validate",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "parity synchronized?: true"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "status": "verified",
+      "notes": "Verified by the dedicated layout, layer, and display authoring surfaces together with package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/layout.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/layer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/display.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.style_attribute_surface",
+      "status": "verified",
+      "notes": "Verified by the canonical style and theme authoring helpers together with package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/style.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/theme.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.canvas_surface",
+      "inherits_from_requirement_id": "unified_ui.widgets.canvas_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.canvas_surface."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.compose_with_widgets",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.layering_primitives",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.layout_primitives",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.viewport_and_clipping",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_ui.theming.color_model",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_ui.theming.component_variants",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_ui.theming.inheritance_and_overrides",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_ui.theming.semantic_roles",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_ui.theming.text_style_attributes",
+      "inherits_from_requirement_id": "unified_ui.widgets.style_attribute_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.style_attribute_surface."
+    },
+    {
+      "requirement_id": "unified_ui.theming.theme_structure",
+      "status": "verified",
+      "notes": "Verified by the maintained theme and style modules together with package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/style.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.signals.authoring_event_semantics",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "status": "verified",
+      "notes": "Verified by the maintained signal, descriptor, and binding module surfaces together with package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/signal.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/signals/descriptor.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.signals.no_runtime_local_event_leakage",
+      "inherits_from_requirement_id": "unified_ui.dsl.compile_time_validation",
+      "notes": "Shares the current conformance status of unified_ui.dsl.compile_time_validation."
+    },
+    {
+      "requirement_id": "unified_ui.signals.standard_interaction_families",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_ui.signals.validation_and_introspection",
+      "inherits_from_requirement_id": "unified_ui.tooling.compiler_inspection",
+      "notes": "Shares the current conformance status of unified_ui.tooling.compiler_inspection."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "status": "verified",
+      "notes": "Verified by the maintained compiler pipeline and package coverage tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/compiler.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/compiler/pipeline.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/compiler/result.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.compiler.deterministic_results",
+      "status": "verified",
+      "notes": "Verified by the maintained validation workflow and deterministic compilation checks.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/parity.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.validate",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "example compilation deterministic?: true"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.compiler.introspection_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained compiler inspection modules and mix task coverage reporting.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/compiler/inspection.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/mix/tasks/unified_ui.inspect.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.inspect --coverage",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "total_examples"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.compiler.no_renderer_output_modes",
+      "inherits_from_requirement_id": "unified_ui.package.dsl_boundary_only",
+      "notes": "Shares the current conformance status of unified_ui.package.dsl_boundary_only."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.runtime_independent_bindings",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.style_theme_layer_resolution",
+      "inherits_from_requirement_id": "unified_ui.compiler.deterministic_results",
+      "notes": "Shares the current conformance status of unified_ui.compiler.deterministic_results."
+    },
+    {
+      "requirement_id": "unified_ui.tooling.authoring_validation_workflow",
+      "status": "verified",
+      "notes": "Verified by the maintained validation task and release-readiness summary.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/mix/tasks/unified_ui.validate.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/tooling.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.validate",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "release ready?: true"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.tooling.compiler_inspection",
+      "status": "verified",
+      "notes": "Verified by the maintained inspect and export mix tasks.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/mix/tasks/unified_ui.inspect.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/mix/tasks/unified_ui.export.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.inspect --coverage",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "total_examples"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.export --format coverage",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "total_examples"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.tooling.documentation_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained README and guide set referenced by the package.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/README.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/guides/dsl_model.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/guides/theming_and_signals.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/guides/compiler_and_parity.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/guides/maintainer_workflows.md"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.tooling.reference_examples",
+      "status": "verified",
+      "notes": "Verified by the maintained example catalog and export coverage reporting.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified-ui/lib/unified_ui/examples/*.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_ui.export --format coverage",
+          "cwd": "packages/unified-ui",
+          "expect_stdout_contains": "total_examples"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.package.exchange_boundary",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "unified_iur.package.renderer_independent_surface",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "unified_iur.core.canonical_element_model",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "unified_iur.core.child_relationship_model",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "unified_iur.core.identity_and_metadata",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "unified_iur.core.pure_immutable_values",
+      "inherits_from_requirement_id": "unified_ui.compiler.deterministic_results",
+      "notes": "Shares the current conformance status of unified_ui.compiler.deterministic_results."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares the current conformance status of unified_ui.widgets.iur_surface_parity."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.foundational_widgets",
+      "inherits_from_requirement_id": "unified_ui.widgets.foundational_visual_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.foundational_visual_surface."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.input_and_form_widgets",
+      "inherits_from_requirement_id": "unified_ui.widgets.input_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.input_surface."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.layout_and_layering",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.navigation_feedback_and_data",
+      "inherits_from_requirement_id": "unified_ui.widgets.feedback_navigation_data_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.feedback_navigation_data_surface."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.styling_attributes",
+      "inherits_from_requirement_id": "unified_ui.widgets.style_attribute_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.style_attribute_surface."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.theme_and_token_representation",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.canvas_surface",
+      "inherits_from_requirement_id": "unified_ui.widgets.canvas_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.canvas_surface."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.compose_with_widgets",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layering_primitives",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layout_primitives",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.viewport_and_clipping",
+      "inherits_from_requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.layout_and_layer_surface."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.data_binding_representation",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.element_binding_attachment",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.renderer_independent_payload_mapping",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.standard_interaction_families",
+      "inherits_from_requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "notes": "Shares the current conformance status of unified_ui.signals.canonical_descriptor_shape."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.deterministic_shape",
+      "inherits_from_requirement_id": "unified_ui.compiler.deterministic_results",
+      "notes": "Shares the current conformance status of unified_ui.compiler.deterministic_results."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.no_runtime_local_escape_hatches",
+      "inherits_from_requirement_id": "unified_ui.dsl.compile_time_validation",
+      "notes": "Shares the current conformance status of unified_ui.dsl.compile_time_validation."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.portable_data_model",
+      "inherits_from_requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "notes": "Shares the current conformance status of unified_ui.compiler.canonical_iur_output."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.runtime_library_consumption",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares the current conformance status of unified_ui.widgets.iur_surface_parity."
+    },
+    {
+      "requirement_id": "unified_iur.theming.color_model",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.theming.component_variants",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.theming.inheritance_and_overrides",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.theming.semantic_roles",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.theming.text_style_attributes",
+      "inherits_from_requirement_id": "unified_ui.widgets.style_attribute_surface",
+      "notes": "Shares the current conformance status of unified_ui.widgets.style_attribute_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.theme_structure",
+      "inherits_from_requirement_id": "unified_ui.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_ui.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.introspection_helpers",
+      "inherits_from_requirement_id": "unified_ui.tooling.compiler_inspection",
+      "notes": "Shares the current conformance status of unified_ui.tooling.compiler_inspection."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.reference_examples",
+      "inherits_from_requirement_id": "unified_ui.tooling.reference_examples",
+      "notes": "Shares the current conformance status of unified_ui.tooling.reference_examples."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.validation_workflow",
+      "inherits_from_requirement_id": "unified_ui.tooling.authoring_validation_workflow",
+      "notes": "Shares the current conformance status of unified_ui.tooling.authoring_validation_workflow."
+    }
+  ]
+}

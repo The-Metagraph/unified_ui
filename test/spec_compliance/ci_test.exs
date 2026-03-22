@@ -99,4 +99,49 @@ defmodule Unified.SpecCompliance.CITest do
 
     assert required_report.status == :fail
   end
+
+  test "hyphenated package source paths affect underscore-named packages" do
+    root = tmp_root!("ci_hyphenated_package")
+    write_minimal_plan_docs!(root, "unified_ui")
+
+    write_json!(
+      root,
+      ".spec/state.json",
+      state([requirement("unified_ui.package.one", ".spec/specs/unified-ui/package.spec.md")])
+    )
+
+    manifest =
+      plan_manifest("unified_ui",
+        mappings: [
+          mapping(
+            "unified_ui.package.one",
+            "direct",
+            ".spec/specs/unified-ui/package.spec.md",
+            ["1.1.1"]
+          )
+        ]
+      )
+
+    write_json!(root, ".spec/planning/unified_ui/spec-traceability.json", manifest)
+    write_traceability_markdown!(root, "unified_ui", manifest)
+
+    write_json!(
+      root,
+      ".spec/conformance/unified_ui/manifest.json",
+      conformance_manifest("unified_ui", [
+        concrete_requirement("unified_ui.package.one", "verified", [path_exists("README.md")])
+      ])
+    )
+
+    write_file!(root, ".spec/specs/unified-ui/package.spec.md", "# unified_ui\n")
+
+    affected =
+      CI.affected_packages(
+        root,
+        ["unified_ui"],
+        ["packages/unified-ui/lib/unified_ui.ex"]
+      )
+
+    assert affected == ["unified_ui"]
+  end
 end

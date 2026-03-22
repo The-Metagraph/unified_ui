@@ -73,13 +73,20 @@ defmodule Unified.SpecCompliance.CI do
           []
       end
 
+    package_path_variants = package_path_variants(package)
+
     [
       ".spec/conformance/#{package}/",
       ".spec/planning/#{package}/",
-      ".spec/specs/#{package}/",
-      "packages/#{package}/"
-      | source_files
+      source_files
+      | Enum.flat_map(package_path_variants, fn variant ->
+          [
+            ".spec/specs/#{variant}/",
+            "packages/#{variant}/"
+          ]
+        end)
     ]
+    |> List.flatten()
     |> Enum.uniq()
   end
 
@@ -183,5 +190,10 @@ defmodule Unified.SpecCompliance.CI do
     Enum.any?(relevant_paths, fn path ->
       String.starts_with?(file, path) or file == path
     end)
+  end
+
+  defp package_path_variants(package) do
+    [package, String.replace(package, "_", "-")]
+    |> Enum.uniq()
   end
 end
