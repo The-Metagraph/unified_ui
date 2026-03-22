@@ -48,6 +48,8 @@ defmodule TerminalUi.Runtime.Screen do
       metadata: %{
         direct_native: source_kind == :native,
         canonical_input: source_kind == :canonical,
+        theme:
+          Keyword.get(opts, :theme, Map.get(screen, :theme, TerminalUi.Theme.default_theme().id)),
         focus_traversal: :shared_runtime,
         binding_surface: :shared_runtime,
         layered_runtime: root.kind in TerminalUi.Layer.kinds(),

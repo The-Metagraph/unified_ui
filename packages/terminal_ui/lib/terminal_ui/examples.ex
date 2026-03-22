@@ -3,7 +3,7 @@ defmodule TerminalUi.Examples do
   Maintained native and canonical examples for `terminal_ui`.
   """
 
-  alias UnifiedIUR.{Canvas, Interaction, Layer, Layout}
+  alias UnifiedIUR.{Canvas, Element, Interaction, Layer, Layout}
   alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
 
   @spec native_foundational_screen() :: map()
@@ -368,6 +368,136 @@ defmodule TerminalUi.Examples do
     )
   end
 
+  @spec native_styled_screen() :: map()
+  def native_styled_screen do
+    %{
+      id: "styled-review",
+      title: "Native Styled Review",
+      theme: :high_contrast,
+      root:
+        TerminalUi.Widgets.column("styled-root", [
+          TerminalUi.Widgets.text("styled-title", "Styled Workspace",
+            theme: :high_contrast,
+            semantic_role: :title,
+            theme_tokens: %{text: [:text, :hero]}
+          ),
+          TerminalUi.Widgets.text_input("styled-query",
+            value: "node:db",
+            binding: :styled_query,
+            theme: :high_contrast,
+            variant: :outlined,
+            style_refs: [:query_field]
+          ),
+          TerminalUi.Widgets.button("styled-save", "Deploy",
+            theme: :high_contrast,
+            variant: :accented,
+            semantic_role: :primary_action
+          ),
+          TerminalUi.Widgets.status("styled-status", "Attention required",
+            theme: :high_contrast,
+            semantic_role: :status_warning,
+            severity: :warning
+          ),
+          TerminalUi.Widgets.command_palette(
+            "styled-palette",
+            [
+              %{id: :deploy, label: "Deploy", value: :deploy},
+              %{id: :drain, label: "Drain", value: :drain}
+            ],
+            query: "de",
+            binding: :styled_command,
+            current: :deploy,
+            theme: :high_contrast,
+            variant: :dense
+          ),
+          TerminalUi.Widgets.canvas(
+            "styled-canvas",
+            [
+              %{kind: :cell, position: %{x: 0, y: 0}, text: "A"},
+              %{kind: :cell, position: %{x: 1, y: 0}, text: "B"}
+            ],
+            width: 12,
+            height: 4,
+            theme: :high_contrast,
+            degradation: :ascii_canvas
+          )
+        ]),
+      metadata: %{
+        example_id: :native_styled_review,
+        source: :native,
+        coverage: [:native_styling, :theme_resolution, :capability_degradation, :inspection]
+      }
+    }
+  end
+
+  @spec canonical_styled_screen() :: UnifiedIUR.Element.t()
+  def canonical_styled_screen do
+    Element.new(:layout, :column,
+      id: "styled-root",
+      attributes: %{gap: :sm},
+      children: [
+        Element.new(:widget, :text,
+          id: "styled-title",
+          attributes: %{
+            text: "Styled Workspace",
+            theme: :high_contrast,
+            style: %{semantic_role: :title, theme_tokens: %{text: [:text, :hero]}}
+          }
+        ),
+        Element.new(:widget, :text_input,
+          id: "styled-query",
+          attributes: %{
+            value: "node:db",
+            theme: :high_contrast,
+            style: %{variant: :outlined, style_refs: [:query_field]}
+          }
+        ),
+        Element.new(:widget, :button,
+          id: "styled-save",
+          attributes: %{
+            text: "Deploy",
+            theme: :high_contrast,
+            style: %{variant: :accented, semantic_role: :primary_action}
+          }
+        ),
+        Element.new(:widget, :status,
+          id: "styled-status",
+          attributes: %{
+            text: "Attention required",
+            severity: :warning,
+            theme: :high_contrast,
+            style: %{semantic_role: :status_warning}
+          }
+        ),
+        Element.new(:widget, :command_palette,
+          id: "styled-palette",
+          attributes: %{
+            items: [
+              %{id: :deploy, label: "Deploy", value: :deploy},
+              %{id: :drain, label: "Drain", value: :drain}
+            ],
+            query: "de",
+            theme: :high_contrast,
+            style: %{variant: :dense}
+          }
+        ),
+        Element.new(:widget, :canvas,
+          id: "styled-canvas",
+          attributes: %{
+            operations: [
+              %{kind: :cell, position: {0, 0}, text: "A"},
+              %{kind: :cell, position: {1, 0}, text: "B"}
+            ],
+            width: 12,
+            height: 4,
+            theme: :high_contrast,
+            style: %{degradation: :ascii_canvas}
+          }
+        )
+      ]
+    )
+  end
+
   @spec native_examples() :: [map()]
   def native_examples do
     [
@@ -394,6 +524,14 @@ defmodule TerminalUi.Examples do
         coverage: [:normalized_input, :local_native_handling, :canonical_boundary_translation],
         categories: [:forms, :navigation, :operational, :transport],
         artifact: native_transport_screen()
+      },
+      %{
+        id: :native_styled_review,
+        mode: :native,
+        summary: "Direct-native styled and degradation-aware workspace",
+        coverage: [:native_styling, :theme_resolution, :capability_degradation, :inspection],
+        categories: [:content, :forms, :actions, :style, :degradation, :inspection],
+        artifact: native_styled_screen()
       }
     ]
   end
@@ -424,6 +562,14 @@ defmodule TerminalUi.Examples do
         coverage: [:normalized_input, :canonical_signal_translation, :shared_event_routing],
         categories: [:forms, :navigation, :operational, :transport],
         artifact: canonical_transport_screen()
+      },
+      %{
+        id: :canonical_styled_review,
+        mode: :canonical,
+        summary: "Canonical styled and degradation-aware workspace",
+        coverage: [:shared_theme_model, :canonical_styling, :inspection, :capability_degradation],
+        categories: [:content, :forms, :actions, :style, :degradation, :inspection],
+        artifact: canonical_styled_screen()
       }
     ]
   end
@@ -435,7 +581,9 @@ defmodule TerminalUi.Examples do
       advanced_continuity: advanced_comparison(),
       advanced_capability_continuity: advanced_capability_comparison(),
       transport_flow_review: transport_flow_comparison(),
-      normalized_input_profiles: normalized_input_comparison()
+      normalized_input_profiles: normalized_input_comparison(),
+      styled_continuity_review: styled_continuity_comparison(),
+      styled_degradation_review: styled_degradation_comparison()
     }
   end
 
@@ -452,7 +600,10 @@ defmodule TerminalUi.Examples do
         operational: [:command_palette, :cluster_dashboard],
         display: [:viewport, :split_pane],
         layering: [:overlay, :dialog, :context_menu],
-        transport: [:shortcut, :paste, :resize, :focus]
+        transport: [:shortcut, :paste, :resize, :focus],
+        style: [:theme, :variant, :semantic_role, :theme_tokens],
+        degradation: [:glyph_set, :color_mode, :fallback_plan],
+        inspection: [:runtime_snapshot, :style_nodes, :continuity_report]
       },
       workflows: %{
         foundational_review: [:native_foundational, :canonical_foundational],
@@ -467,8 +618,14 @@ defmodule TerminalUi.Examples do
           :transport_flow_review,
           :normalized_input_profiles
         ],
+        style_review: [
+          :native_styled_review,
+          :canonical_styled_review,
+          :styled_continuity_review
+        ],
+        degradation_review: [:styled_degradation_review],
         parity_review: [:foundational_continuity, :advanced_continuity],
-        capability_review: [:advanced_capability_continuity]
+        capability_review: [:advanced_capability_continuity, :styled_degradation_review]
       },
       parity_groups: %{
         foundational_workspace: [
@@ -487,6 +644,12 @@ defmodule TerminalUi.Examples do
           :canonical_transport_review,
           :transport_flow_review,
           :normalized_input_profiles
+        ],
+        styled_workspace_review: [
+          :native_styled_review,
+          :canonical_styled_review,
+          :styled_continuity_review,
+          :styled_degradation_review
         ]
       }
     }
@@ -720,6 +883,85 @@ defmodule TerminalUi.Examples do
         tty_capability_handling_explicit?:
           tty_shortcut_summary.translation.backend_mode == :tty and
             tty_resize_summary.local_handling == :paged_resize
+      }
+    }
+  end
+
+  @spec styled_continuity_comparison() :: map()
+  def styled_continuity_comparison do
+    {:ok, native_state} =
+      TerminalUi.Runtime.mount_native_screen(native_styled_screen(), backend_mode: :raw)
+
+    {:ok, canonical_state} =
+      TerminalUi.Runtime.mount_iur_screen(canonical_styled_screen(),
+        backend_mode: :raw,
+        theme: :high_contrast
+      )
+
+    continuity = TerminalUi.Continuity.compare(native_state, canonical_state)
+
+    %{
+      id: :styled_continuity_review,
+      summary: "Compare styled native and canonical rendering through one shared style model",
+      coverage: [:style_review, :inspection, :continuity],
+      native: TerminalUi.Inspection.runtime_snapshot(native_state),
+      canonical: TerminalUi.Inspection.runtime_snapshot(canonical_state),
+      continuity: continuity.continuity,
+      diagnostics: continuity.diagnostics,
+      parity: %{
+        widget_identity_match?: continuity.continuity.widget_identity_match?,
+        theme_resolution_match?: continuity.continuity.theme_resolution_match?,
+        style_resolution_match?: continuity.continuity.style_resolution_match?
+      }
+    }
+  end
+
+  @spec styled_degradation_comparison() :: map()
+  def styled_degradation_comparison do
+    {:ok, native_raw} =
+      TerminalUi.Runtime.mount_native_screen(native_styled_screen(), backend_mode: :raw)
+
+    {:ok, native_tty} =
+      TerminalUi.Runtime.mount_native_screen(native_styled_screen(), backend_mode: :tty)
+
+    {:ok, canonical_raw} =
+      TerminalUi.Runtime.mount_iur_screen(canonical_styled_screen(),
+        backend_mode: :raw,
+        theme: :high_contrast
+      )
+
+    {:ok, canonical_tty} =
+      TerminalUi.Runtime.mount_iur_screen(canonical_styled_screen(),
+        backend_mode: :tty,
+        theme: :high_contrast
+      )
+
+    native_capability = TerminalUi.Continuity.compare_capabilities(native_raw, native_tty)
+
+    canonical_capability =
+      TerminalUi.Continuity.compare_capabilities(canonical_raw, canonical_tty)
+
+    native_tty_snapshot = TerminalUi.Inspection.runtime_snapshot(native_tty)
+    canonical_tty_snapshot = TerminalUi.Inspection.runtime_snapshot(canonical_tty)
+
+    %{
+      id: :styled_degradation_review,
+      summary: "Review explicit degradation decisions across rich and fallback terminals",
+      coverage: [:degradation_review, :capability_review, :inspection],
+      native_fallback: native_tty_snapshot.degradation,
+      canonical_fallback: canonical_tty_snapshot.degradation,
+      native_capability: native_capability.continuity,
+      canonical_capability: canonical_capability.continuity,
+      parity: %{
+        glyph_fallback_explicit?:
+          native_tty_snapshot.degradation.plan.glyph_set == :ascii and
+            canonical_tty_snapshot.degradation.plan.glyph_set == :ascii,
+        degradation_bounded?:
+          native_capability.continuity.degradation_bounded? and
+            canonical_capability.continuity.degradation_bounded?,
+        inspection_surfaces_agree?:
+          native_tty_snapshot.capabilities.diagnostics.degradation_plan.canvas_mode ==
+            canonical_tty_snapshot.capabilities.diagnostics.degradation_plan.canvas_mode
       }
     }
   end

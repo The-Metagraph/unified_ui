@@ -29,6 +29,25 @@ defmodule TerminalUi.Info do
         profiles: TerminalUi.Capabilities.profiles(),
         diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      degradation: %{
+        profile: TerminalUi.Capabilities.snapshot().degradation_profile,
+        diagnostics: TerminalUi.Degradation.diagnostics()
+      },
+      style: %{
+        primitives: Map.keys(TerminalUi.Style.primitives()),
+        hooks: TerminalUi.Style.widget_style_hooks()
+      },
+      theme: %{
+        catalog: TerminalUi.Theme.catalog_ids(),
+        default: TerminalUi.Theme.default_theme().id
+      },
+      inspection: %{
+        helpers: TerminalUi.Inspection.helpers()
+      },
+      continuity: %{
+        seams: TerminalUi.Continuity.seams(),
+        diagnostic_kinds: TerminalUi.Continuity.diagnostic_kinds()
+      },
       transport: %{
         families: TerminalUi.Transport.families(),
         input_families: TerminalUi.Transport.input_families(),

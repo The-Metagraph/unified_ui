@@ -7,6 +7,11 @@ defmodule TerminalUiTest do
              :runtime,
              :backend,
              :capabilities,
+             :degradation,
+             :style,
+             :theme,
+             :inspection,
+             :continuity,
              :layout,
              :layer,
              :renderer,
@@ -21,6 +26,11 @@ defmodule TerminalUiTest do
              runtime: %{assumptions: runtime_assumptions, modules: runtime_modules},
              backend: %{modes: backend_modes},
              capabilities: %{categories: capability_categories},
+             degradation: %{modules: degradation_modules},
+             style: %{hooks: style_hooks},
+             theme: %{catalog: theme_catalog},
+             inspection: %{helpers: inspection_helpers},
+             continuity: %{seams: continuity_seams},
              layout: %{kinds: layout_kinds, module: TerminalUi.Layout},
              layer: %{kinds: layer_kinds, module: TerminalUi.Layer},
              renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
@@ -41,19 +51,26 @@ defmodule TerminalUiTest do
     assert TerminalUi.Runtime.Boot in runtime_modules
     assert backend_modes == [:raw, :tty]
     assert :unicode in capability_categories
+    assert TerminalUi.Degradation in degradation_modules
+    assert :theme_tokens in style_hooks
+    assert :high_contrast in theme_catalog
+    assert :runtime_snapshot in inspection_helpers
+    assert :style_resolution in continuity_seams
     assert :viewport in layout_kinds
     assert :overlay in layer_kinds
 
     assert native_ids == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert canonical_ids == [
              :canonical_foundational,
              :canonical_advanced_operations,
-             :canonical_transport_review
+             :canonical_transport_review,
+             :canonical_styled_review
            ]
 
     assert "guides/runtime_backbone.md" in guides
@@ -68,6 +85,11 @@ defmodule TerminalUiTest do
              layout: %{kinds: layout_kinds},
              layer: %{kinds: layer_kinds},
              widgets: %{families: families},
+             degradation: %{diagnostics: degradation_diagnostics},
+             style: %{primitives: style_primitives},
+             theme: %{catalog: theme_catalog, default: default_theme},
+             inspection: %{helpers: inspection_helpers},
+             continuity: %{seams: continuity_seams, diagnostic_kinds: diagnostic_kinds},
              examples: %{comparison_ids: comparison_ids},
              documentation: %{guides: guides},
              tooling: %{workflows: workflows}
@@ -76,6 +98,13 @@ defmodule TerminalUiTest do
     assert :action in families
     assert :visualization in families
     assert :layout in families
+    assert :colors in style_primitives
+    assert :high_contrast in theme_catalog
+    assert default_theme == :terminal_default
+    assert degradation_diagnostics.plan.glyph_set == :unicode
+    assert :runtime_snapshot in inspection_helpers
+    assert :degradation_boundaries in continuity_seams
+    assert :resolved_style_mismatch in diagnostic_kinds
     assert :canvas_surface in layout_kinds
     assert :context_menu in layer_kinds
 
@@ -84,6 +113,8 @@ defmodule TerminalUiTest do
              :advanced_continuity,
              :foundational_continuity,
              :normalized_input_profiles,
+             :styled_continuity_review,
+             :styled_degradation_review,
              :transport_flow_review
            ]
 

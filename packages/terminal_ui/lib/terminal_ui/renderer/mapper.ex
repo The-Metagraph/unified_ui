@@ -932,6 +932,44 @@ defmodule TerminalUi.Renderer.Mapper do
     |> maybe_put(:label, label_text(element, nil))
     |> maybe_put(:description, description(element))
     |> maybe_put(:disabled, state_attr(element, :disabled?))
+    |> maybe_put(
+      :theme,
+      first_present([group_attr(element, :style, :theme), attr(element, :theme)])
+    )
+    |> maybe_put(
+      :variant,
+      first_present([group_attr(element, :style, :variant), attr(element, :variant)])
+    )
+    |> maybe_put(
+      :semantic_role,
+      first_present([group_attr(element, :style, :semantic_role), attr(element, :semantic_role)])
+    )
+    |> maybe_put(:fg, first_present([group_attr(element, :style, :fg), attr(element, :fg)]))
+    |> maybe_put(:bg, first_present([group_attr(element, :style, :bg), attr(element, :bg)]))
+    |> maybe_put(
+      :attrs,
+      first_present([group_attr(element, :style, :attrs), attr(element, :attrs)])
+    )
+    |> maybe_put(
+      :border,
+      first_present([group_attr(element, :style, :border), attr(element, :border)])
+    )
+    |> maybe_put(
+      :padding,
+      first_present([group_attr(element, :style, :padding), attr(element, :padding)])
+    )
+    |> maybe_put(
+      :theme_tokens,
+      first_present([group_attr(element, :style, :theme_tokens), attr(element, :theme_tokens)])
+    )
+    |> maybe_put(
+      :style_refs,
+      first_present([group_attr(element, :style, :style_refs), attr(element, :style_refs)])
+    )
+    |> maybe_put(
+      :degradation,
+      first_present([group_attr(element, :style, :degradation), attr(element, :degradation)])
+    )
   end
 
   defp binding_name(element) do

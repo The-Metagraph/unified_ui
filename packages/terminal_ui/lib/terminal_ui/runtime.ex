@@ -6,7 +6,18 @@ defmodule TerminalUi.Runtime do
   alias Jido.Signal
   alias TerminalUi.{Backend, Layer, Layout, Transport}
   alias TerminalUi.Renderer
-  alias TerminalUi.Runtime.{Boot, Error, EventLoop, EventRouter, Realization, Screen, State}
+
+  alias TerminalUi.Runtime.{
+    Boot,
+    Error,
+    EventLoop,
+    EventRouter,
+    Realization,
+    Screen,
+    State,
+    StyleResolver
+  }
+
   alias UnifiedIUR.Element
 
   @type validation_state :: :foundational_realization_ready | :advanced_runtime_ready
@@ -20,6 +31,7 @@ defmodule TerminalUi.Runtime do
       EventRouter,
       Screen,
       Realization,
+      StyleResolver,
       State,
       Error,
       Layout,
@@ -41,6 +53,8 @@ defmodule TerminalUi.Runtime do
       :layered_runtime_behavior,
       :capability_fallbacks,
       :canonical_foundational_rendering,
+      :native_style_surface,
+      :shared_theme_model,
       :canonical_boundary_events,
       :normalized_terminal_inputs,
       :shared_event_routing,
@@ -62,7 +76,8 @@ defmodule TerminalUi.Runtime do
       boundary_local_routing_shared: true,
       capability_aware: true,
       keyboard_first: true,
-      renderer_boot_path_present: true
+      renderer_boot_path_present: true,
+      style_surface_shared: true
     }
   end
 

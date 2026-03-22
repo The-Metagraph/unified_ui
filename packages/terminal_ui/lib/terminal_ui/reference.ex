@@ -33,6 +33,29 @@ defmodule TerminalUi.Reference do
         contract: TerminalUi.Capabilities.capability_contract(),
         diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      degradation: %{
+        modules: TerminalUi.Degradation.modules(),
+        responsibilities: TerminalUi.Degradation.responsibilities(),
+        diagnostics: TerminalUi.Degradation.diagnostics()
+      },
+      style: %{
+        primitives: TerminalUi.Style.primitives(),
+        hooks: TerminalUi.Style.widget_style_hooks(),
+        responsibilities: TerminalUi.Style.responsibilities()
+      },
+      theme: %{
+        catalog: TerminalUi.Theme.catalog_ids(),
+        default: TerminalUi.Theme.default_theme().id,
+        continuity_rules: TerminalUi.Theme.continuity_rules()
+      },
+      inspection: %{
+        helpers: TerminalUi.Inspection.helpers(),
+        package_overview: TerminalUi.Inspection.package_overview()
+      },
+      continuity: %{
+        seams: TerminalUi.Continuity.seams(),
+        contract: TerminalUi.Continuity.contract()
+      },
       layout: %{kinds: TerminalUi.Layout.kinds(), module: TerminalUi.Layout},
       layer: %{kinds: TerminalUi.Layer.kinds(), module: TerminalUi.Layer},
       renderer: %{
