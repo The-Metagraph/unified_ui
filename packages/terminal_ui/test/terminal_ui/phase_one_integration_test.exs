@@ -38,7 +38,7 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert state.realization.validation_state == :foundational_ready
     assert state.focus.current == "save-workspace"
     assert state.capabilities.degradation_profile == :rich_terminal
-    assert state.event_loop.input_dispatch == :scaffold_ready
+    assert state.event_loop.input_dispatch == :normalized_transport_ready
     assert state.event_loop.screen_id == "workspace"
     assert state.backend_adapter.mode == :raw
   end

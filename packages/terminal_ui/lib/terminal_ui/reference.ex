@@ -40,7 +40,15 @@ defmodule TerminalUi.Reference do
         responsibilities: TerminalUi.Renderer.responsibilities(),
         mapper: TerminalUi.Renderer.Mapper
       },
-      transport: %{modes: TerminalUi.Transport.modes()},
+      transport: %{
+        modes: TerminalUi.Transport.modes(),
+        families: TerminalUi.Transport.families(),
+        input_families: TerminalUi.Transport.input_families(),
+        local_default_families: TerminalUi.Transport.local_default_families(),
+        boundary_crossing_families: TerminalUi.Transport.boundary_crossing_families(),
+        modules: TerminalUi.Transport.modules(),
+        diagnostics: TerminalUi.Transport.diagnostics()
+      },
       examples: %{
         native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
         canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),

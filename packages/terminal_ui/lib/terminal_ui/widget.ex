@@ -194,7 +194,8 @@ defmodule TerminalUi.Widget do
              :command_palette,
              :process_monitor,
              :supervision_tree_viewer
-           ], do: :operational
+           ],
+      do: :operational
 
   def family_for(_kind), do: :content
 

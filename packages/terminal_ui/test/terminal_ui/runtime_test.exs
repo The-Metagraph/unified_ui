@@ -35,7 +35,7 @@ defmodule TerminalUi.RuntimeTest do
     assert runtime_state.backend_mode == :raw
     assert runtime_state.capabilities.backend_mode == :raw
     assert runtime_state.backend_adapter.runtime_module == TermUI.Runtime
-    assert runtime_state.event_loop.input_dispatch == :scaffold_ready
+    assert runtime_state.event_loop.input_dispatch == :normalized_transport_ready
     assert runtime_state.screen.layout.composition == :foundational_shared_runtime
     assert runtime_state.realization.validation_state == :foundational_ready
     assert runtime_state.validation_state == :foundational_realization_ready
