@@ -23,6 +23,91 @@ defmodule WebUi.ExamplesTest do
              |> Enum.sort()
   end
 
+  test "example metadata partitions native, canonical, and mixed suites with stable review artifacts" do
+    assert Enum.sort(Enum.map(WebUi.Examples.native_examples(), & &1.id)) == [
+             :native_advanced,
+             :native_counter,
+             :native_foundational,
+             :native_styling,
+             :native_transport
+           ]
+
+    assert Enum.sort(Enum.map(WebUi.Examples.canonical_examples(), & &1.id)) == [
+             :canonical_advanced,
+             :canonical_foundational,
+             :canonical_styling,
+             :canonical_transport,
+             :canonical_welcome
+           ]
+
+    assert Enum.sort(Enum.map(WebUi.Examples.mixed_examples(), & &1.id)) == [
+             :advanced_continuity,
+             :foundational_continuity,
+             :mixed_transport,
+             :styling_continuity
+           ]
+
+    assert %{
+             category: :native,
+             workflow: :styling,
+             artifact_names: artifact_names,
+             parity_with: [:canonical_styling, :styling_continuity],
+             traceability: %{
+               package_specs: package_specs,
+               runtime_obligations: runtime_obligations
+             }
+           } = WebUi.Examples.metadata(:native_styling)
+
+    assert artifact_names.preview == "web_ui.examples.native_styling.preview"
+    assert artifact_names.inspection == "web_ui.examples.native_styling.inspection"
+    assert artifact_names.export == "web_ui.examples.native_styling.export"
+    assert :native_widgets in package_specs
+    assert :direct_native_reviewable in runtime_obligations
+  end
+
+  test "coverage matrix groups workflows and parity obligations deterministically" do
+    assert %{
+             categories: %{mixed: mixed_ids, native: native_ids, canonical: canonical_ids},
+             workflows: %{styling: styling_ids},
+             parity_groups: %{styling_review: styling_group}
+           } = WebUi.Examples.coverage_matrix()
+
+    assert Enum.sort(mixed_ids) == [
+             :advanced_continuity,
+             :foundational_continuity,
+             :mixed_transport,
+             :styling_continuity
+           ]
+
+    assert Enum.sort(native_ids) == [
+             :native_advanced,
+             :native_counter,
+             :native_foundational,
+             :native_styling,
+             :native_transport
+           ]
+
+    assert Enum.sort(canonical_ids) == [
+             :canonical_advanced,
+             :canonical_foundational,
+             :canonical_styling,
+             :canonical_transport,
+             :canonical_welcome
+           ]
+
+    assert Enum.sort(styling_ids) == [
+             :canonical_styling,
+             :native_styling,
+             :styling_continuity
+           ]
+
+    assert Enum.sort(styling_group) == [
+             :canonical_styling,
+             :native_styling,
+             :styling_continuity
+           ]
+  end
+
   test "native and canonical foundational examples stay aligned through the continuity artifact" do
     comparison = WebUi.Examples.foundational_comparison()
 
