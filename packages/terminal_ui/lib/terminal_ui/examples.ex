@@ -587,6 +587,22 @@ defmodule TerminalUi.Examples do
     }
   end
 
+  @spec mixed_examples() :: [map()]
+  def mixed_examples do
+    catalog_by_category(:mixed)
+  end
+
+  @spec catalog() :: [map()]
+  def catalog do
+    catalog_entries()
+    |> Enum.map(&decorate_catalog_entry/1)
+  end
+
+  @spec metadata(atom()) :: map() | nil
+  def metadata(id) when is_atom(id) do
+    Enum.find(catalog(), &(&1.id == id))
+  end
+
   @spec coverage_matrix() :: map()
   def coverage_matrix do
     %{
@@ -1023,4 +1039,184 @@ defmodule TerminalUi.Examples do
 
   defp route_for_translation(%{boundary: :boundary}), do: :canonical_boundary
   defp route_for_translation(_translation), do: :local_runtime
+
+  defp catalog_by_category(category) do
+    catalog()
+    |> Enum.filter(&(&1.category == category))
+  end
+
+  defp decorate_catalog_entry(entry) do
+    Map.merge(entry, %{
+      artifact_names: artifact_names(entry.id),
+      traceability: traceability(entry),
+      coverage: example_coverage(entry.id)
+    })
+  end
+
+  defp artifact_names(id) do
+    base = "terminal_ui.examples.#{id}"
+
+    %{
+      preview: "#{base}.preview",
+      inspection: "#{base}.inspection",
+      validation: "#{base}.validation",
+      comparison: "#{base}.comparison"
+    }
+  end
+
+  defp traceability(entry) do
+    %{
+      package_specs: package_spec_surfaces(entry.category),
+      runtime_obligations: runtime_obligations(entry.category),
+      coverage_obligations: example_coverage(entry.id)
+    }
+  end
+
+  defp package_spec_surfaces(:native), do: [:native_widgets, :runtime, :tooling]
+  defp package_spec_surfaces(:canonical), do: [:iur_renderer, :runtime, :tooling]
+  defp package_spec_surfaces(:mixed), do: [:transport, :capabilities, :tooling]
+
+  defp runtime_obligations(:native), do: [:direct_native_reviewable, :shared_runtime]
+  defp runtime_obligations(:canonical), do: [:canonical_reviewable, :shared_runtime]
+  defp runtime_obligations(:mixed), do: [:continuity_reviewable, :capability_reviewable]
+
+  defp example_coverage(id) do
+    native_examples()
+    |> Kernel.++(canonical_examples())
+    |> Enum.find(&(&1.id == id))
+    |> case do
+      nil ->
+        comparison_examples()
+        |> Map.get(id, %{})
+        |> Map.get(:coverage, [])
+
+      example ->
+        Map.get(example, :coverage, [])
+    end
+  end
+
+  defp catalog_entries do
+    [
+      %{
+        id: :native_foundational,
+        category: :native,
+        workflow: :foundational,
+        parity_group: :foundational_review,
+        parity_with: [:canonical_foundational, :foundational_continuity],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :canonical_foundational,
+        category: :canonical,
+        workflow: :foundational,
+        parity_group: :foundational_review,
+        parity_with: [:native_foundational, :foundational_continuity],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :foundational_continuity,
+        category: :mixed,
+        workflow: :foundational,
+        parity_group: :foundational_review,
+        parity_with: [:native_foundational, :canonical_foundational],
+        capability_profiles: [:rich_terminal]
+      },
+      %{
+        id: :native_advanced_operations,
+        category: :native,
+        workflow: :advanced,
+        parity_group: :advanced_review,
+        parity_with: [:canonical_advanced_operations, :advanced_continuity],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :canonical_advanced_operations,
+        category: :canonical,
+        workflow: :advanced,
+        parity_group: :advanced_review,
+        parity_with: [:native_advanced_operations, :advanced_continuity],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :advanced_continuity,
+        category: :mixed,
+        workflow: :advanced,
+        parity_group: :advanced_review,
+        parity_with: [:native_advanced_operations, :canonical_advanced_operations],
+        capability_profiles: [:rich_terminal]
+      },
+      %{
+        id: :advanced_capability_continuity,
+        category: :mixed,
+        workflow: :capability,
+        parity_group: :advanced_review,
+        parity_with: [:native_advanced_operations, :canonical_advanced_operations],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :native_transport_review,
+        category: :native,
+        workflow: :transport,
+        parity_group: :transport_review,
+        parity_with: [:canonical_transport_review, :transport_flow_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :canonical_transport_review,
+        category: :canonical,
+        workflow: :transport,
+        parity_group: :transport_review,
+        parity_with: [:native_transport_review, :transport_flow_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :transport_flow_review,
+        category: :mixed,
+        workflow: :transport,
+        parity_group: :transport_review,
+        parity_with: [:native_transport_review, :canonical_transport_review],
+        capability_profiles: [:rich_terminal]
+      },
+      %{
+        id: :normalized_input_profiles,
+        category: :mixed,
+        workflow: :transport,
+        parity_group: :transport_review,
+        parity_with: [:native_transport_review, :canonical_transport_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :native_styled_review,
+        category: :native,
+        workflow: :styling,
+        parity_group: :styling_review,
+        parity_with: [:canonical_styled_review, :styled_continuity_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :canonical_styled_review,
+        category: :canonical,
+        workflow: :styling,
+        parity_group: :styling_review,
+        parity_with: [:native_styled_review, :styled_continuity_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
+        id: :styled_continuity_review,
+        category: :mixed,
+        workflow: :styling,
+        parity_group: :styling_review,
+        parity_with: [:native_styled_review, :canonical_styled_review],
+        capability_profiles: [:rich_terminal]
+      },
+      %{
+        id: :styled_degradation_review,
+        category: :mixed,
+        workflow: :capability,
+        parity_group: :styling_review,
+        parity_with: [:native_styled_review, :canonical_styled_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      }
+    ]
+  end
 end
