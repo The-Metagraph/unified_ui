@@ -186,6 +186,18 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.aliases == 48
   end
 
+  test "live unified_ui plancheck and compliance both pass" do
+    plan_report = Unified.SpecCompliance.plancheck("unified_ui")
+    compliance_report = Unified.SpecCompliance.compliance("unified_ui", run_commands: true)
+
+    assert plan_report.status == :pass
+    assert compliance_report.status == :pass
+    assert compliance_report.summary.applicable_requirements == 97
+    assert compliance_report.summary.status_counts.verified == 97
+    assert compliance_report.summary.status_counts.waived == 0
+    assert compliance_report.summary.ci_enforcement == "required"
+  end
+
   defp ensure_spec_state! do
     state_path = Path.join(File.cwd!(), ".spec/state.json")
 

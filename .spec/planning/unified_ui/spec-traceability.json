@@ -1,0 +1,759 @@
+{
+  "package": "unified_ui",
+  "version": "1",
+  "applicability": {
+    "direct_prefixes": [
+      "unified_ui."
+    ],
+    "inherited_requirement_ids": [
+      "ecosystem.architecture.dsl_authoring_boundary",
+      "ecosystem.architecture.iur_exchange_boundary",
+      "ecosystem.architecture.shared_transport_contract",
+      "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+      "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+      "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+      "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+      "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+      "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+      "ecosystem.signal_transport.jido_signal_canonical",
+      "ecosystem.signal_transport.dsl_event_bindings"
+    ],
+    "upstream_requirement_ids": [
+      "unified_iur.package.exchange_boundary",
+      "unified_iur.package.renderer_independent_surface",
+      "unified_iur.core.canonical_element_model",
+      "unified_iur.core.child_relationship_model",
+      "unified_iur.core.identity_and_metadata",
+      "unified_iur.core.pure_immutable_values",
+      "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "unified_iur.constructs.foundational_widgets",
+      "unified_iur.constructs.input_and_form_widgets",
+      "unified_iur.constructs.layout_and_layering",
+      "unified_iur.constructs.navigation_feedback_and_data",
+      "unified_iur.constructs.styling_attributes",
+      "unified_iur.constructs.theme_and_token_representation",
+      "unified_iur.display_systems.canvas_surface",
+      "unified_iur.display_systems.compose_with_widgets",
+      "unified_iur.display_systems.layering_primitives",
+      "unified_iur.display_systems.layout_primitives",
+      "unified_iur.display_systems.viewport_and_clipping",
+      "unified_iur.interactions.canonical_event_descriptor_representation",
+      "unified_iur.interactions.data_binding_representation",
+      "unified_iur.interactions.element_binding_attachment",
+      "unified_iur.interactions.renderer_independent_payload_mapping",
+      "unified_iur.interactions.standard_interaction_families",
+      "unified_iur.interoperability.deterministic_shape",
+      "unified_iur.interoperability.no_runtime_local_escape_hatches",
+      "unified_iur.interoperability.portable_data_model",
+      "unified_iur.interoperability.runtime_library_consumption",
+      "unified_iur.theming.color_model",
+      "unified_iur.theming.component_variants",
+      "unified_iur.theming.inheritance_and_overrides",
+      "unified_iur.theming.semantic_roles",
+      "unified_iur.theming.text_style_attributes",
+      "unified_iur.theming.theme_structure",
+      "unified_iur.tooling.introspection_helpers",
+      "unified_iur.tooling.reference_examples",
+      "unified_iur.tooling.validation_workflow"
+    ],
+    "non_applicable_requirement_ids": [
+      "ecosystem.architecture.renderer_packages_consume_iur",
+      "ecosystem.architecture.runtime_libraries_native_surface",
+      "ecosystem.architecture.runtime_libraries_iur_renderer",
+      "ecosystem.platform_runtimes.widget_libraries_independent",
+      "ecosystem.platform_runtimes.native_surface_covers_iur",
+      "ecosystem.platform_runtimes.native_surface_usable_without_iur",
+      "ecosystem.platform_runtimes.iur_interpretation",
+      "ecosystem.platform_runtimes.web_ui_runtime_split",
+      "ecosystem.platform_runtimes.live_ui_runtime",
+      "ecosystem.platform_runtimes.desktop_ui_targets",
+      "ecosystem.platform_runtimes.desktop_ui_native_runtime",
+      "ecosystem.signal_transport.web_bridge",
+      "ecosystem.signal_transport.live_bridge",
+      "ecosystem.signal_transport.desktop_translation",
+      "ecosystem.signal_transport.native_signal_models_allowed",
+      "ecosystem.signal_transport.local_state_not_contract"
+    ]
+  },
+  "mappings": [
+    {
+      "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
+      "scope": "inherited",
+      "source_file": ".spec/specs/architecture.spec.md",
+      "primary_plan_refs": ["1.2.1"],
+      "ownership_note": "Inherited authored-boundary requirement for UnifiedUi."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.iur_exchange_boundary",
+      "scope": "inherited",
+      "source_file": ".spec/specs/architecture.spec.md",
+      "primary_plan_refs": ["5.1.1"],
+      "ownership_note": "Inherited canonical-exchange boundary requirement."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.shared_transport_contract",
+      "scope": "inherited",
+      "source_file": ".spec/specs/architecture.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "ownership_note": "Inherited shared signal-contract requirement."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Inherited DSL-to-IUR symmetry requirement."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": ["5.4.1"],
+      "ownership_note": "Inherited parity requirement between canonical IUR and DSL coverage."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": ["5.4.1"],
+      "ownership_note": "Inherited parity requirement for widgets, layout, layering, and themes."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": ["3.3.2"],
+      "ownership_note": "Inherited authored-surface requirement for layers and themes."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": ["5.1.1"],
+      "ownership_note": "Inherited compilation-to-IUR requirement."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": ["5.4.1"],
+      "ownership_note": "Inherited bilateral parity governance requirement."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.jido_signal_canonical",
+      "scope": "inherited",
+      "source_file": ".spec/specs/signal_transport.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "ownership_note": "Inherited canonical signal-contract requirement."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.dsl_event_bindings",
+      "scope": "inherited",
+      "source_file": ".spec/specs/signal_transport.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Inherited authored binding-to-signal requirement."
+    },
+    {
+      "requirement_id": "unified_ui.package.library_identity",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/package.spec.md",
+      "primary_plan_refs": ["1.1.1"],
+      "ownership_note": "Direct package identity requirement."
+    },
+    {
+      "requirement_id": "unified_ui.package.canonical_iur_dependency",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/package.spec.md",
+      "primary_plan_refs": ["1.1.1"],
+      "ownership_note": "Direct package dependency requirement."
+    },
+    {
+      "requirement_id": "unified_ui.package.dsl_boundary_only",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/package.spec.md",
+      "primary_plan_refs": ["1.1.2"],
+      "ownership_note": "Direct authored-boundary requirement."
+    },
+    {
+      "requirement_id": "unified_ui.package.standalone_authoring_api",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/package.spec.md",
+      "primary_plan_refs": ["1.2.1"],
+      "ownership_note": "Direct author-facing API requirement."
+    },
+    {
+      "requirement_id": "unified_ui.package.traceable_to_root_specs",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/package.spec.md",
+      "primary_plan_refs": ["6.4.1"],
+      "ownership_note": "Direct spec-traceability requirement."
+    },
+    {
+      "requirement_id": "unified_ui.structure.mix_package_layout",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/structure.spec.md",
+      "primary_plan_refs": ["1.1.1"],
+      "ownership_note": "Direct package layout requirement."
+    },
+    {
+      "requirement_id": "unified_ui.structure.dsl_modules",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/structure.spec.md",
+      "primary_plan_refs": ["1.1.2"],
+      "ownership_note": "Direct DSL module-boundary requirement."
+    },
+    {
+      "requirement_id": "unified_ui.structure.compiler_modules",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/structure.spec.md",
+      "primary_plan_refs": ["5.1.1"],
+      "ownership_note": "Direct compiler module-boundary requirement."
+    },
+    {
+      "requirement_id": "unified_ui.structure.signal_modules",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/structure.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "ownership_note": "Direct signal module-boundary requirement."
+    },
+    {
+      "requirement_id": "unified_ui.structure.introspection_and_reference",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/structure.spec.md",
+      "primary_plan_refs": ["1.4.1"],
+      "ownership_note": "Direct introspection and reference-module requirement."
+    },
+    {
+      "requirement_id": "unified_ui.structure.no_required_long_lived_runtime",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/structure.spec.md",
+      "primary_plan_refs": ["1.1.2"],
+      "ownership_note": "Direct pure-library runtime-boundary requirement."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.authoring_extensibility",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/dsl.spec.md",
+      "primary_plan_refs": ["1.2.2"],
+      "ownership_note": "Direct DSL extensibility requirement."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.compile_time_validation",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/dsl.spec.md",
+      "primary_plan_refs": ["1.3.2"],
+      "ownership_note": "Direct compile-time validation requirement."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.interaction_binding",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/dsl.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Direct interaction and binding DSL requirement."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.spark_style_authoring_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/dsl.spec.md",
+      "primary_plan_refs": ["1.2.1"],
+      "ownership_note": "Direct Spark-style authoring requirement."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.styling_and_theming",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/dsl.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Direct style and theme DSL requirement."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.widgets_layouts_layers",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/dsl.spec.md",
+      "primary_plan_refs": ["1.2.2"],
+      "ownership_note": "Direct widget, layout, and layer authoring-surface requirement."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.canvas_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["3.3.2"],
+      "ownership_note": "Direct canvas widget authoring requirement."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.feedback_navigation_data_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["3.1.1"],
+      "ownership_note": "Direct advanced widget family requirement."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.foundational_visual_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["2.1.1"],
+      "ownership_note": "Direct foundational widget requirement."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.input_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["2.2.1"],
+      "ownership_note": "Direct input and form widget requirement."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["5.4.1"],
+      "ownership_note": "Direct parity requirement against canonical UnifiedIUR."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.layout_and_layer_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["2.3.1"],
+      "ownership_note": "Direct layout and layer authoring requirement."
+    },
+    {
+      "requirement_id": "unified_ui.widgets.style_attribute_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/widgets.spec.md",
+      "primary_plan_refs": ["4.2.1"],
+      "ownership_note": "Direct canonical style attribute requirement."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.canvas_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/display_systems.spec.md",
+      "primary_plan_refs": ["3.3.2"],
+      "ownership_note": "Direct display-system canvas requirement."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.compose_with_widgets",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/display_systems.spec.md",
+      "primary_plan_refs": ["3.4.2"],
+      "ownership_note": "Direct display-system composition requirement."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.layering_primitives",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/display_systems.spec.md",
+      "primary_plan_refs": ["3.3.2"],
+      "ownership_note": "Direct layering construct requirement."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.layout_primitives",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/display_systems.spec.md",
+      "primary_plan_refs": ["2.3.1"],
+      "ownership_note": "Direct layout construct requirement."
+    },
+    {
+      "requirement_id": "unified_ui.display_systems.viewport_and_clipping",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/display_systems.spec.md",
+      "primary_plan_refs": ["3.3.1"],
+      "ownership_note": "Direct viewport and clipping requirement."
+    },
+    {
+      "requirement_id": "unified_ui.theming.color_model",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/theming.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Direct theming color-model requirement."
+    },
+    {
+      "requirement_id": "unified_ui.theming.component_variants",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/theming.spec.md",
+      "primary_plan_refs": ["4.1.2"],
+      "ownership_note": "Direct theming component-variant requirement."
+    },
+    {
+      "requirement_id": "unified_ui.theming.inheritance_and_overrides",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/theming.spec.md",
+      "primary_plan_refs": ["4.1.2"],
+      "ownership_note": "Direct theming inheritance requirement."
+    },
+    {
+      "requirement_id": "unified_ui.theming.semantic_roles",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/theming.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Direct theming semantic-role requirement."
+    },
+    {
+      "requirement_id": "unified_ui.theming.text_style_attributes",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/theming.spec.md",
+      "primary_plan_refs": ["4.2.1"],
+      "ownership_note": "Direct theming text-style requirement."
+    },
+    {
+      "requirement_id": "unified_ui.theming.theme_structure",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/theming.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Direct theme structure requirement."
+    },
+    {
+      "requirement_id": "unified_ui.signals.authoring_event_semantics",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "ownership_note": "Direct authored signal-semantics requirement."
+    },
+    {
+      "requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Direct canonical descriptor-shape requirement."
+    },
+    {
+      "requirement_id": "unified_ui.signals.no_runtime_local_event_leakage",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.4.2"],
+      "ownership_note": "Direct runtime-leakage rejection requirement."
+    },
+    {
+      "requirement_id": "unified_ui.signals.standard_interaction_families",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "ownership_note": "Direct standard interaction-family requirement."
+    },
+    {
+      "requirement_id": "unified_ui.signals.validation_and_introspection",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.4.2"],
+      "ownership_note": "Direct signal validation and introspection requirement."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.canonical_iur_output",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Direct canonical compilation-output requirement."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.deterministic_results",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.2.1"],
+      "ownership_note": "Direct deterministic compilation requirement."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.introspection_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.3.1"],
+      "ownership_note": "Direct compiled-output inspection requirement."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.no_renderer_output_modes",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.4.2"],
+      "ownership_note": "Direct renderer-independence requirement for compilation output."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.runtime_independent_bindings",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.2.2"],
+      "ownership_note": "Direct runtime-independent binding compilation requirement."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.style_theme_layer_resolution",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.2.1"],
+      "ownership_note": "Direct style, theme, and layer resolution requirement."
+    },
+    {
+      "requirement_id": "unified_ui.tooling.authoring_validation_workflow",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/tooling.spec.md",
+      "primary_plan_refs": ["6.3.1"],
+      "ownership_note": "Direct validation-workflow requirement."
+    },
+    {
+      "requirement_id": "unified_ui.tooling.compiler_inspection",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/tooling.spec.md",
+      "primary_plan_refs": ["6.2.1"],
+      "ownership_note": "Direct compiler inspection tooling requirement."
+    },
+    {
+      "requirement_id": "unified_ui.tooling.documentation_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/tooling.spec.md",
+      "primary_plan_refs": ["6.4.1"],
+      "ownership_note": "Direct documentation-surface requirement."
+    },
+    {
+      "requirement_id": "unified_ui.tooling.reference_examples",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/tooling.spec.md",
+      "primary_plan_refs": ["6.1.1"],
+      "ownership_note": "Direct maintained example requirement."
+    },
+    {
+      "requirement_id": "unified_iur.package.exchange_boundary",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/package.spec.md",
+      "primary_plan_refs": ["5.1.1"],
+      "ownership_note": "Upstream canonical exchange-boundary constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.package.renderer_independent_surface",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/package.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Upstream renderer-independent surface constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.core.canonical_element_model",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/core.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Upstream canonical element-model constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.core.child_relationship_model",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/core.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Upstream child-relationship constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.core.identity_and_metadata",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/core.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Upstream identity-and-metadata constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.core.pure_immutable_values",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/core.spec.md",
+      "primary_plan_refs": ["5.2.1"],
+      "ownership_note": "Upstream immutable-value constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["5.4.1"],
+      "ownership_note": "Upstream parity-surface constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.foundational_widgets",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["2.1.1"],
+      "ownership_note": "Upstream foundational widget constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.input_and_form_widgets",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["2.2.1"],
+      "ownership_note": "Upstream input and form constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.layout_and_layering",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["2.3.1"],
+      "ownership_note": "Upstream layout and layering constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.navigation_feedback_and_data",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["3.1.1"],
+      "ownership_note": "Upstream navigation, feedback, and data constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.styling_attributes",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["4.2.1"],
+      "ownership_note": "Upstream styling-attribute constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.theme_and_token_representation",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Upstream theme and token constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.canvas_surface",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/display_systems.spec.md",
+      "primary_plan_refs": ["3.3.2"],
+      "ownership_note": "Upstream canvas-display constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.compose_with_widgets",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/display_systems.spec.md",
+      "primary_plan_refs": ["3.4.2"],
+      "ownership_note": "Upstream display composition constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layering_primitives",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/display_systems.spec.md",
+      "primary_plan_refs": ["3.3.2"],
+      "ownership_note": "Upstream layering constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layout_primitives",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/display_systems.spec.md",
+      "primary_plan_refs": ["2.3.1"],
+      "ownership_note": "Upstream layout constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.viewport_and_clipping",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/display_systems.spec.md",
+      "primary_plan_refs": ["3.3.1"],
+      "ownership_note": "Upstream viewport constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Upstream canonical interaction-descriptor constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.data_binding_representation",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Upstream data-binding descriptor constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.element_binding_attachment",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Upstream binding-attachment constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.renderer_independent_payload_mapping",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "ownership_note": "Upstream payload-mapping constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.standard_interaction_families",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "ownership_note": "Upstream interaction-family constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.deterministic_shape",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interoperability.spec.md",
+      "primary_plan_refs": ["5.2.1"],
+      "ownership_note": "Upstream deterministic-shape constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.no_runtime_local_escape_hatches",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interoperability.spec.md",
+      "primary_plan_refs": ["4.4.2"],
+      "ownership_note": "Upstream renderer-leakage constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.portable_data_model",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interoperability.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "ownership_note": "Upstream portable-data constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.runtime_library_consumption",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interoperability.spec.md",
+      "primary_plan_refs": ["5.4.1"],
+      "ownership_note": "Upstream runtime-consumption constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.theming.color_model",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/theming.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Upstream theming color-model constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.theming.component_variants",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/theming.spec.md",
+      "primary_plan_refs": ["4.1.2"],
+      "ownership_note": "Upstream theming variant constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.theming.inheritance_and_overrides",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/theming.spec.md",
+      "primary_plan_refs": ["4.1.2"],
+      "ownership_note": "Upstream theming inheritance constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.theming.semantic_roles",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/theming.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Upstream semantic-role constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.theming.text_style_attributes",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/theming.spec.md",
+      "primary_plan_refs": ["4.2.1"],
+      "ownership_note": "Upstream text-style constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.theming.theme_structure",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/theming.spec.md",
+      "primary_plan_refs": ["4.1.1"],
+      "ownership_note": "Upstream theme-structure constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.introspection_helpers",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/tooling.spec.md",
+      "primary_plan_refs": ["6.2.1"],
+      "ownership_note": "Upstream inspection-helper constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.reference_examples",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/tooling.spec.md",
+      "primary_plan_refs": ["6.1.1"],
+      "ownership_note": "Upstream reference-example constraint consumed by UnifiedUi."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.validation_workflow",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/tooling.spec.md",
+      "primary_plan_refs": ["6.3.1"],
+      "ownership_note": "Upstream validation-workflow constraint consumed by UnifiedUi."
+    }
+  ]
+}
