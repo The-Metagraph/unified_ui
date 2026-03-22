@@ -8,6 +8,11 @@ defmodule TerminalUi.Tooling do
     [:package_checks, :runtime_review, :capability_review]
   end
 
+  @spec mix_tasks() :: [atom()]
+  def mix_tasks do
+    [:"terminal_ui.inspect", :"terminal_ui.validate"]
+  end
+
   @spec documentation_surface() :: [String.t()]
   def documentation_surface do
     [

@@ -8,8 +8,19 @@ defmodule TerminalUi.Reference do
     %{
       package: TerminalUi,
       package_areas: TerminalUi.package_areas(),
-      widgets: %{families: TerminalUi.Widgets.families()},
-      runtime: %{assumptions: TerminalUi.Runtime.assumptions()},
+      widgets: %{
+        families: TerminalUi.Widgets.families(),
+        kinds: TerminalUi.Widgets.kinds(),
+        modules: TerminalUi.Widgets.modules(),
+        contract: TerminalUi.Widget.contract(),
+        validation_state: TerminalUi.Widgets.validation_state()
+      },
+      runtime: %{
+        assumptions: TerminalUi.Runtime.assumptions(),
+        modules: TerminalUi.Runtime.modules(),
+        capabilities: TerminalUi.Runtime.capabilities(),
+        validation_state: TerminalUi.Runtime.validation_state()
+      },
       backend: %{
         modes: TerminalUi.Backend.modes(),
         modules: TerminalUi.Backend.modules(),
@@ -23,7 +34,11 @@ defmodule TerminalUi.Reference do
       },
       renderer: %{accepts: TerminalUi.Renderer.accepts()},
       transport: %{modes: TerminalUi.Transport.modes()},
-      tooling: %{guides: TerminalUi.Tooling.documentation_surface()}
+      documentation: %{guides: TerminalUi.Tooling.documentation_surface()},
+      tooling: %{
+        guides: TerminalUi.Tooling.documentation_surface(),
+        workflows: TerminalUi.Tooling.workflows()
+      }
     }
   end
 end
