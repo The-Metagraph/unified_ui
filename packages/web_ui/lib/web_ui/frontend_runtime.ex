@@ -3,11 +3,11 @@ defmodule WebUi.FrontendRuntime do
   Elm-facing frontend runtime scaffold for `web_ui`.
   """
 
-  alias WebUi.FrontendRuntime.{Boot, Bridge, Error, Message, Model, Realization}
+  alias WebUi.FrontendRuntime.{Boot, Bridge, Error, Message, Model, Realization, StyleRealization}
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, Boot, Bridge, Message, Model, Realization, Error]
+    [__MODULE__, Boot, Bridge, Message, Model, Realization, StyleRealization, Error]
   end
 
   @spec capabilities() :: [atom()]
@@ -18,7 +18,8 @@ defmodule WebUi.FrontendRuntime do
       :bridge_translation,
       :bounded_browser_event_dispatch,
       :server_acknowledgement_handling,
-      :foundational_realization
+      :foundational_realization,
+      :style_realization
     ]
   end
 

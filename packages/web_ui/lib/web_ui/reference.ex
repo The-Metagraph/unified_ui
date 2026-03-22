@@ -27,6 +27,7 @@ defmodule WebUi.Reference do
   def responsibilities do
     %{
       direct_native: [:native_widgets, :phoenix_server_runtime, :elm_frontend_runtime],
+      styling: WebUi.Style.responsibilities(),
       display_systems: WebUi.Layout.responsibilities(),
       layering: WebUi.Layer.responsibilities(),
       canonical_signals: WebUi.Signals.responsibilities(),
@@ -87,6 +88,23 @@ defmodule WebUi.Reference do
         modes: WebUi.Transport.modes(),
         integration_points: transport_integration_points(),
         families: WebUi.Transport.families()
+      },
+      style: %{
+        primitives: WebUi.Style.primitives(),
+        hooks: WebUi.Style.widget_style_hooks(),
+        portable_keys: WebUi.Style.portable_keys()
+      },
+      theme: %{
+        catalog: WebUi.Theme.catalog_ids(),
+        default: WebUi.Theme.default_theme().id,
+        palette_roles: WebUi.Theme.palette_roles(),
+        continuity_rules: WebUi.Theme.continuity_rules(),
+        runtime_contract: WebUi.Theme.runtime_contract()
+      },
+      inspection: %{
+        helpers: WebUi.Inspection.helpers(),
+        package_overview: WebUi.Inspection.package_overview(),
+        continuity_contract: WebUi.Continuity.contract()
       },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),

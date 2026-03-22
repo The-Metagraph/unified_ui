@@ -4,12 +4,22 @@ defmodule WebUi.ServerRuntime do
   """
 
   alias UnifiedIUR.Element
-  alias WebUi.ServerRuntime.{Error, EventRouter, RenderModel, State, SyncBoundary, ViewState}
+
+  alias WebUi.ServerRuntime.{
+    Error,
+    EventRouter,
+    RenderModel,
+    State,
+    StyleResolver,
+    SyncBoundary,
+    ViewState
+  }
+
   alias WebUi.Widget
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, State, ViewState, RenderModel, EventRouter, SyncBoundary, Error]
+    [__MODULE__, State, ViewState, RenderModel, StyleResolver, EventRouter, SyncBoundary, Error]
   end
 
   @spec mount_native_screen(map(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
@@ -26,7 +36,11 @@ defmodule WebUi.ServerRuntime do
         id: element.id || "canonical-screen",
         title: Keyword.get(opts, :title, "Canonical Screen"),
         root: root,
-        metadata: %{source: :canonical, bridge: :phoenix_elm}
+        metadata: %{
+          source: :canonical,
+          bridge: :phoenix_elm,
+          theme: Keyword.get(opts, :theme, :default)
+        }
       }
 
       {:ok, build_state(:canonical, screen, element, opts)}
@@ -108,6 +122,14 @@ defmodule WebUi.ServerRuntime do
   end
 
   defp build_state(source_kind, screen, canonical_element, opts) do
+    metadata =
+      screen
+      |> Map.get(:metadata, %{})
+      |> Map.put(
+        :theme,
+        Keyword.get(opts, :theme, Map.get(Map.get(screen, :metadata, %{}), :theme, :default))
+      )
+
     %State{
       runtime_id: Keyword.get(opts, :runtime_id, "web-ui-runtime"),
       source_kind: source_kind,
@@ -118,7 +140,7 @@ defmodule WebUi.ServerRuntime do
       boundary_mode: if(source_kind == :canonical, do: :canonical_boundary, else: :native_local),
       diagnostics: [],
       event_log: [],
-      metadata: Map.get(screen, :metadata, %{})
+      metadata: metadata
     }
   end
 

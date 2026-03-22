@@ -5,12 +5,27 @@ defmodule WebUi.Tooling do
 
   @spec workflows() :: [atom()]
   def workflows do
-    [:package_tests, :reference_inspection, :canonical_render_smoke, :transport_round_trip]
+    [
+      :package_tests,
+      :reference_inspection,
+      :canonical_render_smoke,
+      :transport_round_trip,
+      :runtime_inspection,
+      :continuity_diagnostics
+    ]
   end
 
   @spec preview_surfaces() :: [module()]
   def preview_surfaces do
-    [WebUi.Reference, WebUi.Info, WebUi.Examples]
+    [
+      WebUi.Reference,
+      WebUi.Info,
+      WebUi.Style,
+      WebUi.Theme,
+      WebUi.Inspection,
+      WebUi.Continuity,
+      WebUi.Examples
+    ]
   end
 
   @spec mix_tasks() :: [String.t()]

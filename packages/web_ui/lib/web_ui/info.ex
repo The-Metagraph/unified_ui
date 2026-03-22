@@ -11,6 +11,18 @@ defmodule WebUi.Info do
       package_areas: WebUi.package_areas(),
       validation_state: WebUi.Runtime.validation_state(),
       bridge: bridge_summary(),
+      style: %{
+        primitives: WebUi.Style.primitives(),
+        hooks: WebUi.Style.widget_style_hooks()
+      },
+      theme: %{
+        catalog: WebUi.Theme.catalog_ids(),
+        default: WebUi.Theme.default_theme().id
+      },
+      inspection: %{
+        helpers: WebUi.Inspection.helpers(),
+        continuity_seams: WebUi.Continuity.seams()
+      },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         mix_tasks: WebUi.Tooling.mix_tasks()

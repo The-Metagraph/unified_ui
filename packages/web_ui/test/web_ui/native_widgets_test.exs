@@ -8,7 +8,13 @@ defmodule WebUi.NativeWidgetsTest do
     content =
       WebUi.Widgets.content("workspace-header", [text, button],
         presentation: :hero,
-        style_hooks: [:tone, :variant]
+        tone: :accent,
+        variant: :hero,
+        background: :panel,
+        border: :subtle,
+        style_hooks: [:tone, :variant, :theme_tokens],
+        theme_tokens: %{surface: [:surface, :default]},
+        state_variants: %{focused: %{border: :focus_ring}}
       )
 
     assert text.kind == :text
@@ -16,7 +22,12 @@ defmodule WebUi.NativeWidgetsTest do
     assert button.events == %{click: %{intent: :save_workspace}}
     assert content.attributes.presentation == :hero
     assert content.slot_children.default == [text, button]
-    assert content.styles.hooks == [:tone, :variant]
+    assert content.styles.hooks == [:tone, :variant, :theme_tokens]
+    assert content.styles.tone == :accent
+    assert content.styles.variant == :hero
+    assert content.styles.background == :panel
+    assert content.styles.theme_tokens.surface == [:surface, :default]
+    assert content.styles.state_variants.focused.border == :focus_ring
   end
 
   test "input, navigation, layout, and grouped form widgets compose deterministically" do

@@ -6,6 +6,7 @@ defmodule WebUi.ExamplesTest do
              :advanced_continuity,
              :canonical_advanced,
              :canonical_foundational,
+             :canonical_styling,
              :canonical_transport,
              :canonical_welcome,
              :foundational_continuity,
@@ -13,7 +14,9 @@ defmodule WebUi.ExamplesTest do
              :native_advanced,
              :native_counter,
              :native_foundational,
-             :native_transport
+             :native_styling,
+             :native_transport,
+             :styling_continuity
            ] =
              WebUi.Examples.catalog()
              |> Enum.map(& &1.id)
@@ -84,5 +87,33 @@ defmodule WebUi.ExamplesTest do
     assert comparison.continuity.same_intent?
     assert comparison.continuity.local_and_boundary_paths_diverge?
     assert comparison.continuity.server_authority_preserved?
+  end
+
+  test "styling comparison exposes side-by-side resolved style and browser realization artifacts" do
+    comparison = WebUi.Examples.styling_comparison()
+
+    assert comparison.continuity.validation.status == :pass
+    assert comparison.continuity.theme_propagation_match?
+    assert comparison.continuity.style_resolution_match?
+    assert comparison.continuity.frontend_realization_match?
+
+    assert Enum.any?(comparison.review_artifact.server.native, fn node ->
+             node.id == "primary-action" and node.resolved_styles.background == :accent_tint
+           end)
+
+    assert Enum.any?(comparison.review_artifact.frontend.native, fn node ->
+             node.id == "style-query" and "is-focused" in node.browser_style.class_tokens
+           end)
+
+    assert Enum.any?(comparison.review_artifact.frontend.canonical, fn node ->
+             node.id == "style-query" and "is-focused" in node.browser_style.class_tokens
+           end)
+
+    assert comparison.review_artifact.continuity.shared_ids == [
+             "styling-title",
+             "style-query",
+             "primary-action",
+             "style-inspector"
+           ]
   end
 end

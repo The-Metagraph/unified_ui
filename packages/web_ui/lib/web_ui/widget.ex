@@ -75,7 +75,7 @@ defmodule WebUi.Widget do
         :layers,
         :menu
       ],
-      styles: [:tone, :size, :spacing, :surface, :hooks],
+      styles: Enum.uniq(WebUi.Style.portable_keys() ++ [:background, :border, :align]),
       events: [
         :click,
         :change,

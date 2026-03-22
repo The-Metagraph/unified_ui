@@ -14,9 +14,11 @@ defmodule WebUi.Runtime do
       WebUi.ServerRuntime,
       WebUi.ServerRuntime.State,
       WebUi.ServerRuntime.ViewState,
+      WebUi.ServerRuntime.StyleResolver,
       WebUi.FrontendRuntime,
       WebUi.FrontendRuntime.Boot,
-      WebUi.FrontendRuntime.Bridge
+      WebUi.FrontendRuntime.Bridge,
+      WebUi.FrontendRuntime.StyleRealization
     ]
   end
 
@@ -28,7 +30,9 @@ defmodule WebUi.Runtime do
       :frontend_hydration,
       :transport_translation,
       :frontend_event_flow,
-      :boundary_envelope_flow
+      :boundary_envelope_flow,
+      :style_resolution,
+      :style_realization
     ]
   end
 

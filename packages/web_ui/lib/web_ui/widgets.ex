@@ -369,7 +369,8 @@ defmodule WebUi.Widgets do
         stack("#{id}-root", children, direction: :column, styles: Keyword.get(opts, :styles, %{})),
       metadata: %{
         bridge: Keyword.get(opts, :bridge, :phoenix_elm),
-        source: Keyword.get(opts, :source, :native)
+        source: Keyword.get(opts, :source, :native),
+        theme: Keyword.get(opts, :theme, :default)
       }
     }
   end

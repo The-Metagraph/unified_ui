@@ -87,10 +87,31 @@ defmodule WebUi.Widgets.Builder do
       |> List.wrap()
       |> Enum.reject(&is_nil/1)
 
+    explicit =
+      %{}
+      |> maybe_put(:typography, option(opts, :typography))
+      |> maybe_put(:tone, option(opts, :tone))
+      |> maybe_put(:color_role, option(opts, :color_role))
+      |> maybe_put(:size, option(opts, :size))
+      |> maybe_put(:spacing, option(opts, :spacing))
+      |> maybe_put(:align, option(opts, :align))
+      |> maybe_put(:surface, option(opts, :surface))
+      |> maybe_put(:background, option(opts, :background))
+      |> maybe_put(:border, option(opts, :border))
+      |> maybe_put(:visibility, option(opts, :visibility))
+      |> maybe_put(:emphasis, option(opts, :emphasis))
+      |> maybe_put(:variant, option(opts, :variant))
+      |> maybe_put(:style_refs, option(opts, :style_refs))
+      |> maybe_put(:theme_tokens, option(opts, :theme_tokens))
+      |> maybe_put(:state_variants, option(opts, :state_variants))
+      |> maybe_put(:composition, option(opts, :composition))
+      |> maybe_put(:hooks, hooks)
+
     opts
     |> option(:styles, %{})
     |> normalize_map()
-    |> maybe_put(:hooks, hooks)
+    |> Map.merge(explicit)
+    |> WebUi.Style.normalize()
     |> compact_map()
   end
 
