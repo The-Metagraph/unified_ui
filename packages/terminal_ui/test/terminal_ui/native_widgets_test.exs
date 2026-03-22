@@ -61,7 +61,7 @@ defmodule TerminalUi.NativeWidgetsTest do
 
     assert TerminalUi.Backend.RawMode in reference.backend.modules
     assert TerminalUi.Runtime.EventLoop in reference.runtime.modules
-    assert :renderer_entrypoint_placeholder in reference.runtime.capabilities
+    assert :shared_realization_model in reference.runtime.capabilities
     assert :rich_terminal in reference.capabilities.profiles
     assert "guides/runtime_backbone.md" in reference.documentation.guides
     assert TerminalUi.Info.widget_summary(widget).binding_keys == []

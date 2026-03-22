@@ -9,7 +9,9 @@ defmodule TerminalUi.Runtime.State do
     :source_kind,
     :backend_mode,
     :capabilities,
-    :root
+    :root,
+    :screen,
+    :realization
   ]
   defstruct [
     :runtime_id,
@@ -19,6 +21,9 @@ defmodule TerminalUi.Runtime.State do
     :backend_mode,
     :capabilities,
     :root,
+    :screen,
+    :realization,
+    :focus,
     :backend_adapter,
     :event_loop,
     :lifecycle,
@@ -36,6 +41,9 @@ defmodule TerminalUi.Runtime.State do
           backend_mode: atom(),
           capabilities: map(),
           root: map(),
+          screen: TerminalUi.Runtime.Screen.t(),
+          realization: map(),
+          focus: map() | nil,
           backend_adapter: map(),
           event_loop: map(),
           lifecycle: map(),

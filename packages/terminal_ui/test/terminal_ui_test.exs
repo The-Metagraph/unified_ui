@@ -35,7 +35,7 @@ defmodule TerminalUiTest do
     assert %{
              package: :terminal_ui,
              namespace: TerminalUi,
-             runtime: %{validation_state: :backbone_ready},
+             runtime: %{validation_state: :foundational_realization_ready},
              widgets: %{families: families},
              documentation: %{guides: guides},
              tooling: %{workflows: workflows}

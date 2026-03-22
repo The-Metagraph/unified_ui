@@ -31,7 +31,10 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert state.source_kind == :native
     assert state.backend_mode == :raw
     assert state.root == root
-    assert state.validation_state == :backbone_ready
+    assert state.validation_state == :foundational_realization_ready
+    assert state.screen.layout.composition == :foundational_shared_runtime
+    assert state.realization.validation_state == :foundational_ready
+    assert state.focus.current == "save-workspace"
     assert state.capabilities.degradation_profile == :rich_terminal
     assert state.event_loop.input_dispatch == :scaffold_ready
     assert state.event_loop.screen_id == "workspace"
@@ -69,14 +72,14 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     summary = TerminalUi.info()
 
     assert reference.widgets.validation_state.direct_native_scaffold == :ready
-    assert reference.runtime.validation_state == :backbone_ready
+    assert reference.runtime.validation_state == :foundational_realization_ready
     assert reference.backend.modes == [:raw, :tty]
     assert reference.transport.modes == [:native_local, :canonical_boundary]
     assert :capability_snapshot in reference.runtime.capabilities
     assert :rich_terminal in reference.capabilities.profiles
 
     assert summary.package == :terminal_ui
-    assert summary.runtime.validation_state == :backbone_ready
+    assert summary.runtime.validation_state == :foundational_realization_ready
     assert :layout in summary.widgets.families
     assert :fallback_terminal in summary.capabilities.profiles
     assert :runtime_review in summary.tooling.workflows

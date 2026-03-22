@@ -7,16 +7,18 @@ defmodule TerminalUi.RuntimeTest do
   test "runtime exposes the phase one backbone modules and capabilities" do
     assert TerminalUi.Runtime.Boot in Runtime.modules()
     assert TerminalUi.Runtime.EventLoop in Runtime.modules()
+    assert TerminalUi.Runtime.Screen in Runtime.modules()
+    assert TerminalUi.Runtime.Realization in Runtime.modules()
     assert TerminalUi.Runtime.State in Runtime.modules()
-    assert Runtime.validation_state() == :backbone_ready
-    assert :event_loop_scaffold in Runtime.capabilities()
+    assert Runtime.validation_state() == :foundational_realization_ready
+    assert :shared_realization_model in Runtime.capabilities()
   end
 
   test "runtime mounts a native screen through the shared term_ui-backed backbone" do
     screen = %{
       id: :welcome,
       title: "Welcome",
-      root: %{id: :welcome_text, kind: :text, content: "Hello"}
+      root: TerminalUi.Widgets.text("welcome_text", "Hello")
     }
 
     assert {:ok, runtime_state} =
@@ -29,6 +31,13 @@ defmodule TerminalUi.RuntimeTest do
     assert runtime_state.capabilities.backend_mode == :raw
     assert runtime_state.backend_adapter.runtime_module == TermUI.Runtime
     assert runtime_state.event_loop.input_dispatch == :scaffold_ready
+    assert runtime_state.screen.layout.composition == :foundational_shared_runtime
+    assert runtime_state.realization.validation_state == :foundational_ready
+
+    assert runtime_state.realization.cell_surface == [
+             %{widget_id: "welcome_text", content: "Hello", kind: :text, family: :content}
+           ]
+
     assert runtime_state.lifecycle.boot == :initialized
   end
 
