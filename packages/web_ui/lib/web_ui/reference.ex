@@ -106,6 +106,12 @@ defmodule WebUi.Reference do
         package_overview: WebUi.Inspection.package_overview(),
         continuity_contract: WebUi.Continuity.contract()
       },
+      validation: %{
+        inspect: WebUi.Inspect,
+        export: WebUi.Export,
+        validate: WebUi.Validate,
+        release_readiness_modes: [:summary, :strict]
+      },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         preview_surfaces: WebUi.Tooling.preview_surfaces(),

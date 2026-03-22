@@ -23,6 +23,11 @@ defmodule WebUi.Info do
         helpers: WebUi.Inspection.helpers(),
         continuity_seams: WebUi.Continuity.seams()
       },
+      validation: %{
+        workflows: WebUi.Tooling.workflows(),
+        example_coverage: WebUi.Validate.example_coverage().status,
+        runtime_behavior: WebUi.Validate.runtime_behavior().status
+      },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         mix_tasks: WebUi.Tooling.mix_tasks()

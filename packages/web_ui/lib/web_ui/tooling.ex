@@ -7,11 +7,15 @@ defmodule WebUi.Tooling do
   def workflows do
     [
       :package_tests,
+      :example_preview,
       :reference_inspection,
       :canonical_render_smoke,
       :transport_round_trip,
       :runtime_inspection,
-      :continuity_diagnostics
+      :continuity_diagnostics,
+      :artifact_export,
+      :package_validation,
+      :release_readiness
     ]
   end
 
@@ -23,6 +27,9 @@ defmodule WebUi.Tooling do
       WebUi.Style,
       WebUi.Theme,
       WebUi.Inspection,
+      WebUi.Inspect,
+      WebUi.Export,
+      WebUi.Validate,
       WebUi.Continuity,
       WebUi.Examples
     ]
@@ -30,7 +37,7 @@ defmodule WebUi.Tooling do
 
   @spec mix_tasks() :: [String.t()]
   def mix_tasks do
-    ["mix deps.get", "mix test", "mix docs"]
+    ["mix deps.get", "mix test", "mix docs", "mix compile"]
   end
 
   @spec documentation_surface() :: [String.t()]

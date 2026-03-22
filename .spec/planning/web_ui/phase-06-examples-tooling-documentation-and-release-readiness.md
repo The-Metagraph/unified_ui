@@ -36,22 +36,22 @@ Back to index: [README](./README.md)
       [x] 6.1.2.2 Subtask - Define stable inspection, preview, comparison, and export artifact naming for review workflows.
       [x] 6.1.2.3 Subtask - Keep example metadata traceable to package specs, canonical widget coverage, and split-runtime obligations.
 
-  [ ] 6.2 Section - Maintainer Tooling and Validation Workflows
+  [x] 6.2 Section - Maintainer Tooling and Validation Workflows
     Implement the tooling surface that lets maintainers inspect, preview, export, and validate the package coherently.
 
-    [ ] 6.2.1 Task - Implement package preview and inspection workflows
+    [x] 6.2.1 Task - Implement package preview and inspection workflows
       Provide maintainer-facing commands or helpers that surface native rendering, canonical rendering, styling, and transport behavior.
 
-      [ ] 6.2.1.1 Subtask - Implement preview workflows for direct-native, canonical, and mixed examples across the Phoenix and Elm runtime split.
-      [ ] 6.2.1.2 Subtask - Implement inspection workflows for widget catalogs, renderer coverage, transport behavior, style continuity, and runtime state.
-      [ ] 6.2.1.3 Subtask - Implement export workflows that produce review-friendly metadata, reports, comparisons, and diagnostics.
+      [x] 6.2.1.1 Subtask - Implement preview workflows for direct-native, canonical, and mixed examples across the Phoenix and Elm runtime split.
+      [x] 6.2.1.2 Subtask - Implement inspection workflows for widget catalogs, renderer coverage, transport behavior, style continuity, and runtime state.
+      [x] 6.2.1.3 Subtask - Implement export workflows that produce review-friendly metadata, reports, comparisons, and diagnostics.
 
-    [ ] 6.2.2 Task - Implement package validation workflows
+    [x] 6.2.2 Task - Implement package validation workflows
       Provide repeatable validation that guards widget coverage, runtime behavior, styling continuity, and boundary event translation.
 
-      [ ] 6.2.2.1 Subtask - Implement validation for canonical IUR coverage, native widget coverage, and direct-native versus canonical continuity.
-      [ ] 6.2.2.2 Subtask - Implement validation for Phoenix runtime behavior, Elm frontend behavior, and boundary event translation.
-      [ ] 6.2.2.3 Subtask - Implement strict release-readiness modes that fail on missing examples, stale coverage, or inconsistent package diagnostics.
+      [x] 6.2.2.1 Subtask - Implement validation for canonical IUR coverage, native widget coverage, and direct-native versus canonical continuity.
+      [x] 6.2.2.2 Subtask - Implement validation for Phoenix runtime behavior, Elm frontend behavior, and boundary event translation.
+      [x] 6.2.2.3 Subtask - Implement strict release-readiness modes that fail on missing examples, stale coverage, or inconsistent package diagnostics.
 
   [ ] 6.3 Section - Documentation and Package Reference Surfaces
     Implement the package documentation that explains the runtime split, widget surface, renderer entrypoints, and transport model.

@@ -197,6 +197,25 @@ defmodule WebUi.CanonicalRendererTest do
     assert find_node(model.tree, "inspect-dialog").browser.focusable?
   end
 
+  test "canonical panel layouts map into the native layout surface" do
+    canonical =
+      Element.new(:layout, :panel,
+        id: "settings-panel",
+        attributes: %{title: "Settings", tone: :muted},
+        children: [
+          Element.new(:widget, :text,
+            id: "settings-copy",
+            attributes: %{content: "Panel body"}
+          )
+        ]
+      )
+
+    assert {:ok, %WebUi.Widget{kind: :panel} = root} = WebUi.Renderer.render(canonical)
+    assert root.attributes.title == "Settings"
+    assert root.attributes.tone == :muted
+    assert Enum.map(root.slot_children.default, & &1.id) == ["settings-copy"]
+  end
+
   defp find_widget(%WebUi.Widget{id: id} = widget, id), do: widget
 
   defp find_widget(%WebUi.Widget{} = widget, id) do

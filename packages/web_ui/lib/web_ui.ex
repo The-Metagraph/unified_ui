@@ -6,8 +6,10 @@ defmodule WebUi do
   alias WebUi.{
     Continuity,
     Examples,
+    Export,
     Frontend,
     Info,
+    Inspect,
     Inspection,
     Layer,
     Layout,
@@ -20,6 +22,7 @@ defmodule WebUi do
     Theme,
     Tooling,
     Transport,
+    Validate,
     Widgets
   }
 
@@ -89,8 +92,17 @@ defmodule WebUi do
   @spec inspection() :: module()
   def inspection, do: Inspection
 
+  @spec inspect() :: module()
+  def inspect, do: Inspect
+
+  @spec export() :: module()
+  def export, do: Export
+
   @spec continuity() :: module()
   def continuity, do: Continuity
+
+  @spec validate() :: module()
+  def validate, do: Validate
 
   @spec tooling() :: module()
   def tooling, do: Tooling

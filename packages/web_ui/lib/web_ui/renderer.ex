@@ -42,6 +42,7 @@ defmodule WebUi.Renderer do
       :column,
       :container,
       :stack,
+      :panel,
       :viewport,
       :scroll_bar,
       :split_pane,

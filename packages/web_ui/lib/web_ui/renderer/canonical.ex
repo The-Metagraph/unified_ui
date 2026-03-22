@@ -495,6 +495,21 @@ defmodule WebUi.Renderer.Canonical do
   end
 
   defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:layout, "layout"] and kind in [:panel, "panel"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       Widgets.panel(
+         element.id,
+         attr(element, :title, "Panel"),
+         children,
+         Keyword.merge(base_opts(element),
+           tone: attr(element, :tone, :default)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:viewport, "viewport"] do
     with {:ok, content} <- required_slot_child(element, :content) do
       {:ok,
