@@ -51,7 +51,7 @@ defmodule TerminalUi.RuntimeTest do
     assert {:error, %TerminalUi.Runtime.Error{reason: :invalid_screen}} =
              Runtime.mount_native_screen(%{id: :broken, title: "Broken"})
 
-    element = Element.new(:widget, :table, id: :hello, attributes: %{})
+    element = Element.new(:widget, :calendar, id: :hello, attributes: %{})
 
     assert {:error, %TerminalUi.Runtime.Error{reason: :unsupported_canonical_construct}} =
              Runtime.mount_iur_screen(element)

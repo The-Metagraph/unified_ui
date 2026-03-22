@@ -27,13 +27,13 @@ defmodule TerminalUi.PhaseTwoIntegrationTest do
   end
 
   test "unsupported foundational widgets and invalid canonical bindings fail with deterministic diagnostics" do
-    unsupported = Element.new(:widget, :table, id: "unsupported-table")
+    unsupported = Element.new(:widget, :calendar, id: "unsupported-calendar")
 
     assert {:error, %TerminalUi.Runtime.Error{} = unsupported_error} =
              TerminalUi.Runtime.mount_iur_screen(unsupported, backend_mode: :raw)
 
     assert unsupported_error.reason == :unsupported_canonical_construct
-    assert unsupported_error.details.kind == :table
+    assert unsupported_error.details.kind == :calendar
 
     invalid_bindings =
       Element.new(:widget, :text_input,

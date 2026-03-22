@@ -60,13 +60,13 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert invalid_backend_error.reason == :unsupported_backend_mode
     assert invalid_backend_error.details.backend_mode == :serial
 
-    element = Element.new(:widget, :table, id: "status")
+    element = Element.new(:widget, :calendar, id: "status")
 
     assert {:error, %Error{} = canonical_error} =
              TerminalUi.Runtime.mount_iur_screen(element, backend_mode: :raw)
 
     assert canonical_error.reason == :unsupported_canonical_construct
-    assert canonical_error.details.kind == :table
+    assert canonical_error.details.kind == :calendar
   end
 
   test "reference and info helpers expose runtime, capability, and backend seams without renderer coverage" do

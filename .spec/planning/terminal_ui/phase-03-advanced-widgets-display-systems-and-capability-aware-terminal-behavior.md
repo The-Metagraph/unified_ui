@@ -65,25 +65,25 @@ Back to index: [README](./README.md)
       [x] 3.2.2.2 Subtask - Implement keyboard-first alternatives and inline fallbacks for interaction patterns that limited terminals cannot realize fully.
       [x] 3.2.2.3 Subtask - Add diagnostics for invalid layering state, unsupported positioned behavior, and advanced display realization mismatches.
 
-  [ ] 3.3 Section - Expanded Canonical IUR Rendering
+  [x] 3.3 Section - Expanded Canonical IUR Rendering
     Expand canonical renderer coverage so the advanced widget and display
     surface remains aligned with the native terminal runtime model.
 
-    [ ] 3.3.1 Task - Expand canonical renderer coverage across the advanced surface
+    [x] 3.3.1 Task - Expand canonical renderer coverage across the advanced surface
       Map advanced canonical widgets, display systems, and styling hooks into
       the same native `terminal_ui` widget families and runtime mechanics.
 
-      [ ] 3.3.1.1 Subtask - Implement canonical mapping for advanced data, feedback, visualization, and operational widget families.
-      [ ] 3.3.1.2 Subtask - Implement canonical mapping for advanced layout, layering, viewport, split-pane, scroll, and canvas constructs.
-      [ ] 3.3.1.3 Subtask - Keep renderer coverage aligned with direct-native widget reuse instead of introducing renderer-only widget variants.
+      [x] 3.3.1.1 Subtask - Implement canonical mapping for advanced data, feedback, visualization, and operational widget families.
+      [x] 3.3.1.2 Subtask - Implement canonical mapping for advanced layout, layering, viewport, split-pane, scroll, and canvas constructs.
+      [x] 3.3.1.3 Subtask - Keep renderer coverage aligned with direct-native widget reuse instead of introducing renderer-only widget variants.
 
-    [ ] 3.3.2 Task - Implement canonical meaning preservation across capability profiles
+    [x] 3.3.2 Task - Implement canonical meaning preservation across capability profiles
       Preserve deterministic terminal meaning while advanced native and
       canonical rendering paths expand.
 
-      [ ] 3.3.2.1 Subtask - Define deterministic mapping expectations for advanced widget structure, layering, degradation, and interaction semantics.
-      [ ] 3.3.2.2 Subtask - Preserve native widget meaning and canonical intent across richer and limited terminal capability profiles through one runtime model.
-      [ ] 3.3.2.3 Subtask - Add diagnostics for advanced canonical constructs that cannot yet be realized safely by the shared runtime.
+      [x] 3.3.2.1 Subtask - Define deterministic mapping expectations for advanced widget structure, layering, degradation, and interaction semantics.
+      [x] 3.3.2.2 Subtask - Preserve native widget meaning and canonical intent across richer and limited terminal capability profiles through one runtime model.
+      [x] 3.3.2.3 Subtask - Add diagnostics for advanced canonical constructs that cannot yet be realized safely by the shared runtime.
 
   [ ] 3.4 Section - Advanced Comparison Examples
     Implement maintained advanced examples that compare direct-native and
