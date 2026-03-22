@@ -64,25 +64,25 @@ Back to index: [README](./README.md)
       [x] 6.2.2.2 Subtask - Implement package validation workflows for transport translation, no-boundary-leakage guarantees, and capability degradation expectations.
       [x] 6.2.2.3 Subtask - Keep validation workflows package-scoped and repeatable across local maintainer and CI usage.
 
-  [ ] 6.3 Section - Documentation Surface
+  [x] 6.3 Section - Documentation Surface
     Implement the documentation and reference surface that package maintainers
     and consumers need in order to understand `terminal_ui`.
 
-    [ ] 6.3.1 Task - Implement package guides and runtime documentation
+    [x] 6.3.1 Task - Implement package guides and runtime documentation
       Document the native widget surface, shared `term_ui` runtime, capability
       model, canonical renderer entry point, and transport model.
 
-      [ ] 6.3.1.1 Subtask - Document the native widget and styling surface for direct-native `terminal_ui` usage.
-      [ ] 6.3.1.2 Subtask - Document the shared runtime, backend and capability seams, canonical renderer entry point, and transport translation model.
-      [ ] 6.3.1.3 Subtask - Document supported backend modes, capability profiles, and release assumptions without collapsing them into runtime logic.
+      [x] 6.3.1.1 Subtask - Document the native widget and styling surface for direct-native `terminal_ui` usage.
+      [x] 6.3.1.2 Subtask - Document the shared runtime, backend and capability seams, canonical renderer entry point, and transport translation model.
+      [x] 6.3.1.3 Subtask - Document supported backend modes, capability profiles, and release assumptions without collapsing them into runtime logic.
 
-    [ ] 6.3.2 Task - Implement reference summaries and maintainer-facing package docs
+    [x] 6.3.2 Task - Implement reference summaries and maintainer-facing package docs
       Keep maintained reference surfaces usable as the package reaches release
       readiness.
 
-      [ ] 6.3.2.1 Subtask - Expose maintained example, widget-family, transport, styling, and capability summaries through package-facing helper modules.
-      [ ] 6.3.2.2 Subtask - Keep maintainer-facing docs aligned with inspection and validation tooling output.
-      [ ] 6.3.2.3 Subtask - Document how direct-native and canonical entry paths share one runtime model and one package boundary.
+      [x] 6.3.2.1 Subtask - Expose maintained example, widget-family, transport, styling, and capability summaries through package-facing helper modules.
+      [x] 6.3.2.2 Subtask - Keep maintainer-facing docs aligned with inspection and validation tooling output.
+      [x] 6.3.2.3 Subtask - Document how direct-native and canonical entry paths share one runtime model and one package boundary.
 
   [ ] 6.4 Section - Release Readiness and Package Evolution
     Implement the final governance, traceability, and release-readiness gates

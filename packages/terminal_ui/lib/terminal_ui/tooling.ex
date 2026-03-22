@@ -50,6 +50,9 @@ defmodule TerminalUi.Tooling do
     [
       "README.md",
       "guides/runtime_backbone.md",
+      "guides/native_runtime_and_examples.md",
+      "guides/canonical_rendering_and_transport.md",
+      "guides/styling_capabilities_and_inspection.md",
       "guides/maintainer_workflows.md"
     ]
   end
