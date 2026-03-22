@@ -16,7 +16,7 @@ Back to index: [README](./README.md)
 - The package should make direct-native and canonical rendering equally reviewable through the same maintainer workflows.
 - Release readiness depends on widget coverage, split-runtime behavior, canonical transport, style continuity, and documentation all being observable through repeatable workflows.
 
-[ ] 6 Phase 6 - Examples, Tooling, Documentation, and Release Readiness
+[x] 6 Phase 6 - Examples, Tooling, Documentation, and Release Readiness
   Implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows for `web_ui`.
 
   [x] 6.1 Section - Maintained Reference Examples
@@ -80,19 +80,19 @@ Back to index: [README](./README.md)
       [x] 6.4.1.2 Subtask - Define release gates for maintained examples, documentation freshness, and tooling completeness.
       [x] 6.4.1.3 Subtask - Define package evolution rules for adding new widget families or runtime capabilities without collapsing package boundaries.
 
-  [ ] 6.5 Section - Phase 6 Integration Tests
+  [x] 6.5 Section - Phase 6 Integration Tests
     Validate examples, tooling, documentation, and release-readiness workflows end to end.
 
-    [ ] 6.5.1 Task - Example and tooling integration scenarios
+    [x] 6.5.1 Task - Example and tooling integration scenarios
       Verify maintainers can preview, inspect, export, and validate the full package surface through repeatable workflows.
 
-      [ ] 6.5.1.1 Subtask - Verify maintained examples cover direct-native, canonical, and mixed workflows through stable package commands or helpers.
-      [ ] 6.5.1.2 Subtask - Verify preview, inspection, export, and validation workflows remain coherent across the Phoenix and Elm runtime split.
-      [ ] 6.5.1.3 Subtask - Verify missing coverage, stale examples, or inconsistent diagnostics fail release-readiness workflows deterministically.
+      [x] 6.5.1.1 Subtask - Verify maintained examples cover direct-native, canonical, and mixed workflows through stable package commands or helpers.
+      [x] 6.5.1.2 Subtask - Verify preview, inspection, export, and validation workflows remain coherent across the Phoenix and Elm runtime split.
+      [x] 6.5.1.3 Subtask - Verify missing coverage, stale examples, or inconsistent diagnostics fail release-readiness workflows deterministically.
 
-    [ ] 6.5.2 Task - Documentation and release-readiness integration scenarios
+    [x] 6.5.2 Task - Documentation and release-readiness integration scenarios
       Verify package documentation and release gates remain aligned with the implemented package surface.
 
-      [ ] 6.5.2.1 Subtask - Verify package guides and reference surfaces reflect current native widgets, renderer entrypoints, styling behavior, and transport boundaries.
-      [ ] 6.5.2.2 Subtask - Verify release gates surface actionable failures for runtime drift, coverage drift, and documentation drift.
-      [ ] 6.5.2.3 Subtask - Verify maintainers can compare direct-native and canonical workflows for the same feature area before promoting package changes.
+      [x] 6.5.2.1 Subtask - Verify package guides and reference surfaces reflect current native widgets, renderer entrypoints, styling behavior, and transport boundaries.
+      [x] 6.5.2.2 Subtask - Verify release gates surface actionable failures for runtime drift, coverage drift, and documentation drift.
+      [x] 6.5.2.3 Subtask - Verify maintainers can compare direct-native and canonical workflows for the same feature area before promoting package changes.

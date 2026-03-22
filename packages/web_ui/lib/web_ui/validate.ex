@@ -163,12 +163,19 @@ defmodule WebUi.Validate do
 
   @spec release_readiness(mode()) :: {:ok, map()} | {:error, map()}
   def release_readiness(mode \\ :summary) do
-    sections = %{
+    release_readiness(mode, [])
+  end
+
+  @spec release_readiness(mode(), keyword()) :: {:ok, map()} | {:error, map()}
+  def release_readiness(mode, opts) do
+    default_sections = %{
       example_coverage: example_coverage(),
       runtime_behavior: runtime_behavior(),
       tooling_surface: tooling_surface(),
       documentation_surface: documentation_surface()
     }
+
+    sections = Map.merge(default_sections, Keyword.get(opts, :section_overrides, %{}))
 
     findings =
       sections
