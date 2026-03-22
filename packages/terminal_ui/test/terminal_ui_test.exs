@@ -43,8 +43,8 @@ defmodule TerminalUiTest do
     assert :unicode in capability_categories
     assert :viewport in layout_kinds
     assert :overlay in layer_kinds
-    assert native_ids == [:native_foundational]
-    assert canonical_ids == [:canonical_foundational]
+    assert native_ids == [:native_foundational, :native_advanced_operations]
+    assert canonical_ids == [:canonical_foundational, :canonical_advanced_operations]
     assert "guides/runtime_backbone.md" in guides
     assert :runtime_review in workflows
   end
@@ -67,7 +67,13 @@ defmodule TerminalUiTest do
     assert :layout in families
     assert :canvas_surface in layout_kinds
     assert :context_menu in layer_kinds
-    assert comparison_ids == [:foundational_continuity]
+
+    assert comparison_ids == [
+             :advanced_capability_continuity,
+             :advanced_continuity,
+             :foundational_continuity
+           ]
+
     assert "guides/maintainer_workflows.md" in guides
     assert :capability_review in workflows
   end

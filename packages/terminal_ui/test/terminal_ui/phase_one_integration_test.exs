@@ -80,7 +80,7 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert :capability_snapshot in reference.runtime.capabilities
     assert :advanced_display_systems in reference.runtime.capabilities
     assert :foundational_canonical_mapping in reference.renderer.responsibilities
-    assert reference.examples.native_ids == [:native_foundational]
+    assert :native_foundational in reference.examples.native_ids
     assert :rich_terminal in reference.capabilities.profiles
     assert reference.layout.kinds == TerminalUi.Layout.kinds()
     assert reference.layer.kinds == TerminalUi.Layer.kinds()
@@ -90,7 +90,7 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert :layout in summary.widgets.families
     assert summary.layout.kinds == TerminalUi.Layout.kinds()
     assert summary.layer.kinds == TerminalUi.Layer.kinds()
-    assert summary.examples.comparison_ids == [:foundational_continuity]
+    assert :foundational_continuity in summary.examples.comparison_ids
     assert :fallback_terminal in summary.capabilities.profiles
     assert :runtime_review in summary.tooling.workflows
   end

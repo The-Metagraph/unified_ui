@@ -34,7 +34,10 @@ defmodule TerminalUi.Info do
       examples: %{
         native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
         canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),
-        comparison_ids: Map.keys(TerminalUi.Examples.comparison_examples()),
+        comparison_ids:
+          TerminalUi.Examples.comparison_examples()
+          |> Map.keys()
+          |> Enum.sort_by(&to_string/1),
         categories: coverage_matrix.categories |> Map.keys() |> Enum.sort(),
         workflows: coverage_matrix.workflows |> Map.keys() |> Enum.sort()
       },
