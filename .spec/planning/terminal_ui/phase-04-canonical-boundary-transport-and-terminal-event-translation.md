@@ -22,25 +22,25 @@ Back to index: [README](./README.md)
   event flow, and transport diagnostics for direct-native and canonical
   rendering paths.
 
-  [ ] 4.1 Section - Canonical Event Translation Backbone
+  [x] 4.1 Section - Canonical Event Translation Backbone
     Implement the canonical boundary translation model that turns normalized
     terminal interactions into cross-package signals and back again.
 
-    [ ] 4.1.1 Task - Implement canonical boundary signal translation
+    [x] 4.1.1 Task - Implement canonical boundary signal translation
       Define the translation layer for canonical event descriptors,
       `Jido.Signal`, and CloudEvents-compatible transport semantics.
 
-      [ ] 4.1.1.1 Subtask - Implement transport modules that map canonical interaction descriptors to boundary signal definitions and back again.
-      [ ] 4.1.1.2 Subtask - Define the canonical event envelope shape used whenever interactions cross the package boundary.
-      [ ] 4.1.1.3 Subtask - Keep canonical boundary translation aligned with authored `unified_ui` signal descriptors and canonical `UnifiedIUR` interaction payloads.
+      [x] 4.1.1.1 Subtask - Implement transport modules that map canonical interaction descriptors to boundary signal definitions and back again.
+      [x] 4.1.1.2 Subtask - Define the canonical event envelope shape used whenever interactions cross the package boundary.
+      [x] 4.1.1.3 Subtask - Keep canonical boundary translation aligned with authored `unified_ui` signal descriptors and canonical `UnifiedIUR` interaction payloads.
 
-    [ ] 4.1.2 Task - Implement native terminal input normalization
+    [x] 4.1.2 Task - Implement native terminal input normalization
       Normalize richer and limited backend input into one shared native
       terminal interaction model before boundary translation occurs.
 
-      [ ] 4.1.2.1 Subtask - Define the shared native terminal event model for key input, mouse gestures, paste, resize, focus changes, shortcuts, and capability-dependent interactions.
-      [ ] 4.1.2.2 Subtask - Normalize raw-mode and TTY-compatible input families into the shared native event model before any canonical translation occurs.
-      [ ] 4.1.2.3 Subtask - Add diagnostics for unsupported raw input payloads, invalid normalization state, and ambiguous native event interpretation.
+      [x] 4.1.2.1 Subtask - Define the shared native terminal event model for key input, mouse gestures, paste, resize, focus changes, shortcuts, and capability-dependent interactions.
+      [x] 4.1.2.2 Subtask - Normalize raw-mode and TTY-compatible input families into the shared native event model before any canonical translation occurs.
+      [x] 4.1.2.3 Subtask - Add diagnostics for unsupported raw input payloads, invalid normalization state, and ambiguous native event interpretation.
 
   [ ] 4.2 Section - Shared Runtime Event Flow
     Implement the shared runtime event flow that connects normalized native
