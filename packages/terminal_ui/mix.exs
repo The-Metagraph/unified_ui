@@ -1,0 +1,53 @@
+defmodule TerminalUi.MixProject do
+  use Mix.Project
+
+  @version "0.1.0"
+  @source_url "https://github.com/pcharbon70/unified_ui"
+
+  def project do
+    [
+      app: :terminal_ui,
+      version: @version,
+      elixir: "~> 1.19",
+      start_permanent: Mix.env() == :prod,
+      description: "TermUI-backed terminal runtime library for the unified ecosystem.",
+      deps: deps(),
+      docs: docs(),
+      package: package()
+    ]
+  end
+
+  def application do
+    [
+      extra_applications: [:logger]
+    ]
+  end
+
+  defp deps do
+    [
+      {:jido_signal, "~> 2.0"},
+      {:term_ui, "~> 0.2"},
+      {:unified_iur, path: "../unified_iur"}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "TerminalUi",
+      extras: [
+        "README.md",
+        "guides/runtime_backbone.md",
+        "guides/maintainer_workflows.md"
+      ],
+      source_ref: "main",
+      source_url: @source_url
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => @source_url}
+    ]
+  end
+end
