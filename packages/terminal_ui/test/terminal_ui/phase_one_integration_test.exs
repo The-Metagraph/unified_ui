@@ -77,11 +77,13 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert reference.transport.modes == [:native_local, :canonical_boundary]
     assert :capability_snapshot in reference.runtime.capabilities
     assert :foundational_canonical_mapping in reference.renderer.responsibilities
+    assert reference.examples.native_ids == [:native_foundational]
     assert :rich_terminal in reference.capabilities.profiles
 
     assert summary.package == :terminal_ui
     assert summary.runtime.validation_state == :foundational_realization_ready
     assert :layout in summary.widgets.families
+    assert summary.examples.comparison_ids == [:foundational_continuity]
     assert :fallback_terminal in summary.capabilities.profiles
     assert :runtime_review in summary.tooling.workflows
   end

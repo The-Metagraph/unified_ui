@@ -14,6 +14,7 @@ defmodule TerminalUiTest do
              capabilities: %{categories: capability_categories},
              renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
              transport: %{modes: [:native_local, :canonical_boundary]},
+             examples: %{native_ids: native_ids, canonical_ids: canonical_ids},
              tooling: %{guides: guides, workflows: workflows}
            } = TerminalUi.reference()
 
@@ -27,6 +28,8 @@ defmodule TerminalUiTest do
     assert TerminalUi.Runtime.Boot in runtime_modules
     assert backend_modes == [:raw, :tty]
     assert :unicode in capability_categories
+    assert native_ids == [:native_foundational]
+    assert canonical_ids == [:canonical_foundational]
     assert "guides/runtime_backbone.md" in guides
     assert :runtime_review in workflows
   end
@@ -37,12 +40,14 @@ defmodule TerminalUiTest do
              namespace: TerminalUi,
              runtime: %{validation_state: :foundational_realization_ready},
              widgets: %{families: families},
+             examples: %{comparison_ids: comparison_ids},
              documentation: %{guides: guides},
              tooling: %{workflows: workflows}
            } = TerminalUi.info()
 
     assert :action in families
     assert :layout in families
+    assert comparison_ids == [:foundational_continuity]
     assert "guides/maintainer_workflows.md" in guides
     assert :capability_review in workflows
   end

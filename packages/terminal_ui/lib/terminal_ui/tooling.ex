@@ -5,7 +5,7 @@ defmodule TerminalUi.Tooling do
 
   @spec workflows() :: [atom()]
   def workflows do
-    [:package_checks, :runtime_review, :capability_review]
+    [:package_checks, :runtime_review, :capability_review, :example_review]
   end
 
   @spec mix_tasks() :: [atom()]
