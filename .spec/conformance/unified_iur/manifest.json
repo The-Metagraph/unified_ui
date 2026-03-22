@@ -1,0 +1,939 @@
+{
+  "package": "unified_iur",
+  "version": "1",
+  "ci_enforcement": "required",
+  "requirements": [
+    {
+      "requirement_id": "ecosystem.architecture.iur_exchange_boundary",
+      "inherits_from_requirement_id": "unified_iur.package.exchange_boundary",
+      "notes": "Shares the current conformance status of unified_iur.package.exchange_boundary."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.shared_transport_contract",
+      "inherits_from_requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "notes": "Shares the current conformance status of unified_iur.interactions.canonical_event_descriptor_representation."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.dsl_entities_have_iur_representation",
+      "inherits_from_requirement_id": "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "notes": "Shares the current conformance status of unified_iur.constructs.canonical_surface_for_runtime_parity."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.canonical_iur_constructs_representable_in_dsl",
+      "inherits_from_requirement_id": "unified_iur.interoperability.extension_strategy",
+      "notes": "Shares the current conformance status of unified_iur.interoperability.extension_strategy."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
+      "inherits_from_requirement_id": "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "notes": "Shares the current conformance status of unified_iur.constructs.canonical_surface_for_runtime_parity."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
+      "inherits_from_requirement_id": "unified_iur.interoperability.extension_strategy",
+      "notes": "Shares the current conformance status of unified_iur.interoperability.extension_strategy."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
+      "inherits_from_requirement_id": "unified_iur.package.exchange_boundary",
+      "notes": "Shares the current conformance status of unified_iur.package.exchange_boundary."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+      "inherits_from_requirement_id": "unified_iur.interoperability.extension_strategy",
+      "notes": "Shares the current conformance status of unified_iur.interoperability.extension_strategy."
+    },
+    {
+      "requirement_id": "unified_iur.package.library_identity",
+      "status": "verified",
+      "notes": "Verified by the maintained package identity and top-level UnifiedIUR namespace.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/mix.exs"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"app: :unified_iur|defmodule UnifiedIUR\" packages/unified_iur/mix.exs packages/unified_iur/lib/unified_iur.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.package.exchange_boundary",
+      "status": "verified",
+      "notes": "Verified by the maintained canonical exchange-boundary docs and normalization or interoperability surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/README.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/normalize.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interoperability.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"canonical intermediate representation package|portable canonical UI model|runtime-library consumption helpers\" packages/unified_iur/README.md packages/unified_iur/lib/unified_iur.ex packages/unified_iur/lib/unified_iur/interoperability.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.package.renderer_independent_surface",
+      "status": "verified",
+      "notes": "Verified by the canonical surface modules and the absence of runtime-facing package boundaries.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified_iur/lib/unified_iur/*.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified_iur/lib/unified_iur/runtime.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified_iur/lib/unified_iur/server.ex"
+        },
+        {
+          "kind": "command",
+          "run": "if grep -R -nE \"defmodule UnifiedIUR\\.(Runtime|Server|Frontend|Renderer)\" packages/unified_iur/lib; then exit 1; else exit 0; fi",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.package.direct_runtime_consumption",
+      "inherits_from_requirement_id": "unified_iur.interoperability.runtime_library_consumption",
+      "notes": "Shares the current conformance status of unified_iur.interoperability.runtime_library_consumption."
+    },
+    {
+      "requirement_id": "unified_iur.package.traceable_to_root_specs",
+      "status": "verified",
+      "notes": "Verified by the maintained package spec set and planning index references to the root contracts.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/unified-iur/*.spec.md"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"Architecture|DSL and IUR Symbiosis|Platform Runtimes|Signal Transport|UnifiedIUR Package|UnifiedIUR Structure|UnifiedIUR Core|UnifiedIUR Constructs|UnifiedIUR Widgets|UnifiedIUR Display Systems|UnifiedIUR Theming|UnifiedIUR Interactions|UnifiedIUR Interoperability|UnifiedIUR Tooling\" .spec/planning/unified_iur/README.md",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.structure.mix_library_layout",
+      "status": "verified",
+      "notes": "Verified by the maintained Mix package layout, guides, and tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/mix.exs"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified_iur/lib/**/*.ex"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified_iur/test/**/*.exs"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified_iur/guides/*.md"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.structure.core_and_construct_module_split",
+      "status": "verified",
+      "notes": "Verified by the dedicated core, construct, display, interaction, interoperability, and tooling module areas.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/core.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/constructs.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/display.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interactions.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interoperability.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tooling.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.structure.no_long_lived_runtime",
+      "status": "verified",
+      "notes": "Verified by the pure-library structure and the absence of long-lived runtime infrastructure.",
+      "evidence": [
+        {
+          "kind": "path_absent",
+          "path": "packages/unified_iur/lib/unified_iur/runtime.ex"
+        },
+        {
+          "kind": "path_absent",
+          "path": "packages/unified_iur/lib/unified_iur/application.ex"
+        },
+        {
+          "kind": "command",
+          "run": "if grep -R -nE \"use (GenServer|Supervisor)|def start_link\" packages/unified_iur/lib; then exit 1; else exit 0; fi",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.structure.normalization_and_conversion_modules",
+      "status": "verified",
+      "notes": "Verified by the dedicated normalization, validation, and export module surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/normalize.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/validate.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/export.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.structure.reference_and_introspection_modules",
+      "status": "verified",
+      "notes": "Verified by the dedicated reference, inspection, tooling, export, and fixture modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/reference.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/inspect.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tooling.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/export.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.core.canonical_element_model",
+      "status": "verified",
+      "notes": "Verified by the canonical element, metadata, and core namespace anchors.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/core.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/element.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/metadata.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@canonical_element_types|defstruct id:|def new\\(\" packages/unified_iur/lib/unified_iur/core.ex packages/unified_iur/lib/unified_iur/element.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.core.identity_and_metadata",
+      "status": "verified",
+      "notes": "Verified by the metadata struct and reference-surface identity or metadata summaries.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/metadata.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/reference.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"identity_fields|metadata_fields|authored_ref|description|annotations|tags\" packages/unified_iur/lib/unified_iur/reference.ex packages/unified_iur/lib/unified_iur/metadata.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.core.child_relationship_model",
+      "status": "verified",
+      "notes": "Verified by the child-wrapper model and tree traversal helpers.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/element.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tree.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"child_shape|Child|depth_first|breadth_first|shape_signature\" packages/unified_iur/lib/unified_iur/element.ex packages/unified_iur/lib/unified_iur/tree.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.core.pure_immutable_values",
+      "status": "verified",
+      "notes": "Verified by the core invariant helpers that enforce pure canonical terms and stable shape.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/core/invariant.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"assert_pure_term!|assert_shape_stable!|runtime_native_prefixes\" packages/unified_iur/lib/unified_iur/core/invariant.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.core.extensible_without_breaking_shape",
+      "inherits_from_requirement_id": "unified_iur.interoperability.extension_strategy",
+      "notes": "Shares the current conformance status of unified_iur.interoperability.extension_strategy."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.foundational_widgets",
+      "status": "verified",
+      "notes": "Verified by the dedicated foundational widget constructors and catalog surface.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/foundational.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"foundational_kinds|:button|:content|def text\\(|def button\\(\" packages/unified_iur/lib/unified_iur/widgets.ex packages/unified_iur/lib/unified_iur/widgets/foundational.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.input_and_form_widgets",
+      "status": "verified",
+      "notes": "Verified by the dedicated input widget and form-composition module surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/forms.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/input.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"input_kinds|form_builder|field_group|field\\(|text_input|file_input\" packages/unified_iur/lib/unified_iur/widgets.ex packages/unified_iur/lib/unified_iur/forms.ex packages/unified_iur/lib/unified_iur/widgets/input.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.layout_and_layering",
+      "status": "verified",
+      "notes": "Verified by the canonical container, layout, layer, and viewport construct surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/container.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/layout.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/layer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/viewport.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.navigation_feedback_and_data",
+      "status": "verified",
+      "notes": "Verified by the dedicated navigation, data-view, and feedback widget families.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/data.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/feedback.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.styling_attributes",
+      "status": "verified",
+      "notes": "Verified by the canonical style value model and attachment normalization surface.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/style.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/attachment.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"spacing|sizing|alignment|visibility|border|state_variants|normalize_local_style\" packages/unified_iur/lib/unified_iur/style.ex packages/unified_iur/lib/unified_iur/attachment.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.theme_and_token_representation",
+      "status": "verified",
+      "notes": "Verified by the canonical theme and token module surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/token.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"roles|tokens|put_token|resolve_style|token_refs\" packages/unified_iur/lib/unified_iur/theme.ex packages/unified_iur/lib/unified_iur/attachment.ex packages/unified_iur/lib/unified_iur/token.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "status": "verified",
+      "notes": "Verified by the maintained canonical fixtures, catalog surfaces, and package validation workflow.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/extension.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_iur.validate",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.input_and_navigation",
+      "status": "verified",
+      "notes": "Verified by the input and navigation widget families.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/input.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/navigation.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def text_input|def file_input|def menu|def tabs\" packages/unified_iur/lib/unified_iur/widgets/input.ex packages/unified_iur/lib/unified_iur/widgets/navigation.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.data_and_document_views",
+      "inherits_from_requirement_id": "unified_iur.constructs.navigation_feedback_and_data",
+      "notes": "Shares the current conformance status of unified_iur.constructs.navigation_feedback_and_data."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.overlay_and_feedback",
+      "status": "verified",
+      "notes": "Verified by the overlay-layer and feedback widget families.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/layer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/feedback.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def overlay|def dialog|def toast|def alert_dialog|def context_menu|def status|def progress|def gauge|def inline_feedback\" packages/unified_iur/lib/unified_iur/layer.ex packages/unified_iur/lib/unified_iur/widgets/feedback.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.visualization",
+      "status": "verified",
+      "notes": "Verified by the dedicated canvas and chart constructors.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/canvas.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def surface|def sparkline|def bar_chart|def line_chart\" packages/unified_iur/lib/unified_iur/canvas.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.operational_views",
+      "status": "verified",
+      "notes": "Verified by the advanced operational and inspection widget families.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/advanced.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"stream_widget|log_viewer|process_monitor|cluster_dashboard|command_palette|markdown_viewer|supervision_tree_viewer\" packages/unified_iur/lib/unified_iur/widgets/advanced.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.widget_semantics_preserved",
+      "inherits_from_requirement_id": "unified_iur.constructs.canonical_surface_for_runtime_parity",
+      "notes": "Shares the current conformance status of unified_iur.constructs.canonical_surface_for_runtime_parity."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layout_primitives",
+      "status": "verified",
+      "notes": "Verified by the canonical row, column, stack, grid, and container layout surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/layout.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/container.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def row|def column|def stack|def grid|def box\\(\" packages/unified_iur/lib/unified_iur/layout.ex packages/unified_iur/lib/unified_iur/container.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layering_primitives",
+      "status": "verified",
+      "notes": "Verified by the canonical overlay, dialog, toast, alert, and context-menu layer surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/layer.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def overlay|def dialog|def toast|def alert_dialog|def context_menu\" packages/unified_iur/lib/unified_iur/layer.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.viewport_and_clipping",
+      "status": "verified",
+      "notes": "Verified by the canonical viewport, scroll-bar, and split-pane surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/viewport.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def region|def scroll_bar|def split_pane|clip\\?|scrollbars|sync_group\" packages/unified_iur/lib/unified_iur/viewport.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.canvas_surface",
+      "status": "verified",
+      "notes": "Verified by the canonical canvas surface and drawing-operation attributes.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/canvas.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@kinds|def surface|operations|clip\\?|position|points\" packages/unified_iur/lib/unified_iur/canvas.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.compose_with_widgets",
+      "inherits_from_requirement_id": "unified_iur.constructs.layout_and_layering",
+      "notes": "Shares the current conformance status of unified_iur.constructs.layout_and_layering."
+    },
+    {
+      "requirement_id": "unified_iur.theming.color_model",
+      "status": "verified",
+      "notes": "Verified by the canonical color model and style value surface.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/style/color.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/style.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"mode: :named|mode: :indexed|mode: :rgb|foreground|background|border_color\" packages/unified_iur/lib/unified_iur/style/color.ex packages/unified_iur/lib/unified_iur/style.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.theming.text_style_attributes",
+      "status": "verified",
+      "notes": "Verified by the canonical text-attribute surface for portable styling.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/style/text_attributes.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"bold\\?|dim\\?|italic\\?|underline\\?|blink\\?|reverse\\?|hidden\\?|strikethrough\\?\" packages/unified_iur/lib/unified_iur/style/text_attributes.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.theming.theme_structure",
+      "status": "verified",
+      "notes": "Verified by the canonical theme identity, palette, roles, tokens, defaults, and component maps.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/theme.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"id: atom|palette|roles|tokens|defaults|components|resolve_style\" packages/unified_iur/lib/unified_iur/theme.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.theming.semantic_roles",
+      "inherits_from_requirement_id": "unified_iur.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_iur.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.theming.component_variants",
+      "inherits_from_requirement_id": "unified_iur.theming.theme_structure",
+      "notes": "Shares the current conformance status of unified_iur.theming.theme_structure."
+    },
+    {
+      "requirement_id": "unified_iur.theming.inheritance_and_overrides",
+      "status": "verified",
+      "notes": "Verified by the canonical merge and resolve-style behavior for theme defaults, tokens, and local overrides.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/style.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"merge_token_refs|resolve_style|inherit\\?|variant|state|Style\\.merge\" packages/unified_iur/lib/unified_iur/theme.ex packages/unified_iur/lib/unified_iur/attachment.ex packages/unified_iur/lib/unified_iur/style.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "status": "verified",
+      "notes": "Verified by the canonical interaction families and descriptor shape.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interaction.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interactions.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"@families|family ::|:click|:change|:submit|:open|:close|:selection|:focus|:navigation|:command\" packages/unified_iur/lib/unified_iur/interaction.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interactions.renderer_independent_payload_mapping",
+      "inherits_from_requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "notes": "Shares the current conformance status of unified_iur.interactions.canonical_event_descriptor_representation."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.standard_interaction_families",
+      "inherits_from_requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "notes": "Shares the current conformance status of unified_iur.interactions.canonical_event_descriptor_representation."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.data_binding_representation",
+      "status": "verified",
+      "notes": "Verified by the canonical binding structs and form-composition attachment surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/binding.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/forms.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"defstruct name:|depends_on|derived|normalize_binding|fallback_bindings\" packages/unified_iur/lib/unified_iur/binding.ex packages/unified_iur/lib/unified_iur/forms.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interactions.element_binding_attachment",
+      "status": "verified",
+      "notes": "Verified by the attachment normalization rules for interactions, bindings, and interaction scope.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/attachment.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"normalize_interactions|normalize_bindings|normalize_interaction_scope|binding and bindings cannot both be provided|interaction and interactions cannot both be provided\" packages/unified_iur/lib/unified_iur/attachment.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.runtime_library_consumption",
+      "status": "verified",
+      "notes": "Verified by the dedicated interoperability helpers and the package test suite.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interoperability.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.portable_data_model",
+      "inherits_from_requirement_id": "unified_iur.interoperability.runtime_library_consumption",
+      "notes": "Shares the current conformance status of unified_iur.interoperability.runtime_library_consumption."
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.no_runtime_local_escape_hatches",
+      "status": "verified",
+      "notes": "Verified by the validation rules that reject runtime-native structs and local escape hatches.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/validate.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/core/invariant.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"runtime_local_escape_hatch|Jido\\.Signal|Phoenix\\.LiveView|LiveUi|WebUi|DesktopUi|runtime-library-native structs\" packages/unified_iur/lib/unified_iur/validate.ex packages/unified_iur/lib/unified_iur/core/invariant.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.deterministic_shape",
+      "status": "verified",
+      "notes": "Verified by the deterministic snapshot, diff, and validation surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/reference.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tooling.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_iur.validate",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interoperability.extension_strategy",
+      "status": "verified",
+      "notes": "Verified by the canonical extension metadata, compatibility rules, parity report, and maintainer inspection workflow.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/extension.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_iur.inspect placeholder --format extensions",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.tooling.reference_examples",
+      "status": "verified",
+      "notes": "Verified by the maintained canonical fixture catalog and stable snapshot export workflow.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_iur.export forms--profile_editor --format snapshot",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.tooling.introspection_helpers",
+      "status": "verified",
+      "notes": "Verified by the inspection helpers, tooling namespace, and maintainer-facing report workflow.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/inspect.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tooling.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_iur.inspect forms--profile_editor --format report",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.tooling.validation_workflow",
+      "status": "verified",
+      "notes": "Verified by the package validation task and release-readiness reporting workflow.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/validate.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tooling.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix unified_iur.validate",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.tooling.documentation_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained README and guide set surfaced through tooling.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/README.md"
+        },
+        {
+          "kind": "path_glob_nonempty",
+          "glob": "packages/unified_iur/guides/*.md"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"Construct Families|Core Model|Interoperability|Maintainer Workflows\" packages/unified_iur/README.md",
+          "cwd": "."
+        }
+      ]
+    }
+  ]
+}
