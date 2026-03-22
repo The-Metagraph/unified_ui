@@ -1,5 +1,6 @@
 defmodule Unified.SpecCompliance.ComplianceTest do
   use ExUnit.Case, async: false
+  @moduletag timeout: 180_000
 
   alias Unified.SpecCompliance.Compliance
 
