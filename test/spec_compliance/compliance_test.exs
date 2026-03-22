@@ -1,9 +1,14 @@
 defmodule Unified.SpecCompliance.ComplianceTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias Unified.SpecCompliance.Compliance
 
   import SpecComplianceTestSupport
+
+  setup_all do
+    ensure_spec_state!()
+    :ok
+  end
 
   test "fails when the conformance manifest is missing a requirement entry" do
     root = tmp_root!("missing_entry")
@@ -179,5 +184,14 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.applicable_requirements == 83
     assert compliance_report.summary.status_counts.verified == 83
     assert compliance_report.summary.aliases == 48
+  end
+
+  defp ensure_spec_state! do
+    state_path = Path.join(File.cwd!(), ".spec/state.json")
+
+    unless File.exists?(state_path) do
+      Mix.Task.reenable("spec.plan")
+      Mix.Task.run("spec.plan")
+    end
   end
 end
