@@ -69,25 +69,25 @@ Back to index: [README](./README.md)
       [x] 1.2.2.2 Subtask - Create bounded placeholders for focus changes, paste handling, resize callbacks, and mouse fallback behavior that later transport translation can reuse.
       [x] 1.2.2.3 Subtask - Define diagnostics for invalid event-loop state, unsupported callback payloads, and mismatched runtime initialization order.
 
-  [ ] 1.3 Section - Backend and Capability Seams
+  [x] 1.3 Section - Backend and Capability Seams
     Implement explicit richer and limited backend seams so terminal variation
     stays bounded behind the shared runtime.
 
-    [ ] 1.3.1 Task - Implement backend adapter entrypoints
+    [x] 1.3.1 Task - Implement backend adapter entrypoints
       Define the baseline adapter modules and capability boundaries for richer
       raw-mode and TTY-compatible terminal execution.
 
-      [ ] 1.3.1.1 Subtask - Create raw-mode and TTY-compatible adapter modules that plug into the shared `term_ui` runtime without redefining widget semantics.
-      [ ] 1.3.1.2 Subtask - Define capability contracts for colors, Unicode, mouse, paste, resize, and terminal presence that may vary underneath one runtime model.
-      [ ] 1.3.1.3 Subtask - Keep the initial backend adapters focused on integration seams rather than full transport and degradation logic.
+      [x] 1.3.1.1 Subtask - Create raw-mode and TTY-compatible adapter modules that plug into the shared `term_ui` runtime without redefining widget semantics.
+      [x] 1.3.1.2 Subtask - Define capability contracts for colors, Unicode, mouse, paste, resize, and terminal presence that may vary underneath one runtime model.
+      [x] 1.3.1.3 Subtask - Keep the initial backend adapters focused on integration seams rather than full transport and degradation logic.
 
-    [ ] 1.3.2 Task - Implement bounded backend callback and capability wiring
+    [x] 1.3.2 Task - Implement bounded backend callback and capability wiring
       Define how backend-specific callbacks and capabilities surface through the
       shared runtime without leaking backend divergence everywhere.
 
-      [ ] 1.3.2.1 Subtask - Define package-local callback contracts for terminal lifecycle, resize, focus, paste, and backend boot hooks.
-      [ ] 1.3.2.2 Subtask - Isolate capability lookups, fallback behavior, and backend selection rules behind adapter boundaries.
-      [ ] 1.3.2.3 Subtask - Add diagnostics for unsupported capabilities, invalid adapter registration, and mismatched callback payloads.
+      [x] 1.3.2.1 Subtask - Define package-local callback contracts for terminal lifecycle, resize, focus, paste, and backend boot hooks.
+      [x] 1.3.2.2 Subtask - Isolate capability lookups, fallback behavior, and backend selection rules behind adapter boundaries.
+      [x] 1.3.2.3 Subtask - Add diagnostics for unsupported capabilities, invalid adapter registration, and mismatched callback payloads.
 
   [ ] 1.4 Section - Native Widget and Reference Backbone
     Implement the native widget contract and package-facing reference surfaces

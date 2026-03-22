@@ -10,8 +10,14 @@ defmodule TerminalUi.Info do
       namespace: TerminalUi,
       package_areas: TerminalUi.package_areas(),
       runtime: %{assumptions: TerminalUi.Runtime.assumptions()},
-      backend: %{modes: TerminalUi.Backend.modes()},
-      capabilities: %{categories: TerminalUi.Capabilities.categories()},
+      backend: %{
+        modes: TerminalUi.Backend.modes(),
+        selection_contract: TerminalUi.Backend.selection_contract()
+      },
+      capabilities: %{
+        categories: TerminalUi.Capabilities.categories(),
+        profiles: TerminalUi.Capabilities.profiles()
+      },
       documentation: %{guides: TerminalUi.Tooling.documentation_surface()},
       tooling: %{workflows: TerminalUi.Tooling.workflows()}
     }
