@@ -8,6 +8,8 @@ defmodule TerminalUi.ExamplesTest do
     advanced_canonical = TerminalUi.Examples.canonical_advanced_operations_screen()
     native_transport = TerminalUi.Examples.native_transport_screen()
     canonical_transport = TerminalUi.Examples.canonical_transport_screen()
+    native_styled = TerminalUi.Examples.native_styled_screen()
+    canonical_styled = TerminalUi.Examples.canonical_styled_screen()
 
     assert native.metadata.example_id == :native_foundational
     assert native.metadata.coverage == [:foundational_widgets, :native_runtime, :focus_traversal]
@@ -16,17 +18,21 @@ defmodule TerminalUi.ExamplesTest do
     assert advanced_canonical.id == "operations-overlay"
     assert native_transport.metadata.example_id == :native_transport_review
     assert canonical_transport.id == "transport-root"
+    assert native_styled.metadata.example_id == :native_styled_review
+    assert canonical_styled.id == "styled-root"
 
     assert Enum.map(TerminalUi.Examples.native_examples(), & &1.id) == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id) == [
              :canonical_foundational,
              :canonical_advanced_operations,
-             :canonical_transport_review
+             :canonical_transport_review,
+             :canonical_styled_review
            ]
   end
 
@@ -36,6 +42,8 @@ defmodule TerminalUi.ExamplesTest do
     capability = TerminalUi.Examples.advanced_capability_comparison()
     transport = TerminalUi.Examples.transport_flow_comparison()
     normalized = TerminalUi.Examples.normalized_input_comparison()
+    styled = TerminalUi.Examples.styled_continuity_comparison()
+    degradation = TerminalUi.Examples.styled_degradation_comparison()
 
     assert comparison.id == :foundational_continuity
     assert comparison.native.source_kind == :native
@@ -66,6 +74,16 @@ defmodule TerminalUi.ExamplesTest do
     assert normalized.parity.resize_family_match?
     assert normalized.parity.boundary_local_split_visible?
     assert normalized.parity.tty_capability_handling_explicit?
+
+    assert styled.id == :styled_continuity_review
+    assert styled.parity.widget_identity_match?
+    assert styled.parity.theme_resolution_match?
+    assert styled.parity.style_resolution_match?
+
+    assert degradation.id == :styled_degradation_review
+    assert degradation.parity.glyph_fallback_explicit?
+    assert degradation.parity.degradation_bounded?
+    assert degradation.parity.inspection_surfaces_agree?
   end
 
   test "reference and info surfaces include foundational example metadata and coverage" do
@@ -75,13 +93,15 @@ defmodule TerminalUi.ExamplesTest do
     assert reference.examples.native_ids == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert reference.examples.canonical_ids == [
              :canonical_foundational,
              :canonical_advanced_operations,
-             :canonical_transport_review
+             :canonical_transport_review,
+             :canonical_styled_review
            ]
 
     assert :foundational_continuity in reference.examples.comparison_ids
@@ -89,27 +109,34 @@ defmodule TerminalUi.ExamplesTest do
     assert :advanced_capability_continuity in reference.examples.comparison_ids
     assert :transport_flow_review in reference.examples.comparison_ids
     assert :normalized_input_profiles in reference.examples.comparison_ids
+    assert :styled_continuity_review in reference.examples.comparison_ids
+    assert :styled_degradation_review in reference.examples.comparison_ids
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :forms)
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :layering)
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :transport)
+    assert Map.has_key?(reference.examples.coverage_matrix.categories, :style)
 
     assert summary.examples.native_ids == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert summary.examples.canonical_ids == [
              :canonical_foundational,
              :canonical_advanced_operations,
-             :canonical_transport_review
+             :canonical_transport_review,
+             :canonical_styled_review
            ]
 
     assert :actions in summary.examples.categories
     assert :display in summary.examples.categories
     assert :transport in summary.examples.categories
+    assert :style in summary.examples.categories
     assert :advanced_review in summary.examples.workflows
     assert :transport_review in summary.examples.workflows
+    assert :style_review in summary.examples.workflows
     assert :parity_review in summary.examples.workflows
     assert :example_review in summary.tooling.workflows
   end

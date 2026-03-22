@@ -962,6 +962,14 @@ defmodule TerminalUi.Renderer.Mapper do
       :theme_tokens,
       first_present([group_attr(element, :style, :theme_tokens), attr(element, :theme_tokens)])
     )
+    |> maybe_put(
+      :style_refs,
+      first_present([group_attr(element, :style, :style_refs), attr(element, :style_refs)])
+    )
+    |> maybe_put(
+      :degradation,
+      first_present([group_attr(element, :style, :degradation), attr(element, :degradation)])
+    )
   end
 
   defp binding_name(element) do

@@ -62,13 +62,15 @@ defmodule TerminalUiTest do
     assert native_ids == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert canonical_ids == [
              :canonical_foundational,
              :canonical_advanced_operations,
-             :canonical_transport_review
+             :canonical_transport_review,
+             :canonical_styled_review
            ]
 
     assert "guides/runtime_backbone.md" in guides
@@ -111,6 +113,8 @@ defmodule TerminalUiTest do
              :advanced_continuity,
              :foundational_continuity,
              :normalized_input_profiles,
+             :styled_continuity_review,
+             :styled_degradation_review,
              :transport_flow_review
            ]
 

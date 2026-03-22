@@ -84,26 +84,26 @@ Back to index: [README](./README.md)
       [x] 5.3.2.2 Subtask - Implement cross-capability continuity helpers that compare the same screen intent across richer and limited terminal semantics.
       [x] 5.3.2.3 Subtask - Report deterministic diagnostics for styling, renderer, or capability behavior that drifts from shared package meaning.
 
-  [ ] 5.4 Section - Styling and Degradation Examples
+  [x] 5.4 Section - Styling and Degradation Examples
     Implement maintained examples that compare styling, theming, and
     degradation behavior through both entry paths and multiple capability
     profiles.
 
-    [ ] 5.4.1 Task - Implement styled native and canonical examples
+    [x] 5.4.1 Task - Implement styled native and canonical examples
       Provide maintained examples that exercise themes, variants, semantic
       roles, and capability-aware degradation through both entry paths.
 
-      [ ] 5.4.1.1 Subtask - Add direct-native styled examples that exercise foundational and advanced widget theming.
-      [ ] 5.4.1.2 Subtask - Add canonical styled examples that realize the same screen intent with the shared style model.
-      [ ] 5.4.1.3 Subtask - Keep example metadata aligned with style, degradation, and inspection coverage in the package reference surface.
+      [x] 5.4.1.1 Subtask - Add direct-native styled examples that exercise foundational and advanced widget theming.
+      [x] 5.4.1.2 Subtask - Add canonical styled examples that realize the same screen intent with the shared style model.
+      [x] 5.4.1.3 Subtask - Keep example metadata aligned with style, degradation, and inspection coverage in the package reference surface.
 
-    [ ] 5.4.2 Task - Implement degradation comparison helpers
+    [x] 5.4.2 Task - Implement degradation comparison helpers
       Make it easier to review how the same screen meaning survives Unicode,
       color, and backend fallback differences.
 
-      [ ] 5.4.2.1 Subtask - Add helper workflows that compare styled direct-native and canonical rendering paths under multiple capability profiles.
-      [ ] 5.4.2.2 Subtask - Add helper workflows that summarize explicit degradation decisions instead of accidental output loss.
-      [ ] 5.4.2.3 Subtask - Document where tooling and validation workflows will extend the comparison surface in later phases.
+      [x] 5.4.2.1 Subtask - Add helper workflows that compare styled direct-native and canonical rendering paths under multiple capability profiles.
+      [x] 5.4.2.2 Subtask - Add helper workflows that summarize explicit degradation decisions instead of accidental output loss.
+      [x] 5.4.2.3 Subtask - Document where tooling and validation workflows will extend the comparison surface in later phases.
 
   [ ] 5.5 Section - Phase 5 Integration Tests
     Validate styling, bounded capability variation, degradation workflows, and
