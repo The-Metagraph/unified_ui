@@ -82,25 +82,25 @@ Back to index: [README](./README.md)
       [x] 4.3.2.2 Subtask - Highlight where local native event families remain local and where canonical translation is required.
       [x] 4.3.2.3 Subtask - Keep transport summaries aligned with later validation and release-readiness workflows.
 
-  [ ] 4.4 Section - Transport Comparison Examples
+  [x] 4.4 Section - Transport Comparison Examples
     Implement maintained examples that compare native-local handling and
     boundary-crossing event translation across the terminal runtime.
 
-    [ ] 4.4.1 Task - Implement transport-oriented native and canonical examples
+    [x] 4.4.1 Task - Implement transport-oriented native and canonical examples
       Provide maintained examples that exercise canonical signals, local native
       input, and normalized terminal interaction families.
 
-      [ ] 4.4.1.1 Subtask - Add direct-native examples that exercise focus, shortcuts, paste, resize, and capability fallback interactions.
-      [ ] 4.4.1.2 Subtask - Add canonical-rendered examples that exercise the same interaction families through `Jido.Signal` translation.
-      [ ] 4.4.1.3 Subtask - Keep transport example metadata aligned with package reference and validation surfaces.
+      [x] 4.4.1.1 Subtask - Add direct-native examples that exercise focus, shortcuts, paste, resize, and capability fallback interactions.
+      [x] 4.4.1.2 Subtask - Add canonical-rendered examples that exercise the same interaction families through `Jido.Signal` translation.
+      [x] 4.4.1.3 Subtask - Keep transport example metadata aligned with package reference and validation surfaces.
 
-    [ ] 4.4.2 Task - Implement normalized-input comparison helpers
+    [x] 4.4.2 Task - Implement normalized-input comparison helpers
       Help maintainers compare how the same interaction family is normalized
       across supported backend and capability profiles.
 
-      [ ] 4.4.2.1 Subtask - Add helper workflows that compare normalized input across richer and limited terminal backends.
-      [ ] 4.4.2.2 Subtask - Show how local native handling differs from canonical boundary translation without changing event meaning.
-      [ ] 4.4.2.3 Subtask - Document where later tooling workflows will validate these interaction families.
+      [x] 4.4.2.1 Subtask - Add helper workflows that compare normalized input across richer and limited terminal backends.
+      [x] 4.4.2.2 Subtask - Show how local native handling differs from canonical boundary translation without changing event meaning.
+      [x] 4.4.2.3 Subtask - Document where later tooling workflows will validate these interaction families.
 
   [ ] 4.5 Section - Phase 4 Integration Tests
     Validate canonical transport, normalized input flow, and contract hygiene

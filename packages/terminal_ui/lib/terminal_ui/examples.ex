@@ -284,6 +284,90 @@ defmodule TerminalUi.Examples do
     )
   end
 
+  @spec native_transport_screen() :: map()
+  def native_transport_screen do
+    %{
+      id: "transport-native",
+      title: "Native Transport Review",
+      root:
+        TerminalUi.Widgets.column("transport-root", [
+          TerminalUi.Widgets.text("transport-title", "Transport Review"),
+          TerminalUi.Widgets.text_input("command-input",
+            value: "reload",
+            binding: :command_query,
+            placeholder: "Type a command"
+          ),
+          TerminalUi.Widgets.command_palette(
+            "command-palette",
+            [
+              %{id: :reload, label: "Reload", value: :reload},
+              %{id: :restart, label: "Restart", value: :restart}
+            ],
+            query: "re",
+            binding: :command_query,
+            current: :reload
+          ),
+          TerminalUi.Widgets.menu(
+            "scope-menu",
+            [
+              %{id: :workspace, label: "Workspace"},
+              %{id: :cluster, label: "Cluster"}
+            ],
+            current: :workspace,
+            binding: :scope
+          ),
+          TerminalUi.Widgets.status("transport-status", "Ready", severity: :info)
+        ]),
+      metadata: %{
+        example_id: :native_transport_review,
+        source: :native,
+        coverage: [
+          :normalized_input,
+          :local_native_handling,
+          :canonical_boundary_translation
+        ]
+      }
+    }
+  end
+
+  @spec canonical_transport_screen() :: UnifiedIUR.Element.t()
+  def canonical_transport_screen do
+    Layout.column(
+      [
+        Foundational.text("Transport Review", id: "transport-title"),
+        Input.text_input(
+          id: "command-input",
+          value: "reload",
+          binding: %{name: :command_query, value: "reload"},
+          interaction: Interaction.submit(intent: :submit_command)
+        ),
+        Advanced.command_palette(
+          [
+            %{id: :reload, label: "Reload", value: :reload},
+            %{id: :restart, label: "Restart", value: :restart}
+          ],
+          id: "command-palette",
+          query: "re",
+          binding: %{name: :command_query, value: "re"},
+          interaction: Interaction.command(intent: :reload_workspace, command: :reload)
+        ),
+        Navigation.menu(
+          [
+            %{id: :workspace, label: "Workspace"},
+            %{id: :cluster, label: "Cluster"}
+          ],
+          id: "scope-menu",
+          active_item: :workspace,
+          binding: %{name: :scope, value: :workspace},
+          interaction: Interaction.selection(intent: :select_scope)
+        ),
+        Feedback.status("Ready", id: "transport-status", severity: :info)
+      ],
+      id: "transport-root",
+      gap: :sm
+    )
+  end
+
   @spec native_examples() :: [map()]
   def native_examples do
     [
@@ -302,6 +386,14 @@ defmodule TerminalUi.Examples do
         coverage: [:advanced_widgets, :layered_runtime, :display_systems, :capability_fallbacks],
         categories: [:data, :visualization, :operational, :display, :layering],
         artifact: native_advanced_operations_screen()
+      },
+      %{
+        id: :native_transport_review,
+        mode: :native,
+        summary: "Direct-native transport review screen",
+        coverage: [:normalized_input, :local_native_handling, :canonical_boundary_translation],
+        categories: [:forms, :navigation, :operational, :transport],
+        artifact: native_transport_screen()
       }
     ]
   end
@@ -324,6 +416,14 @@ defmodule TerminalUi.Examples do
         coverage: [:advanced_canonical_renderer, :shared_realization, :capability_fallbacks],
         categories: [:data, :visualization, :operational, :display, :layering],
         artifact: canonical_advanced_operations_screen()
+      },
+      %{
+        id: :canonical_transport_review,
+        mode: :canonical,
+        summary: "Canonical transport review screen",
+        coverage: [:normalized_input, :canonical_signal_translation, :shared_event_routing],
+        categories: [:forms, :navigation, :operational, :transport],
+        artifact: canonical_transport_screen()
       }
     ]
   end
@@ -333,7 +433,9 @@ defmodule TerminalUi.Examples do
     %{
       foundational_continuity: foundational_comparison(),
       advanced_continuity: advanced_comparison(),
-      advanced_capability_continuity: advanced_capability_comparison()
+      advanced_capability_continuity: advanced_capability_comparison(),
+      transport_flow_review: transport_flow_comparison(),
+      normalized_input_profiles: normalized_input_comparison()
     }
   end
 
@@ -349,7 +451,8 @@ defmodule TerminalUi.Examples do
         visualization: [:gauge, :canvas],
         operational: [:command_palette, :cluster_dashboard],
         display: [:viewport, :split_pane],
-        layering: [:overlay, :dialog, :context_menu]
+        layering: [:overlay, :dialog, :context_menu],
+        transport: [:shortcut, :paste, :resize, :focus]
       },
       workflows: %{
         foundational_review: [:native_foundational, :canonical_foundational],
@@ -357,6 +460,12 @@ defmodule TerminalUi.Examples do
           :native_advanced_operations,
           :canonical_advanced_operations,
           :advanced_continuity
+        ],
+        transport_review: [
+          :native_transport_review,
+          :canonical_transport_review,
+          :transport_flow_review,
+          :normalized_input_profiles
         ],
         parity_review: [:foundational_continuity, :advanced_continuity],
         capability_review: [:advanced_capability_continuity]
@@ -372,6 +481,12 @@ defmodule TerminalUi.Examples do
           :canonical_advanced_operations,
           :advanced_continuity,
           :advanced_capability_continuity
+        ],
+        transport_runtime_review: [
+          :native_transport_review,
+          :canonical_transport_review,
+          :transport_flow_review,
+          :normalized_input_profiles
         ]
       }
     }
@@ -485,6 +600,130 @@ defmodule TerminalUi.Examples do
     }
   end
 
+  @spec transport_flow_comparison() :: map()
+  def transport_flow_comparison do
+    {:ok, native_state} =
+      TerminalUi.Runtime.mount_native_screen(native_transport_screen(), backend_mode: :raw)
+
+    {:ok, canonical_state} =
+      TerminalUi.Runtime.mount_iur_screen(canonical_transport_screen(), backend_mode: :raw)
+
+    {:ok, native_local_state, native_local_route} =
+      TerminalUi.Runtime.dispatch_native_event(native_state,
+        input_family: :focus,
+        boundary: :local,
+        focus_target: "scope-menu",
+        widget_id: "scope-menu",
+        intent: :focus_scope_menu
+      )
+
+    {:ok, _native_boundary_state, native_boundary_route} =
+      TerminalUi.Runtime.dispatch_native_event(native_local_state,
+        input_family: :shortcut,
+        shortcut: "ctrl-r",
+        widget_id: "command-palette",
+        intent: :reload_workspace
+      )
+
+    {:ok, _canonical_boundary_state, canonical_boundary_route} =
+      TerminalUi.Runtime.dispatch_widget_interaction(
+        canonical_state,
+        "command-palette",
+        :command,
+        intent: :reload_workspace,
+        runtime_event: "command:reload_workspace",
+        payload: %{command: :reload}
+      )
+
+    %{
+      id: :transport_flow_review,
+      summary: "Compare local native handling and canonical boundary translation",
+      coverage: [:transport_review, :local_native_handling, :canonical_boundary_translation],
+      native_local: route_summary(native_local_route),
+      native_boundary: route_summary(native_boundary_route),
+      canonical_boundary: route_summary(canonical_boundary_route),
+      parity: %{
+        local_route_stays_local?: native_local_route.route == :local_runtime,
+        boundary_routes_emit_signals?:
+          not is_nil(native_boundary_route.translation.signal) and
+            not is_nil(canonical_boundary_route.translation.signal),
+        runtime_event_meaning_preserved?:
+          native_boundary_route.family == canonical_boundary_route.family and
+            native_boundary_route.translation.intent ==
+              canonical_boundary_route.translation.intent
+      }
+    }
+  end
+
+  @spec normalized_input_comparison() :: map()
+  def normalized_input_comparison do
+    {:ok, raw_shortcut} =
+      TerminalUi.Transport.from_native_event(
+        backend_mode: :raw,
+        input_family: :shortcut,
+        shortcut: "ctrl-r",
+        intent: :reload_workspace,
+        widget_id: "command-palette",
+        runtime_id: "terminal-ui:transport",
+        screen: "transport"
+      )
+
+    {:ok, tty_shortcut} =
+      TerminalUi.Transport.from_native_event(
+        backend_mode: :tty,
+        input_family: :shortcut,
+        shortcut: "ctrl-r",
+        intent: :reload_workspace,
+        widget_id: "command-palette",
+        runtime_id: "terminal-ui:transport",
+        screen: "transport"
+      )
+
+    {:ok, raw_resize} =
+      TerminalUi.Transport.from_native_event(
+        backend_mode: :raw,
+        input_family: :resize,
+        width: 120,
+        height: 40,
+        boundary: :local,
+        screen: "transport"
+      )
+
+    {:ok, tty_resize} =
+      TerminalUi.Transport.from_native_event(
+        backend_mode: :tty,
+        input_family: :resize,
+        width: 120,
+        height: 40,
+        boundary: :local,
+        screen: "transport"
+      )
+
+    raw_shortcut_summary = route_summary(raw_shortcut)
+    tty_shortcut_summary = route_summary(tty_shortcut)
+    raw_resize_summary = route_summary(raw_resize)
+    tty_resize_summary = route_summary(tty_resize)
+
+    %{
+      id: :normalized_input_profiles,
+      summary: "Compare normalized input families across raw and tty backends",
+      coverage: [:normalized_input, :capability_review],
+      raw_shortcut: raw_shortcut_summary,
+      tty_shortcut: tty_shortcut_summary,
+      raw_resize: raw_resize_summary,
+      tty_resize: tty_resize_summary,
+      parity: %{
+        shortcut_family_match?: raw_shortcut.family == tty_shortcut.family,
+        resize_family_match?: raw_resize.family == tty_resize.family,
+        boundary_local_split_visible?:
+          raw_shortcut.boundary == :boundary and raw_resize.boundary == :local,
+        tty_capability_handling_explicit?:
+          tty_shortcut_summary.translation.backend_mode == :tty and
+            tty_resize_summary.local_handling == :paged_resize
+      }
+    }
+  end
+
   defp runtime_summary(runtime_state) do
     %{
       source_kind: runtime_state.source_kind,
@@ -519,4 +758,27 @@ defmodule TerminalUi.Examples do
         |> Enum.sort_by(&to_string/1)
     }
   end
+
+  defp route_summary(route_result) do
+    translation = Map.get(route_result, :translation, route_result)
+
+    %{
+      route: Map.get(route_result, :route, route_for_translation(translation)),
+      family: Map.get(route_result, :family, translation.family),
+      input_family: Map.get(route_result, :input_family, Map.get(translation, :input_family)),
+      boundary: Map.get(route_result, :boundary, translation.boundary),
+      runtime_event: Map.get(route_result, :runtime_event, translation.runtime_event),
+      local_handling:
+        Map.get(route_result, :local_handling, Map.get(translation, :local_handling)),
+      signal_type:
+        case Map.get(translation, :signal) do
+          nil -> nil
+          signal -> signal.type
+        end,
+      translation: translation
+    }
+  end
+
+  defp route_for_translation(%{boundary: :boundary}), do: :canonical_boundary
+  defp route_for_translation(_translation), do: :local_runtime
 end
