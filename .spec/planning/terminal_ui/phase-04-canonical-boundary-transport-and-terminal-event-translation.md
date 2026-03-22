@@ -1,0 +1,123 @@
+# Phase 4 - Canonical Boundary Transport and Terminal Event Translation
+
+Back to index: [README](./README.md)
+
+## Relevant Shared APIs / Interfaces
+- `TerminalUi.Transport`
+- `TerminalUi.Transport.Signal`
+- `TerminalUi.Transport.Normalize`
+- `TerminalUi.Runtime.EventRouter`
+- `Jido.Signal`
+
+## Relevant Assumptions / Defaults
+- Direct native `terminal_ui` usage may keep interactions local until they
+  cross a package boundary.
+- Canonical boundary meaning should be translated once through bounded
+  transport modules rather than leaking backend-local envelopes.
+- The shared runtime remains the source of normalized terminal interaction
+  meaning even when individual backends expose different raw events.
+
+[ ] 4 Phase 4 - Canonical Boundary Transport and Terminal Event Translation
+  Implement canonical `Jido.Signal` boundary translation, normalized terminal
+  event flow, and transport diagnostics for direct-native and canonical
+  rendering paths.
+
+  [ ] 4.1 Section - Canonical Event Translation Backbone
+    Implement the canonical boundary translation model that turns normalized
+    terminal interactions into cross-package signals and back again.
+
+    [ ] 4.1.1 Task - Implement canonical boundary signal translation
+      Define the translation layer for canonical event descriptors,
+      `Jido.Signal`, and CloudEvents-compatible transport semantics.
+
+      [ ] 4.1.1.1 Subtask - Implement transport modules that map canonical interaction descriptors to boundary signal definitions and back again.
+      [ ] 4.1.1.2 Subtask - Define the canonical event envelope shape used whenever interactions cross the package boundary.
+      [ ] 4.1.1.3 Subtask - Keep canonical boundary translation aligned with authored `unified_ui` signal descriptors and canonical `UnifiedIUR` interaction payloads.
+
+    [ ] 4.1.2 Task - Implement native terminal input normalization
+      Normalize richer and limited backend input into one shared native
+      terminal interaction model before boundary translation occurs.
+
+      [ ] 4.1.2.1 Subtask - Define the shared native terminal event model for key input, mouse gestures, paste, resize, focus changes, shortcuts, and capability-dependent interactions.
+      [ ] 4.1.2.2 Subtask - Normalize raw-mode and TTY-compatible input families into the shared native event model before any canonical translation occurs.
+      [ ] 4.1.2.3 Subtask - Add diagnostics for unsupported raw input payloads, invalid normalization state, and ambiguous native event interpretation.
+
+  [ ] 4.2 Section - Shared Runtime Event Flow
+    Implement the shared runtime event flow that connects normalized native
+    events, local runtime handling, and canonical boundary translation.
+
+    [ ] 4.2.1 Task - Implement boundary-crossing event routing
+      Route normalized terminal interactions through canonical transport
+      modules whenever the interaction leaves the package boundary.
+
+      [ ] 4.2.1.1 Subtask - Implement runtime routing from widget interactions and canonical binding attachments into boundary translation modules.
+      [ ] 4.2.1.2 Subtask - Implement inbound handling for canonical boundary signals that need to update native runtime state or widget realization.
+      [ ] 4.2.1.3 Subtask - Keep event routing shared between direct-native and canonical-rendered screens.
+
+    [ ] 4.2.2 Task - Implement local native interaction handling without boundary leakage
+      Preserve the ability to handle local native runtime behavior directly
+      while keeping renderer-local details out of the cross-package contract.
+
+      [ ] 4.2.2.1 Subtask - Implement package-local handling for local shortcuts, focus shifts, inline menus, and capability fallback behavior that stays inside the runtime.
+      [ ] 4.2.2.2 Subtask - Distinguish local native event handling from boundary-crossing signals without changing interaction family meaning.
+      [ ] 4.2.2.3 Subtask - Add diagnostics for leaked renderer-local event names, raw terminal payloads, and invalid boundary/local routing decisions.
+
+  [ ] 4.3 Section - Transport Diagnostics and Contract Hygiene
+    Implement inspection and validation surfaces that keep the terminal
+    transport layer deterministic and free of boundary leakage.
+
+    [ ] 4.3.1 Task - Implement transport diagnostics and validation helpers
+      Provide package-local tooling that inspects boundary signal mappings,
+      normalization rules, and no-leakage guarantees.
+
+      [ ] 4.3.1.1 Subtask - Implement inspection helpers that list canonical-to-native interaction mappings and normalized event families.
+      [ ] 4.3.1.2 Subtask - Implement validation helpers that catch raw backend leakage at the package boundary.
+      [ ] 4.3.1.3 Subtask - Report deterministic diagnostics for unsupported canonical events, ambiguous routing, and invalid signal payloads.
+
+    [ ] 4.3.2 Task - Implement transport-focused reference summaries
+      Keep transport boundaries visible to maintainers as the runtime grows
+      more complex.
+
+      [ ] 4.3.2.1 Subtask - Expose transport summaries through package reference helpers and tooling surfaces.
+      [ ] 4.3.2.2 Subtask - Highlight where local native event families remain local and where canonical translation is required.
+      [ ] 4.3.2.3 Subtask - Keep transport summaries aligned with later validation and release-readiness workflows.
+
+  [ ] 4.4 Section - Transport Comparison Examples
+    Implement maintained examples that compare native-local handling and
+    boundary-crossing event translation across the terminal runtime.
+
+    [ ] 4.4.1 Task - Implement transport-oriented native and canonical examples
+      Provide maintained examples that exercise canonical signals, local native
+      input, and normalized terminal interaction families.
+
+      [ ] 4.4.1.1 Subtask - Add direct-native examples that exercise focus, shortcuts, paste, resize, and capability fallback interactions.
+      [ ] 4.4.1.2 Subtask - Add canonical-rendered examples that exercise the same interaction families through `Jido.Signal` translation.
+      [ ] 4.4.1.3 Subtask - Keep transport example metadata aligned with package reference and validation surfaces.
+
+    [ ] 4.4.2 Task - Implement normalized-input comparison helpers
+      Help maintainers compare how the same interaction family is normalized
+      across supported backend and capability profiles.
+
+      [ ] 4.4.2.1 Subtask - Add helper workflows that compare normalized input across richer and limited terminal backends.
+      [ ] 4.4.2.2 Subtask - Show how local native handling differs from canonical boundary translation without changing event meaning.
+      [ ] 4.4.2.3 Subtask - Document where later tooling workflows will validate these interaction families.
+
+  [ ] 4.5 Section - Phase 4 Integration Tests
+    Validate canonical transport, normalized input flow, and contract hygiene
+    end to end.
+
+    [ ] 4.5.1 Task - Boundary translation integration scenarios
+      Verify canonical terminal interactions cross the package boundary through
+      deterministic `Jido.Signal` translation.
+
+      [ ] 4.5.1.1 Subtask - Verify boundary-crossing interactions emit and consume canonical signals with CloudEvents-compatible semantics.
+      [ ] 4.5.1.2 Subtask - Verify canonical bindings and event descriptors route correctly through native widget interactions.
+      [ ] 4.5.1.3 Subtask - Verify invalid canonical event payloads or leaked backend-local envelopes fail with deterministic diagnostics.
+
+    [ ] 4.5.2 Task - Local-native and normalized-input integration scenarios
+      Verify local native event handling and backend normalization stay bounded
+      inside the shared runtime while preserving canonical meaning when needed.
+
+      [ ] 4.5.2.1 Subtask - Verify local native interactions can remain inside the runtime without forcing unnecessary boundary translation.
+      [ ] 4.5.2.2 Subtask - Verify normalized input families remain consistent across backend adapters and direct-native versus canonical entry paths.
+      [ ] 4.5.2.3 Subtask - Verify transport diagnostics surface boundary-local distinctions and no-leakage guarantees clearly.

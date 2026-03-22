@@ -12,6 +12,7 @@ surface:
   - packages/live_ui
   - packages/web_ui
   - packages/desktop_ui
+  - packages/terminal_ui
   - .spec/specs/signal_transport.spec.md
 decisions:
   - repo.ecosystem.contract_model
@@ -45,6 +46,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: ecosystem.signal_transport.terminal_bridge
+  statement: `terminal_ui` shall translate between canonical widget events at the ecosystem boundary and its native terminal interaction model for keyboard, mouse, paste, resize, and focus events while preserving canonical event meaning across capability-aware degradation.
+  priority: must
+  stability: stable
+
 - id: ecosystem.signal_transport.native_signal_models_allowed
   statement: Renderer-specific native signal models may vary by library, but translation to or from the canonical event contract shall preserve canonical event meaning.
   priority: must
@@ -63,6 +69,11 @@ decisions:
   covers:
     - ecosystem.signal_transport.desktop_translation
   reason: The desktop runtime is expected to normalize native input into canonical signals, but the SDL2 event bridge is still evolving.
+
+- id: ecosystem.signal_transport.terminal_bridge_evolving
+  covers:
+    - ecosystem.signal_transport.terminal_bridge
+  reason: The terminal runtime is expected to normalize terminal-native events into canonical signals, but backend fallback behavior and degradation-aware translation are still evolving.
 ```
 
 ## Verification
@@ -76,6 +87,7 @@ decisions:
     - ecosystem.signal_transport.web_bridge
     - ecosystem.signal_transport.live_bridge
     - ecosystem.signal_transport.desktop_translation
+    - ecosystem.signal_transport.terminal_bridge
     - ecosystem.signal_transport.native_signal_models_allowed
     - ecosystem.signal_transport.local_state_not_contract
 ```

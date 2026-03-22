@@ -13,6 +13,7 @@ surface:
   - packages/live_ui
   - packages/web_ui
   - packages/desktop_ui
+  - packages/terminal_ui
   - .spec/specs/architecture.spec.md
   - .spec/specs/dsl_iur_symbiosis.spec.md
   - .spec/specs/platform_runtimes.spec.md

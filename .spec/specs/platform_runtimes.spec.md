@@ -1,16 +1,18 @@
 # Platform Runtimes
 
-This subject defines the renderer and widget-library responsibilities for the ecosystem runtime packages.
+This subject defines the renderer and widget-library responsibilities for the
+ecosystem runtime packages.
 
 ```spec-meta
 id: ecosystem.platform_runtimes
 kind: architecture
 status: active
-summary: Architecture contract for `web_ui`, `live_ui`, and `desktop_ui` as native widget and signal libraries that also include canonical IUR renderers.
+summary: Architecture contract for `web_ui`, `live_ui`, `desktop_ui`, and `terminal_ui` as native widget and signal libraries that also include canonical IUR renderers.
 surface:
   - packages/web_ui
   - packages/live_ui
   - packages/desktop_ui
+  - packages/terminal_ui
   - .spec/specs/platform_runtimes.spec.md
 decisions:
   - repo.ecosystem.contract_model
@@ -58,6 +60,16 @@ decisions:
   statement: `desktop_ui` shall expose a native desktop runtime and widget model that is usable directly, with canonical IUR rendering provided as a renderer entry point rather than the only runtime entry point.
   priority: must
   stability: stable
+
+- id: ecosystem.platform_runtimes.terminal_ui_targets
+  statement: `terminal_ui` shall target Linux, macOS, and Windows terminal environments as first-class runtime targets, including richer raw-mode execution and TTY-compatible fallback execution where capability differences require it.
+  priority: must
+  stability: stable
+
+- id: ecosystem.platform_runtimes.terminal_ui_native_runtime
+  statement: `terminal_ui` shall expose a native terminal runtime and widget model that is usable directly, with canonical IUR rendering provided as a renderer entry point rather than the only runtime entry point.
+  priority: must
+  stability: stable
 ```
 
 ## Exceptions
@@ -68,6 +80,12 @@ decisions:
     - ecosystem.platform_runtimes.desktop_ui_targets
     - ecosystem.platform_runtimes.desktop_ui_native_runtime
   reason: The desktop runtime architecture and platform targets are defined at the ecosystem level, but implementation depth is still evolving.
+
+- id: ecosystem.platform_runtimes.terminal_runtime_evolving
+  covers:
+    - ecosystem.platform_runtimes.terminal_ui_targets
+    - ecosystem.platform_runtimes.terminal_ui_native_runtime
+  reason: The terminal runtime architecture, backend fallback behavior, and degradation policy are defined at the ecosystem level, but implementation depth is still evolving.
 ```
 
 ## Verification
@@ -84,4 +102,6 @@ decisions:
     - ecosystem.platform_runtimes.live_ui_runtime
     - ecosystem.platform_runtimes.desktop_ui_targets
     - ecosystem.platform_runtimes.desktop_ui_native_runtime
+    - ecosystem.platform_runtimes.terminal_ui_targets
+    - ecosystem.platform_runtimes.terminal_ui_native_runtime
 ```
