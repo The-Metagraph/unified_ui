@@ -85,6 +85,7 @@ defmodule WebUi.Widget do
         :sort,
         :filter,
         :paginate,
+        :selection,
         :close,
         :expand,
         :command,
@@ -184,6 +185,7 @@ defmodule WebUi.Widget do
              :container,
              :row,
              :column,
+             :grid,
              :viewport,
              :scroll_bar,
              :split_pane
@@ -193,13 +195,28 @@ defmodule WebUi.Widget do
   def family_for(kind) when kind in [:overlay, :dialog, :toast, :alert_dialog, :context_menu],
     do: :layer
 
-  def family_for(kind) when kind in [:button, :link, :form], do: :interaction
+  def family_for(kind) when kind in [:button, :link, :form, :form_builder], do: :interaction
 
-  def family_for(kind) when kind in [:text_input, :checkbox, :select, :field, :field_group],
-    do: :input
+  def family_for(kind)
+      when kind in [
+             :text_input,
+             :numeric_input,
+             :date_input,
+             :time_input,
+             :file_input,
+             :slider,
+             :toggle,
+             :checkbox,
+             :radio_group,
+             :select,
+             :pick_list,
+             :field,
+             :field_group
+           ],
+      do: :input
 
   def family_for(kind) when kind in [:tabs, :menu], do: :navigation
-  def family_for(kind) when kind in [:table, :tree_view], do: :data
+  def family_for(kind) when kind in [:list, :table, :tree_view], do: :data
   def family_for(kind) when kind in [:markdown_viewer, :log_viewer], do: :document
   def family_for(kind) when kind in [:status, :progress, :inline_feedback], do: :feedback
 

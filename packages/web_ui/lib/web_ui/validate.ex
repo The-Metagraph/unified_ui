@@ -16,7 +16,9 @@ defmodule WebUi.Validate do
   @spec example_coverage() :: map()
   def example_coverage do
     matrix = WebUi.Examples.coverage_matrix()
-    missing_widget_kinds = WebUi.Widgets.kinds() -- WebUi.Renderer.supported_kinds()
+    required_canonical_kinds = WebUi.Renderer.required_canonical_kinds()
+    missing_native_kinds = required_canonical_kinds -- WebUi.Widgets.kinds()
+    missing_renderer_kinds = required_canonical_kinds -- WebUi.Renderer.supported_kinds()
 
     checks = [
       check(:native_examples_present, WebUi.Examples.native_examples() != [], []),
@@ -26,8 +28,11 @@ defmodule WebUi.Validate do
       check(:advanced_workflow_present, Map.has_key?(matrix.workflows, :advanced), []),
       check(:transport_workflow_present, Map.has_key?(matrix.workflows, :transport), []),
       check(:styling_workflow_present, Map.has_key?(matrix.workflows, :styling), []),
-      check(:renderer_covers_widget_kinds, missing_widget_kinds == [], %{
-        missing: missing_widget_kinds
+      check(:native_surface_covers_canonical_kinds, missing_native_kinds == [], %{
+        missing: missing_native_kinds
+      }),
+      check(:renderer_covers_canonical_kinds, missing_renderer_kinds == [], %{
+        missing: missing_renderer_kinds
       })
     ]
 

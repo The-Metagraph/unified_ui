@@ -27,6 +27,7 @@ defmodule WebUi.Layout do
   defdelegate panel(id, title, children, opts \\ []), to: NativeLayout
   defdelegate row(id, children, opts \\ []), to: NativeLayout
   defdelegate column(id, children, opts \\ []), to: NativeLayout
+  defdelegate grid(id, children, opts \\ []), to: NativeLayout
   defdelegate viewport(id, content, opts \\ []), to: NativeLayout
   defdelegate scroll_bar(id, opts \\ []), to: NativeLayout
   defdelegate split_pane(id, primary, secondary, opts \\ []), to: NativeLayout

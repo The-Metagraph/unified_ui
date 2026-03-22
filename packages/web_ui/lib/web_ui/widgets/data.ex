@@ -6,10 +6,28 @@ defmodule WebUi.Widgets.Data do
 
   alias WebUi.Widgets.Builder
 
-  @kinds [:table, :tree_view, :markdown_viewer, :log_viewer]
+  @kinds [:list, :table, :tree_view, :markdown_viewer, :log_viewer]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
+
+  @spec list(String.t() | atom(), [keyword() | map()], keyword() | map()) :: WebUi.Widget.t()
+  def list(id, items, opts \\ []) when is_list(items) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:list,
+      id: id,
+      attributes: %{
+        ordered: Builder.option(opts, :ordered, false),
+        selection_mode: Builder.option(opts, :selection_mode, :single),
+        items: normalize_items(items)
+      },
+      state: Builder.state(opts, [:disabled, :loading, :focused, :selected]),
+      styles: Builder.styles(opts),
+      events: Builder.events(opts, on_change: :change),
+      metadata: Builder.metadata(opts, %{native_surface: :data, review_surface: true})
+    )
+  end
 
   @spec table(
           String.t() | atom(),
@@ -116,6 +134,19 @@ defmodule WebUi.Widgets.Data do
       |> Builder.maybe_put(:align, Builder.option(column, :align))
       |> Builder.maybe_put(:sortable, Builder.option(column, :sortable))
       |> Builder.maybe_put(:sort_key, Builder.option(column, :sort_key))
+    end)
+  end
+
+  defp normalize_items(items) do
+    Enum.map(items, fn item ->
+      item = Builder.options(item)
+
+      %{}
+      |> Builder.maybe_put(:id, Builder.option(item, :id))
+      |> Builder.maybe_put(:label, Builder.option(item, :label))
+      |> Builder.maybe_put(:value, Builder.option(item, :value))
+      |> Builder.maybe_put(:description, Builder.option(item, :description))
+      |> Builder.maybe_put(:selected, Builder.option(item, :selected))
     end)
   end
 

@@ -88,6 +88,10 @@ defmodule WebUi.NativeWidgetsTest do
     assert WebUi.Widgets.Operational in modules
 
     assert :content in WebUi.Widgets.kinds()
+    assert :numeric_input in WebUi.Widgets.kinds()
+    assert :grid in WebUi.Widgets.kinds()
+    assert :list in WebUi.Widgets.kinds()
+    assert :form_builder in WebUi.Widgets.kinds()
     assert :form in WebUi.Widgets.kinds()
     assert :viewport in WebUi.Widgets.kinds()
     assert :dialog in WebUi.Widgets.kinds()
@@ -100,6 +104,77 @@ defmodule WebUi.NativeWidgetsTest do
     assert WebUi.Widgets.validation_state().form_composition == :ready
     assert WebUi.Widgets.validation_state().advanced_data_widgets == :ready
     assert WebUi.Widgets.validation_state().display_system_widgets == :ready
+  end
+
+  test "expanded native constructors cover the remaining canonical input, layout, and data kinds" do
+    numeric_input =
+      WebUi.Widgets.numeric_input("count-input", name: :count, value: 7, min: 0, max: 10)
+
+    date_input = WebUi.Widgets.date_input("launch-date", name: :launch_date, value: "2026-03-21")
+    time_input = WebUi.Widgets.time_input("launch-time", name: :launch_time, value: "09:30")
+
+    file_input =
+      WebUi.Widgets.file_input("upload-input", name: :artifact, accept: [".csv"], multiple: true)
+
+    slider = WebUi.Widgets.slider("threshold-slider", name: :threshold, value: 80, max: 100)
+    toggle = WebUi.Widgets.toggle("alerts-toggle", name: :alerts, checked: true)
+
+    radio_group =
+      WebUi.Widgets.radio_group(
+        "mode-input",
+        [
+          [id: :auto, label: "Auto", value: :auto],
+          [id: :manual, label: "Manual", value: :manual]
+        ],
+        name: :mode,
+        value: :auto
+      )
+
+    pick_list =
+      WebUi.Widgets.pick_list(
+        "targets-input",
+        [
+          [id: "node-a", label: "Node A", value: "node-a"],
+          [id: "node-b", label: "Node B", value: "node-b"]
+        ],
+        name: :targets,
+        value: ["node-a"]
+      )
+
+    form_builder =
+      WebUi.Widgets.form_builder("controls-form", [
+        WebUi.Widgets.field("threshold-field", slider, name: :threshold, label: "Threshold")
+      ])
+
+    grid =
+      WebUi.Widgets.grid(
+        "ops-grid",
+        [
+          WebUi.Widgets.text("grid-copy", "Grid item"),
+          WebUi.Widgets.button("grid-action", "Run")
+        ], columns: 2, gap: :md)
+
+    list =
+      WebUi.Widgets.list(
+        "node-list",
+        [[id: "node-a", label: "Node A", value: "node-a", selected: true]],
+        ordered: true,
+        selection_mode: :single
+      )
+
+    assert numeric_input.kind == :numeric_input
+    assert date_input.kind == :date_input
+    assert time_input.kind == :time_input
+    assert file_input.kind == :file_input
+    assert slider.kind == :slider
+    assert toggle.kind == :toggle
+    assert radio_group.kind == :radio_group
+    assert pick_list.kind == :pick_list
+    assert form_builder.kind == :form_builder
+    assert grid.kind == :grid
+    assert list.kind == :list
+    assert list.family == :data
+    assert WebUi.Renderer.required_canonical_kinds() -- WebUi.Widgets.kinds() == []
   end
 
   test "advanced widget families normalize deterministic data, feedback, visualization, and operational state" do
@@ -252,5 +327,12 @@ defmodule WebUi.NativeWidgetsTest do
                  fn ->
                    WebUi.Layer.overlay("invalid-overlay", content, [content])
                  end
+  end
+
+  test "example coverage validates canonical surface parity directly against unified_iur kinds" do
+    report = WebUi.Validate.example_coverage()
+
+    assert report.status == :pass
+    assert Enum.empty?(report.findings)
   end
 end
