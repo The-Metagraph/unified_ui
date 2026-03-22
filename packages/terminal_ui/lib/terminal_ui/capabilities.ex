@@ -60,7 +60,7 @@ defmodule TerminalUi.Capabilities do
 
   @spec diagnostics(keyword()) :: map()
   def diagnostics(opts \\ []) do
-    snapshot = snapshot(opts)
+    snapshot = Keyword.get(opts, :capabilities, snapshot(opts))
 
     %{
       profile: snapshot.degradation_profile,

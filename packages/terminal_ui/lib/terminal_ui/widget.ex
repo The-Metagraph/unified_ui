@@ -61,7 +61,9 @@ defmodule TerminalUi.Widget do
         :sort_key,
         :overlay_role,
         :capability_profile,
-        :degradation_strategy
+        :degradation_strategy,
+        :theme,
+        :style_refs
       ],
       state: [
         :disabled,
@@ -90,6 +92,14 @@ defmodule TerminalUi.Widget do
         :border,
         :padding,
         :semantic_role,
+        :theme,
+        :variant,
+        :theme_tokens,
+        :state_variants,
+        :hooks,
+        :style_refs,
+        :glyph_set,
+        :intensity,
         :degradation,
         :intent,
         :overlay_tone,

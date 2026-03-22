@@ -29,6 +29,14 @@ defmodule TerminalUi.Info do
         profiles: TerminalUi.Capabilities.profiles(),
         diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      style: %{
+        primitives: Map.keys(TerminalUi.Style.primitives()),
+        hooks: TerminalUi.Style.widget_style_hooks()
+      },
+      theme: %{
+        catalog: TerminalUi.Theme.catalog_ids(),
+        default: TerminalUi.Theme.default_theme().id
+      },
       transport: %{
         families: TerminalUi.Transport.families(),
         input_families: TerminalUi.Transport.input_families(),

@@ -32,10 +32,25 @@ defmodule TerminalUi.Runtime.Boot do
   end
 
   defp build_state(screen, backend_mode, source_kind, opts) do
+    theme =
+      Keyword.get(opts, :theme, Map.get(screen, :theme, TerminalUi.Theme.default_theme().id))
+
+    capabilities = Capabilities.snapshot(backend_mode: backend_mode)
+
     with {:ok, root} <- normalize_root(Map.fetch!(screen, :root)),
-         screen_model <- Screen.new(Map.put(screen, :root, root), source_kind, backend_mode, opts),
+         screen_model <-
+           Screen.new(
+             Map.put(screen, :root, root),
+             source_kind,
+             backend_mode,
+             Keyword.put(opts, :theme, theme)
+           ),
          {:ok, realization} <-
-           Realization.realize_screen(screen_model, backend_mode: backend_mode) do
+           Realization.realize_screen(screen_model,
+             backend_mode: backend_mode,
+             capabilities: capabilities,
+             theme: theme
+           ) do
       screen_id = to_string(Map.fetch!(screen, :id))
 
       {:ok,
@@ -45,7 +60,7 @@ defmodule TerminalUi.Runtime.Boot do
          title: Map.get(screen, :title),
          source_kind: source_kind,
          backend_mode: backend_mode,
-         capabilities: Capabilities.snapshot(backend_mode: backend_mode),
+         capabilities: capabilities,
          root: root,
          screen: screen_model,
          realization: realization,

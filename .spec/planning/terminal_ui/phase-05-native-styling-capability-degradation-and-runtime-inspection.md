@@ -23,25 +23,25 @@ Back to index: [README](./README.md)
   runtime continuity diagnostics, and inspectable behavior across richer and
   limited terminal environments.
 
-  [ ] 5.1 Section - Native Styling and Theming Surface
+  [x] 5.1 Section - Native Styling and Theming Surface
     Implement the native style and theme surface that both direct-native users
     and canonical renderer output can share.
 
-    [ ] 5.1.1 Task - Implement native style primitives and component variants
+    [x] 5.1.1 Task - Implement native style primitives and component variants
       Define native styling primitives, text attributes, and component-level
       variants that can express canonical styling meaning.
 
-      [ ] 5.1.1.1 Subtask - Implement color, text-style, semantic-role, and variant primitives that map cleanly to canonical theming meaning.
-      [ ] 5.1.1.2 Subtask - Implement component-scoped styling for foundational and advanced widget families.
-      [ ] 5.1.1.3 Subtask - Keep the native style surface directly usable without requiring canonical input.
+      [x] 5.1.1.1 Subtask - Implement color, text-style, semantic-role, and variant primitives that map cleanly to canonical theming meaning.
+      [x] 5.1.1.2 Subtask - Implement component-scoped styling for foundational and advanced widget families.
+      [x] 5.1.1.3 Subtask - Keep the native style surface directly usable without requiring canonical input.
 
-    [ ] 5.1.2 Task - Implement theme structure and inheritance behavior
+    [x] 5.1.2 Task - Implement theme structure and inheritance behavior
       Define theme-level defaults, local overrides, and inheritance behavior so
       the runtime can reconstruct effective widget styling deterministically.
 
-      [ ] 5.1.2.1 Subtask - Implement theme identity, palette, semantic roles, and component variant collections.
-      [ ] 5.1.2.2 Subtask - Implement local style inheritance, merging, and override rules for runtime realization.
-      [ ] 5.1.2.3 Subtask - Keep canonical and direct-native styling behavior aligned through one shared style model.
+      [x] 5.1.2.1 Subtask - Implement theme identity, palette, semantic roles, and component variant collections.
+      [x] 5.1.2.2 Subtask - Implement local style inheritance, merging, and override rules for runtime realization.
+      [x] 5.1.2.3 Subtask - Keep canonical and direct-native styling behavior aligned through one shared style model.
 
   [ ] 5.2 Section - Capability Detection and Degradation Workflows
     Implement the capability-aware behavior that keeps richer and limited

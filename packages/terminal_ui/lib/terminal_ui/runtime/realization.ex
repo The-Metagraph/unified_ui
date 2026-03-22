@@ -4,7 +4,7 @@ defmodule TerminalUi.Runtime.Realization do
   """
 
   alias TerminalUi.{Capabilities, Layout, Layer}
-  alias TerminalUi.Runtime.{Error, Screen}
+  alias TerminalUi.Runtime.{Error, Screen, StyleResolver}
   alias TerminalUi.Widget
 
   @type realized_node :: map()
@@ -12,7 +12,11 @@ defmodule TerminalUi.Runtime.Realization do
   @spec realize_screen(Screen.t(), keyword()) :: {:ok, map()} | {:error, Error.t()}
   def realize_screen(%Screen{} = screen, opts \\ []) do
     opts = Keyword.put_new(opts, :backend_mode, screen.backend_mode)
-    capability_diagnostics = Capabilities.diagnostics(backend_mode: screen.backend_mode)
+
+    capability_diagnostics =
+      opts
+      |> Keyword.get(:capabilities, Capabilities.snapshot(backend_mode: screen.backend_mode))
+      |> then(fn snapshot -> Capabilities.diagnostics(capabilities: snapshot) end)
 
     with {:ok, tree} <- realize_widget(screen.root, [screen.id], opts) do
       focus_order = collect_focus_order(tree)
@@ -36,6 +40,7 @@ defmodule TerminalUi.Runtime.Realization do
          diagnostics: %{
            source_kind: screen.source_kind,
            backend_mode: screen.backend_mode,
+           theme: screen.metadata.theme,
            shared_runtime: true,
            layout: screen.layout,
            capability_profile: capability_diagnostics.profile,
@@ -56,6 +61,8 @@ defmodule TerminalUi.Runtime.Realization do
 
   defp realize_widget(%Widget{} = widget, path, opts) do
     if widget.kind in allowed_kinds() do
+      style_resolution = StyleResolver.resolve(widget, theme: Keyword.get(opts, :theme))
+
       widget.children
       |> Enum.with_index()
       |> Enum.reduce_while({:ok, []}, fn {child, index}, {:ok, acc} ->
@@ -88,6 +95,13 @@ defmodule TerminalUi.Runtime.Realization do
              events: Map.keys(widget.events),
              attributes: widget.attributes,
              styles: widget.styles,
+             theme: %{
+               id: style_resolution.theme,
+               active_states: style_resolution.active_states,
+               token_refs: style_resolution.token_refs
+             },
+             resolved_styles: style_resolution.resolved,
+             style_diagnostics: style_resolution.diagnostics,
              children: children,
              render_mode: Keyword.get(opts, :render_mode, :advanced_terminal)
            }}

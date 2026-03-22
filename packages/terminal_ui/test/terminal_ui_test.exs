@@ -7,6 +7,8 @@ defmodule TerminalUiTest do
              :runtime,
              :backend,
              :capabilities,
+             :style,
+             :theme,
              :layout,
              :layer,
              :renderer,
@@ -21,6 +23,8 @@ defmodule TerminalUiTest do
              runtime: %{assumptions: runtime_assumptions, modules: runtime_modules},
              backend: %{modes: backend_modes},
              capabilities: %{categories: capability_categories},
+             style: %{hooks: style_hooks},
+             theme: %{catalog: theme_catalog},
              layout: %{kinds: layout_kinds, module: TerminalUi.Layout},
              layer: %{kinds: layer_kinds, module: TerminalUi.Layer},
              renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
@@ -41,6 +45,8 @@ defmodule TerminalUiTest do
     assert TerminalUi.Runtime.Boot in runtime_modules
     assert backend_modes == [:raw, :tty]
     assert :unicode in capability_categories
+    assert :theme_tokens in style_hooks
+    assert :high_contrast in theme_catalog
     assert :viewport in layout_kinds
     assert :overlay in layer_kinds
 
@@ -68,6 +74,8 @@ defmodule TerminalUiTest do
              layout: %{kinds: layout_kinds},
              layer: %{kinds: layer_kinds},
              widgets: %{families: families},
+             style: %{primitives: style_primitives},
+             theme: %{catalog: theme_catalog, default: default_theme},
              examples: %{comparison_ids: comparison_ids},
              documentation: %{guides: guides},
              tooling: %{workflows: workflows}
@@ -76,6 +84,9 @@ defmodule TerminalUiTest do
     assert :action in families
     assert :visualization in families
     assert :layout in families
+    assert :colors in style_primitives
+    assert :high_contrast in theme_catalog
+    assert default_theme == :terminal_default
     assert :canvas_surface in layout_kinds
     assert :context_menu in layer_kinds
 

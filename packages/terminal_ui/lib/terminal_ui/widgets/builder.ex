@@ -8,6 +8,7 @@ defmodule TerminalUi.Widgets.Builder do
       description: Keyword.get(opts, :description),
       role: Keyword.get(opts, :role),
       variant: Keyword.get(opts, :variant),
+      theme: Keyword.get(opts, :theme),
       native_surface: true,
       degradation: Keyword.get(opts, :degradation),
       shortcut: Keyword.get(opts, :shortcut),
@@ -69,6 +70,14 @@ defmodule TerminalUi.Widgets.Builder do
     |> maybe_put(:border, Keyword.get(opts, :border))
     |> maybe_put(:padding, Keyword.get(opts, :padding))
     |> maybe_put(:semantic_role, Keyword.get(opts, :semantic_role))
+    |> maybe_put(:theme, Keyword.get(opts, :theme))
+    |> maybe_put(:variant, Keyword.get(opts, :variant))
+    |> maybe_put(:theme_tokens, Keyword.get(opts, :theme_tokens))
+    |> maybe_put(:state_variants, Keyword.get(opts, :state_variants))
+    |> maybe_put(:hooks, Keyword.get(opts, :hooks))
+    |> maybe_put(:style_refs, Keyword.get(opts, :style_refs))
+    |> maybe_put(:glyph_set, Keyword.get(opts, :glyph_set))
+    |> maybe_put(:intensity, Keyword.get(opts, :intensity))
     |> maybe_put(:degradation, Keyword.get(opts, :degradation))
     |> maybe_put(:intent, Keyword.get(opts, :intent))
   end
