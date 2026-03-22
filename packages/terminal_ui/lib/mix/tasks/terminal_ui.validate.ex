@@ -36,8 +36,14 @@ defmodule Mix.Tasks.TerminalUi.Validate do
 
     Mix.shell().info(output)
 
-    if strict? and TerminalUi.Validate.validate(:strict) |> elem(0) == :error do
-      Mix.raise("TerminalUi validation failed strict checks")
+    if strict? do
+      case TerminalUi.Validate.release_readiness(:strict) do
+        {:ok, _release} ->
+          :ok
+
+        {:error, _release} ->
+          Mix.raise("TerminalUi validation failed strict release-readiness gates")
+      end
     end
   end
 end

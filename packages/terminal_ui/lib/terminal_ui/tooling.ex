@@ -13,7 +13,10 @@ defmodule TerminalUi.Tooling do
       :runtime_review,
       :transport_review,
       :capability_review,
-      :package_validation
+      :package_validation,
+      :documentation_review,
+      :release_readiness,
+      :evolution_policy_review
     ]
   end
 

@@ -5,6 +5,14 @@ defmodule TerminalUi.Validate do
   """
 
   @type mode :: :summary | :strict
+  @required_guides [
+    "README.md",
+    "guides/runtime_backbone.md",
+    "guides/native_runtime_and_examples.md",
+    "guides/canonical_rendering_and_transport.md",
+    "guides/styling_capabilities_and_inspection.md",
+    "guides/maintainer_workflows.md"
+  ]
 
   @spec example_coverage() :: map()
   def example_coverage do
@@ -233,16 +241,38 @@ defmodule TerminalUi.Validate do
     report(:tooling_surface, checks)
   end
 
+  @spec documentation_surface() :: map()
+  def documentation_surface do
+    missing_docs =
+      @required_guides
+      |> Enum.reject(&File.exists?(Path.join(package_root(), &1)))
+
+    undocumented_guides = @required_guides -- TerminalUi.Tooling.documentation_surface()
+
+    checks = [
+      check(:guide_files_present, missing_docs == [], %{missing: missing_docs}),
+      check(:tooling_docs_surface_complete, undocumented_guides == [], %{
+        missing: undocumented_guides
+      }),
+      check(:readme_present, File.exists?(Path.join(package_root(), "README.md")), [])
+    ]
+
+    report(:documentation_surface, checks)
+  end
+
   @spec validation_report() :: map()
   def validation_report do
-    %{
+    sections = %{
       example_coverage: example_coverage(),
       renderer_determinism: renderer_determinism(),
       runtime_behavior: runtime_behavior(),
       transport_validation: transport_validation(),
       capability_behavior: capability_behavior(),
-      tooling_surface: tooling_surface()
+      tooling_surface: tooling_surface(),
+      documentation_surface: documentation_surface()
     }
+
+    Map.put(sections, :release_readiness, build_release_readiness(sections))
   end
 
   @spec validation_summary(map()) :: String.t()
@@ -255,18 +285,98 @@ defmodule TerminalUi.Validate do
       "  transport validation passing?: #{report.transport_validation.status == :pass}",
       "  capability behavior passing?: #{report.capability_behavior.status == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
-      "  failing sections: #{inspect(failing_sections(report))}"
+      "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
+      "  release ready?: #{report.release_readiness.status == :pass}",
+      "  failing sections: #{inspect(report.release_readiness.failing_sections)}"
     ]
     |> Enum.join("\n")
+  end
+
+  @spec release_gates() :: [map()]
+  def release_gates do
+    [
+      gate(
+        :example_coverage,
+        "Maintain native, canonical, and mixed example coverage for the terminal package surface.",
+        :example_coverage
+      ),
+      gate(
+        :renderer_and_runtime_behavior,
+        "Keep renderer determinism, shared runtime behavior, and capability-aware continuity healthy.",
+        :runtime_behavior
+      ),
+      gate(
+        :transport_translation,
+        "Keep normalized terminal input handling and canonical boundary translation explicit and leak-free.",
+        :transport_validation
+      ),
+      gate(
+        :capability_degradation,
+        "Keep rich-terminal and fallback-terminal behavior bounded and reviewable.",
+        :capability_behavior
+      ),
+      gate(
+        :tooling_surface,
+        "Keep inspect, validate, reference, and maintainer workflow surfaces available together.",
+        :tooling_surface
+      ),
+      gate(
+        :documentation_surface,
+        "Keep package guides aligned with the shared runtime, canonical renderer, and capability model.",
+        :documentation_surface
+      )
+    ]
+  end
+
+  @spec evolution_rules() :: [map()]
+  def evolution_rules do
+    [
+      %{
+        id: :new_widget_families_require_examples_and_validation,
+        description:
+          "New widget families should ship with maintained examples and updated validation coverage."
+      },
+      %{
+        id: :renderer_changes_preserve_shared_runtime,
+        description:
+          "Canonical renderer changes should continue to flow through the same native runtime, styling, degradation, and transport model."
+      },
+      %{
+        id: :capability_changes_require_degradation_review,
+        description:
+          "Backend or capability changes should keep fallback behavior explicit and bounded rather than implicit."
+      },
+      %{
+        id: :terminal_ui_not_dsl_or_iur_owner,
+        description:
+          "Changes in terminal_ui must remain subordinate to upstream UnifiedUi and UnifiedIUR contracts instead of redefining them locally."
+      },
+      %{
+        id: :tooling_and_docs_move_with_surface,
+        description:
+          "When the package surface changes, tooling, validation, and docs should move in the same change set."
+      }
+    ]
+  end
+
+  @spec release_readiness(mode()) :: {:ok, map()} | {:error, map()}
+  def release_readiness(mode \\ :summary) do
+    report = validation_report()
+    release = report.release_readiness
+
+    case {mode, release.status} do
+      {:strict, :fail} -> {:error, release}
+      _other -> {:ok, release}
+    end
   end
 
   @spec validate(mode()) :: {:ok, map()} | {:error, map()}
   def validate(mode \\ :summary) do
     report = validation_report()
 
-    case {mode, failing_sections(report)} do
-      {:strict, [_ | _] = failing} -> {:error, Map.put(report, :failing_sections, failing)}
-      {_mode, failing} -> {:ok, Map.put(report, :failing_sections, failing)}
+    case {mode, report.release_readiness.status} do
+      {:strict, :fail} -> {:error, report}
+      _other -> {:ok, report}
     end
   end
 
@@ -297,15 +407,38 @@ defmodule TerminalUi.Validate do
     }
   end
 
-  defp failing_sections(report) do
-    report
-    |> Enum.filter(fn {_section, result} ->
-      is_map(result) and Map.get(result, :status) == :fail
-    end)
-    |> Enum.map(&elem(&1, 0))
+  defp build_release_readiness(sections) do
+    failing =
+      sections
+      |> Enum.filter(fn {section, result} ->
+        section != :release_readiness and is_map(result) and Map.get(result, :status) == :fail
+      end)
+      |> Enum.map(&elem(&1, 0))
+
+    %{
+      status: if(failing == [], do: :pass, else: :fail),
+      failing_sections: failing,
+      gates:
+        Enum.map(release_gates(), fn gate ->
+          Map.put(gate, :status, sections[gate.section].status)
+        end),
+      evolution_rules: evolution_rules()
+    }
+  end
+
+  defp gate(id, description, section) do
+    %{
+      id: id,
+      description: description,
+      section: section
+    }
   end
 
   defp exported?(module, function, arity) do
     Code.ensure_loaded?(module) and Enum.member?(module.__info__(:functions), {function, arity})
+  end
+
+  defp package_root do
+    Path.expand("../..", __DIR__)
   end
 end

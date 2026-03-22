@@ -117,7 +117,10 @@ defmodule TerminalUi.Reference do
         validation_sections:
           TerminalUi.Validate.validation_report()
           |> Map.keys()
-          |> Enum.sort()
+          |> Enum.sort(),
+        release_readiness_modes: [:summary, :strict],
+        release_gates: TerminalUi.Validate.release_gates(),
+        evolution_rules: TerminalUi.Validate.evolution_rules()
       },
       examples: example_summary(),
       documentation: %{

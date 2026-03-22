@@ -59,6 +59,7 @@ Package-local checks:
 - `mix terminal_ui.inspect native_styled_review --format diagnostics`
 - `mix terminal_ui.validate`
 - `mix terminal_ui.validate --format report`
+- `mix terminal_ui.validate --strict`
 
 Workspace checks:
 
@@ -71,3 +72,10 @@ Workspace checks:
 - `guides/canonical_rendering_and_transport.md`
 - `guides/styling_capabilities_and_inspection.md`
 - `guides/maintainer_workflows.md`
+
+## Release Readiness
+
+Treat `mix terminal_ui.validate --strict` as the package release-readiness
+gate. It keeps example coverage, renderer determinism, shared runtime behavior,
+transport translation, capability degradation, tooling, and docs aligned before
+the package evolves further.

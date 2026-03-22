@@ -24,6 +24,7 @@ defmodule TerminalUi.ToolingTest do
     transport = TerminalUi.Validate.transport_validation()
     capability = TerminalUi.Validate.capability_behavior()
     tooling = TerminalUi.Validate.tooling_surface()
+    docs = TerminalUi.Validate.documentation_surface()
     report = TerminalUi.Validate.validation_report()
 
     assert coverage.status == :pass
@@ -32,15 +33,25 @@ defmodule TerminalUi.ToolingTest do
     assert transport.status == :pass
     assert capability.status == :pass
     assert tooling.status == :pass
+    assert docs.status == :pass
     assert report.example_coverage.status == :pass
     assert report.runtime_behavior.status == :pass
     assert report.transport_validation.status == :pass
+    assert report.documentation_surface.status == :pass
+    assert report.release_readiness.status == :pass
 
     assert {:ok, strict_report} = TerminalUi.Validate.validate(:strict)
-    assert strict_report.failing_sections == []
+    assert strict_report.release_readiness.failing_sections == []
+    assert {:ok, strict_release} = TerminalUi.Validate.release_readiness(:strict)
+    assert strict_release.status == :pass
 
     assert TerminalUi.Inspect in TerminalUi.Tooling.preview_surfaces()
     assert "mix terminal_ui.inspect" in TerminalUi.Tooling.mix_tasks()
     assert "mix terminal_ui.validate" in TerminalUi.Tooling.mix_tasks()
+
+    assert Enum.any?(
+             TerminalUi.Validate.evolution_rules(),
+             &(&1.id == :terminal_ui_not_dsl_or_iur_owner)
+           )
   end
 end

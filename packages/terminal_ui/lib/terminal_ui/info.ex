@@ -54,7 +54,9 @@ defmodule TerminalUi.Info do
         runtime_behavior: validation_report.runtime_behavior.status,
         transport_validation: validation_report.transport_validation.status,
         capability_behavior: validation_report.capability_behavior.status,
-        tooling_surface: validation_report.tooling_surface.status
+        tooling_surface: validation_report.tooling_surface.status,
+        documentation_surface: validation_report.documentation_surface.status,
+        release_readiness: validation_report.release_readiness.status
       },
       continuity: %{
         seams: TerminalUi.Continuity.seams(),

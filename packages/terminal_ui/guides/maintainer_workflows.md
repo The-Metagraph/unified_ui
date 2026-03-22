@@ -14,6 +14,7 @@ reference surfaces as release-shaping work from the beginning.
 - `mix terminal_ui.inspect styled_degradation_review --format comparison`
 - `mix terminal_ui.validate`
 - `mix terminal_ui.validate --format report`
+- `mix terminal_ui.validate --strict`
 
 ## Workspace Commands
 
@@ -46,3 +47,13 @@ reference surfaces as release-shaping work from the beginning.
    transport, and capability behavior still align.
 5. Keep the package docs and reference helpers in sync with the same change set
    whenever runtime or widget behavior changes.
+
+## Evolution Guardrails
+
+- `terminal_ui` does not redefine authored DSL or canonical IUR contracts.
+- Upstream `UnifiedUi` and `UnifiedIUR` changes should flow through planning,
+  package implementation, and validation together.
+- Runtime changes should preserve one shared native/canonical runtime model,
+  one transport boundary, and one bounded degradation policy.
+- Use `mix terminal_ui.validate --strict` before treating a change as release
+  ready.

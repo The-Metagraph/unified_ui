@@ -30,11 +30,19 @@ defmodule TerminalUi.DocumentationTest do
     assert :form_builder in reference.renderer.supported_kinds
     assert reference.validation.inspect == TerminalUi.Inspect
     assert reference.validation.validate == TerminalUi.Validate
+    assert length(reference.validation.release_gates) == 6
+
+    assert Enum.any?(
+             reference.validation.evolution_rules,
+             &(&1.id == :tooling_and_docs_move_with_surface)
+           )
 
     assert :styled_degradation_review in reference.examples.mixed_ids
 
     assert summary.validation.example_coverage == :pass
     assert summary.validation.transport_validation == :pass
+    assert summary.validation.documentation_surface == :pass
+    assert summary.validation.release_readiness == :pass
     assert summary.documentation.guides == TerminalUi.Tooling.documentation_surface()
     assert TerminalUi.Inspect in summary.documentation.preview_surfaces
     assert "mix terminal_ui.validate" in summary.tooling.mix_tasks
