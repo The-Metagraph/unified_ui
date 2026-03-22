@@ -15,7 +15,9 @@ defmodule WebUi.Tooling do
       :continuity_diagnostics,
       :artifact_export,
       :package_validation,
-      :release_readiness
+      :release_readiness,
+      :documentation_review,
+      :evolution_policy_review
     ]
   end
 

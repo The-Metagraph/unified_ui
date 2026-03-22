@@ -4,6 +4,14 @@ defmodule WebUi.Validate do
   """
 
   @type mode :: :summary | :strict
+  @required_guides [
+    "README.md",
+    "guides/runtime_backbone.md",
+    "guides/native_runtime_and_examples.md",
+    "guides/canonical_rendering_and_transport.md",
+    "guides/styling_and_inspection.md",
+    "guides/maintainer_workflows.md"
+  ]
 
   @spec example_coverage() :: map()
   def example_coverage do
@@ -81,12 +89,85 @@ defmodule WebUi.Validate do
     report(:tooling_surface, checks)
   end
 
+  @spec documentation_surface() :: map()
+  def documentation_surface do
+    missing_docs =
+      @required_guides
+      |> Enum.reject(&File.exists?(Path.join(package_root(), &1)))
+
+    undocumented_guides =
+      @required_guides -- WebUi.Tooling.documentation_surface()
+
+    checks = [
+      check(:guide_files_present, missing_docs == [], %{missing: missing_docs}),
+      check(:tooling_docs_surface_complete, undocumented_guides == [], %{
+        missing: undocumented_guides
+      }),
+      check(:readme_present, File.exists?(Path.join(package_root(), "README.md")), [])
+    ]
+
+    report(:documentation_surface, checks)
+  end
+
+  @spec release_gates() :: [map()]
+  def release_gates do
+    [
+      gate(
+        :example_coverage,
+        "Maintain native, canonical, and mixed example coverage for the package surface.",
+        :example_coverage
+      ),
+      gate(
+        :runtime_behavior,
+        "Keep split-runtime behavior, continuity, and transport flows reviewable and healthy.",
+        :runtime_behavior
+      ),
+      gate(
+        :tooling_surface,
+        "Keep preview, inspection, export, and validation workflows available together.",
+        :tooling_surface
+      ),
+      gate(
+        :documentation_surface,
+        "Keep README and package guides aligned with the implemented package surface.",
+        :documentation_surface
+      )
+    ]
+  end
+
+  @spec evolution_rules() :: [map()]
+  def evolution_rules do
+    [
+      %{
+        id: :new_widget_families_require_examples,
+        description:
+          "New widget families should ship with maintained native, canonical, or mixed examples."
+      },
+      %{
+        id: :renderer_decisions_must_stay_explicit,
+        description:
+          "New widget kinds must either be mapped in the renderer or called out as intentionally unsupported."
+      },
+      %{
+        id: :runtime_capabilities_require_boundary_review,
+        description:
+          "New runtime capabilities should keep Phoenix authority, Elm realization, and transport boundaries explicit."
+      },
+      %{
+        id: :tooling_and_docs_move_with_surface,
+        description:
+          "When the package surface changes, inspection, validation, and documentation should move in the same change set."
+      }
+    ]
+  end
+
   @spec release_readiness(mode()) :: {:ok, map()} | {:error, map()}
   def release_readiness(mode \\ :summary) do
     sections = %{
       example_coverage: example_coverage(),
       runtime_behavior: runtime_behavior(),
-      tooling_surface: tooling_surface()
+      tooling_surface: tooling_surface(),
+      documentation_surface: documentation_surface()
     }
 
     findings =
@@ -94,11 +175,18 @@ defmodule WebUi.Validate do
       |> Map.values()
       |> Enum.flat_map(& &1.findings)
 
+    gates =
+      Enum.map(release_gates(), fn gate ->
+        Map.put(gate, :status, sections[gate.section].status)
+      end)
+
     report = %{
       mode: mode,
       status: if(findings == [], do: :pass, else: :fail),
       findings: findings,
-      sections: sections
+      sections: sections,
+      gates: gates,
+      evolution_rules: evolution_rules()
     }
 
     case {mode, findings} do
@@ -134,7 +222,19 @@ defmodule WebUi.Validate do
     }
   end
 
+  defp gate(id, description, section) do
+    %{
+      id: id,
+      description: description,
+      section: section
+    }
+  end
+
   defp exported?(module, function, arity) do
     Code.ensure_loaded?(module) and Enum.member?(module.__info__(:functions), {function, arity})
+  end
+
+  defp package_root do
+    Path.expand("../..", __DIR__)
   end
 end

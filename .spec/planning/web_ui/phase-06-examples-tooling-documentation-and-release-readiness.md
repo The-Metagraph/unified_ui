@@ -70,15 +70,15 @@ Back to index: [README](./README.md)
       [x] 6.3.2.2 Subtask - Implement package summaries for example coverage, runtime obligations, and validation state.
       [x] 6.3.2.3 Subtask - Keep reference surfaces deterministic and review-friendly so they can support package evolution over time.
 
-  [ ] 6.4 Section - Release Readiness and Evolution Workflow
+  [x] 6.4 Section - Release Readiness and Evolution Workflow
     Implement the release gates and maintainer workflow rules that keep `web_ui` aligned with ecosystem contracts over time.
 
-    [ ] 6.4.1 Task - Implement release-readiness criteria and package gates
+    [x] 6.4.1 Task - Implement release-readiness criteria and package gates
       Define what must be healthy before the package is considered ready to promote or expand.
 
-      [ ] 6.4.1.1 Subtask - Define release gates for native widget coverage, canonical renderer coverage, split-runtime behavior, styling continuity, and transport correctness.
-      [ ] 6.4.1.2 Subtask - Define release gates for maintained examples, documentation freshness, and tooling completeness.
-      [ ] 6.4.1.3 Subtask - Define package evolution rules for adding new widget families or runtime capabilities without collapsing package boundaries.
+      [x] 6.4.1.1 Subtask - Define release gates for native widget coverage, canonical renderer coverage, split-runtime behavior, styling continuity, and transport correctness.
+      [x] 6.4.1.2 Subtask - Define release gates for maintained examples, documentation freshness, and tooling completeness.
+      [x] 6.4.1.3 Subtask - Define package evolution rules for adding new widget families or runtime capabilities without collapsing package boundaries.
 
   [ ] 6.5 Section - Phase 6 Integration Tests
     Validate examples, tooling, documentation, and release-readiness workflows end to end.

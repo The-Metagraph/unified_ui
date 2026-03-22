@@ -30,6 +30,7 @@ defmodule WebUi.Info do
         workflows: WebUi.Tooling.workflows(),
         example_coverage: WebUi.Validate.example_coverage().status,
         runtime_behavior: WebUi.Validate.runtime_behavior().status,
+        documentation_surface: WebUi.Validate.documentation_surface().status,
         release_readiness: release_readiness.status
       },
       examples: %{

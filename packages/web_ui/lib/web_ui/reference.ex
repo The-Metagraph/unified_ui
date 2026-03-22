@@ -110,7 +110,9 @@ defmodule WebUi.Reference do
         inspect: WebUi.Inspect,
         export: WebUi.Export,
         validate: WebUi.Validate,
-        release_readiness_modes: [:summary, :strict]
+        release_readiness_modes: [:summary, :strict],
+        release_gates: WebUi.Validate.release_gates(),
+        evolution_rules: WebUi.Validate.evolution_rules()
       },
       documentation: %{
         guides: WebUi.Tooling.documentation_surface(),

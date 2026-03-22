@@ -51,7 +51,7 @@ defmodule WebUiTest do
              theme: %{default: :default},
              inspection: %{continuity_seams: continuity_seams},
              examples: %{workflows: workflows},
-             validation: %{release_readiness: :pass},
+             validation: %{release_readiness: :pass, documentation_surface: :pass},
              documentation: %{guides: guides}
            } = WebUi.info()
 

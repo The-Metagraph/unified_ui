@@ -29,10 +29,12 @@ defmodule WebUi.ToolingTest do
     coverage = WebUi.Validate.example_coverage()
     runtime = WebUi.Validate.runtime_behavior()
     tooling = WebUi.Validate.tooling_surface()
+    documentation = WebUi.Validate.documentation_surface()
 
     assert coverage.status == :pass
     assert runtime.status == :pass
     assert tooling.status == :pass
+    assert documentation.status == :pass
 
     assert {:ok, summary_report} = WebUi.Validate.release_readiness(:summary)
     assert {:ok, strict_report} = WebUi.Validate.release_readiness(:strict)
@@ -41,5 +43,11 @@ defmodule WebUi.ToolingTest do
     assert strict_report.status == :pass
     assert summary_report.findings == []
     assert strict_report.findings == []
+    assert Enum.all?(summary_report.gates, &(&1.status == :pass))
+
+    assert Enum.any?(
+             summary_report.evolution_rules,
+             &(&1.id == :tooling_and_docs_move_with_surface)
+           )
   end
 end
