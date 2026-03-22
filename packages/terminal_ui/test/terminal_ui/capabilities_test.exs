@@ -31,15 +31,31 @@ defmodule TerminalUi.CapabilitiesTest do
     assert raw.degradation_profile == :rich_terminal
     assert raw.unicode
     assert raw.mouse
+    assert raw.positioning
+    assert raw.canvas
     assert tty.degradation_profile == :fallback_terminal
     refute tty.unicode
     refute tty.mouse
-    assert tty.keyboard_alternatives == [:inline_menu_selection, :ctrl_resize, :arrow_navigation]
+    refute tty.positioning
+    refute tty.canvas
+
+    assert tty.keyboard_alternatives == [
+             :inline_menu_selection,
+             :ctrl_resize,
+             :arrow_navigation,
+             :inline_overlay,
+             :paged_scroll
+           ]
 
     assert :unicode in tty_diagnostics.degraded_capabilities
     assert :mouse in tty_diagnostics.degraded_capabilities
     assert :paste in tty_diagnostics.degraded_capabilities
     assert :color in tty_diagnostics.degraded_capabilities
+    assert :positioning in tty_diagnostics.degraded_capabilities
+    assert :canvas in tty_diagnostics.degraded_capabilities
     assert tty_diagnostics.profile == :fallback_terminal
+    assert tty_diagnostics.fallback_modes.overlay == :inline_overlay
+    assert tty_diagnostics.fallback_modes.scroll == :paged_scroll
+    assert :overlay_presentation in tty_diagnostics.allowed_variation
   end
 end

@@ -3,7 +3,16 @@ defmodule TerminalUi.Widget do
   Native renderer-facing widget representation for `terminal_ui`.
   """
 
-  @type family :: :content | :action | :layout | :input | :navigation | :feedback
+  @type family ::
+          :content
+          | :action
+          | :layout
+          | :input
+          | :navigation
+          | :data
+          | :feedback
+          | :visualization
+          | :operational
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -47,7 +56,12 @@ defmodule TerminalUi.Widget do
         :focusable,
         :binding_key,
         :command,
-        :keyboard_hint
+        :keyboard_hint,
+        :selection_mode,
+        :sort_key,
+        :overlay_role,
+        :capability_profile,
+        :degradation_strategy
       ],
       state: [
         :disabled,
@@ -60,11 +74,27 @@ defmodule TerminalUi.Widget do
         :checked,
         :active,
         :current,
-        :value
+        :value,
+        :severity,
+        :paused,
+        :streaming,
+        :progress,
+        :phase
       ],
-      bindings: [:value, :checked, :selected, :current, :items],
+      bindings: [:value, :checked, :selected, :current, :items, :query, :filters, :selection],
       slots: [:default, :label, :content, :header, :footer, :overlay],
-      styles: [:fg, :bg, :attrs, :border, :padding, :semantic_role, :degradation, :intent],
+      styles: [
+        :fg,
+        :bg,
+        :attrs,
+        :border,
+        :padding,
+        :semantic_role,
+        :degradation,
+        :intent,
+        :overlay_tone,
+        :chart_palette
+      ],
       events: [
         :keypress,
         :submit,
@@ -76,7 +106,12 @@ defmodule TerminalUi.Widget do
         :select,
         :change,
         :toggle,
-        :activate
+        :activate,
+        :sort,
+        :filter,
+        :paginate,
+        :expand,
+        :close
       ]
     }
   end
@@ -142,7 +177,25 @@ defmodule TerminalUi.Widget do
   def family_for(kind) when kind in [:button, :toggle, :link, :command], do: :action
   def family_for(kind) when kind in [:text_input, :checkbox, :radio_group, :select], do: :input
   def family_for(kind) when kind in [:menu, :tabs, :breadcrumbs, :list], do: :navigation
-  def family_for(kind) when kind in [:dialog], do: :feedback
+  def family_for(kind) when kind in [:table, :tree_view, :inspector, :markdown_viewer], do: :data
+
+  def family_for(kind) when kind in [:dialog, :toast, :alert_dialog, :progress, :status],
+    do: :feedback
+
+  def family_for(kind)
+      when kind in [:gauge, :sparkline, :bar_chart, :line_chart, :timeline, :canvas],
+      do: :visualization
+
+  def family_for(kind)
+      when kind in [
+             :log_viewer,
+             :stream_widget,
+             :cluster_dashboard,
+             :command_palette,
+             :process_monitor,
+             :supervision_tree_viewer
+           ], do: :operational
+
   def family_for(_kind), do: :content
 
   defp normalize_map(nil), do: %{}

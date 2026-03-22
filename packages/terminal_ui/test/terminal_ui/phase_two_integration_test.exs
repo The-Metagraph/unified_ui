@@ -27,13 +27,13 @@ defmodule TerminalUi.PhaseTwoIntegrationTest do
   end
 
   test "unsupported foundational widgets and invalid canonical bindings fail with deterministic diagnostics" do
-    unsupported = Element.new(:widget, :table, id: "unsupported-table")
+    unsupported = Element.new(:widget, :calendar, id: "unsupported-calendar")
 
     assert {:error, %TerminalUi.Runtime.Error{} = unsupported_error} =
              TerminalUi.Runtime.mount_iur_screen(unsupported, backend_mode: :raw)
 
     assert unsupported_error.reason == :unsupported_canonical_construct
-    assert unsupported_error.details.kind == :table
+    assert unsupported_error.details.kind == :calendar
 
     invalid_bindings =
       Element.new(:widget, :text_input,
@@ -55,9 +55,9 @@ defmodule TerminalUi.PhaseTwoIntegrationTest do
     assert comparison.parity.focus_order_match?
     assert comparison.parity.cell_surface_kinds_match?
     assert comparison.parity.shared_runtime_backbone?
-    assert reference.examples.native_ids == [:native_foundational]
-    assert reference.examples.canonical_ids == [:canonical_foundational]
-    assert reference.examples.comparison_ids == [:foundational_continuity]
-    assert summary.examples.comparison_ids == [:foundational_continuity]
+    assert :native_foundational in reference.examples.native_ids
+    assert :canonical_foundational in reference.examples.canonical_ids
+    assert :foundational_continuity in reference.examples.comparison_ids
+    assert :foundational_continuity in summary.examples.comparison_ids
   end
 end

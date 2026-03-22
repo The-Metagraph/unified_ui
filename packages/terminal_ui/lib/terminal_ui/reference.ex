@@ -30,8 +30,11 @@ defmodule TerminalUi.Reference do
       capabilities: %{
         categories: TerminalUi.Capabilities.categories(),
         profiles: TerminalUi.Capabilities.profiles(),
-        contract: TerminalUi.Capabilities.capability_contract()
+        contract: TerminalUi.Capabilities.capability_contract(),
+        diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      layout: %{kinds: TerminalUi.Layout.kinds(), module: TerminalUi.Layout},
+      layer: %{kinds: TerminalUi.Layer.kinds(), module: TerminalUi.Layer},
       renderer: %{
         accepts: TerminalUi.Renderer.accepts(),
         responsibilities: TerminalUi.Renderer.responsibilities(),
@@ -41,7 +44,10 @@ defmodule TerminalUi.Reference do
       examples: %{
         native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
         canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),
-        comparison_ids: Map.keys(TerminalUi.Examples.comparison_examples()),
+        comparison_ids:
+          TerminalUi.Examples.comparison_examples()
+          |> Map.keys()
+          |> Enum.sort_by(&to_string/1),
         coverage_matrix: TerminalUi.Examples.coverage_matrix()
       },
       documentation: %{guides: TerminalUi.Tooling.documentation_surface()},

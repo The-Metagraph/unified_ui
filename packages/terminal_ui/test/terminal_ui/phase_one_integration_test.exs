@@ -9,6 +9,8 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert TerminalUi.runtime() == TerminalUi.Runtime
     assert TerminalUi.backend() == TerminalUi.Backend
     assert TerminalUi.capabilities() == TerminalUi.Capabilities
+    assert TerminalUi.layout() == TerminalUi.Layout
+    assert TerminalUi.layer() == TerminalUi.Layer
     assert TerminalUi.renderer() == TerminalUi.Renderer
     assert TerminalUi.transport() == TerminalUi.Transport
     assert TerminalUi.tooling() == TerminalUi.Tooling
@@ -58,13 +60,13 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert invalid_backend_error.reason == :unsupported_backend_mode
     assert invalid_backend_error.details.backend_mode == :serial
 
-    element = Element.new(:widget, :table, id: "status")
+    element = Element.new(:widget, :calendar, id: "status")
 
     assert {:error, %Error{} = canonical_error} =
              TerminalUi.Runtime.mount_iur_screen(element, backend_mode: :raw)
 
     assert canonical_error.reason == :unsupported_canonical_construct
-    assert canonical_error.details.kind == :table
+    assert canonical_error.details.kind == :calendar
   end
 
   test "reference and info helpers expose runtime, capability, and backend seams without renderer coverage" do
@@ -72,18 +74,23 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     summary = TerminalUi.info()
 
     assert reference.widgets.validation_state.direct_native_scaffold == :ready
-    assert reference.runtime.validation_state == :foundational_realization_ready
+    assert reference.runtime.validation_state == :advanced_runtime_ready
     assert reference.backend.modes == [:raw, :tty]
     assert reference.transport.modes == [:native_local, :canonical_boundary]
     assert :capability_snapshot in reference.runtime.capabilities
+    assert :advanced_display_systems in reference.runtime.capabilities
     assert :foundational_canonical_mapping in reference.renderer.responsibilities
-    assert reference.examples.native_ids == [:native_foundational]
+    assert :native_foundational in reference.examples.native_ids
     assert :rich_terminal in reference.capabilities.profiles
+    assert reference.layout.kinds == TerminalUi.Layout.kinds()
+    assert reference.layer.kinds == TerminalUi.Layer.kinds()
 
     assert summary.package == :terminal_ui
-    assert summary.runtime.validation_state == :foundational_realization_ready
+    assert summary.runtime.validation_state == :advanced_runtime_ready
     assert :layout in summary.widgets.families
-    assert summary.examples.comparison_ids == [:foundational_continuity]
+    assert summary.layout.kinds == TerminalUi.Layout.kinds()
+    assert summary.layer.kinds == TerminalUi.Layer.kinds()
+    assert :foundational_continuity in summary.examples.comparison_ids
     assert :fallback_terminal in summary.capabilities.profiles
     assert :runtime_review in summary.tooling.workflows
   end

@@ -3,12 +3,12 @@ defmodule TerminalUi.Runtime do
   Shared runtime entrypoint for native and canonical `terminal_ui` screens.
   """
 
-  alias TerminalUi.Backend
+  alias TerminalUi.{Backend, Layer, Layout}
   alias TerminalUi.Renderer
   alias TerminalUi.Runtime.{Boot, Error, EventLoop, Realization, Screen, State}
   alias UnifiedIUR.Element
 
-  @type validation_state :: :foundational_realization_ready
+  @type validation_state :: :foundational_realization_ready | :advanced_runtime_ready
 
   @spec modules() :: [module()]
   def modules do
@@ -19,7 +19,9 @@ defmodule TerminalUi.Runtime do
       Screen,
       Realization,
       State,
-      Error
+      Error,
+      Layout,
+      Layer
     ]
   end
 
@@ -33,6 +35,9 @@ defmodule TerminalUi.Runtime do
       :event_loop_scaffold,
       :screen_composition,
       :shared_realization_model,
+      :advanced_display_systems,
+      :layered_runtime_behavior,
+      :capability_fallbacks,
       :canonical_foundational_rendering,
       :focus_traversal,
       :binding_surface,
@@ -41,13 +46,14 @@ defmodule TerminalUi.Runtime do
   end
 
   @spec validation_state() :: validation_state()
-  def validation_state, do: :foundational_realization_ready
+  def validation_state, do: :advanced_runtime_ready
 
   @spec assumptions() :: map()
   def assumptions do
     %{
       term_ui_backed: true,
       shared_runtime_for_native_and_canonical: true,
+      layered_runtime_shared: true,
       capability_aware: true,
       keyboard_first: true,
       renderer_boot_path_present: true

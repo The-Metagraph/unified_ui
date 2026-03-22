@@ -14,8 +14,10 @@ defmodule TerminalUi.Renderer do
     [
       :accept_canonical_iur,
       :foundational_canonical_mapping,
+      :advanced_canonical_mapping,
       :native_widget_reuse,
-      :capability_aware_realization
+      :capability_aware_realization,
+      :layered_meaning_preservation
     ]
   end
 

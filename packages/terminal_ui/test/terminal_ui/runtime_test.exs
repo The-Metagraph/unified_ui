@@ -10,8 +10,12 @@ defmodule TerminalUi.RuntimeTest do
     assert TerminalUi.Runtime.Screen in Runtime.modules()
     assert TerminalUi.Runtime.Realization in Runtime.modules()
     assert TerminalUi.Runtime.State in Runtime.modules()
-    assert Runtime.validation_state() == :foundational_realization_ready
+    assert TerminalUi.Layout in Runtime.modules()
+    assert TerminalUi.Layer in Runtime.modules()
+    assert Runtime.validation_state() == :advanced_runtime_ready
     assert :shared_realization_model in Runtime.capabilities()
+    assert :advanced_display_systems in Runtime.capabilities()
+    assert :layered_runtime_behavior in Runtime.capabilities()
     assert :canonical_foundational_rendering in Runtime.capabilities()
   end
 
@@ -34,6 +38,7 @@ defmodule TerminalUi.RuntimeTest do
     assert runtime_state.event_loop.input_dispatch == :scaffold_ready
     assert runtime_state.screen.layout.composition == :foundational_shared_runtime
     assert runtime_state.realization.validation_state == :foundational_ready
+    assert runtime_state.validation_state == :foundational_realization_ready
 
     assert runtime_state.realization.cell_surface == [
              %{widget_id: "welcome_text", content: "Hello", kind: :text, family: :content}
@@ -46,7 +51,7 @@ defmodule TerminalUi.RuntimeTest do
     assert {:error, %TerminalUi.Runtime.Error{reason: :invalid_screen}} =
              Runtime.mount_native_screen(%{id: :broken, title: "Broken"})
 
-    element = Element.new(:widget, :table, id: :hello, attributes: %{})
+    element = Element.new(:widget, :calendar, id: :hello, attributes: %{})
 
     assert {:error, %TerminalUi.Runtime.Error{reason: :unsupported_canonical_construct}} =
              Runtime.mount_iur_screen(element)
