@@ -65,6 +65,8 @@ jobs:
         include:
           - package: unified_iur
             path: packages/unified_iur
+          - package: unified_ui
+            path: packages/unified-ui
           - package: live_ui
             path: packages/live_ui
           - package: web_ui
