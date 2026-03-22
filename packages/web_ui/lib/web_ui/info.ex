@@ -5,6 +5,9 @@ defmodule WebUi.Info do
 
   @spec package_summary() :: map()
   def package_summary do
+    coverage_matrix = WebUi.Examples.coverage_matrix()
+    {:ok, release_readiness} = WebUi.Validate.release_readiness(:summary)
+
     %{
       package: :web_ui,
       namespace: WebUi,
@@ -26,13 +29,23 @@ defmodule WebUi.Info do
       validation: %{
         workflows: WebUi.Tooling.workflows(),
         example_coverage: WebUi.Validate.example_coverage().status,
-        runtime_behavior: WebUi.Validate.runtime_behavior().status
+        runtime_behavior: WebUi.Validate.runtime_behavior().status,
+        release_readiness: release_readiness.status
+      },
+      examples: %{
+        total: length(WebUi.Examples.catalog()),
+        categories: coverage_matrix.categories |> Map.keys() |> Enum.sort(),
+        workflows: coverage_matrix.workflows |> Map.keys() |> Enum.sort(),
+        parity_groups: coverage_matrix.parity_groups |> Map.keys() |> Enum.sort()
       },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         mix_tasks: WebUi.Tooling.mix_tasks()
       },
-      documentation: WebUi.Tooling.documentation_surface()
+      documentation: %{
+        guides: WebUi.Tooling.documentation_surface(),
+        preview_surfaces: WebUi.Tooling.preview_surfaces()
+      }
     }
   end
 

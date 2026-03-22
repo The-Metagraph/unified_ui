@@ -53,22 +53,22 @@ Back to index: [README](./README.md)
       [x] 6.2.2.2 Subtask - Implement validation for Phoenix runtime behavior, Elm frontend behavior, and boundary event translation.
       [x] 6.2.2.3 Subtask - Implement strict release-readiness modes that fail on missing examples, stale coverage, or inconsistent package diagnostics.
 
-  [ ] 6.3 Section - Documentation and Package Reference Surfaces
+  [x] 6.3 Section - Documentation and Package Reference Surfaces
     Implement the package documentation that explains the runtime split, widget surface, renderer entrypoints, and transport model.
 
-    [ ] 6.3.1 Task - Implement package guides and reference documentation
+    [x] 6.3.1 Task - Implement package guides and reference documentation
       Document how maintainers and integrators understand the package structure, widget model, renderer entrypoints, and split runtime.
 
-      [ ] 6.3.1.1 Subtask - Write package guides for runtime backbone, native widgets, canonical rendering, transport, and styling.
-      [ ] 6.3.1.2 Subtask - Document the Phoenix server runtime, Elm frontend runtime, and the boundary between them as first-class package behavior.
-      [ ] 6.3.1.3 Subtask - Document package-facing reference surfaces, maintainer commands, and expected review artifacts.
+      [x] 6.3.1.1 Subtask - Write package guides for runtime backbone, native widgets, canonical rendering, transport, and styling.
+      [x] 6.3.1.2 Subtask - Document the Phoenix server runtime, Elm frontend runtime, and the boundary between them as first-class package behavior.
+      [x] 6.3.1.3 Subtask - Document package-facing reference surfaces, maintainer commands, and expected review artifacts.
 
-    [ ] 6.3.2 Task - Implement package reference summaries
+    [x] 6.3.2 Task - Implement package reference summaries
       Provide durable package reference helpers that summarize the current native, canonical, and tooling surface.
 
-      [ ] 6.3.2.1 Subtask - Implement package summaries for supported widget families, display systems, styling capabilities, and transport integration points.
-      [ ] 6.3.2.2 Subtask - Implement package summaries for example coverage, runtime obligations, and validation state.
-      [ ] 6.3.2.3 Subtask - Keep reference surfaces deterministic and review-friendly so they can support package evolution over time.
+      [x] 6.3.2.1 Subtask - Implement package summaries for supported widget families, display systems, styling capabilities, and transport integration points.
+      [x] 6.3.2.2 Subtask - Implement package summaries for example coverage, runtime obligations, and validation state.
+      [x] 6.3.2.3 Subtask - Keep reference surfaces deterministic and review-friendly so they can support package evolution over time.
 
   [ ] 6.4 Section - Release Readiness and Evolution Workflow
     Implement the release gates and maintainer workflow rules that keep `web_ui` aligned with ecosystem contracts over time.

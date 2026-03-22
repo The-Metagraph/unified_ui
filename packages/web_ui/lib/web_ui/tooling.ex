@@ -37,7 +37,14 @@ defmodule WebUi.Tooling do
 
   @spec mix_tasks() :: [String.t()]
   def mix_tasks do
-    ["mix deps.get", "mix test", "mix docs", "mix compile"]
+    [
+      "mix deps.get",
+      "mix compile",
+      "mix test",
+      "mix docs",
+      "mix spec.plancheck web_ui",
+      "mix spec.compliance web_ui"
+    ]
   end
 
   @spec documentation_surface() :: [String.t()]
@@ -47,6 +54,7 @@ defmodule WebUi.Tooling do
       "guides/runtime_backbone.md",
       "guides/native_runtime_and_examples.md",
       "guides/canonical_rendering_and_transport.md",
+      "guides/styling_and_inspection.md",
       "guides/maintainer_workflows.md"
     ]
   end

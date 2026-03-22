@@ -10,7 +10,7 @@ defmodule WebUi.MixProject do
       version: @version,
       elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
-      description: "Phoenix-and-Elm runtime scaffold for the unified ecosystem.",
+      description: "Phoenix-and-Elm runtime library for the unified web target.",
       deps: deps(),
       docs: docs(),
       package: package()
@@ -39,6 +39,7 @@ defmodule WebUi.MixProject do
         "guides/runtime_backbone.md",
         "guides/native_runtime_and_examples.md",
         "guides/canonical_rendering_and_transport.md",
+        "guides/styling_and_inspection.md",
         "guides/maintainer_workflows.md"
       ],
       source_ref: "main",

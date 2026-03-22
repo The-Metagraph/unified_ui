@@ -112,12 +112,22 @@ defmodule WebUi.Reference do
         validate: WebUi.Validate,
         release_readiness_modes: [:summary, :strict]
       },
+      documentation: %{
+        guides: WebUi.Tooling.documentation_surface(),
+        maintainer_commands: WebUi.Tooling.mix_tasks()
+      },
       tooling: %{
         workflows: WebUi.Tooling.workflows(),
         preview_surfaces: WebUi.Tooling.preview_surfaces(),
         documentation: WebUi.Tooling.documentation_surface()
       },
-      examples: Map.keys(WebUi.Examples.comparison_examples()),
+      examples: %{
+        catalog: WebUi.Examples.catalog(),
+        native_ids: Enum.map(WebUi.Examples.native_examples(), & &1.id),
+        canonical_ids: Enum.map(WebUi.Examples.canonical_examples(), & &1.id),
+        mixed_ids: Enum.map(WebUi.Examples.mixed_examples(), & &1.id),
+        coverage_matrix: WebUi.Examples.coverage_matrix()
+      },
       responsibilities: responsibilities()
     }
   end

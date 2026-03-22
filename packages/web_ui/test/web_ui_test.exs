@@ -27,7 +27,9 @@ defmodule WebUiTest do
              transport: %{modes: [:native_local, :canonical_boundary]},
              style: %{hooks: style_hooks},
              theme: %{catalog: theme_catalog},
-             inspection: %{helpers: inspection_helpers}
+             inspection: %{helpers: inspection_helpers},
+             documentation: %{guides: guides},
+             examples: %{native_ids: native_ids}
            } = WebUi.reference()
 
     assert :content in families
@@ -38,6 +40,8 @@ defmodule WebUiTest do
     assert :theme_tokens in style_hooks
     assert :default in theme_catalog
     assert :runtime_snapshot in inspection_helpers
+    assert "guides/styling_and_inspection.md" in guides
+    assert :native_styling in native_ids
   end
 
   test "package summary reports package identity" do
@@ -45,10 +49,15 @@ defmodule WebUiTest do
              package: :web_ui,
              namespace: WebUi,
              theme: %{default: :default},
-             inspection: %{continuity_seams: continuity_seams}
+             inspection: %{continuity_seams: continuity_seams},
+             examples: %{workflows: workflows},
+             validation: %{release_readiness: :pass},
+             documentation: %{guides: guides}
            } = WebUi.info()
 
     assert :server_style_resolution in continuity_seams
+    assert :styling in workflows
+    assert "guides/styling_and_inspection.md" in guides
   end
 
   test "package exposes maintained native and canonical examples" do

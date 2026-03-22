@@ -38,7 +38,9 @@ defmodule WebUi.StyleRealizationTest do
             style_hooks: [:theme_tokens],
             theme_tokens: %{button: [:button, :primary]}
           )
-        ], theme: :midnight)
+        ],
+        theme: :midnight
+      )
 
     assert {:ok, state} = WebUi.Runtime.mount_native_screen(screen)
 
