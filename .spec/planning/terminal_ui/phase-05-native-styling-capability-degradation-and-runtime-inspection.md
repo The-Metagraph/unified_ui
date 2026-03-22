@@ -43,25 +43,25 @@ Back to index: [README](./README.md)
       [x] 5.1.2.2 Subtask - Implement local style inheritance, merging, and override rules for runtime realization.
       [x] 5.1.2.3 Subtask - Keep canonical and direct-native styling behavior aligned through one shared style model.
 
-  [ ] 5.2 Section - Capability Detection and Degradation Workflows
+  [x] 5.2 Section - Capability Detection and Degradation Workflows
     Implement the capability-aware behavior that keeps richer and limited
     terminal environments inside one shared semantic model.
 
-    [ ] 5.2.1 Task - Implement shared-runtime versus capability-module boundaries
+    [x] 5.2.1 Task - Implement shared-runtime versus capability-module boundaries
       Keep capability variation explicit and bounded without collapsing shared
       runtime behavior into backend-specific modules.
 
-      [ ] 5.2.1.1 Subtask - Implement capability modules for backend selection, Unicode-versus-ASCII behavior, color-depth degradation, and mouse availability.
-      [ ] 5.2.1.2 Subtask - Keep shared widget realization, transport behavior, and style semantics outside the capability-specific modules.
-      [ ] 5.2.1.3 Subtask - Define diagnostics for capability integration mismatches that would otherwise drift into shared runtime logic.
+      [x] 5.2.1.1 Subtask - Implement capability modules for backend selection, Unicode-versus-ASCII behavior, color-depth degradation, and mouse availability.
+      [x] 5.2.1.2 Subtask - Keep shared widget realization, transport behavior, and style semantics outside the capability-specific modules.
+      [x] 5.2.1.3 Subtask - Define diagnostics for capability integration mismatches that would otherwise drift into shared runtime logic.
 
-    [ ] 5.2.2 Task - Implement bounded capability variation within shared semantics
+    [x] 5.2.2 Task - Implement bounded capability variation within shared semantics
       Allow capability-specific behavior where terminal constraints demand it
       while preserving shared runtime, transport, and renderer meaning.
 
-      [ ] 5.2.2.1 Subtask - Define where richer and limited terminal behavior may diverge without changing widget or transport semantics.
-      [ ] 5.2.2.2 Subtask - Preserve shared runtime, canonical rendering, and input-normalization semantics underneath capability-specific behavior.
-      [ ] 5.2.2.3 Subtask - Add continuity diagnostics for capability-specific behavior that risks semantic drift.
+      [x] 5.2.2.1 Subtask - Define where richer and limited terminal behavior may diverge without changing widget or transport semantics.
+      [x] 5.2.2.2 Subtask - Preserve shared runtime, canonical rendering, and input-normalization semantics underneath capability-specific behavior.
+      [x] 5.2.2.3 Subtask - Add continuity diagnostics for capability-specific behavior that risks semantic drift.
 
   [ ] 5.3 Section - Runtime Inspection and Continuity Diagnostics
     Implement tooling surfaces that help maintainers inspect styling, runtime

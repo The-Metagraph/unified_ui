@@ -7,6 +7,7 @@ defmodule TerminalUiTest do
              :runtime,
              :backend,
              :capabilities,
+             :degradation,
              :style,
              :theme,
              :layout,
@@ -23,6 +24,7 @@ defmodule TerminalUiTest do
              runtime: %{assumptions: runtime_assumptions, modules: runtime_modules},
              backend: %{modes: backend_modes},
              capabilities: %{categories: capability_categories},
+             degradation: %{modules: degradation_modules},
              style: %{hooks: style_hooks},
              theme: %{catalog: theme_catalog},
              layout: %{kinds: layout_kinds, module: TerminalUi.Layout},
@@ -45,6 +47,7 @@ defmodule TerminalUiTest do
     assert TerminalUi.Runtime.Boot in runtime_modules
     assert backend_modes == [:raw, :tty]
     assert :unicode in capability_categories
+    assert TerminalUi.Degradation in degradation_modules
     assert :theme_tokens in style_hooks
     assert :high_contrast in theme_catalog
     assert :viewport in layout_kinds
@@ -74,6 +77,7 @@ defmodule TerminalUiTest do
              layout: %{kinds: layout_kinds},
              layer: %{kinds: layer_kinds},
              widgets: %{families: families},
+             degradation: %{diagnostics: degradation_diagnostics},
              style: %{primitives: style_primitives},
              theme: %{catalog: theme_catalog, default: default_theme},
              examples: %{comparison_ids: comparison_ids},
@@ -87,6 +91,7 @@ defmodule TerminalUiTest do
     assert :colors in style_primitives
     assert :high_contrast in theme_catalog
     assert default_theme == :terminal_default
+    assert degradation_diagnostics.plan.glyph_set == :unicode
     assert :canvas_surface in layout_kinds
     assert :context_menu in layer_kinds
 

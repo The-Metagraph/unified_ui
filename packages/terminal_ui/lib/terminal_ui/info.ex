@@ -29,6 +29,10 @@ defmodule TerminalUi.Info do
         profiles: TerminalUi.Capabilities.profiles(),
         diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      degradation: %{
+        profile: TerminalUi.Capabilities.snapshot().degradation_profile,
+        diagnostics: TerminalUi.Degradation.diagnostics()
+      },
       style: %{
         primitives: Map.keys(TerminalUi.Style.primitives()),
         hooks: TerminalUi.Style.widget_style_hooks()

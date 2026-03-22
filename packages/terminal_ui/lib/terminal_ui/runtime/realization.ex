@@ -3,7 +3,7 @@ defmodule TerminalUi.Runtime.Realization do
   Shared terminal realization for direct-native and canonical widget trees.
   """
 
-  alias TerminalUi.{Capabilities, Layout, Layer}
+  alias TerminalUi.{Capabilities, Degradation, Layout, Layer}
   alias TerminalUi.Runtime.{Error, Screen, StyleResolver}
   alias TerminalUi.Widget
 
@@ -207,30 +207,7 @@ defmodule TerminalUi.Runtime.Realization do
   end
 
   defp degradation_for(widget, opts) do
-    backend_mode = Keyword.get(opts, :backend_mode, :raw)
-
-    explicit =
-      Map.get(widget.metadata, :degradation_strategy) || Map.get(widget.metadata, :degradation)
-
-    cond do
-      not is_nil(explicit) and backend_mode == :tty ->
-        explicit
-
-      backend_mode == :tty and widget.kind in [:overlay, :popover, :dialog, :toast, :alert_dialog] ->
-        :inline_overlay
-
-      backend_mode == :tty and widget.kind in [:context_menu, :command_palette] ->
-        :inline_menu_selection
-
-      backend_mode == :tty and widget.kind in [:canvas, :canvas_surface, :absolute, :positioned] ->
-        :ascii_canvas
-
-      backend_mode == :tty and widget.kind in [:viewport, :scroll_region] ->
-        :paged_scroll
-
-      true ->
-        nil
-    end
+    Degradation.resolve(widget, opts)
   end
 
   defp layer_role_for(widget) do

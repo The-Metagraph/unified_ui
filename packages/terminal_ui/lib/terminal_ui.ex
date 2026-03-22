@@ -6,6 +6,7 @@ defmodule TerminalUi do
   alias TerminalUi.{
     Backend,
     Capabilities,
+    Degradation,
     Examples,
     Info,
     Style,
@@ -25,6 +26,7 @@ defmodule TerminalUi do
           | :runtime
           | :backend
           | :capabilities
+          | :degradation
           | :style
           | :theme
           | :layout
@@ -40,6 +42,7 @@ defmodule TerminalUi do
       :runtime,
       :backend,
       :capabilities,
+      :degradation,
       :style,
       :theme,
       :layout,
@@ -61,6 +64,9 @@ defmodule TerminalUi do
 
   @spec capabilities() :: module()
   def capabilities, do: Capabilities
+
+  @spec degradation() :: module()
+  def degradation, do: Degradation
 
   @spec style() :: module()
   def style, do: Style

@@ -29,11 +29,15 @@ defmodule TerminalUi.CapabilitiesTest do
     tty_diagnostics = TerminalUi.Capabilities.diagnostics(backend_mode: :tty)
 
     assert raw.degradation_profile == :rich_terminal
+    assert raw.color_mode == :rich_color
+    assert raw.glyph_set == :unicode
     assert raw.unicode
     assert raw.mouse
     assert raw.positioning
     assert raw.canvas
     assert tty.degradation_profile == :fallback_terminal
+    assert tty.color_mode == :limited_color
+    assert tty.glyph_set == :ascii
     refute tty.unicode
     refute tty.mouse
     refute tty.positioning
@@ -57,5 +61,7 @@ defmodule TerminalUi.CapabilitiesTest do
     assert tty_diagnostics.fallback_modes.overlay == :inline_overlay
     assert tty_diagnostics.fallback_modes.scroll == :paged_scroll
     assert :overlay_presentation in tty_diagnostics.allowed_variation
+    assert tty_diagnostics.degradation_plan.canvas_mode == :ascii_canvas
+    assert TerminalUi.Degradation in tty_diagnostics.module_boundaries.capability_modules
   end
 end

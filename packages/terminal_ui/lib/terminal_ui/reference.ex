@@ -33,6 +33,11 @@ defmodule TerminalUi.Reference do
         contract: TerminalUi.Capabilities.capability_contract(),
         diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      degradation: %{
+        modules: TerminalUi.Degradation.modules(),
+        responsibilities: TerminalUi.Degradation.responsibilities(),
+        diagnostics: TerminalUi.Degradation.diagnostics()
+      },
       style: %{
         primitives: TerminalUi.Style.primitives(),
         hooks: TerminalUi.Style.widget_style_hooks(),

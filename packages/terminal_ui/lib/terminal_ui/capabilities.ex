@@ -19,6 +19,9 @@ defmodule TerminalUi.Capabilities do
     ]
   end
 
+  @spec modules() :: [module()]
+  def modules, do: [__MODULE__, TerminalUi.Degradation]
+
   @spec snapshot(keyword()) :: map()
   def snapshot(opts \\ []) do
     backend_mode = Keyword.get(opts, :backend_mode, :raw)
@@ -28,7 +31,9 @@ defmodule TerminalUi.Capabilities do
     %{
       backend_mode: backend_mode,
       color_depth: color_depth_for(backend_mode),
+      color_mode: color_mode_for(backend_mode),
       unicode: backend_mode == :raw,
+      glyph_set: glyph_set_for(backend_mode),
       mouse: backend_mode == :raw,
       paste: backend_mode == :raw,
       resize: true,
@@ -47,6 +52,12 @@ defmodule TerminalUi.Capabilities do
   def profiles do
     [:rich_terminal, :fallback_terminal]
   end
+
+  @spec color_modes() :: [atom()]
+  def color_modes, do: [:rich_color, :limited_color]
+
+  @spec glyph_modes() :: [atom()]
+  def glyph_modes, do: [:unicode, :ascii]
 
   @spec degradation_profile(atom()) :: atom()
   def degradation_profile(:raw), do: :rich_terminal
@@ -68,7 +79,12 @@ defmodule TerminalUi.Capabilities do
       keyboard_alternatives: snapshot.keyboard_alternatives,
       supported_categories: Enum.reject(categories(), &(&1 in degraded_capabilities(snapshot))),
       fallback_modes: fallback_modes(snapshot),
-      allowed_variation: allowed_variation(snapshot)
+      allowed_variation: allowed_variation(snapshot),
+      degradation_plan: TerminalUi.Degradation.plan(snapshot),
+      module_boundaries: %{
+        shared_runtime: [:runtime, :renderer, :transport],
+        capability_modules: [TerminalUi.Capabilities, TerminalUi.Degradation]
+      }
     }
   end
 
@@ -77,12 +93,23 @@ defmodule TerminalUi.Capabilities do
     %{
       required_categories: [:backend, :color, :unicode, :resize, :terminal],
       optional_categories: [:mouse, :paste, :layering, :positioning, :canvas],
-      degradation_profiles: profiles()
+      degradation_profiles: profiles(),
+      bounded_variation: [:overlay_presentation, :positioned_canvas_rendering, :glyph_fallback]
     }
   end
 
+  @spec fallback_modes(map()) :: map()
+  def fallback_modes(snapshot), do: do_fallback_modes(snapshot)
+
+  @spec allowed_variation(map()) :: [atom()]
+  def allowed_variation(snapshot), do: do_allowed_variation(snapshot)
+
   defp color_depth_for(:raw), do: :true_color
   defp color_depth_for(:tty), do: :ansi16
+  defp color_mode_for(:raw), do: :rich_color
+  defp color_mode_for(:tty), do: :limited_color
+  defp glyph_set_for(:raw), do: :unicode
+  defp glyph_set_for(:tty), do: :ascii
 
   defp degraded_capabilities(snapshot) do
     []
@@ -94,7 +121,7 @@ defmodule TerminalUi.Capabilities do
     |> maybe_add(:canvas, not snapshot.canvas)
   end
 
-  defp fallback_modes(snapshot) do
+  defp do_fallback_modes(snapshot) do
     %{}
     |> maybe_put(:overlay, if(snapshot.backend_mode == :tty, do: :inline_overlay))
     |> maybe_put(:menu, if(snapshot.backend_mode == :tty, do: :inline_menu_selection))
@@ -102,9 +129,14 @@ defmodule TerminalUi.Capabilities do
     |> maybe_put(:scroll, if(snapshot.backend_mode == :tty, do: :paged_scroll))
   end
 
-  defp allowed_variation(snapshot) do
+  defp do_allowed_variation(snapshot) do
     if snapshot.backend_mode == :tty do
-      [:overlay_presentation, :positioned_canvas_rendering, :context_menu_presentation]
+      [
+        :overlay_presentation,
+        :positioned_canvas_rendering,
+        :context_menu_presentation,
+        :glyph_fallback
+      ]
     else
       []
     end
