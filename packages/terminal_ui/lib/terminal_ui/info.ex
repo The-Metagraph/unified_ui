@@ -5,6 +5,8 @@ defmodule TerminalUi.Info do
 
   @spec package_summary() :: map()
   def package_summary do
+    coverage_matrix = TerminalUi.Examples.coverage_matrix()
+
     %{
       package: :terminal_ui,
       namespace: TerminalUi,
@@ -25,6 +27,13 @@ defmodule TerminalUi.Info do
         categories: TerminalUi.Capabilities.categories(),
         profiles: TerminalUi.Capabilities.profiles()
       },
+      examples: %{
+        native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
+        canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),
+        comparison_ids: Map.keys(TerminalUi.Examples.comparison_examples()),
+        categories: coverage_matrix.categories |> Map.keys() |> Enum.sort(),
+        workflows: coverage_matrix.workflows |> Map.keys() |> Enum.sort()
+      },
       documentation: %{guides: TerminalUi.Tooling.documentation_surface()},
       tooling: %{workflows: TerminalUi.Tooling.workflows()}
     }
@@ -38,6 +47,7 @@ defmodule TerminalUi.Info do
       kind: widget.kind,
       metadata_keys: Map.keys(widget.metadata),
       state_keys: Map.keys(widget.state),
+      binding_keys: Map.keys(widget.bindings),
       slots: widget.slots,
       event_keys: Map.keys(widget.events),
       style_keys: Map.keys(widget.styles)

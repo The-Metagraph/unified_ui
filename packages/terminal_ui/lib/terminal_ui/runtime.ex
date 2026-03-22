@@ -5,10 +5,10 @@ defmodule TerminalUi.Runtime do
 
   alias TerminalUi.Backend
   alias TerminalUi.Renderer
-  alias TerminalUi.Runtime.{Boot, Error, EventLoop, State}
+  alias TerminalUi.Runtime.{Boot, Error, EventLoop, Realization, Screen, State}
   alias UnifiedIUR.Element
 
-  @type validation_state :: :backbone_ready
+  @type validation_state :: :foundational_realization_ready
 
   @spec modules() :: [module()]
   def modules do
@@ -16,6 +16,8 @@ defmodule TerminalUi.Runtime do
       __MODULE__,
       Boot,
       EventLoop,
+      Screen,
+      Realization,
       State,
       Error
     ]
@@ -29,13 +31,17 @@ defmodule TerminalUi.Runtime do
       :capability_snapshot,
       :backend_selection,
       :event_loop_scaffold,
-      :renderer_entrypoint_placeholder,
+      :screen_composition,
+      :shared_realization_model,
+      :canonical_foundational_rendering,
+      :focus_traversal,
+      :binding_surface,
       :deterministic_runtime_errors
     ]
   end
 
   @spec validation_state() :: validation_state()
-  def validation_state, do: :backbone_ready
+  def validation_state, do: :foundational_realization_ready
 
   @spec assumptions() :: map()
   def assumptions do

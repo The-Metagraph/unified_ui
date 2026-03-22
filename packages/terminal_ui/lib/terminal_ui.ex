@@ -6,6 +6,7 @@ defmodule TerminalUi do
   alias TerminalUi.{
     Backend,
     Capabilities,
+    Examples,
     Info,
     Reference,
     Renderer,
@@ -49,6 +50,9 @@ defmodule TerminalUi do
 
   @spec tooling() :: module()
   def tooling, do: Tooling
+
+  @spec examples() :: module()
+  def examples, do: Examples
 
   @spec reference() :: map()
   def reference, do: Reference.package_reference()

@@ -12,19 +12,24 @@ defmodule TerminalUiTest do
              runtime: %{assumptions: runtime_assumptions, modules: runtime_modules},
              backend: %{modes: backend_modes},
              capabilities: %{categories: capability_categories},
-             renderer: %{accepts: UnifiedIUR.Element},
+             renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
              transport: %{modes: [:native_local, :canonical_boundary]},
+             examples: %{native_ids: native_ids, canonical_ids: canonical_ids},
              tooling: %{guides: guides, workflows: workflows}
            } = TerminalUi.reference()
 
     assert package_areas == TerminalUi.package_areas()
+    assert :action in families
     assert :content in families
     assert :text in kinds
+    assert :command in kinds
     assert TerminalUi.Widget in widget_modules
     assert runtime_assumptions.term_ui_backed
     assert TerminalUi.Runtime.Boot in runtime_modules
     assert backend_modes == [:raw, :tty]
     assert :unicode in capability_categories
+    assert native_ids == [:native_foundational]
+    assert canonical_ids == [:canonical_foundational]
     assert "guides/runtime_backbone.md" in guides
     assert :runtime_review in workflows
   end
@@ -33,13 +38,16 @@ defmodule TerminalUiTest do
     assert %{
              package: :terminal_ui,
              namespace: TerminalUi,
-             runtime: %{validation_state: :backbone_ready},
+             runtime: %{validation_state: :foundational_realization_ready},
              widgets: %{families: families},
+             examples: %{comparison_ids: comparison_ids},
              documentation: %{guides: guides},
              tooling: %{workflows: workflows}
            } = TerminalUi.info()
 
+    assert :action in families
     assert :layout in families
+    assert comparison_ids == [:foundational_continuity]
     assert "guides/maintainer_workflows.md" in guides
     assert :capability_review in workflows
   end

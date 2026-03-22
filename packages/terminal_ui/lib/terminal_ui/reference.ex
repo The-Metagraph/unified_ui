@@ -32,8 +32,18 @@ defmodule TerminalUi.Reference do
         profiles: TerminalUi.Capabilities.profiles(),
         contract: TerminalUi.Capabilities.capability_contract()
       },
-      renderer: %{accepts: TerminalUi.Renderer.accepts()},
+      renderer: %{
+        accepts: TerminalUi.Renderer.accepts(),
+        responsibilities: TerminalUi.Renderer.responsibilities(),
+        mapper: TerminalUi.Renderer.Mapper
+      },
       transport: %{modes: TerminalUi.Transport.modes()},
+      examples: %{
+        native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
+        canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),
+        comparison_ids: Map.keys(TerminalUi.Examples.comparison_examples()),
+        coverage_matrix: TerminalUi.Examples.coverage_matrix()
+      },
       documentation: %{guides: TerminalUi.Tooling.documentation_surface()},
       tooling: %{
         guides: TerminalUi.Tooling.documentation_surface(),
