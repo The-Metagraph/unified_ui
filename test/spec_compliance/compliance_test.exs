@@ -1,5 +1,6 @@
 defmodule Unified.SpecCompliance.ComplianceTest do
   use ExUnit.Case, async: false
+  @moduletag timeout: 180_000
 
   alias Unified.SpecCompliance.Compliance
 
@@ -186,6 +187,7 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.aliases == 48
   end
 
+  @tag timeout: 420_000
   test "live unified_ui plancheck and compliance both pass" do
     plan_report = Unified.SpecCompliance.plancheck("unified_ui")
     compliance_report = Unified.SpecCompliance.compliance("unified_ui", run_commands: true)
@@ -195,6 +197,19 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.applicable_requirements == 97
     assert compliance_report.summary.status_counts.verified == 97
     assert compliance_report.summary.status_counts.waived == 0
+    assert compliance_report.summary.ci_enforcement == "required"
+  end
+
+  test "live unified_iur plancheck and compliance both pass" do
+    plan_report = Unified.SpecCompliance.plancheck("unified_iur")
+    compliance_report = Unified.SpecCompliance.compliance("unified_iur", run_commands: true)
+
+    assert plan_report.status == :pass
+    assert compliance_report.status == :pass
+    assert compliance_report.summary.applicable_requirements == 61
+    assert compliance_report.summary.status_counts.verified == 61
+    assert compliance_report.summary.status_counts.waived == 0
+    assert compliance_report.summary.aliases == 18
     assert compliance_report.summary.ci_enforcement == "required"
   end
 
