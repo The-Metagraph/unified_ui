@@ -24,26 +24,26 @@ Back to index: [README](./README.md)
   Implement advanced widget families, display systems, layered terminal
   behavior, and broader canonical renderer coverage across the shared runtime.
 
-  [ ] 3.1 Section - Advanced Native Widget Families
+  [x] 3.1 Section - Advanced Native Widget Families
     Implement the advanced directly usable terminal widget families required
     for data-rich screens, overlays, feedback, visualization, and operational
     workflows.
 
-    [ ] 3.1.1 Task - Implement advanced data, document, overlay, and feedback widgets
+    [x] 3.1.1 Task - Implement advanced data, document, overlay, and feedback widgets
       Add the richer widget families needed for data-heavy terminal flows and
       layered interactions.
 
-      [ ] 3.1.1.1 Subtask - Implement tables, trees, inspectors, document-style views, and other advanced data or document widgets.
-      [ ] 3.1.1.2 Subtask - Implement dialogs, toasts, alerts, progress, and other overlay or feedback widgets appropriate to terminal flows.
-      [ ] 3.1.1.3 Subtask - Define shared runtime metadata for selection, expansion, sorting, and overlay lifecycle behavior.
+      [x] 3.1.1.1 Subtask - Implement tables, trees, inspectors, document-style views, and other advanced data or document widgets.
+      [x] 3.1.1.2 Subtask - Implement dialogs, toasts, alerts, progress, and other overlay or feedback widgets appropriate to terminal flows.
+      [x] 3.1.1.3 Subtask - Define shared runtime metadata for selection, expansion, sorting, and overlay lifecycle behavior.
 
-    [ ] 3.1.2 Task - Implement advanced visualization and operational widgets
+    [x] 3.1.2 Task - Implement advanced visualization and operational widgets
       Add the specialized terminal surfaces needed for dashboards, canvases,
       operational views, and keyboard-first workflows.
 
-      [ ] 3.1.2.1 Subtask - Implement charts, gauges, timeline-style views, canvas-friendly widgets, and visualization primitives.
-      [ ] 3.1.2.2 Subtask - Implement operational widgets such as logs, dashboards, inspectors, command palettes, and monitoring surfaces.
-      [ ] 3.1.2.3 Subtask - Define shared widget metadata for degradation behavior, advanced focus routing, and capability-aware interaction behavior.
+      [x] 3.1.2.1 Subtask - Implement charts, gauges, timeline-style views, canvas-friendly widgets, and visualization primitives.
+      [x] 3.1.2.2 Subtask - Implement operational widgets such as logs, dashboards, inspectors, command palettes, and monitoring surfaces.
+      [x] 3.1.2.3 Subtask - Define shared widget metadata for degradation behavior, advanced focus routing, and capability-aware interaction behavior.
 
   [ ] 3.2 Section - Display Systems and Layered Terminal Runtime Behavior
     Implement the advanced display primitives and layered runtime behavior that

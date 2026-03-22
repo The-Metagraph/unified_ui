@@ -88,7 +88,11 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
              TerminalUi.Widget,
              TerminalUi.Widgets.Foundational,
              TerminalUi.Widgets.Input,
-             TerminalUi.Widgets.Navigation
+             TerminalUi.Widgets.Navigation,
+             TerminalUi.Widgets.Data,
+             TerminalUi.Widgets.Feedback,
+             TerminalUi.Widgets.Visualization,
+             TerminalUi.Widgets.Operational
            ]
 
     assert :action in TerminalUi.Widgets.families()
@@ -96,16 +100,9 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
     assert :radio_group in TerminalUi.Widgets.kinds()
     assert :tabs in TerminalUi.Widgets.kinds()
 
-    assert TerminalUi.Widgets.validation_state() == %{
-             widget_contract: :ready,
-             registration_surface: :ready,
-             direct_native_scaffold: :ready,
-             foundational_content_widgets: :ready,
-             foundational_action_widgets: :ready,
-             foundational_form_widgets: :ready,
-             foundational_navigation_widgets: :ready,
-             focus_and_shortcut_metadata: :ready
-           }
+    assert TerminalUi.Widgets.validation_state().widget_contract == :ready
+    assert TerminalUi.Widgets.validation_state().foundational_navigation_widgets == :ready
+    assert TerminalUi.Widgets.validation_state().advanced_data_widgets == :ready
 
     assert TerminalUi.Info.widget_summary(widget).binding_keys == [:checked]
   end

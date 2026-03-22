@@ -17,7 +17,8 @@ defmodule TerminalUi.Info do
       },
       widgets: %{
         families: TerminalUi.Widgets.families(),
-        kinds: TerminalUi.Widgets.kinds()
+        kinds: TerminalUi.Widgets.kinds(),
+        validation_state: TerminalUi.Widgets.validation_state()
       },
       backend: %{
         modes: TerminalUi.Backend.modes(),

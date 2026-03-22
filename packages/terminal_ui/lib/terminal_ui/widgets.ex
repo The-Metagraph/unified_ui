@@ -1,10 +1,11 @@
 defmodule TerminalUi.Widgets do
   @moduledoc """
-  Package-facing entrypoint for foundational native `terminal_ui` widgets.
+  Package-facing entrypoint for native `terminal_ui` widgets.
   """
 
   alias TerminalUi.Widget
-  alias TerminalUi.Widgets.{Builder, Foundational, Input, Navigation}
+  alias TerminalUi.Widgets.{Builder, Data, Feedback, Foundational, Input, Navigation}
+  alias TerminalUi.Widgets.{Operational, Visualization}
 
   @type family :: Widget.family()
 
@@ -18,7 +19,17 @@ defmodule TerminalUi.Widgets do
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, Widget, Foundational, Input, Navigation]
+    [
+      __MODULE__,
+      Widget,
+      Foundational,
+      Input,
+      Navigation,
+      Data,
+      Feedback,
+      Visualization,
+      Operational
+    ]
   end
 
   @spec kinds() :: [atom()]
@@ -27,6 +38,10 @@ defmodule TerminalUi.Widgets do
       Foundational.kinds(),
       Input.kinds(),
       Navigation.kinds(),
+      Data.kinds(),
+      Feedback.kinds(),
+      Visualization.kinds(),
+      Operational.kinds(),
       [:container, :column, :row, :stack, :dialog]
     ]
     |> List.flatten()
@@ -50,7 +65,12 @@ defmodule TerminalUi.Widgets do
       foundational_action_widgets: :ready,
       foundational_form_widgets: :ready,
       foundational_navigation_widgets: :ready,
-      focus_and_shortcut_metadata: :ready
+      focus_and_shortcut_metadata: :ready,
+      advanced_data_widgets: :ready,
+      advanced_feedback_widgets: :ready,
+      advanced_visualization_widgets: :ready,
+      advanced_operational_widgets: :ready,
+      advanced_degradation_metadata: :ready
     }
   end
 
@@ -142,6 +162,102 @@ defmodule TerminalUi.Widgets do
   @spec list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def list(id, items, opts \\ []) do
     Navigation.list(id, items, opts)
+  end
+
+  @spec table(String.t() | atom(), [keyword() | map()], [keyword() | map()], keyword()) ::
+          Widget.t()
+  def table(id, columns, rows, opts \\ []) do
+    Data.table(id, columns, rows, opts)
+  end
+
+  @spec tree_view(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def tree_view(id, nodes, opts \\ []) do
+    Data.tree_view(id, nodes, opts)
+  end
+
+  @spec inspector(String.t() | atom(), map() | keyword(), keyword()) :: Widget.t()
+  def inspector(id, subject, opts \\ []) do
+    Data.inspector(id, subject, opts)
+  end
+
+  @spec markdown_viewer(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def markdown_viewer(id, markdown, opts \\ []) do
+    Data.markdown_viewer(id, markdown, opts)
+  end
+
+  @spec toast(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def toast(id, message, opts \\ []) do
+    Feedback.toast(id, message, opts)
+  end
+
+  @spec alert_dialog(String.t() | atom(), String.t(), [Widget.t()], keyword()) :: Widget.t()
+  def alert_dialog(id, message, children, opts \\ []) do
+    Feedback.alert_dialog(id, message, children, opts)
+  end
+
+  @spec progress(String.t() | atom(), keyword()) :: Widget.t()
+  def progress(id, opts \\ []) do
+    Feedback.progress(id, opts)
+  end
+
+  @spec status(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def status(id, text, opts \\ []) do
+    Feedback.status(id, text, opts)
+  end
+
+  @spec gauge(String.t() | atom(), keyword()) :: Widget.t()
+  def gauge(id, opts \\ []) do
+    Visualization.gauge(id, opts)
+  end
+
+  @spec sparkline(String.t() | atom(), [number()], keyword()) :: Widget.t()
+  def sparkline(id, series, opts \\ []) do
+    Visualization.sparkline(id, series, opts)
+  end
+
+  @spec bar_chart(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def bar_chart(id, series, opts \\ []) do
+    Visualization.bar_chart(id, series, opts)
+  end
+
+  @spec line_chart(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def line_chart(id, series, opts \\ []) do
+    Visualization.line_chart(id, series, opts)
+  end
+
+  @spec timeline(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def timeline(id, events, opts \\ []) do
+    Visualization.timeline(id, events, opts)
+  end
+
+  @spec canvas(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def canvas(id, operations, opts \\ []) do
+    Visualization.canvas(id, operations, opts)
+  end
+
+  @spec log_viewer(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def log_viewer(id, entries, opts \\ []) do
+    Operational.log_viewer(id, entries, opts)
+  end
+
+  @spec stream_widget(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def stream_widget(id, entries, opts \\ []) do
+    Operational.stream_widget(id, entries, opts)
+  end
+
+  @spec cluster_dashboard(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def cluster_dashboard(id, nodes, opts \\ []) do
+    Operational.cluster_dashboard(id, nodes, opts)
+  end
+
+  @spec command_palette(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def command_palette(id, commands, opts \\ []) do
+    Operational.command_palette(id, commands, opts)
+  end
+
+  @spec process_monitor(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def process_monitor(id, processes, opts \\ []) do
+    Operational.process_monitor(id, processes, opts)
   end
 
   @spec container(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()

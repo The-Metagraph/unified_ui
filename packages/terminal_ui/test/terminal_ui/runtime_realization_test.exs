@@ -39,7 +39,7 @@ defmodule TerminalUi.RuntimeRealizationTest do
 
   test "unsupported foundational widgets fail with deterministic realization diagnostics" do
     unsupported_root =
-      TerminalUi.Widget.new(:table,
+      TerminalUi.Widget.new(:unknown_widget,
         id: "unsupported-table",
         metadata: %{label: "Unsupported Table", native_surface: true}
       )
@@ -51,6 +51,6 @@ defmodule TerminalUi.RuntimeRealizationTest do
 
     assert error.reason == :unsupported_foundational_widget
     assert error.phase == :realization
-    assert error.details == %{kind: :table, widget_id: "unsupported-table"}
+    assert error.details == %{kind: :unknown_widget, widget_id: "unsupported-table"}
   end
 end

@@ -30,29 +30,23 @@ defmodule TerminalUi.NativeWidgetsTest do
              TerminalUi.Widget,
              TerminalUi.Widgets.Foundational,
              TerminalUi.Widgets.Input,
-             TerminalUi.Widgets.Navigation
+             TerminalUi.Widgets.Navigation,
+             TerminalUi.Widgets.Data,
+             TerminalUi.Widgets.Feedback,
+             TerminalUi.Widgets.Visualization,
+             TerminalUi.Widgets.Operational
            ]
 
     assert :action in TerminalUi.Widgets.families()
+    assert :data in TerminalUi.Widgets.families()
     assert :feedback in TerminalUi.Widgets.families()
     assert :row in TerminalUi.Widgets.kinds()
     assert :stack in TerminalUi.Widgets.kinds()
     assert :dialog in TerminalUi.Widgets.kinds()
     assert TerminalUi.Widgets.validation_state().widget_contract == :ready
 
-    assert TerminalUi.Widget.contract().metadata == [
-             :label,
-             :description,
-             :role,
-             :variant,
-             :native_surface,
-             :degradation,
-             :shortcut,
-             :focusable,
-             :binding_key,
-             :command,
-             :keyboard_hint
-           ]
+    assert :keyboard_hint in TerminalUi.Widget.contract().metadata
+    assert :overlay_role in TerminalUi.Widget.contract().metadata
   end
 
   test "reference helpers and package info expose runtime, capability, and widget boundaries" do

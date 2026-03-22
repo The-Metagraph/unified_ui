@@ -21,8 +21,10 @@ defmodule TerminalUiTest do
     assert package_areas == TerminalUi.package_areas()
     assert :action in families
     assert :content in families
+    assert :data in families
     assert :text in kinds
     assert :command in kinds
+    assert :table in kinds
     assert TerminalUi.Widget in widget_modules
     assert runtime_assumptions.term_ui_backed
     assert TerminalUi.Runtime.Boot in runtime_modules
@@ -46,6 +48,7 @@ defmodule TerminalUiTest do
            } = TerminalUi.info()
 
     assert :action in families
+    assert :visualization in families
     assert :layout in families
     assert comparison_ids == [:foundational_continuity]
     assert "guides/maintainer_workflows.md" in guides

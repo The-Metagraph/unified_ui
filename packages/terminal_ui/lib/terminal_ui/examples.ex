@@ -21,13 +21,19 @@ defmodule TerminalUi.Examples do
             [
               %{id: :overview, label: "Overview"},
               %{id: :activity, label: "Activity"}
-            ], current: :overview, binding: :section),
+            ],
+            current: :overview,
+            binding: :section
+          ),
           TerminalUi.Widgets.list(
             "results",
             [
               %{id: :alpha, label: "Alpha"},
               %{id: :beta, label: "Beta"}
-            ], current: :alpha, binding: :selected_result),
+            ],
+            current: :alpha,
+            binding: :selected_result
+          ),
           TerminalUi.Widgets.button("save", "Save", on_press: %{intent: :save_workspace})
         ]),
       metadata: %{
