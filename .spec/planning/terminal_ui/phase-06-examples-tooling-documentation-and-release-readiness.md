@@ -42,27 +42,27 @@ Back to index: [README](./README.md)
       [x] 6.1.2.2 Subtask - Pair canonical examples with equivalent direct-native examples where comparison is useful.
       [x] 6.1.2.3 Subtask - Keep canonical example metadata aligned with renderer coverage and upstream compatibility expectations.
 
-  [ ] 6.2 Section - Tooling and Validation Workflows
+  [x] 6.2 Section - Tooling and Validation Workflows
     Implement the maintainer tooling needed to inspect, preview, and validate
     the package across supported capability profiles and entry paths.
 
-    [ ] 6.2.1 Task - Implement preview and inspection tooling
+    [x] 6.2.1 Task - Implement preview and inspection tooling
       Provide tooling workflows that let maintainers inspect native widget
       rendering, canonical rendering, styling, degradation, transport, and
       backend-specific behavior during package development.
 
-      [ ] 6.2.1.1 Subtask - Implement package tooling that previews maintained examples and summarizes direct-native versus canonical runtime behavior.
-      [ ] 6.2.1.2 Subtask - Implement inspection tooling that surfaces widget coverage, style continuity, transport mappings, and capability assumptions.
-      [ ] 6.2.1.3 Subtask - Keep tooling output aligned with the package reference surface and generated traceability docs.
+      [x] 6.2.1.1 Subtask - Implement package tooling that previews maintained examples and summarizes direct-native versus canonical runtime behavior.
+      [x] 6.2.1.2 Subtask - Implement inspection tooling that surfaces widget coverage, style continuity, transport mappings, and capability assumptions.
+      [x] 6.2.1.3 Subtask - Keep tooling output aligned with the package reference surface and generated traceability docs.
 
-    [ ] 6.2.2 Task - Implement repeatable validation workflows
+    [x] 6.2.2 Task - Implement repeatable validation workflows
       Provide validation workflows for native widget coverage, canonical
       renderer coverage, transport translation, and supported capability
       behavior.
 
-      [ ] 6.2.2.1 Subtask - Implement package validation workflows for native widget coverage, canonical IUR coverage, and renderer determinism.
-      [ ] 6.2.2.2 Subtask - Implement package validation workflows for transport translation, no-boundary-leakage guarantees, and capability degradation expectations.
-      [ ] 6.2.2.3 Subtask - Keep validation workflows package-scoped and repeatable across local maintainer and CI usage.
+      [x] 6.2.2.1 Subtask - Implement package validation workflows for native widget coverage, canonical IUR coverage, and renderer determinism.
+      [x] 6.2.2.2 Subtask - Implement package validation workflows for transport translation, no-boundary-leakage guarantees, and capability degradation expectations.
+      [x] 6.2.2.3 Subtask - Keep validation workflows package-scoped and repeatable across local maintainer and CI usage.
 
   [ ] 6.3 Section - Documentation Surface
     Implement the documentation and reference surface that package maintainers

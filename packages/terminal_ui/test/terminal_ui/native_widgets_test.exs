@@ -30,6 +30,7 @@ defmodule TerminalUi.NativeWidgetsTest do
              TerminalUi.Widget,
              TerminalUi.Widgets.Foundational,
              TerminalUi.Widgets.Input,
+             TerminalUi.Widgets.Forms,
              TerminalUi.Widgets.Navigation,
              TerminalUi.Widgets.Data,
              TerminalUi.Widgets.Feedback,

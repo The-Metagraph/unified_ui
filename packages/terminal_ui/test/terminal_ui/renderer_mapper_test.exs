@@ -2,7 +2,7 @@ defmodule TerminalUi.RendererMapperTest do
   use ExUnit.Case, async: true
 
   alias TerminalUi.Renderer
-  alias UnifiedIUR.{Binding, Canvas, Element, Interaction, Layer, Layout}
+  alias UnifiedIUR.{Binding, Canvas, Element, Forms, Interaction, Layer, Layout}
   alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
 
   test "canonical foundational screens map into the native widget surface" do
@@ -180,6 +180,69 @@ defmodule TerminalUi.RendererMapperTest do
            ]
 
     assert Enum.at(sidebar.children, 0).bindings == %{query: :command_query}
+  end
+
+  test "canonical form controls and grouped fields map into the native form surface" do
+    element =
+      Forms.form_builder(
+        [
+          Forms.field_group(
+            [
+              Forms.field(
+                Input.date_input(id: "start-date", name: :start_date),
+                id: "date-field",
+                label: "Start Date"
+              ),
+              Forms.field(
+                Input.time_input(id: "start-time", name: :start_time),
+                id: "time-field",
+                label: "Start Time"
+              ),
+              Forms.field(
+                Input.file_input(id: "avatar-file", name: :avatar, accept: [".png"]),
+                id: "file-field",
+                label: "Avatar"
+              ),
+              Forms.field(
+                Input.pick_list(
+                  [
+                    %{id: :logs, label: "Logs", value: :logs},
+                    %{id: :metrics, label: "Metrics", value: :metrics}
+                  ],
+                  id: "artifacts",
+                  name: :artifacts
+                ),
+                id: "artifacts-field",
+                label: "Artifacts"
+              ),
+              Forms.field(
+                Input.slider(id: "volume-slider", name: :volume, value: 6),
+                id: "volume-field",
+                label: "Volume"
+              )
+            ],
+            id: "schedule-group",
+            legend: "Schedule"
+          )
+        ],
+        id: "schedule-form",
+        mode: :grouped,
+        submit_intent: :save_schedule
+      )
+
+    assert {:ok, widget} = Renderer.render(element)
+    assert widget.kind == :form_builder
+    assert widget.attributes.mode == :grouped
+
+    group = List.first(widget.children)
+    assert group.kind == :field_group
+    assert group.attributes.legend == "Schedule"
+
+    assert Enum.map(group.children, & &1.kind) == [:field, :field, :field, :field, :field]
+
+    assert Enum.map(group.children, fn field ->
+             field.slot_children.control |> List.first() |> Map.get(:kind)
+           end) == [:date_input, :time_input, :file_input, :pick_list, :slider]
   end
 
   test "advanced canonical screens mount through the same runtime with explicit terminal fallbacks" do
