@@ -38,6 +38,7 @@ defmodule TerminalUi.Info do
       kind: widget.kind,
       metadata_keys: Map.keys(widget.metadata),
       state_keys: Map.keys(widget.state),
+      binding_keys: Map.keys(widget.bindings),
       slots: widget.slots,
       event_keys: Map.keys(widget.events),
       style_keys: Map.keys(widget.styles)

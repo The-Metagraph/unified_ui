@@ -3,7 +3,7 @@ defmodule TerminalUi.Widget do
   Native renderer-facing widget representation for `terminal_ui`.
   """
 
-  @type family :: :content | :layout | :input | :navigation | :feedback
+  @type family :: :content | :action | :layout | :input | :navigation | :feedback
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -11,6 +11,7 @@ defmodule TerminalUi.Widget do
           kind: atom(),
           metadata: map(),
           state: map(),
+          bindings: map(),
           slots: [atom() | String.t()],
           slot_children: %{optional(atom() | String.t()) => [t()]},
           attributes: map(),
@@ -24,6 +25,7 @@ defmodule TerminalUi.Widget do
             kind: :text,
             metadata: %{},
             state: %{},
+            bindings: %{},
             slots: [:default],
             slot_children: %{},
             attributes: %{},
@@ -34,11 +36,48 @@ defmodule TerminalUi.Widget do
   @spec contract() :: map()
   def contract do
     %{
-      metadata: [:label, :description, :role, :variant, :native_surface, :degradation],
-      state: [:disabled, :focused, :selected, :expanded, :open, :loading, :fallback],
+      metadata: [
+        :label,
+        :description,
+        :role,
+        :variant,
+        :native_surface,
+        :degradation,
+        :shortcut,
+        :focusable,
+        :binding_key,
+        :command,
+        :keyboard_hint
+      ],
+      state: [
+        :disabled,
+        :focused,
+        :selected,
+        :expanded,
+        :open,
+        :loading,
+        :fallback,
+        :checked,
+        :active,
+        :current,
+        :value
+      ],
+      bindings: [:value, :checked, :selected, :current, :items],
       slots: [:default, :label, :content, :header, :footer, :overlay],
-      styles: [:fg, :bg, :attrs, :border, :padding, :semantic_role, :degradation],
-      events: [:keypress, :submit, :navigation, :focus, :dismiss, :scroll, :command, :select]
+      styles: [:fg, :bg, :attrs, :border, :padding, :semantic_role, :degradation, :intent],
+      events: [
+        :keypress,
+        :submit,
+        :navigation,
+        :focus,
+        :dismiss,
+        :scroll,
+        :command,
+        :select,
+        :change,
+        :toggle,
+        :activate
+      ]
     }
   end
 
@@ -55,6 +94,7 @@ defmodule TerminalUi.Widget do
       kind: kind,
       metadata: normalize_map(Map.get(attrs, :metadata) || Map.get(attrs, "metadata")),
       state: normalize_map(Map.get(attrs, :state) || Map.get(attrs, "state")),
+      bindings: normalize_map(Map.get(attrs, :bindings) || Map.get(attrs, "bindings")),
       slots: normalize_slots(slots),
       slot_children: slot_children,
       attributes: normalize_map(Map.get(attrs, :attributes) || Map.get(attrs, "attributes")),
@@ -87,6 +127,11 @@ defmodule TerminalUi.Widget do
     %{widget | styles: Map.put(widget.styles, key, value)}
   end
 
+  @spec put_binding(t(), atom() | String.t(), term()) :: t()
+  def put_binding(%__MODULE__{} = widget, key, value) do
+    %{widget | bindings: Map.put(widget.bindings, key, value)}
+  end
+
   @spec put_event(t(), atom() | String.t(), map()) :: t()
   def put_event(%__MODULE__{} = widget, key, value) when is_map(value) do
     %{widget | events: Map.put(widget.events, key, value)}
@@ -94,8 +139,9 @@ defmodule TerminalUi.Widget do
 
   @spec family_for(atom()) :: family()
   def family_for(kind) when kind in [:container, :column], do: :layout
-  def family_for(kind) when kind in [:text_input], do: :input
-  def family_for(kind) when kind in [:menu], do: :navigation
+  def family_for(kind) when kind in [:button, :toggle, :link, :command], do: :action
+  def family_for(kind) when kind in [:text_input, :checkbox, :radio_group, :select], do: :input
+  def family_for(kind) when kind in [:menu, :tabs, :breadcrumbs, :list], do: :navigation
   def family_for(kind) when kind in [:dialog], do: :feedback
   def family_for(_kind), do: :content
 

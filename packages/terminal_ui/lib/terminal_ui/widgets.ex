@@ -1,147 +1,182 @@
 defmodule TerminalUi.Widgets do
   @moduledoc """
-  Native widget namespace for the `terminal_ui` Phase 1 scaffold.
+  Package-facing entrypoint for foundational native `terminal_ui` widgets.
   """
 
-  @type family :: :content | :layout | :input | :navigation | :feedback
+  alias TerminalUi.Widget
+  alias TerminalUi.Widgets.{Builder, Foundational, Input, Navigation}
+
+  @type family :: Widget.family()
 
   @spec families() :: [family()]
   def families do
-    [:content, :layout, :input, :navigation, :feedback]
+    kinds()
+    |> Enum.map(&family_for_kind/1)
+    |> Enum.uniq()
+    |> Enum.sort_by(&to_string/1)
   end
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, TerminalUi.Widget]
+    [__MODULE__, Widget, Foundational, Input, Navigation]
   end
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:text, :label, :button, :container, :column, :text_input, :menu, :dialog]
+    [
+      Foundational.kinds(),
+      Input.kinds(),
+      Navigation.kinds(),
+      [:container, :column, :dialog]
+    ]
+    |> List.flatten()
+    |> Enum.uniq()
+    |> Enum.sort_by(&to_string/1)
   end
+
+  @spec family_for_kind(atom() | String.t()) :: family()
+  def family_for_kind(kind) when is_binary(kind),
+    do: kind |> String.to_atom() |> family_for_kind()
+
+  def family_for_kind(kind), do: Widget.family_for(kind)
 
   @spec validation_state() :: map()
   def validation_state do
     %{
       widget_contract: :ready,
       registration_surface: :ready,
-      direct_native_scaffold: :ready
+      direct_native_scaffold: :ready,
+      foundational_content_widgets: :ready,
+      foundational_action_widgets: :ready,
+      foundational_form_widgets: :ready,
+      foundational_navigation_widgets: :ready,
+      focus_and_shortcut_metadata: :ready
     }
   end
 
-  @spec text(String.t() | atom(), String.t(), keyword()) :: TerminalUi.Widget.t()
+  @spec text(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def text(id, content, opts \\ []) do
-    opts = Keyword.merge(opts, id: id, family: :content, kind: :text)
-
-    TerminalUi.Widget.new(:text,
-      id: id,
-      family: :content,
-      metadata: %{label: to_string(id), native_surface: true},
-      attributes: %{content: content},
-      styles: style_from_opts(opts)
-    )
+    Foundational.text(id, content, opts)
   end
 
-  @spec label(String.t() | atom(), String.t(), keyword()) :: TerminalUi.Widget.t()
+  @spec label(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def label(id, content, opts \\ []) do
-    TerminalUi.Widget.new(:label,
-      id: id,
-      family: :content,
-      metadata: %{label: to_string(id), role: :label, native_surface: true},
-      attributes: %{content: content},
-      styles: style_from_opts(opts)
-    )
+    Foundational.label(id, content, opts)
   end
 
-  @spec button(String.t() | atom(), String.t(), keyword()) :: TerminalUi.Widget.t()
+  @spec icon(String.t() | atom(), atom() | String.t(), keyword()) :: Widget.t()
+  def icon(id, name, opts \\ []) do
+    Foundational.icon(id, name, opts)
+  end
+
+  @spec image(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def image(id, src, opts \\ []) do
+    Foundational.image(id, src, opts)
+  end
+
+  @spec spacer(String.t() | atom(), keyword()) :: Widget.t()
+  def spacer(id, opts \\ []) do
+    Foundational.spacer(id, opts)
+  end
+
+  @spec separator(String.t() | atom(), keyword()) :: Widget.t()
+  def separator(id, opts \\ []) do
+    Foundational.separator(id, opts)
+  end
+
+  @spec button(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def button(id, label, opts \\ []) do
-    TerminalUi.Widget.new(:button,
-      id: id,
-      family: :content,
-      metadata: %{label: label, role: :button, native_surface: true},
-      state: %{disabled: Keyword.get(opts, :disabled, false)},
-      attributes: %{label: label},
-      events: normalize_event(opts[:on_press], :keypress),
-      styles: style_from_opts(opts)
-    )
+    Foundational.button(id, label, opts)
   end
 
-  @spec text_input(String.t() | atom(), keyword()) :: TerminalUi.Widget.t()
+  @spec toggle(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def toggle(id, label, opts \\ []) do
+    Foundational.toggle(id, label, opts)
+  end
+
+  @spec link(String.t() | atom(), String.t(), String.t(), keyword()) :: Widget.t()
+  def link(id, label, target, opts \\ []) do
+    Foundational.link(id, label, target, opts)
+  end
+
+  @spec command(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def command(id, label, opts \\ []) do
+    Foundational.command(id, label, opts)
+  end
+
+  @spec text_input(String.t() | atom(), keyword()) :: Widget.t()
   def text_input(id, opts \\ []) do
-    TerminalUi.Widget.new(:text_input,
-      id: id,
-      family: :input,
-      metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
-      attributes: %{
-        value: Keyword.get(opts, :value, ""),
-        placeholder: Keyword.get(opts, :placeholder, "")
-      },
-      events: normalize_event(opts[:on_change], :keypress),
-      styles: style_from_opts(opts)
-    )
+    Input.text_input(id, opts)
   end
 
-  @spec menu(String.t() | atom(), [keyword() | map()], keyword()) :: TerminalUi.Widget.t()
+  @spec checkbox(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def checkbox(id, label, opts \\ []) do
+    Input.checkbox(id, label, opts)
+  end
+
+  @spec radio_group(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def radio_group(id, options, opts \\ []) do
+    Input.radio_group(id, options, opts)
+  end
+
+  @spec select(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def select(id, options, opts \\ []) do
+    Input.select(id, options, opts)
+  end
+
+  @spec tabs(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def tabs(id, items, opts \\ []) do
+    Navigation.tabs(id, items, opts)
+  end
+
+  @spec menu(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def menu(id, items, opts \\ []) do
-    TerminalUi.Widget.new(:menu,
-      id: id,
-      family: :navigation,
-      metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
-      attributes: %{items: Enum.map(items, &Enum.into(&1, %{}))},
-      events: normalize_event(opts[:on_navigate], :navigation),
-      styles: style_from_opts(opts)
-    )
+    Navigation.menu(id, items, opts)
   end
 
-  @spec container(String.t() | atom(), [TerminalUi.Widget.t()], keyword()) ::
-          TerminalUi.Widget.t()
+  @spec breadcrumbs(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def breadcrumbs(id, items, opts \\ []) do
+    Navigation.breadcrumbs(id, items, opts)
+  end
+
+  @spec list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def list(id, items, opts \\ []) do
+    Navigation.list(id, items, opts)
+  end
+
+  @spec container(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
   def container(id, children, opts \\ []) do
-    TerminalUi.Widget.new(:container,
+    Widget.new(:container,
       id: id,
       family: :layout,
       metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
       slot_children: %{default: children},
-      styles: style_from_opts(opts)
+      styles: Builder.styles(opts)
     )
   end
 
-  @spec column(String.t() | atom(), [TerminalUi.Widget.t()], keyword()) :: TerminalUi.Widget.t()
+  @spec column(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
   def column(id, children, opts \\ []) do
-    TerminalUi.Widget.new(:column,
+    Widget.new(:column,
       id: id,
       family: :layout,
       metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
       attributes: %{gap: Keyword.get(opts, :gap, :sm)},
       slot_children: %{default: children},
-      styles: style_from_opts(opts)
+      styles: Builder.styles(opts)
     )
   end
 
-  @spec dialog(String.t() | atom(), [TerminalUi.Widget.t()], keyword()) :: TerminalUi.Widget.t()
+  @spec dialog(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
   def dialog(id, children, opts \\ []) do
-    TerminalUi.Widget.new(:dialog,
+    Widget.new(:dialog,
       id: id,
       family: :feedback,
       metadata: %{label: Keyword.get(opts, :label, to_string(id)), native_surface: true},
-      state: %{open: Keyword.get(opts, :open, true)},
+      state: Builder.state(opts, %{open: Keyword.get(opts, :open, true)}),
       slot_children: %{content: children},
-      events: normalize_event(opts[:on_dismiss], :dismiss),
-      styles: style_from_opts(opts)
+      events: Builder.events(dismiss: opts[:on_dismiss]),
+      styles: Builder.styles(opts)
     )
   end
-
-  defp normalize_event(nil, _key), do: %{}
-  defp normalize_event(value, key), do: %{key => Enum.into(value, %{})}
-
-  defp style_from_opts(opts) do
-    %{}
-    |> maybe_put(:fg, Keyword.get(opts, :fg))
-    |> maybe_put(:bg, Keyword.get(opts, :bg))
-    |> maybe_put(:attrs, Keyword.get(opts, :attrs))
-    |> maybe_put(:semantic_role, Keyword.get(opts, :semantic_role))
-    |> maybe_put(:degradation, Keyword.get(opts, :degradation))
-  end
-
-  defp maybe_put(map, _key, nil), do: map
-  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 end
