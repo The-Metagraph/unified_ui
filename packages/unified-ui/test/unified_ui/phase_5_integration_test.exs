@@ -146,6 +146,12 @@ defmodule UnifiedUi.Phase5IntegrationTest do
                      - save_button [widget:button]
                @default
                  - settings_dialog [layer:dialog]
+                   @content
+                     - shell [layout:box]
+                       @default
+                         - headline [widget:text]
+                       @default
+                         - save_button [widget:button]
                @default
                  - workspace_scroll [widget:scroll_bar]
              """)

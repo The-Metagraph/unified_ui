@@ -121,12 +121,18 @@ defmodule UnifiedUi.FormsNavigationTest do
                      }
                    ]
                  },
-                 %{id: :profile_tabs, family: :navigation, kind: :tabs},
+                 %{
+                   id: :profile_tabs,
+                   family: :navigation,
+                   kind: :tabs,
+                   items: [profile: "Profile", permissions: "Permissions"]
+                 },
                  %{
                    id: :profile_commands,
                    family: :navigation,
                    kind: :command_palette,
-                   label: "Profile actions"
+                   label: "Profile actions",
+                   items: [save: "Save profile", discard: "Discard changes"]
                  }
                ]
              }

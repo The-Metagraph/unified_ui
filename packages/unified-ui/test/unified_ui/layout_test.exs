@@ -100,7 +100,12 @@ defmodule UnifiedUi.LayoutTest do
                family: :layout,
                kind: :row,
                children: [
-                 %{id: :main_menu, family: :navigation, kind: :menu},
+                 %{
+                   id: :main_menu,
+                   family: :navigation,
+                   kind: :menu,
+                   items: [home: "Home", profile: "Profile"]
+                 },
                  %{id: :save_button, family: :foundational, kind: :button, label: "Save"}
                ]
              },

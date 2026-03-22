@@ -175,6 +175,12 @@ defmodule UnifiedUi.CompilerInspectionTest do
                      - save_button [widget:button]
                @default
                  - confirm_dialog [layer:dialog]
+                   @content
+                     - shell [layout:box]
+                       @default
+                         - headline [widget:text]
+                       @default
+                         - save_button [widget:button]
                @default
                  - workspace_scroll [widget:scroll_bar]
              """)
