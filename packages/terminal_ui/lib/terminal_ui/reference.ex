@@ -30,8 +30,11 @@ defmodule TerminalUi.Reference do
       capabilities: %{
         categories: TerminalUi.Capabilities.categories(),
         profiles: TerminalUi.Capabilities.profiles(),
-        contract: TerminalUi.Capabilities.capability_contract()
+        contract: TerminalUi.Capabilities.capability_contract(),
+        diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      layout: %{kinds: TerminalUi.Layout.kinds(), module: TerminalUi.Layout},
+      layer: %{kinds: TerminalUi.Layer.kinds(), module: TerminalUi.Layer},
       renderer: %{
         accepts: TerminalUi.Renderer.accepts(),
         responsibilities: TerminalUi.Renderer.responsibilities(),

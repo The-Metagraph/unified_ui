@@ -8,6 +8,8 @@ defmodule TerminalUi do
     Capabilities,
     Examples,
     Info,
+    Layout,
+    Layer,
     Reference,
     Renderer,
     Runtime,
@@ -21,13 +23,25 @@ defmodule TerminalUi do
           | :runtime
           | :backend
           | :capabilities
+          | :layout
+          | :layer
           | :renderer
           | :transport
           | :tooling
 
   @spec package_areas() :: [package_area()]
   def package_areas do
-    [:widgets, :runtime, :backend, :capabilities, :renderer, :transport, :tooling]
+    [
+      :widgets,
+      :runtime,
+      :backend,
+      :capabilities,
+      :layout,
+      :layer,
+      :renderer,
+      :transport,
+      :tooling
+    ]
   end
 
   @spec widgets() :: module()
@@ -41,6 +55,12 @@ defmodule TerminalUi do
 
   @spec capabilities() :: module()
   def capabilities, do: Capabilities
+
+  @spec layout() :: module()
+  def layout, do: Layout
+
+  @spec layer() :: module()
+  def layer, do: Layer
 
   @spec renderer() :: module()
   def renderer, do: Renderer

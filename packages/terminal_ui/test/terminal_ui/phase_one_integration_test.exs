@@ -9,6 +9,8 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     assert TerminalUi.runtime() == TerminalUi.Runtime
     assert TerminalUi.backend() == TerminalUi.Backend
     assert TerminalUi.capabilities() == TerminalUi.Capabilities
+    assert TerminalUi.layout() == TerminalUi.Layout
+    assert TerminalUi.layer() == TerminalUi.Layer
     assert TerminalUi.renderer() == TerminalUi.Renderer
     assert TerminalUi.transport() == TerminalUi.Transport
     assert TerminalUi.tooling() == TerminalUi.Tooling
@@ -72,17 +74,22 @@ defmodule TerminalUi.PhaseOneIntegrationTest do
     summary = TerminalUi.info()
 
     assert reference.widgets.validation_state.direct_native_scaffold == :ready
-    assert reference.runtime.validation_state == :foundational_realization_ready
+    assert reference.runtime.validation_state == :advanced_runtime_ready
     assert reference.backend.modes == [:raw, :tty]
     assert reference.transport.modes == [:native_local, :canonical_boundary]
     assert :capability_snapshot in reference.runtime.capabilities
+    assert :advanced_display_systems in reference.runtime.capabilities
     assert :foundational_canonical_mapping in reference.renderer.responsibilities
     assert reference.examples.native_ids == [:native_foundational]
     assert :rich_terminal in reference.capabilities.profiles
+    assert reference.layout.kinds == TerminalUi.Layout.kinds()
+    assert reference.layer.kinds == TerminalUi.Layer.kinds()
 
     assert summary.package == :terminal_ui
-    assert summary.runtime.validation_state == :foundational_realization_ready
+    assert summary.runtime.validation_state == :advanced_runtime_ready
     assert :layout in summary.widgets.families
+    assert summary.layout.kinds == TerminalUi.Layout.kinds()
+    assert summary.layer.kinds == TerminalUi.Layer.kinds()
     assert summary.examples.comparison_ids == [:foundational_continuity]
     assert :fallback_terminal in summary.capabilities.profiles
     assert :runtime_review in summary.tooling.workflows

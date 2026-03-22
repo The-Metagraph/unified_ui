@@ -2,8 +2,17 @@ defmodule TerminalUiTest do
   use ExUnit.Case, async: true
 
   test "package reference exposes terminal runtime and capability areas" do
-    assert [:widgets, :runtime, :backend, :capabilities, :renderer, :transport, :tooling] ==
-             TerminalUi.package_areas()
+    assert [
+             :widgets,
+             :runtime,
+             :backend,
+             :capabilities,
+             :layout,
+             :layer,
+             :renderer,
+             :transport,
+             :tooling
+           ] == TerminalUi.package_areas()
 
     assert %{
              package: TerminalUi,
@@ -12,6 +21,8 @@ defmodule TerminalUiTest do
              runtime: %{assumptions: runtime_assumptions, modules: runtime_modules},
              backend: %{modes: backend_modes},
              capabilities: %{categories: capability_categories},
+             layout: %{kinds: layout_kinds, module: TerminalUi.Layout},
+             layer: %{kinds: layer_kinds, module: TerminalUi.Layer},
              renderer: %{accepts: UnifiedIUR.Element, mapper: TerminalUi.Renderer.Mapper},
              transport: %{modes: [:native_local, :canonical_boundary]},
              examples: %{native_ids: native_ids, canonical_ids: canonical_ids},
@@ -30,6 +41,8 @@ defmodule TerminalUiTest do
     assert TerminalUi.Runtime.Boot in runtime_modules
     assert backend_modes == [:raw, :tty]
     assert :unicode in capability_categories
+    assert :viewport in layout_kinds
+    assert :overlay in layer_kinds
     assert native_ids == [:native_foundational]
     assert canonical_ids == [:canonical_foundational]
     assert "guides/runtime_backbone.md" in guides
@@ -40,7 +53,9 @@ defmodule TerminalUiTest do
     assert %{
              package: :terminal_ui,
              namespace: TerminalUi,
-             runtime: %{validation_state: :foundational_realization_ready},
+             runtime: %{validation_state: :advanced_runtime_ready},
+             layout: %{kinds: layout_kinds},
+             layer: %{kinds: layer_kinds},
              widgets: %{families: families},
              examples: %{comparison_ids: comparison_ids},
              documentation: %{guides: guides},
@@ -50,6 +65,8 @@ defmodule TerminalUiTest do
     assert :action in families
     assert :visualization in families
     assert :layout in families
+    assert :canvas_surface in layout_kinds
+    assert :context_menu in layer_kinds
     assert comparison_ids == [:foundational_continuity]
     assert "guides/maintainer_workflows.md" in guides
     assert :capability_review in workflows

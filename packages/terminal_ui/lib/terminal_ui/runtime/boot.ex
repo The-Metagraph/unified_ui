@@ -34,7 +34,8 @@ defmodule TerminalUi.Runtime.Boot do
   defp build_state(screen, backend_mode, source_kind, opts) do
     with {:ok, root} <- normalize_root(Map.fetch!(screen, :root)),
          screen_model <- Screen.new(Map.put(screen, :root, root), source_kind, backend_mode, opts),
-         {:ok, realization} <- Realization.realize_screen(screen_model) do
+         {:ok, realization} <-
+           Realization.realize_screen(screen_model, backend_mode: backend_mode) do
       screen_id = to_string(Map.fetch!(screen, :id))
 
       {:ok,
@@ -56,7 +57,7 @@ defmodule TerminalUi.Runtime.Boot do
            terminal: :not_yet_attached,
            shutdown: :idle
          },
-         validation_state: :foundational_realization_ready
+         validation_state: runtime_validation_state(realization)
        }}
     end
   end
@@ -116,4 +117,9 @@ defmodule TerminalUi.Runtime.Boot do
 
     {:ok, Widget.new(kind, attrs)}
   end
+
+  defp runtime_validation_state(%{validation_state: :advanced_ready}),
+    do: :advanced_runtime_ready
+
+  defp runtime_validation_state(_realization), do: :foundational_realization_ready
 end

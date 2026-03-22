@@ -26,8 +26,11 @@ defmodule TerminalUi.Info do
       },
       capabilities: %{
         categories: TerminalUi.Capabilities.categories(),
-        profiles: TerminalUi.Capabilities.profiles()
+        profiles: TerminalUi.Capabilities.profiles(),
+        diagnostics: TerminalUi.Capabilities.diagnostics()
       },
+      layout: %{kinds: TerminalUi.Layout.kinds()},
+      layer: %{kinds: TerminalUi.Layer.kinds()},
       examples: %{
         native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
         canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),

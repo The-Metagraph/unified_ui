@@ -45,25 +45,25 @@ Back to index: [README](./README.md)
       [x] 3.1.2.2 Subtask - Implement operational widgets such as logs, dashboards, inspectors, command palettes, and monitoring surfaces.
       [x] 3.1.2.3 Subtask - Define shared widget metadata for degradation behavior, advanced focus routing, and capability-aware interaction behavior.
 
-  [ ] 3.2 Section - Display Systems and Layered Terminal Runtime Behavior
+  [x] 3.2 Section - Display Systems and Layered Terminal Runtime Behavior
     Implement the advanced display primitives and layered runtime behavior that
     rich terminal screens require.
 
-    [ ] 3.2.1 Task - Implement advanced layout, viewport, split-pane, scroll, and canvas systems
+    [x] 3.2.1 Task - Implement advanced layout, viewport, split-pane, scroll, and canvas systems
       Add the display structures needed for richer composition beyond the
       foundational screen model.
 
-      [ ] 3.2.1.1 Subtask - Implement split panes, bounded viewport regions, scroll containers, and advanced alignment or constraint behavior.
-      [ ] 3.2.1.2 Subtask - Implement canvas-style placement and positioned fragments for richer terminal composition.
-      [ ] 3.2.1.3 Subtask - Keep advanced display systems composable with the existing widget runtime rather than as detached subsystems.
+      [x] 3.2.1.1 Subtask - Implement split panes, bounded viewport regions, scroll containers, and advanced alignment or constraint behavior.
+      [x] 3.2.1.2 Subtask - Implement canvas-style placement and positioned fragments for richer terminal composition.
+      [x] 3.2.1.3 Subtask - Keep advanced display systems composable with the existing widget runtime rather than as detached subsystems.
 
-    [ ] 3.2.2 Task - Implement layered and capability-aware runtime behavior
+    [x] 3.2.2 Task - Implement layered and capability-aware runtime behavior
       Add the shared runtime mechanics needed for dialogs, menus, overlays, and
       limited-backend interaction alternatives across supported terminals.
 
-      [ ] 3.2.2.1 Subtask - Implement layered runtime behavior for overlays, menus, dialogs, popovers, and absolute-positioned content.
-      [ ] 3.2.2.2 Subtask - Implement keyboard-first alternatives and inline fallbacks for interaction patterns that limited terminals cannot realize fully.
-      [ ] 3.2.2.3 Subtask - Add diagnostics for invalid layering state, unsupported positioned behavior, and advanced display realization mismatches.
+      [x] 3.2.2.1 Subtask - Implement layered runtime behavior for overlays, menus, dialogs, popovers, and absolute-positioned content.
+      [x] 3.2.2.2 Subtask - Implement keyboard-first alternatives and inline fallbacks for interaction patterns that limited terminals cannot realize fully.
+      [x] 3.2.2.3 Subtask - Add diagnostics for invalid layering state, unsupported positioned behavior, and advanced display realization mismatches.
 
   [ ] 3.3 Section - Expanded Canonical IUR Rendering
     Expand canonical renderer coverage so the advanced widget and display

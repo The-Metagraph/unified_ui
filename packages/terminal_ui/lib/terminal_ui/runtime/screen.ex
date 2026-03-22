@@ -41,7 +41,7 @@ defmodule TerminalUi.Runtime.Screen do
       backend_mode: backend_mode,
       root: root,
       layout: %{
-        composition: :foundational_shared_runtime,
+        composition: composition_for(root),
         root_kind: root.kind,
         align: Keyword.get(opts, :align, :start)
       },
@@ -49,7 +49,9 @@ defmodule TerminalUi.Runtime.Screen do
         direct_native: source_kind == :native,
         canonical_input: source_kind == :canonical,
         focus_traversal: :shared_runtime,
-        binding_surface: :shared_runtime
+        binding_surface: :shared_runtime,
+        layered_runtime: root.kind in TerminalUi.Layer.kinds(),
+        advanced_display: root.kind in TerminalUi.Layout.kinds()
       },
       bindings: binding_overview(root)
     }
@@ -83,5 +85,13 @@ defmodule TerminalUi.Runtime.Screen do
       |> Enum.reject(&is_nil/1)
 
     Enum.reduce(widget.children, acc ++ names, &collect_binding_names/2)
+  end
+
+  defp composition_for(root) do
+    if root.kind in TerminalUi.Layout.kinds() or root.kind in TerminalUi.Layer.kinds() do
+      :advanced_shared_runtime
+    else
+      :foundational_shared_runtime
+    end
   end
 end
