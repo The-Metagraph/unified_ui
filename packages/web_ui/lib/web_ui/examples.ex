@@ -948,24 +948,45 @@ defmodule WebUi.Examples do
     }
   end
 
+  @spec metadata(atom()) :: map() | nil
+  def metadata(id) when is_atom(id) do
+    catalog()
+    |> Enum.find(&(&1.id == id))
+  end
+
+  @spec native_examples() :: [map()]
+  def native_examples do
+    catalog_by_category(:native)
+  end
+
+  @spec canonical_examples() :: [map()]
+  def canonical_examples do
+    catalog_by_category(:canonical)
+  end
+
+  @spec mixed_examples() :: [map()]
+  def mixed_examples do
+    catalog_by_category(:mixed)
+  end
+
+  @spec coverage_matrix() :: map()
+  def coverage_matrix do
+    catalog = catalog()
+
+    %{
+      categories: Enum.group_by(catalog, & &1.category, & &1.id),
+      workflows: Enum.group_by(catalog, & &1.workflow, & &1.id),
+      parity_groups:
+        catalog
+        |> Enum.group_by(& &1.parity_group, & &1.id)
+        |> Map.delete(nil)
+    }
+  end
+
   @spec catalog() :: [map()]
   def catalog do
-    [
-      %{id: :canonical_foundational, summary: "Canonical foundational workspace"},
-      %{id: :canonical_advanced, summary: "Canonical advanced operations workspace"},
-      %{id: :canonical_styling, summary: "Canonical styling review workspace"},
-      %{id: :canonical_transport, summary: "Canonical transport-focused workspace"},
-      %{id: :canonical_welcome, summary: "Canonical welcome message"},
-      %{id: :advanced_continuity, summary: "Native and canonical advanced comparison"},
-      %{id: :foundational_continuity, summary: "Native and canonical foundational comparison"},
-      %{id: :mixed_transport, summary: "Native and canonical transport workflow comparison"},
-      %{id: :native_advanced, summary: "Direct-native advanced operations workspace"},
-      %{id: :native_counter, summary: "Minimal native counter"},
-      %{id: :native_foundational, summary: "Direct-native foundational workspace"},
-      %{id: :native_styling, summary: "Direct-native styling review workspace"},
-      %{id: :native_transport, summary: "Direct-native transport-focused workspace"},
-      %{id: :styling_continuity, summary: "Native and canonical styling comparison"}
-    ]
+    catalog_entries()
+    |> Enum.map(&decorate_catalog_entry/1)
   end
 
   @spec foundational_comparison() :: map()
@@ -1120,6 +1141,11 @@ defmodule WebUi.Examples do
     )
   end
 
+  defp catalog_by_category(category) do
+    catalog()
+    |> Enum.filter(&(&1.category == category))
+  end
+
   defp snapshot(widget_tree, frontend_tree) do
     %{
       widget_ids: collect_widget_ids(widget_tree),
@@ -1181,5 +1207,180 @@ defmodule WebUi.Examples do
     nodes
     |> Enum.filter(&(to_string(&1.id) in ids))
     |> Enum.sort_by(&to_string(&1.id))
+  end
+
+  defp decorate_catalog_entry(entry) do
+    Map.merge(entry, %{
+      artifact_names: artifact_names(entry.id),
+      traceability: traceability(entry)
+    })
+  end
+
+  defp artifact_names(id) do
+    base = "web_ui.examples.#{id}"
+
+    %{
+      preview: "#{base}.preview",
+      inspection: "#{base}.inspection",
+      export: "#{base}.export",
+      comparison: "#{base}.comparison"
+    }
+  end
+
+  defp traceability(entry) do
+    %{
+      package_specs: package_spec_surfaces(entry.category),
+      runtime_obligations: runtime_obligations(entry.category),
+      coverage_obligations: entry.coverage
+    }
+  end
+
+  defp package_spec_surfaces(:native),
+    do: [:native_widgets, :server_runtime, :frontend_runtime, :tooling]
+
+  defp package_spec_surfaces(:canonical),
+    do: [:iur_renderer, :server_runtime, :frontend_runtime, :tooling]
+
+  defp package_spec_surfaces(:mixed),
+    do: [:native_widgets, :iur_renderer, :transport, :tooling]
+
+  defp runtime_obligations(:native),
+    do: [:phoenix_authoritative, :elm_realization, :direct_native_reviewable]
+
+  defp runtime_obligations(:canonical),
+    do: [:phoenix_authoritative, :elm_realization, :canonical_reviewable]
+
+  defp runtime_obligations(:mixed),
+    do: [:phoenix_authoritative, :elm_realization, :native_canonical_parity]
+
+  defp catalog_entries do
+    [
+      %{
+        id: :canonical_foundational,
+        category: :canonical,
+        workflow: :foundational,
+        summary: "Canonical foundational workspace",
+        coverage: [:canonical_renderer, :foundational_widgets, :forms, :split_runtime],
+        parity_group: :foundational_workspace,
+        parity_with: [:native_foundational, :foundational_continuity]
+      },
+      %{
+        id: :canonical_advanced,
+        category: :canonical,
+        workflow: :advanced,
+        summary: "Canonical advanced operations workspace",
+        coverage: [:canonical_renderer, :advanced_widgets, :display_systems, :layering],
+        parity_group: :advanced_operations,
+        parity_with: [:native_advanced, :advanced_continuity]
+      },
+      %{
+        id: :canonical_styling,
+        category: :canonical,
+        workflow: :styling,
+        summary: "Canonical styling review workspace",
+        coverage: [:canonical_renderer, :themes, :style_resolution, :inspection],
+        parity_group: :styling_review,
+        parity_with: [:native_styling, :styling_continuity]
+      },
+      %{
+        id: :canonical_transport,
+        category: :canonical,
+        workflow: :transport,
+        summary: "Canonical transport-focused workspace",
+        coverage: [:canonical_renderer, :transport_boundary, :server_authority],
+        parity_group: :transport_workspace,
+        parity_with: [:native_transport, :mixed_transport]
+      },
+      %{
+        id: :canonical_welcome,
+        category: :canonical,
+        workflow: :minimal,
+        summary: "Canonical welcome message",
+        coverage: [:canonical_renderer, :minimal_widget, :runtime_hydration],
+        parity_group: :welcome_runtime,
+        parity_with: [:native_counter]
+      },
+      %{
+        id: :advanced_continuity,
+        category: :mixed,
+        workflow: :advanced,
+        summary: "Native and canonical advanced comparison",
+        coverage: [:comparison_artifact, :advanced_widgets, :display_systems, :layering],
+        parity_group: :advanced_operations,
+        parity_with: [:native_advanced, :canonical_advanced]
+      },
+      %{
+        id: :foundational_continuity,
+        category: :mixed,
+        workflow: :foundational,
+        summary: "Native and canonical foundational comparison",
+        coverage: [:comparison_artifact, :foundational_widgets, :forms, :split_runtime],
+        parity_group: :foundational_workspace,
+        parity_with: [:native_foundational, :canonical_foundational]
+      },
+      %{
+        id: :mixed_transport,
+        category: :mixed,
+        workflow: :transport,
+        summary: "Native and canonical transport workflow comparison",
+        coverage: [:comparison_artifact, :transport_boundary, :server_authority],
+        parity_group: :transport_workspace,
+        parity_with: [:native_transport, :canonical_transport]
+      },
+      %{
+        id: :native_advanced,
+        category: :native,
+        workflow: :advanced,
+        summary: "Direct-native advanced operations workspace",
+        coverage: [:advanced_widgets, :display_systems, :layering, :native_runtime],
+        parity_group: :advanced_operations,
+        parity_with: [:canonical_advanced, :advanced_continuity]
+      },
+      %{
+        id: :native_counter,
+        category: :native,
+        workflow: :minimal,
+        summary: "Minimal native counter",
+        coverage: [:foundational_widgets, :native_runtime, :local_events],
+        parity_group: :welcome_runtime,
+        parity_with: [:canonical_welcome]
+      },
+      %{
+        id: :native_foundational,
+        category: :native,
+        workflow: :foundational,
+        summary: "Direct-native foundational workspace",
+        coverage: [:foundational_widgets, :forms, :navigation, :split_runtime],
+        parity_group: :foundational_workspace,
+        parity_with: [:canonical_foundational, :foundational_continuity]
+      },
+      %{
+        id: :native_styling,
+        category: :native,
+        workflow: :styling,
+        summary: "Direct-native styling review workspace",
+        coverage: [:themes, :style_resolution, :layered_styling, :inspection],
+        parity_group: :styling_review,
+        parity_with: [:canonical_styling, :styling_continuity]
+      },
+      %{
+        id: :native_transport,
+        category: :native,
+        workflow: :transport,
+        summary: "Direct-native transport-focused workspace",
+        coverage: [:transport_local, :forms, :actions, :native_runtime],
+        parity_group: :transport_workspace,
+        parity_with: [:canonical_transport, :mixed_transport]
+      },
+      %{
+        id: :styling_continuity,
+        category: :mixed,
+        workflow: :styling,
+        summary: "Native and canonical styling comparison",
+        coverage: [:comparison_artifact, :style_continuity, :inspection],
+        parity_group: :styling_review,
+        parity_with: [:native_styling, :canonical_styling]
+      }
+    ]
   end
 end

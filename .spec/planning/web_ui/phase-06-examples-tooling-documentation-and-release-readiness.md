@@ -19,22 +19,22 @@ Back to index: [README](./README.md)
 [ ] 6 Phase 6 - Examples, Tooling, Documentation, and Release Readiness
   Implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows for `web_ui`.
 
-  [ ] 6.1 Section - Maintained Reference Examples
+  [x] 6.1 Section - Maintained Reference Examples
     Implement the example catalog that demonstrates package coverage and gives maintainers stable review artifacts.
 
-    [ ] 6.1.1 Task - Implement direct-native, canonical, and mixed example suites
+    [x] 6.1.1 Task - Implement direct-native, canonical, and mixed example suites
       Provide maintained examples that cover the package's native runtime surface, canonical renderer surface, and shared transport behavior.
 
-      [ ] 6.1.1.1 Subtask - Create direct-native examples that exercise foundational, advanced, layered, and styling-heavy web workflows.
-      [ ] 6.1.1.2 Subtask - Create canonical-rendered examples that exercise equivalent `UnifiedIUR` coverage through the same runtime architecture.
-      [ ] 6.1.1.3 Subtask - Create mixed examples that compare native and canonical rendering, transport, and continuity for the same workflow.
+      [x] 6.1.1.1 Subtask - Create direct-native examples that exercise foundational, advanced, layered, and styling-heavy web workflows.
+      [x] 6.1.1.2 Subtask - Create canonical-rendered examples that exercise equivalent `UnifiedIUR` coverage through the same runtime architecture.
+      [x] 6.1.1.3 Subtask - Create mixed examples that compare native and canonical rendering, transport, and continuity for the same workflow.
 
-    [ ] 6.1.2 Task - Implement example metadata and review artifacts
+    [x] 6.1.2 Task - Implement example metadata and review artifacts
       Define the metadata, comparison outputs, and artifact naming conventions that make examples maintainable.
 
-      [ ] 6.1.2.1 Subtask - Define example identifiers, categories, coverage metadata, and parity obligations for native, canonical, and mixed examples.
-      [ ] 6.1.2.2 Subtask - Define stable inspection, preview, comparison, and export artifact naming for review workflows.
-      [ ] 6.1.2.3 Subtask - Keep example metadata traceable to package specs, canonical widget coverage, and split-runtime obligations.
+      [x] 6.1.2.1 Subtask - Define example identifiers, categories, coverage metadata, and parity obligations for native, canonical, and mixed examples.
+      [x] 6.1.2.2 Subtask - Define stable inspection, preview, comparison, and export artifact naming for review workflows.
+      [x] 6.1.2.3 Subtask - Keep example metadata traceable to package specs, canonical widget coverage, and split-runtime obligations.
 
   [ ] 6.2 Section - Maintainer Tooling and Validation Workflows
     Implement the tooling surface that lets maintainers inspect, preview, export, and validate the package coherently.
