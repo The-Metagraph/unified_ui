@@ -34,7 +34,7 @@ package contract.
 
 ## Maintainer Commands
 
-Run these commands from [`packages/unified-ui`](/Users/Pascal/code/unified/packages/unified-ui):
+Run these commands from `packages/unified-ui`:
 
 ```bash
 mix test

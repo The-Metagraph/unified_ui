@@ -10,7 +10,7 @@ its own while still proving the same authored-to-canonical-to-runtime path:
 `UnifiedUi` DSL -> canonical `UnifiedIUR` -> `LiveUi` rendering.
 
 If you want the fastest path to launching or validating the suite, start with
-[Running the Examples](/Users/Pascal/code/unified/examples/running_the_examples.md).
+[Running the Examples](./running_the_examples.md).
 
 `examples/demo/` is the aggregate category-oriented review surface. It uses the
 same shared theme and style baseline as the current button example and gives
@@ -101,7 +101,7 @@ Run these from `examples/shared/`:
 Direct browser workflow for any example app:
 
 ```bash
-cd /Users/Pascal/code/unified/examples/button
+cd examples/button
 mix deps.get
 mix phx.server
 ```
@@ -112,7 +112,7 @@ port with `PORT=4100 mix phx.server`.
 Aggregate demo workflow:
 
 ```bash
-cd /Users/Pascal/code/unified/examples/demo
+cd examples/demo
 mix deps.get
 mix phx.server
 ```
@@ -120,7 +120,7 @@ mix phx.server
 Or preview the demo launch contract from the shared tooling:
 
 ```bash
-cd /Users/Pascal/code/unified/examples/shared
+cd examples/shared
 mix examples.launch demo --dry-run
 ```
 
@@ -166,12 +166,12 @@ Discovery surfaces:
 
 Authoritative suite contract:
 
-- [Example Apps Suite](/Users/Pascal/code/unified/.spec/specs/examples/package.spec.md)
-- [Example Apps Structure](/Users/Pascal/code/unified/.spec/specs/examples/structure.spec.md)
-- [Example Apps DSL Template](/Users/Pascal/code/unified/.spec/specs/examples/dsl_template.spec.md)
-- [Example Apps Catalog](/Users/Pascal/code/unified/.spec/specs/examples/catalog.spec.md)
-- [Example Apps Tooling](/Users/Pascal/code/unified/.spec/specs/examples/tooling.spec.md)
+- [Example Apps Suite](../.spec/specs/examples/package.spec.md)
+- [Example Apps Structure](../.spec/specs/examples/structure.spec.md)
+- [Example Apps DSL Template](../.spec/specs/examples/dsl_template.spec.md)
+- [Example Apps Catalog](../.spec/specs/examples/catalog.spec.md)
+- [Example Apps Tooling](../.spec/specs/examples/tooling.spec.md)
 
 Implementation plan:
 
-- [Example Apps Planning Index](/Users/Pascal/code/unified/.spec/planning/examples/README.md)
+- [Example Apps Planning Index](../.spec/planning/examples/README.md)
