@@ -114,6 +114,26 @@ defmodule ElmUi.Validate do
     report(:documentation_surface, checks)
   end
 
+  @spec validation_report() :: map()
+  def validation_report do
+    sections = default_sections()
+    Map.put(sections, :release_readiness, build_release_readiness(sections, :summary))
+  end
+
+  @spec validation_summary(map()) :: String.t()
+  def validation_summary(report) when is_map(report) do
+    [
+      "ElmUi validation summary",
+      "  example coverage passing?: #{report.example_coverage.status == :pass}",
+      "  runtime behavior passing?: #{report.runtime_behavior.status == :pass}",
+      "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
+      "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
+      "  release ready?: #{report.release_readiness.status == :pass}",
+      "  failing sections: #{inspect(report.release_readiness.failing_sections)}"
+    ]
+    |> Enum.join("\n")
+  end
+
   @spec release_gates() :: [map()]
   def release_gates do
     [
@@ -173,35 +193,10 @@ defmodule ElmUi.Validate do
 
   @spec release_readiness(mode(), keyword()) :: {:ok, map()} | {:error, map()}
   def release_readiness(mode, opts) do
-    default_sections = %{
-      example_coverage: example_coverage(),
-      runtime_behavior: runtime_behavior(),
-      tooling_surface: tooling_surface(),
-      documentation_surface: documentation_surface()
-    }
+    sections = Map.merge(default_sections(), Keyword.get(opts, :section_overrides, %{}))
+    report = build_release_readiness(sections, mode)
 
-    sections = Map.merge(default_sections, Keyword.get(opts, :section_overrides, %{}))
-
-    findings =
-      sections
-      |> Map.values()
-      |> Enum.flat_map(& &1.findings)
-
-    gates =
-      Enum.map(release_gates(), fn gate ->
-        Map.put(gate, :status, sections[gate.section].status)
-      end)
-
-    report = %{
-      mode: mode,
-      status: if(findings == [], do: :pass, else: :fail),
-      findings: findings,
-      sections: sections,
-      gates: gates,
-      evolution_rules: evolution_rules()
-    }
-
-    case {mode, findings} do
+    case {mode, report.findings} do
       {:strict, [_ | _]} -> {:error, report}
       _ -> {:ok, report}
     end
@@ -244,6 +239,40 @@ defmodule ElmUi.Validate do
 
   defp exported?(module, function, arity) do
     Code.ensure_loaded?(module) and Enum.member?(module.__info__(:functions), {function, arity})
+  end
+
+  defp default_sections do
+    %{
+      example_coverage: example_coverage(),
+      runtime_behavior: runtime_behavior(),
+      tooling_surface: tooling_surface(),
+      documentation_surface: documentation_surface()
+    }
+  end
+
+  defp build_release_readiness(sections, mode) do
+    findings =
+      sections
+      |> Map.values()
+      |> Enum.flat_map(& &1.findings)
+
+    gates =
+      Enum.map(release_gates(), fn gate ->
+        Map.put(gate, :status, sections[gate.section].status)
+      end)
+
+    %{
+      mode: mode,
+      status: if(findings == [], do: :pass, else: :fail),
+      findings: findings,
+      sections: sections,
+      gates: gates,
+      evolution_rules: evolution_rules(),
+      failing_sections:
+        sections
+        |> Enum.filter(fn {_section, report} -> report.status != :pass end)
+        |> Enum.map(fn {section, _report} -> section end)
+    }
   end
 
   defp package_root do
