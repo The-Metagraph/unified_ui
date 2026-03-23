@@ -1,10 +1,10 @@
 # Running the Examples
 
 This guide is the quickest way to launch and validate the standalone example
-apps in [/Users/Pascal/code/unified/examples](/Users/Pascal/code/unified/examples).
+apps in [examples](./).
 
 The example suite is made up of standalone Phoenix LiveView apps backed by the
-shared helpers in [/Users/Pascal/code/unified/examples/shared](/Users/Pascal/code/unified/examples/shared).
+shared helpers in [examples/shared](./shared).
 Use this guide when you want to run one example app directly, launch the
 aggregate demo, or use the shared maintainer tooling.
 
@@ -13,7 +13,7 @@ aggregate demo, or use the shared maintainer tooling.
 Run one example app directly:
 
 ```bash
-cd /Users/Pascal/code/unified/examples/button
+cd examples/button
 mix deps.get
 mix phx.server
 ```
@@ -23,7 +23,7 @@ Then open `http://127.0.0.1:4000/`.
 Run the aggregate demo app:
 
 ```bash
-cd /Users/Pascal/code/unified/examples/demo
+cd examples/demo
 mix deps.get
 mix phx.server
 ```
@@ -33,11 +33,10 @@ examples by control family.
 
 ## Shared Tooling
 
-Most maintainer workflows run from
-[/Users/Pascal/code/unified/examples/shared](/Users/Pascal/code/unified/examples/shared):
+Most maintainer workflows run from [examples/shared](./shared):
 
 ```bash
-cd /Users/Pascal/code/unified/examples/shared
+cd examples/shared
 mix deps.get
 ```
 
@@ -92,7 +91,7 @@ mix examples.release --strict
 ## Choosing an Example
 
 The full catalog is documented in
-[/Users/Pascal/code/unified/examples/README.md](/Users/Pascal/code/unified/examples/README.md),
+[examples/README.md](./README.md),
 but these are common starting points:
 
 - `examples/demo`: aggregate review surface
@@ -111,7 +110,7 @@ By default, Phoenix serves an example app at `http://127.0.0.1:4000/`.
 To use a different port:
 
 ```bash
-cd /Users/Pascal/code/unified/examples/button
+cd examples/button
 mix deps.get
 PORT=4100 mix phx.server
 ```
@@ -128,6 +127,6 @@ terms and the canonical signal behavior side by side.
 
 ## Related References
 
-- [Examples README](/Users/Pascal/code/unified/examples/README.md)
-- [Example Apps Suite Spec](/Users/Pascal/code/unified/.spec/specs/examples/package.spec.md)
-- [Example Apps Planning Index](/Users/Pascal/code/unified/.spec/planning/examples/README.md)
+- [Examples README](./README.md)
+- [Example Apps Suite Spec](../.spec/specs/examples/package.spec.md)
+- [Example Apps Planning Index](../.spec/planning/examples/README.md)
