@@ -35,7 +35,7 @@ decisions:
   stability: stable
 
 - id: repo.governance.unified_iur_not_runtime_contract
-  statement: The `unified_iur` package design subjects shall govern the canonical interchange model and shall not absorb runtime-library-native widget or local signal responsibilities owned by `live_ui`, `web_ui`, or `desktop_ui`.
+  statement: The `unified_iur` package design subjects shall govern the canonical interchange model and shall not absorb runtime-library-native widget or local signal responsibilities owned by `live_ui`, `elm_ui`, or `desktop_ui`.
   priority: must
   stability: stable
 ```

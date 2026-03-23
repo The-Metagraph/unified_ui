@@ -7,15 +7,16 @@ ecosystem runtime packages.
 id: ecosystem.platform_runtimes
 kind: architecture
 status: active
-summary: Architecture contract for `web_ui`, `live_ui`, `desktop_ui`, and `terminal_ui` as native widget and signal libraries that also include canonical IUR renderers.
+summary: Architecture contract for `elm_ui`, `live_ui`, `desktop_ui`, and `terminal_ui` as native widget and signal libraries that also include canonical IUR renderers.
 surface:
-  - packages/web_ui
+  - packages/elm_ui
   - packages/live_ui
   - packages/desktop_ui
   - packages/terminal_ui
   - .spec/specs/platform_runtimes.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.elm_ui_naming
 ```
 
 ## Requirements
@@ -41,8 +42,8 @@ decisions:
   priority: must
   stability: stable
 
-- id: ecosystem.platform_runtimes.web_ui_runtime_split
-  statement: `web_ui` shall use Phoenix for server-side runtime representation and Elm for client-side rendering and local state while preserving canonical IUR meaning and canonical event meaning at the ecosystem boundary.
+- id: ecosystem.platform_runtimes.elm_ui_runtime_split
+  statement: `elm_ui` shall use Phoenix for server-side runtime representation and Elm for client-side rendering and local state while preserving canonical IUR meaning and canonical event meaning at the ecosystem boundary.
   priority: must
   stability: stable
 
@@ -98,7 +99,7 @@ decisions:
     - ecosystem.platform_runtimes.native_surface_covers_iur
     - ecosystem.platform_runtimes.native_surface_usable_without_iur
     - ecosystem.platform_runtimes.iur_interpretation
-    - ecosystem.platform_runtimes.web_ui_runtime_split
+    - ecosystem.platform_runtimes.elm_ui_runtime_split
     - ecosystem.platform_runtimes.live_ui_runtime
     - ecosystem.platform_runtimes.desktop_ui_targets
     - ecosystem.platform_runtimes.desktop_ui_native_runtime

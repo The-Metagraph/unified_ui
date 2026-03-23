@@ -10,12 +10,13 @@ summary: Shared Jido.Signal and CloudEvents-compatible boundary contract across 
 surface:
   - packages/unified-ui
   - packages/live_ui
-  - packages/web_ui
+  - packages/elm_ui
   - packages/desktop_ui
   - packages/terminal_ui
   - .spec/specs/signal_transport.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.elm_ui_naming
 ```
 
 ## Requirements
@@ -31,8 +32,8 @@ decisions:
   priority: must
   stability: stable
 
-- id: ecosystem.signal_transport.web_bridge
-  statement: `web_ui` shall translate between canonical widget events at the ecosystem boundary and its native widget signal model across the Phoenix and Elm split while preserving canonical event meaning.
+- id: ecosystem.signal_transport.elm_ui_bridge
+  statement: `elm_ui` shall translate between canonical widget events at the ecosystem boundary and its native Phoenix-and-Elm interaction model while preserving canonical event meaning.
   priority: must
   stability: stable
 
@@ -84,7 +85,7 @@ decisions:
   covers:
     - ecosystem.signal_transport.jido_signal_canonical
     - ecosystem.signal_transport.dsl_event_bindings
-    - ecosystem.signal_transport.web_bridge
+    - ecosystem.signal_transport.elm_ui_bridge
     - ecosystem.signal_transport.live_bridge
     - ecosystem.signal_transport.desktop_translation
     - ecosystem.signal_transport.terminal_bridge

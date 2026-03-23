@@ -43,7 +43,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.package.dsl_boundary_only
-  statement: The package shall own the authored DSL, canonical signal descriptor authoring, compilation, and introspection responsibilities, and shall not become a renderer or runtime-library package for `web_ui`, `live_ui`, or `desktop_ui`.
+  statement: The package shall own the authored DSL, canonical signal descriptor authoring, compilation, and introspection responsibilities, and shall not become a renderer or runtime-library package for `elm_ui`, `live_ui`, or `desktop_ui`.
   priority: must
   stability: stable
 
@@ -67,7 +67,7 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.package.authoring_without_runtime_packages
-  given: A developer adds `packages/unified-ui` to a project without `web_ui`, `live_ui`, or `desktop_ui`
+  given: A developer adds `packages/unified-ui` to a project without `elm_ui`, `live_ui`, or `desktop_ui`
   when: The developer authors UI modules and compiles them into canonical IUR
   then: The package authoring and compilation workflow remains usable without a renderer/runtime package dependency
 ```

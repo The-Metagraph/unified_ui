@@ -35,7 +35,7 @@ decisions:
   stability: stable
 
 - id: repo.governance.unified_ui_not_runtime_contract
-  statement: The `unified_ui` package design subjects shall govern the authored DSL package and shall not absorb runtime-library-native responsibilities owned by `live_ui`, `web_ui`, or `desktop_ui`.
+  statement: The `unified_ui` package design subjects shall govern the authored DSL package and shall not absorb runtime-library-native responsibilities owned by `live_ui`, `elm_ui`, or `desktop_ui`.
   priority: must
   stability: stable
 ```

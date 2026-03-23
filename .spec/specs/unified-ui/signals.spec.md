@@ -47,7 +47,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.signals.no_runtime_local_event_leakage
-  statement: The authored signal surface shall not require `web_ui`, `live_ui`, or `desktop_ui` local event names, local payload keys, or local transport envelopes in authored modules.
+  statement: The authored signal surface shall not require `elm_ui`, `live_ui`, or `desktop_ui` local event names, local payload keys, or local transport envelopes in authored modules.
   priority: must
   stability: stable
 ```
