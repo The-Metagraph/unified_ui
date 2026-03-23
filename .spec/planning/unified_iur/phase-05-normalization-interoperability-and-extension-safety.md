@@ -48,7 +48,7 @@ Back to index: [README](./README.md)
     [x] 5.2.2 Task - Implement renderer-independence enforcement
       Guard the canonical model against runtime-local escape hatches or embedded native widget models.
 
-      [x] 5.2.2.1 Subtask - Implement validation that rejects `live_ui`, `web_ui`, or `desktop_ui` native widget structs from canonical values.
+      [x] 5.2.2.1 Subtask - Implement validation that rejects `live_ui`, `elm_ui`, or `desktop_ui` native widget structs from canonical values.
       [x] 5.2.2.2 Subtask - Implement validation that rejects runtime-local style objects and signal envelopes from canonical fields.
       [x] 5.2.2.3 Subtask - Implement compatibility checks that keep runtime-library entry expectations stable as canonical shape evolves.
 

@@ -1,0 +1,1039 @@
+{
+  "package": "elm_ui",
+  "version": "1",
+  "ci_enforcement": "required",
+  "requirements": [
+    {
+      "requirement_id": "ecosystem.architecture.dsl_authoring_boundary",
+      "inherits_from_requirement_id": "elm_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of elm_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.iur_exchange_boundary",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.renderer_packages_consume_iur",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.runtime_libraries_native_surface",
+      "inherits_from_requirement_id": "elm_ui.package.native_runtime_library",
+      "notes": "Shares the current conformance status of elm_ui.package.native_runtime_library."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.runtime_libraries_iur_renderer",
+      "inherits_from_requirement_id": "elm_ui.package.iur_renderer_entrypoint",
+      "notes": "Shares the current conformance status of elm_ui.package.iur_renderer_entrypoint."
+    },
+    {
+      "requirement_id": "ecosystem.architecture.shared_transport_contract",
+      "inherits_from_requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of elm_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.widget_libraries_independent",
+      "inherits_from_requirement_id": "elm_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of elm_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.native_surface_covers_iur",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.native_surface_usable_without_iur",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.direct_native_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.direct_native_surface."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.iur_interpretation",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.elm_ui_runtime_split",
+      "inherits_from_requirement_id": "elm_ui.package.phoenix_elm_split",
+      "notes": "Shares the current conformance status of elm_ui.package.phoenix_elm_split."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.jido_signal_canonical",
+      "inherits_from_requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of elm_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.dsl_event_bindings",
+      "inherits_from_requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of elm_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.elm_ui_bridge",
+      "inherits_from_requirement_id": "elm_ui.transport.server_frontend_bridge",
+      "notes": "Shares the current conformance status of elm_ui.transport.server_frontend_bridge."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.native_signal_models_allowed",
+      "inherits_from_requirement_id": "elm_ui.transport.native_web_event_model",
+      "notes": "Shares the current conformance status of elm_ui.transport.native_web_event_model."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.local_state_not_contract",
+      "inherits_from_requirement_id": "elm_ui.frontend_runtime.local_state_bounded",
+      "notes": "Shares the current conformance status of elm_ui.frontend_runtime.local_state_bounded."
+    },
+    {
+      "requirement_id": "elm_ui.package.library_identity",
+      "status": "verified",
+      "notes": "Verified by the restored `packages/elm_ui` package identity and top-level `ElmUi` namespace.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/mix.exs"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"app: :elm_ui|defmodule ElmUi\" packages/elm_ui/mix.exs packages/elm_ui/lib/elm_ui.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.package.native_runtime_library",
+      "status": "verified",
+      "notes": "Verified by the restored native widget surface, examples, and package-local runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.package.iur_renderer_entrypoint",
+      "status": "verified",
+      "notes": "Verified by the restored canonical renderer entrypoint and package-local renderer tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.package.phoenix_elm_split",
+      "status": "verified",
+      "notes": "Verified by the restored Phoenix-side runtime modules, Elm asset scaffold, and shared runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/elm.json"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.package.not_dsl_or_iur_owner",
+      "status": "verified",
+      "notes": "Verified as a maintained boundary guardrail in the restored package scaffold.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui.ex"
+        },
+        {
+          "kind": "command",
+          "run": "! grep -R -nE \"defmodule (UnifiedUi|UnifiedIUR)\" packages/elm_ui/lib",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.package.traceable_to_root_specs",
+      "status": "verified",
+      "notes": "Verified by the maintained package spec set and root-spec references.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/elm_ui/*.spec.md"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"Architecture|Platform Runtimes|Signal Transport\" .spec/specs/elm_ui/*.spec.md",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.structure.mix_and_frontend_layout",
+      "status": "verified",
+      "notes": "Verified by the restored Mix package, frontend asset layout, guides, and package tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/mix.exs"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/src/Main.elm"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/test/elm_ui/runtime_test.exs"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.structure.server_frontend_boundary",
+      "status": "verified",
+      "notes": "Verified by distinct server runtime, frontend runtime, and Elm bridge boundaries.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/src/ElmUi/Bridge.elm"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.structure.native_widget_module_boundary",
+      "status": "verified",
+      "notes": "Verified by distinct native widget and canonical renderer module areas.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer/canonical.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.structure.transport_translation_modules",
+      "status": "verified",
+      "notes": "Verified by dedicated transport translation modules for signal handling and frontend/server bridging.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/bridge.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.structure.frontend_bridge_modules",
+      "status": "verified",
+      "notes": "Verified by isolated frontend boot and bridge modules plus Elm-side bridge assets.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/boot.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/src/ElmUi/Bridge.elm"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.structure.no_dsl_or_iur_authorship",
+      "status": "verified",
+      "notes": "Verified as a maintained boundary contract in the restored package scaffold.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui.ex"
+        },
+        {
+          "kind": "command",
+          "run": "! grep -R -nE \"defmodule (UnifiedUi|UnifiedIUR)\" packages/elm_ui/lib",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.native_widgets.direct_native_surface",
+      "status": "verified",
+      "notes": "Verified by the restored native widget API and direct-native example screens.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.native_widgets.covers_canonical_iur_surface",
+      "status": "verified",
+      "notes": "Verified by the expanded native widget catalog and coverage validation proving the direct native surface spans the canonical widget set.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/validate.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/elm_ui/native_widgets_test.exs test/elm_ui/canonical_renderer_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.native_widgets.server_client_composition",
+      "status": "verified",
+      "notes": "Verified by the shared native screen mount, hydration, and runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "status": "verified",
+      "notes": "Verified by the native style/theme surface and continuity tests that keep authored theme tokens and state variants intact across the split runtime.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/style.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/theme.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime/style_resolver.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/style_realization.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/elm_ui/phase_five_integration_test.exs test/elm_ui/runtime_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.native_widgets.interaction_surface",
+      "status": "verified",
+      "notes": "Verified by the restored native event descriptors and transport translation tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.authoritative_server_representation",
+      "status": "verified",
+      "notes": "Verified by the restored server runtime state model and runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime/state.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.coordinate_frontend_rendering",
+      "status": "verified",
+      "notes": "Verified by the restored server-to-frontend hydration pipeline.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime/view_state.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/boot.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.handle_boundary_events",
+      "status": "verified",
+      "notes": "Verified by server runtime handling of translated canonical boundary signals in package-local tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime",
+      "status": "verified",
+      "notes": "Verified by the shared native and canonical mount entrypoints in `ElmUi.Runtime`.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.browser_state_is_bounded",
+      "status": "verified",
+      "notes": "Verified by the explicit server state model and bounded frontend-local state shape.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime/state.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/model.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.frontend_runtime.elm_rendering_layer",
+      "status": "verified",
+      "notes": "Verified by the restored Elm asset scaffold and frontend runtime modules.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/elm.json"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/src/Main.elm"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.frontend_runtime.local_state_bounded",
+      "status": "verified",
+      "notes": "Verified by the bounded frontend model and hydration/runtime tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/model.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.frontend_runtime.native_and_iur_entrypoints_share_frontend",
+      "status": "verified",
+      "notes": "Verified by the shared frontend hydration path for native and canonical runtime entrypoints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.frontend_runtime.browser_capabilities",
+      "status": "verified",
+      "notes": "Verified by the frontend bridge and Elm asset scaffold that handle browser-facing runtime concerns inside the package.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/assets/src/Main.elm"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.frontend_runtime.canonical_meaning_preserved",
+      "status": "verified",
+      "notes": "Verified by canonical renderer and runtime hydration tests that preserve the authored canonical meaning through the frontend realization path.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/model.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/elm_ui/canonical_renderer_test.exs test/elm_ui/runtime_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.iur_renderer.accepts_canonical_iur",
+      "status": "verified",
+      "notes": "Verified by the restored canonical renderer entrypoint and package-local renderer tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.iur_renderer.full_construct_coverage",
+      "status": "verified",
+      "notes": "Verified by direct canonical renderer coverage tests and the coverage validator that now checks the renderer against the full canonical kind set.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/validate.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/elm_ui/native_widgets_test.exs test/elm_ui/canonical_renderer_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.iur_renderer.deterministic_mapping",
+      "status": "verified",
+      "notes": "Verified by deterministic renderer tests against equivalent canonical input.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.iur_renderer.meaning_preservation",
+      "status": "verified",
+      "notes": "Verified by canonical renderer and continuity tests that confirm canonical interactions, theme attachments, layout meaning, and hydration roles survive translation into native widgets.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/continuity.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/elm_ui/canonical_renderer_test.exs test/elm_ui/phase_five_integration_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.iur_renderer.native_widget_reuse",
+      "status": "verified",
+      "notes": "Verified by the renderer returning the package's native `ElmUi.Widget` structures.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/renderer/canonical.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "status": "verified",
+      "notes": "Verified by native-to-`Jido.Signal` boundary translation in package-local tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.transport.native_web_event_model",
+      "status": "verified",
+      "notes": "Verified by the restored native-local web event translation path.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.transport.server_frontend_bridge",
+      "status": "verified",
+      "notes": "Verified by dedicated frontend and transport bridge envelopes.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/bridge.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/frontend_runtime/bridge.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.transport.no_boundary_leakage",
+      "status": "verified",
+      "notes": "Verified by server-facing transport envelopes that strip renderer-local event details at the boundary.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.transport.direct_native_usage_allowed",
+      "status": "verified",
+      "notes": "Verified by local-native transport flows that stay inside the package runtime until the canonical boundary is crossed.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/transport/signals.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.tooling.reference_examples",
+      "status": "verified",
+      "notes": "Verified by maintained native and canonical example inputs in the package.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/examples.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"native_counter_screen|canonical_welcome_screen\" packages/elm_ui/lib/elm_ui/examples.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.tooling.preview_and_inspection",
+      "status": "verified",
+      "notes": "Verified by package reference, info, and tooling inspection helpers.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/reference.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/info.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/tooling.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.tooling.validation_workflow",
+      "status": "verified",
+      "notes": "Verified by documented tooling workflows and package-local test coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/tooling.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/test/elm_ui/runtime_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.tooling.documentation_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained `elm_ui` package docs, guides, specs, and planning surfaces.",
+      "evidence": [
+        {
+          "kind": "path_glob_nonempty",
+          "glob": ".spec/specs/elm_ui/*.spec.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": ".spec/planning/elm_ui/README.md"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/README.md"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.input_and_navigation",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.overlay_and_feedback",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.data_and_document_views",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.visualization",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.operational_views",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.covers_canonical_iur_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.covers_canonical_iur_surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.widget_semantics_preserved",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.meaning_preservation",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.meaning_preservation."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layout_primitives",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.layering_primitives",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.viewport_and_clipping",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.canvas_surface",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.full_construct_coverage",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.full_construct_coverage."
+    },
+    {
+      "requirement_id": "unified_iur.display_systems.compose_with_widgets",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.meaning_preservation",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.meaning_preservation."
+    },
+    {
+      "requirement_id": "unified_iur.theming.theme_structure",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.color_model",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.text_style_attributes",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.semantic_roles",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.component_variants",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.theming.inheritance_and_overrides",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.theme_and_style_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.theme_and_style_surface."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.canonical_event_descriptor_representation",
+      "inherits_from_requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of elm_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.element_binding_attachment",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.renderer_independent_payload_mapping",
+      "inherits_from_requirement_id": "elm_ui.transport.no_boundary_leakage",
+      "notes": "Shares the current conformance status of elm_ui.transport.no_boundary_leakage."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.standard_interaction_families",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.data_binding_representation",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_ui.package.library_identity",
+      "inherits_from_requirement_id": "elm_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of elm_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "unified_ui.package.dsl_boundary_only",
+      "inherits_from_requirement_id": "elm_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of elm_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "unified_ui.package.canonical_iur_dependency",
+      "inherits_from_requirement_id": "elm_ui.iur_renderer.accepts_canonical_iur",
+      "notes": "Shares the current conformance status of elm_ui.iur_renderer.accepts_canonical_iur."
+    },
+    {
+      "requirement_id": "unified_ui.package.standalone_authoring_api",
+      "inherits_from_requirement_id": "elm_ui.package.not_dsl_or_iur_owner",
+      "notes": "Shares the current conformance status of elm_ui.package.not_dsl_or_iur_owner."
+    },
+    {
+      "requirement_id": "unified_ui.package.traceable_to_root_specs",
+      "inherits_from_requirement_id": "elm_ui.package.traceable_to_root_specs",
+      "notes": "Shares the current conformance status of elm_ui.package.traceable_to_root_specs."
+    },
+    {
+      "requirement_id": "unified_ui.signals.canonical_descriptor_shape",
+      "inherits_from_requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of elm_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "unified_ui.signals.authoring_event_semantics",
+      "inherits_from_requirement_id": "elm_ui.transport.canonical_boundary_events",
+      "notes": "Shares the current conformance status of elm_ui.transport.canonical_boundary_events."
+    },
+    {
+      "requirement_id": "unified_ui.signals.standard_interaction_families",
+      "inherits_from_requirement_id": "elm_ui.native_widgets.interaction_surface",
+      "notes": "Shares the current conformance status of elm_ui.native_widgets.interaction_surface."
+    },
+    {
+      "requirement_id": "unified_ui.signals.validation_and_introspection",
+      "inherits_from_requirement_id": "elm_ui.tooling.preview_and_inspection",
+      "notes": "Shares the current conformance status of elm_ui.tooling.preview_and_inspection."
+    },
+    {
+      "requirement_id": "unified_ui.signals.no_runtime_local_event_leakage",
+      "inherits_from_requirement_id": "elm_ui.transport.no_boundary_leakage",
+      "notes": "Shares the current conformance status of elm_ui.transport.no_boundary_leakage."
+    }
+  ]
+}

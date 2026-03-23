@@ -25,7 +25,7 @@ defmodule SpecComplianceTestSupport do
   end
 
   @spec requirement(String.t(), String.t()) :: map()
-  def requirement(id, file \\ ".spec/specs/web_ui/package.spec.md") do
+  def requirement(id, file \\ ".spec/specs/elm_ui/package.spec.md") do
     %{
       "id" => id,
       "subject_id" => id |> String.split(".") |> Enum.take(2) |> Enum.join("."),

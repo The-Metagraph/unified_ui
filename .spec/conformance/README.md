@@ -15,7 +15,7 @@ manifests.
 
 ## Current Use
 
-- `web_ui`, `live_ui`, `unified_ui`, and `unified_iur` are seeded packages in this layer
+- `elm_ui`, `live_ui`, `unified_ui`, and `unified_iur` are seeded packages in this layer
 - `mix spec.plancheck <package>` validates machine-readable plan coverage
 - `mix spec.traceability.generate <package>` regenerates the markdown mirror
 - `mix spec.compliance <package>` validates implementation evidence against the

@@ -109,7 +109,7 @@ defmodule UnifiedIUR.InteroperabilityTest do
 
     refute report.valid?
     refute report.runtime_safe?
-    assert report.consumers == [:live_ui, :web_ui, :desktop_ui]
+    assert report.consumers == [:live_ui, :elm_ui, :desktop_ui]
     assert Enum.any?(report.issues, &(&1.code == :runtime_local_escape_hatch))
   end
 

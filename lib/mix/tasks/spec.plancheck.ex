@@ -7,9 +7,9 @@ defmodule Mix.Tasks.Spec.Plancheck do
   @moduledoc """
   Checks package-scoped plan coverage using the machine-readable planning manifest.
 
-      mix spec.plancheck web_ui
-      mix spec.plancheck web_ui --refresh-state
-      mix spec.plancheck web_ui --format json --output tmp/web_ui-plancheck.json
+      mix spec.plancheck elm_ui
+      mix spec.plancheck elm_ui --refresh-state
+      mix spec.plancheck elm_ui --format json --output tmp/elm_ui-plancheck.json
   """
 
   @impl true

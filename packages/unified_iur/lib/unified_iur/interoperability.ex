@@ -7,7 +7,7 @@ defmodule UnifiedIUR.Interoperability do
   alias UnifiedIUR.{Element, Normalize, Tree, Validate}
   alias UnifiedIUR.Validate.Error
 
-  @runtime_consumers [:live_ui, :web_ui, :desktop_ui]
+  @runtime_consumers [:live_ui, :elm_ui, :desktop_ui]
 
   @spec runtime_consumers() :: [atom()]
   def runtime_consumers do

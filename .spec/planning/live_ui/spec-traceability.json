@@ -58,10 +58,10 @@
       "unified_ui.signals.no_runtime_local_event_leakage"
     ],
     "non_applicable_requirement_ids": [
-      "ecosystem.platform_runtimes.web_ui_runtime_split",
+      "ecosystem.platform_runtimes.elm_ui_runtime_split",
       "ecosystem.platform_runtimes.desktop_ui_targets",
       "ecosystem.platform_runtimes.desktop_ui_native_runtime",
-      "ecosystem.signal_transport.web_bridge",
+      "ecosystem.signal_transport.elm_ui_bridge",
       "ecosystem.signal_transport.desktop_translation"
     ]
   },

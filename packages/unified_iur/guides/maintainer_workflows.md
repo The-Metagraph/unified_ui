@@ -24,7 +24,7 @@ Changes to canonical families should be reviewed against the paired
 ## Assessing Runtime Compatibility
 
 Before merging canonical shape changes, assess their impact on `live_ui`,
-`web_ui`, and `desktop_ui`:
+`elm_ui`, and `desktop_ui`:
 
 1. Inspect the changed fixtures and diffs.
 2. Confirm attachment and slot semantics remain portable.

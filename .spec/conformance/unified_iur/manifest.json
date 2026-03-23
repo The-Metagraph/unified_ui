@@ -818,7 +818,7 @@
         },
         {
           "kind": "command",
-          "run": "grep -nE \"runtime_local_escape_hatch|Jido\\.Signal|Phoenix\\.LiveView|LiveUi|WebUi|DesktopUi|runtime-library-native structs\" packages/unified_iur/lib/unified_iur/validate.ex packages/unified_iur/lib/unified_iur/core/invariant.ex",
+          "run": "grep -nE \"runtime_local_escape_hatch|Jido\\.Signal|Phoenix\\.LiveView|LiveUi|ElmUi|DesktopUi|runtime-library-native structs\" packages/unified_iur/lib/unified_iur/validate.ex packages/unified_iur/lib/unified_iur/core/invariant.ex",
           "cwd": "."
         }
       ]

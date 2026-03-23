@@ -16,7 +16,7 @@ affects:
   - elm_ui.tooling
 ---
 
-# Rename the Phoenix-and-Elm Web Runtime Contract to `elm_ui`
+# Rename the Phoenix-and-Elm Web Runtime Contract from `web_ui` to `elm_ui`
 
 ## Context
 

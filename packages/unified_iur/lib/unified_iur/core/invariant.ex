@@ -11,7 +11,7 @@ defmodule UnifiedIUR.Core.Invariant do
   alias UnifiedIUR.Metadata
   alias UnifiedIUR.Tree
 
-  @runtime_native_prefixes ["Elixir.LiveUi", "Elixir.WebUi", "Elixir.DesktopUi"]
+  @runtime_native_prefixes ["Elixir.LiveUi", "Elixir.ElmUi", "Elixir.DesktopUi"]
 
   @spec canonical_element?(term()) :: boolean()
   def canonical_element?(%Element{} = element) do

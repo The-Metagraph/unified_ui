@@ -84,7 +84,7 @@ Back to index: [README](./README.md)
 
       [x] 6.4.2.1 Subtask - Document how to add a new authored canonical construct family from spec to DSL to compiled parity coverage.
       [x] 6.4.2.2 Subtask - Document how to evaluate `UnifiedIUR` parity and signal-surface impacts when the authored model changes.
-      [x] 6.4.2.3 Subtask - Document how to assess likely compatibility impacts on `live_ui`, `web_ui`, and `desktop_ui` without implementing those packages here.
+      [x] 6.4.2.3 Subtask - Document how to assess likely compatibility impacts on `live_ui`, `elm_ui`, and `desktop_ui` without implementing those packages here.
 
   [x] 6.5 Section - Phase 6 Integration Tests
     Validate examples, maintainer tooling, validation workflows, and release-readiness checks through end-to-end package workflows.
