@@ -43,6 +43,10 @@ defmodule ElmUi.Tooling do
       "mix deps.get",
       "mix compile",
       "mix test",
+      "mix elm_ui.preview --format catalog",
+      "mix elm_ui.inspect native_styling",
+      "mix elm_ui.export styling_continuity --format comparison",
+      "mix elm_ui.validate --strict",
       "mix spec.plancheck elm_ui",
       "mix spec.compliance elm_ui"
     ]

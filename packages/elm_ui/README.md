@@ -37,6 +37,10 @@ Package-local checks:
 - `mix deps.get`
 - `mix compile`
 - `mix test`
+- `mix elm_ui.preview --format catalog`
+- `mix elm_ui.inspect native_styling`
+- `mix elm_ui.export styling_continuity --format comparison`
+- `mix elm_ui.validate --strict`
 
 Workspace checks:
 

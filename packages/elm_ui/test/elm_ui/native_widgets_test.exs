@@ -152,7 +152,10 @@ defmodule ElmUi.NativeWidgetsTest do
         [
           ElmUi.Widgets.text("grid-copy", "Grid item"),
           ElmUi.Widgets.button("grid-action", "Run")
-        ], columns: 2, gap: :md)
+        ],
+        columns: 2,
+        gap: :md
+      )
 
     list =
       ElmUi.Widgets.list(

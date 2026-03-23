@@ -7,6 +7,10 @@
 - `mix deps.get`
 - `mix compile`
 - `mix test`
+- `mix elm_ui.preview --format catalog`
+- `mix elm_ui.inspect native_styling`
+- `mix elm_ui.export styling_continuity --format comparison`
+- `mix elm_ui.validate --strict`
 
 ## Workspace Commands
 
@@ -28,7 +32,7 @@
 
 ## Recommended Review Loop
 
-1. Inspect example metadata through `ElmUi.Examples.catalog/0`.
-2. Preview example behavior through `ElmUi.Inspect.preview/1`.
-3. Export a review artifact through `ElmUi.Export.artifact/1`.
-4. Run release-readiness checks through `ElmUi.Validate.release_readiness/1`.
+1. Inspect example metadata through `mix elm_ui.preview --format catalog`.
+2. Preview example behavior through `mix elm_ui.inspect native_styling`.
+3. Export a review artifact through `mix elm_ui.export styling_continuity --format comparison`.
+4. Run release-readiness checks through `mix elm_ui.validate --strict`.

@@ -25,6 +25,9 @@
 
 ## Review Surfaces
 
+- `mix elm_ui.inspect native_styling`
+- `mix elm_ui.export styling_continuity --format comparison`
+- `mix elm_ui.validate --strict`
 - `ElmUi.Inspection.runtime_snapshot/2`
 - `ElmUi.Continuity.compare/3`
 - `ElmUi.Inspect.preview/1`
