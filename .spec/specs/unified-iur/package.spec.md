@@ -50,7 +50,7 @@ decisions:
   stability: stable
 
 - id: unified_iur.package.renderer_independent_surface
-  statement: The package shall define renderer-independent canonical data structures for widgets, layouts, layering, styling, theming, and interaction descriptors without embedding `web_ui`, `live_ui`, or `desktop_ui` native widget models.
+  statement: The package shall define renderer-independent canonical data structures for widgets, layouts, layering, styling, theming, and interaction descriptors without embedding `elm_ui`, `live_ui`, or `desktop_ui` native widget models.
   priority: must
   stability: stable
 

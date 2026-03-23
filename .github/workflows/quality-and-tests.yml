@@ -69,8 +69,8 @@ jobs:
             path: packages/unified-ui
           - package: live_ui
             path: packages/live_ui
-          - package: web_ui
-            path: packages/web_ui
+          - package: elm_ui
+            path: packages/elm_ui
 
     defaults:
       run:

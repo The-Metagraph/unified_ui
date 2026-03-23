@@ -84,7 +84,7 @@ Back to index: [README](./README.md)
 
       [x] 2.4.2.1 Subtask - Register baseline example modules so maintainers can list or inspect them from package helpers.
       [x] 2.4.2.2 Subtask - Expose how baseline examples map to the canonical construct families introduced in Phase 2.
-      [x] 2.4.2.3 Subtask - Keep examples independent from `live_ui`, `web_ui`, and `desktop_ui` package availability.
+      [x] 2.4.2.3 Subtask - Keep examples independent from `live_ui`, `elm_ui`, and `desktop_ui` package availability.
 
   [x] 2.5 Section - Phase 2 Integration Tests
     Validate foundational authored widgets, forms, navigation, and baseline composition end to end.

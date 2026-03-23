@@ -7,10 +7,10 @@ defmodule Mix.Tasks.Spec.Compliance do
   @moduledoc """
   Checks package-scoped implementation compliance using a conformance manifest.
 
-      mix spec.compliance web_ui
-      mix spec.compliance web_ui --no-run-commands
-      mix spec.compliance web_ui --refresh-state
-      mix spec.compliance web_ui --format json --output tmp/web_ui-compliance.json
+      mix spec.compliance elm_ui
+      mix spec.compliance elm_ui --no-run-commands
+      mix spec.compliance elm_ui --refresh-state
+      mix spec.compliance elm_ui --format json --output tmp/elm_ui-compliance.json
   """
 
   @impl true

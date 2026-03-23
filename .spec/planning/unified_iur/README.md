@@ -44,5 +44,5 @@ The plan aligns to:
 - `unified_iur` remains a pure Mix library and not a long-lived runtime.
 - Canonical values are immutable and renderer-independent.
 - `unified_iur` remains the exchange boundary between `unified_ui` authored output and runtime-library renderer entry points.
-- Canonical constructs must preserve enough semantic information for `live_ui`, `web_ui`, and `desktop_ui` to realize their own native widget surfaces.
+- Canonical constructs must preserve enough semantic information for `live_ui`, `elm_ui`, and `desktop_ui` to realize their own native widget surfaces.
 - Canonical widget, display-system, style, theme, and interaction changes remain bilaterally aligned with `unified_ui`.

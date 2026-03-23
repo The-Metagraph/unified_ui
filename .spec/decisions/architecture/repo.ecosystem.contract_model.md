@@ -19,7 +19,7 @@ The repository defines one authored DSL package, one canonical intermediate repr
 
 1. `unified_ui` owns the authored DSL surface and compiles canonical UI intent into `unified_iur`.
 2. `unified_iur` owns the canonical intermediate representation for widgets, layouts, layering, styling, and theming.
-3. Runtime libraries such as `web_ui`, `live_ui`, and `desktop_ui` own native widget, layering, styling, and signal surfaces that are usable independently of canonical IUR.
+3. Runtime libraries such as `elm_ui`, `live_ui`, `desktop_ui`, and `terminal_ui` own native widget, layering, styling, and signal surfaces that are usable independently of canonical IUR.
 4. Every canonical `unified_iur` widget, layout, layering, and styling construct intended for ecosystem rendering must be representable in each runtime library's native surface.
 5. Each runtime library includes a renderer that loads canonical `unified_iur` and realizes it through that library's own native widgets and native signals.
 6. Cross-package interaction semantics use `Jido.Signal` and CloudEvents-compatible event conventions as the canonical boundary contract.

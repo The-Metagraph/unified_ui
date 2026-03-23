@@ -46,7 +46,7 @@ mix unified_ui.export --example operations_dashboard --format snapshot
 
 ## Runtime Impact Assessment
 
-`UnifiedUi` does not implement `live_ui`, `web_ui`, or `desktop_ui`, but
+`UnifiedUi` does not implement `live_ui`, `elm_ui`, or `desktop_ui`, but
 maintainers still need to think about them when the authored boundary changes.
 
 When canonical constructs change, review:

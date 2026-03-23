@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Spec.Traceability.Generate do
   Generates `.spec/planning/<package>/spec-traceability.md` from the
   authoritative JSON planning manifest.
 
-      mix spec.traceability.generate web_ui
+      mix spec.traceability.generate elm_ui
       mix spec.traceability.generate live_ui
   """
 

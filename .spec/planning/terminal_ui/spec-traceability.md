@@ -44,11 +44,11 @@ and which upstream package specs are treated as input constraints rather than
 ### Referenced Root Requirements Outside `terminal_ui` Ownership
 These referenced root requirements are intentionally not mapped to `terminal_ui`
 tasks because they govern other runtime packages:
-- `ecosystem.platform_runtimes.web_ui_runtime_split`
+- `ecosystem.platform_runtimes.elm_ui_runtime_split`
 - `ecosystem.platform_runtimes.live_ui_runtime`
 - `ecosystem.platform_runtimes.desktop_ui_targets`
 - `ecosystem.platform_runtimes.desktop_ui_native_runtime`
-- `ecosystem.signal_transport.web_bridge`
+- `ecosystem.signal_transport.elm_ui_bridge`
 - `ecosystem.signal_transport.live_bridge`
 - `ecosystem.signal_transport.desktop_translation`
 ## Direct `terminal_ui` Spec Requirements

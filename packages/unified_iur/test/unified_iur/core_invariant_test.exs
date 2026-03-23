@@ -1,4 +1,4 @@
-defmodule WebUi.FakeWidget do
+defmodule ElmUi.FakeWidget do
   defstruct [:id]
 end
 
@@ -25,7 +25,7 @@ defmodule UnifiedIUR.CoreInvariantTest do
     tree =
       Element.new(:widget, :button,
         id: "button",
-        attributes: %{runtime_widget: %WebUi.FakeWidget{id: "native"}}
+        attributes: %{runtime_widget: %ElmUi.FakeWidget{id: "native"}}
       )
 
     assert_raise ArgumentError,

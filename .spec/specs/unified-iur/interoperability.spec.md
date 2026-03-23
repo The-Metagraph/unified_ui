@@ -28,7 +28,7 @@ decisions:
 
 ```spec-requirements
 - id: unified_iur.interoperability.runtime_library_consumption
-  statement: Canonical `unified_iur` structures shall be organized so `web_ui`, `live_ui`, and `desktop_ui` can consume them as renderer entry input without requiring authored DSL modules.
+  statement: Canonical `unified_iur` structures shall be organized so `elm_ui`, `live_ui`, and `desktop_ui` can consume them as renderer entry input without requiring authored DSL modules.
   priority: must
   stability: stable
 
@@ -43,7 +43,7 @@ decisions:
   stability: stable
 
 - id: unified_iur.interoperability.no_runtime_local_escape_hatches
-  statement: The package shall not rely on `web_ui`, `live_ui`, or `desktop_ui` native widget structs, renderer-local style objects, or runtime-local signal envelopes as part of the canonical IUR model.
+  statement: The package shall not rely on `elm_ui`, `live_ui`, or `desktop_ui` native widget structs, renderer-local style objects, or runtime-local signal envelopes as part of the canonical IUR model.
   priority: must
   stability: stable
 
@@ -57,7 +57,7 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.interoperability.one_iur_many_runtimes
-  given: The same canonical screen is rendered by `web_ui`, `live_ui`, and `desktop_ui`
+  given: The same canonical screen is rendered by `elm_ui`, `live_ui`, and `desktop_ui`
   when: Each runtime library loads canonical IUR
   then: Each library can realize the same authored meaning through its own native surface without requiring a renderer-specific canonical representation
 ```

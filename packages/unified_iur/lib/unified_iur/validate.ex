@@ -10,7 +10,7 @@ defmodule UnifiedIUR.Validate do
   @runtime_local_prefixes [
     "DesktopUi",
     "LiveUi",
-    "WebUi",
+    "ElmUi",
     "UnifiedUi",
     "Phoenix.LiveView",
     "Jido.Signal"

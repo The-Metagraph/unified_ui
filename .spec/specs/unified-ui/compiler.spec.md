@@ -52,7 +52,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.compiler.no_renderer_output_modes
-  statement: The package shall not define platform-specific compile targets for `web_ui`, `live_ui`, or `desktop_ui`; renderer libraries consume canonical IUR instead.
+  statement: The package shall not define platform-specific compile targets for `elm_ui`, `live_ui`, or `desktop_ui`; renderer libraries consume canonical IUR instead.
   priority: must
   stability: stable
 ```

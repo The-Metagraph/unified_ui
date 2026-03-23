@@ -11,7 +11,7 @@ surface:
   - packages/unified-ui
   - packages/unified_iur
   - packages/live_ui
-  - packages/web_ui
+  - packages/elm_ui
   - packages/desktop_ui
   - packages/terminal_ui
   - .spec/specs/architecture.spec.md
@@ -20,6 +20,7 @@ surface:
   - .spec/specs/signal_transport.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.elm_ui_naming
 ```
 
 ## Requirements

@@ -84,7 +84,7 @@ Back to index: [README](./README.md)
 
       [x] 1.4.2.1 Subtask - Implement authored module summary helpers for declared identifiers, section usage, and validation state.
       [x] 1.4.2.2 Subtask - Implement inspection helpers that surface registered widgets, layouts, styles, and interactions as they are added to the package.
-      [x] 1.4.2.3 Subtask - Implement baseline inspection surfaces that do not require `live_ui`, `web_ui`, or `desktop_ui` to be present.
+      [x] 1.4.2.3 Subtask - Implement baseline inspection surfaces that do not require `live_ui`, `elm_ui`, or `desktop_ui` to be present.
 
   [x] 1.5 Section - Phase 1 Integration Tests
     Validate package bootstrap, Spark DSL registration, authored invariants, and reference surfaces end to end.

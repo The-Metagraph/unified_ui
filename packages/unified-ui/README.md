@@ -18,7 +18,7 @@ required long-lived runtime services.
 
 - authors describe widgets, layouts, display systems, themes, and canonical signals here
 - the compiler lowers authored modules into canonical `UnifiedIUR`
-- runtime libraries such as `live_ui`, `web_ui`, and `desktop_ui` are downstream consumers of the canonical output, not alternative authoring surfaces
+- runtime libraries such as `live_ui`, `elm_ui`, and `desktop_ui` are downstream consumers of the canonical output, not alternative authoring surfaces
 
 The package is designed to stay renderer-agnostic. If a change would introduce
 renderer-local concepts into authored modules, that change is outside the

@@ -70,12 +70,12 @@ decisions:
     - repo.conformance.generated_traceability_mirrors
 
 - kind: source_file
-  target: .spec/planning/web_ui/spec-traceability.json
+  target: .spec/planning/elm_ui/spec-traceability.json
   covers:
     - repo.conformance.plan_coverage_manifests
 
 - kind: source_file
-  target: .spec/planning/web_ui/spec-traceability.md
+  target: .spec/planning/elm_ui/spec-traceability.md
   covers:
     - repo.conformance.generated_traceability_mirrors
 
@@ -90,7 +90,7 @@ decisions:
     - repo.conformance.generated_traceability_mirrors
 
 - kind: source_file
-  target: .spec/conformance/web_ui/manifest.json
+  target: .spec/conformance/elm_ui/manifest.json
   covers:
     - repo.conformance.package_manifests
     - repo.conformance.requirement_id_join

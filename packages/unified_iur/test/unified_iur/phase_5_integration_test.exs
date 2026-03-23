@@ -6,7 +6,7 @@ defmodule UnifiedIUR.Phase5IntegrationTest do
   alias UnifiedIUR.Layout
   alias UnifiedIUR.Widgets.{Foundational, Input}
 
-  defmodule WebUi.NativeNode do
+  defmodule ElmUi.NativeNode do
     defstruct [:id]
   end
 
@@ -157,7 +157,7 @@ defmodule UnifiedIUR.Phase5IntegrationTest do
       type: :widget,
       kind: :content,
       content: %{text: "Native"},
-      extra: %{native: %WebUi.NativeNode{id: "native-1"}}
+      extra: %{native: %ElmUi.NativeNode{id: "native-1"}}
     }
 
     refute Interoperability.runtime_safe?(unsafe)

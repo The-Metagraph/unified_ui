@@ -40,13 +40,13 @@ tasks because they govern other runtime packages:
 - `ecosystem.platform_runtimes.native_surface_covers_iur`
 - `ecosystem.platform_runtimes.native_surface_usable_without_iur`
 - `ecosystem.platform_runtimes.iur_interpretation`
-- `ecosystem.platform_runtimes.web_ui_runtime_split`
+- `ecosystem.platform_runtimes.elm_ui_runtime_split`
 - `ecosystem.platform_runtimes.live_ui_runtime`
 - `ecosystem.platform_runtimes.desktop_ui_targets`
 - `ecosystem.platform_runtimes.desktop_ui_native_runtime`
 - `ecosystem.signal_transport.jido_signal_canonical`
 - `ecosystem.signal_transport.dsl_event_bindings`
-- `ecosystem.signal_transport.web_bridge`
+- `ecosystem.signal_transport.elm_ui_bridge`
 - `ecosystem.signal_transport.live_bridge`
 - `ecosystem.signal_transport.desktop_translation`
 - `ecosystem.signal_transport.native_signal_models_allowed`

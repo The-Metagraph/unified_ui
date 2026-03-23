@@ -84,7 +84,7 @@ Back to index: [README](./README.md)
 
       [x] 6.4.2.1 Subtask - Document how to add a new canonical construct family from spec to implementation to fixture coverage.
       [x] 6.4.2.2 Subtask - Document how to evaluate bilateral `unified_ui` parity when changing canonical surface.
-      [x] 6.4.2.3 Subtask - Document how to assess compatibility impacts on `live_ui`, `web_ui`, and `desktop_ui`.
+      [x] 6.4.2.3 Subtask - Document how to assess compatibility impacts on `live_ui`, `elm_ui`, and `desktop_ui`.
 
   [x] 6.5 Section - Phase 6 Integration Tests
     Validate tooling, fixtures, validation gates, and documentation readiness through end-to-end maintainer workflows.

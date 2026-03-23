@@ -44,9 +44,9 @@ and which upstream package specs are treated as input constraints rather than
 ### Referenced Root Requirements Outside `desktop_ui` Ownership
 These referenced root requirements are intentionally not mapped to `desktop_ui`
 tasks because they govern other runtime packages:
-- `ecosystem.platform_runtimes.web_ui_runtime_split`
+- `ecosystem.platform_runtimes.elm_ui_runtime_split`
 - `ecosystem.platform_runtimes.live_ui_runtime`
-- `ecosystem.signal_transport.web_bridge`
+- `ecosystem.signal_transport.elm_ui_bridge`
 - `ecosystem.signal_transport.live_bridge`
 ## Direct `desktop_ui` Spec Requirements
 ### `package.spec.md`

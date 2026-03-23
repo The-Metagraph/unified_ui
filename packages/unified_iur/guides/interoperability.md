@@ -4,7 +4,7 @@
 
 ## Runtime-Library Expectations
 
-Runtime libraries such as `live_ui`, `web_ui`, and `desktop_ui` are expected to:
+Runtime libraries such as `live_ui`, `elm_ui`, and `desktop_ui` are expected to:
 
 - accept canonical `UnifiedIUR.Element` trees
 - preserve canonical element identity and metadata meaning

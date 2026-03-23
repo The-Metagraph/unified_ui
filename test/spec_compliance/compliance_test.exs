@@ -145,9 +145,9 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert Enum.any?(report.findings, &(&1.code == "command_stdout_mismatch"))
   end
 
-  test "live web_ui plancheck and compliance both pass with full verification" do
-    plan_report = Unified.SpecCompliance.plancheck("web_ui")
-    compliance_report = Unified.SpecCompliance.compliance("web_ui", run_commands: true)
+  test "live elm_ui plancheck and compliance both pass with full verification" do
+    plan_report = Unified.SpecCompliance.plancheck("elm_ui")
+    compliance_report = Unified.SpecCompliance.compliance("elm_ui", run_commands: true)
 
     assert plan_report.status == :pass
     assert compliance_report.status == :pass
@@ -164,7 +164,7 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     native_runtime_requirement =
       Enum.find(
         compliance_report.results,
-        &(&1.requirement_id == "web_ui.package.native_runtime_library")
+        &(&1.requirement_id == "elm_ui.package.native_runtime_library")
       )
 
     assert native_runtime_requirement.effective_status == :verified
@@ -172,7 +172,7 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     refute Enum.any?(
              compliance_report.findings,
-             &(&1.requirement_id == "web_ui.package.traceable_to_root_specs")
+             &(&1.requirement_id == "elm_ui.package.traceable_to_root_specs")
            )
   end
 
