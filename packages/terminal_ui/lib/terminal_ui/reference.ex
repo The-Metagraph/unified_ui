@@ -3,6 +3,43 @@ defmodule TerminalUi.Reference do
   Lightweight package reference helpers for `terminal_ui`.
   """
 
+  @spec example_summary() :: map()
+  def example_summary do
+    %{
+      catalog: TerminalUi.Examples.catalog(),
+      native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
+      canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),
+      mixed_ids: Enum.map(TerminalUi.Examples.mixed_examples(), & &1.id),
+      comparison_ids:
+        TerminalUi.Examples.comparison_examples()
+        |> Map.keys()
+        |> Enum.sort_by(&to_string/1),
+      coverage_matrix: TerminalUi.Examples.coverage_matrix()
+    }
+  end
+
+  @spec capability_summary() :: map()
+  def capability_summary do
+    %{
+      categories: TerminalUi.Capabilities.categories(),
+      profiles: TerminalUi.Capabilities.profiles(),
+      diagnostics: TerminalUi.Capabilities.diagnostics(),
+      degradation: TerminalUi.Degradation.diagnostics()
+    }
+  end
+
+  @spec shared_runtime_contract() :: map()
+  def shared_runtime_contract do
+    %{
+      assumptions: TerminalUi.Runtime.assumptions(),
+      backend_modes: TerminalUi.Backend.modes(),
+      capability_profiles: TerminalUi.Capabilities.profiles(),
+      renderer_accepts: TerminalUi.Renderer.accepts(),
+      transport_modes: TerminalUi.Transport.modes(),
+      direct_native_and_canonical_share_runtime: true
+    }
+  end
+
   @spec package_reference() :: map()
   def package_reference do
     %{
@@ -60,6 +97,8 @@ defmodule TerminalUi.Reference do
       layer: %{kinds: TerminalUi.Layer.kinds(), module: TerminalUi.Layer},
       renderer: %{
         accepts: TerminalUi.Renderer.accepts(),
+        supported_kinds: TerminalUi.Renderer.supported_kinds(),
+        required_canonical_kinds: TerminalUi.Renderer.required_canonical_kinds(),
         responsibilities: TerminalUi.Renderer.responsibilities(),
         mapper: TerminalUi.Renderer.Mapper
       },
@@ -72,19 +111,31 @@ defmodule TerminalUi.Reference do
         modules: TerminalUi.Transport.modules(),
         diagnostics: TerminalUi.Transport.diagnostics()
       },
-      examples: %{
-        native_ids: Enum.map(TerminalUi.Examples.native_examples(), & &1.id),
-        canonical_ids: Enum.map(TerminalUi.Examples.canonical_examples(), & &1.id),
-        comparison_ids:
-          TerminalUi.Examples.comparison_examples()
+      validation: %{
+        inspect: TerminalUi.Inspect,
+        validate: TerminalUi.Validate,
+        validation_sections:
+          TerminalUi.Validate.validation_report()
           |> Map.keys()
-          |> Enum.sort_by(&to_string/1),
-        coverage_matrix: TerminalUi.Examples.coverage_matrix()
+          |> Enum.sort(),
+        release_readiness_modes: [:summary, :strict],
+        release_gates: TerminalUi.Validate.release_gates(),
+        evolution_rules: TerminalUi.Validate.evolution_rules()
       },
-      documentation: %{guides: TerminalUi.Tooling.documentation_surface()},
+      examples: example_summary(),
+      documentation: %{
+        guides: TerminalUi.Tooling.documentation_surface(),
+        maintainer_commands: TerminalUi.Tooling.mix_tasks(),
+        shared_runtime_contract: shared_runtime_contract()
+      },
       tooling: %{
         guides: TerminalUi.Tooling.documentation_surface(),
-        workflows: TerminalUi.Tooling.workflows()
+        workflows: TerminalUi.Tooling.workflows(),
+        preview_surfaces: TerminalUi.Tooling.preview_surfaces()
+      },
+      summaries: %{
+        examples: example_summary(),
+        capabilities: capability_summary()
       }
     }
   end

@@ -36,6 +36,55 @@ defmodule TerminalUi.ExamplesTest do
            ]
   end
 
+  test "examples catalog exposes native, canonical, and mixed review artifacts" do
+    assert [
+             :advanced_capability_continuity,
+             :advanced_continuity,
+             :canonical_advanced_operations,
+             :canonical_foundational,
+             :canonical_styled_review,
+             :canonical_transport_review,
+             :foundational_continuity,
+             :native_advanced_operations,
+             :native_foundational,
+             :native_styled_review,
+             :native_transport_review,
+             :normalized_input_profiles,
+             :styled_continuity_review,
+             :styled_degradation_review,
+             :transport_flow_review
+           ] =
+             TerminalUi.Examples.catalog()
+             |> Enum.map(& &1.id)
+             |> Enum.sort()
+
+    assert Enum.sort(Enum.map(TerminalUi.Examples.mixed_examples(), & &1.id)) == [
+             :advanced_capability_continuity,
+             :advanced_continuity,
+             :foundational_continuity,
+             :normalized_input_profiles,
+             :styled_continuity_review,
+             :styled_degradation_review,
+             :transport_flow_review
+           ]
+
+    assert %{
+             category: :native,
+             workflow: :styling,
+             artifact_names: artifact_names,
+             parity_with: [:canonical_styled_review, :styled_continuity_review],
+             traceability: %{
+               package_specs: package_specs,
+               runtime_obligations: runtime_obligations
+             }
+           } = TerminalUi.Examples.metadata(:native_styled_review)
+
+    assert artifact_names.preview == "terminal_ui.examples.native_styled_review.preview"
+    assert artifact_names.validation == "terminal_ui.examples.native_styled_review.validation"
+    assert :native_widgets in package_specs
+    assert :direct_native_reviewable in runtime_obligations
+  end
+
   test "comparison helpers show native and canonical rendering through the shared runtime" do
     comparison = TerminalUi.Examples.foundational_comparison()
     advanced = TerminalUi.Examples.advanced_comparison()

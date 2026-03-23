@@ -62,6 +62,21 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
         %{id: :details, label: "Details"}
       ])
 
+    volume =
+      TerminalUi.Widgets.slider("volume",
+        value: 6,
+        min: 0,
+        max: 10,
+        binding: :volume,
+        on_change: %{intent: :set_volume}
+      )
+
+    artifacts =
+      TerminalUi.Widgets.pick_list("artifacts", [%{id: :logs, label: "Logs"}],
+        selected: [:logs],
+        binding: :artifacts
+      )
+
     assert query.family == :input
     assert query.bindings.value == :query
     assert query.events.submit == %{intent: :search}
@@ -73,6 +88,11 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
     assert sections.metadata.focusable
     assert trail.kind == :breadcrumbs
     assert Enum.map(trail.attributes.items, & &1.id) == [:workspace, :details]
+    assert volume.kind == :slider
+    assert volume.bindings.value == :volume
+    assert volume.events.change == %{intent: :set_volume}
+    assert artifacts.kind == :pick_list
+    assert artifacts.bindings.selected == :artifacts
   end
 
   test "catalog and widget summaries expose phase two foundational coverage" do
@@ -88,6 +108,7 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
              TerminalUi.Widget,
              TerminalUi.Widgets.Foundational,
              TerminalUi.Widgets.Input,
+             TerminalUi.Widgets.Forms,
              TerminalUi.Widgets.Navigation,
              TerminalUi.Widgets.Data,
              TerminalUi.Widgets.Feedback,
@@ -98,6 +119,8 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
     assert :action in TerminalUi.Widgets.families()
     assert :command in TerminalUi.Widgets.kinds()
     assert :radio_group in TerminalUi.Widgets.kinds()
+    assert :file_input in TerminalUi.Widgets.kinds()
+    assert :form_builder in TerminalUi.Widgets.kinds()
     assert :tabs in TerminalUi.Widgets.kinds()
 
     assert TerminalUi.Widgets.validation_state().widget_contract == :ready

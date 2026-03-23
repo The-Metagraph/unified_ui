@@ -4,7 +4,7 @@ defmodule TerminalUi.Widgets do
   """
 
   alias TerminalUi.Widget
-  alias TerminalUi.Widgets.{Builder, Data, Feedback, Foundational, Input, Navigation}
+  alias TerminalUi.Widgets.{Builder, Data, Feedback, Forms, Foundational, Input, Navigation}
   alias TerminalUi.Widgets.{Operational, Visualization}
 
   @type family :: Widget.family()
@@ -24,6 +24,7 @@ defmodule TerminalUi.Widgets do
       Widget,
       Foundational,
       Input,
+      Forms,
       Navigation,
       Data,
       Feedback,
@@ -37,6 +38,7 @@ defmodule TerminalUi.Widgets do
     [
       Foundational.kinds(),
       Input.kinds(),
+      Forms.kinds(),
       Navigation.kinds(),
       Data.kinds(),
       Feedback.kinds(),
@@ -129,6 +131,11 @@ defmodule TerminalUi.Widgets do
     Input.text_input(id, opts)
   end
 
+  @spec numeric_input(String.t() | atom(), keyword()) :: Widget.t()
+  def numeric_input(id, opts \\ []) do
+    Input.numeric_input(id, opts)
+  end
+
   @spec checkbox(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def checkbox(id, label, opts \\ []) do
     Input.checkbox(id, label, opts)
@@ -142,6 +149,31 @@ defmodule TerminalUi.Widgets do
   @spec select(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def select(id, options, opts \\ []) do
     Input.select(id, options, opts)
+  end
+
+  @spec pick_list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def pick_list(id, options, opts \\ []) do
+    Input.pick_list(id, options, opts)
+  end
+
+  @spec slider(String.t() | atom(), keyword()) :: Widget.t()
+  def slider(id, opts \\ []) do
+    Input.slider(id, opts)
+  end
+
+  @spec date_input(String.t() | atom(), keyword()) :: Widget.t()
+  def date_input(id, opts \\ []) do
+    Input.date_input(id, opts)
+  end
+
+  @spec time_input(String.t() | atom(), keyword()) :: Widget.t()
+  def time_input(id, opts \\ []) do
+    Input.time_input(id, opts)
+  end
+
+  @spec file_input(String.t() | atom(), keyword()) :: Widget.t()
+  def file_input(id, opts \\ []) do
+    Input.file_input(id, opts)
   end
 
   @spec tabs(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
@@ -162,6 +194,23 @@ defmodule TerminalUi.Widgets do
   @spec list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def list(id, items, opts \\ []) do
     Navigation.list(id, items, opts)
+  end
+
+  @spec field(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def field(id, control, opts \\ []) do
+    Forms.field(id, control, opts)
+  end
+
+  @spec field_group(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def field_group(id, children, opts \\ []) do
+    Forms.field_group(id, children, opts)
+  end
+
+  @spec form_builder(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def form_builder(id, children, opts \\ []) do
+    Forms.form_builder(id, children, opts)
   end
 
   @spec table(String.t() | atom(), [keyword() | map()], [keyword() | map()], keyword()) ::

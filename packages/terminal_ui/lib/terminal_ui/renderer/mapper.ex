@@ -122,7 +122,7 @@ defmodule TerminalUi.Renderer.Mapper do
   end
 
   defp do_map(%Element{type: :widget, kind: kind} = element)
-       when kind in [:text_input, "text_input", :numeric_input, "numeric_input"] do
+       when kind in [:text_input, "text_input"] do
     {:ok,
      TerminalUi.Widgets.text_input(
        element.id,
@@ -135,6 +135,29 @@ defmodule TerminalUi.Renderer.Mapper do
              [group_attr(element, :input, :placeholder), attr(element, :placeholder)],
              ""
            ),
+         on_change: interaction_payload(element, :change),
+         on_submit: interaction_payload(element, :submit)
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:numeric_input, "numeric_input"] do
+    {:ok,
+     TerminalUi.Widgets.numeric_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         placeholder:
+           first_present(
+             [group_attr(element, :input, :placeholder), attr(element, :placeholder)],
+             ""
+           ),
+         min: first_present([group_attr(element, :input, :min), attr(element, :min)]),
+         max: first_present([group_attr(element, :input, :max), attr(element, :max)]),
+         step: first_present([group_attr(element, :input, :step), attr(element, :step)], 1),
          on_change: interaction_payload(element, :change),
          on_submit: interaction_payload(element, :submit)
        )
@@ -197,6 +220,105 @@ defmodule TerminalUi.Renderer.Mapper do
          binding: binding_name(element),
          on_change: interaction_payload(element, :change),
          on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:pick_list, "pick_list"] do
+    {:ok,
+     TerminalUi.Widgets.pick_list(
+       element.id,
+       first_present([group_attr(element, :selection, :options), attr(element, :options)], []),
+       Keyword.merge(
+         base_opts(element),
+         selected: first_present([attr(element, :selected), binding_value(element)]),
+         binding: binding_name(element),
+         multiple:
+           first_present(
+             [group_attr(element, :selection, :multiple?), attr(element, :multiple?)],
+             true
+           ),
+         on_change: interaction_payload(element, :change),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:slider, "slider"] do
+    {:ok,
+     TerminalUi.Widgets.slider(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)], 0),
+         binding: binding_name(element),
+         min: first_present([group_attr(element, :input, :min), attr(element, :min)], 0),
+         max: first_present([group_attr(element, :input, :max), attr(element, :max)], 100),
+         step: first_present([group_attr(element, :input, :step), attr(element, :step)], 1),
+         on_change: interaction_payload(element, :change),
+         on_focus: interaction_payload(element, :focus)
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:date_input, "date_input"] do
+    {:ok,
+     TerminalUi.Widgets.date_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         min: first_present([group_attr(element, :input, :min), attr(element, :min)]),
+         max: first_present([group_attr(element, :input, :max), attr(element, :max)]),
+         format:
+           first_present([group_attr(element, :input, :format), attr(element, :format)], :iso8601),
+         on_change: interaction_payload(element, :change),
+         on_submit: interaction_payload(element, :submit)
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:time_input, "time_input"] do
+    {:ok,
+     TerminalUi.Widgets.time_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         min: first_present([group_attr(element, :input, :min), attr(element, :min)]),
+         max: first_present([group_attr(element, :input, :max), attr(element, :max)]),
+         step: first_present([group_attr(element, :input, :step), attr(element, :step)]),
+         format:
+           first_present([group_attr(element, :input, :format), attr(element, :format)], :iso8601),
+         on_change: interaction_payload(element, :change),
+         on_submit: interaction_payload(element, :submit)
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:file_input, "file_input"] do
+    {:ok,
+     TerminalUi.Widgets.file_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         binding: binding_name(element),
+         accept: first_present([group_attr(element, :file, :accept), attr(element, :accept)], []),
+         multiple:
+           first_present(
+             [group_attr(element, :file, :multiple?), attr(element, :multiple?)],
+             false
+           ),
+         capture: first_present([group_attr(element, :file, :capture), attr(element, :capture)]),
+         on_change: interaction_payload(element, :change),
+         on_focus: interaction_payload(element, :focus)
        )
      )}
   end
@@ -698,6 +820,74 @@ defmodule TerminalUi.Renderer.Mapper do
     end
   end
 
+  defp do_map(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:form_builder, "form_builder"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       TerminalUi.Widgets.form_builder(
+         element.id,
+         children,
+         Keyword.merge(
+           base_opts(element),
+           mode:
+             first_present([group_attr(element, :form, :mode), attr(element, :mode)], :grouped),
+           autocomplete:
+             first_present(
+               [group_attr(element, :form, :autocomplete?), attr(element, :autocomplete?)],
+               true
+             ),
+           on_submit: interaction_payload(element, :submit)
+         )
+       )}
+    end
+  end
+
+  defp do_map(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:field_group, "field_group"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       TerminalUi.Widgets.field_group(
+         element.id,
+         children,
+         Keyword.merge(
+           base_opts(element),
+           legend: first_present([group_attr(element, :group, :legend), attr(element, :legend)]),
+           group_description:
+             first_present([
+               group_attr(element, :group, :description),
+               attr(element, :group_description)
+             ]),
+           collapsible:
+             first_present(
+               [group_attr(element, :group, :collapsible?), attr(element, :collapsible?)],
+               false
+             )
+         )
+       )}
+    end
+  end
+
+  defp do_map(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:field, "field"] do
+    with {:ok, control} <- map_required_child(element, [:control]),
+         {:ok, label} <- map_optional_child(element, [:label]),
+         {:ok, help} <- map_optional_child(element, [:help]) do
+      {:ok,
+       TerminalUi.Widgets.field(
+         element.id,
+         control,
+         Keyword.merge(
+           base_opts(element),
+           name: first_present([group_attr(element, :field, :name), attr(element, :name)]),
+           control_id:
+             first_present([group_attr(element, :field, :control_id), attr(element, :control_id)]),
+           label: label,
+           help: help
+         )
+       )}
+    end
+  end
+
   defp do_map(%Element{type: :layer, kind: kind} = element) when kind in [:overlay, "overlay"] do
     with {:ok, base} <- map_required_child(element, [:base]),
          {:ok, overlays} <-
@@ -859,6 +1049,13 @@ defmodule TerminalUi.Renderer.Mapper do
 
       child ->
         map(child)
+    end
+  end
+
+  defp map_optional_child(%Element{} = element, slots) do
+    case first_child_in_slots(element, slots) do
+      nil -> {:ok, nil}
+      child -> map(child)
     end
   end
 
