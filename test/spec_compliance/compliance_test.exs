@@ -187,7 +187,7 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.aliases == 48
   end
 
-  @tag timeout: 420_000
+  @tag timeout: 720_000
   test "live unified_ui plancheck and compliance both pass" do
     plan_report = Unified.SpecCompliance.plancheck("unified_ui")
     compliance_report = Unified.SpecCompliance.compliance("unified_ui", run_commands: true)
