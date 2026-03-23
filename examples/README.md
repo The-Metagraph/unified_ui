@@ -9,6 +9,9 @@ primary widget or construct. Every example app is meant to be understandable on
 its own while still proving the same authored-to-canonical-to-runtime path:
 `UnifiedUi` DSL -> canonical `UnifiedIUR` -> `LiveUi` rendering.
 
+If you want the fastest path to launching or validating the suite, start with
+[Running the Examples](/Users/Pascal/code/unified/examples/running_the_examples.md).
+
 `examples/demo/` is the aggregate category-oriented review surface. It uses the
 same shared theme and style baseline as the current button example and gives
 reviewers one browser-runnable shell for the ordered control categories.
