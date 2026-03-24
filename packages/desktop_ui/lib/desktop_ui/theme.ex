@@ -177,10 +177,16 @@ defmodule DesktopUi.Theme do
           hero: %{semantic_role: :title, attrs: [:bold, :underline, :uppercase]}
         },
         button: %{
-          primary: %{variant: :filled, semantic_role: :primary_action}
+          primary: %{variant: :filled, semantic_role: :primary_action},
+          secondary: %{variant: :quiet, semantic_role: :secondary_action}
         },
         surface: %{
-          panel: %{variant: :panel, border: :double, bg: :surface}
+          panel: %{variant: :panel, border: :double, bg: :surface},
+          elevated: %{variant: :elevated, border: :double, elevation: :raised}
+        },
+        status: %{
+          warning: %{semantic_role: :status_warning},
+          danger: %{semantic_role: :status_danger}
         }
       }
     }

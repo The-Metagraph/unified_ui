@@ -114,7 +114,13 @@ defmodule DesktopUi.Reference do
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),
         workflows: DesktopUi.Tooling.workflows(),
-        mix_tasks: DesktopUi.Tooling.mix_tasks()
+        preview_surfaces: DesktopUi.Tooling.preview_surfaces(),
+        mix_tasks: DesktopUi.Tooling.mix_tasks(),
+        validation_state: DesktopUi.Tooling.validation_state()
+      },
+      validate: %{
+        release_gates: DesktopUi.Validate.release_gates(),
+        validation_report: DesktopUi.Validate.validation_report()
       }
     }
   end

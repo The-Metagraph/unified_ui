@@ -68,7 +68,11 @@ defmodule DesktopUi.Info do
       },
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),
-        workflows: DesktopUi.Tooling.workflows()
+        workflows: DesktopUi.Tooling.workflows(),
+        mix_tasks: DesktopUi.Tooling.mix_tasks()
+      },
+      validate: %{
+        release_gates: DesktopUi.Validate.release_gates()
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
