@@ -11,7 +11,9 @@ defmodule DesktopUi.Info do
       package_areas: DesktopUi.package_areas(),
       runtime: %{
         assumptions: DesktopUi.Runtime.assumptions(),
-        validation_state: DesktopUi.Runtime.validation_state()
+        validation_state: DesktopUi.Runtime.validation_state(),
+        event_loop:
+          DesktopUi.Runtime.EventLoop.diagnostics(DesktopUi.Runtime.EventLoop.scaffold())
       },
       widgets: %{
         families: DesktopUi.Widgets.families(),

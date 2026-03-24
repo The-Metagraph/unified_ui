@@ -17,7 +17,9 @@ defmodule DesktopUi.Reference do
         assumptions: DesktopUi.Runtime.assumptions(),
         modules: DesktopUi.Runtime.modules(),
         capabilities: DesktopUi.Runtime.capabilities(),
-        validation_state: DesktopUi.Runtime.validation_state()
+        validation_state: DesktopUi.Runtime.validation_state(),
+        event_loop_diagnostics:
+          DesktopUi.Runtime.EventLoop.diagnostics(DesktopUi.Runtime.EventLoop.scaffold())
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),

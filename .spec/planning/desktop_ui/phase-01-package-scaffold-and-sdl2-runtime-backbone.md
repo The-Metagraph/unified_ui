@@ -47,26 +47,26 @@ Back to index: [README](./README.md)
       [x] 1.1.2.2 Subtask - Establish public naming conventions for runtime entry points, platform modules, native widget namespaces, and package-facing helper modules.
       [x] 1.1.2.3 Subtask - Prevent the package structure from taking ownership of authored DSL concerns or canonical IUR model definitions.
 
-  [ ] 1.2 Section - Shared SDL2 Runtime Backbone
+  [x] 1.2 Section - Shared SDL2 Runtime Backbone
     Implement the shared runtime model that later native widgets, canonical
     rendering, and platform adapters will reuse.
 
-    [ ] 1.2.1 Task - Implement runtime entrypoints and state boundaries
+    [x] 1.2.1 Task - Implement runtime entrypoints and state boundaries
       Define the baseline SDL2 runtime surface for direct native screens and
       renderer-driven screens.
 
-      [ ] 1.2.1.1 Subtask - Create runtime modules for application start, window boot, render-loop state initialization, and shutdown handling.
-      [ ] 1.2.1.2 Subtask - Define authoritative runtime state boundaries for window registry, focus state, redraw scheduling, and screen realization.
-      [ ] 1.2.1.3 Subtask - Define package-local error handling and lifecycle behavior for invalid runtime state, missing widgets, and boot failures.
+      [x] 1.2.1.1 Subtask - Create runtime modules for application start, window boot, render-loop state initialization, and shutdown handling.
+      [x] 1.2.1.2 Subtask - Define authoritative runtime state boundaries for window registry, focus state, redraw scheduling, and screen realization.
+      [x] 1.2.1.3 Subtask - Define package-local error handling and lifecycle behavior for invalid runtime state, missing widgets, and boot failures.
 
-    [ ] 1.2.2 Task - Implement shared SDL2 event-loop scaffolding
+    [x] 1.2.2 Task - Implement shared SDL2 event-loop scaffolding
       Create the minimum shared runtime mechanics needed to coordinate redraws,
       input polling, and window lifecycle before full transport translation
       exists.
 
-      [ ] 1.2.2.1 Subtask - Create package-local modules for event polling, redraw requests, input dispatch scaffolding, and frame coordination.
-      [ ] 1.2.2.2 Subtask - Create bounded placeholders for focus changes, shortcut handling, and window lifecycle callbacks that later transport translation can reuse.
-      [ ] 1.2.2.3 Subtask - Define diagnostics for invalid event-loop state, unsupported callback payloads, and mismatched runtime initialization order.
+      [x] 1.2.2.1 Subtask - Create package-local modules for event polling, redraw requests, input dispatch scaffolding, and frame coordination.
+      [x] 1.2.2.2 Subtask - Create bounded placeholders for focus changes, shortcut handling, and window lifecycle callbacks that later transport translation can reuse.
+      [x] 1.2.2.3 Subtask - Define diagnostics for invalid event-loop state, unsupported callback payloads, and mismatched runtime initialization order.
 
   [ ] 1.3 Section - Platform Integration Seams
     Implement explicit Windows, macOS, and Linux adapter seams so platform
