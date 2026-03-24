@@ -5,6 +5,7 @@ defmodule DesktopUi do
 
   alias DesktopUi.{
     Artifacts,
+    Examples,
     Info,
     Inspection,
     Platform,
@@ -24,12 +25,23 @@ defmodule DesktopUi do
           | :renderer
           | :transport
           | :artifacts
+          | :examples
           | :inspection
           | :tooling
 
   @spec package_areas() :: [package_area()]
   def package_areas do
-    [:widgets, :runtime, :platform, :renderer, :transport, :artifacts, :inspection, :tooling]
+    [
+      :widgets,
+      :runtime,
+      :platform,
+      :renderer,
+      :transport,
+      :artifacts,
+      :examples,
+      :inspection,
+      :tooling
+    ]
   end
 
   @spec widgets() :: module()
@@ -52,6 +64,9 @@ defmodule DesktopUi do
 
   @spec artifacts() :: module()
   def artifacts, do: Artifacts
+
+  @spec examples() :: module()
+  def examples, do: Examples
 
   @spec inspection() :: module()
   def inspection, do: Inspection

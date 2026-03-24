@@ -83,25 +83,25 @@ Back to index: [README](./README.md)
       [x] 2.3.2.2 Subtask - Define deterministic canonical-to-native mapping expectations for widget structure, focus behavior, and styling hooks.
       [x] 2.3.2.3 Subtask - Add diagnostics for unsupported canonical constructs, invalid bindings, and renderer-native mismatches.
 
-  [ ] 2.4 Section - Foundational Reference Examples
+  [x] 2.4 Section - Foundational Reference Examples
     Implement maintained foundational examples that compare direct-native and
     canonical rendering through the same runtime backbone.
 
-    [ ] 2.4.1 Task - Implement foundational direct-native and canonical examples
+    [x] 2.4.1 Task - Implement foundational direct-native and canonical examples
       Provide small maintained screens that let maintainers exercise the first
       widget families and canonical renderer path end to end.
 
-      [ ] 2.4.1.1 Subtask - Add direct-native foundational examples for content, actions, forms, and navigation.
-      [ ] 2.4.1.2 Subtask - Add canonical foundational examples that render the same screen intent through `UnifiedIUR`.
-      [ ] 2.4.1.3 Subtask - Keep example metadata aligned with the package reference surface and future tooling workflows.
+      [x] 2.4.1.1 Subtask - Add direct-native foundational examples for content, actions, forms, and navigation.
+      [x] 2.4.1.2 Subtask - Add canonical foundational examples that render the same screen intent through `UnifiedIUR`.
+      [x] 2.4.1.3 Subtask - Keep example metadata aligned with the package reference surface and future tooling workflows.
 
-    [ ] 2.4.2 Task - Implement foundational comparison helpers
+    [x] 2.4.2 Task - Implement foundational comparison helpers
       Make it easy to compare direct-native and canonical output while coverage
       is still limited to the foundational surface.
 
-      [ ] 2.4.2.1 Subtask - Add helper workflows that compare foundational native and canonical render trees.
-      [ ] 2.4.2.2 Subtask - Expose which widget families and display constructs are covered by the foundational examples.
-      [ ] 2.4.2.3 Subtask - Document where advanced widget and display coverage will extend the examples in later phases.
+      [x] 2.4.2.1 Subtask - Add helper workflows that compare foundational native and canonical render trees.
+      [x] 2.4.2.2 Subtask - Expose which widget families and display constructs are covered by the foundational examples.
+      [x] 2.4.2.3 Subtask - Document where advanced widget and display coverage will extend the examples in later phases.
 
   [ ] 2.5 Section - Phase 2 Integration Tests
     Validate foundational native widgets, baseline screen composition, and the

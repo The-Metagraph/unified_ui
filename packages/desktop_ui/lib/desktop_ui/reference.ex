@@ -47,6 +47,11 @@ defmodule DesktopUi.Reference do
         responsibilities: DesktopUi.Artifacts.responsibilities(),
         validation_state: DesktopUi.Artifacts.validation_state()
       },
+      examples: %{
+        native_ids: DesktopUi.Examples.native_ids(),
+        canonical_ids: DesktopUi.Examples.canonical_ids(),
+        comparison_ids: DesktopUi.Examples.comparison_ids()
+      },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
         package_overview: DesktopUi.Inspection.package_overview(),
