@@ -26,6 +26,14 @@ defmodule DesktopUi.Info do
         diagnostics: DesktopUi.Platform.diagnostics(),
         validation_state: DesktopUi.Platform.validation_state()
       },
+      layout: %{
+        kinds: DesktopUi.Layout.kinds(),
+        validation_state: DesktopUi.Layout.validation_state()
+      },
+      layer: %{
+        kinds: DesktopUi.Layer.kinds(),
+        validation_state: DesktopUi.Layer.validation_state()
+      },
       renderer: %{
         responsibilities: DesktopUi.Renderer.responsibilities(),
         validation_state: DesktopUi.Renderer.validation_state()
@@ -52,7 +60,7 @@ defmodule DesktopUi.Info do
         validation: DesktopUi.Inspection.validation_surface()
       },
       responsibilities: %{
-        direct_native: [:widgets, :runtime, :platform],
+        direct_native: [:widgets, :layout, :layer, :runtime, :platform],
         canonical_renderer: [:renderer, :runtime, :transport]
       }
     }

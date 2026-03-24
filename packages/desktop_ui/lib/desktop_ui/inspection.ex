@@ -5,7 +5,13 @@ defmodule DesktopUi.Inspection do
 
   @spec helpers() :: [atom()]
   def helpers do
-    [:package_overview, :shared_runtime_contract, :platform_contract, :validation_surface]
+    [
+      :package_overview,
+      :shared_runtime_contract,
+      :platform_contract,
+      :layering_contract,
+      :validation_surface
+    ]
   end
 
   @spec package_overview() :: map()
@@ -15,6 +21,14 @@ defmodule DesktopUi.Inspection do
       runtime_binding: :sdl,
       platform_targets: DesktopUi.Platform.targets(),
       package_areas: DesktopUi.package_areas(),
+      layout: %{
+        kinds: DesktopUi.Layout.kinds(),
+        validation_state: DesktopUi.Layout.validation_state()
+      },
+      layer: %{
+        kinds: DesktopUi.Layer.kinds(),
+        validation_state: DesktopUi.Layer.validation_state()
+      },
       examples: %{
         native_ids: DesktopUi.Examples.native_ids(),
         canonical_ids: DesktopUi.Examples.canonical_ids(),
@@ -31,8 +45,20 @@ defmodule DesktopUi.Inspection do
       assumptions: DesktopUi.Runtime.assumptions(),
       runtime_modules: DesktopUi.Runtime.modules(),
       platform_targets: DesktopUi.Platform.targets(),
+      layout_kinds: DesktopUi.Layout.kinds(),
+      layer_kinds: DesktopUi.Layer.kinds(),
       transport_modes: DesktopUi.Transport.modes(),
       direct_native_and_canonical_share_runtime: true
+    }
+  end
+
+  @spec layering_contract() :: map()
+  def layering_contract do
+    %{
+      layout: DesktopUi.Layout.validation_state(),
+      layer: DesktopUi.Layer.validation_state(),
+      multiwindow_runtime: true,
+      advanced_display_shared_runtime: true
     }
   end
 
@@ -42,6 +68,8 @@ defmodule DesktopUi.Inspection do
       widgets: DesktopUi.Widgets.validation_state(),
       runtime: DesktopUi.Runtime.validation_state(),
       platform: DesktopUi.Platform.validation_state(),
+      layout: DesktopUi.Layout.validation_state(),
+      layer: DesktopUi.Layer.validation_state(),
       renderer: DesktopUi.Renderer.validation_state(),
       transport: DesktopUi.Transport.validation_state(),
       artifacts: DesktopUi.Artifacts.validation_state()

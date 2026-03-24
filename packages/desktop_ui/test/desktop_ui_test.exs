@@ -6,6 +6,8 @@ defmodule DesktopUiTest do
     assert DesktopUi.widget() == DesktopUi.Widget
     assert DesktopUi.runtime() == DesktopUi.Runtime
     assert DesktopUi.platform() == DesktopUi.Platform
+    assert DesktopUi.layout() == DesktopUi.Layout
+    assert DesktopUi.layer() == DesktopUi.Layer
     assert DesktopUi.renderer() == DesktopUi.Renderer
     assert DesktopUi.transport() == DesktopUi.Transport
     assert DesktopUi.artifacts() == DesktopUi.Artifacts

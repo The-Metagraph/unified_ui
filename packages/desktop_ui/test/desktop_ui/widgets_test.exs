@@ -88,4 +88,56 @@ defmodule DesktopUi.WidgetsTest do
     assert tabs.attributes.current == :overview
     assert tabs.events.navigation.intent == :navigate
   end
+
+  test "advanced widget families cover data, feedback, visualization, and operational surfaces" do
+    table =
+      DesktopUi.Widgets.table(
+        "services-table",
+        [%{id: :service, label: "Service"}, %{id: :status, label: "Status"}],
+        [%{id: :api, cells: ["API", "healthy"]}],
+        selection_binding: :selected_service,
+        sort_key: :service
+      )
+
+    dialog =
+      DesktopUi.Widgets.dialog(
+        "ops-dialog",
+        "Operations",
+        [
+          DesktopUi.Widgets.text("dialog-copy", "Runbook loaded")
+        ], open: true)
+
+    chart =
+      DesktopUi.Widgets.bar_chart("service-chart", [%{id: :healthy, values: [4, 6, 8]}])
+
+    palette =
+      DesktopUi.Widgets.command_palette(
+        "ops-palette",
+        [%{id: :reload, label: "Reload"}, %{id: :restart, label: "Restart"}],
+        query_binding: :command_query,
+        window_identity: :ops_window
+      )
+
+    assert table.family == :data
+    assert table.bindings.selection == :selected_service
+    assert table.metadata.sort_key == :service
+
+    assert dialog.family == :window
+    assert dialog.metadata.overlay_role == :dialog
+    assert dialog.state.open
+
+    assert chart.family == :visualization
+    assert palette.family == :operational
+    assert palette.metadata.window_identity == :ops_window
+
+    assert :table in DesktopUi.Widgets.kinds()
+    assert :toast in DesktopUi.Widgets.kinds()
+    assert :bar_chart in DesktopUi.Widgets.kinds()
+    assert :command_palette in DesktopUi.Widgets.kinds()
+    assert DesktopUi.Widgets.validation_state().advanced_data_widgets == :ready
+    assert DesktopUi.Widgets.validation_state().advanced_operational_widgets == :ready
+    assert :selection_mode in DesktopUi.Widget.contract().metadata
+    assert :sort in DesktopUi.Widget.contract().events
+    assert :columns in DesktopUi.Widget.contract().attributes
+  end
 end

@@ -3,7 +3,18 @@ defmodule DesktopUi.Widget do
   Native renderer-facing widget representation for `desktop_ui`.
   """
 
-  @type family :: :content | :action | :layout | :input | :navigation | :feedback | :window
+  @type family ::
+          :content
+          | :action
+          | :layout
+          | :input
+          | :navigation
+          | :feedback
+          | :window
+          | :data
+          | :visualization
+          | :operational
+          | :layer
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -46,11 +57,43 @@ defmodule DesktopUi.Widget do
         :shortcut,
         :shortcut_scope,
         :focus_group,
-        :binding_surface
+        :binding_surface,
+        :selection_mode,
+        :sort_key,
+        :overlay_role,
+        :overlay_lifecycle,
+        :positioning_mode,
+        :interaction_route,
+        :window_identity
       ],
-      state: [:disabled, :focused, :open, :active, :selected, :checked, :value],
-      bindings: [:value, :checked, :selected, :current, :active_item],
-      slots: [:default, :header, :content, :footer, :overlay],
+      state: [
+        :disabled,
+        :focused,
+        :open,
+        :active,
+        :selected,
+        :checked,
+        :value,
+        :loading,
+        :expanded,
+        :phase,
+        :progress,
+        :severity,
+        :streaming,
+        :paused
+      ],
+      bindings: [
+        :value,
+        :checked,
+        :selected,
+        :current,
+        :active_item,
+        :selection,
+        :filters,
+        :query,
+        :expansion
+      ],
+      slots: [:default, :header, :content, :footer, :overlay, :primary, :secondary, :anchor],
       attributes: [
         :label,
         :content,
@@ -67,10 +110,47 @@ defmodule DesktopUi.Widget do
         :current,
         :gap,
         :align,
-        :justify
+        :justify,
+        :columns,
+        :rows,
+        :nodes,
+        :subject,
+        :sections,
+        :message,
+        :timeout_ms,
+        :status,
+        :current,
+        :total,
+        :indeterminate,
+        :series,
+        :axes,
+        :events,
+        :operations,
+        :commands,
+        :processes,
+        :summary,
+        :query,
+        :entries
       ],
       styles: [:fg, :bg, :padding, :border, :theme, :variant, :tone, :weight, :intent],
-      events: [:click, :focus, :blur, :shortcut, :close, :resize, :change, :selection, :submit]
+      events: [
+        :click,
+        :focus,
+        :blur,
+        :shortcut,
+        :close,
+        :resize,
+        :change,
+        :selection,
+        :submit,
+        :sort,
+        :filter,
+        :paginate,
+        :expand,
+        :dismiss,
+        :command,
+        :navigation
+      ]
     }
   end
 
@@ -133,6 +213,27 @@ defmodule DesktopUi.Widget do
   end
 
   @spec family_for(atom()) :: family()
+  def family_for(kind) when kind in [:overlay, :context_menu, :popover, :multi_window], do: :layer
+
+  def family_for(kind)
+      when kind in [:viewport, :scroll_region, :split_pane, :canvas_surface, :absolute],
+      do: :layout
+
+  def family_for(kind) when kind in [:table, :tree_view, :inspector, :markdown_viewer], do: :data
+
+  def family_for(kind) when kind in [:gauge, :bar_chart, :line_chart, :timeline, :canvas],
+    do: :visualization
+
+  def family_for(kind)
+      when kind in [
+             :log_viewer,
+             :cluster_dashboard,
+             :command_palette,
+             :process_monitor,
+             :window_command
+           ],
+      do: :operational
+
   def family_for(kind) when kind in [:window, :dialog], do: :window
   def family_for(kind) when kind in [:column, :row, :stack], do: :layout
   def family_for(kind) when kind in [:button, :toggle, :link, :command], do: :action

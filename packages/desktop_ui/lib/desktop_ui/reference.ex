@@ -32,6 +32,14 @@ defmodule DesktopUi.Reference do
         diagnostics: DesktopUi.Platform.diagnostics(),
         validation_state: DesktopUi.Platform.validation_state()
       },
+      layout: %{
+        kinds: DesktopUi.Layout.kinds(),
+        validation_state: DesktopUi.Layout.validation_state()
+      },
+      layer: %{
+        kinds: DesktopUi.Layer.kinds(),
+        validation_state: DesktopUi.Layer.validation_state()
+      },
       renderer: %{
         accepts: DesktopUi.Renderer.accepts(),
         responsibilities: DesktopUi.Renderer.responsibilities(),
@@ -56,10 +64,11 @@ defmodule DesktopUi.Reference do
         helpers: DesktopUi.Inspection.helpers(),
         package_overview: DesktopUi.Inspection.package_overview(),
         shared_runtime_contract: DesktopUi.Inspection.shared_runtime_contract(),
+        layering_contract: DesktopUi.Inspection.layering_contract(),
         validation_surface: DesktopUi.Inspection.validation_surface()
       },
       responsibilities: %{
-        direct_native: [:widgets, :runtime, :platform],
+        direct_native: [:widgets, :layout, :layer, :runtime, :platform],
         canonical_renderer: [:renderer, :runtime, :transport],
         bounded_platform_variation: true
       },

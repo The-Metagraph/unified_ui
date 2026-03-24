@@ -53,6 +53,8 @@ defmodule DesktopUi.Runtime.Screen do
       composition: %{
         root_kind: root.kind,
         layout_kinds: collect_layout_kinds(root),
+        layer_kinds: collect_layer_kinds(root),
+        window_count: count_windows(root),
         widget_count: count_widgets(root),
         shared_realization: true
       },
@@ -77,7 +79,17 @@ defmodule DesktopUi.Runtime.Screen do
     root
     |> flatten_widgets([])
     |> Enum.map(& &1.kind)
-    |> Enum.filter(&(&1 in [:window, :dialog, :content, :column, :row, :stack]))
+    |> Enum.filter(
+      &(&1 in ([:window, :dialog, :content, :column, :row, :stack] ++ DesktopUi.Layout.kinds()))
+    )
+    |> Enum.uniq()
+  end
+
+  defp collect_layer_kinds(root) do
+    root
+    |> flatten_widgets([])
+    |> Enum.map(& &1.kind)
+    |> Enum.filter(&(&1 in DesktopUi.Layer.kinds()))
     |> Enum.uniq()
   end
 
@@ -104,6 +116,12 @@ defmodule DesktopUi.Runtime.Screen do
 
   defp count_widgets(root) do
     root |> flatten_widgets([]) |> length()
+  end
+
+  defp count_windows(root) do
+    root
+    |> flatten_widgets([])
+    |> Enum.count(&(&1.kind == :window))
   end
 
   defp flatten_widgets(widget, acc) do

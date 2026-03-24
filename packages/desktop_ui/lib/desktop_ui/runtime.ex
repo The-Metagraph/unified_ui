@@ -22,7 +22,9 @@ defmodule DesktopUi.Runtime do
       DesktopUi.Runtime.Screen,
       DesktopUi.Runtime.State,
       DesktopUi.Runtime.Shutdown,
-      DesktopUi.Runtime.Error
+      DesktopUi.Runtime.Error,
+      DesktopUi.Layout,
+      DesktopUi.Layer
     ]
   end
 
@@ -37,6 +39,10 @@ defmodule DesktopUi.Runtime do
       :foundational_layout_realization,
       :binding_indexing,
       :event_targeting,
+      :advanced_display_realization,
+      :layered_runtime,
+      :multiwindow_registry,
+      :window_focus_handoff,
       :event_polling_scaffold,
       :frame_coordination,
       :focus_callback_placeholders,

@@ -39,7 +39,7 @@ defmodule DesktopUi.Runtime.Boot do
         Screen.new(screen, source_kind, Keyword.put(opts, :platform_target, platform_target))
 
       with {:ok, realization} <- Realization.realize_screen(screen_model, opts) do
-        window = Window.register(screen_model, opts)
+        windows = Window.register_all(screen_model, opts)
 
         {:ok,
          %State{
@@ -51,9 +51,13 @@ defmodule DesktopUi.Runtime.Boot do
            platform_adapter: adapter.summary(),
            root: screen_model.root,
            screen: screen_model,
-           windows: %{primary: window.id, registry: %{window.id => window}},
+           windows: windows,
            focus: %{
-             current: realization.current_focus || Window.primary_focus_target(window),
+             current:
+               realization.current_focus ||
+                 windows.primary
+                 |> then(&Map.fetch!(windows.registry, &1))
+                 |> Window.primary_focus_target(),
              order: realization.focus_order
            },
            redraw: %{
@@ -65,7 +69,7 @@ defmodule DesktopUi.Runtime.Boot do
              Map.merge(realization, %{
                mode: :shared_sdl_runtime,
                root_kind: screen_model.root.kind,
-               window_id: window.id
+               window_id: windows.primary
              }),
            event_loop:
              EventLoop.scaffold(platform_target: platform_target, screen_id: screen_model.id),
