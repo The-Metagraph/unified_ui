@@ -102,4 +102,62 @@ defmodule DesktopUi.RuntimeTest do
     assert Map.has_key?(state.realization.event_targets, "workspace-tabs")
     assert Enum.any?(state.realization.cell_surface, &(&1.kind == :checkbox))
   end
+
+  test "advanced layout, layered runtime, and multiwindow screens share one realization model" do
+    screen = %{
+      id: "operations",
+      title: "Operations",
+      root:
+        DesktopUi.Layer.multi_window("operations-windows", [
+          DesktopUi.Widgets.window("operations-window", "Operations", [
+            DesktopUi.Layer.overlay(
+              "operations-overlay",
+              DesktopUi.Layout.split_pane(
+                "operations-split",
+                DesktopUi.Layout.viewport(
+                  "services-viewport",
+                  DesktopUi.Widgets.table(
+                    "services-table",
+                    [%{id: :service, label: "Service"}],
+                    [%{id: :api, cells: ["API"]}],
+                    selection_binding: :selected_service
+                  )
+                ),
+                DesktopUi.Widgets.column("operations-sidebar", [
+                  DesktopUi.Widgets.log_viewer(
+                    "operations-log",
+                    [%{id: "entry-1", message: "Booted"}],
+                    query_binding: :log_query
+                  ),
+                  DesktopUi.Widgets.gauge("cpu-gauge", value: 72, label: "CPU")
+                ]),
+                ratio: 0.6
+              ),
+              [
+                DesktopUi.Widgets.dialog("ops-dialog", "Runbook", [
+                  DesktopUi.Widgets.text("dialog-copy", "Runbook loaded")
+                ])
+              ]
+            )
+          ]),
+          DesktopUi.Widgets.window("details-window", "Details", [
+            DesktopUi.Widgets.process_monitor(
+              "process-monitor",
+              [%{id: :beam, name: "beam.smp"}],
+              selection_binding: :selected_process
+            )
+          ])
+        ])
+    }
+
+    assert {:ok, state} = Runtime.mount_native_screen(screen, platform_target: :linux)
+    assert state.realization.validation_state == :advanced_ready
+    assert length(state.realization.layers) >= 2
+    assert Enum.any?(state.realization.viewport_regions, &(&1.kind == :viewport))
+    assert state.windows.continuity == :multi_window
+    assert state.windows.primary == "window:operations-window"
+    assert state.windows.secondary_ids == ["window:details-window"]
+    assert Enum.sort(state.realization.window_ids) == ["details-window", "operations-window"]
+    assert state.screen.composition.window_count == 2
+  end
 end

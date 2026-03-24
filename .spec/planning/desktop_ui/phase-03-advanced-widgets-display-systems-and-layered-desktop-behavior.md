@@ -45,25 +45,25 @@ Back to index: [README](./README.md)
       [x] 3.1.2.2 Subtask - Implement operational widgets such as logs, terminals, dashboards, inspectors, and window-oriented command surfaces.
       [x] 3.1.2.3 Subtask - Define shared widget metadata for multiwindow identity, window-local state, and advanced interaction routing.
 
-  [ ] 3.2 Section - Display Systems and Layered Desktop Runtime Behavior
+  [x] 3.2 Section - Display Systems and Layered Desktop Runtime Behavior
     Implement the advanced display primitives and layered runtime behavior that
     rich desktop screens require.
 
-    [ ] 3.2.1 Task - Implement advanced layout, viewport, split-pane, scroll, and canvas systems
+    [x] 3.2.1 Task - Implement advanced layout, viewport, split-pane, scroll, and canvas systems
       Add the display structures needed for richer composition beyond the
       foundational screen model.
 
-      [ ] 3.2.1.1 Subtask - Implement split panes, bounded viewport regions, scroll containers, and advanced alignment or constraint behavior.
-      [ ] 3.2.1.2 Subtask - Implement canvas-style placement and positioned fragments for richer desktop composition.
-      [ ] 3.2.1.3 Subtask - Keep advanced display systems composable with the existing widget runtime rather than as detached subsystems.
+      [x] 3.2.1.1 Subtask - Implement split panes, bounded viewport regions, scroll containers, and advanced alignment or constraint behavior.
+      [x] 3.2.1.2 Subtask - Implement canvas-style placement and positioned fragments for richer desktop composition.
+      [x] 3.2.1.3 Subtask - Keep advanced display systems composable with the existing widget runtime rather than as detached subsystems.
 
-    [ ] 3.2.2 Task - Implement layered, overlay, and multiwindow runtime behavior
+    [x] 3.2.2 Task - Implement layered, overlay, and multiwindow runtime behavior
       Add the shared runtime mechanics needed for dialogs, menus, overlays, and
       multiwindow coordination across supported targets.
 
-      [ ] 3.2.2.1 Subtask - Implement layered runtime behavior for overlays, menus, dialogs, popovers, and absolute-positioned content.
-      [ ] 3.2.2.2 Subtask - Implement multiwindow coordination, focus handoff, and window-to-window runtime continuity.
-      [ ] 3.2.2.3 Subtask - Add diagnostics for invalid layering state, orphaned windows, and advanced display realization mismatches.
+      [x] 3.2.2.1 Subtask - Implement layered runtime behavior for overlays, menus, dialogs, popovers, and absolute-positioned content.
+      [x] 3.2.2.2 Subtask - Implement multiwindow coordination, focus handoff, and window-to-window runtime continuity.
+      [x] 3.2.2.3 Subtask - Add diagnostics for invalid layering state, orphaned windows, and advanced display realization mismatches.
 
   [ ] 3.3 Section - Expanded Canonical IUR Rendering
     Expand canonical renderer coverage so the advanced widget and display

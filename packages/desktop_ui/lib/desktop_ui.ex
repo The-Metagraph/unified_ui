@@ -8,6 +8,8 @@ defmodule DesktopUi do
     Examples,
     Info,
     Inspection,
+    Layer,
+    Layout,
     Platform,
     Reference,
     Renderer,
@@ -22,6 +24,8 @@ defmodule DesktopUi do
           :widgets
           | :runtime
           | :platform
+          | :layout
+          | :layer
           | :renderer
           | :transport
           | :artifacts
@@ -35,6 +39,8 @@ defmodule DesktopUi do
       :widgets,
       :runtime,
       :platform,
+      :layout,
+      :layer,
       :renderer,
       :transport,
       :artifacts,
@@ -55,6 +61,12 @@ defmodule DesktopUi do
 
   @spec platform() :: module()
   def platform, do: Platform
+
+  @spec layout() :: module()
+  def layout, do: Layout
+
+  @spec layer() :: module()
+  def layer, do: Layer
 
   @spec renderer() :: module()
   def renderer, do: Renderer
