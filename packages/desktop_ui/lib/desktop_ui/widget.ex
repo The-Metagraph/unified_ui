@@ -132,7 +132,22 @@ defmodule DesktopUi.Widget do
         :query,
         :entries
       ],
-      styles: [:fg, :bg, :padding, :border, :theme, :variant, :tone, :weight, :intent],
+      styles: [
+        :fg,
+        :bg,
+        :padding,
+        :border,
+        :theme,
+        :variant,
+        :semantic_role,
+        :tone,
+        :weight,
+        :intent,
+        :attrs,
+        :style_refs,
+        :theme_tokens,
+        :state_variants
+      ],
       events: [
         :click,
         :focus,

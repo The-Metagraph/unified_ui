@@ -45,6 +45,15 @@ defmodule DesktopUi.Info do
         diagnostics: DesktopUi.Transport.diagnostics(),
         validation_state: DesktopUi.Transport.validation_state()
       },
+      style: %{
+        primitives: DesktopUi.Style.primitives(),
+        validation_state: DesktopUi.Style.validation_state()
+      },
+      theme: %{
+        default_theme: DesktopUi.Theme.default_theme().id,
+        catalog_ids: DesktopUi.Theme.catalog_ids(),
+        validation_state: DesktopUi.Theme.validation_state()
+      },
       artifacts: %{
         target_platforms: DesktopUi.Artifacts.target_platforms(),
         validation_state: DesktopUi.Artifacts.validation_state()
@@ -63,7 +72,7 @@ defmodule DesktopUi.Info do
         validation: DesktopUi.Inspection.validation_surface()
       },
       responsibilities: %{
-        direct_native: [:widgets, :layout, :layer, :runtime, :platform],
+        direct_native: [:widgets, :layout, :layer, :runtime, :platform, :style, :theme],
         canonical_renderer: [:renderer, :runtime, :transport]
       }
     }

@@ -56,6 +56,18 @@ defmodule DesktopUi.Reference do
         diagnostics: DesktopUi.Transport.diagnostics(),
         validation_state: DesktopUi.Transport.validation_state()
       },
+      style: %{
+        primitives: DesktopUi.Style.primitives(),
+        widget_style_hooks: DesktopUi.Style.widget_style_hooks(),
+        responsibilities: DesktopUi.Style.responsibilities(),
+        validation_state: DesktopUi.Style.validation_state()
+      },
+      theme: %{
+        default_theme: DesktopUi.Theme.default_theme().id,
+        catalog_ids: DesktopUi.Theme.catalog_ids(),
+        continuity_rules: DesktopUi.Theme.continuity_rules(),
+        validation_state: DesktopUi.Theme.validation_state()
+      },
       artifacts: %{
         target_platforms: DesktopUi.Artifacts.target_platforms(),
         responsibilities: DesktopUi.Artifacts.responsibilities(),
@@ -75,7 +87,7 @@ defmodule DesktopUi.Reference do
         validation_surface: DesktopUi.Inspection.validation_surface()
       },
       responsibilities: %{
-        direct_native: [:widgets, :layout, :layer, :runtime, :platform],
+        direct_native: [:widgets, :layout, :layer, :runtime, :platform, :style, :theme],
         canonical_renderer: [:renderer, :runtime, :transport],
         bounded_platform_variation: true
       },

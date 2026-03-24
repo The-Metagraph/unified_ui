@@ -4,7 +4,7 @@ defmodule DesktopUi.Runtime.Boot do
   """
 
   alias DesktopUi.Platform
-  alias DesktopUi.Runtime.{Error, EventLoop, Realization, Screen, State, Window}
+  alias DesktopUi.Runtime.{Error, EventLoop, Realization, Screen, State, StyleResolver, Window}
   alias DesktopUi.Widget
 
   @required_screen_keys [:id, :title, :root]
@@ -39,6 +39,7 @@ defmodule DesktopUi.Runtime.Boot do
         Screen.new(screen, source_kind, Keyword.put(opts, :platform_target, platform_target))
 
       with {:ok, realization} <- Realization.realize_screen(screen_model, opts) do
+        realization = StyleResolver.resolve_screen(screen_model, realization, opts)
         windows = Window.register_all(screen_model, opts)
 
         {:ok,

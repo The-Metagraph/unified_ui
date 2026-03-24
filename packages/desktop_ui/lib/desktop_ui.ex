@@ -14,6 +14,8 @@ defmodule DesktopUi do
     Reference,
     Renderer,
     Runtime,
+    Style,
+    Theme,
     Tooling,
     Transport,
     Widget,
@@ -28,6 +30,8 @@ defmodule DesktopUi do
           | :layer
           | :renderer
           | :transport
+          | :style
+          | :theme
           | :artifacts
           | :examples
           | :inspection
@@ -43,6 +47,8 @@ defmodule DesktopUi do
       :layer,
       :renderer,
       :transport,
+      :style,
+      :theme,
       :artifacts,
       :examples,
       :inspection,
@@ -73,6 +79,12 @@ defmodule DesktopUi do
 
   @spec transport() :: module()
   def transport, do: Transport
+
+  @spec style() :: module()
+  def style, do: Style
+
+  @spec theme() :: module()
+  def theme, do: Theme
 
   @spec artifacts() :: module()
   def artifacts, do: Artifacts

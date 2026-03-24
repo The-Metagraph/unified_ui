@@ -22,6 +22,11 @@ defmodule DesktopUi.ReferenceTest do
     assert :command in reference.transport.families
     assert :shortcut in reference.transport.input_families
     assert :navigation in reference.transport.boundary_crossing_families
+    assert :focus_ring in reference.style.primitives.colors
+    assert reference.style.validation_state.direct_native_surface == :ready
+    assert reference.theme.default_theme == :desktop_default
+    assert :high_contrast in reference.theme.catalog_ids
+    assert reference.theme.validation_state.shared_style_model == :ready
 
     assert reference.transport.modules == [
              DesktopUi.Transport,
@@ -44,6 +49,8 @@ defmodule DesktopUi.ReferenceTest do
     assert :viewport in summary.layout.kinds
     assert :overlay in summary.layer.kinds
     assert :command in summary.transport.families
+    assert summary.style.validation_state.component_variants == :ready
+    assert summary.theme.default_theme == :desktop_default
     assert summary.inspection.validation.runtime == :runtime_backbone_ready
   end
 end

@@ -4,7 +4,7 @@ defmodule DesktopUi.Runtime do
   """
 
   alias DesktopUi.Renderer
-  alias DesktopUi.Runtime.{Boot, Error, EventLoop, EventRouter, Shutdown, State}
+  alias DesktopUi.Runtime.{Boot, Error, EventLoop, EventRouter, Shutdown, State, StyleResolver}
   alias UnifiedIUR.Element
   alias Jido.Signal
 
@@ -22,6 +22,7 @@ defmodule DesktopUi.Runtime do
       DesktopUi.Runtime.Frame,
       DesktopUi.Runtime.Window,
       DesktopUi.Runtime.Screen,
+      StyleResolver,
       DesktopUi.Runtime.State,
       DesktopUi.Runtime.Shutdown,
       DesktopUi.Runtime.Error,
@@ -54,6 +55,8 @@ defmodule DesktopUi.Runtime do
       :shortcut_callback_placeholders,
       :window_lifecycle_callbacks,
       :platform_adapter_registration,
+      :shared_style_model,
+      :theme_inheritance_resolution,
       :deterministic_runtime_errors
     ]
   end
@@ -66,6 +69,7 @@ defmodule DesktopUi.Runtime do
       shared_runtime_for_native_and_canonical: true,
       platform_variation_bounded: true,
       boundary_local_routing_shared: true,
+      shared_style_model: true,
       renderer_boot_path_present: true,
       package_application_takeover: false
     }
