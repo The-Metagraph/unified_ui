@@ -4,7 +4,7 @@ defmodule DesktopUi.Widgets do
   """
 
   alias DesktopUi.Widget
-  alias DesktopUi.Widgets.Builder
+  alias DesktopUi.Widgets.{Builder, Foundational, Input, Navigation}
 
   @spec families() :: [Widget.family()]
   def families do
@@ -16,13 +16,27 @@ defmodule DesktopUi.Widgets do
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, Widget, Builder]
+    [__MODULE__, Widget, Builder, Foundational, Input, Navigation]
   end
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:button, :column, :dialog, :menu, :row, :stack, :status, :text, :text_input, :window]
+    [
+      Foundational.kinds(),
+      Input.kinds(),
+      Navigation.kinds(),
+      [:column, :dialog, :row, :stack, :status, :window]
+    ]
+    |> List.flatten()
+    |> Enum.uniq()
+    |> Enum.sort()
   end
+
+  @spec family_for_kind(atom() | String.t()) :: Widget.family()
+  def family_for_kind(kind) when is_binary(kind),
+    do: kind |> String.to_atom() |> family_for_kind()
+
+  def family_for_kind(kind), do: Widget.family_for(kind)
 
   @spec validation_state() :: map()
   def validation_state do
@@ -30,7 +44,12 @@ defmodule DesktopUi.Widgets do
       widget_contract: :ready,
       registration_surface: :ready,
       direct_native_scaffold: :ready,
+      foundational_content_widgets: :ready,
+      foundational_action_widgets: :ready,
+      foundational_form_widgets: :ready,
+      foundational_navigation_widgets: :ready,
       focus_metadata: :ready,
+      shortcut_metadata: :ready,
       slot_contracts: :ready,
       style_contracts: :ready
     }
@@ -43,7 +62,8 @@ defmodule DesktopUi.Widgets do
       direct_native_only: true,
       canonical_branching: false,
       supported_kinds: kinds(),
-      supported_families: families()
+      supported_families: families(),
+      shared_focus_model: true
     }
   end
 
@@ -57,6 +77,11 @@ defmodule DesktopUi.Widgets do
     Builder.dialog(id, title, children, opts)
   end
 
+  @spec content(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def content(id, children \\ [], opts \\ []) do
+    Foundational.content(id, children, opts)
+  end
+
   @spec column(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
   def column(id, children \\ [], opts \\ []) do
     Builder.column(id, children, opts)
@@ -67,24 +92,99 @@ defmodule DesktopUi.Widgets do
     Builder.row(id, children, opts)
   end
 
+  @spec stack(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def stack(id, children \\ [], opts \\ []) do
+    Builder.stack(id, children, opts)
+  end
+
   @spec text(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def text(id, content, opts \\ []) do
-    Builder.text(id, content, opts)
+    Foundational.text(id, content, opts)
+  end
+
+  @spec label(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def label(id, content, opts \\ []) do
+    Foundational.label(id, content, opts)
+  end
+
+  @spec icon(String.t() | atom(), atom() | String.t(), keyword()) :: Widget.t()
+  def icon(id, name, opts \\ []) do
+    Foundational.icon(id, name, opts)
+  end
+
+  @spec image(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def image(id, source, opts \\ []) do
+    Foundational.image(id, source, opts)
+  end
+
+  @spec spacer(String.t() | atom(), keyword()) :: Widget.t()
+  def spacer(id, opts \\ []) do
+    Foundational.spacer(id, opts)
+  end
+
+  @spec separator(String.t() | atom(), keyword()) :: Widget.t()
+  def separator(id, opts \\ []) do
+    Foundational.separator(id, opts)
   end
 
   @spec button(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def button(id, label, opts \\ []) do
-    Builder.button(id, label, opts)
+    Foundational.button(id, label, opts)
+  end
+
+  @spec toggle(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def toggle(id, label, opts \\ []) do
+    Foundational.toggle(id, label, opts)
+  end
+
+  @spec link(String.t() | atom(), String.t(), String.t(), keyword()) :: Widget.t()
+  def link(id, label, href, opts \\ []) do
+    Foundational.link(id, label, href, opts)
+  end
+
+  @spec command(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def command(id, label, opts \\ []) do
+    Foundational.command(id, label, opts)
   end
 
   @spec text_input(String.t() | atom(), keyword()) :: Widget.t()
   def text_input(id, opts \\ []) do
-    Builder.text_input(id, opts)
+    Input.text_input(id, opts)
+  end
+
+  @spec checkbox(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def checkbox(id, label, opts \\ []) do
+    Input.checkbox(id, label, opts)
+  end
+
+  @spec radio_group(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def radio_group(id, options, opts \\ []) do
+    Input.radio_group(id, options, opts)
+  end
+
+  @spec select(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def select(id, options, opts \\ []) do
+    Input.select(id, options, opts)
+  end
+
+  @spec tabs(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def tabs(id, items, opts \\ []) do
+    Navigation.tabs(id, items, opts)
   end
 
   @spec menu(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
   def menu(id, items, opts \\ []) do
-    Builder.menu(id, items, opts)
+    Navigation.menu(id, items, opts)
+  end
+
+  @spec breadcrumbs(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def breadcrumbs(id, items, opts \\ []) do
+    Navigation.breadcrumbs(id, items, opts)
+  end
+
+  @spec list(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def list(id, items, opts \\ []) do
+    Navigation.list(id, items, opts)
   end
 
   @spec status(String.t() | atom(), String.t(), keyword()) :: Widget.t()

@@ -15,6 +15,11 @@ defmodule DesktopUi.Inspection do
       runtime_binding: :sdl,
       platform_targets: DesktopUi.Platform.targets(),
       package_areas: DesktopUi.package_areas(),
+      examples: %{
+        native_ids: DesktopUi.Examples.native_ids(),
+        canonical_ids: DesktopUi.Examples.canonical_ids(),
+        comparison_ids: DesktopUi.Examples.comparison_ids()
+      },
       shared_runtime_contract: shared_runtime_contract(),
       validation: validation_surface()
     }

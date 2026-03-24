@@ -38,6 +38,11 @@ defmodule DesktopUi.Info do
         target_platforms: DesktopUi.Artifacts.target_platforms(),
         validation_state: DesktopUi.Artifacts.validation_state()
       },
+      examples: %{
+        native_ids: DesktopUi.Examples.native_ids(),
+        canonical_ids: DesktopUi.Examples.canonical_ids(),
+        comparison_ids: DesktopUi.Examples.comparison_ids()
+      },
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),
         workflows: DesktopUi.Tooling.workflows()

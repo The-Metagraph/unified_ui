@@ -15,6 +15,9 @@ defmodule DesktopUi.Runtime.Screen do
     :platform_target,
     :root,
     metadata: %{},
+    composition: %{},
+    bindings: %{},
+    focus: %{},
     realization: %{}
   ]
 
@@ -25,6 +28,9 @@ defmodule DesktopUi.Runtime.Screen do
           platform_target: atom(),
           root: Widget.t(),
           metadata: map(),
+          composition: map(),
+          bindings: map(),
+          focus: map(),
           realization: map()
         }
 
@@ -44,11 +50,63 @@ defmodule DesktopUi.Runtime.Screen do
         canonical_input: source_kind == :canonical,
         runtime_foundation: :sdl2
       },
+      composition: %{
+        root_kind: root.kind,
+        layout_kinds: collect_layout_kinds(root),
+        widget_count: count_widgets(root),
+        shared_realization: true
+      },
+      bindings: %{
+        names: collect_bindings(root),
+        shared_runtime_surface: true
+      },
+      focus: %{
+        focusable_ids: collect_focusable_ids(root),
+        traversal_model: :preorder
+      },
       realization: %{
         root_kind: root.kind,
         uses_window_registry: true,
-        redraw_model: :shared_sdl_runtime
+        redraw_model: :shared_sdl_runtime,
+        foundational_layout_realization: true
       }
     }
+  end
+
+  defp collect_layout_kinds(root) do
+    root
+    |> flatten_widgets([])
+    |> Enum.map(& &1.kind)
+    |> Enum.filter(&(&1 in [:window, :dialog, :content, :column, :row, :stack]))
+    |> Enum.uniq()
+  end
+
+  defp collect_bindings(root) do
+    root
+    |> flatten_widgets([])
+    |> Enum.flat_map(fn widget ->
+      widget.bindings
+      |> Map.values()
+      |> Enum.reject(&is_nil/1)
+    end)
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  defp collect_focusable_ids(root) do
+    root
+    |> flatten_widgets([])
+    |> Enum.filter(fn widget ->
+      Map.get(widget.metadata, :focusable, false) and !Map.get(widget.state, :disabled, false)
+    end)
+    |> Enum.map(&to_string(&1.id))
+  end
+
+  defp count_widgets(root) do
+    root |> flatten_widgets([]) |> length()
+  end
+
+  defp flatten_widgets(widget, acc) do
+    Enum.reduce(widget.children, acc ++ [widget], &flatten_widgets(&1, &2))
   end
 end

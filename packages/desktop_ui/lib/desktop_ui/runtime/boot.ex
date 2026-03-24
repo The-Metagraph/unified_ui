@@ -4,7 +4,7 @@ defmodule DesktopUi.Runtime.Boot do
   """
 
   alias DesktopUi.Platform
-  alias DesktopUi.Runtime.{Error, EventLoop, Screen, State, Window}
+  alias DesktopUi.Runtime.{Error, EventLoop, Realization, Screen, State, Window}
   alias DesktopUi.Widget
 
   @required_screen_keys [:id, :title, :root]
@@ -38,43 +38,45 @@ defmodule DesktopUi.Runtime.Boot do
       screen_model =
         Screen.new(screen, source_kind, Keyword.put(opts, :platform_target, platform_target))
 
-      window = Window.register(screen_model, opts)
+      with {:ok, realization} <- Realization.realize_screen(screen_model, opts) do
+        window = Window.register(screen_model, opts)
 
-      {:ok,
-       %State{
-         runtime_id: Keyword.get(opts, :runtime_id, "desktop-ui:#{screen_model.id}"),
-         screen_id: screen_model.id,
-         title: screen_model.title,
-         source_kind: source_kind,
-         platform_target: platform_target,
-         platform_adapter: adapter.summary(),
-         root: screen_model.root,
-         screen: screen_model,
-         windows: %{primary: window.id, registry: %{window.id => window}},
-         focus: %{
-           current: Window.primary_focus_target(window),
-           order: Window.focus_order(window)
-         },
-         redraw: %{
-           status: :idle,
-           requests: 0,
-           pending_reason: nil
-         },
-         realization: %{
-           mode: :shared_sdl_runtime,
-           root_kind: screen_model.root.kind,
-           window_id: window.id,
-           validation_state: :phase_one_realization_ready
-         },
-         event_loop:
-           EventLoop.scaffold(platform_target: platform_target, screen_id: screen_model.id),
-         lifecycle: %{
-           boot: :initialized,
-           runtime: :ready,
-           shutdown: :idle
-         },
-         validation_state: :runtime_backbone_ready
-       }}
+        {:ok,
+         %State{
+           runtime_id: Keyword.get(opts, :runtime_id, "desktop-ui:#{screen_model.id}"),
+           screen_id: screen_model.id,
+           title: screen_model.title,
+           source_kind: source_kind,
+           platform_target: platform_target,
+           platform_adapter: adapter.summary(),
+           root: screen_model.root,
+           screen: screen_model,
+           windows: %{primary: window.id, registry: %{window.id => window}},
+           focus: %{
+             current: realization.current_focus || Window.primary_focus_target(window),
+             order: realization.focus_order
+           },
+           redraw: %{
+             status: :idle,
+             requests: 0,
+             pending_reason: nil
+           },
+           realization:
+             Map.merge(realization, %{
+               mode: :shared_sdl_runtime,
+               root_kind: screen_model.root.kind,
+               window_id: window.id
+             }),
+           event_loop:
+             EventLoop.scaffold(platform_target: platform_target, screen_id: screen_model.id),
+           lifecycle: %{
+             boot: :initialized,
+             runtime: :ready,
+             shutdown: :idle
+           },
+           validation_state: :runtime_backbone_ready
+         }}
+      end
     else
       {:error, {:unsupported_platform_target, target}} ->
         {:error,
@@ -82,6 +84,9 @@ defmodule DesktopUi.Runtime.Boot do
 
       {:error, {:invalid_platform_adapter, target}} ->
         {:error, Error.new(:invalid_platform_adapter, %{platform_target: target}, :runtime_boot)}
+
+      {:error, %Error{} = error} ->
+        {:error, error}
     end
   end
 

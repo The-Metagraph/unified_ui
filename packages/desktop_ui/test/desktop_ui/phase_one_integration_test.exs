@@ -37,6 +37,7 @@ defmodule DesktopUi.PhaseOneIntegrationTest do
     assert state.windows.primary == "window:workspace"
     assert state.realization.mode == :shared_sdl_runtime
     assert state.validation_state == :runtime_backbone_ready
+    assert state.realization.validation_state == :foundational_ready
     assert state.event_loop.poller.source == :sdl_event_queue
     assert state.event_loop.frame.present_mode == :shared_runtime
   end

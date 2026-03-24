@@ -36,13 +36,41 @@ defmodule DesktopUi.Widget do
   @spec contract() :: map()
   def contract do
     %{
-      metadata: [:label, :description, :role, :variant, :focusable, :window_role, :shortcut],
-      state: [:disabled, :focused, :open, :active, :selected, :value],
-      bindings: [:value, :checked, :selected],
+      metadata: [
+        :label,
+        :description,
+        :role,
+        :variant,
+        :focusable,
+        :window_role,
+        :shortcut,
+        :shortcut_scope,
+        :focus_group,
+        :binding_surface
+      ],
+      state: [:disabled, :focused, :open, :active, :selected, :checked, :value],
+      bindings: [:value, :checked, :selected, :current, :active_item],
       slots: [:default, :header, :content, :footer, :overlay],
-      attributes: [:label, :content, :placeholder, :items, :window_title],
-      styles: [:fg, :bg, :padding, :border, :theme, :variant],
-      events: [:click, :focus, :blur, :shortcut, :close, :resize]
+      attributes: [
+        :label,
+        :content,
+        :placeholder,
+        :items,
+        :window_title,
+        :icon,
+        :source,
+        :alt,
+        :size,
+        :orientation,
+        :href,
+        :options,
+        :current,
+        :gap,
+        :align,
+        :justify
+      ],
+      styles: [:fg, :bg, :padding, :border, :theme, :variant, :tone, :weight, :intent],
+      events: [:click, :focus, :blur, :shortcut, :close, :resize, :change, :selection, :submit]
     }
   end
 
@@ -107,9 +135,9 @@ defmodule DesktopUi.Widget do
   @spec family_for(atom()) :: family()
   def family_for(kind) when kind in [:window, :dialog], do: :window
   def family_for(kind) when kind in [:column, :row, :stack], do: :layout
-  def family_for(kind) when kind in [:button], do: :action
-  def family_for(kind) when kind in [:text_input], do: :input
-  def family_for(kind) when kind in [:menu], do: :navigation
+  def family_for(kind) when kind in [:button, :toggle, :link, :command], do: :action
+  def family_for(kind) when kind in [:text_input, :checkbox, :radio_group, :select], do: :input
+  def family_for(kind) when kind in [:menu, :tabs, :breadcrumbs, :list], do: :navigation
   def family_for(kind) when kind in [:status], do: :feedback
   def family_for(_kind), do: :content
 
