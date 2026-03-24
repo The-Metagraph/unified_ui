@@ -3,6 +3,30 @@ defmodule DesktopUi.Info do
   Lightweight package summary helpers for `desktop_ui`.
   """
 
+  @spec example_summary() :: map()
+  def example_summary do
+    package_summary().examples
+  end
+
+  @spec transport_summary() :: map()
+  def transport_summary do
+    package_summary().transport
+  end
+
+  @spec style_summary() :: map()
+  def style_summary do
+    %{
+      style: package_summary().style,
+      theme: package_summary().theme,
+      continuity: package_summary().continuity
+    }
+  end
+
+  @spec artifact_summary() :: map()
+  def artifact_summary do
+    package_summary().artifacts
+  end
+
   @spec package_summary() :: map()
   def package_summary do
     %{
@@ -64,7 +88,8 @@ defmodule DesktopUi.Info do
       examples: %{
         native_ids: DesktopUi.Examples.native_ids(),
         canonical_ids: DesktopUi.Examples.canonical_ids(),
-        comparison_ids: DesktopUi.Examples.comparison_ids()
+        comparison_ids: DesktopUi.Examples.comparison_ids(),
+        workflows: Map.keys(DesktopUi.Examples.coverage_matrix().workflows)
       },
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),

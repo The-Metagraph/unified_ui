@@ -3,6 +3,35 @@ defmodule DesktopUi.Reference do
   Lightweight package reference helpers for `desktop_ui`.
   """
 
+  @spec widget_summary() :: map()
+  def widget_summary do
+    package_reference().widgets
+  end
+
+  @spec example_summary() :: map()
+  def example_summary do
+    package_reference().examples
+  end
+
+  @spec transport_summary() :: map()
+  def transport_summary do
+    package_reference().transport
+  end
+
+  @spec style_summary() :: map()
+  def style_summary do
+    %{
+      style: package_reference().style,
+      theme: package_reference().theme,
+      continuity: package_reference().continuity
+    }
+  end
+
+  @spec artifact_summary() :: map()
+  def artifact_summary do
+    package_reference().artifacts
+  end
+
   @spec package_reference() :: map()
   def package_reference do
     %{
@@ -80,7 +109,9 @@ defmodule DesktopUi.Reference do
       examples: %{
         native_ids: DesktopUi.Examples.native_ids(),
         canonical_ids: DesktopUi.Examples.canonical_ids(),
-        comparison_ids: DesktopUi.Examples.comparison_ids()
+        comparison_ids: DesktopUi.Examples.comparison_ids(),
+        catalog: DesktopUi.Examples.catalog(),
+        coverage_matrix: DesktopUi.Examples.coverage_matrix()
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
