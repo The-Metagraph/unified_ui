@@ -90,7 +90,7 @@ defmodule DesktopUi.PhaseOneIntegrationTest do
 
     assert reference.inspection.package_overview.runtime_foundation == :sdl2
     assert reference.inspection.package_overview.runtime_binding == :sdl
-    assert reference.inspection.validation_surface.transport == :boundary_scaffold_ready
+    assert reference.inspection.validation_surface.transport == :boundary_translation_ready
     assert reference.responsibilities.bounded_platform_variation
 
     assert summary.package == :desktop_ui
