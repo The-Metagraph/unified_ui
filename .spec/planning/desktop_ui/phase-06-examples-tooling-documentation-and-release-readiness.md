@@ -22,25 +22,25 @@ Back to index: [README](./README.md)
   Implement maintained reference examples, preview and inspection tooling,
   documentation, release-readiness gates, and package evolution workflows.
 
-  [ ] 6.1 Section - Maintained Reference Examples
+  [x] 6.1 Section - Maintained Reference Examples
     Implement the maintained example catalog that demonstrates the package's
     direct-native and canonical entry paths.
 
-    [ ] 6.1.1 Task - Implement maintained direct-native example coverage
+    [x] 6.1.1 Task - Implement maintained direct-native example coverage
       Provide curated examples that exercise the native desktop widget surface,
       styling, windows, and interaction behavior.
 
-      [ ] 6.1.1.1 Subtask - Add maintained direct-native examples for foundational, advanced, styled, and multiwindow desktop flows.
-      [ ] 6.1.1.2 Subtask - Keep example metadata aligned with widget-family, transport, styling, and artifact coverage summaries.
-      [ ] 6.1.1.3 Subtask - Ensure example coverage stays useful for package inspection, preview, and release-readiness workflows.
+      [x] 6.1.1.1 Subtask - Add maintained direct-native examples for foundational, advanced, styled, and multiwindow desktop flows.
+      [x] 6.1.1.2 Subtask - Keep example metadata aligned with widget-family, transport, styling, and artifact coverage summaries.
+      [x] 6.1.1.3 Subtask - Ensure example coverage stays useful for package inspection, preview, and release-readiness workflows.
 
-    [ ] 6.1.2 Task - Implement maintained canonical example coverage
+    [x] 6.1.2 Task - Implement maintained canonical example coverage
       Provide curated examples that exercise canonical `UnifiedIUR` rendering
       through the same runtime and widget stack.
 
-      [ ] 6.1.2.1 Subtask - Add maintained canonical examples for foundational, advanced, styled, and transport-heavy desktop flows.
-      [ ] 6.1.2.2 Subtask - Pair canonical examples with equivalent direct-native examples where comparison is useful.
-      [ ] 6.1.2.3 Subtask - Keep canonical example metadata aligned with renderer coverage and upstream compatibility expectations.
+      [x] 6.1.2.1 Subtask - Add maintained canonical examples for foundational, advanced, styled, and transport-heavy desktop flows.
+      [x] 6.1.2.2 Subtask - Pair canonical examples with equivalent direct-native examples where comparison is useful.
+      [x] 6.1.2.3 Subtask - Keep canonical example metadata aligned with renderer coverage and upstream compatibility expectations.
 
   [ ] 6.2 Section - Tooling and Validation Workflows
     Implement the maintainer tooling needed to inspect, preview, and validate

@@ -60,33 +60,38 @@ defmodule DesktopUi.ExamplesTest do
     assert reference.examples.native_ids == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert reference.examples.canonical_ids == [
              :canonical_foundational,
              :canonical_advanced_operations,
-             :canonical_transport_review
+             :canonical_transport_review,
+             :canonical_styled_review
            ]
 
     assert reference.examples.comparison_ids == [
              :foundational_continuity,
              :advanced_continuity,
              :transport_flow_review,
-             :normalized_input_profiles
+             :normalized_input_profiles,
+             :styled_continuity_review
            ]
 
     assert summary.examples.native_ids == [
              :native_foundational,
              :native_advanced_operations,
-             :native_transport_review
+             :native_transport_review,
+             :native_styled_review
            ]
 
     assert summary.examples.comparison_ids == [
              :foundational_continuity,
              :advanced_continuity,
              :transport_flow_review,
-             :normalized_input_profiles
+             :normalized_input_profiles,
+             :styled_continuity_review
            ]
   end
 
@@ -114,5 +119,34 @@ defmodule DesktopUi.ExamplesTest do
     assert normalized.parity.window_events_stay_local?
     assert normalized.parity.local_boundary_split_visible?
     assert normalized.parity.platform_variation_bounded?
+  end
+
+  test "styled examples and catalog metadata expose maintained style review coverage" do
+    native = DesktopUi.Examples.native_styled_review()
+    canonical = DesktopUi.Examples.canonical_styled_review()
+    comparison = DesktopUi.Examples.styled_comparison()
+    catalog = DesktopUi.Examples.catalog()
+    matrix = DesktopUi.Examples.coverage_matrix()
+
+    assert native.metadata.example_id == :native_styled_review
+    assert :style_primitives in native.metadata.coverage
+    assert canonical.kind == :window
+    assert comparison.id == :styled_continuity_review
+    assert comparison.parity.widget_identity_match?
+    assert comparison.parity.style_resolution_match?
+    assert comparison.parity.platform_semantics_match?
+
+    assert DesktopUi.Examples.metadata(:native_styled_review).workflow == :style_review
+    assert :native_styled_review in Enum.map(DesktopUi.Examples.native_examples(), & &1.id)
+    assert :canonical_styled_review in Enum.map(DesktopUi.Examples.canonical_examples(), & &1.id)
+    assert :styled_continuity_review in Enum.map(DesktopUi.Examples.mixed_examples(), & &1.id)
+    assert :style_review in Map.keys(matrix.workflows)
+    assert :style_review in Map.keys(matrix.parity_groups)
+
+    assert Enum.any?(catalog, fn entry ->
+             entry.id == :styled_continuity_review and
+               entry.artifact_names.comparison ==
+                 "desktop_ui.examples.styled_continuity_review.comparison"
+           end)
   end
 end
