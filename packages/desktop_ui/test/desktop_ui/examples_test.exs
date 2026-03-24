@@ -57,15 +57,62 @@ defmodule DesktopUi.ExamplesTest do
     reference = DesktopUi.reference()
     summary = DesktopUi.info()
 
-    assert reference.examples.native_ids == [:native_foundational, :native_advanced_operations]
+    assert reference.examples.native_ids == [
+             :native_foundational,
+             :native_advanced_operations,
+             :native_transport_review
+           ]
 
     assert reference.examples.canonical_ids == [
              :canonical_foundational,
-             :canonical_advanced_operations
+             :canonical_advanced_operations,
+             :canonical_transport_review
            ]
 
-    assert reference.examples.comparison_ids == [:foundational_continuity, :advanced_continuity]
-    assert summary.examples.native_ids == [:native_foundational, :native_advanced_operations]
-    assert summary.examples.comparison_ids == [:foundational_continuity, :advanced_continuity]
+    assert reference.examples.comparison_ids == [
+             :foundational_continuity,
+             :advanced_continuity,
+             :transport_flow_review,
+             :normalized_input_profiles
+           ]
+
+    assert summary.examples.native_ids == [
+             :native_foundational,
+             :native_advanced_operations,
+             :native_transport_review
+           ]
+
+    assert summary.examples.comparison_ids == [
+             :foundational_continuity,
+             :advanced_continuity,
+             :transport_flow_review,
+             :normalized_input_profiles
+           ]
+  end
+
+  test "transport examples expose local routing, boundary translation, and normalized profiles" do
+    native = DesktopUi.Examples.native_transport_review()
+    canonical = DesktopUi.Examples.canonical_transport_review()
+    comparison = DesktopUi.Examples.transport_comparison()
+    normalized = DesktopUi.Examples.normalized_input_comparison()
+
+    assert native.metadata.example_id == :native_transport_review
+    assert :canonical_boundary_events in native.metadata.coverage
+    assert Map.has_key?(native.metadata.target_semantics, :windows)
+
+    assert canonical.kind == :window
+    assert canonical.type == :widget
+
+    assert comparison.id == :transport_flow_review
+    assert comparison.parity.local_focus_stays_local?
+    assert comparison.parity.boundary_routes_match?
+    assert comparison.parity.boundary_signal_types_match?
+    assert comparison.parity.normalized_input_family_match?
+
+    assert normalized.id == :normalized_input_profiles
+    assert normalized.parity.shortcut_family_match?
+    assert normalized.parity.window_events_stay_local?
+    assert normalized.parity.local_boundary_split_visible?
+    assert normalized.parity.platform_variation_bounded?
   end
 end

@@ -23,9 +23,12 @@ defmodule DesktopUi.RuntimeTest do
     assert state.redraw.status == :idle
     assert state.realization.validation_state == :foundational_ready
     assert state.event_loop.poller.source == :sdl_event_queue
-    assert state.event_loop.input_dispatch.boundary_mode == :placeholder_ready
+    assert state.event_loop.input_dispatch.boundary_mode == :canonical_boundary_ready
     assert state.focus.current == "workspace-window"
     assert state.focus.order == ["workspace-window", "save-button"]
+    assert state.event_loop.local_events == 0
+    assert state.event_loop.boundary_events == 0
+    assert state.event_log == []
     assert state.realization.binding_index == %{}
     assert state.realization.event_targets == %{"save-button" => [:click]}
     assert state.realization.diagnostics.layout_guards == :ready
@@ -159,5 +162,56 @@ defmodule DesktopUi.RuntimeTest do
     assert state.windows.secondary_ids == ["window:details-window"]
     assert Enum.sort(state.realization.window_ids) == ["details-window", "operations-window"]
     assert state.screen.composition.window_count == 2
+  end
+
+  test "shared runtime routing preserves local desktop handling and canonical boundary translation" do
+    native_screen = DesktopUi.Examples.native_foundational_screen()
+    canonical_screen = DesktopUi.Examples.canonical_foundational_screen()
+
+    assert {:ok, native_state} =
+             Runtime.mount_native_screen(native_screen, platform_target: :linux)
+
+    assert {:ok, canonical_state} =
+             Runtime.mount_iur_screen(canonical_screen, platform_target: :linux)
+
+    assert {:ok, focused_state, local_route} =
+             Runtime.dispatch_native_event(native_state,
+               input_family: :focus,
+               boundary: :local,
+               focus_target: "workspace-tabs",
+               widget_id: "workspace-tabs",
+               intent: :focus_workspace_tabs
+             )
+
+    assert local_route.route == :local_runtime
+    assert local_route.family == :focus
+    assert local_route.translation.signal == nil
+    assert focused_state.focus.current == "workspace-tabs"
+    assert focused_state.event_loop.local_events == 1
+
+    assert {:ok, boundary_state, boundary_route} =
+             Runtime.dispatch_widget_interaction(
+               canonical_state,
+               "refresh-command",
+               :command,
+               intent: :refresh_workspace,
+               runtime_event: "shortcut:refresh_workspace",
+               payload: %{command: :refresh}
+             )
+
+    assert boundary_route.route == :canonical_boundary
+    assert boundary_route.family == :command
+    assert boundary_route.translation.signal.type == "desktop_ui.command.refresh_workspace"
+    assert boundary_state.event_loop.boundary_events == 1
+
+    assert List.last(boundary_state.event_log).signal_type ==
+             "desktop_ui.command.refresh_workspace"
+
+    assert {:ok, inbound_state, inbound_route} =
+             Runtime.handle_boundary_signal(boundary_state, boundary_route.translation.signal)
+
+    assert inbound_route.route == :canonical_boundary
+    assert inbound_route.family == :command
+    assert inbound_state.event_loop.boundary_events == 2
   end
 end
