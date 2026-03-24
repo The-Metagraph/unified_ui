@@ -243,13 +243,22 @@ defmodule DesktopUi.Examples do
                         "node-a",
                         [
                           DesktopUi.Widgets.text("node-a-label", "A")
-                        ], x: 0, y: 0),
+                        ],
+                        x: 0,
+                        y: 0
+                      ),
                       DesktopUi.Layout.absolute(
                         "node-b",
                         [
                           DesktopUi.Widgets.text("node-b-label", "B")
-                        ], x: 8, y: 3)
-                    ], width: 20, height: 10)
+                        ],
+                        x: 8,
+                        y: 3
+                      )
+                    ],
+                    width: 20,
+                    height: 10
+                  )
                 ]),
                 ratio: 0.6
               ),
@@ -510,6 +519,260 @@ defmodule DesktopUi.Examples do
     }
   end
 
+  @spec native_transport_review() :: map()
+  def native_transport_review do
+    %{
+      id: "transport-review",
+      title: "Native Transport Review",
+      root:
+        DesktopUi.Widgets.window("transport-window", "Transport Review", [
+          DesktopUi.Widgets.column("transport-layout", [
+            DesktopUi.Widgets.menu(
+              "scope-menu",
+              [
+                %{id: :workspace, label: "Workspace"},
+                %{id: :services, label: "Services"}
+              ],
+              current: :workspace,
+              binding: :scope,
+              shortcut: "Alt+S",
+              on_navigate: %{intent: :navigate_scope},
+              on_select: %{intent: :select_scope}
+            ),
+            DesktopUi.Widgets.text_input("command-input",
+              value: "status:ok",
+              binding: :command_query,
+              placeholder: "Search workspace",
+              on_change: %{intent: :change_query},
+              on_submit: %{intent: :submit_query}
+            ),
+            DesktopUi.Widgets.command("refresh-command", "Refresh",
+              shortcut: "Cmd+R",
+              intent: :refresh_workspace
+            ),
+            DesktopUi.Widgets.process_monitor(
+              "process-monitor",
+              [%{id: :beam, name: "beam.smp", status: :running}],
+              selection_binding: :selected_process,
+              on_select: %{intent: :inspect_process}
+            ),
+            DesktopUi.Widgets.window_command("detach-window", "Detach Window",
+              window_identity: :transport_window,
+              intent: :detach_window
+            )
+          ])
+        ]),
+      metadata: %{
+        example_id: :native_transport_review,
+        source: :native,
+        coverage: [
+          :normalized_desktop_inputs,
+          :canonical_boundary_events,
+          :local_native_routing,
+          :window_management
+        ],
+        target_semantics: target_semantics()
+      }
+    }
+  end
+
+  @spec canonical_transport_review() :: Element.t()
+  def canonical_transport_review do
+    Element.new(:widget, :window,
+      id: "transport-window",
+      attributes: %{title: "Transport Review"},
+      children: [
+        Element.new(:layout, :column,
+          id: "transport-layout",
+          children: [
+            Element.new(:widget, :menu,
+              id: "scope-menu",
+              attributes: %{
+                items: [
+                  %{id: :workspace, label: "Workspace"},
+                  %{id: :services, label: "Services"}
+                ],
+                current: :workspace,
+                binding: %{name: :scope, value: :workspace},
+                interaction: %{family: :navigation, intent: :navigate_scope}
+              }
+            ),
+            Element.new(:widget, :text_input,
+              id: "command-input",
+              attributes: %{
+                value: "status:ok",
+                placeholder: "Search workspace",
+                binding: %{name: :command_query, value: "status:ok"},
+                interaction: %{family: :submit, intent: :submit_query}
+              }
+            ),
+            Element.new(:widget, :command,
+              id: "refresh-command",
+              attributes: %{
+                label: "Refresh",
+                shortcut: "Cmd+R",
+                interaction: %{family: :command, intent: :refresh_workspace}
+              }
+            ),
+            Element.new(:widget, :process_monitor,
+              id: "process-monitor",
+              attributes: %{
+                processes: [%{id: :beam, name: "beam.smp", status: :running}],
+                binding: %{name: :selected_process, value: :beam},
+                interaction: %{family: :selection, intent: :inspect_process}
+              }
+            ),
+            Element.new(:widget, :window_command,
+              id: "detach-window",
+              attributes: %{
+                label: "Detach Window",
+                interaction: %{family: :command, intent: :detach_window}
+              },
+              metadata: %{window_identity: :transport_window}
+            )
+          ]
+        )
+      ]
+    )
+  end
+
+  @spec transport_comparison() :: map()
+  def transport_comparison do
+    native_screen = native_transport_review()
+    canonical_screen = canonical_transport_review()
+
+    {:ok, native_state} =
+      DesktopUi.Runtime.mount_native_screen(native_screen, platform_target: :linux)
+
+    {:ok, canonical_state} =
+      DesktopUi.Runtime.mount_iur_screen(canonical_screen, platform_target: :linux)
+
+    {:ok, local_native_state, local_route} =
+      DesktopUi.Runtime.dispatch_native_event(native_state,
+        input_family: :focus,
+        boundary: :local,
+        focus_target: "scope-menu",
+        widget_id: "scope-menu",
+        intent: :focus_scope_menu
+      )
+
+    {:ok, native_boundary_state, native_boundary_route} =
+      DesktopUi.Runtime.dispatch_native_event(local_native_state,
+        input_family: :shortcut,
+        shortcut: "cmd-r",
+        widget_id: "refresh-command",
+        intent: :refresh_workspace
+      )
+
+    {:ok, canonical_boundary_state, canonical_boundary_route} =
+      DesktopUi.Runtime.dispatch_widget_interaction(
+        canonical_state,
+        "refresh-command",
+        :command,
+        intent: :refresh_workspace,
+        runtime_event: "shortcut:refresh_workspace",
+        payload: %{command: :refresh}
+      )
+
+    %{
+      id: :transport_flow_review,
+      native_example_id: native_screen.metadata.example_id,
+      canonical_example_id: :canonical_transport_review,
+      coverage: %{
+        input_families: DesktopUi.Transport.input_families(),
+        local_families: DesktopUi.Transport.local_default_families(),
+        boundary_families: DesktopUi.Transport.boundary_crossing_families()
+      },
+      parity: %{
+        local_focus_stays_local?:
+          local_route.route == :local_runtime and local_route.translation.signal == nil,
+        boundary_routes_match?:
+          native_boundary_route.route == :canonical_boundary and
+            canonical_boundary_route.route == :canonical_boundary,
+        boundary_signal_types_match?:
+          native_boundary_route.translation.signal.type ==
+            canonical_boundary_route.translation.signal.type,
+        normalized_input_family_match?:
+          native_boundary_route.input_family == canonical_boundary_route.input_family
+      },
+      native_local: %{
+        state: local_native_state,
+        route: local_route
+      },
+      native_boundary: %{
+        state: native_boundary_state,
+        route: native_boundary_route
+      },
+      canonical_boundary: %{
+        state: canonical_boundary_state,
+        route: canonical_boundary_route
+      }
+    }
+  end
+
+  @spec normalized_input_comparison() :: map()
+  def normalized_input_comparison do
+    shortcut_profiles =
+      DesktopUi.Platform.targets()
+      |> Enum.map(fn target ->
+        {:ok, normalized} =
+          DesktopUi.Transport.normalize_native_event(
+            platform_target: target,
+            input_family: :shortcut,
+            shortcut: if(target == :macos, do: "cmd-r", else: "ctrl-r"),
+            widget_id: "refresh-command",
+            runtime_id: "desktop-ui:transport",
+            screen: "transport-review"
+          )
+
+        {target, normalized}
+      end)
+      |> Map.new()
+
+    window_profiles =
+      DesktopUi.Platform.targets()
+      |> Enum.map(fn target ->
+        {:ok, normalized} =
+          DesktopUi.Transport.normalize_native_event(
+            platform_target: target,
+            input_family: :window,
+            boundary: :local,
+            window_action: :focus,
+            window_id: "transport-window",
+            runtime_id: "desktop-ui:transport",
+            screen: "transport-review"
+          )
+
+        {target, normalized}
+      end)
+      |> Map.new()
+
+    %{
+      id: :normalized_input_profiles,
+      parity: %{
+        shortcut_family_match?:
+          Enum.all?(shortcut_profiles, fn {_target, normalized} ->
+            normalized.family == :command
+          end),
+        window_events_stay_local?:
+          Enum.all?(window_profiles, fn {_target, normalized} ->
+            normalized.boundary == :local and normalized.local_handling == :window_management
+          end),
+        local_boundary_split_visible?:
+          Enum.all?(shortcut_profiles, fn {_target, normalized} ->
+            normalized.boundary == :boundary
+          end),
+        platform_variation_bounded?:
+          Enum.all?(DesktopUi.Platform.targets(), fn target ->
+            shortcut_profiles[target].normalized_input.platform_target == target and
+              window_profiles[target].normalized_input.platform_target == target
+          end)
+      },
+      shortcut_profiles: shortcut_profiles,
+      window_profiles: window_profiles
+    }
+  end
+
   @spec target_semantics() :: map()
   def target_semantics do
     contract = DesktopUi.Platform.capability_contract()
@@ -531,13 +794,21 @@ defmodule DesktopUi.Examples do
   end
 
   @spec native_ids() :: [atom()]
-  def native_ids, do: [:native_foundational, :native_advanced_operations]
+  def native_ids,
+    do: [:native_foundational, :native_advanced_operations, :native_transport_review]
 
   @spec canonical_ids() :: [atom()]
-  def canonical_ids, do: [:canonical_foundational, :canonical_advanced_operations]
+  def canonical_ids,
+    do: [:canonical_foundational, :canonical_advanced_operations, :canonical_transport_review]
 
   @spec comparison_ids() :: [atom()]
-  def comparison_ids, do: [:foundational_continuity, :advanced_continuity]
+  def comparison_ids,
+    do: [
+      :foundational_continuity,
+      :advanced_continuity,
+      :transport_flow_review,
+      :normalized_input_profiles
+    ]
 
   defp trim_focus_order(ids) do
     Enum.reject(ids, &(&1 == "workspace-window"))
