@@ -20,7 +20,7 @@ Back to index: [README](./README.md)
 - Platform-specific callbacks and packaging concerns must remain bounded behind
   explicit module seams from the start.
 
-[ ] 1 Phase 1 - Package Scaffold and SDL2 Runtime Backbone
+[x] 1 Phase 1 - Package Scaffold and SDL2 Runtime Backbone
   Implement the Mix package scaffold, shared SDL2 runtime backbone, platform
   adapter seams, and baseline reference surfaces that every later `desktop_ui`
   phase depends on.
@@ -109,22 +109,22 @@ Back to index: [README](./README.md)
       [x] 1.4.2.2 Subtask - Implement reference surfaces that report direct-native versus canonical-renderer package responsibilities across the shared runtime and adapter split.
       [x] 1.4.2.3 Subtask - Implement inspection helpers that expose SDL2 assumptions, platform seams, and package validation state.
 
-  [ ] 1.5 Section - Phase 1 Integration Tests
+  [x] 1.5 Section - Phase 1 Integration Tests
     Validate package bootstrap, shared-runtime wiring, platform seams, native
     widget registration, and reference surfaces end to end.
 
-    [ ] 1.5.1 Task - Package and runtime backbone integration scenarios
+    [x] 1.5.1 Task - Package and runtime backbone integration scenarios
       Verify the package loads as a desktop runtime library and that minimal
       native screens boot through the shared SDL2 backbone.
 
-      [ ] 1.5.1.1 Subtask - Verify the package compiles and exposes runtime, platform, and renderer entrypoints without taking over application startup.
-      [ ] 1.5.1.2 Subtask - Verify a minimal native screen can boot, register a window, and render through the package backbone.
-      [ ] 1.5.1.3 Subtask - Verify malformed widget declarations, invalid runtime boot data, or broken platform adapter registration fail with deterministic diagnostics.
+      [x] 1.5.1.1 Subtask - Verify the package compiles and exposes runtime, platform, and renderer entrypoints without taking over application startup.
+      [x] 1.5.1.2 Subtask - Verify a minimal native screen can boot, register a window, and render through the package backbone.
+      [x] 1.5.1.3 Subtask - Verify malformed widget declarations, invalid runtime boot data, or broken platform adapter registration fail with deterministic diagnostics.
 
-    [ ] 1.5.2 Task - Reference and platform seam integration scenarios
+    [x] 1.5.2 Task - Reference and platform seam integration scenarios
       Verify package reference helpers remain usable before canonical renderer
       coverage is added.
 
-      [ ] 1.5.2.1 Subtask - Verify reference helpers report widget families, runtime modules, and platform boundaries without renderer dependencies.
-      [ ] 1.5.2.2 Subtask - Verify inspection surfaces expose SDL2 assumptions, adapter entry points, and validation state.
-      [ ] 1.5.2.3 Subtask - Verify shared-runtime semantics remain visible through package-facing helper APIs even while platform-specific seams exist.
+      [x] 1.5.2.1 Subtask - Verify reference helpers report widget families, runtime modules, and platform boundaries without renderer dependencies.
+      [x] 1.5.2.2 Subtask - Verify inspection surfaces expose SDL2 assumptions, adapter entry points, and validation state.
+      [x] 1.5.2.3 Subtask - Verify shared-runtime semantics remain visible through package-facing helper APIs even while platform-specific seams exist.
