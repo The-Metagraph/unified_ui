@@ -18,7 +18,7 @@ Back to index: [README](./README.md)
 - Baseline screen composition, focus, and layout behavior should stabilize
   before transport translation and platform artifacts expand further.
 
-[ ] 2 Phase 2 - Foundational Native Widgets and Baseline IUR Rendering
+[x] 2 Phase 2 - Foundational Native Widgets and Baseline IUR Rendering
   Implement foundational native widgets, baseline screen composition, and the
   first canonical `UnifiedIUR` rendering path through the shared desktop
   runtime.
@@ -103,22 +103,22 @@ Back to index: [README](./README.md)
       [x] 2.4.2.2 Subtask - Expose which widget families and display constructs are covered by the foundational examples.
       [x] 2.4.2.3 Subtask - Document where advanced widget and display coverage will extend the examples in later phases.
 
-  [ ] 2.5 Section - Phase 2 Integration Tests
+  [x] 2.5 Section - Phase 2 Integration Tests
     Validate foundational native widgets, baseline screen composition, and the
     first canonical renderer path end to end.
 
-    [ ] 2.5.1 Task - Foundational native and canonical rendering scenarios
+    [x] 2.5.1 Task - Foundational native and canonical rendering scenarios
       Verify the package can realize the same foundational screen intent
       directly and from canonical `UnifiedIUR`.
 
-      [ ] 2.5.1.1 Subtask - Verify direct-native foundational screens render through the shared runtime with working focus and baseline input handling.
-      [ ] 2.5.1.2 Subtask - Verify canonical foundational screens map into the same native widget and runtime realization model.
-      [ ] 2.5.1.3 Subtask - Verify unsupported foundational widgets or invalid canonical bindings fail with deterministic diagnostics.
+      [x] 2.5.1.1 Subtask - Verify direct-native foundational screens render through the shared runtime with working focus and baseline input handling.
+      [x] 2.5.1.2 Subtask - Verify canonical foundational screens map into the same native widget and runtime realization model.
+      [x] 2.5.1.3 Subtask - Verify unsupported foundational widgets or invalid canonical bindings fail with deterministic diagnostics.
 
-    [ ] 2.5.2 Task - Foundational example and comparison scenarios
+    [x] 2.5.2 Task - Foundational example and comparison scenarios
       Verify maintained foundational examples remain aligned with the package
       reference surface and renderer coverage.
 
-      [ ] 2.5.2.1 Subtask - Verify maintained examples report the expected foundational widget and layout coverage.
-      [ ] 2.5.2.2 Subtask - Verify comparison helpers show direct-native and canonical rendering through the same runtime backbone.
-      [ ] 2.5.2.3 Subtask - Verify foundational example metadata stays usable by future tooling and validation workflows.
+      [x] 2.5.2.1 Subtask - Verify maintained examples report the expected foundational widget and layout coverage.
+      [x] 2.5.2.2 Subtask - Verify comparison helpers show direct-native and canonical rendering through the same runtime backbone.
+      [x] 2.5.2.3 Subtask - Verify foundational example metadata stays usable by future tooling and validation workflows.
