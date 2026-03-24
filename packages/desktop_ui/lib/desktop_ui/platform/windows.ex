@@ -9,10 +9,24 @@ defmodule DesktopUi.Platform.Windows do
   def summary do
     %{
       target: :windows,
+      runtime_foundation: :sdl2,
       capabilities: capabilities(),
       callbacks: callbacks(),
       notifications: :system_toast,
-      menus: :native_menu_bar
+      menus: :native_menu_bar,
+      integration: integration_profile(),
+      allowed_variation: DesktopUi.Platform.Integration.allowed_variation(),
+      shared_semantics: DesktopUi.Platform.Integration.shared_semantics()
+    }
+  end
+
+  @impl true
+  def integration_profile do
+    %{
+      windowing: %{chrome: :native_frame, controls: :win32_caption_buttons},
+      menus: %{surface: :native_menu_bar, scope: :window},
+      shortcuts: %{surface: :accelerators, scope: :window_and_application},
+      notifications: %{surface: :system_toast, activation: :focus_window}
     }
   end
 

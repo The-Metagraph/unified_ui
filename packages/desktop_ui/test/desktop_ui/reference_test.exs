@@ -27,6 +27,9 @@ defmodule DesktopUi.ReferenceTest do
     assert reference.theme.default_theme == :desktop_default
     assert :high_contrast in reference.theme.catalog_ids
     assert reference.theme.validation_state.shared_style_model == :ready
+    assert reference.platform.integration.mismatches == []
+
+    assert :style_resolution in reference.platform.capability_contract.shared_semantics_outside_platform
 
     assert reference.transport.modules == [
              DesktopUi.Transport,
@@ -51,6 +54,7 @@ defmodule DesktopUi.ReferenceTest do
     assert :command in summary.transport.families
     assert summary.style.validation_state.component_variants == :ready
     assert summary.theme.default_theme == :desktop_default
+    assert summary.platform.integration.mismatches == []
     assert summary.inspection.validation.runtime == :runtime_backbone_ready
   end
 end

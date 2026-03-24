@@ -4,6 +4,7 @@ defmodule DesktopUi.Platform.Adapter do
   """
 
   @callback summary() :: map()
+  @callback integration_profile() :: map()
   @callback capabilities() :: [atom()]
   @callback callbacks() :: [atom()]
 end

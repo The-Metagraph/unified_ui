@@ -43,25 +43,25 @@ Back to index: [README](./README.md)
       [x] 5.1.2.2 Subtask - Implement local style inheritance, merging, and override rules for runtime realization.
       [x] 5.1.2.3 Subtask - Keep canonical and direct-native styling behavior aligned through one shared style model.
 
-  [ ] 5.2 Section - Bounded Platform Runtime Integration
+  [x] 5.2 Section - Bounded Platform Runtime Integration
     Implement the target-specific runtime integration that remains necessary
     beneath one shared desktop semantic model.
 
-    [ ] 5.2.1 Task - Implement shared-runtime versus platform-module integration boundaries
+    [x] 5.2.1 Task - Implement shared-runtime versus platform-module integration boundaries
       Keep platform variation explicit and bounded without collapsing shared
       runtime behavior into target-specific modules.
 
-      [ ] 5.2.1.1 Subtask - Implement platform integration modules for target-specific windowing, menu, shortcut, and notification behavior.
-      [ ] 5.2.1.2 Subtask - Keep shared widget realization, transport behavior, and style semantics outside the platform-specific modules.
-      [ ] 5.2.1.3 Subtask - Define diagnostics for platform integration mismatches that would otherwise drift into shared runtime logic.
+      [x] 5.2.1.1 Subtask - Implement platform integration modules for target-specific windowing, menu, shortcut, and notification behavior.
+      [x] 5.2.1.2 Subtask - Keep shared widget realization, transport behavior, and style semantics outside the platform-specific modules.
+      [x] 5.2.1.3 Subtask - Define diagnostics for platform integration mismatches that would otherwise drift into shared runtime logic.
 
-    [ ] 5.2.2 Task - Implement bounded target variation within shared semantics
+    [x] 5.2.2 Task - Implement bounded target variation within shared semantics
       Allow target-specific behavior where operating-system integration demands
       it while preserving shared runtime, transport, and renderer meaning.
 
-      [ ] 5.2.2.1 Subtask - Define where Windows, macOS, and Linux behavior may diverge without changing widget or transport semantics.
-      [ ] 5.2.2.2 Subtask - Preserve shared runtime, canonical rendering, and input-normalization semantics underneath target-specific behavior.
-      [ ] 5.2.2.3 Subtask - Add continuity diagnostics for target-specific behavior that risks semantic drift.
+      [x] 5.2.2.1 Subtask - Define where Windows, macOS, and Linux behavior may diverge without changing widget or transport semantics.
+      [x] 5.2.2.2 Subtask - Preserve shared runtime, canonical rendering, and input-normalization semantics underneath target-specific behavior.
+      [x] 5.2.2.3 Subtask - Add continuity diagnostics for target-specific behavior that risks semantic drift.
 
   [ ] 5.3 Section - Platform Artifact Workflows
     Implement explicit build, packaging, and release workflow surfaces for

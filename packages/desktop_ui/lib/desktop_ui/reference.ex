@@ -29,6 +29,7 @@ defmodule DesktopUi.Reference do
         modules: DesktopUi.Platform.modules(),
         capability_contract: DesktopUi.Platform.capability_contract(),
         callback_contract: DesktopUi.Platform.callback_contract(),
+        integration: DesktopUi.Platform.diagnostics().integration,
         diagnostics: DesktopUi.Platform.diagnostics(),
         validation_state: DesktopUi.Platform.validation_state()
       },

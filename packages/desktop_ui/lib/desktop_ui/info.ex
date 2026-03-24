@@ -23,6 +23,7 @@ defmodule DesktopUi.Info do
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),
+        integration: DesktopUi.Platform.diagnostics().integration,
         diagnostics: DesktopUi.Platform.diagnostics(),
         validation_state: DesktopUi.Platform.validation_state()
       },

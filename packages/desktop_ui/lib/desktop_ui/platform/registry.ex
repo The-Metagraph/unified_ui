@@ -18,7 +18,8 @@ defmodule DesktopUi.Platform.Registry do
     case Map.fetch(registry, target) do
       {:ok, adapter} when is_atom(adapter) ->
         if Code.ensure_loaded?(adapter) and function_exported?(adapter, :summary, 0) and
-             function_exported?(adapter, :capabilities, 0) do
+             function_exported?(adapter, :capabilities, 0) and
+             function_exported?(adapter, :integration_profile, 0) do
           {:ok, adapter}
         else
           {:error, :invalid_adapter}
