@@ -19,7 +19,8 @@ defmodule DesktopUi.Runtime.State do
     :realization,
     :event_loop,
     :lifecycle,
-    :validation_state
+    :validation_state,
+    event_log: []
   ]
 
   @type source_kind :: :native | :canonical
@@ -39,6 +40,7 @@ defmodule DesktopUi.Runtime.State do
           realization: map(),
           event_loop: map(),
           lifecycle: map(),
-          validation_state: atom()
+          validation_state: atom(),
+          event_log: [map()]
         }
 end

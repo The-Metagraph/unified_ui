@@ -7,8 +7,9 @@ defmodule DesktopUi.Runtime.Dispatch do
   def scaffold do
     %{
       status: :ready,
-      families: [:pointer, :keyboard, :focus, :window],
-      boundary_mode: :placeholder_ready
+      families: DesktopUi.Transport.input_families(),
+      route_modes: [:local_runtime, :canonical_boundary],
+      boundary_mode: :canonical_boundary_ready
     }
   end
 end

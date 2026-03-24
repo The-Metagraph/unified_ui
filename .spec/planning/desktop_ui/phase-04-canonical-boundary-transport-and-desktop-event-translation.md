@@ -42,25 +42,25 @@ Back to index: [README](./README.md)
       [x] 4.1.2.2 Subtask - Normalize SDL2 and platform-local input families into the shared native event model before any canonical translation occurs.
       [x] 4.1.2.3 Subtask - Add diagnostics for unsupported raw input payloads, invalid normalization state, and ambiguous native event interpretation.
 
-  [ ] 4.2 Section - Shared Runtime Event Flow
+  [x] 4.2 Section - Shared Runtime Event Flow
     Implement the shared runtime event flow that connects normalized native
     events, local runtime handling, and canonical boundary translation.
 
-    [ ] 4.2.1 Task - Implement boundary-crossing event routing
+    [x] 4.2.1 Task - Implement boundary-crossing event routing
       Route normalized desktop interactions through canonical transport modules
       whenever the interaction leaves the package boundary.
 
-      [ ] 4.2.1.1 Subtask - Implement runtime routing from widget interactions and canonical binding attachments into boundary translation modules.
-      [ ] 4.2.1.2 Subtask - Implement inbound handling for canonical boundary signals that need to update native runtime state or widget realization.
-      [ ] 4.2.1.3 Subtask - Keep event routing shared between direct-native and canonical-rendered screens.
+      [x] 4.2.1.1 Subtask - Implement runtime routing from widget interactions and canonical binding attachments into boundary translation modules.
+      [x] 4.2.1.2 Subtask - Implement inbound handling for canonical boundary signals that need to update native runtime state or widget realization.
+      [x] 4.2.1.3 Subtask - Keep event routing shared between direct-native and canonical-rendered screens.
 
-    [ ] 4.2.2 Task - Implement local native interaction handling without boundary leakage
+    [x] 4.2.2 Task - Implement local native interaction handling without boundary leakage
       Preserve the ability to handle local native runtime behavior directly
       while keeping renderer-local details out of the cross-package contract.
 
-      [ ] 4.2.2.1 Subtask - Implement package-local handling for local shortcuts, focus shifts, menu navigation, and window-management behavior that stays inside the runtime.
-      [ ] 4.2.2.2 Subtask - Distinguish local native event handling from boundary-crossing signals without changing interaction family meaning.
-      [ ] 4.2.2.3 Subtask - Add diagnostics for leaked renderer-local event names, raw platform payloads, and invalid boundary/local routing decisions.
+      [x] 4.2.2.1 Subtask - Implement package-local handling for local shortcuts, focus shifts, menu navigation, and window-management behavior that stays inside the runtime.
+      [x] 4.2.2.2 Subtask - Distinguish local native event handling from boundary-crossing signals without changing interaction family meaning.
+      [x] 4.2.2.3 Subtask - Add diagnostics for leaked renderer-local event names, raw platform payloads, and invalid boundary/local routing decisions.
 
   [ ] 4.3 Section - Transport Diagnostics and Contract Hygiene
     Implement inspection and validation surfaces that keep the desktop transport
