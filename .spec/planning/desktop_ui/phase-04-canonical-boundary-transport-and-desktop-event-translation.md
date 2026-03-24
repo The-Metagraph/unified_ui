@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 - The shared runtime remains the source of normalized desktop interaction
   meaning even when individual targets expose different raw callbacks.
 
-[ ] 4 Phase 4 - Canonical Boundary Transport and Desktop Event Translation
+[x] 4 Phase 4 - Canonical Boundary Transport and Desktop Event Translation
   Implement canonical `Jido.Signal` boundary translation, normalized desktop
   event flow, and transport diagnostics for direct-native and canonical
   rendering paths.
@@ -102,22 +102,22 @@ Back to index: [README](./README.md)
       [x] 4.4.2.2 Subtask - Show how local native handling differs from canonical boundary translation without changing event meaning.
       [x] 4.4.2.3 Subtask - Document where later release workflows will package and validate these interaction families.
 
-  [ ] 4.5 Section - Phase 4 Integration Tests
+  [x] 4.5 Section - Phase 4 Integration Tests
     Validate canonical transport, normalized input flow, and contract hygiene
     end to end.
 
-    [ ] 4.5.1 Task - Boundary translation integration scenarios
+    [x] 4.5.1 Task - Boundary translation integration scenarios
       Verify canonical desktop interactions cross the package boundary through
       deterministic `Jido.Signal` translation.
 
-      [ ] 4.5.1.1 Subtask - Verify boundary-crossing interactions emit and consume canonical signals with CloudEvents-compatible semantics.
-      [ ] 4.5.1.2 Subtask - Verify canonical bindings and event descriptors route correctly through native widget interactions.
-      [ ] 4.5.1.3 Subtask - Verify invalid canonical event payloads or leaked platform-local envelopes fail with deterministic diagnostics.
+      [x] 4.5.1.1 Subtask - Verify boundary-crossing interactions emit and consume canonical signals with CloudEvents-compatible semantics.
+      [x] 4.5.1.2 Subtask - Verify canonical bindings and event descriptors route correctly through native widget interactions.
+      [x] 4.5.1.3 Subtask - Verify invalid canonical event payloads or leaked platform-local envelopes fail with deterministic diagnostics.
 
-    [ ] 4.5.2 Task - Local-native and normalized-input integration scenarios
+    [x] 4.5.2 Task - Local-native and normalized-input integration scenarios
       Verify local native event handling and platform normalization stay bounded
       inside the shared runtime while preserving canonical meaning when needed.
 
-      [ ] 4.5.2.1 Subtask - Verify local native interactions can remain inside the runtime without forcing unnecessary boundary translation.
-      [ ] 4.5.2.2 Subtask - Verify normalized input families remain consistent across platform adapters and direct-native versus canonical entry paths.
-      [ ] 4.5.2.3 Subtask - Verify transport diagnostics surface boundary-local distinctions and no-leakage guarantees clearly.
+      [x] 4.5.2.1 Subtask - Verify local native interactions can remain inside the runtime without forcing unnecessary boundary translation.
+      [x] 4.5.2.2 Subtask - Verify normalized input families remain consistent across platform adapters and direct-native versus canonical entry paths.
+      [x] 4.5.2.3 Subtask - Verify transport diagnostics surface boundary-local distinctions and no-leakage guarantees clearly.
