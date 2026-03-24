@@ -1,6 +1,6 @@
 defmodule DesktopUi.Renderer.Mapper do
   @moduledoc """
-  Canonical-to-native widget mapper for foundational `desktop_ui` rendering.
+  Canonical-to-native widget mapper for `desktop_ui`.
   """
 
   alias DesktopUi.Renderer.Error
@@ -252,6 +252,258 @@ defmodule DesktopUi.Renderer.Mapper do
     {:ok, DesktopUi.Widgets.content(element.id, [], base_opts(element))}
   end
 
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:window, "window"] do
+    {:ok,
+     DesktopUi.Widgets.window(
+       element.id,
+       first_present([attr(element, :title), label_text(element)], "Window"),
+       [],
+       base_opts(element)
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:table, "table"] do
+    {:ok,
+     DesktopUi.Widgets.table(
+       element.id,
+       first_present([attr(element, :columns), group_attr(element, :data, :columns)], []),
+       first_present([attr(element, :rows), group_attr(element, :data, :rows)], []),
+       Keyword.merge(
+         base_opts(element),
+         selection_binding: binding_name(element),
+         selected: first_present([attr(element, :selected), binding_value(element)]),
+         sort_key:
+           first_present([attr(element, :sort_key), group_attr(element, :data, :sort_key)]),
+         on_select: interaction_payload(element, :selection),
+         on_sort: interaction_payload(element, :sort),
+         on_filter: interaction_payload(element, :filter)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:tree_view, "tree_view"] do
+    {:ok,
+     DesktopUi.Widgets.tree_view(
+       element.id,
+       first_present([attr(element, :nodes), group_attr(element, :data, :nodes)], []),
+       Keyword.merge(
+         base_opts(element),
+         selection_binding: binding_name(element),
+         selected: first_present([attr(element, :selected), binding_value(element)]),
+         on_select: interaction_payload(element, :selection),
+         on_expand: interaction_payload(element, :expand)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:inspector, "inspector"] do
+    {:ok,
+     DesktopUi.Widgets.inspector(
+       element.id,
+       first_present([attr(element, :subject), group_attr(element, :data, :subject)], %{}),
+       Keyword.merge(
+         base_opts(element),
+         sections:
+           first_present([attr(element, :sections), group_attr(element, :data, :sections)], []),
+         on_expand: interaction_payload(element, :expand),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:markdown_viewer, "markdown_viewer"] do
+    {:ok,
+     DesktopUi.Widgets.markdown_viewer(
+       element.id,
+       first_present([attr(element, :source), attr(element, :content)], ""),
+       Keyword.merge(
+         base_opts(element),
+         anchors: first_present([attr(element, :anchors)], []),
+         mode: first_present([attr(element, :mode)], :rendered),
+         on_navigate: interaction_payload(element, :navigation)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:dialog, "dialog"] do
+    {:ok,
+     DesktopUi.Widgets.dialog(
+       element.id,
+       first_present([attr(element, :title), label_text(element)], "Dialog"),
+       [],
+       Keyword.merge(
+         base_opts(element),
+         open: first_present([attr(element, :open)], true),
+         on_close: interaction_payload(element, :close)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:toast, "toast"] do
+    {:ok,
+     DesktopUi.Widgets.toast(
+       element.id,
+       content_text(element, "Toast"),
+       Keyword.merge(
+         base_opts(element),
+         timeout_ms: first_present([attr(element, :timeout_ms)], 3_000),
+         on_close: interaction_payload(element, :close)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:progress, "progress"] do
+    {:ok,
+     DesktopUi.Widgets.progress(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         current: first_present([attr(element, :current), binding_value(element)]),
+         total: attr(element, :total),
+         binding: binding_name(element),
+         indeterminate: first_present([attr(element, :indeterminate)], false)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:gauge, "gauge"] do
+    {:ok,
+     DesktopUi.Widgets.gauge(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         min: first_present([attr(element, :min)], 0),
+         max: first_present([attr(element, :max)], 100),
+         label: label_text(element)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:bar_chart, "bar_chart"] do
+    {:ok,
+     DesktopUi.Widgets.bar_chart(
+       element.id,
+       first_present([attr(element, :series)], []),
+       Keyword.merge(base_opts(element), axes: first_present([attr(element, :axes)], %{}))
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:line_chart, "line_chart"] do
+    {:ok,
+     DesktopUi.Widgets.line_chart(
+       element.id,
+       first_present([attr(element, :series)], []),
+       Keyword.merge(base_opts(element), axes: first_present([attr(element, :axes)], %{}))
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:timeline, "timeline"] do
+    {:ok,
+     DesktopUi.Widgets.timeline(
+       element.id,
+       first_present([attr(element, :events)], []),
+       Keyword.merge(base_opts(element), mode: first_present([attr(element, :mode)], :relative))
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:canvas, "canvas"] do
+    {:ok,
+     DesktopUi.Widgets.canvas(
+       element.id,
+       first_present([attr(element, :operations)], []),
+       Keyword.merge(
+         base_opts(element),
+         width: attr(element, :width),
+         height: attr(element, :height),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:log_viewer, "log_viewer"] do
+    {:ok,
+     DesktopUi.Widgets.log_viewer(
+       element.id,
+       first_present([attr(element, :entries)], []),
+       Keyword.merge(
+         base_opts(element),
+         query_binding: binding_name(element),
+         query: attr(element, :query),
+         on_filter: interaction_payload(element, :filter)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:cluster_dashboard, "cluster_dashboard"] do
+    {:ok,
+     DesktopUi.Widgets.cluster_dashboard(
+       element.id,
+       first_present([attr(element, :nodes)], []),
+       Keyword.merge(base_opts(element), summary: first_present([attr(element, :summary)], %{}))
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:command_palette, "command_palette"] do
+    {:ok,
+     DesktopUi.Widgets.command_palette(
+       element.id,
+       first_present([attr(element, :commands)], []),
+       Keyword.merge(
+         base_opts(element),
+         query_binding: binding_name(element),
+         query: attr(element, :query),
+         on_change: interaction_payload(element, :change),
+         on_command: interaction_payload(element, :command),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:process_monitor, "process_monitor"] do
+    {:ok,
+     DesktopUi.Widgets.process_monitor(
+       element.id,
+       first_present([attr(element, :processes)], []),
+       Keyword.merge(
+         base_opts(element),
+         selection_binding: binding_name(element),
+         sort_by: attr(element, :sort_by),
+         on_sort: interaction_payload(element, :sort),
+         on_filter: interaction_payload(element, :filter),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:window_command, "window_command"] do
+    {:ok,
+     DesktopUi.Widgets.window_command(
+       element.id,
+       label_text(element, "Window Command"),
+       Keyword.merge(base_opts(element), on_command: interaction_payload(element, :command))
+     )}
+  end
+
   defp map_element(%Element{type: :layout, kind: kind} = element)
        when kind in [:column, "column"] do
     {:ok,
@@ -278,6 +530,130 @@ defmodule DesktopUi.Renderer.Mapper do
        element.id,
        [],
        Keyword.merge(base_opts(element), align: first_present([attr(element, :align)], :stretch))
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element)
+       when kind in [:viewport, "viewport"] do
+    {:ok,
+     DesktopUi.Layout.viewport(
+       element.id,
+       placeholder_child(element.id, :viewport),
+       Keyword.merge(
+         base_opts(element),
+         axis: first_present([attr(element, :axis)], :vertical),
+         offset: first_present([attr(element, :offset)], %{x: 0, y: 0}),
+         width: attr(element, :width),
+         height: attr(element, :height),
+         on_scroll: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element)
+       when kind in [:scroll_region, "scroll_region"] do
+    {:ok,
+     DesktopUi.Layout.scroll_region(
+       element.id,
+       placeholder_child(element.id, :scroll_region),
+       Keyword.merge(
+         base_opts(element),
+         axis: first_present([attr(element, :axis)], :vertical),
+         offset: first_present([attr(element, :offset)], %{x: 0, y: 0}),
+         on_scroll: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element)
+       when kind in [:split_pane, "split_pane"] do
+    {:ok,
+     DesktopUi.Layout.split_pane(
+       element.id,
+       placeholder_child(element.id, :primary),
+       placeholder_child(element.id, :secondary),
+       Keyword.merge(
+         base_opts(element),
+         direction: first_present([attr(element, :direction)], :horizontal),
+         ratio: first_present([attr(element, :ratio)], 0.5),
+         on_resize: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element)
+       when kind in [:canvas_surface, "canvas_surface"] do
+    {:ok,
+     DesktopUi.Layout.canvas_surface(
+       element.id,
+       [],
+       Keyword.merge(base_opts(element),
+         width: attr(element, :width),
+         height: attr(element, :height)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element)
+       when kind in [:absolute, "absolute"] do
+    {:ok,
+     DesktopUi.Layout.absolute(
+       element.id,
+       [],
+       Keyword.merge(
+         base_opts(element),
+         x: first_present([attr(element, :x)], 0),
+         y: first_present([attr(element, :y)], 0),
+         z_index: first_present([attr(element, :z_index)], 0)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layer, kind: kind} = element)
+       when kind in [:overlay, "overlay"] do
+    {:ok,
+     DesktopUi.Layer.overlay(
+       element.id,
+       placeholder_child(element.id, :content),
+       [],
+       Keyword.merge(base_opts(element),
+         overlay_role: first_present([metadata_attr(element, :overlay_role)], :overlay)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layer, kind: kind} = element)
+       when kind in [:context_menu, "context_menu"] do
+    {:ok,
+     DesktopUi.Layer.context_menu(
+       element.id,
+       placeholder_child(element.id, :anchor),
+       first_present([attr(element, :items)], []),
+       Keyword.merge(base_opts(element), on_select: interaction_payload(element, :selection))
+     )}
+  end
+
+  defp map_element(%Element{type: :layer, kind: kind} = element)
+       when kind in [:popover, "popover"] do
+    {:ok,
+     DesktopUi.Layer.popover(
+       element.id,
+       placeholder_child(element.id, :anchor),
+       placeholder_child(element.id, :content),
+       Keyword.merge(base_opts(element), on_close: interaction_payload(element, :close))
+     )}
+  end
+
+  defp map_element(%Element{type: :layer, kind: kind} = element)
+       when kind in [:multi_window, "multi_window"] do
+    {:ok,
+     DesktopUi.Layer.multi_window(
+       element.id,
+       [],
+       Keyword.merge(
+         base_opts(element),
+         window_identity: first_present([metadata_attr(element, :window_identity)], element.id)
+       )
      )}
   end
 
@@ -373,7 +749,14 @@ defmodule DesktopUi.Renderer.Mapper do
       variant: first_present([attr(element, :variant), metadata_attr(element, :variant)]),
       shortcut: first_present([attr(element, :shortcut), metadata_attr(element, :shortcut)]),
       focus_group: metadata_attr(element, :focus_group),
-      binding_surface: metadata_attr(element, :binding_surface)
+      binding_surface: metadata_attr(element, :binding_surface),
+      selection_mode: metadata_attr(element, :selection_mode),
+      sort_key: metadata_attr(element, :sort_key),
+      overlay_role: metadata_attr(element, :overlay_role),
+      overlay_lifecycle: metadata_attr(element, :overlay_lifecycle),
+      positioning_mode: metadata_attr(element, :positioning_mode),
+      interaction_route: metadata_attr(element, :interaction_route),
+      window_identity: metadata_attr(element, :window_identity)
     ]
     |> Enum.reject(fn {_key, value} -> is_nil(value) end)
   end
@@ -401,7 +784,17 @@ defmodule DesktopUi.Renderer.Mapper do
         interaction
 
       %{intent: _intent} = interaction
-      when family in [:click, :change, :submit, :selection, :navigation, :command] ->
+      when family in [
+             :click,
+             :change,
+             :submit,
+             :selection,
+             :navigation,
+             :command,
+             :sort,
+             :filter,
+             :close
+           ] ->
         interaction
 
       _other ->
@@ -465,4 +858,8 @@ defmodule DesktopUi.Renderer.Mapper do
   defp normalize_styles(nil), do: []
   defp normalize_styles(styles) when is_map(styles), do: Map.to_list(styles)
   defp normalize_styles(styles) when is_list(styles), do: styles
+
+  defp placeholder_child(id, role) do
+    Widget.new(:spacer, id: "#{id}-#{role}-placeholder")
+  end
 end
