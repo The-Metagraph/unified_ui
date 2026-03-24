@@ -111,8 +111,10 @@ defmodule DesktopUi.Runtime.Boot do
        family: Map.get(root, :family, Widget.family_for(kind)),
        metadata: Map.get(root, :metadata, %{}),
        state: Map.get(root, :state, %{}),
+       bindings: Map.get(root, :bindings, %{}),
        slots: Map.get(root, :slots, [:default]),
        slot_children: Map.get(root, :slot_children, %{}),
+       attributes: Map.get(root, :attributes, %{}),
        styles: Map.get(root, :styles, %{}),
        events: Map.get(root, :events, %{}),
        children: Map.get(root, :children, [])

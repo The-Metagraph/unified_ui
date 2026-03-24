@@ -5,21 +5,11 @@ defmodule DesktopUi.RuntimeTest do
   alias DesktopUi.Runtime.Error
 
   test "mounts a minimal native screen through the shared runtime backbone" do
-    root = %DesktopUi.Widget{
-      id: "workspace-window",
-      kind: :window,
-      family: :window,
-      metadata: %{focusable: true},
-      children: [
-        %DesktopUi.Widget{id: "workspace-title", kind: :text, family: :content},
-        %DesktopUi.Widget{
-          id: "save-button",
-          kind: :button,
-          family: :action,
-          metadata: %{focusable: true}
-        }
-      ]
-    }
+    root =
+      DesktopUi.Widgets.window("workspace-window", "Workspace", [
+        DesktopUi.Widgets.text("workspace-title", "Workspace"),
+        DesktopUi.Widgets.button("save-button", "Save", intent: :save_workspace)
+      ])
 
     screen = %{id: "workspace", title: "Workspace", root: root}
 

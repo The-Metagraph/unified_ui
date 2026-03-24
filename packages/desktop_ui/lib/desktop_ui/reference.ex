@@ -10,8 +10,11 @@ defmodule DesktopUi.Reference do
       package_areas: DesktopUi.package_areas(),
       widgets: %{
         families: DesktopUi.Widgets.families(),
+        kinds: DesktopUi.Widgets.kinds(),
         modules: DesktopUi.Widgets.modules(),
-        contract: DesktopUi.Widget.contract()
+        contract: DesktopUi.Widget.contract(),
+        registration_model: DesktopUi.Widgets.registration_model(),
+        validation_state: DesktopUi.Widgets.validation_state()
       },
       runtime: %{
         assumptions: DesktopUi.Runtime.assumptions(),
@@ -46,7 +49,14 @@ defmodule DesktopUi.Reference do
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
-        package_overview: DesktopUi.Inspection.package_overview()
+        package_overview: DesktopUi.Inspection.package_overview(),
+        shared_runtime_contract: DesktopUi.Inspection.shared_runtime_contract(),
+        validation_surface: DesktopUi.Inspection.validation_surface()
+      },
+      responsibilities: %{
+        direct_native: [:widgets, :runtime, :platform],
+        canonical_renderer: [:renderer, :runtime, :transport],
+        bounded_platform_variation: true
       },
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),

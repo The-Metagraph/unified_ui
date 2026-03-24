@@ -17,7 +17,9 @@ defmodule DesktopUi.Info do
       },
       widgets: %{
         families: DesktopUi.Widgets.families(),
-        contract: DesktopUi.Widget.contract()
+        kinds: DesktopUi.Widgets.kinds(),
+        contract: DesktopUi.Widget.contract(),
+        validation_state: DesktopUi.Widgets.validation_state()
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),
@@ -39,6 +41,14 @@ defmodule DesktopUi.Info do
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),
         workflows: DesktopUi.Tooling.workflows()
+      },
+      inspection: %{
+        helpers: DesktopUi.Inspection.helpers(),
+        validation: DesktopUi.Inspection.validation_surface()
+      },
+      responsibilities: %{
+        direct_native: [:widgets, :runtime, :platform],
+        canonical_renderer: [:renderer, :runtime, :transport]
       }
     }
   end

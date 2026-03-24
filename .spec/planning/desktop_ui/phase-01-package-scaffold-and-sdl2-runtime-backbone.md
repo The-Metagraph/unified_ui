@@ -88,26 +88,26 @@ Back to index: [README](./README.md)
       [x] 1.3.2.2 Subtask - Isolate target-specific capability lookups and fallback behavior behind adapter boundaries.
       [x] 1.3.2.3 Subtask - Add diagnostics for unsupported platform capabilities, invalid adapter registration, and mismatched callback payloads.
 
-  [ ] 1.4 Section - Native Widget and Reference Backbone
+  [x] 1.4 Section - Native Widget and Reference Backbone
     Implement the native widget contract and package-facing reference surfaces
     that let maintainers inspect runtime capabilities before full renderer
     coverage exists.
 
-    [ ] 1.4.1 Task - Implement the baseline native widget behavior and registration model
+    [x] 1.4.1 Task - Implement the baseline native widget behavior and registration model
       Define how native `desktop_ui` widgets are declared, composed, and
       registered across the shared runtime.
 
-      [ ] 1.4.1.1 Subtask - Create the package-level native widget behavior or contract used by direct-use `desktop_ui` widgets.
-      [ ] 1.4.1.2 Subtask - Define common widget metadata, focus, slot, and style contracts shared by later widget families.
-      [ ] 1.4.1.3 Subtask - Keep the initial widget contract renderer-native and free of canonical IUR-specific branching.
+      [x] 1.4.1.1 Subtask - Create the package-level native widget behavior or contract used by direct-use `desktop_ui` widgets.
+      [x] 1.4.1.2 Subtask - Define common widget metadata, focus, slot, and style contracts shared by later widget families.
+      [x] 1.4.1.3 Subtask - Keep the initial widget contract renderer-native and free of canonical IUR-specific branching.
 
-    [ ] 1.4.2 Task - Implement package reference and inspection summaries
+    [x] 1.4.2 Task - Implement package reference and inspection summaries
       Provide lightweight introspection that summarizes declared widget
       families, runtime capabilities, platform seams, and validation state.
 
-      [ ] 1.4.2.1 Subtask - Implement reference helpers that list native widget families, runtime modules, platform adapters, and transport integration points as they are added.
-      [ ] 1.4.2.2 Subtask - Implement reference surfaces that report direct-native versus canonical-renderer package responsibilities across the shared runtime and adapter split.
-      [ ] 1.4.2.3 Subtask - Implement inspection helpers that expose SDL2 assumptions, platform seams, and package validation state.
+      [x] 1.4.2.1 Subtask - Implement reference helpers that list native widget families, runtime modules, platform adapters, and transport integration points as they are added.
+      [x] 1.4.2.2 Subtask - Implement reference surfaces that report direct-native versus canonical-renderer package responsibilities across the shared runtime and adapter split.
+      [x] 1.4.2.3 Subtask - Implement inspection helpers that expose SDL2 assumptions, platform seams, and package validation state.
 
   [ ] 1.5 Section - Phase 1 Integration Tests
     Validate package bootstrap, shared-runtime wiring, platform seams, native
