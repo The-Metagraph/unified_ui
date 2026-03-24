@@ -57,6 +57,8 @@ defmodule DesktopUi.Info do
       },
       artifacts: %{
         target_platforms: DesktopUi.Artifacts.target_platforms(),
+        workflows: DesktopUi.Artifacts.workflows(),
+        boundary_policy: DesktopUi.Artifacts.boundary_policy(),
         validation_state: DesktopUi.Artifacts.validation_state()
       },
       examples: %{

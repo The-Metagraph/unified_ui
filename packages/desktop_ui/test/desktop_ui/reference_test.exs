@@ -28,6 +28,9 @@ defmodule DesktopUi.ReferenceTest do
     assert :high_contrast in reference.theme.catalog_ids
     assert reference.theme.validation_state.shared_style_model == :ready
     assert reference.platform.integration.mismatches == []
+    assert reference.artifacts.workflows.windows.packaging == [:zip_archive, :msi_installer]
+    assert reference.artifacts.boundary_policy.transport_semantics_preserved
+    assert reference.artifacts.validation_state.packaging_boundaries == :ready
 
     assert :style_resolution in reference.platform.capability_contract.shared_semantics_outside_platform
 
@@ -55,6 +58,8 @@ defmodule DesktopUi.ReferenceTest do
     assert summary.style.validation_state.component_variants == :ready
     assert summary.theme.default_theme == :desktop_default
     assert summary.platform.integration.mismatches == []
+    assert summary.artifacts.workflows.macos.packaging == [:app_bundle, :signed_zip]
+    assert summary.artifacts.boundary_policy.packaging_distinct_from_renderer_logic
     assert summary.inspection.validation.runtime == :runtime_backbone_ready
   end
 end

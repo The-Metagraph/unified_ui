@@ -63,25 +63,25 @@ Back to index: [README](./README.md)
       [x] 5.2.2.2 Subtask - Preserve shared runtime, canonical rendering, and input-normalization semantics underneath target-specific behavior.
       [x] 5.2.2.3 Subtask - Add continuity diagnostics for target-specific behavior that risks semantic drift.
 
-  [ ] 5.3 Section - Platform Artifact Workflows
+  [x] 5.3 Section - Platform Artifact Workflows
     Implement explicit build, packaging, and release workflow surfaces for
     Windows, macOS, and Linux artifacts.
 
-    [ ] 5.3.1 Task - Implement platform-specific build and packaging workflows
+    [x] 5.3.1 Task - Implement platform-specific build and packaging workflows
       Define repeatable artifact workflows for each supported desktop target
       without assuming one universal packaging pipeline.
 
-      [ ] 5.3.1.1 Subtask - Define Windows build and packaging workflows appropriate for desktop executables, installers, or archives.
-      [ ] 5.3.1.2 Subtask - Define macOS build and packaging workflows appropriate for desktop bundles, archives, or installers.
-      [ ] 5.3.1.3 Subtask - Define Linux build and packaging workflows appropriate for binaries, packages, or archives.
+      [x] 5.3.1.1 Subtask - Define Windows build and packaging workflows appropriate for desktop executables, installers, or archives.
+      [x] 5.3.1.2 Subtask - Define macOS build and packaging workflows appropriate for desktop bundles, archives, or installers.
+      [x] 5.3.1.3 Subtask - Define Linux build and packaging workflows appropriate for binaries, packages, or archives.
 
-    [ ] 5.3.2 Task - Implement artifact policy and packaging boundaries
+    [x] 5.3.2 Task - Implement artifact policy and packaging boundaries
       Keep artifact delivery concerns explicit while preserving one shared
       runtime and renderer contract.
 
-      [ ] 5.3.2.1 Subtask - Document and encode the allowed artifact types and platform-specific flow differences for supported targets.
-      [ ] 5.3.2.2 Subtask - Keep packaging workflows distinct from widget behavior, transport translation, and shared runtime logic.
-      [ ] 5.3.2.3 Subtask - Preserve shared runtime semantics, canonical IUR support, and transport behavior across all supported artifact flows.
+      [x] 5.3.2.1 Subtask - Document and encode the allowed artifact types and platform-specific flow differences for supported targets.
+      [x] 5.3.2.2 Subtask - Keep packaging workflows distinct from widget behavior, transport translation, and shared runtime logic.
+      [x] 5.3.2.3 Subtask - Preserve shared runtime semantics, canonical IUR support, and transport behavior across all supported artifact flows.
 
   [ ] 5.4 Section - Runtime Inspection and Continuity Diagnostics
     Implement tooling surfaces that help maintainers inspect styling, runtime

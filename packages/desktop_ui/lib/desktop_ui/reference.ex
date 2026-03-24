@@ -71,6 +71,9 @@ defmodule DesktopUi.Reference do
       },
       artifacts: %{
         target_platforms: DesktopUi.Artifacts.target_platforms(),
+        workflows: DesktopUi.Artifacts.workflows(),
+        boundary_policy: DesktopUi.Artifacts.boundary_policy(),
+        diagnostics: DesktopUi.Artifacts.diagnostics(),
         responsibilities: DesktopUi.Artifacts.responsibilities(),
         validation_state: DesktopUi.Artifacts.validation_state()
       },
