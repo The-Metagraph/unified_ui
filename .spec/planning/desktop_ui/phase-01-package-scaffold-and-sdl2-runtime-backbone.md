@@ -25,27 +25,27 @@ Back to index: [README](./README.md)
   adapter seams, and baseline reference surfaces that every later `desktop_ui`
   phase depends on.
 
-  [ ] 1.1 Section - Mix Package and Namespace Scaffold
+[x] 1.1 Section - Mix Package and Namespace Scaffold
     Implement the baseline package structure, namespace layout, and library
     packaging rules required for `desktop_ui`.
 
-    [ ] 1.1.1 Task - Implement the baseline Mix and package library skeleton
+    [x] 1.1.1 Task - Implement the baseline Mix and package library skeleton
       Establish `packages/desktop_ui` as a standard Elixir library with package
       metadata, docs configuration, SDL2 dependency policy, and `unified_iur`
       dependency wiring.
 
-      [ ] 1.1.1.1 Subtask - Create `packages/desktop_ui/mix.exs` with package metadata, docs configuration, SDL2-related dependencies, and `unified_iur` dependency wiring.
-      [ ] 1.1.1.2 Subtask - Create the top-level `DesktopUi` namespace module together with package-facing entry modules for native widgets, runtime access, platform integration, canonical rendering, transport, and tooling.
-      [ ] 1.1.1.3 Subtask - Create `lib/`, `test/`, native runtime support, and package guide directories aligned with the `desktop_ui` structure spec.
+      [x] 1.1.1.1 Subtask - Create `packages/desktop_ui/mix.exs` with package metadata, docs configuration, SDL2-related dependencies, and `unified_iur` dependency wiring.
+      [x] 1.1.1.2 Subtask - Create the top-level `DesktopUi` namespace module together with package-facing entry modules for native widgets, runtime access, platform integration, canonical rendering, transport, and tooling.
+      [x] 1.1.1.3 Subtask - Create `lib/`, `test/`, native runtime support, and package guide directories aligned with the `desktop_ui` structure spec.
 
-    [ ] 1.1.2 Task - Implement package namespace and directory boundaries
+    [x] 1.1.2 Task - Implement package namespace and directory boundaries
       Separate native widget, shared runtime, platform integration, canonical
       rendering, transport translation, and artifact concerns so the package
       grows coherently.
 
-      [ ] 1.1.2.1 Subtask - Create dedicated module areas for native widgets, shared SDL2 runtime coordination, platform adapters, canonical IUR rendering, transport translation, artifact workflows, and tooling helpers.
-      [ ] 1.1.2.2 Subtask - Establish public naming conventions for runtime entry points, platform modules, native widget namespaces, and package-facing helper modules.
-      [ ] 1.1.2.3 Subtask - Prevent the package structure from taking ownership of authored DSL concerns or canonical IUR model definitions.
+      [x] 1.1.2.1 Subtask - Create dedicated module areas for native widgets, shared SDL2 runtime coordination, platform adapters, canonical IUR rendering, transport translation, artifact workflows, and tooling helpers.
+      [x] 1.1.2.2 Subtask - Establish public naming conventions for runtime entry points, platform modules, native widget namespaces, and package-facing helper modules.
+      [x] 1.1.2.3 Subtask - Prevent the package structure from taking ownership of authored DSL concerns or canonical IUR model definitions.
 
   [ ] 1.2 Section - Shared SDL2 Runtime Backbone
     Implement the shared runtime model that later native widgets, canonical
