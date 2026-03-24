@@ -85,25 +85,25 @@ Back to index: [README](./README.md)
       [x] 3.3.2.2 Subtask - Preserve native widget meaning and canonical intent across Windows, macOS, and Linux through the same runtime model.
       [x] 3.3.2.3 Subtask - Add diagnostics for advanced canonical constructs that cannot yet be realized safely by the shared runtime.
 
-  [ ] 3.4 Section - Advanced Comparison Examples
+  [x] 3.4 Section - Advanced Comparison Examples
     Implement maintained advanced examples that compare direct-native and
     canonical rendering through complex desktop flows.
 
-    [ ] 3.4.1 Task - Implement advanced native and canonical examples
+    [x] 3.4.1 Task - Implement advanced native and canonical examples
       Provide maintained examples that exercise advanced widget families,
       layering, and multiwindow behavior through both entry paths.
 
-      [ ] 3.4.1.1 Subtask - Add direct-native advanced examples for data-heavy, layered, and multiwindow desktop flows.
-      [ ] 3.4.1.2 Subtask - Add canonical advanced examples that realize the same screen intent from `UnifiedIUR`.
-      [ ] 3.4.1.3 Subtask - Keep example metadata aligned with advanced widget and display coverage in the package reference surface.
+      [x] 3.4.1.1 Subtask - Add direct-native advanced examples for data-heavy, layered, and multiwindow desktop flows.
+      [x] 3.4.1.2 Subtask - Add canonical advanced examples that realize the same screen intent from `UnifiedIUR`.
+      [x] 3.4.1.3 Subtask - Keep example metadata aligned with advanced widget and display coverage in the package reference surface.
 
-    [ ] 3.4.2 Task - Implement cross-target comparison helpers
+    [x] 3.4.2 Task - Implement cross-target comparison helpers
       Make it easier to review how advanced runtime behavior stays coherent
       across supported desktop targets.
 
-      [ ] 3.4.2.1 Subtask - Add helper workflows that compare advanced direct-native and canonical rendering paths.
-      [ ] 3.4.2.2 Subtask - Add helper workflows that summarize where platform behavior is allowed to differ underneath shared semantics.
-      [ ] 3.4.2.3 Subtask - Document where transport and artifact workflows will extend the comparison surface in later phases.
+      [x] 3.4.2.1 Subtask - Add helper workflows that compare advanced direct-native and canonical rendering paths.
+      [x] 3.4.2.2 Subtask - Add helper workflows that summarize where platform behavior is allowed to differ underneath shared semantics.
+      [x] 3.4.2.3 Subtask - Document where transport and artifact workflows will extend the comparison surface in later phases.
 
   [ ] 3.5 Section - Phase 3 Integration Tests
     Validate advanced widgets, display systems, multiwindow coordination, and

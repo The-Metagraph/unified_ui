@@ -81,6 +81,6 @@ defmodule DesktopUi.PhaseTwoIntegrationTest do
     assert :canonical_foundational in reference.examples.canonical_ids
     assert :foundational_continuity in reference.examples.comparison_ids
     assert :foundational_continuity in summary.examples.comparison_ids
-    assert DesktopUi.Inspection.package_overview().examples.native_ids == [:native_foundational]
+    assert :native_foundational in DesktopUi.Inspection.package_overview().examples.native_ids
   end
 end
