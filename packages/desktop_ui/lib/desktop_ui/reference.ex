@@ -85,13 +85,29 @@ defmodule DesktopUi.Reference do
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
         package_overview: DesktopUi.Inspection.package_overview(),
+        continuity_contract: DesktopUi.Inspection.continuity_contract(),
+        platform_profiles: DesktopUi.Inspection.platform_profiles(),
         shared_runtime_contract: DesktopUi.Inspection.shared_runtime_contract(),
         transport_contract: DesktopUi.Inspection.transport_contract(),
         layering_contract: DesktopUi.Inspection.layering_contract(),
         validation_surface: DesktopUi.Inspection.validation_surface()
       },
+      continuity: %{
+        seams: DesktopUi.Continuity.seams(),
+        diagnostic_kinds: DesktopUi.Continuity.diagnostic_kinds(),
+        contract: DesktopUi.Continuity.contract()
+      },
       responsibilities: %{
-        direct_native: [:widgets, :layout, :layer, :runtime, :platform, :style, :theme],
+        direct_native: [
+          :widgets,
+          :layout,
+          :layer,
+          :runtime,
+          :platform,
+          :style,
+          :theme,
+          :continuity
+        ],
         canonical_renderer: [:renderer, :runtime, :transport],
         bounded_platform_variation: true
       },

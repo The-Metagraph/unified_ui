@@ -5,6 +5,7 @@ defmodule DesktopUi do
 
   alias DesktopUi.{
     Artifacts,
+    Continuity,
     Examples,
     Info,
     Inspection,
@@ -32,6 +33,7 @@ defmodule DesktopUi do
           | :transport
           | :style
           | :theme
+          | :continuity
           | :artifacts
           | :examples
           | :inspection
@@ -49,6 +51,7 @@ defmodule DesktopUi do
       :transport,
       :style,
       :theme,
+      :continuity,
       :artifacts,
       :examples,
       :inspection,
@@ -85,6 +88,9 @@ defmodule DesktopUi do
 
   @spec theme() :: module()
   def theme, do: Theme
+
+  @spec continuity() :: module()
+  def continuity, do: Continuity
 
   @spec artifacts() :: module()
   def artifacts, do: Artifacts

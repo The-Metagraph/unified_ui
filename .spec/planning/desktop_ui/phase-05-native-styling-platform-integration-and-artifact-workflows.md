@@ -83,25 +83,25 @@ Back to index: [README](./README.md)
       [x] 5.3.2.2 Subtask - Keep packaging workflows distinct from widget behavior, transport translation, and shared runtime logic.
       [x] 5.3.2.3 Subtask - Preserve shared runtime semantics, canonical IUR support, and transport behavior across all supported artifact flows.
 
-  [ ] 5.4 Section - Runtime Inspection and Continuity Diagnostics
+  [x] 5.4 Section - Runtime Inspection and Continuity Diagnostics
     Implement tooling surfaces that help maintainers inspect styling, runtime
     continuity, and target-specific behavior without losing semantic alignment.
 
-    [ ] 5.4.1 Task - Implement styling and platform inspection surfaces
+    [x] 5.4.1 Task - Implement styling and platform inspection surfaces
       Provide package-local inspection helpers for native styling, canonical
       styling realization, and bounded platform behavior.
 
-      [ ] 5.4.1.1 Subtask - Implement inspection helpers that summarize effective styles, themes, and component variants for direct-native and canonical rendering.
-      [ ] 5.4.1.2 Subtask - Implement inspection helpers that show where platform-specific capabilities and packaging flows diverge underneath shared semantics.
-      [ ] 5.4.1.3 Subtask - Keep inspection output aligned with maintained examples and later validation workflows.
+      [x] 5.4.1.1 Subtask - Implement inspection helpers that summarize effective styles, themes, and component variants for direct-native and canonical rendering.
+      [x] 5.4.1.2 Subtask - Implement inspection helpers that show where platform-specific capabilities and packaging flows diverge underneath shared semantics.
+      [x] 5.4.1.3 Subtask - Keep inspection output aligned with maintained examples and later validation workflows.
 
-    [ ] 5.4.2 Task - Implement native and canonical continuity diagnostics
+    [x] 5.4.2 Task - Implement native and canonical continuity diagnostics
       Expose whether the same desktop meaning is preserved across direct-native,
       canonical, and cross-target execution paths.
 
-      [ ] 5.4.2.1 Subtask - Implement continuity helpers that compare direct-native and canonical widget, style, and interaction realization.
-      [ ] 5.4.2.2 Subtask - Implement cross-target continuity helpers that compare the same screen intent across Windows, macOS, and Linux semantics.
-      [ ] 5.4.2.3 Subtask - Report deterministic diagnostics for styling, renderer, or platform behavior that drifts from shared package meaning.
+      [x] 5.4.2.1 Subtask - Implement continuity helpers that compare direct-native and canonical widget, style, and interaction realization.
+      [x] 5.4.2.2 Subtask - Implement cross-target continuity helpers that compare the same screen intent across Windows, macOS, and Linux semantics.
+      [x] 5.4.2.3 Subtask - Report deterministic diagnostics for styling, renderer, or platform behavior that drifts from shared package meaning.
 
   [ ] 5.5 Section - Phase 5 Integration Tests
     Validate styling, bounded platform variation, artifact workflows, and

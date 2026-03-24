@@ -74,8 +74,21 @@ defmodule DesktopUi.Info do
         helpers: DesktopUi.Inspection.helpers(),
         validation: DesktopUi.Inspection.validation_surface()
       },
+      continuity: %{
+        seams: DesktopUi.Continuity.seams(),
+        diagnostic_kinds: DesktopUi.Continuity.diagnostic_kinds()
+      },
       responsibilities: %{
-        direct_native: [:widgets, :layout, :layer, :runtime, :platform, :style, :theme],
+        direct_native: [
+          :widgets,
+          :layout,
+          :layer,
+          :runtime,
+          :platform,
+          :style,
+          :theme,
+          :continuity
+        ],
         canonical_renderer: [:renderer, :runtime, :transport]
       }
     }
