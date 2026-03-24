@@ -21,10 +21,16 @@ defmodule DesktopUi.RuntimeTest do
     assert state.platform_adapter.target == :linux
     assert state.windows.primary == "window:workspace"
     assert state.redraw.status == :idle
-    assert state.realization.validation_state == :phase_one_realization_ready
+    assert state.realization.validation_state == :foundational_ready
     assert state.event_loop.poller.source == :sdl_event_queue
     assert state.event_loop.input_dispatch.boundary_mode == :placeholder_ready
     assert state.focus.current == "workspace-window"
+    assert state.focus.order == ["workspace-window", "save-button"]
+    assert state.realization.binding_index == %{}
+    assert state.realization.event_targets == %{"save-button" => [:click]}
+    assert state.realization.diagnostics.layout_guards == :ready
+    assert state.screen.composition.root_kind == :window
+    assert state.screen.composition.shared_realization
   end
 
   test "invalid screen input fails with deterministic diagnostics" do
@@ -51,5 +57,49 @@ defmodule DesktopUi.RuntimeTest do
              )
 
     assert invalid_platform_error.reason == :unsupported_platform_target
+  end
+
+  test "realization indexes bindings, focus order, and event targets for foundational screens" do
+    screen = %{
+      id: "workspace",
+      title: "Workspace",
+      root:
+        DesktopUi.Widgets.window("workspace-window", "Workspace", [
+          DesktopUi.Widgets.column("workspace-column", [
+            DesktopUi.Widgets.text_input("query-input",
+              value: "status:ok",
+              binding: :query,
+              on_submit: %{intent: :run_query}
+            ),
+            DesktopUi.Widgets.checkbox("alerts-checkbox", "Alerts",
+              checked: true,
+              binding: :alerts_enabled
+            ),
+            DesktopUi.Widgets.tabs(
+              "workspace-tabs",
+              [%{id: :overview, label: "Overview"}, %{id: :activity, label: "Activity"}],
+              current: :overview,
+              binding: :active_section
+            )
+          ])
+        ])
+    }
+
+    assert {:ok, state} = Runtime.mount_native_screen(screen, platform_target: :linux)
+
+    assert state.screen.bindings.names == [:active_section, :alerts_enabled, :query]
+
+    assert state.focus.order == [
+             "workspace-window",
+             "query-input",
+             "alerts-checkbox",
+             "workspace-tabs"
+           ]
+
+    assert Map.has_key?(state.realization.binding_index, :query)
+    assert Map.has_key?(state.realization.binding_index, :alerts_enabled)
+    assert Map.has_key?(state.realization.event_targets, "query-input")
+    assert Map.has_key?(state.realization.event_targets, "workspace-tabs")
+    assert Enum.any?(state.realization.cell_surface, &(&1.kind == :checkbox))
   end
 end

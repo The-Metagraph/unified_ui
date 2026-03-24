@@ -43,25 +43,25 @@ Back to index: [README](./README.md)
       [x] 2.1.2.2 Subtask - Implement tabs, menus, breadcrumbs, lists, and foundational navigation surfaces appropriate to desktop usage.
       [x] 2.1.2.3 Subtask - Define keyboard focus, shortcut hooks, and interaction metadata shared by foundational form and navigation widgets.
 
-  [ ] 2.2 Section - Foundational Shared Runtime and Screen Composition
+  [x] 2.2 Section - Foundational Shared Runtime and Screen Composition
     Implement the shared runtime realization model that can mount and compose
     foundational native screens before advanced layering exists.
 
-    [ ] 2.2.1 Task - Implement foundational layout and screen composition
+    [x] 2.2.1 Task - Implement foundational layout and screen composition
       Define the baseline direct-native realization model for stacking,
       alignment, bindings, and screen-level composition.
 
-      [ ] 2.2.1.1 Subtask - Implement foundational screen composition structures for containers, box layouts, stacks, alignment, and common screen metadata.
-      [ ] 2.2.1.2 Subtask - Implement runtime realization hooks for widget tree assembly, baseline focus traversal, and data-binding surfaces.
-      [ ] 2.2.1.3 Subtask - Keep foundational layout realization shared between direct-native and future canonical rendering paths.
+      [x] 2.2.1.1 Subtask - Implement foundational screen composition structures for containers, box layouts, stacks, alignment, and common screen metadata.
+      [x] 2.2.1.2 Subtask - Implement runtime realization hooks for widget tree assembly, baseline focus traversal, and data-binding surfaces.
+      [x] 2.2.1.3 Subtask - Keep foundational layout realization shared between direct-native and future canonical rendering paths.
 
-    [ ] 2.2.2 Task - Implement baseline direct-native rendering flow
+    [x] 2.2.2 Task - Implement baseline direct-native rendering flow
       Render foundational native widget trees through the shared desktop
       runtime using one coherent realization model.
 
-      [ ] 2.2.2.1 Subtask - Implement shared runtime realization for foundational widget drawing and event targeting.
-      [ ] 2.2.2.2 Subtask - Reuse the same runtime surfaces for direct-native screens and future canonical renderer output.
-      [ ] 2.2.2.3 Subtask - Add diagnostics for unsupported foundational widgets, invalid layout state, and realization mismatches.
+      [x] 2.2.2.1 Subtask - Implement shared runtime realization for foundational widget drawing and event targeting.
+      [x] 2.2.2.2 Subtask - Reuse the same runtime surfaces for direct-native screens and future canonical renderer output.
+      [x] 2.2.2.3 Subtask - Add diagnostics for unsupported foundational widgets, invalid layout state, and realization mismatches.
 
   [ ] 2.3 Section - Baseline Canonical IUR Rendering
     Implement the first canonical `UnifiedIUR` rendering path using the same
