@@ -49,47 +49,40 @@ defmodule DesktopUi.Widgets.Builder do
     )
   end
 
-  @spec text(String.t() | atom(), String.t(), keyword()) :: Widget.t()
-  def text(id, content, opts \\ []) do
-    Widget.new(:text,
+  @spec stack(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def stack(id, children \\ [], opts \\ []) do
+    Widget.new(:stack,
       id: id,
       metadata: %{focusable: false},
-      attributes: %{content: content},
-      styles: Map.new(Keyword.get(opts, :styles, []))
+      attributes: %{align: Keyword.get(opts, :align, :stretch)},
+      styles: Map.new(Keyword.get(opts, :styles, [])),
+      children: children
     )
+  end
+
+  @spec content(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def content(id, children \\ [], opts \\ []) do
+    DesktopUi.Widgets.Foundational.content(id, children, opts)
+  end
+
+  @spec text(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def text(id, content, opts \\ []) do
+    DesktopUi.Widgets.Foundational.text(id, content, opts)
   end
 
   @spec button(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def button(id, label, opts \\ []) do
-    Widget.new(:button,
-      id: id,
-      metadata: %{focusable: true},
-      attributes: %{label: label},
-      styles: Map.new(Keyword.get(opts, :styles, [])),
-      events: %{click: %{intent: Keyword.get(opts, :intent, :activate)}}
-    )
+    DesktopUi.Widgets.Foundational.button(id, label, opts)
   end
 
   @spec text_input(String.t() | atom(), keyword()) :: Widget.t()
   def text_input(id, opts \\ []) do
-    Widget.new(:text_input,
-      id: id,
-      metadata: %{focusable: true},
-      state: %{value: Keyword.get(opts, :value, "")},
-      bindings: %{value: Keyword.get(opts, :binding, :value)},
-      attributes: %{placeholder: Keyword.get(opts, :placeholder, "")},
-      styles: Map.new(Keyword.get(opts, :styles, []))
-    )
+    DesktopUi.Widgets.Input.text_input(id, opts)
   end
 
   @spec menu(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
   def menu(id, items, opts \\ []) do
-    Widget.new(:menu,
-      id: id,
-      metadata: %{focusable: true},
-      attributes: %{items: Enum.map(items, &Map.new/1)},
-      styles: Map.new(Keyword.get(opts, :styles, []))
-    )
+    DesktopUi.Widgets.Navigation.menu(id, items, opts)
   end
 
   @spec status(String.t() | atom(), String.t(), keyword()) :: Widget.t()

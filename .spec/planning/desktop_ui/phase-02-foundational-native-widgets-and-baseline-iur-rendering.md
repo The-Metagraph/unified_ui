@@ -23,25 +23,25 @@ Back to index: [README](./README.md)
   first canonical `UnifiedIUR` rendering path through the shared desktop
   runtime.
 
-  [ ] 2.1 Section - Foundational Native Widget Families
+  [x] 2.1 Section - Foundational Native Widget Families
     Implement the initial directly usable native widget families required for
     content, actions, forms, and navigation.
 
-    [ ] 2.1.1 Task - Implement foundational content and action widgets
+    [x] 2.1.1 Task - Implement foundational content and action widgets
       Create the first direct-native `desktop_ui` widgets for text, icons,
       images, buttons, and content containers.
 
-      [ ] 2.1.1.1 Subtask - Implement content widgets for text, labels, icons, images, spacers, and separators.
-      [ ] 2.1.1.2 Subtask - Implement action widgets for buttons, toggles, links, and primary command surfaces.
-      [ ] 2.1.1.3 Subtask - Define foundational widget state and rendering metadata for focus, disabled state, and baseline style hooks.
+      [x] 2.1.1.1 Subtask - Implement content widgets for text, labels, icons, images, spacers, and separators.
+      [x] 2.1.1.2 Subtask - Implement action widgets for buttons, toggles, links, and primary command surfaces.
+      [x] 2.1.1.3 Subtask - Define foundational widget state and rendering metadata for focus, disabled state, and baseline style hooks.
 
-    [ ] 2.1.2 Task - Implement baseline forms and navigation widgets
+    [x] 2.1.2 Task - Implement baseline forms and navigation widgets
       Add the input, selection, and navigation widgets required for canonical
       foundational screen coverage and direct-native usability.
 
-      [ ] 2.1.2.1 Subtask - Implement text entry, checkbox, radio, select, and baseline data-binding friendly form controls.
-      [ ] 2.1.2.2 Subtask - Implement tabs, menus, breadcrumbs, lists, and foundational navigation surfaces appropriate to desktop usage.
-      [ ] 2.1.2.3 Subtask - Define keyboard focus, shortcut hooks, and interaction metadata shared by foundational form and navigation widgets.
+      [x] 2.1.2.1 Subtask - Implement text entry, checkbox, radio, select, and baseline data-binding friendly form controls.
+      [x] 2.1.2.2 Subtask - Implement tabs, menus, breadcrumbs, lists, and foundational navigation surfaces appropriate to desktop usage.
+      [x] 2.1.2.3 Subtask - Define keyboard focus, shortcut hooks, and interaction metadata shared by foundational form and navigation widgets.
 
   [ ] 2.2 Section - Foundational Shared Runtime and Screen Composition
     Implement the shared runtime realization model that can mount and compose
