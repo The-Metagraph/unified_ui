@@ -3,6 +3,7 @@ defmodule DesktopUi.Runtime.Boot do
   Runtime boot helpers for the `desktop_ui` Phase 1 backbone.
   """
 
+  alias DesktopUi.Platform
   alias DesktopUi.Runtime.{Error, EventLoop, Screen, State, Window}
   alias DesktopUi.Widget
 
@@ -33,44 +34,55 @@ defmodule DesktopUi.Runtime.Boot do
   end
 
   defp build_state(screen, source_kind, opts) do
-    screen_model = Screen.new(screen, source_kind, opts)
-    window = Window.register(screen_model, opts)
-    platform_target = Keyword.get(opts, :platform_target, :linux)
+    with {:ok, %{target: platform_target, adapter: adapter}} <- Platform.select(opts) do
+      screen_model =
+        Screen.new(screen, source_kind, Keyword.put(opts, :platform_target, platform_target))
 
-    {:ok,
-     %State{
-       runtime_id: Keyword.get(opts, :runtime_id, "desktop-ui:#{screen_model.id}"),
-       screen_id: screen_model.id,
-       title: screen_model.title,
-       source_kind: source_kind,
-       platform_target: platform_target,
-       root: screen_model.root,
-       screen: screen_model,
-       windows: %{primary: window.id, registry: %{window.id => window}},
-       focus: %{
-         current: Window.primary_focus_target(window),
-         order: Window.focus_order(window)
-       },
-       redraw: %{
-         status: :idle,
-         requests: 0,
-         pending_reason: nil
-       },
-       realization: %{
-         mode: :shared_sdl_runtime,
-         root_kind: screen_model.root.kind,
-         window_id: window.id,
-         validation_state: :phase_one_realization_ready
-       },
-       event_loop:
-         EventLoop.scaffold(platform_target: platform_target, screen_id: screen_model.id),
-       lifecycle: %{
-         boot: :initialized,
-         runtime: :ready,
-         shutdown: :idle
-       },
-       validation_state: :runtime_backbone_ready
-     }}
+      window = Window.register(screen_model, opts)
+
+      {:ok,
+       %State{
+         runtime_id: Keyword.get(opts, :runtime_id, "desktop-ui:#{screen_model.id}"),
+         screen_id: screen_model.id,
+         title: screen_model.title,
+         source_kind: source_kind,
+         platform_target: platform_target,
+         platform_adapter: adapter.summary(),
+         root: screen_model.root,
+         screen: screen_model,
+         windows: %{primary: window.id, registry: %{window.id => window}},
+         focus: %{
+           current: Window.primary_focus_target(window),
+           order: Window.focus_order(window)
+         },
+         redraw: %{
+           status: :idle,
+           requests: 0,
+           pending_reason: nil
+         },
+         realization: %{
+           mode: :shared_sdl_runtime,
+           root_kind: screen_model.root.kind,
+           window_id: window.id,
+           validation_state: :phase_one_realization_ready
+         },
+         event_loop:
+           EventLoop.scaffold(platform_target: platform_target, screen_id: screen_model.id),
+         lifecycle: %{
+           boot: :initialized,
+           runtime: :ready,
+           shutdown: :idle
+         },
+         validation_state: :runtime_backbone_ready
+       }}
+    else
+      {:error, {:unsupported_platform_target, target}} ->
+        {:error,
+         Error.new(:unsupported_platform_target, %{platform_target: target}, :runtime_boot)}
+
+      {:error, {:invalid_platform_adapter, target}} ->
+        {:error, Error.new(:invalid_platform_adapter, %{platform_target: target}, :runtime_boot)}
+    end
   end
 
   defp validate_screen(screen) when is_map(screen) do

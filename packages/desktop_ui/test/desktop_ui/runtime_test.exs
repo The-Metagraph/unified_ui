@@ -28,6 +28,7 @@ defmodule DesktopUi.RuntimeTest do
     assert state.screen_id == "workspace"
     assert state.source_kind == :native
     assert state.platform_target == :linux
+    assert state.platform_adapter.target == :linux
     assert state.windows.primary == "window:workspace"
     assert state.redraw.status == :idle
     assert state.realization.validation_state == :phase_one_realization_ready
@@ -48,5 +49,17 @@ defmodule DesktopUi.RuntimeTest do
 
     assert invalid_root_error.reason == :invalid_screen_root
     assert invalid_root_error.phase == :runtime_boot
+
+    assert {:error, %Error{} = invalid_platform_error} =
+             Runtime.mount_native_screen(
+               %{
+                 id: "broken",
+                 title: "Broken",
+                 root: %DesktopUi.Widget{id: "root", kind: :window}
+               },
+               platform_target: :android
+             )
+
+    assert invalid_platform_error.reason == :unsupported_platform_target
   end
 end

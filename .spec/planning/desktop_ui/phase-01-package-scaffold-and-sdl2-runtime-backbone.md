@@ -68,25 +68,25 @@ Back to index: [README](./README.md)
       [x] 1.2.2.2 Subtask - Create bounded placeholders for focus changes, shortcut handling, and window lifecycle callbacks that later transport translation can reuse.
       [x] 1.2.2.3 Subtask - Define diagnostics for invalid event-loop state, unsupported callback payloads, and mismatched runtime initialization order.
 
-  [ ] 1.3 Section - Platform Integration Seams
+  [x] 1.3 Section - Platform Integration Seams
     Implement explicit Windows, macOS, and Linux adapter seams so platform
     variation stays bounded behind the shared runtime.
 
-    [ ] 1.3.1 Task - Implement platform adapter entrypoints
+    [x] 1.3.1 Task - Implement platform adapter entrypoints
       Define the baseline adapter modules and capability boundaries for the
       first-class desktop targets.
 
-      [ ] 1.3.1.1 Subtask - Create Windows, macOS, and Linux adapter modules that plug into the shared SDL2 runtime without redefining widget semantics.
-      [ ] 1.3.1.2 Subtask - Define capability contracts for windowing, menus, shortcuts, and platform notifications that may vary underneath one runtime model.
-      [ ] 1.3.1.3 Subtask - Keep the initial platform adapters focused on integration seams rather than full artifact packaging logic.
+      [x] 1.3.1.1 Subtask - Create Windows, macOS, and Linux adapter modules that plug into the shared SDL2 runtime without redefining widget semantics.
+      [x] 1.3.1.2 Subtask - Define capability contracts for windowing, menus, shortcuts, and platform notifications that may vary underneath one runtime model.
+      [x] 1.3.1.3 Subtask - Keep the initial platform adapters focused on integration seams rather than full artifact packaging logic.
 
-    [ ] 1.3.2 Task - Implement bounded platform callback and capability wiring
+    [x] 1.3.2 Task - Implement bounded platform callback and capability wiring
       Define how target-specific callbacks and capabilities surface through the
       shared runtime without leaking platform divergence everywhere.
 
-      [ ] 1.3.2.1 Subtask - Define package-local callback contracts for platform lifecycle, file-open, focus, and window-management hooks.
-      [ ] 1.3.2.2 Subtask - Isolate target-specific capability lookups and fallback behavior behind adapter boundaries.
-      [ ] 1.3.2.3 Subtask - Add diagnostics for unsupported platform capabilities, invalid adapter registration, and mismatched callback payloads.
+      [x] 1.3.2.1 Subtask - Define package-local callback contracts for platform lifecycle, file-open, focus, and window-management hooks.
+      [x] 1.3.2.2 Subtask - Isolate target-specific capability lookups and fallback behavior behind adapter boundaries.
+      [x] 1.3.2.3 Subtask - Add diagnostics for unsupported platform capabilities, invalid adapter registration, and mismatched callback payloads.
 
   [ ] 1.4 Section - Native Widget and Reference Backbone
     Implement the native widget contract and package-facing reference surfaces

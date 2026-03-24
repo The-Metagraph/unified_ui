@@ -21,6 +21,7 @@ defmodule DesktopUi.Info do
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),
+        diagnostics: DesktopUi.Platform.diagnostics(),
         validation_state: DesktopUi.Platform.validation_state()
       },
       renderer: %{
