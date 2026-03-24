@@ -18,7 +18,7 @@ Back to index: [README](./README.md)
 - Release readiness should harden traceability, validation, and maintainer
   workflows rather than introducing a separate package behavior model.
 
-[ ] 6 Phase 6 - Examples, Tooling, Documentation, and Release Readiness
+[x] 6 Phase 6 - Examples, Tooling, Documentation, and Release Readiness
   Implement maintained reference examples, preview and inspection tooling,
   documentation, release-readiness gates, and package evolution workflows.
 
@@ -103,22 +103,22 @@ Back to index: [README](./README.md)
       [x] 6.4.2.2 Subtask - Document how upstream `UnifiedIUR` and `UnifiedUi` changes should flow through `desktop_ui` planning, implementation, and validation.
       [x] 6.4.2.3 Subtask - Document how package changes should preserve canonical rendering, native runtime, transport, and artifact contract continuity.
 
-  [ ] 6.5 Section - Phase 6 Integration Tests
+  [x] 6.5 Section - Phase 6 Integration Tests
     Validate maintained examples, tooling, docs, and release-readiness gates
     together before considering the package ready for broader implementation.
 
-    [ ] 6.5.1 Task - Example and tooling integration scenarios
+    [x] 6.5.1 Task - Example and tooling integration scenarios
       Verify maintained examples and tooling workflows stay aligned with the
       package surface and supported targets.
 
-      [ ] 6.5.1.1 Subtask - Verify maintained examples expose the expected direct-native and canonical coverage areas.
-      [ ] 6.5.1.2 Subtask - Verify preview, inspection, and validation tooling operate on maintained example metadata and package reference surfaces deterministically.
-      [ ] 6.5.1.3 Subtask - Verify tooling output remains useful for local development, CI validation, and review workflows.
+      [x] 6.5.1.1 Subtask - Verify maintained examples expose the expected direct-native and canonical coverage areas.
+      [x] 6.5.1.2 Subtask - Verify preview, inspection, and validation tooling operate on maintained example metadata and package reference surfaces deterministically.
+      [x] 6.5.1.3 Subtask - Verify tooling output remains useful for local development, CI validation, and review workflows.
 
-    [ ] 6.5.2 Task - Documentation and release-readiness integration scenarios
+    [x] 6.5.2 Task - Documentation and release-readiness integration scenarios
       Verify docs, traceability, validation, and release workflows align with
       the package contract.
 
-      [ ] 6.5.2.1 Subtask - Verify package docs describe native widgets, canonical rendering, transport translation, and artifact workflows coherently.
-      [ ] 6.5.2.2 Subtask - Verify release-readiness gates and traceability workflows cover the root and upstream contracts referenced by the plan.
-      [ ] 6.5.2.3 Subtask - Verify package evolution guardrails keep future changes aligned with shared runtime semantics and canonical ecosystem boundaries.
+      [x] 6.5.2.1 Subtask - Verify package docs describe native widgets, canonical rendering, transport translation, and artifact workflows coherently.
+      [x] 6.5.2.2 Subtask - Verify release-readiness gates and traceability workflows cover the root and upstream contracts referenced by the plan.
+      [x] 6.5.2.3 Subtask - Verify package evolution guardrails keep future changes aligned with shared runtime semantics and canonical ecosystem boundaries.
