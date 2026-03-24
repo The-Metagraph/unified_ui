@@ -83,25 +83,25 @@ Back to index: [README](./README.md)
       [x] 6.3.2.2 Subtask - Keep maintainer-facing docs aligned with inspection and validation tooling output.
       [x] 6.3.2.3 Subtask - Document how direct-native and canonical entry paths share one runtime model and one package boundary.
 
-  [ ] 6.4 Section - Release Readiness and Package Evolution
+  [x] 6.4 Section - Release Readiness and Package Evolution
     Implement the final governance, traceability, and release-readiness gates
     needed to evolve `desktop_ui` safely.
 
-    [ ] 6.4.1 Task - Implement release-readiness gates and traceability workflows
+    [x] 6.4.1 Task - Implement release-readiness gates and traceability workflows
       Make package validation, documentation, and root-spec traceability part
       of normal `desktop_ui` maintenance.
 
-      [ ] 6.4.1.1 Subtask - Define release-readiness gates for native coverage, canonical coverage, transport validation, artifact workflows, and target support.
-      [ ] 6.4.1.2 Subtask - Keep package docs and traceability aligned with the root ecosystem, runtime-library, and signal transport subjects.
-      [ ] 6.4.1.3 Subtask - Ensure package reference and tooling surfaces remain useful as new widget families and platform behaviors are added.
+      [x] 6.4.1.1 Subtask - Define release-readiness gates for native coverage, canonical coverage, transport validation, artifact workflows, and target support.
+      [x] 6.4.1.2 Subtask - Keep package docs and traceability aligned with the root ecosystem, runtime-library, and signal transport subjects.
+      [x] 6.4.1.3 Subtask - Ensure package reference and tooling surfaces remain useful as new widget families and platform behaviors are added.
 
-    [ ] 6.4.2 Task - Implement package evolution guardrails
+    [x] 6.4.2 Task - Implement package evolution guardrails
       Keep future `desktop_ui` changes subordinate to the root ecosystem and
       upstream canonical contracts rather than letting the runtime drift.
 
-      [ ] 6.4.2.1 Subtask - Document that `desktop_ui` does not own authored DSL or canonical IUR definitions.
-      [ ] 6.4.2.2 Subtask - Document how upstream `UnifiedIUR` and `UnifiedUi` changes should flow through `desktop_ui` planning, implementation, and validation.
-      [ ] 6.4.2.3 Subtask - Document how package changes should preserve canonical rendering, native runtime, transport, and artifact contract continuity.
+      [x] 6.4.2.1 Subtask - Document that `desktop_ui` does not own authored DSL or canonical IUR definitions.
+      [x] 6.4.2.2 Subtask - Document how upstream `UnifiedIUR` and `UnifiedUi` changes should flow through `desktop_ui` planning, implementation, and validation.
+      [x] 6.4.2.3 Subtask - Document how package changes should preserve canonical rendering, native runtime, transport, and artifact contract continuity.
 
   [ ] 6.5 Section - Phase 6 Integration Tests
     Validate maintained examples, tooling, docs, and release-readiness gates

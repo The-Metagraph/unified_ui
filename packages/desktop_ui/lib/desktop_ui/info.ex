@@ -29,6 +29,8 @@ defmodule DesktopUi.Info do
 
   @spec package_summary() :: map()
   def package_summary do
+    {:ok, release_readiness} = DesktopUi.Validate.release_readiness(:summary)
+
     %{
       package: :desktop_ui,
       namespace: DesktopUi,
@@ -97,7 +99,15 @@ defmodule DesktopUi.Info do
         mix_tasks: DesktopUi.Tooling.mix_tasks()
       },
       validate: %{
-        release_gates: DesktopUi.Validate.release_gates()
+        release_gates: DesktopUi.Validate.release_gates(),
+        documentation_surface: DesktopUi.Validate.documentation_surface().status,
+        traceability_alignment: DesktopUi.Validate.traceability_alignment().status,
+        release_readiness: release_readiness.status
+      },
+      documentation: %{
+        guides: DesktopUi.Tooling.documentation_surface(),
+        preview_surfaces: DesktopUi.Tooling.preview_surfaces(),
+        traceability_targets: DesktopUi.Validate.traceability_targets()
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),

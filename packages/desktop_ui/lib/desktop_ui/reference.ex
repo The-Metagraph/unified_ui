@@ -32,6 +32,17 @@ defmodule DesktopUi.Reference do
     package_reference().artifacts
   end
 
+  @spec shared_runtime_contract() :: map()
+  def shared_runtime_contract do
+    %{
+      assumptions: DesktopUi.Runtime.assumptions(),
+      platform_targets: DesktopUi.Platform.targets(),
+      renderer_accepts: DesktopUi.Renderer.accepts(),
+      transport_modes: DesktopUi.Transport.modes(),
+      direct_native_and_canonical_share_runtime: true
+    }
+  end
+
   @spec package_reference() :: map()
   def package_reference do
     %{
@@ -149,8 +160,24 @@ defmodule DesktopUi.Reference do
         mix_tasks: DesktopUi.Tooling.mix_tasks(),
         validation_state: DesktopUi.Tooling.validation_state()
       },
+      documentation: %{
+        guides: DesktopUi.Tooling.documentation_surface(),
+        maintainer_commands: DesktopUi.Tooling.mix_tasks(),
+        shared_runtime_contract: shared_runtime_contract(),
+        traceability_targets: DesktopUi.Validate.traceability_targets()
+      },
       validate: %{
+        inspect: DesktopUi.Inspect,
+        validate: DesktopUi.Validate,
+        validation_sections:
+          DesktopUi.Validate.validation_report()
+          |> Map.keys()
+          |> Enum.sort(),
+        release_readiness_modes: [:summary, :strict],
         release_gates: DesktopUi.Validate.release_gates(),
+        evolution_rules: DesktopUi.Validate.evolution_rules(),
+        documentation_surface: DesktopUi.Validate.documentation_surface(),
+        traceability_alignment: DesktopUi.Validate.traceability_alignment(),
         validation_report: DesktopUi.Validate.validation_report()
       }
     }

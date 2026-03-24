@@ -26,6 +26,8 @@ defmodule DesktopUi.ToolingTest do
     transport = DesktopUi.Validate.transport_validation()
     artifacts = DesktopUi.Validate.artifact_validation()
     tooling = DesktopUi.Validate.tooling_surface()
+    docs = DesktopUi.Validate.documentation_surface()
+    traceability = DesktopUi.Validate.traceability_alignment()
     validation_report = DesktopUi.Validate.validation_report()
     validation_summary = DesktopUi.Validate.validation_summary(validation_report)
 
@@ -34,6 +36,8 @@ defmodule DesktopUi.ToolingTest do
     assert transport.status == :pass
     assert artifacts.status == :pass
     assert tooling.status == :pass
+    assert docs.status == :pass
+    assert traceability.status == :pass
 
     assert {:ok, summary_report} = DesktopUi.Validate.release_readiness(:summary)
     assert {:ok, strict_report} = DesktopUi.Validate.release_readiness(:strict)
@@ -46,5 +50,13 @@ defmodule DesktopUi.ToolingTest do
     assert validation_report.release_readiness.status == :pass
     assert validation_summary =~ "DesktopUi validation summary"
     assert validation_summary =~ "release ready?: true"
+    assert validation_report.documentation_surface.status == :pass
+    assert validation_report.traceability_alignment.status == :pass
+    assert "mix spec.traceability.generate desktop_ui" in DesktopUi.Tooling.mix_tasks()
+
+    assert Enum.any?(
+             DesktopUi.Validate.evolution_rules(),
+             &(&1.id == :desktop_ui_not_dsl_or_iur_owner)
+           )
   end
 end

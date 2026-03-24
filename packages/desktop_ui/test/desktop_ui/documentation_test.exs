@@ -50,4 +50,35 @@ defmodule DesktopUi.DocumentationTest do
     assert reference_artifacts.validation_state.packaging_boundaries == :ready
     assert info_artifacts.target_platforms == [:windows, :macos, :linux]
   end
+
+  test "documentation and validation surfaces expose release and traceability guardrails" do
+    reference = DesktopUi.reference()
+    summary = DesktopUi.info()
+
+    assert reference.documentation.guides == DesktopUi.Tooling.documentation_surface()
+    assert reference.documentation.maintainer_commands == DesktopUi.Tooling.mix_tasks()
+
+    assert reference.documentation.shared_runtime_contract.direct_native_and_canonical_share_runtime
+
+    assert ".spec/specs/platform_runtimes.spec.md" in reference.documentation.traceability_targets
+
+    assert reference.validate.inspect == DesktopUi.Inspect
+    assert reference.validate.validate == DesktopUi.Validate
+    assert :documentation_surface in reference.validate.validation_sections
+    assert :traceability_alignment in reference.validate.validation_sections
+    assert reference.validate.release_readiness_modes == [:summary, :strict]
+    assert reference.validate.documentation_surface.status == :pass
+    assert reference.validate.traceability_alignment.status == :pass
+
+    assert Enum.any?(
+             reference.validate.evolution_rules,
+             &(&1.id == :desktop_ui_not_dsl_or_iur_owner)
+           )
+
+    assert summary.validate.documentation_surface == :pass
+    assert summary.validate.traceability_alignment == :pass
+    assert summary.validate.release_readiness == :pass
+    assert summary.documentation.guides == DesktopUi.Tooling.documentation_surface()
+    assert DesktopUi.Inspect in summary.documentation.preview_surfaces
+  end
 end

@@ -105,7 +105,9 @@ defmodule DesktopUi.WidgetsTest do
         "Operations",
         [
           DesktopUi.Widgets.text("dialog-copy", "Runbook loaded")
-        ], open: true)
+        ],
+        open: true
+      )
 
     chart =
       DesktopUi.Widgets.bar_chart("service-chart", [%{id: :healthy, values: [4, 6, 8]}])

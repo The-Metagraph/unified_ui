@@ -27,6 +27,9 @@ defmodule DesktopUi.Tooling do
       :style_review,
       :platform_review,
       :package_validation,
+      :documentation_review,
+      :traceability_review,
+      :evolution_policy_review,
       :release_readiness
     ]
   end
@@ -56,6 +59,7 @@ defmodule DesktopUi.Tooling do
       "mix desktop_ui.inspect --format catalog",
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
       "mix desktop_ui.validate --strict",
+      "mix spec.traceability.generate desktop_ui",
       "mix spec.plancheck desktop_ui"
     ]
   end
@@ -65,7 +69,9 @@ defmodule DesktopUi.Tooling do
     %{
       workflows: workflows(),
       preview_surfaces: preview_surfaces(),
-      runtime_validation: DesktopUi.Runtime.validation_state()
+      runtime_validation: DesktopUi.Runtime.validation_state(),
+      documentation_validation: DesktopUi.Validate.documentation_surface().status,
+      traceability_validation: DesktopUi.Validate.traceability_alignment().status
     }
   end
 

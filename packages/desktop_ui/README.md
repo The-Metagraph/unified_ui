@@ -79,6 +79,7 @@ Package-local checks:
 Workspace checks:
 
 - `mix spec.plancheck desktop_ui`
+- `mix spec.traceability.generate desktop_ui`
 
 ## Guides
 
@@ -90,7 +91,17 @@ Workspace checks:
 
 ## Release Readiness
 
-Treat `mix desktop_ui.validate --strict` as the package release-readiness gate.
-It keeps example coverage, shared runtime behavior, transport translation,
-artifact policy, tooling, and release workflows aligned before the package
-evolves further.
+Treat these as the normal release-readiness loop:
+
+- `mix desktop_ui.validate --strict`
+- `mix spec.traceability.generate desktop_ui`
+- `mix spec.plancheck desktop_ui`
+
+That loop keeps example coverage, shared runtime behavior, transport
+translation, documentation, traceability, and artifact policy aligned before
+the package evolves further.
+
+`desktop_ui` does not own authored `UnifiedUi` contracts or canonical
+`UnifiedIUR` definitions. When those upstream contracts change, the expected
+follow-up here is to update `desktop_ui` planning, renderer/runtime behavior,
+docs, and validation together rather than letting the runtime drift.

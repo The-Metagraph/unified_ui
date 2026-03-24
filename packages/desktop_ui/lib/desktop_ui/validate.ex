@@ -5,6 +5,44 @@ defmodule DesktopUi.Validate do
   """
 
   @type mode :: :summary | :strict
+  @required_guides [
+    "README.md",
+    "guides/runtime_backbone.md",
+    "guides/native_runtime_and_examples.md",
+    "guides/canonical_rendering_and_transport.md",
+    "guides/styling_platforms_and_artifacts.md",
+    "guides/maintainer_workflows.md"
+  ]
+  @required_traceability_targets [
+    ".spec/specs/architecture.spec.md",
+    ".spec/specs/platform_runtimes.spec.md",
+    ".spec/specs/signal_transport.spec.md",
+    ".spec/specs/desktop_ui/package.spec.md",
+    ".spec/specs/desktop_ui/structure.spec.md",
+    ".spec/specs/desktop_ui/native_widgets.spec.md",
+    ".spec/specs/desktop_ui/runtime.spec.md",
+    ".spec/specs/desktop_ui/iur_renderer.spec.md",
+    ".spec/specs/desktop_ui/transport.spec.md",
+    ".spec/specs/desktop_ui/platform_artifacts.spec.md",
+    ".spec/specs/desktop_ui/tooling.spec.md",
+    ".spec/planning/desktop_ui/spec-traceability.json",
+    ".spec/planning/desktop_ui/spec-traceability.md"
+  ]
+  @required_root_subjects [
+    ".spec/specs/architecture.spec.md",
+    ".spec/specs/platform_runtimes.spec.md",
+    ".spec/specs/signal_transport.spec.md"
+  ]
+  @required_package_subjects [
+    ".spec/specs/desktop_ui/package.spec.md",
+    ".spec/specs/desktop_ui/structure.spec.md",
+    ".spec/specs/desktop_ui/native_widgets.spec.md",
+    ".spec/specs/desktop_ui/runtime.spec.md",
+    ".spec/specs/desktop_ui/iur_renderer.spec.md",
+    ".spec/specs/desktop_ui/transport.spec.md",
+    ".spec/specs/desktop_ui/platform_artifacts.spec.md",
+    ".spec/specs/desktop_ui/tooling.spec.md"
+  ]
 
   @spec example_coverage() :: map()
   def example_coverage do
@@ -175,6 +213,80 @@ defmodule DesktopUi.Validate do
     report(:tooling_surface, checks)
   end
 
+  @spec documentation_surface() :: map()
+  def documentation_surface do
+    missing_docs =
+      @required_guides
+      |> Enum.reject(&File.exists?(Path.join(package_root(), &1)))
+
+    undocumented_guides = @required_guides -- DesktopUi.Tooling.documentation_surface()
+
+    checks = [
+      check(:guide_files_present, missing_docs == [], %{missing: missing_docs}),
+      check(:tooling_docs_surface_complete, undocumented_guides == [], %{
+        missing: undocumented_guides
+      }),
+      check(:readme_present, File.exists?(Path.join(package_root(), "README.md")), [])
+    ]
+
+    report(:documentation_surface, checks)
+  end
+
+  @spec traceability_targets() :: [String.t()]
+  def traceability_targets do
+    @required_traceability_targets
+  end
+
+  @spec traceability_alignment() :: map()
+  def traceability_alignment do
+    manifest_path =
+      Path.join(workspace_root(), ".spec/planning/desktop_ui/spec-traceability.json")
+
+    markdown_path = Path.join(workspace_root(), ".spec/planning/desktop_ui/spec-traceability.md")
+
+    manifest_result = read_traceability_manifest(manifest_path)
+
+    checks = [
+      check(
+        :traceability_files_present,
+        Enum.all?(@required_traceability_targets, &File.exists?(Path.join(workspace_root(), &1))),
+        %{
+          missing:
+            Enum.reject(
+              @required_traceability_targets,
+              &File.exists?(Path.join(workspace_root(), &1))
+            )
+        }
+      ),
+      check(:traceability_manifest_parses, match?({:ok, _}, manifest_result), %{
+        manifest_path: manifest_path
+      }),
+      check(
+        :traceability_package_identity,
+        traceability_package_identity?(manifest_result),
+        %{expected_package: "desktop_ui"}
+      ),
+      check(
+        :root_subjects_referenced,
+        traceability_includes_sources?(manifest_result, @required_root_subjects),
+        %{missing: traceability_missing_sources(manifest_result, @required_root_subjects)}
+      ),
+      check(
+        :package_subjects_referenced,
+        traceability_includes_sources?(manifest_result, @required_package_subjects),
+        %{missing: traceability_missing_sources(manifest_result, @required_package_subjects)}
+      ),
+      check(
+        :traceability_direct_prefix_present,
+        traceability_includes_direct_prefix?(manifest_result, "desktop_ui."),
+        %{expected_prefix: "desktop_ui."}
+      ),
+      check(:traceability_markdown_present, File.exists?(markdown_path), %{path: markdown_path})
+    ]
+
+    report(:traceability_alignment, checks)
+  end
+
   @spec validation_report() :: map()
   def validation_report do
     sections = default_sections()
@@ -190,6 +302,8 @@ defmodule DesktopUi.Validate do
       "  transport validation passing?: #{report.transport_validation.status == :pass}",
       "  artifact validation passing?: #{report.artifact_validation.status == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
+      "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
+      "  traceability alignment passing?: #{report.traceability_alignment.status == :pass}",
       "  release ready?: #{report.release_readiness.status == :pass}",
       "  failing sections: #{inspect(report.release_readiness.failing_sections)}"
     ]
@@ -223,7 +337,43 @@ defmodule DesktopUi.Validate do
         :tooling_surface,
         "Keep inspect and validate maintainer workflows available together.",
         :tooling_surface
+      ),
+      gate(
+        :documentation_surface,
+        "Keep README and package guides aligned with the implemented desktop runtime surface.",
+        :documentation_surface
+      ),
+      gate(
+        :traceability_alignment,
+        "Keep root and package traceability aligned with desktop_ui planning and release checks.",
+        :traceability_alignment
       )
+    ]
+  end
+
+  @spec evolution_rules() :: [map()]
+  def evolution_rules do
+    [
+      %{
+        id: :desktop_ui_not_dsl_or_iur_owner,
+        description:
+          "`desktop_ui` consumes authored DSL output and canonical IUR input, but does not own either contract."
+      },
+      %{
+        id: :upstream_changes_require_traceability_review,
+        description:
+          "When UnifiedUi or UnifiedIUR behavior changes, planning traceability, renderer behavior, and validation should move in the same change set."
+      },
+      %{
+        id: :runtime_transport_and_artifacts_stay_aligned,
+        description:
+          "Desktop runtime, transport translation, and artifact policies should evolve together so target-specific behavior stays bounded."
+      },
+      %{
+        id: :tooling_docs_and_traceability_move_with_surface,
+        description:
+          "When the package surface changes, examples, inspection, validation, docs, and traceability should stay synchronized."
+      }
     ]
   end
 
@@ -270,7 +420,9 @@ defmodule DesktopUi.Validate do
       runtime_behavior: runtime_behavior(),
       transport_validation: transport_validation(),
       artifact_validation: artifact_validation(),
-      tooling_surface: tooling_surface()
+      tooling_surface: tooling_surface(),
+      documentation_surface: documentation_surface(),
+      traceability_alignment: traceability_alignment()
     }
   end
 
@@ -288,11 +440,55 @@ defmodule DesktopUi.Validate do
       status: if(findings == [], do: :pass, else: :fail),
       gates: gates,
       findings: findings,
+      evolution_rules: evolution_rules(),
       failing_sections:
         sections
         |> Enum.filter(fn {_name, report} -> report.status != :pass end)
         |> Enum.map(fn {name, _report} -> name end)
         |> Enum.sort()
     }
+  end
+
+  defp read_traceability_manifest(path) do
+    with {:ok, body} <- File.read(path),
+         {:ok, manifest} <- JSON.decode(body) do
+      {:ok, manifest}
+    end
+  end
+
+  defp traceability_package_identity?({:ok, %{"package" => package}}), do: package == "desktop_ui"
+  defp traceability_package_identity?(_result), do: false
+
+  defp traceability_includes_sources?({:ok, manifest}, expected_sources) do
+    traceability_missing_sources({:ok, manifest}, expected_sources) == []
+  end
+
+  defp traceability_includes_sources?(_result, _expected_sources), do: false
+
+  defp traceability_missing_sources({:ok, %{"mappings" => mappings}}, expected_sources) do
+    source_files =
+      mappings
+      |> Enum.map(& &1["source_file"])
+      |> Enum.uniq()
+
+    expected_sources -- source_files
+  end
+
+  defp traceability_missing_sources(_result, expected_sources), do: expected_sources
+
+  defp traceability_includes_direct_prefix?({:ok, %{"applicability" => applicability}}, prefix) do
+    applicability
+    |> Map.get("direct_prefixes", [])
+    |> Enum.member?(prefix)
+  end
+
+  defp traceability_includes_direct_prefix?(_result, _prefix), do: false
+
+  defp package_root do
+    Path.expand("../..", __DIR__)
+  end
+
+  defp workspace_root do
+    Path.expand("../../../..", __DIR__)
   end
 end

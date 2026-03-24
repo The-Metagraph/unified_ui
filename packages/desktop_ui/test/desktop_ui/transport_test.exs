@@ -138,6 +138,8 @@ defmodule DesktopUi.TransportTest do
     assert :ok == Transport.validate_translation(translation)
     assert :ok == Transport.validate_boundary_signal(translation.signal)
     assert :transport_diagnostics in Transport.integration_points()
-    assert Transport.diagnostics().mapping_summary.platform_targets == DesktopUi.Platform.targets()
+
+    assert Transport.diagnostics().mapping_summary.platform_targets ==
+             DesktopUi.Platform.targets()
   end
 end
