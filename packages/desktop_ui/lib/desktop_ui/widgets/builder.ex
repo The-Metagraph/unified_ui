@@ -20,7 +20,13 @@ defmodule DesktopUi.Widgets.Builder do
   def dialog(id, title, children \\ [], opts \\ []) do
     Widget.new(:dialog,
       id: id,
-      metadata: %{focusable: true, window_role: :dialog},
+      metadata: %{
+        focusable: true,
+        window_role: :dialog,
+        overlay_role: :dialog,
+        overlay_lifecycle: Keyword.get(opts, :overlay_lifecycle, :managed)
+      },
+      state: %{open: Keyword.get(opts, :open, true), phase: Keyword.get(opts, :phase, :active)},
       attributes: %{window_title: title},
       styles: Map.new(Keyword.get(opts, :styles, [])),
       children: children

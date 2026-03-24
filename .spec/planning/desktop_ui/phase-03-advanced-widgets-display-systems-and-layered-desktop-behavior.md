@@ -24,26 +24,26 @@ Back to index: [README](./README.md)
   desktop behavior, and broader canonical renderer coverage across the shared
   runtime.
 
-  [ ] 3.1 Section - Advanced Native Widget Families
+  [x] 3.1 Section - Advanced Native Widget Families
     Implement the advanced directly usable desktop widget families required for
     data-rich screens, overlays, feedback, visualization, and operational
     workflows.
 
-    [ ] 3.1.1 Task - Implement advanced data, document, overlay, and feedback widgets
+    [x] 3.1.1 Task - Implement advanced data, document, overlay, and feedback widgets
       Add the richer widget families needed for data-heavy desktop flows and
       layered interactions.
 
-      [ ] 3.1.1.1 Subtask - Implement tables, trees, inspectors, document-style views, and other advanced data or document widgets.
-      [ ] 3.1.1.2 Subtask - Implement dialogs, toasts, alerts, progress, and other overlay or feedback widgets appropriate to desktop flows.
-      [ ] 3.1.1.3 Subtask - Define shared runtime metadata for selection, expansion, sorting, and overlay lifecycle behavior.
+      [x] 3.1.1.1 Subtask - Implement tables, trees, inspectors, document-style views, and other advanced data or document widgets.
+      [x] 3.1.1.2 Subtask - Implement dialogs, toasts, alerts, progress, and other overlay or feedback widgets appropriate to desktop flows.
+      [x] 3.1.1.3 Subtask - Define shared runtime metadata for selection, expansion, sorting, and overlay lifecycle behavior.
 
-    [ ] 3.1.2 Task - Implement advanced visualization, operational, and multiwindow widgets
+    [x] 3.1.2 Task - Implement advanced visualization, operational, and multiwindow widgets
       Add the specialized desktop surfaces needed for dashboards, canvases,
       operational views, and multiwindow usage.
 
-      [ ] 3.1.2.1 Subtask - Implement charts, gauges, timeline-style views, canvas-friendly widgets, and visualization primitives.
-      [ ] 3.1.2.2 Subtask - Implement operational widgets such as logs, terminals, dashboards, inspectors, and window-oriented command surfaces.
-      [ ] 3.1.2.3 Subtask - Define shared widget metadata for multiwindow identity, window-local state, and advanced interaction routing.
+      [x] 3.1.2.1 Subtask - Implement charts, gauges, timeline-style views, canvas-friendly widgets, and visualization primitives.
+      [x] 3.1.2.2 Subtask - Implement operational widgets such as logs, terminals, dashboards, inspectors, and window-oriented command surfaces.
+      [x] 3.1.2.3 Subtask - Define shared widget metadata for multiwindow identity, window-local state, and advanced interaction routing.
 
   [ ] 3.2 Section - Display Systems and Layered Desktop Runtime Behavior
     Implement the advanced display primitives and layered runtime behavior that
