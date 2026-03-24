@@ -9,6 +9,7 @@ defmodule DesktopUi.Inspection do
       :package_overview,
       :shared_runtime_contract,
       :platform_contract,
+      :transport_contract,
       :layering_contract,
       :validation_surface
     ]
@@ -34,6 +35,7 @@ defmodule DesktopUi.Inspection do
         canonical_ids: DesktopUi.Examples.canonical_ids(),
         comparison_ids: DesktopUi.Examples.comparison_ids()
       },
+      transport: transport_contract(),
       shared_runtime_contract: shared_runtime_contract(),
       validation: validation_surface()
     }
@@ -59,6 +61,19 @@ defmodule DesktopUi.Inspection do
       layer: DesktopUi.Layer.validation_state(),
       multiwindow_runtime: true,
       advanced_display_shared_runtime: true
+    }
+  end
+
+  @spec transport_contract() :: map()
+  def transport_contract do
+    %{
+      modes: DesktopUi.Transport.modes(),
+      families: DesktopUi.Transport.families(),
+      input_families: DesktopUi.Transport.input_families(),
+      local_default_families: DesktopUi.Transport.local_default_families(),
+      boundary_crossing_families: DesktopUi.Transport.boundary_crossing_families(),
+      diagnostics: DesktopUi.Transport.diagnostics(),
+      no_platform_leakage_guarantee: true
     }
   end
 

@@ -85,12 +85,13 @@ defmodule DesktopUi.PhaseOneIntegrationTest do
     assert reference.transport.integration_points == [
              :runtime,
              :platform_input_normalization,
-             :canonical_signal_translation
+             :canonical_signal_translation,
+             :transport_diagnostics
            ]
 
     assert reference.inspection.package_overview.runtime_foundation == :sdl2
     assert reference.inspection.package_overview.runtime_binding == :sdl
-    assert reference.inspection.validation_surface.transport == :boundary_translation_ready
+    assert reference.inspection.validation_surface.transport == :transport_diagnostics_ready
     assert reference.responsibilities.bounded_platform_variation
 
     assert summary.package == :desktop_ui

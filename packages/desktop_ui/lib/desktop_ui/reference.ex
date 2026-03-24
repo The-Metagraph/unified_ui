@@ -47,7 +47,13 @@ defmodule DesktopUi.Reference do
       },
       transport: %{
         modes: DesktopUi.Transport.modes(),
+        families: DesktopUi.Transport.families(),
+        input_families: DesktopUi.Transport.input_families(),
+        local_default_families: DesktopUi.Transport.local_default_families(),
+        boundary_crossing_families: DesktopUi.Transport.boundary_crossing_families(),
         integration_points: DesktopUi.Transport.integration_points(),
+        modules: DesktopUi.Transport.modules(),
+        diagnostics: DesktopUi.Transport.diagnostics(),
         validation_state: DesktopUi.Transport.validation_state()
       },
       artifacts: %{
@@ -64,6 +70,7 @@ defmodule DesktopUi.Reference do
         helpers: DesktopUi.Inspection.helpers(),
         package_overview: DesktopUi.Inspection.package_overview(),
         shared_runtime_contract: DesktopUi.Inspection.shared_runtime_contract(),
+        transport_contract: DesktopUi.Inspection.transport_contract(),
         layering_contract: DesktopUi.Inspection.layering_contract(),
         validation_surface: DesktopUi.Inspection.validation_surface()
       },

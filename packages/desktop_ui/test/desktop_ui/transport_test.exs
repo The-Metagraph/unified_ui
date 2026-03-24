@@ -114,4 +114,30 @@ defmodule DesktopUi.TransportTest do
                sdl_event: %{scancode: 40}
              )
   end
+
+  test "transport diagnostics validate no-leakage guarantees and boundary signals" do
+    assert :ok ==
+             Transport.validate_native_event(
+               platform_target: :linux,
+               input_family: :focus,
+               boundary: :local,
+               focus_target: "services-table",
+               widget_id: "services-table"
+             )
+
+    assert {:ok, translation} =
+             Transport.from_native_event(
+               platform_target: :windows,
+               input_family: :shortcut,
+               shortcut: "ctrl-r",
+               runtime_id: "desktop-ui:ops",
+               widget_id: "ops-palette",
+               screen: "operations"
+             )
+
+    assert :ok == Transport.validate_translation(translation)
+    assert :ok == Transport.validate_boundary_signal(translation.signal)
+    assert :transport_diagnostics in Transport.integration_points()
+    assert Transport.diagnostics().mapping_summary.platform_targets == DesktopUi.Platform.targets()
+  end
 end

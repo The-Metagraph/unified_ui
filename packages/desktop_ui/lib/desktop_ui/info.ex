@@ -40,6 +40,9 @@ defmodule DesktopUi.Info do
       },
       transport: %{
         modes: DesktopUi.Transport.modes(),
+        families: DesktopUi.Transport.families(),
+        input_families: DesktopUi.Transport.input_families(),
+        diagnostics: DesktopUi.Transport.diagnostics(),
         validation_state: DesktopUi.Transport.validation_state()
       },
       artifacts: %{
