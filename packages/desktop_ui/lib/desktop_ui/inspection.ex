@@ -1,12 +1,18 @@
 defmodule DesktopUi.Inspection do
   @moduledoc """
-  Lightweight inspection placeholder for `desktop_ui`.
+  Package and runtime inspection helpers for `desktop_ui`.
   """
+
+  alias DesktopUi.Runtime.State
 
   @spec helpers() :: [atom()]
   def helpers do
     [
       :package_overview,
+      :runtime_snapshot,
+      :style_nodes,
+      :platform_profiles,
+      :continuity_contract,
       :shared_runtime_contract,
       :platform_contract,
       :transport_contract,
@@ -22,6 +28,20 @@ defmodule DesktopUi.Inspection do
       runtime_binding: :sdl,
       platform_targets: DesktopUi.Platform.targets(),
       package_areas: DesktopUi.package_areas(),
+      style: %{
+        primitives: Map.keys(DesktopUi.Style.primitives()),
+        hooks: DesktopUi.Style.widget_style_hooks(),
+        responsibilities: DesktopUi.Style.responsibilities()
+      },
+      theme: %{
+        catalog: DesktopUi.Theme.catalog_ids(),
+        default: DesktopUi.Theme.default_theme().id,
+        continuity_rules: DesktopUi.Theme.continuity_rules()
+      },
+      artifacts: %{
+        target_platforms: DesktopUi.Artifacts.target_platforms(),
+        boundary_policy: DesktopUi.Artifacts.boundary_policy()
+      },
       layout: %{
         kinds: DesktopUi.Layout.kinds(),
         validation_state: DesktopUi.Layout.validation_state()
@@ -36,9 +56,53 @@ defmodule DesktopUi.Inspection do
         comparison_ids: DesktopUi.Examples.comparison_ids()
       },
       transport: transport_contract(),
+      platform_profiles: platform_profiles(),
+      continuity: continuity_contract(),
       shared_runtime_contract: shared_runtime_contract(),
       validation: validation_surface()
     }
+  end
+
+  @spec runtime_snapshot(State.t()) :: map()
+  def runtime_snapshot(%State{} = state) do
+    style_nodes = style_nodes(state.realization.tree)
+
+    %{
+      runtime: %{
+        runtime_id: state.runtime_id,
+        screen_id: state.screen_id,
+        source_kind: state.source_kind,
+        platform_target: state.platform_target,
+        theme: state.realization.theme,
+        validation_state: state.validation_state
+      },
+      style: %{
+        theme: state.realization.theme,
+        node_count: length(style_nodes),
+        style_nodes: style_nodes,
+        diagnostics: get_in(state.realization, [:diagnostics, :style_warnings]) || []
+      },
+      platform: %{
+        target: state.platform_target,
+        profile: DesktopUi.Platform.Integration.target_profile(state.platform_target),
+        artifacts: DesktopUi.Artifacts.workflow(state.platform_target)
+      }
+    }
+  end
+
+  @spec style_nodes(map()) :: [map()]
+  def style_nodes(tree) when is_map(tree) do
+    collect_style_nodes(tree)
+  end
+
+  @spec platform_profiles() :: [map()]
+  def platform_profiles do
+    DesktopUi.Platform.Integration.diagnostics().target_profiles
+  end
+
+  @spec continuity_contract() :: map()
+  def continuity_contract do
+    DesktopUi.Continuity.contract()
   end
 
   @spec shared_runtime_contract() :: map()
@@ -50,6 +114,7 @@ defmodule DesktopUi.Inspection do
       layout_kinds: DesktopUi.Layout.kinds(),
       layer_kinds: DesktopUi.Layer.kinds(),
       transport_modes: DesktopUi.Transport.modes(),
+      shared_style_model: true,
       direct_native_and_canonical_share_runtime: true
     }
   end
@@ -83,11 +148,27 @@ defmodule DesktopUi.Inspection do
       widgets: DesktopUi.Widgets.validation_state(),
       runtime: DesktopUi.Runtime.validation_state(),
       platform: DesktopUi.Platform.validation_state(),
+      style: DesktopUi.Style.validation_state(),
+      theme: DesktopUi.Theme.validation_state(),
       layout: DesktopUi.Layout.validation_state(),
       layer: DesktopUi.Layer.validation_state(),
       renderer: DesktopUi.Renderer.validation_state(),
       transport: DesktopUi.Transport.validation_state(),
       artifacts: DesktopUi.Artifacts.validation_state()
     }
+  end
+
+  defp collect_style_nodes(node) do
+    [
+      %{
+        id: node.id,
+        family: node.family,
+        kind: node.kind,
+        theme: get_in(node, [:resolved_styles, :theme]),
+        resolved_styles: Map.get(node, :resolved_styles, %{}),
+        active_states: Map.get(node, :active_style_states, []),
+        style_diagnostics: Map.get(node, :style_diagnostics, [])
+      }
+    ] ++ Enum.flat_map(Map.get(node, :children, []), &collect_style_nodes/1)
   end
 end

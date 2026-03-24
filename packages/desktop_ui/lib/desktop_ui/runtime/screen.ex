@@ -37,6 +37,7 @@ defmodule DesktopUi.Runtime.Screen do
   @spec new(map(), State.source_kind(), keyword()) :: t()
   def new(screen, source_kind, opts \\ []) do
     root = Map.fetch!(screen, :root)
+    theme = Keyword.get(opts, :theme, Map.get(screen, :theme, infer_theme(root)))
 
     %__MODULE__{
       id: screen |> Map.fetch!(:id) |> to_string(),
@@ -48,7 +49,8 @@ defmodule DesktopUi.Runtime.Screen do
         shared_runtime: true,
         direct_native: source_kind == :native,
         canonical_input: source_kind == :canonical,
-        runtime_foundation: :sdl2
+        runtime_foundation: :sdl2,
+        theme: theme
       },
       composition: %{
         root_kind: root.kind,
@@ -70,9 +72,14 @@ defmodule DesktopUi.Runtime.Screen do
         root_kind: root.kind,
         uses_window_registry: true,
         redraw_model: :shared_sdl_runtime,
-        foundational_layout_realization: true
+        foundational_layout_realization: true,
+        theme: theme
       }
     }
+  end
+
+  defp infer_theme(%Widget{styles: styles}) when is_map(styles) do
+    Map.get(styles, :theme, DesktopUi.Theme.default_theme().id)
   end
 
   defp collect_layout_kinds(root) do

@@ -3,7 +3,7 @@ defmodule DesktopUi.Platform do
   Platform integration boundary for `desktop_ui`.
   """
 
-  alias DesktopUi.Platform.{Adapter, Registry}
+  alias DesktopUi.Platform.{Adapter, Integration, Registry}
 
   @type target :: :windows | :macos | :linux
 
@@ -15,6 +15,7 @@ defmodule DesktopUi.Platform do
     [
       __MODULE__,
       Adapter,
+      Integration,
       Registry,
       DesktopUi.Platform.Windows,
       DesktopUi.Platform.MacOS,
@@ -27,7 +28,8 @@ defmodule DesktopUi.Platform do
     %{
       shared_categories: [:windowing, :menus, :shortcuts, :notifications],
       target_specific_callbacks: [:lifecycle, :focus, :file_open, :window_management],
-      bounded_fallbacks: [:menu_shape, :notification_style, :window_controls]
+      bounded_fallbacks: [:menu_shape, :notification_style, :window_controls, :shortcut_scope],
+      shared_semantics_outside_platform: Integration.shared_semantics()
     }
   end
 
@@ -98,6 +100,7 @@ defmodule DesktopUi.Platform do
       registered_targets: Registry.registered_targets(registry),
       callback_contract: callback_contract(),
       capability_contract: capability_contract(),
+      integration: Integration.diagnostics(),
       invalid_targets:
         targets()
         |> Enum.reject(fn target ->

@@ -9,10 +9,24 @@ defmodule DesktopUi.Platform.Linux do
   def summary do
     %{
       target: :linux,
+      runtime_foundation: :sdl2,
       capabilities: capabilities(),
       callbacks: callbacks(),
       notifications: :desktop_portal,
-      menus: :window_local_menu
+      menus: :window_local_menu,
+      integration: integration_profile(),
+      allowed_variation: DesktopUi.Platform.Integration.allowed_variation(),
+      shared_semantics: DesktopUi.Platform.Integration.shared_semantics()
+    }
+  end
+
+  @impl true
+  def integration_profile do
+    %{
+      windowing: %{chrome: :wm_managed_frame, controls: :window_manager},
+      menus: %{surface: :window_local_menu, scope: :window},
+      shortcuts: %{surface: :accelerators, scope: :window},
+      notifications: %{surface: :desktop_portal, activation: :focus_window}
     }
   end
 

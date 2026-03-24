@@ -10,6 +10,9 @@ defmodule DesktopUiTest do
     assert DesktopUi.layer() == DesktopUi.Layer
     assert DesktopUi.renderer() == DesktopUi.Renderer
     assert DesktopUi.transport() == DesktopUi.Transport
+    assert DesktopUi.style() == DesktopUi.Style
+    assert DesktopUi.theme() == DesktopUi.Theme
+    assert DesktopUi.continuity() == DesktopUi.Continuity
     assert DesktopUi.artifacts() == DesktopUi.Artifacts
     assert DesktopUi.tooling() == DesktopUi.Tooling
     assert DesktopUi.reference().package == DesktopUi

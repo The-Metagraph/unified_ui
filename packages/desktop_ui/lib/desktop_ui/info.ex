@@ -23,6 +23,7 @@ defmodule DesktopUi.Info do
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),
+        integration: DesktopUi.Platform.diagnostics().integration,
         diagnostics: DesktopUi.Platform.diagnostics(),
         validation_state: DesktopUi.Platform.validation_state()
       },
@@ -45,8 +46,19 @@ defmodule DesktopUi.Info do
         diagnostics: DesktopUi.Transport.diagnostics(),
         validation_state: DesktopUi.Transport.validation_state()
       },
+      style: %{
+        primitives: DesktopUi.Style.primitives(),
+        validation_state: DesktopUi.Style.validation_state()
+      },
+      theme: %{
+        default_theme: DesktopUi.Theme.default_theme().id,
+        catalog_ids: DesktopUi.Theme.catalog_ids(),
+        validation_state: DesktopUi.Theme.validation_state()
+      },
       artifacts: %{
         target_platforms: DesktopUi.Artifacts.target_platforms(),
+        workflows: DesktopUi.Artifacts.workflows(),
+        boundary_policy: DesktopUi.Artifacts.boundary_policy(),
         validation_state: DesktopUi.Artifacts.validation_state()
       },
       examples: %{
@@ -62,8 +74,21 @@ defmodule DesktopUi.Info do
         helpers: DesktopUi.Inspection.helpers(),
         validation: DesktopUi.Inspection.validation_surface()
       },
+      continuity: %{
+        seams: DesktopUi.Continuity.seams(),
+        diagnostic_kinds: DesktopUi.Continuity.diagnostic_kinds()
+      },
       responsibilities: %{
-        direct_native: [:widgets, :layout, :layer, :runtime, :platform],
+        direct_native: [
+          :widgets,
+          :layout,
+          :layer,
+          :runtime,
+          :platform,
+          :style,
+          :theme,
+          :continuity
+        ],
         canonical_renderer: [:renderer, :runtime, :transport]
       }
     }
