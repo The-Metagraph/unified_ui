@@ -13,6 +13,7 @@ defmodule DesktopUiTest do
     assert DesktopUi.style() == DesktopUi.Style
     assert DesktopUi.theme() == DesktopUi.Theme
     assert DesktopUi.continuity() == DesktopUi.Continuity
+    assert DesktopUi.validate() == DesktopUi.Validate
     assert DesktopUi.artifacts() == DesktopUi.Artifacts
     assert DesktopUi.tooling() == DesktopUi.Tooling
     assert DesktopUi.reference().package == DesktopUi

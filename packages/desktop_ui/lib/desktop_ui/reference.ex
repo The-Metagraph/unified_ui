@@ -3,6 +3,46 @@ defmodule DesktopUi.Reference do
   Lightweight package reference helpers for `desktop_ui`.
   """
 
+  @spec widget_summary() :: map()
+  def widget_summary do
+    package_reference().widgets
+  end
+
+  @spec example_summary() :: map()
+  def example_summary do
+    package_reference().examples
+  end
+
+  @spec transport_summary() :: map()
+  def transport_summary do
+    package_reference().transport
+  end
+
+  @spec style_summary() :: map()
+  def style_summary do
+    %{
+      style: package_reference().style,
+      theme: package_reference().theme,
+      continuity: package_reference().continuity
+    }
+  end
+
+  @spec artifact_summary() :: map()
+  def artifact_summary do
+    package_reference().artifacts
+  end
+
+  @spec shared_runtime_contract() :: map()
+  def shared_runtime_contract do
+    %{
+      assumptions: DesktopUi.Runtime.assumptions(),
+      platform_targets: DesktopUi.Platform.targets(),
+      renderer_accepts: DesktopUi.Renderer.accepts(),
+      transport_modes: DesktopUi.Transport.modes(),
+      direct_native_and_canonical_share_runtime: true
+    }
+  end
+
   @spec package_reference() :: map()
   def package_reference do
     %{
@@ -80,7 +120,9 @@ defmodule DesktopUi.Reference do
       examples: %{
         native_ids: DesktopUi.Examples.native_ids(),
         canonical_ids: DesktopUi.Examples.canonical_ids(),
-        comparison_ids: DesktopUi.Examples.comparison_ids()
+        comparison_ids: DesktopUi.Examples.comparison_ids(),
+        catalog: DesktopUi.Examples.catalog(),
+        coverage_matrix: DesktopUi.Examples.coverage_matrix()
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
@@ -114,7 +156,29 @@ defmodule DesktopUi.Reference do
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),
         workflows: DesktopUi.Tooling.workflows(),
-        mix_tasks: DesktopUi.Tooling.mix_tasks()
+        preview_surfaces: DesktopUi.Tooling.preview_surfaces(),
+        mix_tasks: DesktopUi.Tooling.mix_tasks(),
+        validation_state: DesktopUi.Tooling.validation_state()
+      },
+      documentation: %{
+        guides: DesktopUi.Tooling.documentation_surface(),
+        maintainer_commands: DesktopUi.Tooling.mix_tasks(),
+        shared_runtime_contract: shared_runtime_contract(),
+        traceability_targets: DesktopUi.Validate.traceability_targets()
+      },
+      validate: %{
+        inspect: DesktopUi.Inspect,
+        validate: DesktopUi.Validate,
+        validation_sections:
+          DesktopUi.Validate.validation_report()
+          |> Map.keys()
+          |> Enum.sort(),
+        release_readiness_modes: [:summary, :strict],
+        release_gates: DesktopUi.Validate.release_gates(),
+        evolution_rules: DesktopUi.Validate.evolution_rules(),
+        documentation_surface: DesktopUi.Validate.documentation_surface(),
+        traceability_alignment: DesktopUi.Validate.traceability_alignment(),
+        validation_report: DesktopUi.Validate.validation_report()
       }
     }
   end

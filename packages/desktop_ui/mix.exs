@@ -46,6 +46,9 @@ defmodule DesktopUi.MixProject do
       extras: [
         "README.md",
         "guides/runtime_backbone.md",
+        "guides/native_runtime_and_examples.md",
+        "guides/canonical_rendering_and_transport.md",
+        "guides/styling_platforms_and_artifacts.md",
         "guides/maintainer_workflows.md"
       ],
       source_ref: "main",

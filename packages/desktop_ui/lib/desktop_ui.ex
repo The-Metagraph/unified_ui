@@ -19,6 +19,7 @@ defmodule DesktopUi do
     Theme,
     Tooling,
     Transport,
+    Validate,
     Widget,
     Widgets
   }
@@ -34,6 +35,7 @@ defmodule DesktopUi do
           | :style
           | :theme
           | :continuity
+          | :validate
           | :artifacts
           | :examples
           | :inspection
@@ -52,6 +54,7 @@ defmodule DesktopUi do
       :style,
       :theme,
       :continuity,
+      :validate,
       :artifacts,
       :examples,
       :inspection,
@@ -91,6 +94,9 @@ defmodule DesktopUi do
 
   @spec continuity() :: module()
   def continuity, do: Continuity
+
+  @spec validate() :: module()
+  def validate, do: Validate
 
   @spec artifacts() :: module()
   def artifacts, do: Artifacts

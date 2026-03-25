@@ -3,8 +3,34 @@ defmodule DesktopUi.Info do
   Lightweight package summary helpers for `desktop_ui`.
   """
 
+  @spec example_summary() :: map()
+  def example_summary do
+    package_summary().examples
+  end
+
+  @spec transport_summary() :: map()
+  def transport_summary do
+    package_summary().transport
+  end
+
+  @spec style_summary() :: map()
+  def style_summary do
+    %{
+      style: package_summary().style,
+      theme: package_summary().theme,
+      continuity: package_summary().continuity
+    }
+  end
+
+  @spec artifact_summary() :: map()
+  def artifact_summary do
+    package_summary().artifacts
+  end
+
   @spec package_summary() :: map()
   def package_summary do
+    {:ok, release_readiness} = DesktopUi.Validate.release_readiness(:summary)
+
     %{
       package: :desktop_ui,
       namespace: DesktopUi,
@@ -64,11 +90,24 @@ defmodule DesktopUi.Info do
       examples: %{
         native_ids: DesktopUi.Examples.native_ids(),
         canonical_ids: DesktopUi.Examples.canonical_ids(),
-        comparison_ids: DesktopUi.Examples.comparison_ids()
+        comparison_ids: DesktopUi.Examples.comparison_ids(),
+        workflows: Map.keys(DesktopUi.Examples.coverage_matrix().workflows)
       },
       tooling: %{
         guides: DesktopUi.Tooling.documentation_surface(),
-        workflows: DesktopUi.Tooling.workflows()
+        workflows: DesktopUi.Tooling.workflows(),
+        mix_tasks: DesktopUi.Tooling.mix_tasks()
+      },
+      validate: %{
+        release_gates: DesktopUi.Validate.release_gates(),
+        documentation_surface: DesktopUi.Validate.documentation_surface().status,
+        traceability_alignment: DesktopUi.Validate.traceability_alignment().status,
+        release_readiness: release_readiness.status
+      },
+      documentation: %{
+        guides: DesktopUi.Tooling.documentation_surface(),
+        preview_surfaces: DesktopUi.Tooling.preview_surfaces(),
+        traceability_targets: DesktopUi.Validate.traceability_targets()
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),

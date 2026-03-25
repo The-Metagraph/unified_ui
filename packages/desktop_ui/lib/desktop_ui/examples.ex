@@ -710,6 +710,188 @@ defmodule DesktopUi.Examples do
     }
   end
 
+  @spec native_styled_review() :: map()
+  def native_styled_review do
+    %{
+      id: "styled-review",
+      title: "Native Styled Review",
+      root:
+        DesktopUi.Widgets.window(
+          "styled-window",
+          "Styled Review",
+          [
+            DesktopUi.Widgets.content("styled-header", [
+              DesktopUi.Widgets.label("styled-label", "Theme"),
+              DesktopUi.Widgets.text("styled-title", "Desktop Styled Review",
+                styles: [
+                  theme_tokens: %{headline: [:text, :hero]}
+                ]
+              )
+            ]),
+            DesktopUi.Widgets.row("styled-actions", [
+              DesktopUi.Widgets.button("styled-primary", "Approve",
+                intent: :approve_change,
+                styles: [
+                  theme_tokens: %{primary: [:button, :primary]},
+                  state_variants: %{focused: %{border: :focus_ring}}
+                ]
+              ),
+              DesktopUi.Widgets.button("styled-secondary", "Later",
+                intent: :defer_change,
+                styles: [
+                  theme_tokens: %{secondary: [:button, :secondary]}
+                ]
+              )
+            ]),
+            DesktopUi.Widgets.text("styled-status", "Pending Review",
+              styles: [
+                theme_tokens: %{status: [:status, :warning]}
+              ]
+            ),
+            DesktopUi.Widgets.table(
+              "styled-table",
+              [%{id: :name, label: "Name"}, %{id: :status, label: "Status"}],
+              [
+                %{id: :desktop, cells: ["Desktop", "ready"]},
+                %{id: :transport, cells: ["Transport", "review"]}
+              ],
+              styles: [
+                theme_tokens: %{surface: [:surface, :panel]}
+              ]
+            )
+          ],
+          styles: [
+            theme: :high_contrast,
+            theme_tokens: %{chrome: [:surface, :elevated]}
+          ]
+        ),
+      metadata: %{
+        example_id: :native_styled_review,
+        source: :native,
+        coverage: [
+          :style_primitives,
+          :theme_resolution,
+          :component_variants,
+          :artifact_review_surface
+        ],
+        target_semantics: target_semantics()
+      }
+    }
+  end
+
+  @spec canonical_styled_review() :: Element.t()
+  def canonical_styled_review do
+    Element.new(:widget, :window,
+      id: "styled-window",
+      attributes: %{
+        title: "Styled Review",
+        styles: %{
+          theme: :high_contrast,
+          theme_tokens: %{chrome: [:surface, :elevated]}
+        }
+      },
+      children: [
+        Element.new(:widget, :content,
+          id: "styled-header",
+          children: [
+            Element.new(:widget, :label,
+              id: "styled-label",
+              attributes: %{content: "Theme"}
+            ),
+            Element.new(:widget, :text,
+              id: "styled-title",
+              attributes: %{
+                content: "Desktop Styled Review",
+                styles: %{theme_tokens: %{headline: [:text, :hero]}}
+              }
+            )
+          ]
+        ),
+        Element.new(:layout, :row,
+          id: "styled-actions",
+          children: [
+            Element.new(:widget, :button,
+              id: "styled-primary",
+              attributes: %{
+                label: "Approve",
+                interaction: %{family: :click, intent: :approve_change},
+                styles: %{
+                  theme_tokens: %{primary: [:button, :primary]},
+                  state_variants: %{focused: %{border: :focus_ring}}
+                }
+              }
+            ),
+            Element.new(:widget, :button,
+              id: "styled-secondary",
+              attributes: %{
+                label: "Later",
+                interaction: %{family: :click, intent: :defer_change},
+                styles: %{theme_tokens: %{secondary: [:button, :secondary]}}
+              }
+            )
+          ]
+        ),
+        Element.new(:widget, :text,
+          id: "styled-status",
+          attributes: %{
+            content: "Pending Review",
+            styles: %{theme_tokens: %{status: [:status, :warning]}}
+          }
+        ),
+        Element.new(:widget, :table,
+          id: "styled-table",
+          attributes: %{
+            columns: [%{id: :name, label: "Name"}, %{id: :status, label: "Status"}],
+            rows: [
+              %{id: :desktop, cells: ["Desktop", "ready"]},
+              %{id: :transport, cells: ["Transport", "review"]}
+            ],
+            styles: %{theme_tokens: %{surface: [:surface, :panel]}}
+          }
+        )
+      ]
+    )
+  end
+
+  @spec styled_comparison() :: map()
+  def styled_comparison do
+    native_screen = native_styled_review()
+    canonical_screen = canonical_styled_review()
+
+    {:ok, native_state} =
+      DesktopUi.Runtime.mount_native_screen(native_screen,
+        platform_target: :linux,
+        theme: :high_contrast
+      )
+
+    {:ok, canonical_state} =
+      DesktopUi.Runtime.mount_iur_screen(canonical_screen,
+        platform_target: :linux,
+        theme: :high_contrast
+      )
+
+    continuity = DesktopUi.Continuity.compare(native_state, canonical_state)
+
+    %{
+      id: :styled_continuity_review,
+      native_example_id: native_screen.metadata.example_id,
+      canonical_example_id: :canonical_styled_review,
+      coverage: %{
+        style_hooks: DesktopUi.Style.widget_style_hooks(),
+        theme_catalog: DesktopUi.Theme.catalog_ids(),
+        artifact_targets: DesktopUi.Artifacts.target_platforms()
+      },
+      parity: %{
+        widget_identity_match?: continuity.continuity.widget_identity_match?,
+        style_resolution_match?: continuity.continuity.style_resolution_match?,
+        platform_semantics_match?: continuity.continuity.platform_semantics_match?
+      },
+      native: continuity.native,
+      canonical: continuity.canonical,
+      diagnostics: continuity.diagnostics
+    }
+  end
+
   @spec normalized_input_comparison() :: map()
   def normalized_input_comparison do
     shortcut_profiles =
@@ -793,13 +975,58 @@ defmodule DesktopUi.Examples do
     |> Map.new()
   end
 
+  @spec metadata(atom()) :: map() | nil
+  def metadata(id) when is_atom(id) do
+    catalog()
+    |> Enum.find(&(&1.id == id))
+  end
+
+  @spec native_examples() :: [map()]
+  def native_examples, do: catalog_by_category(:native)
+
+  @spec canonical_examples() :: [map()]
+  def canonical_examples, do: catalog_by_category(:canonical)
+
+  @spec mixed_examples() :: [map()]
+  def mixed_examples, do: catalog_by_category(:mixed)
+
+  @spec coverage_matrix() :: map()
+  def coverage_matrix do
+    catalog = catalog()
+
+    %{
+      categories: Enum.group_by(catalog, & &1.category, & &1.id),
+      workflows: Enum.group_by(catalog, & &1.workflow, & &1.id),
+      parity_groups:
+        catalog
+        |> Enum.group_by(& &1.parity_group, & &1.id)
+        |> Map.delete(nil)
+    }
+  end
+
+  @spec catalog() :: [map()]
+  def catalog do
+    catalog_entries()
+    |> Enum.map(&decorate_catalog_entry/1)
+  end
+
   @spec native_ids() :: [atom()]
   def native_ids,
-    do: [:native_foundational, :native_advanced_operations, :native_transport_review]
+    do: [
+      :native_foundational,
+      :native_advanced_operations,
+      :native_transport_review,
+      :native_styled_review
+    ]
 
   @spec canonical_ids() :: [atom()]
   def canonical_ids,
-    do: [:canonical_foundational, :canonical_advanced_operations, :canonical_transport_review]
+    do: [
+      :canonical_foundational,
+      :canonical_advanced_operations,
+      :canonical_transport_review,
+      :canonical_styled_review
+    ]
 
   @spec comparison_ids() :: [atom()]
   def comparison_ids,
@@ -807,8 +1034,177 @@ defmodule DesktopUi.Examples do
       :foundational_continuity,
       :advanced_continuity,
       :transport_flow_review,
-      :normalized_input_profiles
+      :normalized_input_profiles,
+      :styled_continuity_review
     ]
+
+  defp catalog_by_category(category) do
+    catalog()
+    |> Enum.filter(&(&1.category == category))
+  end
+
+  defp decorate_catalog_entry(entry) do
+    Map.merge(entry, %{
+      traceability: traceability(entry),
+      artifact_names: artifact_names(entry.id)
+    })
+  end
+
+  defp artifact_names(id) do
+    base = "desktop_ui.examples.#{id}"
+
+    %{
+      preview: "#{base}.preview",
+      inspection: "#{base}.inspection",
+      validation: "#{base}.validation",
+      comparison: "#{base}.comparison"
+    }
+  end
+
+  defp traceability(entry) do
+    %{
+      package_specs: package_spec_surfaces(entry.category),
+      runtime_obligations: runtime_obligations(entry.category),
+      coverage_obligations: entry.coverage
+    }
+  end
+
+  defp package_spec_surfaces(:native), do: [:native_widgets, :runtime, :tooling]
+  defp package_spec_surfaces(:canonical), do: [:iur_renderer, :runtime, :tooling]
+  defp package_spec_surfaces(:mixed), do: [:transport, :platform_artifacts, :tooling]
+
+  defp runtime_obligations(:native), do: [:direct_native_reviewable, :shared_runtime]
+  defp runtime_obligations(:canonical), do: [:canonical_reviewable, :shared_runtime]
+  defp runtime_obligations(:mixed), do: [:continuity_reviewable, :platform_reviewable]
+
+  defp catalog_entries do
+    [
+      %{
+        id: :native_foundational,
+        category: :native,
+        workflow: :foundational_review,
+        parity_group: :foundational_review,
+        parity_with: [:canonical_foundational, :foundational_continuity],
+        coverage: [
+          :content_widgets,
+          :action_widgets,
+          :form_widgets,
+          :navigation_widgets,
+          :shared_runtime
+        ]
+      },
+      %{
+        id: :canonical_foundational,
+        category: :canonical,
+        workflow: :foundational_review,
+        parity_group: :foundational_review,
+        parity_with: [:native_foundational, :foundational_continuity],
+        coverage: [:foundational_renderer, :shared_runtime, :widget_identity]
+      },
+      %{
+        id: :foundational_continuity,
+        category: :mixed,
+        workflow: :foundational_review,
+        parity_group: :foundational_review,
+        parity_with: [:native_foundational, :canonical_foundational],
+        coverage: [:continuity_review, :shared_runtime, :binding_alignment]
+      },
+      %{
+        id: :native_advanced_operations,
+        category: :native,
+        workflow: :advanced_review,
+        parity_group: :advanced_review,
+        parity_with: [:canonical_advanced_operations, :advanced_continuity],
+        coverage: [:advanced_widgets, :layered_runtime, :display_systems, :multiwindow_runtime]
+      },
+      %{
+        id: :canonical_advanced_operations,
+        category: :canonical,
+        workflow: :advanced_review,
+        parity_group: :advanced_review,
+        parity_with: [:native_advanced_operations, :advanced_continuity],
+        coverage: [:advanced_renderer, :layered_runtime, :multiwindow_runtime]
+      },
+      %{
+        id: :advanced_continuity,
+        category: :mixed,
+        workflow: :advanced_review,
+        parity_group: :advanced_review,
+        parity_with: [:native_advanced_operations, :canonical_advanced_operations],
+        coverage: [:continuity_review, :layer_alignment, :window_registry]
+      },
+      %{
+        id: :native_transport_review,
+        category: :native,
+        workflow: :transport_review,
+        parity_group: :transport_review,
+        parity_with: [
+          :canonical_transport_review,
+          :transport_flow_review,
+          :normalized_input_profiles
+        ],
+        coverage: [
+          :canonical_boundary_events,
+          :local_native_routing,
+          :window_management,
+          :normalized_desktop_inputs
+        ]
+      },
+      %{
+        id: :canonical_transport_review,
+        category: :canonical,
+        workflow: :transport_review,
+        parity_group: :transport_review,
+        parity_with: [:native_transport_review, :transport_flow_review],
+        coverage: [:transport_renderer, :boundary_signal_translation, :shared_runtime]
+      },
+      %{
+        id: :transport_flow_review,
+        category: :mixed,
+        workflow: :transport_review,
+        parity_group: :transport_review,
+        parity_with: [:native_transport_review, :canonical_transport_review],
+        coverage: [:local_boundary_split, :signal_type_alignment, :normalized_input_families]
+      },
+      %{
+        id: :normalized_input_profiles,
+        category: :mixed,
+        workflow: :transport_review,
+        parity_group: :transport_review,
+        parity_with: [:native_transport_review, :canonical_transport_review],
+        coverage: [:platform_variation_bounded, :normalized_inputs, :window_management]
+      },
+      %{
+        id: :native_styled_review,
+        category: :native,
+        workflow: :style_review,
+        parity_group: :style_review,
+        parity_with: [:canonical_styled_review, :styled_continuity_review],
+        coverage: [
+          :style_primitives,
+          :theme_resolution,
+          :component_variants,
+          :artifact_review_surface
+        ]
+      },
+      %{
+        id: :canonical_styled_review,
+        category: :canonical,
+        workflow: :style_review,
+        parity_group: :style_review,
+        parity_with: [:native_styled_review, :styled_continuity_review],
+        coverage: [:style_renderer, :theme_tokens, :shared_style_model]
+      },
+      %{
+        id: :styled_continuity_review,
+        category: :mixed,
+        workflow: :style_review,
+        parity_group: :style_review,
+        parity_with: [:native_styled_review, :canonical_styled_review],
+        coverage: [:style_continuity, :theme_alignment, :artifact_targets]
+      }
+    ]
+  end
 
   defp trim_focus_order(ids) do
     Enum.reject(ids, &(&1 == "workspace-window"))
