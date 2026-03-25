@@ -40,6 +40,8 @@ defmodule UnifiedUi.WidgetsTest do
              :label,
              :icon,
              :image,
+             :badge,
+             :hero,
              :content,
              :button,
              :link,

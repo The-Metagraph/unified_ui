@@ -428,6 +428,9 @@ defmodule UnifiedUi.Compiler.Pipeline do
         :field ->
           lower_field(node, context, visited, attachments)
 
+        :form_field ->
+          lower_field(node, context, visited, attachments, :form_field)
+
         :text ->
           Widgets.Foundational.text(node.value || "", common_opts(node, attachments))
 
@@ -444,6 +447,27 @@ defmodule UnifiedUi.Compiler.Pipeline do
           Widgets.Foundational.image(
             node.source || "",
             common_opts(node, attachments, [:alt_text, :media_type, :fit])
+          )
+
+        :badge ->
+          Widgets.Foundational.badge(
+            node.value || "",
+            common_opts(node, attachments,
+              icon: node.name,
+              icon_set: node.set,
+              presentation: node.presentation
+            )
+          )
+
+        :hero ->
+          Widgets.Foundational.hero(
+            lower_children(node, context, visited),
+            common_opts(node, attachments,
+              eyebrow: node.eyebrow,
+              title: node.title,
+              message: node.message,
+              align: node.align
+            )
           )
 
         :button ->
@@ -566,6 +590,28 @@ defmodule UnifiedUi.Compiler.Pipeline do
           Widgets.Data.tree_view(
             normalize_list(node.tree_nodes),
             common_opts(node, attachments, [:expanded?, :empty_state])
+          )
+
+        :stat ->
+          Widgets.Data.stat(
+            common_opts(node, attachments,
+              title: node.title,
+              value: node.value,
+              message: node.message
+            )
+          )
+
+        :key_value ->
+          Widgets.Data.key_value(
+            node.label || "",
+            node.value,
+            common_opts(node, attachments, description: node.description)
+          )
+
+        :info_list ->
+          Widgets.Data.info_list(
+            normalize_list(node.items),
+            common_opts(node, attachments, [:ordered?, :empty_state])
           )
 
         :markdown_viewer ->
@@ -762,14 +808,14 @@ defmodule UnifiedUi.Compiler.Pipeline do
     end
   end
 
-  defp lower_field(node, context, visited, attachments) do
+  defp lower_field(node, context, visited, attachments, constructor \\ :field) do
     control =
       case node.children do
         [child | _rest] -> lower_node(child, context, visited)
         [] -> Element.new(:widget, :empty_field_control, id: "#{node.id}-control")
       end
 
-    Forms.field(
+    apply(Forms, constructor, [
       control,
       common_opts(node, attachments,
         name: node.field_name,
@@ -778,7 +824,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
         path: node.value_path,
         default: node.default_value
       )
-    )
+    ])
   end
 
   defp lower_children(node, context, visited) do

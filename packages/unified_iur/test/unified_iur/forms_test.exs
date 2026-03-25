@@ -9,7 +9,7 @@ defmodule UnifiedIUR.FormsTest do
   alias UnifiedIUR.Widgets.Input
 
   test "exposes canonical form composition kinds" do
-    assert [:form_builder, :field_group, :field] == Forms.kinds()
+    assert [:form_builder, :field_group, :field, :form_field] == Forms.kinds()
   end
 
   test "builds form builders with binding, validation, and submission attachment points" do
@@ -137,5 +137,38 @@ defmodule UnifiedIUR.FormsTest do
              kind: :text,
              attributes: %{content: %{text: "We will never share your email."}}
            } = help_child.element
+  end
+
+  test "builds semantic form_field composites alongside baseline fields" do
+    control =
+      Input.text_input(
+        id: "project-name-input",
+        name: :project_name,
+        placeholder: "Semantic widgets rollout"
+      )
+
+    form_field =
+      Forms.form_field(control,
+        id: "project-name-field",
+        label: "Project name",
+        help: "Shown in project dashboards."
+      )
+
+    assert %Element{
+             id: "project-name-field",
+             kind: :form_field,
+             children: [label_child, control_child, help_child],
+             attributes: %{
+               field: %{
+                 control_id: "project-name-input",
+                 label_slot: :label,
+                 help_slot: :help
+               }
+             }
+           } = form_field
+
+    assert label_child.slot == :label
+    assert control_child.slot == :control
+    assert help_child.slot == :help
   end
 end

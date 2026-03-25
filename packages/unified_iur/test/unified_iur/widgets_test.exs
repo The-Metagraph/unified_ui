@@ -14,13 +14,28 @@ defmodule UnifiedIUR.WidgetsTest do
              feedback: Feedback
            } = Widgets.modules()
 
-    assert [:text, :label, :icon, :image, :button, :link, :separator, :spacer, :content] ==
+    assert [
+             :text,
+             :label,
+             :icon,
+             :image,
+             :badge,
+             :hero,
+             :button,
+             :link,
+             :separator,
+             :spacer,
+             :content
+           ] ==
              Widgets.foundational_kinds()
 
     assert Widgets.foundational_kinds() == Foundational.kinds()
     assert [:menu, :tabs] == Widgets.navigation_kinds()
     assert Widgets.navigation_kinds() == Navigation.kinds()
-    assert [:list, :table, :tree_view] == Widgets.data_view_kinds()
+
+    assert [:list, :table, :tree_view, :stat, :key_value, :info_list] ==
+             Widgets.data_view_kinds()
+
     assert Widgets.data_view_kinds() == Data.kinds()
     assert [:status, :progress, :gauge, :inline_feedback] == Widgets.feedback_kinds()
     assert Widgets.feedback_kinds() == Feedback.kinds()

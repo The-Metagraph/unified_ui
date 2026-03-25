@@ -8,7 +8,7 @@ defmodule UnifiedIUR.Widgets.Data do
   alias UnifiedIUR.Element
   alias UnifiedIUR.Metadata
 
-  @kinds [:list, :table, :tree_view]
+  @kinds [:list, :table, :tree_view, :stat, :key_value, :info_list]
 
   @spec kinds() :: [atom()]
   def kinds do
@@ -74,6 +74,66 @@ defmodule UnifiedIUR.Widgets.Data do
     )
   end
 
+  @spec stat(keyword() | map()) :: Element.t()
+  def stat(opts \\ []) do
+    opts = normalize_opts(opts)
+
+    Element.new(:widget, :stat,
+      id: option(opts, :id),
+      metadata: normalize_metadata(opts),
+      attributes:
+        %{
+          stat:
+            %{}
+            |> maybe_put(:title, option(opts, :title))
+            |> maybe_put(:value, option(opts, :value))
+            |> maybe_put(:message, option(opts, :message))
+        }
+        |> Attachment.merge(opts, component: :stat),
+      children: []
+    )
+  end
+
+  @spec key_value(String.t(), term(), keyword() | map()) :: Element.t()
+  def key_value(label, value, opts \\ []) when is_binary(label) do
+    opts = normalize_opts(opts)
+
+    Element.new(:widget, :key_value,
+      id: option(opts, :id),
+      metadata: normalize_metadata(opts),
+      attributes:
+        %{
+          key_value:
+            %{}
+            |> maybe_put(:label, label)
+            |> maybe_put(:value, value)
+            |> maybe_put(:description, option(opts, :description))
+        }
+        |> Attachment.merge(opts, component: :key_value),
+      children: []
+    )
+  end
+
+  @spec info_list([keyword() | map()], keyword() | map()) :: Element.t()
+  def info_list(items, opts \\ []) when is_list(items) do
+    opts = normalize_opts(opts)
+
+    Element.new(:widget, :info_list,
+      id: option(opts, :id),
+      metadata: normalize_metadata(opts),
+      attributes:
+        %{
+          info_list:
+            %{}
+            |> maybe_put(:ordered?, option(opts, :ordered?, false))
+            |> maybe_put(:empty_state, option(opts, :empty_state))
+            |> maybe_put(:items, normalize_info_items(items))
+        }
+        |> Attachment.merge(opts, component: :info_list),
+      children: []
+    )
+  end
+
   defp normalize_items(items) do
     Enum.map(items, fn item ->
       item = normalize_opts(item)
@@ -127,6 +187,20 @@ defmodule UnifiedIUR.Widgets.Data do
       |> maybe_put(:expanded?, option(node, :expanded?))
       |> maybe_put(:selected?, option(node, :selected?))
       |> maybe_put(:children, if(children == [], do: nil, else: children))
+    end)
+  end
+
+  defp normalize_info_items(items) do
+    Enum.map(items, fn item ->
+      item = normalize_opts(item)
+
+      %{}
+      |> maybe_put(:id, option(item, :id))
+      |> maybe_put(:title, option(item, :title))
+      |> maybe_put(:value, option(item, :value))
+      |> maybe_put(:description, option(item, :description))
+      |> maybe_put(:icon, option(item, :icon))
+      |> maybe_put(:status, option(item, :status))
     end)
   end
 

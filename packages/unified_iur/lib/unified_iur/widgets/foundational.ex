@@ -31,13 +31,25 @@ defmodule UnifiedIUR.Widgets.Foundational do
         }
 
   @type widget_kind ::
-          :text | :label | :icon | :image | :button | :link | :separator | :spacer | :content
+          :text
+          | :label
+          | :icon
+          | :image
+          | :badge
+          | :hero
+          | :button
+          | :link
+          | :separator
+          | :spacer
+          | :content
 
   @foundational_kinds [
     :text,
     :label,
     :icon,
     :image,
+    :badge,
+    :hero,
     :button,
     :link,
     :separator,
@@ -125,6 +137,45 @@ defmodule UnifiedIUR.Widgets.Foundational do
     )
   end
 
+  @spec badge(String.t(), opts()) :: Element.t()
+  def badge(label, opts \\ []) when is_binary(label) do
+    opts = normalize_opts(opts)
+
+    build_widget(
+      :badge,
+      %{
+        content: %{text: label},
+        badge:
+          %{}
+          |> maybe_put(:icon, option(opts, :icon))
+          |> maybe_put(:icon_set, option(opts, :icon_set))
+          |> maybe_put(:presentation, option(opts, :presentation, :pill))
+      },
+      opts
+    )
+  end
+
+  @spec hero(
+          [Element.t() | Element.Child.t() | {Element.Child.slot(), Element.t() | nil} | map()],
+          opts()
+        ) :: Element.t()
+  def hero(children \\ [], opts \\ []) when is_list(children) do
+    opts = normalize_opts(opts)
+
+    build_widget(
+      :hero,
+      %{
+        hero:
+          %{}
+          |> maybe_put(:eyebrow, option(opts, :eyebrow))
+          |> maybe_put(:title, option(opts, :title))
+          |> maybe_put(:message, option(opts, :message))
+          |> maybe_put(:align, option(opts, :align))
+      },
+      Map.put(opts, :children, children)
+    )
+  end
+
   @spec link(String.t(), String.t(), opts()) :: Element.t()
   def link(label, target, opts \\ []) when is_binary(label) and is_binary(target) do
     opts = normalize_opts(opts)
@@ -208,6 +259,8 @@ defmodule UnifiedIUR.Widgets.Foundational do
         |> merge_attribute(:content, Map.get(kind_attributes, :content))
         |> merge_attribute(:icon, Map.get(kind_attributes, :icon))
         |> merge_attribute(:image, Map.get(kind_attributes, :image))
+        |> merge_attribute(:badge, Map.get(kind_attributes, :badge))
+        |> merge_attribute(:hero, Map.get(kind_attributes, :hero))
         |> merge_attribute(:link, Map.get(kind_attributes, :link))
         |> merge_attribute(:label, Map.get(kind_attributes, :label))
         |> merge_attribute(:separator, Map.get(kind_attributes, :separator))

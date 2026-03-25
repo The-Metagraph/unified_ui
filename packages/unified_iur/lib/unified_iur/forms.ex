@@ -14,7 +14,7 @@ defmodule UnifiedIUR.Forms do
   @type children_input ::
           [Child.t() | Element.t() | {Child.slot(), Element.t() | nil} | map()]
 
-  @kinds [:form_builder, :field_group, :field]
+  @kinds [:form_builder, :field_group, :field, :form_field]
 
   @spec kinds() :: [atom()]
   def kinds do
@@ -74,6 +74,15 @@ defmodule UnifiedIUR.Forms do
 
   @spec field(Element.t(), opts()) :: Element.t()
   def field(%Element{} = control, opts \\ []) do
+    build_field(:field, control, opts)
+  end
+
+  @spec form_field(Element.t(), opts()) :: Element.t()
+  def form_field(%Element{} = control, opts \\ []) do
+    build_field(:form_field, control, opts)
+  end
+
+  defp build_field(kind, %Element{} = control, opts) do
     opts = normalize_opts(opts)
     control_id = option(opts, :control_id, control.id)
     label_child = normalize_label_child(option(opts, :label), control_id)
@@ -85,7 +94,7 @@ defmodule UnifiedIUR.Forms do
       |> Kernel.++([Child.new(:control, control)])
       |> maybe_append(help_child)
 
-    Element.new(:composite, :field,
+    Element.new(:composite, kind,
       id: option(opts, :id),
       metadata: normalize_metadata(opts),
       attributes:
@@ -98,7 +107,7 @@ defmodule UnifiedIUR.Forms do
         })
         |> merge_attribute(:validation, normalize_validation(opts))
         |> Attachment.merge(opts,
-          component: :field,
+          component: kind,
           tone: option(opts, :tone),
           local_style: option(opts, :style),
           fallback_bindings: normalize_binding(opts)

@@ -198,6 +198,22 @@ defmodule UnifiedIUR.Fixtures do
   end
 
   defp build_fixture("foundational--workspace_chrome") do
+    semantic_hero =
+      Foundational.hero(
+        [
+          {:supporting, Foundational.badge("Semantic", id: "semantic-badge", icon: :sparkles)},
+          {:supporting, Foundational.text("Canonical workspace shell", id: "semantic-hero-copy")},
+          {:actions,
+           Foundational.button("Review", id: "semantic-hero-action", action: [intent: :review])}
+        ],
+        id: "semantic-hero",
+        eyebrow: "Unified IUR",
+        title: "Workspace chrome",
+        message: "Foundational semantics stay distinct from generic containers.",
+        theme: :workspace,
+        style_refs: [:surface_card]
+      )
+
     hero =
       Container.box(
         [
@@ -263,6 +279,7 @@ defmodule UnifiedIUR.Fixtures do
 
     Layout.column(
       [
+        {:header, semantic_hero},
         {:header, hero},
         {:header, toolbar},
         {:content, nav}
@@ -274,7 +291,7 @@ defmodule UnifiedIUR.Fixtures do
 
   defp build_fixture("forms--profile_editor") do
     fields = [
-      Forms.field(Input.text_input(id: "name-input", name: :name, value: "Pascal"),
+      Forms.form_field(Input.text_input(id: "name-input", name: :name, value: "Pascal"),
         id: "name-field",
         label: "Name"
       ),
@@ -413,6 +430,39 @@ defmodule UnifiedIUR.Fixtures do
              [id: :root, label: "Root", expanded?: true, children: [[id: :child, label: "Child"]]]
            ],
            id: "content-tree"
+         )},
+        {:content,
+         Data.stat(
+           id: "release-stat",
+           title: "Release coverage",
+           value: "82%",
+           message: "Semantic surface parity"
+         )},
+        {:content,
+         Data.key_value("Owner", "Platform UI",
+           id: "owner-pair",
+           description: "Maintaining the canonical semantic rollout"
+         )},
+        {:content,
+         Data.info_list(
+           [
+             [
+               id: :badge,
+               title: "Badge",
+               value: "Ready",
+               description: "Foundational semantic display"
+             ],
+             [
+               id: :form_field,
+               title: "Form field",
+               value: "Ready",
+               description: "Semantic form composition",
+               status: :active
+             ]
+           ],
+           id: "semantic-info-list",
+           ordered?: true,
+           empty_state: "No semantic notes"
          )},
         {:content,
          Feedback.status("Healthy", id: "status-widget", severity: :success, status: :ready)},

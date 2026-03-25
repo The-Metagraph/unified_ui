@@ -258,6 +258,8 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :label,
              :icon,
              :image,
+             :badge,
+             :hero,
              :content,
              :button,
              :link,
@@ -279,6 +281,9 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :list,
              :table,
              :tree_view,
+             :stat,
+             :key_value,
+             :info_list,
              :markdown_viewer,
              :log_viewer,
              :status,
@@ -295,7 +300,7 @@ defmodule UnifiedUi.Phase2IntegrationTest do
            ]
 
     assert UnifiedUi.Layout.kinds() == [:box, :row, :column, :grid, :stack]
-    assert UnifiedUi.Forms.kinds() == [:form_builder, :field_group, :field]
+    assert UnifiedUi.Forms.kinds() == [:form_builder, :field_group, :field, :form_field]
     assert UnifiedUi.Navigation.kinds() == [:menu, :tabs, :command_palette]
 
     summary = UnifiedUi.Info.composition_summary(BaselineWorkspace)

@@ -5,6 +5,6 @@ defmodule UnifiedUi.Forms do
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:form_builder, :field_group, :field]
+    [:form_builder, :field_group, :field, :form_field]
   end
 end

@@ -30,6 +30,24 @@ defmodule UnifiedUi.Dsl.Entities.Data do
         empty_state: [type: :string, required: false],
         summary: [type: :string, required: false]
       ),
+      leaf(:stat,
+        title: [type: :string, required: true],
+        value: [type: :any, required: true],
+        message: [type: :string, required: false],
+        summary: [type: :string, required: false]
+      ),
+      leaf(:key_value,
+        label: [type: :string, required: true],
+        value: [type: :any, required: true],
+        description: [type: :string, required: false],
+        summary: [type: :string, required: false]
+      ),
+      leaf(:info_list,
+        items: [type: :any, required: true],
+        ordered?: [type: :boolean, required: false, default: false],
+        empty_state: [type: :string, required: false],
+        summary: [type: :string, required: false]
+      ),
       leaf(:markdown_viewer,
         source: [type: :string, required: true],
         presentation: [type: :atom, required: false, default: :rendered],
