@@ -131,6 +131,8 @@ defmodule DesktopUi.Inspection do
       scope: DesktopUi.Sdl3.adapter_scope(),
       lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
       handoff: DesktopUi.Sdl3.App.handoff_contract(),
+      host: DesktopUi.Sdl3.PortHost.contract(),
+      protocol: DesktopUi.Sdl3.Protocol.contract(),
       renderer: DesktopUi.Sdl3.Renderer.contract(),
       events: DesktopUi.Sdl3.Events.contract(),
       text: DesktopUi.Sdl3.Text.contract(),
@@ -138,6 +140,8 @@ defmodule DesktopUi.Inspection do
       renderer_completeness: :skeleton,
       validation_state: %{
         adapter: DesktopUi.Sdl3.validation_state(),
+        host: DesktopUi.Sdl3.PortHost.validation_state(),
+        protocol: DesktopUi.Sdl3.Protocol.validation_state(),
         renderer: DesktopUi.Sdl3.Renderer.validation_state(),
         text: DesktopUi.Sdl3.Text.validation_state(),
         images: DesktopUi.Sdl3.Images.validation_state()

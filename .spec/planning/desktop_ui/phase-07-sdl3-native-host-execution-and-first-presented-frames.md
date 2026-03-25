@@ -40,27 +40,27 @@ Back to index: [README](./README.md)
   event/resource round-trips that preserve the package’s retained semantic
   model.
 
-  [ ] 7.1 Section - Native Host Process and Framed Runtime Protocol
+  [x] 7.1 Section - Native Host Process and Framed Runtime Protocol
     Define and implement the executable native-host boundary that allows Elixir
     runtime state and render intent to cross into an SDL3-owned process
     without collapsing package semantics into backend-specific code.
 
-    [ ] 7.1.1 Task - Define the SDL3 native-host ownership model
+    [x] 7.1.1 Task - Define the SDL3 native-host ownership model
       Establish the package-level host boundary, launch semantics, and failure
       model for the native process that will own SDL3 execution.
 
-      [ ] 7.1.1.1 Subtask - Introduce explicit host-facing modules such as `DesktopUi.Sdl3.Host` and a default implementation such as `DesktopUi.Sdl3.PortHost`.
-      [ ] 7.1.1.2 Subtask - Define how native-host boot, liveness, shutdown, crash reporting, and version compatibility are represented on the Elixir side.
-      [ ] 7.1.1.3 Subtask - Keep the host boundary narrow enough that Elixir runtime, renderer, transport, and widget modules remain authoritative above it.
+      [x] 7.1.1.1 Subtask - Introduce explicit host-facing modules such as `DesktopUi.Sdl3.Host` and a default implementation such as `DesktopUi.Sdl3.PortHost`.
+      [x] 7.1.1.2 Subtask - Define how native-host boot, liveness, shutdown, crash reporting, and version compatibility are represented on the Elixir side.
+      [x] 7.1.1.3 Subtask - Keep the host boundary narrow enough that Elixir runtime, renderer, transport, and widget modules remain authoritative above it.
 
-    [ ] 7.1.2 Task - Define the framed Elixir-to-native protocol
+    [x] 7.1.2 Task - Define the framed Elixir-to-native protocol
       Create the message protocol that carries boot requests, render plans,
       events, diagnostics, and resource requests between Elixir and the SDL3
       host process.
 
-      [ ] 7.1.2.1 Subtask - Define protocol message families for boot, window lifecycle, frame presentation, event batches, text/image resources, diagnostics, and shutdown.
-      [ ] 7.1.2.2 Subtask - Define framing, message correlation, and error envelopes so host communication remains deterministic under partial failures.
-      [ ] 7.1.2.3 Subtask - Separate control messages from larger payloads so future text/image/resource traffic can evolve without rewriting the whole protocol.
+      [x] 7.1.2.1 Subtask - Define protocol message families for boot, window lifecycle, frame presentation, event batches, text/image resources, diagnostics, and shutdown.
+      [x] 7.1.2.2 Subtask - Define framing, message correlation, and error envelopes so host communication remains deterministic under partial failures.
+      [x] 7.1.2.3 Subtask - Separate control messages from larger payloads so future text/image/resource traffic can evolve without rewriting the whole protocol.
 
   [ ] 7.2 Section - SDL3 Callback Lifecycle and Native Window Execution
     Turn the current lifecycle and window seam into a real executable SDL3 app

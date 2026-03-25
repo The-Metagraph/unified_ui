@@ -75,6 +75,8 @@ defmodule DesktopUi.Reference do
         scope: DesktopUi.Sdl3.adapter_scope(),
         lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
         handoff: DesktopUi.Sdl3.App.handoff_contract(),
+        host: DesktopUi.Sdl3.PortHost.contract(),
+        protocol: DesktopUi.Sdl3.Protocol.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),

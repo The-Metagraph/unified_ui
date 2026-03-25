@@ -226,6 +226,9 @@ defmodule DesktopUi.Validate do
           [
             DesktopUi.Sdl3,
             DesktopUi.Sdl3.App,
+            DesktopUi.Sdl3.Host,
+            DesktopUi.Sdl3.PortHost,
+            DesktopUi.Sdl3.Protocol,
             DesktopUi.Sdl3.Lifecycle,
             DesktopUi.Sdl3.Window,
             DesktopUi.Sdl3.RenderPlan,
@@ -237,6 +240,18 @@ defmodule DesktopUi.Validate do
           &Code.ensure_loaded?/1
         ),
         %{modules: DesktopUi.Sdl3.modules()}
+      ),
+      check(
+        :host_boundary_present,
+        adapter_surface.validation_state.host == :port_host_ready and
+          adapter_surface.host.transport == :port,
+        %{host: adapter_surface.host, validation_state: adapter_surface.validation_state}
+      ),
+      check(
+        :framed_protocol_present,
+        adapter_surface.validation_state.protocol == :framed_protocol_ready and
+          adapter_surface.protocol.framing == :desktop_ui_sdl3_frame,
+        %{protocol: adapter_surface.protocol, validation_state: adapter_surface.validation_state}
       ),
       check(
         :renderer_first_backend_bounded,

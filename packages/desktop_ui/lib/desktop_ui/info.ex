@@ -50,6 +50,8 @@ defmodule DesktopUi.Info do
         foundation: DesktopUi.Sdl3.foundation(),
         lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
         handoff: DesktopUi.Sdl3.App.handoff_contract(),
+        host: DesktopUi.Sdl3.PortHost.contract(),
+        protocol: DesktopUi.Sdl3.Protocol.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
