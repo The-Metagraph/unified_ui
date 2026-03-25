@@ -73,7 +73,9 @@ defmodule DesktopUi.Sdl3HostTest do
     assert {:ok, session} = PortHost.launch(executable: cat)
     status = PortHost.status(session)
 
+    assert session.backend == :custom
     assert status.transport == :port
+    assert status.backend == :custom
     assert status.protocol_version == 1
     assert status.version_compatible?
     assert status.liveness == :alive
@@ -107,5 +109,35 @@ defmodule DesktopUi.Sdl3HostTest do
     assert PortHost.status(session).messages_received == 1
 
     assert {:ok, _session} = PortHost.shutdown(session)
+  end
+
+  test "default launch spec falls back to elixir host until compiled host is probe-ready" do
+    fallback_spec =
+      PortHost.default_launch_spec(
+        backend: :auto,
+        capabilities: %{
+          build: %{executable_present?: true, launch_ready?: false},
+          libraries: %{},
+          toolchains: %{}
+        }
+      )
+
+    assert fallback_spec.backend == :elixir_host
+    assert fallback_spec.requested_backend == :auto
+    assert fallback_spec.launch_ready?
+
+    compiled_spec =
+      PortHost.default_launch_spec(
+        backend: :auto,
+        capabilities: %{
+          build: %{executable_present?: true, launch_ready?: true},
+          libraries: %{},
+          toolchains: %{}
+        }
+      )
+
+    assert compiled_spec.backend == :compiled_sdl3_host
+    assert compiled_spec.requested_backend == :auto
+    assert compiled_spec.launch_ready?
   end
 end

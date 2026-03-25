@@ -3,7 +3,13 @@ defmodule DesktopUi.MixTasksTest do
 
   import ExUnit.CaptureIO
 
-  @tasks ["app.start", "desktop_ui.inspect", "desktop_ui.run", "desktop_ui.validate"]
+  @tasks [
+    "app.start",
+    "desktop_ui.inspect",
+    "desktop_ui.run",
+    "desktop_ui.build_host",
+    "desktop_ui.validate"
+  ]
 
   setup do
     Enum.each(@tasks, &Mix.Task.reenable/1)
@@ -46,6 +52,16 @@ defmodule DesktopUi.MixTasksTest do
     assert catalog_output =~ "runnable_examples"
     assert summary_output =~ "DesktopUi host execution summary"
     assert summary_output =~ "presented frame?: true"
+  end
+
+  test "build_host task prints dry-run compile diagnostics" do
+    dry_run_output =
+      capture_io(fn ->
+        run_task("desktop_ui.build_host", ["--dry-run"])
+      end)
+
+    assert dry_run_output =~ "compile_plan"
+    assert dry_run_output =~ "desktop_ui_sdl3_host"
   end
 
   test "validate task prints summary and supports strict mode" do

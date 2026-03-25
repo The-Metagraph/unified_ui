@@ -58,25 +58,25 @@ Back to index: [README](./README.md)
       [x] 8.1.2.2 Subtask - Define deterministic backend recommendation rules for compiled-native, fallback-Elixir, and missing-dependency states.
       [x] 8.1.2.3 Subtask - Surface capability and build-readiness diagnostics through inspection, reference, info, and validation helpers.
 
-  [ ] 8.2 Section - SDL3 Native Host Build and Launch Selection
+  [x] 8.2 Section - SDL3 Native Host Build and Launch Selection
     Build the first compiled SDL3 host executable and teach the package how to
     launch it when native prerequisites are satisfied.
 
-    [ ] 8.2.1 Task - Add the compiled SDL3 host source and build task
+    [x] 8.2.1 Task - Add the compiled SDL3 host source and build task
       Introduce the native source tree and the package task that turns it into
       a runnable host executable.
 
-      [ ] 8.2.1.1 Subtask - Add a native host source tree under `packages/desktop_ui/native/desktop_ui_sdl3_host`.
-      [ ] 8.2.1.2 Subtask - Add `mix desktop_ui.build_host` to compile the native host using discovered SDL3 toolchain and library settings.
-      [ ] 8.2.1.3 Subtask - Make build failures deterministic and diagnostic when compilers or SDL3 companion libraries are missing.
+      [x] 8.2.1.1 Subtask - Add a native host source tree under `packages/desktop_ui/native/desktop_ui_sdl3_host`.
+      [x] 8.2.1.2 Subtask - Add `mix desktop_ui.build_host` to compile the native host using discovered SDL3 toolchain and library settings.
+      [x] 8.2.1.3 Subtask - Make build failures deterministic and diagnostic when compilers or SDL3 companion libraries are missing.
 
-    [ ] 8.2.2 Task - Teach the host boundary to choose compiled or fallback execution
+    [x] 8.2.2 Task - Teach the host boundary to choose compiled or fallback execution
       Update the current port-host launch path so maintainers can run the real
       native host when it exists while preserving a bounded fallback path.
 
-      [ ] 8.2.2.1 Subtask - Prefer the compiled SDL3 host when a built executable is present and compatible.
-      [ ] 8.2.2.2 Subtask - Keep the current Elixir host available as an explicit fallback for CI and SDL3-less environments.
-      [ ] 8.2.2.3 Subtask - Surface which backend was chosen through host status, inspection, and run-task output.
+      [x] 8.2.2.1 Subtask - Prefer the compiled SDL3 host when a built executable is present and compatible.
+      [x] 8.2.2.2 Subtask - Keep the current Elixir host available as an explicit fallback for CI and SDL3-less environments.
+      [x] 8.2.2.3 Subtask - Surface which backend was chosen through host status, inspection, and run-task output.
 
   [ ] 8.3 Section - Visible Window Presentation and Frame Lifecycle
     Replace placeholder-only host reporting with real visible SDL3 window and

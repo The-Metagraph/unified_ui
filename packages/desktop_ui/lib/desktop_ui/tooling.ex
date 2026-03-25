@@ -61,6 +61,7 @@ defmodule DesktopUi.Tooling do
       "mix test",
       "mix desktop_ui.inspect --format catalog",
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
+      "mix desktop_ui.build_host --dry-run",
       "mix desktop_ui.run --format catalog",
       "mix desktop_ui.run native_foundational --format summary",
       "mix desktop_ui.run native_foundational --format report",

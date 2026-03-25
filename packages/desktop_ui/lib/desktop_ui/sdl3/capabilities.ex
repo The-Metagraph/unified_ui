@@ -15,6 +15,7 @@ defmodule DesktopUi.Sdl3.Capabilities do
       discovery_sources: [:env_override, :built_executable, :pkg_config, :homebrew_prefix],
       preferred_backend: :compiled_sdl3_host,
       fallback_backend: :elixir_host,
+      compiled_host_probe: :json_stdout,
       required_toolchains: [:cc],
       optional_tooling: [:pkg_config, :brew]
     }
@@ -59,6 +60,11 @@ defmodule DesktopUi.Sdl3.Capabilities do
     opts |> detect_built_executable() |> Map.get(:available?, false)
   end
 
+  @spec compiled_host_launch_ready?(probe_opts()) :: boolean()
+  def compiled_host_launch_ready?(opts \\ []) do
+    opts |> detect() |> get_in([:build, :launch_ready?])
+  end
+
   defp detect_toolchains(opts) do
     %{
       cc: executable_probe("cc", opts),
@@ -81,7 +87,13 @@ defmodule DesktopUi.Sdl3.Capabilities do
       compiled_path: compiled_path,
       compiled_available?: compiled_available?,
       path: if(override_available?, do: override, else: compiled_path),
-      available?: override_available? or compiled_available?
+      available?: override_available? or compiled_available?,
+      probe:
+        if override_available? or compiled_available? do
+          probe_host(if(override_available?, do: override, else: compiled_path), opts)
+        else
+          %{available?: false, launch_ready?: false, status: :missing}
+        end
     }
   end
 
@@ -120,12 +132,16 @@ defmodule DesktopUi.Sdl3.Capabilities do
       companion_libraries_ready: companion_available,
       executable_present?: built_executable.available?,
       executable_path: built_executable.path,
+      launch_ready?: get_in(built_executable, [:probe, :launch_ready?]) || false,
+      executable_probe: built_executable.probe,
       buildable?: toolchains.cc.available? and all_required_available?,
       validation_state: NativeBuild.validation_state()
     }
   end
 
-  defp backend_recommendation(%{executable_present?: true}), do: :compiled_sdl3_host
+  defp backend_recommendation(%{executable_present?: true, launch_ready?: true}),
+    do: :compiled_sdl3_host
+
   defp backend_recommendation(_build), do: :elixir_host
 
   defp backend_availability(%{executable_present?: true}),
@@ -187,11 +203,33 @@ defmodule DesktopUi.Sdl3.Capabilities do
       {output, 0} ->
         case String.trim(output) do
           "" -> nil
-          trimmed -> trimmed
+          trimmed -> if(prefix_usable?(trimmed, opts), do: trimmed, else: nil)
         end
 
       _other ->
         nil
+    end
+  end
+
+  defp probe_host(path, opts) when is_binary(path) do
+    case run_cmd(path, ["--probe"], opts) do
+      {output, 0} ->
+        case JSON.decode(output) do
+          {:ok, decoded} when is_map(decoded) ->
+            %{
+              available?: true,
+              launch_ready?: Map.get(decoded, "launch_ready", false) == true,
+              status: Map.get(decoded, "status", "unknown"),
+              backend: Map.get(decoded, "backend"),
+              compiled_with: Map.get(decoded, "compiled_with")
+            }
+
+          _other ->
+            %{available?: true, launch_ready?: false, status: :invalid_probe_payload}
+        end
+
+      _other ->
+        %{available?: true, launch_ready?: false, status: :probe_failed}
     end
   end
 
@@ -228,5 +266,10 @@ defmodule DesktopUi.Sdl3.Capabilities do
   defp file_exists?(path, opts) do
     checker = Keyword.get(opts, :file_exists?, &File.exists?/1)
     checker.(path)
+  end
+
+  defp prefix_usable?(prefix, opts) do
+    file_exists?(prefix, opts) and file_exists?(Path.join(prefix, "include"), opts) and
+      file_exists?(Path.join(prefix, "lib"), opts)
   end
 end
