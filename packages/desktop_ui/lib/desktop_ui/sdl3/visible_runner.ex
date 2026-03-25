@@ -115,6 +115,8 @@ defmodule DesktopUi.Sdl3.VisibleRunner do
       runtime_id: plan.runtime_id,
       screen_id: plan.screen_id,
       window_count: length(plan.windows),
+      window_ids: Enum.map(plan.windows, & &1.window_id),
+      logical_units: plan.presentation.logical_units,
       draw_operation_count: plan.diagnostics.draw_operation_count,
       validation_state: plan.presentation.validation_state
     }

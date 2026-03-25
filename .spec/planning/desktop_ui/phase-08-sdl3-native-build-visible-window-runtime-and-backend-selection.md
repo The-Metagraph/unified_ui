@@ -30,7 +30,7 @@ Back to index: [README](./README.md)
 - Elixir continues to own widget semantics, canonical IUR rendering, runtime
   state, transport meaning, and validation logic above the host boundary.
 
-[ ] 8 Phase 8 - SDL3 Native Build, Visible Window Runtime, and Backend Selection
+[x] 8 Phase 8 - SDL3 Native Build, Visible Window Runtime, and Backend Selection
   Add the first buildable native SDL3 host workflow for `desktop_ui` by
   defining host-build capabilities, compiling a real SDL3 executable when
   dependencies exist, selecting between compiled and fallback host backends,
@@ -119,22 +119,22 @@ Back to index: [README](./README.md)
       [x] 8.4.2.2 Subtask - Document SDL3 native prerequisites, build steps, and fallback behavior in the package README and guides.
       [x] 8.4.2.3 Subtask - Extend validation and reference surfaces so maintainers can tell whether native build, native run, and fallback execution are each healthy.
 
-  [ ] 8.5 Section - Phase 8 Integration Tests
+  [x] 8.5 Section - Phase 8 Integration Tests
     Validate the buildable and visible SDL3 host path end to end while keeping
     CI trustworthy on machines without SDL3 installed.
 
-    [ ] 8.5.1 Task - Native build and backend-selection integration scenarios
+    [x] 8.5.1 Task - Native build and backend-selection integration scenarios
       Verify the package chooses the correct execution path depending on build
       and dependency state.
 
-      [ ] 8.5.1.1 Subtask - Verify capability detection distinguishes compiled-native-ready, buildable-but-not-built, and fallback-only environments.
-      [ ] 8.5.1.2 Subtask - Verify the port host prefers a compiled native host when available and falls back explicitly when it is not.
-      [ ] 8.5.1.3 Subtask - Verify run, inspect, and validation tooling report the selected backend and dependency state deterministically.
+      [x] 8.5.1.1 Subtask - Verify capability detection distinguishes compiled-native-ready, buildable-but-not-built, and fallback-only environments.
+      [x] 8.5.1.2 Subtask - Verify the port host prefers a compiled native host when available and falls back explicitly when it is not.
+      [x] 8.5.1.3 Subtask - Verify run, inspect, and validation tooling report the selected backend and dependency state deterministically.
 
-    [ ] 8.5.2 Task - Visible execution and diagnostics integration scenarios
+    [x] 8.5.2 Task - Visible execution and diagnostics integration scenarios
       Verify the visible SDL3 execution path remains bounded, reviewable, and
       semantically aligned with the retained runtime contract.
 
-      [ ] 8.5.2.1 Subtask - Verify the compiled host path can acknowledge boot, present at least one visible frame, and shut down cleanly when SDL3 is available.
-      [ ] 8.5.2.2 Subtask - Verify validation and inspection distinguish real visible-frame execution from fallback or placeholder-only execution.
-      [ ] 8.5.2.3 Subtask - Verify logical units, window ownership, and transport/event semantics remain coherent across compiled-native and fallback host backends.
+      [x] 8.5.2.1 Subtask - Verify the compiled host path can acknowledge boot, present at least one visible frame, and shut down cleanly when SDL3 is available.
+      [x] 8.5.2.2 Subtask - Verify validation and inspection distinguish real visible-frame execution from fallback or placeholder-only execution.
+      [x] 8.5.2.3 Subtask - Verify logical units, window ownership, and transport/event semantics remain coherent across compiled-native and fallback host backends.

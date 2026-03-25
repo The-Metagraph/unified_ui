@@ -101,7 +101,8 @@ defmodule DesktopUi.PhaseSevenIntegrationTest do
         Mix.Tasks.DesktopUi.Validate.run(["--format", "summary"])
       end)
 
-    assert run_output =~ "DesktopUi host execution summary"
+    assert run_output =~ "DesktopUi run summary"
+    assert run_output =~ "backend:"
     assert run_output =~ "presented frame?: true"
     assert validate_output =~ "host execution surface passing?: true"
     assert DesktopUi.Validate.host_execution_surface().status == :pass
