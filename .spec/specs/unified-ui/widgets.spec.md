@@ -28,12 +28,12 @@ decisions:
 
 ```spec-requirements
 - id: unified_ui.widgets.foundational_visual_surface
-  statement: The package shall author foundational visual elements such as text-bearing, image-bearing, icon-bearing, button-like, link-like, separator, spacer, and content container widgets as part of the canonical DSL surface.
+  statement: The package shall author foundational visual elements such as text-bearing, image-bearing, icon-bearing, button-like, link-like, badge-like, hero-like, separator, spacer, and content container widgets as part of the canonical DSL surface.
   priority: must
   stability: stable
 
 - id: unified_ui.widgets.input_surface
-  statement: The package shall author canonical input and navigation controls including `text_input`, `menu`, `context_menu`, `command_palette`, `tabs`, and `form_builder`, while remaining extensible to additional canonical controls such as toggles, selects, sliders, and other form primitives.
+  statement: The package shall author canonical input and navigation controls including `text_input`, `menu`, `context_menu`, `command_palette`, `tabs`, `form_builder`, and `form_field`, while remaining extensible to additional canonical controls such as toggles, selects, sliders, and other form primitives.
   priority: must
   stability: stable
 
@@ -43,7 +43,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.widgets.feedback_navigation_data_surface
-  statement: The package shall author canonical navigation, feedback, and data-display constructs including `dialog`, `alert_dialog`, `toast`, `table`, `tree_view`, `markdown_viewer`, `log_viewer`, `scroll_bar`, `gauge`, `sparkline`, `bar_chart`, `line_chart`, `stream_widget`, `process_monitor`, `supervision_tree_viewer`, and `cluster_dashboard`.
+  statement: The package shall author canonical navigation, feedback, and data-display constructs including `dialog`, `alert_dialog`, `toast`, `table`, `tree_view`, `stat`, `key_value`, `info_list`, `markdown_viewer`, `log_viewer`, `scroll_bar`, `gauge`, `sparkline`, `bar_chart`, `line_chart`, `stream_widget`, `process_monitor`, `supervision_tree_viewer`, and `cluster_dashboard`.
   priority: must
   stability: stable
 

@@ -33,6 +33,14 @@ defmodule UnifiedUi.Dsl.Entities.Foundational do
         fit: [type: :atom, required: false]
       )
 
+    badge =
+      leaf(:badge,
+        value: [type: :string, required: true],
+        name: [type: :atom, required: false],
+        set: [type: :atom, required: false],
+        presentation: [type: :atom, required: false, default: :pill]
+      )
+
     button =
       leaf(:button,
         label: [type: :string, required: true],
@@ -65,7 +73,7 @@ defmodule UnifiedUi.Dsl.Entities.Foundational do
         grow: [type: :integer, required: false, default: 0]
       )
 
-    leafs = [text, label, icon, image, button, link, separator, spacer]
+    leafs = [text, label, icon, image, badge, button, link, separator, spacer]
 
     content =
       %Spark.Dsl.Entity{
@@ -84,7 +92,26 @@ defmodule UnifiedUi.Dsl.Entities.Foundational do
           )
       }
 
-    [text, label, icon, image, content, button, link, separator, spacer]
+    hero =
+      %Spark.Dsl.Entity{
+        name: :hero,
+        target: Node,
+        args: [:id],
+        identifier: :id,
+        recursive_as: :children,
+        auto_set_fields: [family: :foundational, kind: :hero],
+        entities: [children: leafs],
+        schema:
+          EntitySchema.widget(
+            eyebrow: [type: :string, required: false],
+            title: [type: :string, required: false],
+            message: [type: :string, required: false],
+            align: [type: :atom, required: false],
+            summary: [type: :string, required: false]
+          )
+      }
+
+    [text, label, icon, image, badge, hero, content, button, link, separator, spacer]
   end
 
   @spec kinds() :: [atom()]

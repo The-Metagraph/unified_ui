@@ -10,6 +10,8 @@ defmodule UnifiedIUR.Widgets do
     :label,
     :icon,
     :image,
+    :badge,
+    :hero,
     :button,
     :link,
     :separator,
@@ -30,7 +32,7 @@ defmodule UnifiedIUR.Widgets do
     :file_input
   ]
   @navigation_kinds [:menu, :tabs]
-  @data_view_kinds [:list, :table, :tree_view]
+  @data_view_kinds [:list, :table, :tree_view, :stat, :key_value, :info_list]
   @feedback_kinds [:status, :progress, :gauge, :inline_feedback]
   @advanced_kinds [
     :stream_widget,

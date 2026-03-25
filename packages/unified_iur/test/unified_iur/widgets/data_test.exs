@@ -4,7 +4,7 @@ defmodule UnifiedIUR.Widgets.DataTest do
   alias UnifiedIUR.Element
   alias UnifiedIUR.Widgets.Data
 
-  test "builds list, table, and tree data structures with stable item semantics" do
+  test "builds list, table, tree, and semantic data structures with stable item semantics" do
     list =
       Data.list(
         [
@@ -41,6 +41,37 @@ defmodule UnifiedIUR.Widgets.DataTest do
           ]
         ],
         id: "artifact-tree"
+      )
+
+    stat =
+      Data.stat(
+        id: "artifact-stat",
+        title: "Artifacts shipped",
+        value: "24",
+        message: "Across the current release train"
+      )
+
+    key_value =
+      Data.key_value("Owner", "Docs team",
+        id: "owner-pair",
+        description: "Maintaining semantic widget coverage"
+      )
+
+    info_list =
+      Data.info_list(
+        [
+          [
+            id: :semantic,
+            title: "Semantic widgets",
+            value: "In progress",
+            description: "Adding badge, hero, stat, key_value, and info_list",
+            icon: :sparkles,
+            status: :active
+          ]
+        ],
+        id: "semantic-list",
+        ordered?: true,
+        empty_state: "No semantic notes"
       )
 
     assert %Element{
@@ -92,5 +123,47 @@ defmodule UnifiedIUR.Widgets.DataTest do
                }
              }
            } = tree
+
+    assert %Element{
+             kind: :stat,
+             attributes: %{
+               stat: %{
+                 title: "Artifacts shipped",
+                 value: "24",
+                 message: "Across the current release train"
+               }
+             }
+           } = stat
+
+    assert %Element{
+             kind: :key_value,
+             attributes: %{
+               key_value: %{
+                 label: "Owner",
+                 value: "Docs team",
+                 description: "Maintaining semantic widget coverage"
+               }
+             }
+           } = key_value
+
+    assert %Element{
+             kind: :info_list,
+             attributes: %{
+               info_list: %{
+                 ordered?: true,
+                 empty_state: "No semantic notes",
+                 items: [
+                   %{
+                     id: :semantic,
+                     title: "Semantic widgets",
+                     value: "In progress",
+                     description: "Adding badge, hero, stat, key_value, and info_list",
+                     icon: :sparkles,
+                     status: :active
+                   }
+                 ]
+               }
+             }
+           } = info_list
   end
 end

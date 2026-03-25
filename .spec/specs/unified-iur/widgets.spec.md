@@ -35,7 +35,12 @@ decisions:
   stability: stable
 
 - id: unified_iur.widgets.data_and_document_views
-  statement: `unified_iur` shall be able to represent `table`, `tree_view`, `markdown_viewer`, `log_viewer`, `viewport`, `split_pane`, and `scroll_bar` as canonical interchange widgets or display nodes.
+  statement: `unified_iur` shall be able to represent `table`, `tree_view`, `stat`, `key_value`, `info_list`, `markdown_viewer`, `log_viewer`, `viewport`, `split_pane`, and `scroll_bar` as canonical interchange widgets or display nodes.
+  priority: must
+  stability: stable
+
+- id: unified_iur.widgets.semantic_surface
+  statement: `unified_iur` shall be able to represent `badge`, `hero`, and `form_field` as canonical semantic display or form constructs without reducing them to generic text, container, or field placeholders.
   priority: must
   stability: stable
 
@@ -64,6 +69,7 @@ decisions:
     - unified_iur.widgets.input_and_navigation
     - unified_iur.widgets.overlay_and_feedback
     - unified_iur.widgets.data_and_document_views
+    - unified_iur.widgets.semantic_surface
     - unified_iur.widgets.visualization
     - unified_iur.widgets.operational_views
     - unified_iur.widgets.widget_semantics_preserved

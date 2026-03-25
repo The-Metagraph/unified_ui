@@ -36,6 +36,26 @@ defmodule UnifiedIUR.Widgets.FoundationalTest do
         accessibility: [label: "Hero illustration"]
       )
 
+    badge =
+      Foundational.badge("Live",
+        id: "runtime-badge",
+        icon: :sparkles,
+        icon_set: :system,
+        style_refs: [:badge]
+      )
+
+    hero =
+      Foundational.hero(
+        [
+          {:supporting, Foundational.text("Semantic widgets stay semantic.", id: "hero-copy")},
+          {:actions, Foundational.button("Explore", id: "hero-action")}
+        ],
+        id: "docs-hero",
+        eyebrow: "UnifiedUi",
+        title: "Ship richer dashboards",
+        message: "Author semantic structure once and lower it into IUR."
+      )
+
     assert %Element{
              id: "hero-title",
              kind: :text,
@@ -77,6 +97,32 @@ defmodule UnifiedIUR.Widgets.FoundationalTest do
                accessibility: %{label: "Hero illustration"}
              }
            } = image
+
+    assert %Element{
+             id: "runtime-badge",
+             kind: :badge,
+             attributes: %{
+               content: %{text: "Live"},
+               badge: %{icon: :sparkles, icon_set: :system, presentation: :pill},
+               theme: %{component: :badge}
+             }
+           } = badge
+
+    assert %Element{
+             id: "docs-hero",
+             kind: :hero,
+             children: [supporting, actions],
+             attributes: %{
+               hero: %{
+                 eyebrow: "UnifiedUi",
+                 title: "Ship richer dashboards",
+                 message: "Author semantic structure once and lower it into IUR."
+               }
+             }
+           } = hero
+
+    assert supporting.slot == :supporting
+    assert actions.slot == :actions
   end
 
   test "builds actionable foundational widgets with state, emphasis, and style hooks" do

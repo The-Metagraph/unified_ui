@@ -70,7 +70,7 @@ defmodule UnifiedUi.FormsNavigationTest do
            ]
 
     assert UnifiedUi.Navigation.kinds() == [:menu, :tabs, :command_palette]
-    assert UnifiedUi.Forms.kinds() == [:form_builder, :field_group, :field]
+    assert UnifiedUi.Forms.kinds() == [:form_builder, :field_group, :field, :form_field]
   end
 
   test "stores forms, inputs, and navigation nodes in the authored composition tree" do

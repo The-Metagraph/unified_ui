@@ -94,6 +94,9 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :list,
              :table,
              :tree_view,
+             :stat,
+             :key_value,
+             :info_list,
              :markdown_viewer,
              :log_viewer
            ]
@@ -120,6 +123,8 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :label,
              :icon,
              :image,
+             :badge,
+             :hero,
              :content,
              :button,
              :link,
@@ -141,6 +146,9 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :list,
              :table,
              :tree_view,
+             :stat,
+             :key_value,
+             :info_list,
              :markdown_viewer,
              :log_viewer,
              :status,
