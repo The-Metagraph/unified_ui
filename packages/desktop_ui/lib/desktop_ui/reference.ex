@@ -50,6 +50,8 @@ defmodule DesktopUi.Reference do
 
   @spec package_reference() :: map()
   def package_reference do
+    capabilities = DesktopUi.Sdl3.Capabilities.detect()
+
     %{
       package: DesktopUi,
       package_areas: DesktopUi.package_areas(),
@@ -76,12 +78,17 @@ defmodule DesktopUi.Reference do
         lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
         handoff: DesktopUi.Sdl3.App.handoff_contract(),
         host: DesktopUi.Sdl3.PortHost.contract(),
+        native_build: DesktopUi.Sdl3.NativeBuild.contract(),
+        capabilities: capabilities,
         protocol: DesktopUi.Sdl3.Protocol.contract(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
+        frame_script: DesktopUi.Sdl3.FrameScript.contract(),
+        visible_runner: DesktopUi.Sdl3.VisibleRunner.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
         images: DesktopUi.Sdl3.Images.contract(),
+        run_execution: DesktopUi.Tooling.run_backend_summary(capabilities),
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
         renderer_completeness: :first_presented_frames
       },

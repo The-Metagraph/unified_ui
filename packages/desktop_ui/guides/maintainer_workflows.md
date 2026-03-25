@@ -9,8 +9,12 @@ mix test
 mix desktop_ui.inspect --format catalog
 mix desktop_ui.inspect native_styled_review --format diagnostics
 mix desktop_ui.inspect native_foundational --format host
+mix desktop_ui.build_host --dry-run
+mix desktop_ui.build_host
 mix desktop_ui.run --format catalog
 mix desktop_ui.run native_foundational --format summary
+mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000
+mix desktop_ui.run native_foundational --backend fallback
 mix desktop_ui.validate
 mix desktop_ui.validate --format report
 mix desktop_ui.validate --strict
@@ -40,15 +44,17 @@ for day-to-day maintenance.
 
 ## Host Execution Notes
 
-- `mix desktop_ui.run` is the package-local entrypoint for the host-backed SDL3
-  execution seam.
-- `mix desktop_ui.inspect ... --format host` reports the same host-backed
-  execution path from the inspection surface.
-- the current host path validates protocol framing, boot/frame acknowledgements,
-  text/image resource preparation, and event round-trips without requiring a
-  separately installed SDL3 runtime on the maintainer machine.
-- placeholder drawing is still explicit; host execution coverage should not be
-  interpreted as full native widget-complete rendering.
+- `mix desktop_ui.run` now chooses between the compiled visible SDL3 runner and
+  the explicit Elixir-host fallback.
+- `mix desktop_ui.build_host --dry-run` is the fastest way to see whether the
+  current machine can compile and run the native host.
+- `mix desktop_ui.inspect ... --format host` still reports the protocol-host
+  execution seam directly.
+- text and image support remain bounded when SDL3 companion libraries are
+  missing; the run and validation surfaces report that state explicitly.
+- placeholder drawing is still explicit; visible SDL3 execution means real
+  native windows and frames are shown, not that every widget is already
+  widget-complete.
 
 ## Evolution Guardrails
 

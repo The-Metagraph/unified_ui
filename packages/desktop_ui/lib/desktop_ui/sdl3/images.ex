@@ -3,6 +3,8 @@ defmodule DesktopUi.Sdl3.Images do
   SDL_image-first image resource seam for the SDL3 adapter boundary.
   """
 
+  alias DesktopUi.Sdl3.Capabilities
+
   @spec contract() :: map()
   def contract do
     %{
@@ -15,6 +17,20 @@ defmodule DesktopUi.Sdl3.Images do
 
   @spec validation_state() :: atom()
   def validation_state, do: :image_resource_ready
+
+  @spec native_support(map()) :: map()
+  def native_support(capabilities \\ Capabilities.detect()) do
+    native_backend_ready? = get_in(capabilities, [:libraries, :sdl3_image, :available?]) || false
+
+    %{
+      library: :sdl3_image,
+      native_backend_ready?: native_backend_ready?,
+      active_mode:
+        if(native_backend_ready?, do: :native_companion_library, else: :raw_pixel_fallback),
+      fallback_mode: :raw_pixel_fallback,
+      requests_bounded_when_missing?: true
+    }
+  end
 
   @spec prepare(String.t(), keyword()) :: {:ok, map()} | {:error, map()}
   def prepare(source, opts \\ [])

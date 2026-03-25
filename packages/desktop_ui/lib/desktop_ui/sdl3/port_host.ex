@@ -6,15 +6,16 @@ defmodule DesktopUi.Sdl3.PortHost do
   @behaviour DesktopUi.Sdl3.Host
 
   alias DesktopUi.Runtime.Error
-  alias DesktopUi.Sdl3.Protocol
+  alias DesktopUi.Sdl3.{Capabilities, NativeBuild, Protocol}
 
-  @enforce_keys [:id, :port, :executable, :args, :protocol_version]
+  @enforce_keys [:id, :port, :executable, :args, :protocol_version, :backend]
   defstruct [
     :id,
     :port,
     :executable,
     :args,
     :protocol_version,
+    :backend,
     :cwd,
     :env,
     :last_exit_status,
@@ -33,7 +34,8 @@ defmodule DesktopUi.Sdl3.PortHost do
     %{
       transport: :port,
       framed_protocol: Protocol.contract().framing,
-      default_runner: :elixir_eval,
+      default_runner: :auto_detected,
+      supported_backends: [:compiled_sdl3_host, :elixir_host],
       crash_reporting: [:exit_status, :closed],
       liveness_states: [:running, :stopped, :crashed],
       version_negotiation: :explicit
@@ -46,6 +48,7 @@ defmodule DesktopUi.Sdl3.PortHost do
   @impl true
   def launch_spec(opts) do
     %{
+      backend: Keyword.get(opts, :backend, :custom),
       executable: Keyword.get(opts, :executable),
       args: List.wrap(Keyword.get(opts, :args, [])),
       cwd: Keyword.get(opts, :cd),
@@ -59,27 +62,85 @@ defmodule DesktopUi.Sdl3.PortHost do
   def default_launch_spec(opts \\ []) do
     package_root = Path.expand("../../..", __DIR__)
     code_paths = default_code_paths()
+    capabilities = Keyword.get(opts, :capabilities, Capabilities.detect())
+    requested_backend = Keyword.get(opts, :backend, :auto)
 
-    %{
-      executable: System.find_executable("elixir"),
-      args:
-        Enum.flat_map(code_paths, fn path -> ["-pa", path] end) ++
-          [
-            "--no-halt",
-            "-e",
-            "DesktopUi.Sdl3.NativeHost.main()"
-          ],
-      cd: Keyword.get(opts, :cd, package_root),
-      env: [],
-      transport: :port,
-      protocol_version: Keyword.get(opts, :protocol_version, hd(Protocol.supported_versions()))
-    }
+    cond do
+      requested_backend == :compiled_sdl3_host ->
+        %{
+          backend: :compiled_sdl3_host,
+          requested_backend: requested_backend,
+          executable: NativeBuild.executable_path(),
+          args: [],
+          cd: Keyword.get(opts, :cd, package_root),
+          env: [],
+          transport: :port,
+          protocol_version:
+            Keyword.get(opts, :protocol_version, hd(Protocol.supported_versions())),
+          launch_ready?: capabilities.build.launch_ready?,
+          capabilities: capabilities
+        }
+
+      capabilities.build.launch_ready? ->
+        %{
+          backend: :compiled_sdl3_host,
+          requested_backend: requested_backend,
+          executable: NativeBuild.executable_path(),
+          args: [],
+          cd: Keyword.get(opts, :cd, package_root),
+          env: [],
+          transport: :port,
+          protocol_version:
+            Keyword.get(opts, :protocol_version, hd(Protocol.supported_versions())),
+          launch_ready?: true,
+          capabilities: capabilities
+        }
+
+      true ->
+        %{
+          backend: :elixir_host,
+          requested_backend: requested_backend,
+          executable: System.find_executable("elixir"),
+          args:
+            Enum.flat_map(code_paths, fn path -> ["-pa", path] end) ++
+              [
+                "--no-halt",
+                "-e",
+                "DesktopUi.Sdl3.NativeHost.main()"
+              ],
+          cd: Keyword.get(opts, :cd, package_root),
+          env: [],
+          transport: :port,
+          protocol_version:
+            Keyword.get(opts, :protocol_version, hd(Protocol.supported_versions())),
+          launch_ready?: true,
+          capabilities: capabilities
+        }
+    end
   end
 
   @spec launch_default(keyword()) :: {:ok, t()} | {:error, Error.t()}
   def launch_default(opts \\ []) do
     spec = default_launch_spec(opts)
-    launch(executable: spec.executable, args: spec.args, cd: spec.cd, env: spec.env)
+
+    cond do
+      spec.backend == :compiled_sdl3_host and not spec.launch_ready? ->
+        {:error,
+         Error.new(
+           :compiled_native_host_not_launch_ready,
+           %{executable: spec.executable, capabilities: spec.capabilities},
+           :sdl3_port_host
+         )}
+
+      true ->
+        launch(
+          executable: spec.executable,
+          args: spec.args,
+          cd: spec.cd,
+          env: spec.env,
+          backend: spec.backend
+        )
+    end
   end
 
   @impl true
@@ -95,6 +156,7 @@ defmodule DesktopUi.Sdl3.PortHost do
          port: port,
          executable: executable,
          args: spec.args,
+         backend: spec.backend,
          cwd: spec.cwd,
          env: spec.env,
          protocol_version: spec.protocol_version
@@ -110,6 +172,7 @@ defmodule DesktopUi.Sdl3.PortHost do
       args: session.args,
       cwd: session.cwd,
       env: session.env,
+      backend: session.backend,
       transport: session.transport,
       protocol_version: session.protocol_version,
       supported_versions: Protocol.supported_versions(),
@@ -142,7 +205,8 @@ defmodule DesktopUi.Sdl3.PortHost do
   def recv_message(%__MODULE__{} = session, timeout) do
     case Protocol.next_message(session.buffer) do
       {:ok, message, rest} ->
-        {:ok, message, %{session | buffer: rest, messages_received: session.messages_received + 1}}
+        {:ok, message,
+         %{session | buffer: rest, messages_received: session.messages_received + 1}}
 
       :more ->
         receive_frame(session, timeout)
@@ -243,7 +307,13 @@ defmodule DesktopUi.Sdl3.PortHost do
     options = if spec.cwd, do: [{:cd, String.to_charlist(spec.cwd)} | options], else: options
 
     if spec.env != [] do
-      [{:env, Enum.map(spec.env, fn {key, value} -> {String.to_charlist(to_string(key)), String.to_charlist(to_string(value))} end)} | options]
+      [
+        {:env,
+         Enum.map(spec.env, fn {key, value} ->
+           {String.to_charlist(to_string(key)), String.to_charlist(to_string(value))}
+         end)}
+        | options
+      ]
     else
       options
     end

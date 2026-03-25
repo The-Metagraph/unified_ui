@@ -72,8 +72,11 @@ Package-local checks:
 - `mix test`
 - `mix desktop_ui.inspect --format catalog`
 - `mix desktop_ui.inspect native_styled_review --format diagnostics`
+- `mix desktop_ui.build_host --dry-run`
+- `mix desktop_ui.build_host`
 - `mix desktop_ui.run --format catalog`
 - `mix desktop_ui.run native_foundational --format summary`
+- `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000`
 - `mix desktop_ui.validate`
 - `mix desktop_ui.validate --format report`
 - `mix desktop_ui.validate --strict`
@@ -83,21 +86,30 @@ Workspace checks:
 - `mix spec.plancheck desktop_ui`
 - `mix spec.traceability.generate desktop_ui`
 
-## Host-Backed Execution Notes
+## SDL3 Native Execution Notes
 
-The current SDL3 execution path runs through a host-backed Elixir process that
-exercises the SDL3 adapter contract, frame protocol, resource requests, and
-event round-trips.
+`desktop_ui` now has two bounded execution paths:
 
-- no external SDL3 installation is required for the current placeholder-backed
-  host workflow
-- `mix desktop_ui.run` is the maintainer entrypoint for exercising the
-  executable host boundary
-- text and image resource requests, host diagnostics, and event round-trips
-  are visible through the run and inspect surfaces
-- actual native SDL3 drawing remains intentionally bounded and placeholder-led
-  until a later phase replaces the host skeleton with concrete SDL3 runtime
-  integration
+- compiled SDL3 visible-window execution through the native host executable
+- explicit Elixir-host fallback through the framed protocol seam
+
+Use these commands from `packages/desktop_ui`:
+
+- `mix desktop_ui.build_host --dry-run` to inspect compiler and SDL3 dependency state
+- `mix desktop_ui.build_host` to build the native executable when SDL3 is available
+- `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000` to prefer the real visible SDL3 window path
+- `mix desktop_ui.run native_foundational --backend fallback` to force the protocol fallback host
+
+The run surface reports:
+
+- whether the compiled visible runner is ready
+- whether protocol-style compiled launch is ready yet
+- whether text and image companion-library support is native-backed or falling back
+- whether the current execution used a real visible window or the bounded fallback host
+
+Text and image companion libraries remain optional in this phase. Missing
+`SDL3_ttf` or `SDL3_image` should produce explicit diagnostics and bounded
+fallback behavior, not hidden failure.
 
 ## Guides
 

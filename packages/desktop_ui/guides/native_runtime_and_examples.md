@@ -44,3 +44,18 @@ The maintained example set covers:
 
 Those examples are intended to stay useful for local package review, CI-facing
 validation, and release-readiness workflows.
+
+## Visible SDL3 Review Workflow
+
+When SDL3 is available locally, the maintained native and canonical examples
+can run through the compiled visible-window host:
+
+- `mix desktop_ui.build_host --dry-run`
+- `mix desktop_ui.build_host`
+- `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run canonical_foundational --backend compiled --linger-ms 3000`
+
+When SDL3 or its companion libraries are missing, `desktop_ui` keeps the run
+path reviewable by falling back explicitly to the Elixir-host protocol path.
+That fallback still exercises boot, frame, transport, and bounded resource
+contracts, but it does not overstate native visible completeness.
