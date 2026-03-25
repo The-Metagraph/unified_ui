@@ -26,10 +26,43 @@ defmodule DesktopUi.Inspect do
     }
   end
 
+  @spec host_execution(atom() | String.t()) :: {:ok, map()} | {:error, term()}
+  def host_execution(id) do
+    with {:ok, metadata} <- fetch_metadata(id),
+         {:ok, launched} <- launch_host(metadata),
+         host_status = DesktopUi.Sdl3.PortHost.status(launched.host),
+         {:ok, shutdown_ack, host} <- DesktopUi.Sdl3.App.shutdown_host(launched.host) do
+      {:ok,
+       %{
+         id: metadata.id,
+         metadata: metadata,
+         status: :ok,
+         host_status: host_status,
+         boot: launched.acknowledgement,
+         frame: launched.frame_acknowledgement,
+         shutdown: %{acknowledgement: shutdown_ack, final_state: host.state},
+         resource_contracts: %{
+           text: DesktopUi.Sdl3.Text.contract(),
+           images: DesktopUi.Sdl3.Images.contract()
+         },
+         event_contract: DesktopUi.Sdl3.Events.contract()
+       }}
+    end
+  end
+
   @spec render(atom() | String.t(), atom()) :: {:ok, String.t()} | {:error, term()}
   def render(id, format \\ :report) do
-    with {:ok, preview} <- preview(id) do
-      {:ok, format_preview(preview, format)}
+    case format do
+      :host ->
+        with {:ok, execution} <- host_execution(id) do
+          {:ok,
+           Kernel.inspect(execution, pretty: true, width: 100, limit: :infinity, sort_maps: true)}
+        end
+
+      _other ->
+        with {:ok, preview} <- preview(id) do
+          {:ok, format_preview(preview, format)}
+        end
     end
   end
 
@@ -94,6 +127,66 @@ defmodule DesktopUi.Inspect do
   defp preview_surface(%{category: :mixed, id: :styled_continuity_review}) do
     DesktopUi.Examples.styled_comparison()
   end
+
+  defp launch_host(%{category: :native, id: :native_foundational}) do
+    DesktopUi.Sdl3.App.launch_native_screen(
+      DesktopUi.Examples.native_foundational_screen(),
+      platform_target: :linux
+    )
+  end
+
+  defp launch_host(%{category: :native, id: :native_advanced_operations}) do
+    DesktopUi.Sdl3.App.launch_native_screen(
+      DesktopUi.Examples.native_advanced_operations_screen(),
+      platform_target: :linux
+    )
+  end
+
+  defp launch_host(%{category: :native, id: :native_transport_review}) do
+    DesktopUi.Sdl3.App.launch_native_screen(
+      DesktopUi.Examples.native_transport_review(),
+      platform_target: :linux
+    )
+  end
+
+  defp launch_host(%{category: :native, id: :native_styled_review}) do
+    DesktopUi.Sdl3.App.launch_native_screen(
+      DesktopUi.Examples.native_styled_review(),
+      platform_target: :linux,
+      theme: :high_contrast
+    )
+  end
+
+  defp launch_host(%{category: :canonical, id: :canonical_foundational}) do
+    DesktopUi.Sdl3.App.launch_iur_screen(
+      DesktopUi.Examples.canonical_foundational_screen(),
+      platform_target: :linux
+    )
+  end
+
+  defp launch_host(%{category: :canonical, id: :canonical_advanced_operations}) do
+    DesktopUi.Sdl3.App.launch_iur_screen(
+      DesktopUi.Examples.canonical_advanced_operations_screen(),
+      platform_target: :linux
+    )
+  end
+
+  defp launch_host(%{category: :canonical, id: :canonical_transport_review}) do
+    DesktopUi.Sdl3.App.launch_iur_screen(
+      DesktopUi.Examples.canonical_transport_review(),
+      platform_target: :linux
+    )
+  end
+
+  defp launch_host(%{category: :canonical, id: :canonical_styled_review}) do
+    DesktopUi.Sdl3.App.launch_iur_screen(
+      DesktopUi.Examples.canonical_styled_review(),
+      platform_target: :linux,
+      theme: :high_contrast
+    )
+  end
+
+  defp launch_host(%{category: :mixed}), do: {:error, :mixed_examples_do_not_boot_native_hosts}
 
   defp preview_native(screen, opts) do
     {:ok, state} = DesktopUi.Runtime.mount_native_screen(screen, opts)

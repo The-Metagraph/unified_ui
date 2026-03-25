@@ -155,7 +155,11 @@ defmodule DesktopUi.Sdl3.PortHost do
   @impl true
   def shutdown(%__MODULE__{} = session) do
     if alive?(session) do
-      Port.close(session.port)
+      try do
+        Port.close(session.port)
+      rescue
+        ArgumentError -> :ok
+      end
     end
 
     {:ok, %{session | state: :stopped}}

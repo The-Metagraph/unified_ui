@@ -5,10 +5,14 @@ defmodule DesktopUi.ToolingTest do
     assert {:ok, native_preview} = DesktopUi.Inspect.preview(:native_styled_review)
     assert {:ok, canonical_preview} = DesktopUi.Inspect.preview(:canonical_styled_review)
     assert {:ok, mixed_preview} = DesktopUi.Inspect.preview(:styled_continuity_review)
+    assert {:ok, host_execution} = DesktopUi.Inspect.host_execution(:native_foundational)
     assert {:ok, rendered_metadata} = DesktopUi.Inspect.render("native_styled_review", :metadata)
 
     assert {:ok, rendered_diagnostics} =
              DesktopUi.Inspect.render("styled_continuity_review", :diagnostics)
+
+    assert {:ok, rendered_host} =
+             DesktopUi.Inspect.render("native_foundational", :host)
 
     assert native_preview.metadata.category == :native
     assert native_preview.surface.runtime.theme == :high_contrast
@@ -16,8 +20,11 @@ defmodule DesktopUi.ToolingTest do
     assert canonical_preview.surface.runtime.theme == :high_contrast
     assert mixed_preview.metadata.category == :mixed
     assert mixed_preview.surface.parity.style_resolution_match?
+    assert host_execution.status == :ok
+    assert host_execution.frame.payload.presentation.presented_frame?
     assert rendered_metadata =~ ":native_styled_review"
     assert rendered_diagnostics =~ "tooling_workflows"
+    assert rendered_host =~ ":native_foundational"
   end
 
   test "validation workflows summarize coverage, runtime behavior, transport, artifacts, and release readiness" do
@@ -25,6 +32,7 @@ defmodule DesktopUi.ToolingTest do
     runtime = DesktopUi.Validate.runtime_behavior()
     transport = DesktopUi.Validate.transport_validation()
     artifacts = DesktopUi.Validate.artifact_validation()
+    host_execution = DesktopUi.Validate.host_execution_surface()
     tooling = DesktopUi.Validate.tooling_surface()
     sdl3_adapter = DesktopUi.Validate.sdl3_adapter_surface()
     docs = DesktopUi.Validate.documentation_surface()
@@ -36,6 +44,7 @@ defmodule DesktopUi.ToolingTest do
     assert runtime.status == :pass
     assert transport.status == :pass
     assert artifacts.status == :pass
+    assert host_execution.status == :pass
     assert sdl3_adapter.status == :pass
     assert tooling.status == :pass
     assert docs.status == :pass
@@ -50,12 +59,15 @@ defmodule DesktopUi.ToolingTest do
     assert strict_report.findings == []
     assert Enum.all?(summary_report.gates, &(&1.status == :pass))
     assert validation_report.release_readiness.status == :pass
+    assert validation_report.host_execution_surface.status == :pass
     assert validation_report.sdl3_adapter_surface.status == :pass
     assert validation_summary =~ "DesktopUi validation summary"
     assert validation_summary =~ "SDL3 adapter surface passing?: true"
+    assert validation_summary =~ "host execution surface passing?: true"
     assert validation_summary =~ "release ready?: true"
     assert validation_report.documentation_surface.status == :pass
     assert validation_report.traceability_alignment.status == :pass
+    assert "mix desktop_ui.run --format catalog" in DesktopUi.Tooling.mix_tasks()
     assert "mix spec.traceability.generate desktop_ui" in DesktopUi.Tooling.mix_tasks()
 
     assert Enum.any?(

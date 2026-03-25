@@ -72,6 +72,8 @@ Package-local checks:
 - `mix test`
 - `mix desktop_ui.inspect --format catalog`
 - `mix desktop_ui.inspect native_styled_review --format diagnostics`
+- `mix desktop_ui.run --format catalog`
+- `mix desktop_ui.run native_foundational --format summary`
 - `mix desktop_ui.validate`
 - `mix desktop_ui.validate --format report`
 - `mix desktop_ui.validate --strict`
@@ -80,6 +82,22 @@ Workspace checks:
 
 - `mix spec.plancheck desktop_ui`
 - `mix spec.traceability.generate desktop_ui`
+
+## Host-Backed Execution Notes
+
+The current SDL3 execution path runs through a host-backed Elixir process that
+exercises the SDL3 adapter contract, frame protocol, resource requests, and
+event round-trips.
+
+- no external SDL3 installation is required for the current placeholder-backed
+  host workflow
+- `mix desktop_ui.run` is the maintainer entrypoint for exercising the
+  executable host boundary
+- text and image resource requests, host diagnostics, and event round-trips
+  are visible through the run and inspect surfaces
+- actual native SDL3 drawing remains intentionally bounded and placeholder-led
+  until a later phase replaces the host skeleton with concrete SDL3 runtime
+  integration
 
 ## Guides
 

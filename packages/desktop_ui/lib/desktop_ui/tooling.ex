@@ -21,6 +21,7 @@ defmodule DesktopUi.Tooling do
       :package_checks,
       :example_review,
       :example_preview,
+      :host_execution_review,
       :reference_inspection,
       :runtime_review,
       :transport_review,
@@ -43,6 +44,7 @@ defmodule DesktopUi.Tooling do
       DesktopUi.Theme,
       DesktopUi.Inspection,
       DesktopUi.Inspect,
+      DesktopUi.Sdl3.App,
       DesktopUi.Validate,
       DesktopUi.Continuity,
       DesktopUi.Examples,
@@ -58,6 +60,8 @@ defmodule DesktopUi.Tooling do
       "mix test",
       "mix desktop_ui.inspect --format catalog",
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
+      "mix desktop_ui.run --format catalog",
+      "mix desktop_ui.run native_foundational --format summary",
       "mix desktop_ui.validate --strict",
       "mix spec.traceability.generate desktop_ui",
       "mix spec.plancheck desktop_ui"
@@ -70,6 +74,7 @@ defmodule DesktopUi.Tooling do
       workflows: workflows(),
       preview_surfaces: preview_surfaces(),
       runtime_validation: DesktopUi.Runtime.validation_state(),
+      host_execution_validation: DesktopUi.Validate.host_execution_surface().status,
       documentation_validation: DesktopUi.Validate.documentation_surface().status,
       traceability_validation: DesktopUi.Validate.traceability_alignment().status
     }
@@ -88,5 +93,28 @@ defmodule DesktopUi.Tooling do
   @spec validation_summary(map()) :: String.t()
   def validation_summary(report) when is_map(report) do
     DesktopUi.Validate.validation_summary(report)
+  end
+
+  @spec run_catalog() :: map()
+  def run_catalog do
+    %{
+      runnable_examples:
+        DesktopUi.Examples.catalog()
+        |> Enum.filter(&(&1.category in [:native, :canonical]))
+        |> Enum.map(& &1.id),
+      workflows: workflows(),
+      contracts: %{
+        host: DesktopUi.Sdl3.PortHost.contract(),
+        renderer: DesktopUi.Sdl3.Renderer.contract(),
+        text: DesktopUi.Sdl3.Text.contract(),
+        images: DesktopUi.Sdl3.Images.contract(),
+        events: DesktopUi.Sdl3.Events.contract()
+      }
+    }
+  end
+
+  @spec run_example(atom() | String.t()) :: {:ok, map()} | {:error, term()}
+  def run_example(id) do
+    DesktopUi.Inspect.host_execution(id)
   end
 end

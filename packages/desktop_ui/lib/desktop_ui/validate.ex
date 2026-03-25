@@ -203,9 +203,14 @@ defmodule DesktopUi.Validate do
         %{workflows: DesktopUi.Tooling.workflows()}
       ),
       check(
+        :host_execution_workflow_present,
+        :host_execution_review in DesktopUi.Tooling.workflows(),
+        %{workflows: DesktopUi.Tooling.workflows()}
+      ),
+      check(
         :mix_task_surface_present,
         Enum.all?(
-          ["mix desktop_ui.inspect", "mix desktop_ui.validate"],
+          ["mix desktop_ui.inspect", "mix desktop_ui.run", "mix desktop_ui.validate"],
           &Enum.any?(DesktopUi.Tooling.mix_tasks(), fn task -> String.starts_with?(task, &1) end)
         ),
         %{mix_tasks: DesktopUi.Tooling.mix_tasks()}
@@ -213,6 +218,44 @@ defmodule DesktopUi.Validate do
     ]
 
     report(:tooling_surface, checks)
+  end
+
+  @spec host_execution_surface() :: map()
+  def host_execution_surface do
+    native_launch = DesktopUi.Inspect.host_execution(:native_foundational)
+    canonical_launch = DesktopUi.Inspect.host_execution(:canonical_foundational)
+    text_contract = DesktopUi.Sdl3.Text.contract()
+    image_contract = DesktopUi.Sdl3.Images.contract()
+
+    checks = [
+      check(
+        :native_host_execution_ready,
+        host_execution_ok?(native_launch),
+        %{native: host_execution_details(native_launch)}
+      ),
+      check(
+        :canonical_host_execution_ready,
+        host_execution_ok?(canonical_launch),
+        %{canonical: host_execution_details(canonical_launch)}
+      ),
+      check(
+        :resource_contracts_report_cache_boundaries,
+        Enum.all?([text_contract, image_contract], &Map.get(&1, :host_caching, false)),
+        %{text: text_contract, images: image_contract}
+      ),
+      check(
+        :event_roundtrip_surface_present,
+        exported?(DesktopUi.Sdl3.App, :dispatch_native_events, 4) and
+          exported?(DesktopUi.Sdl3.App, :prepare_text_resource, 3) and
+          exported?(DesktopUi.Sdl3.App, :prepare_image_resource, 3),
+        %{
+          app_module: DesktopUi.Sdl3.App,
+          event_contract: DesktopUi.Sdl3.Events.contract()
+        }
+      )
+    ]
+
+    report(:host_execution_surface, checks)
   end
 
   @spec sdl3_adapter_surface() :: map()
@@ -373,6 +416,7 @@ defmodule DesktopUi.Validate do
       "  transport validation passing?: #{report.transport_validation.status == :pass}",
       "  artifact validation passing?: #{report.artifact_validation.status == :pass}",
       "  SDL3 adapter surface passing?: #{report.sdl3_adapter_surface.status == :pass}",
+      "  host execution surface passing?: #{report.host_execution_surface.status == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
       "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
       "  traceability alignment passing?: #{report.traceability_alignment.status == :pass}",
@@ -407,8 +451,13 @@ defmodule DesktopUi.Validate do
       ),
       gate(
         :sdl3_adapter_surface,
-        "Keep the SDL3 adapter seam explicit, discoverable, and bounded while native rendering remains skeletal.",
+        "Keep the SDL3 adapter seam explicit, discoverable, and bounded while native rendering remains host-backed and placeholder-drawn where necessary.",
         :sdl3_adapter_surface
+      ),
+      gate(
+        :host_execution_surface,
+        "Keep the host-backed execution path runnable, inspectable, and event/resource aware.",
+        :host_execution_surface
       ),
       gate(
         :tooling_surface,
@@ -503,6 +552,7 @@ defmodule DesktopUi.Validate do
       transport_validation: transport_validation(),
       artifact_validation: artifact_validation(),
       sdl3_adapter_surface: sdl3_adapter_surface(),
+      host_execution_surface: host_execution_surface(),
       tooling_surface: tooling_surface(),
       documentation_surface: documentation_surface(),
       traceability_alignment: traceability_alignment()
@@ -531,6 +581,14 @@ defmodule DesktopUi.Validate do
         |> Enum.sort()
     }
   end
+
+  defp host_execution_ok?({:ok, %{status: :ok, frame: %{payload: %{presentation: %{presented_frame?: true}}}}}),
+    do: true
+
+  defp host_execution_ok?(_result), do: false
+
+  defp host_execution_details({:ok, execution}), do: execution
+  defp host_execution_details({:error, reason}), do: %{error: reason}
 
   defp read_traceability_manifest(path) do
     with {:ok, body} <- File.read(path),

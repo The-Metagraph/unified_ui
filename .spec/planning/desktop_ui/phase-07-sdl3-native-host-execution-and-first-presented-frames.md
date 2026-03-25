@@ -33,7 +33,7 @@ Back to index: [README](./README.md)
   must produce real native windows, real frame presentation, and real event
   round-trips.
 
-[ ] 7 Phase 7 - SDL3 Native Host Execution and First Presented Frames
+[x] 7 Phase 7 - SDL3 Native Host Execution and First Presented Frames
   Introduce the first real executable SDL3-native runtime path for
   `desktop_ui` by adding a native host process, framed Elixir-to-native
   coordination, real native window ownership, real presented frames, and
@@ -125,45 +125,45 @@ Back to index: [README](./README.md)
       [x] 7.4.2.2 Subtask - Reuse `DesktopUi.Sdl3.Events` and `DesktopUi.Transport` semantics so native host execution does not invent a parallel interaction model.
       [x] 7.4.2.3 Subtask - Validate end-to-end event round-trips for local handling, boundary-worthy signals, and multiwindow focus transitions.
 
-  [ ] 7.5 Section - Tooling, Diagnostics, and Local Execution Workflow
+  [x] 7.5 Section - Tooling, Diagnostics, and Local Execution Workflow
     Make the real native execution path visible and usable for maintainers so
     SDL3 execution can be inspected and validated as part of daily package
     development.
 
-    [ ] 7.5.1 Task - Extend package tooling for executable SDL3 runs
+    [x] 7.5.1 Task - Extend package tooling for executable SDL3 runs
       Add maintainer workflows that can launch, inspect, and validate the real
       host-backed execution path rather than only semantic helper surfaces.
 
-      [ ] 7.5.1.1 Subtask - Introduce a package-local run or preview workflow that boots the SDL3 host for a maintained native or canonical example.
-      [ ] 7.5.1.2 Subtask - Extend inspection and validation helpers to report host readiness, protocol state, presented-frame diagnostics, and resource status.
-      [ ] 7.5.1.3 Subtask - Document the local prerequisites for building and running the SDL3 host on supported development targets.
+      [x] 7.5.1.1 Subtask - Introduce a package-local run or preview workflow that boots the SDL3 host for a maintained native or canonical example.
+      [x] 7.5.1.2 Subtask - Extend inspection and validation helpers to report host readiness, protocol state, presented-frame diagnostics, and resource status.
+      [x] 7.5.1.3 Subtask - Document the local prerequisites for building and running the SDL3 host on supported development targets.
 
-    [ ] 7.5.2 Task - Add bounded diagnostics and fallback rules for real execution
+    [x] 7.5.2 Task - Add bounded diagnostics and fallback rules for real execution
       Keep the first executable path trustworthy by making host/runtime
       failures easy to diagnose and by being explicit about what remains
       placeholder-level.
 
-      [ ] 7.5.2.1 Subtask - Surface clear diagnostics for host boot failure, protocol mismatch, missing SDL3 runtime resources, and failed frame presentation.
-      [ ] 7.5.2.2 Subtask - Distinguish between real native execution coverage and still-placeholder widget rendering so tooling does not overstate completeness.
-      [ ] 7.5.2.3 Subtask - Keep backend-evolution rules explicit so later SDL_GPU exploration remains subordinate to the same execution, protocol, and runtime contract.
+      [x] 7.5.2.1 Subtask - Surface clear diagnostics for host boot failure, protocol mismatch, missing SDL3 runtime resources, and failed frame presentation.
+      [x] 7.5.2.2 Subtask - Distinguish between real native execution coverage and still-placeholder widget rendering so tooling does not overstate completeness.
+      [x] 7.5.2.3 Subtask - Keep backend-evolution rules explicit so later SDL_GPU exploration remains subordinate to the same execution, protocol, and runtime contract.
 
-  [ ] 7.6 Section - Phase 7 Integration Tests
+  [x] 7.6 Section - Phase 7 Integration Tests
     Validate the first executable SDL3 runtime path end to end so maintainers
     can trust that `desktop_ui` now owns a real native execution boundary and
     not only a semantic adapter skeleton.
 
-    [ ] 7.6.1 Task - Native host execution integration scenarios
+    [x] 7.6.1 Task - Native host execution integration scenarios
       Verify the host-backed runtime can boot, present frames, and process
       events without breaking the retained package model.
 
-      [ ] 7.6.1.1 Subtask - Verify a maintained native example can boot through the SDL3 host, create a real native window, and present at least one visible frame.
-      [ ] 7.6.1.2 Subtask - Verify a maintained canonical `UnifiedIUR` example can follow the same path through the renderer, host protocol, and presented-frame loop.
-      [ ] 7.6.1.3 Subtask - Verify native input events can round-trip from SDL3 into Elixir runtime handling and, when appropriate, back out through canonical boundary translation.
+      [x] 7.6.1.1 Subtask - Verify a maintained native example can boot through the SDL3 host, create a real native window, and present at least one visible frame.
+      [x] 7.6.1.2 Subtask - Verify a maintained canonical `UnifiedIUR` example can follow the same path through the renderer, host protocol, and presented-frame loop.
+      [x] 7.6.1.3 Subtask - Verify native input events can round-trip from SDL3 into Elixir runtime handling and, when appropriate, back out through canonical boundary translation.
 
-    [ ] 7.6.2 Task - Diagnostics and execution-boundary integration scenarios
+    [x] 7.6.2 Task - Diagnostics and execution-boundary integration scenarios
       Verify host/process failures remain bounded and reviewable instead of
       destabilizing the package runtime model.
 
-      [ ] 7.6.2.1 Subtask - Verify host boot errors, protocol mismatches, and missing resource dependencies fail with deterministic diagnostics.
-      [ ] 7.6.2.2 Subtask - Verify inspection and validation workflows distinguish executable-frame coverage from placeholder or unimplemented widget rendering.
-      [ ] 7.6.2.3 Subtask - Verify the executable SDL3 host path preserves existing package invariants around logical units, transport meaning, and shared native-vs-canonical runtime behavior.
+      [x] 7.6.2.1 Subtask - Verify host boot errors, protocol mismatches, and missing resource dependencies fail with deterministic diagnostics.
+      [x] 7.6.2.2 Subtask - Verify inspection and validation workflows distinguish executable-frame coverage from placeholder or unimplemented widget rendering.
+      [x] 7.6.2.3 Subtask - Verify the executable SDL3 host path preserves existing package invariants around logical units, transport meaning, and shared native-vs-canonical runtime behavior.

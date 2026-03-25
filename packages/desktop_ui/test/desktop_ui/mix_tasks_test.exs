@@ -3,7 +3,7 @@ defmodule DesktopUi.MixTasksTest do
 
   import ExUnit.CaptureIO
 
-  @tasks ["app.start", "desktop_ui.inspect", "desktop_ui.validate"]
+  @tasks ["app.start", "desktop_ui.inspect", "desktop_ui.run", "desktop_ui.validate"]
 
   setup do
     Enum.each(@tasks, &Mix.Task.reenable/1)
@@ -21,9 +21,31 @@ defmodule DesktopUi.MixTasksTest do
         run_task("desktop_ui.inspect", ["styled_continuity_review", "--format", "comparison"])
       end)
 
+    host_output =
+      capture_io(fn ->
+        run_task("desktop_ui.inspect", ["native_foundational", "--format", "host"])
+      end)
+
     assert catalog_output =~ "native_styled_review"
     assert report_output =~ "styled_continuity_review"
     assert report_output =~ "parity"
+    assert host_output =~ ":native_foundational"
+  end
+
+  test "run task prints catalog and host execution output" do
+    catalog_output =
+      capture_io(fn ->
+        run_task("desktop_ui.run", ["--format", "catalog"])
+      end)
+
+    summary_output =
+      capture_io(fn ->
+        run_task("desktop_ui.run", ["native_foundational", "--format", "summary"])
+      end)
+
+    assert catalog_output =~ "runnable_examples"
+    assert summary_output =~ "DesktopUi host execution summary"
+    assert summary_output =~ "presented frame?: true"
   end
 
   test "validate task prints summary and supports strict mode" do
@@ -38,6 +60,7 @@ defmodule DesktopUi.MixTasksTest do
       end)
 
     assert summary_output =~ "DesktopUi validation summary"
+    assert summary_output =~ "host execution surface passing?: true"
     assert strict_output =~ "release ready?: true"
   end
 
