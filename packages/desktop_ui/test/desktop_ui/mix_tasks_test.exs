@@ -6,6 +6,7 @@ defmodule DesktopUi.MixTasksTest do
   @tasks [
     "app.start",
     "desktop_ui.build",
+    "desktop_ui.package",
     "desktop_ui.inspect",
     "desktop_ui.run",
     "desktop_ui.build_host",
@@ -74,6 +75,17 @@ defmodule DesktopUi.MixTasksTest do
 
     assert dry_run_output =~ "DesktopUi build summary"
     assert dry_run_output =~ "bundle mode:"
+  end
+
+  test "package task prints dry-run packaging diagnostics" do
+    dry_run_output =
+      capture_io(fn ->
+        run_task("desktop_ui.package", ["--target", "linux", "--dry-run"])
+      end)
+
+    assert dry_run_output =~ "DesktopUi package summary"
+    assert dry_run_output =~ "archive path:"
+    assert dry_run_output =~ "warnings:"
   end
 
   test "validate task prints summary and supports strict mode" do

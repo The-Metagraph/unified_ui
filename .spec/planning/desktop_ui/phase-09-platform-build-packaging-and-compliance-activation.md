@@ -43,18 +43,18 @@ Back to index: [README](./README.md)
       [x] 9.1.1.2 Subtask - Add `mix desktop_ui.build --target windows|macos|linux [--dry-run]` as the maintainer entrypoint for deterministic target staging.
       [x] 9.1.1.3 Subtask - Keep staged outputs explicit about whether they include a compiled SDL3 host or a bounded review-only fallback bundle.
 
-  [ ] 9.2 Section - Packaging Workflows and Artifact Diagnostics
+  [x] 9.2 Section - Packaging Workflows and Artifact Diagnostics
     Extend target staging into repeatable packaging workflows so maintainers can
     create reviewable desktop artifacts and see which parts of the package are
     actually runnable.
 
-    [ ] 9.2.1 Task - Implement package-local packaging surfaces
+    [x] 9.2.1 Task - Implement package-local packaging surfaces
       Create packaging manifests and artifact outputs that follow the bounded
       platform workflow policy already defined in `DesktopUi.Artifacts`.
 
-      [ ] 9.2.1.1 Subtask - Add a `DesktopUi.Package` surface that turns staged target outputs into archive or bundle artifacts per platform.
-      [ ] 9.2.1.2 Subtask - Add `mix desktop_ui.package --target windows|macos|linux [--dry-run]` for reviewable packaging workflows.
-      [ ] 9.2.1.3 Subtask - Surface archive paths, bundle contents, compiled-host presence, and fallback-only warnings through inspection, reference, and validation helpers.
+      [x] 9.2.1.1 Subtask - Add a `DesktopUi.Package` surface that turns staged target outputs into archive or bundle artifacts per platform.
+      [x] 9.2.1.2 Subtask - Add `mix desktop_ui.package --target windows|macos|linux [--dry-run]` for reviewable packaging workflows.
+      [x] 9.2.1.3 Subtask - Surface archive paths, bundle contents, compiled-host presence, and fallback-only warnings through inspection, reference, and validation helpers.
 
   [ ] 9.3 Section - DesktopUi Conformance Activation
     Onboard `desktop_ui` into the package-scoped compliance system so its plan,

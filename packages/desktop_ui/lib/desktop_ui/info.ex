@@ -70,6 +70,11 @@ defmodule DesktopUi.Info do
         contract: DesktopUi.Build.contract(),
         targets: DesktopUi.Build.targets()
       },
+      packaging: %{
+        contract: DesktopUi.Package.contract(),
+        targets: DesktopUi.Package.targets(),
+        validation_state: DesktopUi.Package.validation_state()
+      },
       widgets: %{
         families: DesktopUi.Widgets.families(),
         kinds: DesktopUi.Widgets.kinds(),

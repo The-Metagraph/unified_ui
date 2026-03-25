@@ -97,6 +97,14 @@ defmodule DesktopUi.Reference do
         targets: DesktopUi.Build.targets(),
         target_builds: Enum.map(DesktopUi.Build.targets(), &DesktopUi.Build.build_plan(&1))
       },
+      packaging: %{
+        contract: DesktopUi.Package.contract(),
+        targets: DesktopUi.Package.targets(),
+        diagnostics: DesktopUi.Package.diagnostics(),
+        target_packages:
+          Enum.map(DesktopUi.Package.targets(), &DesktopUi.Package.package_plan(&1)),
+        validation_state: DesktopUi.Package.validation_state()
+      },
       platform: %{
         targets: DesktopUi.Platform.targets(),
         modules: DesktopUi.Platform.modules(),

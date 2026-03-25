@@ -9,6 +9,10 @@ mix test
 mix desktop_ui.inspect --format catalog
 mix desktop_ui.inspect native_styled_review --format diagnostics
 mix desktop_ui.inspect native_foundational --format host
+mix desktop_ui.build --target linux --dry-run
+mix desktop_ui.build --target linux
+mix desktop_ui.package --target linux --dry-run
+mix desktop_ui.package --target linux
 mix desktop_ui.build_host --dry-run
 mix desktop_ui.build_host
 mix desktop_ui.run --format catalog
@@ -36,6 +40,7 @@ Useful helper surfaces while working:
 - `DesktopUi.Reference.style_summary/0`
 - `DesktopUi.Reference.artifact_summary/0`
 - `DesktopUi.Inspect.host_execution/1`
+- `DesktopUi.Package.diagnostics/0`
 - `DesktopUi.Tooling.run_catalog/0`
 - `DesktopUi.Validate.validation_report/0`
 
@@ -46,6 +51,10 @@ for day-to-day maintenance.
 
 - `mix desktop_ui.run` now chooses between the compiled visible SDL3 runner and
   the explicit Elixir-host fallback.
+- `mix desktop_ui.build` stages a per-target reviewable build directory before
+  packaging.
+- `mix desktop_ui.package` turns the staged target output into an archive or
+  bundle surface while keeping fallback-only warnings explicit.
 - `mix desktop_ui.build_host --dry-run` is the fastest way to see whether the
   current machine can compile and run the native host.
 - `mix desktop_ui.inspect ... --format host` still reports the protocol-host

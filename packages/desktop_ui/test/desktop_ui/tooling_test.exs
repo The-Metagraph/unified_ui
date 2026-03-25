@@ -74,7 +74,14 @@ defmodule DesktopUi.ToolingTest do
     assert validation_report.documentation_surface.status == :pass
     assert validation_report.traceability_alignment.status == :pass
     assert DesktopUi.Tooling.run_catalog().execution.fallback_backend == :elixir_host
+
+    assert Enum.any?(
+             DesktopUi.Tooling.run_catalog().execution.target_packages,
+             &(&1.target == :linux)
+           )
+
     assert "mix desktop_ui.run --format catalog" in DesktopUi.Tooling.mix_tasks()
+    assert "mix desktop_ui.package --target linux --dry-run" in DesktopUi.Tooling.mix_tasks()
     assert "mix desktop_ui.build_host" in DesktopUi.Tooling.mix_tasks()
     assert "mix spec.traceability.generate desktop_ui" in DesktopUi.Tooling.mix_tasks()
 

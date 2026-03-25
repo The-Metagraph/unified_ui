@@ -14,6 +14,7 @@ defmodule DesktopUi.Inspection do
       :platform_profiles,
       :continuity_contract,
       :shared_runtime_contract,
+      :packaging_contract,
       :sdl3_adapter_surface,
       :platform_contract,
       :transport_contract,
@@ -61,6 +62,12 @@ defmodule DesktopUi.Inspection do
         contract: DesktopUi.Build.contract(),
         targets: DesktopUi.Build.targets(),
         validation_state: DesktopUi.Build.validation_state()
+      },
+      packaging: %{
+        contract: DesktopUi.Package.contract(),
+        targets: DesktopUi.Package.targets(),
+        diagnostics: DesktopUi.Package.diagnostics(),
+        validation_state: DesktopUi.Package.validation_state()
       },
       transport: transport_contract(),
       platform_profiles: platform_profiles(),
@@ -200,6 +207,7 @@ defmodule DesktopUi.Inspection do
       renderer: DesktopUi.Renderer.validation_state(),
       transport: DesktopUi.Transport.validation_state(),
       artifacts: DesktopUi.Artifacts.validation_state(),
+      packaging: DesktopUi.Package.validation_state(),
       sdl3: DesktopUi.Sdl3.validation_state()
     }
   end

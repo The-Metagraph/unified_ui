@@ -23,6 +23,7 @@ defmodule DesktopUi.Tooling do
       :example_preview,
       :host_execution_review,
       :native_build_review,
+      :artifact_packaging_review,
       :reference_inspection,
       :runtime_review,
       :transport_review,
@@ -49,7 +50,8 @@ defmodule DesktopUi.Tooling do
       DesktopUi.Validate,
       DesktopUi.Continuity,
       DesktopUi.Examples,
-      DesktopUi.Artifacts
+      DesktopUi.Artifacts,
+      DesktopUi.Package
     ]
   end
 
@@ -63,6 +65,8 @@ defmodule DesktopUi.Tooling do
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
       "mix desktop_ui.build --target linux --dry-run",
       "mix desktop_ui.build --target linux",
+      "mix desktop_ui.package --target linux --dry-run",
+      "mix desktop_ui.package --target linux",
       "mix desktop_ui.build_host --dry-run",
       "mix desktop_ui.build_host",
       "mix desktop_ui.run --format catalog",
@@ -115,6 +119,7 @@ defmodule DesktopUi.Tooling do
       execution: run_backend_summary(capabilities),
       contracts: %{
         build: DesktopUi.Build.contract(),
+        package: DesktopUi.Package.contract(),
         host: DesktopUi.Sdl3.PortHost.contract(),
         native_build: DesktopUi.Sdl3.NativeBuild.contract(),
         capabilities: capabilities,
@@ -147,6 +152,11 @@ defmodule DesktopUi.Tooling do
         Enum.map(
           DesktopUi.Build.targets(),
           &DesktopUi.Build.build_plan(&1, capabilities: capabilities)
+        ),
+      target_packages:
+        Enum.map(
+          DesktopUi.Package.targets(),
+          &DesktopUi.Package.package_plan(&1, capabilities: capabilities)
         )
     }
   end
