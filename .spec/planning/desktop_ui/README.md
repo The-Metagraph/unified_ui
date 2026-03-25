@@ -31,6 +31,7 @@ The plan aligns to:
 4. [Phase 4 - Canonical Boundary Transport and Desktop Event Translation](./phase-04-canonical-boundary-transport-and-desktop-event-translation.md): implement canonical `Jido.Signal` and CloudEvents-compatible boundary translation for native desktop and IUR-rendered flows.
 5. [Phase 5 - Native Styling, Platform Integration, and Artifact Workflows](./phase-05-native-styling-platform-integration-and-artifact-workflows.md): implement native theming and styling, bounded platform-specific runtime integration, and explicit Windows, macOS, and Linux artifact workflows.
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows.
+7. [Phase 7 - SDL3 Native Host Execution and First Presented Frames](./phase-07-sdl3-native-host-execution-and-first-presented-frames.md): implement the first real executable SDL3 host boundary, framed Elixir-to-native protocol, real window and frame presentation ownership, and event/resource round-trips that move `desktop_ui` from semantic scaffolding to actual native execution.
 
 ## Supporting Docs
 - [Spec Traceability Manifest](./spec-traceability.json): authoritative machine-readable mapping from applicable requirements into this plan.
