@@ -25,7 +25,7 @@ Back to index: [README](./README.md)
 - Windows, macOS, and Linux remain first-class targets even when their artifact
   staging details diverge.
 
-[ ] 9 Phase 9 - Platform Build, Packaging, and Compliance Activation
+[x] 9 Phase 9 - Platform Build, Packaging, and Compliance Activation
   Add the first repeatable target build and packaging workflows for
   `desktop_ui`, expose the resulting artifact and readiness diagnostics through
   maintainer tooling, and onboard the package into machine-checked conformance.
@@ -69,14 +69,14 @@ Back to index: [README](./README.md)
       [x] 9.3.1.2 Subtask - Update root compliance docs and tests so `mix spec.compliance desktop_ui` is a supported package workflow.
       [x] 9.3.1.3 Subtask - Choose an explicit CI enforcement mode for `desktop_ui` based on the evidence added in this phase.
 
-  [ ] 9.4 Section - Phase 9 Integration Tests
+  [x] 9.4 Section - Phase 9 Integration Tests
     Validate target staging, packaging, and package-scoped compliance end to
     end without requiring SDL3 to be installed on every CI machine.
 
-    [ ] 9.4.1 Task - Build, packaging, and compliance integration scenarios
+    [x] 9.4.1 Task - Build, packaging, and compliance integration scenarios
       Verify the new task surfaces and conformance layer stay deterministic
       across SDL3-ready and SDL3-less environments.
 
-      [ ] 9.4.1.1 Subtask - Verify build staging distinguishes compiled-host-ready bundles from fallback-review bundles for each target.
-      [ ] 9.4.1.2 Subtask - Verify packaging commands emit deterministic artifact diagnostics and output paths for Windows, macOS, and Linux.
-      [ ] 9.4.1.3 Subtask - Verify `mix spec.compliance desktop_ui` and changed-package compliance detection report the package correctly.
+      [x] 9.4.1.1 Subtask - Verify build staging distinguishes compiled-host-ready bundles from fallback-review bundles for each target.
+      [x] 9.4.1.2 Subtask - Verify packaging commands emit deterministic artifact diagnostics and output paths for Windows, macOS, and Linux.
+      [x] 9.4.1.3 Subtask - Verify `mix spec.compliance desktop_ui` and changed-package compliance detection report the package correctly.

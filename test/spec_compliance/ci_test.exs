@@ -144,4 +144,17 @@ defmodule Unified.SpecCompliance.CITest do
 
     assert affected == ["unified_ui"]
   end
+
+  @tag timeout: 180_000
+  test "live desktop_ui package changes are detected and reported by compliance ci" do
+    report =
+      Unified.SpecCompliance.ci(changed_file: "packages/desktop_ui/lib/desktop_ui/build.ex")
+
+    assert report.status == :pass
+    assert report.summary.affected_packages == 1
+    assert report.summary.required_failures == 0
+    assert report.summary.warn_failures == 0
+    assert Enum.map(report.packages, & &1.package) == ["desktop_ui"]
+    assert hd(report.packages).ci_enforcement == "required"
+  end
 end
