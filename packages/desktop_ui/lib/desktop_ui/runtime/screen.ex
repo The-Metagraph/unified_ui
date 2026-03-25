@@ -49,7 +49,7 @@ defmodule DesktopUi.Runtime.Screen do
         shared_runtime: true,
         direct_native: source_kind == :native,
         canonical_input: source_kind == :canonical,
-        runtime_foundation: :sdl2,
+        runtime_foundation: :sdl3,
         theme: theme
       },
       composition: %{

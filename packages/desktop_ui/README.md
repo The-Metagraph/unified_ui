@@ -2,7 +2,7 @@
 
 `desktop_ui` is the desktop-target runtime library for the unified ecosystem.
 It supports both direct-native desktop screens and canonical `UnifiedIUR`
-rendering through one shared SDL2-oriented runtime boundary.
+rendering through one shared SDL3-oriented runtime boundary.
 
 ## Main Surfaces
 

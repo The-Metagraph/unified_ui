@@ -1,6 +1,6 @@
 defmodule DesktopUi.Runtime.Redraw do
   @moduledoc """
-  Redraw coordination scaffold for the shared SDL2 runtime loop.
+  Redraw coordination scaffold for the shared SDL3 runtime loop.
   """
 
   @spec scaffold() :: map()

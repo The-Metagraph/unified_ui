@@ -8,6 +8,10 @@ defmodule DesktopUi.ReferenceTest do
     assert reference.widgets.validation_state.direct_native_scaffold == :ready
     assert reference.widgets.registration_model.direct_native_only
     assert reference.runtime.validation_state == :runtime_backbone_ready
+    assert reference.sdl3.foundation.runtime_foundation == :sdl3
+    assert reference.sdl3.renderer.first_backend == :sdl_renderer
+    assert reference.sdl3.renderer.future_backend == :sdl_gpu
+    assert reference.sdl3.renderer_completeness == :skeleton
     assert reference.platform.validation_state == :platform_adapter_ready
     assert reference.layout.validation_state.advanced_display_systems == :ready
     assert reference.layer.validation_state.multiwindow_coordination == :ready
@@ -54,14 +58,19 @@ defmodule DesktopUi.ReferenceTest do
              DesktopUi.Transport.Error
            ]
 
-    assert reference.inspection.package_overview.runtime_foundation == :sdl2
+    assert reference.inspection.package_overview.runtime_foundation == :sdl3
+    assert reference.inspection.sdl3_adapter_surface.foundation.runtime_foundation == :sdl3
+    assert reference.inspection.sdl3_adapter_surface.validation_state.adapter == :app_handoff_ready
     assert reference.inspection.shared_runtime_contract.direct_native_and_canonical_share_runtime
+    assert reference.inspection.shared_runtime_contract.lifecycle_model == :callback_oriented
     assert reference.inspection.transport_contract.no_platform_leakage_guarantee
     assert reference.inspection.layering_contract.multiwindow_runtime
     assert reference.inspection.validation_surface.widgets.focus_metadata == :ready
     assert reference.responsibilities.bounded_platform_variation
 
     assert summary.package == :desktop_ui
+    assert summary.sdl3.foundation.runtime_foundation == :sdl3
+    assert summary.sdl3.renderer_completeness == :skeleton
     assert :window in summary.widgets.families
     assert :window in summary.widgets.kinds
     assert :viewport in summary.layout.kinds

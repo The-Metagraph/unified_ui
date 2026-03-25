@@ -26,6 +26,7 @@ defmodule DesktopUi.ToolingTest do
     transport = DesktopUi.Validate.transport_validation()
     artifacts = DesktopUi.Validate.artifact_validation()
     tooling = DesktopUi.Validate.tooling_surface()
+    sdl3_adapter = DesktopUi.Validate.sdl3_adapter_surface()
     docs = DesktopUi.Validate.documentation_surface()
     traceability = DesktopUi.Validate.traceability_alignment()
     validation_report = DesktopUi.Validate.validation_report()
@@ -35,6 +36,7 @@ defmodule DesktopUi.ToolingTest do
     assert runtime.status == :pass
     assert transport.status == :pass
     assert artifacts.status == :pass
+    assert sdl3_adapter.status == :pass
     assert tooling.status == :pass
     assert docs.status == :pass
     assert traceability.status == :pass
@@ -48,7 +50,9 @@ defmodule DesktopUi.ToolingTest do
     assert strict_report.findings == []
     assert Enum.all?(summary_report.gates, &(&1.status == :pass))
     assert validation_report.release_readiness.status == :pass
+    assert validation_report.sdl3_adapter_surface.status == :pass
     assert validation_summary =~ "DesktopUi validation summary"
+    assert validation_summary =~ "SDL3 adapter surface passing?: true"
     assert validation_summary =~ "release ready?: true"
     assert validation_report.documentation_surface.status == :pass
     assert validation_report.traceability_alignment.status == :pass
@@ -56,7 +60,7 @@ defmodule DesktopUi.ToolingTest do
 
     assert Enum.any?(
              DesktopUi.Validate.evolution_rules(),
-             &(&1.id == :desktop_ui_not_dsl_or_iur_owner)
+             &(&1.id == :sdl3_renderer_first_backend)
            )
   end
 end

@@ -1,6 +1,6 @@
 defmodule DesktopUi.Runtime.Dispatch do
   @moduledoc """
-  Input dispatch scaffold for the shared SDL2 runtime loop.
+  Input dispatch scaffold for the shared SDL3 runtime loop.
   """
 
   @spec scaffold() :: map()

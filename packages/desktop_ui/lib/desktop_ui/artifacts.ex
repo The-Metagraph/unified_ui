@@ -8,19 +8,19 @@ defmodule DesktopUi.Artifacts do
       build: [:fetch_deps, :compile_release, :assemble_sdl_runtime, :stage_windows_assets],
       packaging: [:zip_archive, :msi_installer],
       artifact_types: [:portable_archive, :installer],
-      runtime_contract: %{foundation: :sdl2, semantics: :shared}
+      runtime_contract: %{foundation: :sdl3, semantics: :shared}
     },
     macos: %{
       build: [:fetch_deps, :compile_release, :assemble_sdl_runtime, :stage_app_bundle],
       packaging: [:app_bundle, :signed_zip],
       artifact_types: [:app_bundle, :archive],
-      runtime_contract: %{foundation: :sdl2, semantics: :shared}
+      runtime_contract: %{foundation: :sdl3, semantics: :shared}
     },
     linux: %{
       build: [:fetch_deps, :compile_release, :assemble_sdl_runtime, :stage_desktop_assets],
       packaging: [:tar_archive, :appimage_like_bundle],
       artifact_types: [:archive, :desktop_bundle],
-      runtime_contract: %{foundation: :sdl2, semantics: :shared}
+      runtime_contract: %{foundation: :sdl3, semantics: :shared}
     }
   }
 
@@ -65,7 +65,7 @@ defmodule DesktopUi.Artifacts do
       boundary_policy: boundary_policy(),
       invalid_targets:
         target_platforms()
-        |> Enum.reject(&(workflow(&1).runtime_contract.foundation == :sdl2))
+        |> Enum.reject(&(workflow(&1).runtime_contract.foundation == :sdl3))
     }
   end
 

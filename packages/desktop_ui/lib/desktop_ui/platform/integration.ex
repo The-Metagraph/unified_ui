@@ -40,7 +40,7 @@ defmodule DesktopUi.Platform.Integration do
 
     %{
       target: target,
-      shared_runtime: profile.runtime_foundation == :sdl2,
+      shared_runtime: profile.runtime_foundation == :sdl3,
       shared_renderer: Enum.sort(profile.shared_semantics) == Enum.sort(@shared_semantics),
       bounded_variation_only:
         Enum.sort(profile.allowed_variation) == Enum.sort(@allowed_variation)

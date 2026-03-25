@@ -21,6 +21,7 @@ defmodule DesktopUi.Validate do
     ".spec/specs/desktop_ui/structure.spec.md",
     ".spec/specs/desktop_ui/native_widgets.spec.md",
     ".spec/specs/desktop_ui/runtime.spec.md",
+    ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
     ".spec/specs/desktop_ui/iur_renderer.spec.md",
     ".spec/specs/desktop_ui/transport.spec.md",
     ".spec/specs/desktop_ui/platform_artifacts.spec.md",
@@ -38,6 +39,7 @@ defmodule DesktopUi.Validate do
     ".spec/specs/desktop_ui/structure.spec.md",
     ".spec/specs/desktop_ui/native_widgets.spec.md",
     ".spec/specs/desktop_ui/runtime.spec.md",
+    ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
     ".spec/specs/desktop_ui/iur_renderer.spec.md",
     ".spec/specs/desktop_ui/transport.spec.md",
     ".spec/specs/desktop_ui/platform_artifacts.spec.md",
@@ -213,6 +215,52 @@ defmodule DesktopUi.Validate do
     report(:tooling_surface, checks)
   end
 
+  @spec sdl3_adapter_surface() :: map()
+  def sdl3_adapter_surface do
+    adapter_surface = DesktopUi.Inspection.sdl3_adapter_surface()
+
+    checks = [
+      check(
+        :sdl3_modules_present,
+        Enum.all?(
+          [
+            DesktopUi.Sdl3,
+            DesktopUi.Sdl3.App,
+            DesktopUi.Sdl3.Lifecycle,
+            DesktopUi.Sdl3.Window,
+            DesktopUi.Sdl3.RenderPlan,
+            DesktopUi.Sdl3.Renderer,
+            DesktopUi.Sdl3.Events,
+            DesktopUi.Sdl3.Text,
+            DesktopUi.Sdl3.Images
+          ],
+          &Code.ensure_loaded?/1
+        ),
+        %{modules: DesktopUi.Sdl3.modules()}
+      ),
+      check(
+        :renderer_first_backend_bounded,
+        adapter_surface.renderer.first_backend == :sdl_renderer and
+          adapter_surface.renderer.future_backend == :sdl_gpu,
+        %{renderer: adapter_surface.renderer}
+      ),
+      check(
+        :adapter_skeleton_not_overstated,
+        adapter_surface.renderer_completeness == :skeleton and
+          adapter_surface.renderer.placeholder_draw_operations_allowed,
+        %{renderer: adapter_surface.renderer, completeness: adapter_surface.renderer_completeness}
+      ),
+      check(
+        :resource_seams_present,
+        adapter_surface.validation_state.text == :text_resource_ready and
+          adapter_surface.validation_state.images == :image_resource_ready,
+        %{validation_state: adapter_surface.validation_state}
+      )
+    ]
+
+    report(:sdl3_adapter_surface, checks)
+  end
+
   @spec documentation_surface() :: map()
   def documentation_surface do
     missing_docs =
@@ -301,6 +349,7 @@ defmodule DesktopUi.Validate do
       "  runtime behavior passing?: #{report.runtime_behavior.status == :pass}",
       "  transport validation passing?: #{report.transport_validation.status == :pass}",
       "  artifact validation passing?: #{report.artifact_validation.status == :pass}",
+      "  SDL3 adapter surface passing?: #{report.sdl3_adapter_surface.status == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
       "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
       "  traceability alignment passing?: #{report.traceability_alignment.status == :pass}",
@@ -334,6 +383,11 @@ defmodule DesktopUi.Validate do
         :artifact_validation
       ),
       gate(
+        :sdl3_adapter_surface,
+        "Keep the SDL3 adapter seam explicit, discoverable, and bounded while native rendering remains skeletal.",
+        :sdl3_adapter_surface
+      ),
+      gate(
         :tooling_surface,
         "Keep inspect and validate maintainer workflows available together.",
         :tooling_surface
@@ -354,6 +408,11 @@ defmodule DesktopUi.Validate do
   @spec evolution_rules() :: [map()]
   def evolution_rules do
     [
+      %{
+        id: :sdl3_renderer_first_backend,
+        description:
+          "SDL_Renderer remains the first concrete backend while future SDL_GPU work must preserve the same render-plan, event, and runtime semantics."
+      },
       %{
         id: :desktop_ui_not_dsl_or_iur_owner,
         description:
@@ -420,6 +479,7 @@ defmodule DesktopUi.Validate do
       runtime_behavior: runtime_behavior(),
       transport_validation: transport_validation(),
       artifact_validation: artifact_validation(),
+      sdl3_adapter_surface: sdl3_adapter_surface(),
       tooling_surface: tooling_surface(),
       documentation_surface: documentation_surface(),
       traceability_alignment: traceability_alignment()

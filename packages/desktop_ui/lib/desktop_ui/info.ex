@@ -27,6 +27,11 @@ defmodule DesktopUi.Info do
     package_summary().artifacts
   end
 
+  @spec sdl3_summary() :: map()
+  def sdl3_summary do
+    package_summary().sdl3
+  end
+
   @spec package_summary() :: map()
   def package_summary do
     {:ok, release_readiness} = DesktopUi.Validate.release_readiness(:summary)
@@ -40,6 +45,17 @@ defmodule DesktopUi.Info do
         validation_state: DesktopUi.Runtime.validation_state(),
         event_loop:
           DesktopUi.Runtime.EventLoop.diagnostics(DesktopUi.Runtime.EventLoop.scaffold())
+      },
+      sdl3: %{
+        foundation: DesktopUi.Sdl3.foundation(),
+        lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
+        handoff: DesktopUi.Sdl3.App.handoff_contract(),
+        renderer: DesktopUi.Sdl3.Renderer.contract(),
+        events: DesktopUi.Sdl3.Events.contract(),
+        text: DesktopUi.Sdl3.Text.contract(),
+        images: DesktopUi.Sdl3.Images.contract(),
+        validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
+        renderer_completeness: :skeleton
       },
       widgets: %{
         families: DesktopUi.Widgets.families(),
@@ -111,7 +127,8 @@ defmodule DesktopUi.Info do
       },
       inspection: %{
         helpers: DesktopUi.Inspection.helpers(),
-        validation: DesktopUi.Inspection.validation_surface()
+        validation: DesktopUi.Inspection.validation_surface(),
+        sdl3_adapter_surface: DesktopUi.Inspection.sdl3_adapter_surface()
       },
       continuity: %{
         seams: DesktopUi.Continuity.seams(),
@@ -123,6 +140,7 @@ defmodule DesktopUi.Info do
           :layout,
           :layer,
           :runtime,
+          :sdl3,
           :platform,
           :style,
           :theme,

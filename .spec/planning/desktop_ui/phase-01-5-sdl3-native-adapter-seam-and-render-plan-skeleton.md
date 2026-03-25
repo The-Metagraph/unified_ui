@@ -103,26 +103,26 @@ Back to index: [README](./README.md)
       [x] 1.5.3.2.2 Subtask - Define `DesktopUi.Sdl3.Images` contracts for image decoding, image surface preparation, and raw-pixel fallback aligned with the SDL_image-first spec direction.
       [x] 1.5.3.2.3 Subtask - Keep text and image seams explicit enough that future platform-native resource backends can evolve behind the same adapter boundary.
 
-  [ ] 1.5.4 Section - Diagnostics, Reference Surfaces, and Evolution Boundaries
+  [x] 1.5.4 Section - Diagnostics, Reference Surfaces, and Evolution Boundaries
     Expose the new SDL3 adapter seam through package-facing inspection and
     reference surfaces so maintainers can reason about the native backend
     contract before the renderer is fully realized.
 
-    [ ] 1.5.4.1 Task - Extend reference and inspection surfaces for SDL3 adapters
+    [x] 1.5.4.1 Task - Extend reference and inspection surfaces for SDL3 adapters
       Make the new adapter boundary visible through package helpers without
       requiring native rendering completeness.
 
-      [ ] 1.5.4.1.1 Subtask - Extend package reference surfaces to list SDL3 adapter namespaces, lifecycle ownership boundaries, and native-window mapping responsibilities.
-      [ ] 1.5.4.1.2 Subtask - Extend inspection surfaces to summarize render-plan readiness, event normalization seams, and companion-resource boundaries.
-      [ ] 1.5.4.1.3 Subtask - Keep helper output explicit about what is skeletal, what is native-backed, and what remains future renderer work.
+      [x] 1.5.4.1.1 Subtask - Extend package reference surfaces to list SDL3 adapter namespaces, lifecycle ownership boundaries, and native-window mapping responsibilities.
+      [x] 1.5.4.1.2 Subtask - Extend inspection surfaces to summarize render-plan readiness, event normalization seams, and companion-resource boundaries.
+      [x] 1.5.4.1.3 Subtask - Keep helper output explicit about what is skeletal, what is native-backed, and what remains future renderer work.
 
-    [ ] 1.5.4.2 Task - Document bounded backend evolution and incomplete-renderer rules
+    [x] 1.5.4.2 Task - Document bounded backend evolution and incomplete-renderer rules
       Capture how this adapter skeleton constrains future native rendering work
       so maintainers do not treat the seam as throwaway scaffolding.
 
-      [ ] 1.5.4.2.1 Subtask - Document that SDL_Renderer is the first concrete backend and that future SDL_GPU work must preserve the same render-plan and runtime semantics.
-      [ ] 1.5.4.2.2 Subtask - Document that the adapter skeleton is allowed to use placeholder draw operations while still exposing authoritative lifecycle, window, and event contracts.
-      [ ] 1.5.4.2.3 Subtask - Define validation expectations that prevent helper surfaces from overstating native rendering completeness before later phases deliver it.
+      [x] 1.5.4.2.1 Subtask - Document that SDL_Renderer is the first concrete backend and that future SDL_GPU work must preserve the same render-plan and runtime semantics.
+      [x] 1.5.4.2.2 Subtask - Document that the adapter skeleton is allowed to use placeholder draw operations while still exposing authoritative lifecycle, window, and event contracts.
+      [x] 1.5.4.2.3 Subtask - Define validation expectations that prevent helper surfaces from overstating native rendering completeness before later phases deliver it.
 
   [ ] 1.5.5 Section - Phase 1.5 Integration Tests
     Validate that the new SDL3 adapter seam is real, bounded, and visible

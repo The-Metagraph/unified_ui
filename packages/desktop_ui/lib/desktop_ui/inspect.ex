@@ -21,6 +21,7 @@ defmodule DesktopUi.Inspect do
       examples: DesktopUi.Examples.catalog(),
       preview_surfaces: DesktopUi.Tooling.preview_surfaces(),
       package_overview: DesktopUi.Inspection.package_overview(),
+      sdl3_adapter_surface: DesktopUi.Inspection.sdl3_adapter_surface(),
       tooling_workflows: DesktopUi.Tooling.workflows()
     }
   end
@@ -165,6 +166,7 @@ defmodule DesktopUi.Inspect do
             runtime: preview.surface.runtime,
             style: preview.surface.style,
             platform: preview.surface.platform,
+            sdl3_adapter: DesktopUi.Inspection.sdl3_adapter_surface(),
             artifact_workflows: DesktopUi.Artifacts.workflow(preview.surface.platform.target)
           }
       end

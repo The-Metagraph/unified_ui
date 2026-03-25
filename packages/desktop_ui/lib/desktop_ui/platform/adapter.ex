@@ -1,6 +1,6 @@
 defmodule DesktopUi.Platform.Adapter do
   @moduledoc """
-  Behaviour for platform adapters that plug into the shared SDL2 runtime.
+  Behaviour for platform adapters that plug into the shared SDL3 runtime.
   """
 
   @callback summary() :: map()

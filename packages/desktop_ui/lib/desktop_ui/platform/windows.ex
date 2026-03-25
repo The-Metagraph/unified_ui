@@ -9,7 +9,7 @@ defmodule DesktopUi.Platform.Windows do
   def summary do
     %{
       target: :windows,
-      runtime_foundation: :sdl2,
+      runtime_foundation: :sdl3,
       capabilities: capabilities(),
       callbacks: callbacks(),
       notifications: :system_toast,
