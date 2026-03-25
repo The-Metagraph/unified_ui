@@ -25,6 +25,7 @@ The plan aligns to:
 
 ## Phase Files
 1. [Phase 1 - Package Scaffold and SDL3 Runtime Backbone](./phase-01-package-scaffold-and-sdl3-runtime-backbone.md): implement the Mix package, shared SDL3 runtime backbone, platform adapter seams, and baseline reference surfaces.
+1. [Phase 1.5 - SDL3 Native Adapter Seam and Render-Plan Skeleton](./phase-01-5-sdl3-native-adapter-seam-and-render-plan-skeleton.md): introduce the first concrete SDL3-facing adapter boundary for callback lifecycle ownership, native window coordination, render-plan presentation, event intake, and companion-resource seams before full widget-complete native rendering.
 2. [Phase 2 - Foundational Native Widgets and Baseline IUR Rendering](./phase-02-foundational-native-widgets-and-baseline-iur-rendering.md): implement foundational native widgets, baseline screen composition, and the first canonical `UnifiedIUR` rendering path.
 3. [Phase 3 - Advanced Widgets, Display Systems, and Layered Desktop Behavior](./phase-03-advanced-widgets-display-systems-and-layered-desktop-behavior.md): implement advanced data, overlay, viewport, split-pane, canvas, and multiwindow desktop behavior together with broader canonical renderer coverage.
 4. [Phase 4 - Canonical Boundary Transport and Desktop Event Translation](./phase-04-canonical-boundary-transport-and-desktop-event-translation.md): implement canonical `Jido.Signal` and CloudEvents-compatible boundary translation for native desktop and IUR-rendered flows.
@@ -37,10 +38,10 @@ The plan aligns to:
 
 ## Shared Conventions
 - Numbering:
-  - Phases: `N`
-  - Sections: `N.M`
-  - Tasks: `N.M.K`
-  - Subtasks: `N.M.K.L`
+  - Phases: `N` or inserted decimal identifiers such as `1.5` when a new bridging phase is added between completed phases.
+  - Sections: `<phase-id>.<M>`
+  - Tasks: `<section-id>.<K>`
+  - Subtasks: `<task-id>.<L>`
 - Tracking:
   - Every phase, section, task, and subtask uses Markdown checkboxes (`[ ]`).
 - Description requirement:

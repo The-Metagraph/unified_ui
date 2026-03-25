@@ -36,6 +36,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: desktop_ui.structure.sdl3_adapter_modules
+  statement: The package shall provide explicit SDL3-facing adapter modules for application lifecycle ownership, native window coordination, render-plan presentation, event intake, and companion-resource preparation so semantic runtime modules do not collapse into backend-specific code.
+  priority: must
+  stability: stable
+
 - id: desktop_ui.structure.native_widget_module_boundary
   statement: Native widget and styling modules shall be distinct from canonical IUR interpretation modules so direct-use native APIs and canonical-renderer responsibilities remain clear.
   priority: must
@@ -74,6 +79,7 @@ decisions:
   covers:
     - desktop_ui.structure.mix_library_layout
     - desktop_ui.structure.shared_runtime_vs_platform_modules
+    - desktop_ui.structure.sdl3_adapter_modules
     - desktop_ui.structure.native_widget_module_boundary
     - desktop_ui.structure.transport_translation_modules
     - desktop_ui.structure.platform_artifact_modules
