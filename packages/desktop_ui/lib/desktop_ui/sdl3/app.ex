@@ -5,7 +5,7 @@ defmodule DesktopUi.Sdl3.App do
 
   alias DesktopUi.Runtime
   alias DesktopUi.Runtime.State
-  alias DesktopUi.Sdl3.Lifecycle
+  alias DesktopUi.Sdl3.{Lifecycle, RenderPlan, Window}
   alias UnifiedIUR.Element
 
   @type boot_request :: map()
@@ -77,6 +77,9 @@ defmodule DesktopUi.Sdl3.App do
 
   @spec runtime_handoff(State.t(), keyword()) :: map()
   def runtime_handoff(%State{} = runtime_state, _opts \\ []) do
+    {:ok, windows} = Window.registry(runtime_state)
+    {:ok, render_plan} = RenderPlan.build(runtime_state)
+
     %{
       runtime: %{
         runtime_id: runtime_state.runtime_id,
@@ -86,47 +89,30 @@ defmodule DesktopUi.Sdl3.App do
         validation_state: runtime_state.validation_state,
         direct_native_and_canonical_share_runtime: true
       },
-      windows: %{
-        primary_id: runtime_state.windows.primary,
-        registry: window_sessions(runtime_state),
-        continuity: runtime_state.windows.continuity
-      },
+      windows: windows,
       frame_request: %{
         runtime_id: runtime_state.runtime_id,
         screen_id: runtime_state.screen_id,
-        primary_window_id: runtime_state.windows.primary,
+        primary_window_id: windows.primary_id,
         redraw_status: runtime_state.redraw.status,
         redraw_reason: runtime_state.redraw.pending_reason || :initial_present,
         presentation: %{
           backend: :sdl_renderer,
           logical_units: :desktop_ui_layout,
           render_target: runtime_state.realization.mode,
-          theme: runtime_state.realization.theme
-        }
+          theme: runtime_state.realization.theme,
+          render_plan: render_plan
+        },
+        validation_state: :render_plan_ready
       },
       diagnostics: %{
         screen_title: runtime_state.title,
         widget_count: runtime_state.screen.composition.widget_count,
         window_count: runtime_state.screen.composition.window_count,
         focus_targets: runtime_state.focus.order,
-        event_loop_state: runtime_state.event_loop.routing_state
+        event_loop_state: runtime_state.event_loop.routing_state,
+        render_plan_validation_state: render_plan.presentation.validation_state
       }
     }
-  end
-
-  defp window_sessions(%State{} = runtime_state) do
-    runtime_state.windows.registry
-    |> Enum.sort_by(fn {window_id, _window} -> window_id end)
-    |> Enum.map(fn {window_id, window} ->
-      %{
-        id: window_id,
-        title: window.title,
-        role: window.role,
-        window_identity: window.window_identity,
-        focus_order: window.focus_order,
-        platform_target: window.platform_target,
-        lifecycle: window.lifecycle
-      }
-    end)
   end
 end

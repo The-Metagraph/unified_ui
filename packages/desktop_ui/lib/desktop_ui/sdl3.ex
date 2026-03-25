@@ -3,7 +3,7 @@ defmodule DesktopUi.Sdl3 do
   SDL3-native adapter boundary for `desktop_ui`.
   """
 
-  alias DesktopUi.Sdl3.{App, Lifecycle}
+  alias DesktopUi.Sdl3.{App, Lifecycle, RenderPlan, Renderer, Window}
 
   @type validation_state :: :app_handoff_ready
 
@@ -12,7 +12,10 @@ defmodule DesktopUi.Sdl3 do
     [
       __MODULE__,
       App,
-      Lifecycle
+      Lifecycle,
+      Window,
+      RenderPlan,
+      Renderer
     ]
   end
 
@@ -21,6 +24,9 @@ defmodule DesktopUi.Sdl3 do
     [
       :app_lifecycle,
       :runtime_handoff,
+      :window_registry,
+      :render_plan,
+      :renderer_presentation,
       :callback_dispatch,
       :shutdown_contract
     ]

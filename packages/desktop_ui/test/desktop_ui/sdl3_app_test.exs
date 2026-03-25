@@ -25,7 +25,7 @@ defmodule DesktopUi.Sdl3AppTest do
     assert boot_request.runtime.direct_native_and_canonical_share_runtime
     assert boot_request.windows.primary_id == "window:workspace"
     assert boot_request.windows.continuity == :single_window
-    assert Enum.map(boot_request.windows.registry, & &1.id) == ["window:workspace"]
+    assert Enum.map(boot_request.windows.sessions, & &1.id) == ["window:workspace"]
     assert boot_request.frame_request.primary_window_id == "window:workspace"
     assert boot_request.frame_request.presentation.backend == :sdl_renderer
     assert boot_request.frame_request.presentation.logical_units == :desktop_ui_layout

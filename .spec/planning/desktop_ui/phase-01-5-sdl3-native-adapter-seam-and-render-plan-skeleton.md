@@ -59,27 +59,27 @@ Back to index: [README](./README.md)
       [x] 1.5.1.2.2 Subtask - Define the authoritative handoff between semantic runtime realization, redraw intent, and native presentation requests.
       [x] 1.5.1.2.3 Subtask - Preserve the package rule that direct-native and canonical-IUR entrypoints converge onto one shared runtime model before they cross into SDL3-facing adapter code.
 
-  [ ] 1.5.2 Section - Native Window Registry and Presentation Seam
+  [x] 1.5.2 Section - Native Window Registry and Presentation Seam
     Implement the first concrete native window and presentation contracts so
     `desktop_ui` can describe real SDL3 window ownership and frame preparation
     without needing every widget to draw natively yet.
 
-    [ ] 1.5.2.1 Task - Define native window registry and session adapters
+    [x] 1.5.2.1 Task - Define native window registry and session adapters
       Create the adapter modules and data contracts that map top-level
       `desktop_ui` windows to real SDL3-native windows.
 
-      [ ] 1.5.2.1.1 Subtask - Define `DesktopUi.Sdl3.Window` state and registry contracts for top-level windows, multiwindow flows, and owned transient layers.
-      [ ] 1.5.2.1.2 Subtask - Distinguish native-window ownership from in-window transient layers such as overlays, popovers, context menus, and dialogs.
-      [ ] 1.5.2.1.3 Subtask - Define adapter diagnostics for invalid window reuse, lost owner-window context, and unsupported native-window transitions.
+      [x] 1.5.2.1.1 Subtask - Define `DesktopUi.Sdl3.Window` state and registry contracts for top-level windows, multiwindow flows, and owned transient layers.
+      [x] 1.5.2.1.2 Subtask - Distinguish native-window ownership from in-window transient layers such as overlays, popovers, context menus, and dialogs.
+      [x] 1.5.2.1.3 Subtask - Define adapter diagnostics for invalid window reuse, lost owner-window context, and unsupported native-window transitions.
 
-    [ ] 1.5.2.2 Task - Define render-plan and presentation boundary contracts
+    [x] 1.5.2.2 Task - Define render-plan and presentation boundary contracts
       Introduce the retained-rendering boundary that turns semantic widget
       state into SDL3-facing frame instructions before actual low-level drawing
       becomes feature complete.
 
-      [ ] 1.5.2.2.1 Subtask - Define `DesktopUi.Sdl3.RenderPlan` structures that capture logical bounds, layering, clipping, styling resolution output, and placeholder draw operations.
-      [ ] 1.5.2.2.2 Subtask - Define `DesktopUi.Sdl3.Renderer` or equivalent adapter modules that accept render plans and present them through an SDL_Renderer-first contract.
-      [ ] 1.5.2.2.3 Subtask - Keep render-plan generation and presentation adapter code separate so future SDL3 backend evolution does not rewrite widget or layout semantics.
+      [x] 1.5.2.2.1 Subtask - Define `DesktopUi.Sdl3.RenderPlan` structures that capture logical bounds, layering, clipping, styling resolution output, and placeholder draw operations.
+      [x] 1.5.2.2.2 Subtask - Define `DesktopUi.Sdl3.Renderer` or equivalent adapter modules that accept render plans and present them through an SDL_Renderer-first contract.
+      [x] 1.5.2.2.3 Subtask - Keep render-plan generation and presentation adapter code separate so future SDL3 backend evolution does not rewrite widget or layout semantics.
 
   [ ] 1.5.3 Section - SDL3 Events and Companion Resource Boundaries
     Implement the native input and asset seams that let SDL3 callbacks,
