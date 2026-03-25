@@ -78,11 +78,23 @@ tasks because they govern other runtime packages:
 ### `runtime.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
-| `desktop_ui.runtime.sdl2_foundation` | `1.2.1` | `1.2.2`, `1.5.1` | Direct shared SDL2 runtime obligation. |
+| `desktop_ui.runtime.sdl3_foundation` | `1.2.1` | `1.2.2`, `1.5.1` | Direct shared SDL3 runtime obligation. |
 | `desktop_ui.runtime.shared_runtime_across_targets` | `1.2.1` | `1.3.1`, `5.2.2` | Direct shared-runtime-across-targets obligation. |
 | `desktop_ui.runtime.native_and_iur_entrypoints_share_runtime` | `1.2.1` | `2.3.2`, `3.3.2`, `4.5.2` | Direct runtime-convergence obligation. |
 | `desktop_ui.runtime.window_lifecycle_and_input` | `1.2.2` | `4.1.2`, `4.2.2`, `5.5.2` | Direct runtime lifecycle and input obligation. |
 | `desktop_ui.runtime.platform_variation_bounded` | `1.3.2` | `5.2.2`, `5.3.2` | Direct bounded-platform-variation obligation. |
+### `sdl3_runtime_rendering.spec.md`
+| Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
+| --- | --- | --- | --- |
+| `desktop_ui.sdl3_runtime_rendering.callback_lifecycle` | `1.2.2` | `1.2.1`, `4.2.2`, `1.5.1` | Direct SDL3 callback-lifecycle obligation. |
+| `desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend` | `1.2.1` | `2.2.1`, `5.1.1`, `5.3.1` | Direct SDL_Renderer-first backend obligation. |
+| `desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution` | `6.4.2` | `5.2.1`, `6.5.2` | Direct future SDL3 GPU evolution-boundary obligation. |
+| `desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling` | `3.2.1` | `1.2.2`, `5.1.1`, `5.2.2` | Direct logical-units and DPI-aware rendering obligation. |
+| `desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline` | `2.2.1` | `3.2.1`, `5.1.1`, `6.2.2` | Direct retained-widget-pipeline obligation. |
+| `desktop_ui.sdl3_runtime_rendering.native_window_mapping` | `3.2.2` | `1.2.2`, `5.2.2`, `5.5.2` | Direct native-window mapping obligation. |
+| `desktop_ui.sdl3_runtime_rendering.in_window_layering` | `3.2.2` | `3.1.1`, `4.2.2`, `5.4.2` | Direct in-window layering obligation for transient surfaces. |
+| `desktop_ui.sdl3_runtime_rendering.text_and_image_companions` | `1.2.1` | `5.3.1`, `6.3.1` | Direct SDL companion-library integration obligation for text and images. |
+| `desktop_ui.sdl3_runtime_rendering.desktop_input_contract` | `4.2.2` | `1.2.2`, `2.1.2`, `5.2.2` | Direct keyboard-first desktop input and focus obligation. |
 ### `iur_renderer.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

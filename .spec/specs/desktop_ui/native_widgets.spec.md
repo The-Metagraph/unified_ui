@@ -9,6 +9,7 @@ expose independently of canonical IUR.
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [DesktopUi Package](./package.spec.md)
 - [DesktopUi Runtime](./runtime.spec.md)
+- [DesktopUi SDL3 Runtime And Native Rendering](./sdl3_runtime_rendering.spec.md)
 - [DesktopUi IUR Renderer](./iur_renderer.spec.md)
 
 ```spec-meta
@@ -42,12 +43,12 @@ decisions:
   stability: stable
 
 - id: desktop_ui.native_widgets.theme_and_style_surface
-  statement: The package shall provide a native styling and theming surface that can express canonical styling and theming meaning while still being directly usable by native `desktop_ui` users.
+  statement: The package shall provide a native styling and theming surface that can express canonical styling and theming meaning while still being directly usable by native `desktop_ui` users, independent of whether pixels are ultimately presented through SDL3 renderer internals or a future bounded backend evolution.
   priority: must
   stability: stable
 
 - id: desktop_ui.native_widgets.interaction_surface
-  statement: The package shall provide native interaction patterns for input, focus, shortcuts, menus, overlays, windows, and dynamic content in a way that can be mapped to and from canonical boundary event meaning.
+  statement: The package shall provide native interaction patterns for keyboard-first focus, shortcuts, richer pointer input, menus, overlays, windows, and dynamic content in a way that can be mapped to and from canonical boundary event meaning.
   priority: must
   stability: stable
 ```

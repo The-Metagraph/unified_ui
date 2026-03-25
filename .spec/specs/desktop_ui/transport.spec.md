@@ -42,7 +42,7 @@ decisions:
   stability: stable
 
 - id: desktop_ui.transport.no_boundary_leakage
-  statement: Renderer-local event names, SDL2 callback details, and platform-local input envelopes shall not leak out as the cross-package contract of `desktop_ui`.
+  statement: Renderer-local event names, SDL3 callback details, and platform-local input envelopes shall not leak out as the cross-package contract of `desktop_ui`.
   priority: must
   stability: stable
 

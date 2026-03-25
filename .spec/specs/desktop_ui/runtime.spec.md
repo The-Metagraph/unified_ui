@@ -1,7 +1,7 @@
 # DesktopUi Runtime
 
 This subject defines the target runtime behavior of `desktop_ui` as a
-multiplatform SDL2-based desktop library.
+multiplatform SDL3-based desktop library.
 
 ## Related General Specs
 
@@ -15,7 +15,7 @@ multiplatform SDL2-based desktop library.
 id: desktop_ui.runtime
 kind: runtime
 status: active
-summary: Target multiplatform desktop runtime contract for `desktop_ui`, including SDL2-based rendering and input coordination across Windows, macOS, and Linux.
+summary: Target multiplatform desktop runtime contract for `desktop_ui`, including SDL3-based rendering and input coordination across Windows, macOS, and Linux.
 surface:
   - packages/desktop_ui
   - .spec/specs/desktop_ui/runtime.spec.md
@@ -26,8 +26,8 @@ decisions:
 ## Requirements
 
 ```spec-requirements
-- id: desktop_ui.runtime.sdl2_foundation
-  statement: The desktop runtime shall use SDL2 as the shared rendering and input foundation across supported desktop targets while allowing platform integration layers to supply target-specific behavior where needed.
+- id: desktop_ui.runtime.sdl3_foundation
+  statement: The desktop runtime shall use SDL3 as the shared rendering and input foundation across supported desktop targets while allowing platform integration layers to supply target-specific behavior where needed.
   priority: must
   stability: stable
 
@@ -42,7 +42,7 @@ decisions:
   stability: stable
 
 - id: desktop_ui.runtime.window_lifecycle_and_input
-  statement: The runtime shall coordinate window lifecycle, desktop input, focus, redraw scheduling, and platform callbacks in a way that preserves canonical desktop UI meaning across supported targets.
+  statement: The runtime shall coordinate window lifecycle, SDL3 callback-driven app execution, desktop input, focus, redraw scheduling, and platform callbacks in a way that preserves canonical desktop UI meaning across supported targets.
   priority: must
   stability: stable
 
@@ -67,7 +67,7 @@ decisions:
 - kind: source_file
   target: .spec/specs/desktop_ui/runtime.spec.md
   covers:
-    - desktop_ui.runtime.sdl2_foundation
+    - desktop_ui.runtime.sdl3_foundation
     - desktop_ui.runtime.shared_runtime_across_targets
     - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
     - desktop_ui.runtime.window_lifecycle_and_input

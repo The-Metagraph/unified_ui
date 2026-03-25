@@ -1,0 +1,115 @@
+# DesktopUi SDL3 Runtime And Native Rendering
+
+This subject defines the SDL3-specific native display contract for
+`desktop_ui`, including lifecycle ownership, retained rendering flow, window
+mapping, scaling, and backend evolution boundaries.
+
+## Related General Specs
+
+- [Platform Runtimes](../platform_runtimes.spec.md)
+- [Signal Transport](../signal_transport.spec.md)
+- [DesktopUi Package](./package.spec.md)
+- [DesktopUi Runtime](./runtime.spec.md)
+- [DesktopUi Native Widgets](./native_widgets.spec.md)
+- [DesktopUi Structure](./structure.spec.md)
+- [DesktopUi Platform Artifacts](./platform_artifacts.spec.md)
+
+```spec-meta
+id: desktop_ui.sdl3_runtime_rendering
+kind: runtime
+status: active
+summary: Target SDL3-native runtime and rendering contract for `desktop_ui`, including callback lifecycle ownership, SDL_Renderer-first display, retained widget rendering, DPI-aware logical sizing, and native window mapping.
+surface:
+  - packages/desktop_ui
+  - .spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md
+decisions:
+  - repo.ecosystem.contract_model
+```
+
+## Requirements
+
+```spec-requirements
+- id: desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+  statement: The native desktop runtime shall use SDL3's callback-oriented application lifecycle as the package's primary runtime ownership model, coordinating initialization, event processing, frame iteration, and shutdown through one shared callback-driven runtime contract.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+  statement: Native widget display shall use SDL3's renderer API as the first concrete packaged rendering backend so the initial runtime favors a clear 2D UI presentation model over a GPU-first implementation burden.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+  statement: Future SDL3 GPU backend support may be introduced only behind an internal rendering boundary that preserves the same widget, layout, styling, interaction, and transport semantics already defined for the package.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+  statement: Widget layout, sizing, positioning, and interaction geometry shall be defined in logical units and resolved to physical pixels with SDL3 high-DPI awareness so display meaning remains stable across density differences.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+  statement: Native display shall flow through a retained widget tree with explicit layout, style resolution, render preparation, and presentation phases, while allowing bounded custom-draw escape hatches for specialized surfaces such as canvas-oriented widgets.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.native_window_mapping
+  statement: Top-level `desktop_ui` windows and multiwindow flows shall map to real SDL3 windows by default rather than being simulated as child surfaces inside one universal host window.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.in_window_layering
+  statement: Overlays, popovers, context menus, dialogs, and similar transient layers shall remain in-window layered surfaces by default unless a later package subject explicitly promotes a specific layer role to native-window status.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+  statement: The initial native text and image pipeline shall rely on SDL3 companion-library integration equivalent to SDL_ttf and SDL_image, while allowing future platform-native text or image backends if package semantics remain unchanged.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  statement: The native runtime shall provide a keyboard-first desktop interaction contract together with richer pointer, wheel, hover, drag-initiation, and multiwindow focus coordination semantics across supported targets.
+  priority: must
+  stability: stable
+```
+
+## Scenarios
+
+```spec-scenarios
+- id: desktop_ui.sdl3_runtime_rendering.present_high_dpi_screen
+  given: A native or canonical `desktop_ui` screen is shown on displays with different pixel densities
+  when: The runtime lays out and presents the screen through SDL3
+  then: The package preserves one logical layout model while resolving to different physical pixel densities underneath
+
+- id: desktop_ui.sdl3_runtime_rendering.coordinate_multiwindow_layers
+  given: A desktop flow uses multiple top-level windows together with overlays, popovers, or context menus
+  when: `desktop_ui` realizes that flow natively
+  then: Top-level windows map to native SDL3 windows while transient layered surfaces remain bounded within their owning window unless another subject explicitly says otherwise
+
+- id: desktop_ui.sdl3_runtime_rendering.evolve_render_backend_without_semantic_drift
+  given: Maintainers later explore an SDL3 GPU-backed rendering path
+  when: The package evolves its internal rendering backend
+  then: The change preserves retained widget semantics, canonical rendering meaning, native interaction behavior, and transport boundaries already defined for `desktop_ui`
+```
+
+## Verification
+
+```spec-verification
+- kind: source_file
+  target: .spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+    - desktop_ui.sdl3_runtime_rendering.present_high_dpi_screen
+    - desktop_ui.sdl3_runtime_rendering.coordinate_multiwindow_layers
+    - desktop_ui.sdl3_runtime_rendering.evolve_render_backend_without_semantic_drift
+```

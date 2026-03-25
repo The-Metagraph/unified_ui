@@ -68,7 +68,7 @@ Back to index: [README](./README.md)
     and consumers need in order to understand `desktop_ui`.
 
     [x] 6.3.1 Task - Implement package guides and runtime documentation
-      Document the native widget surface, shared SDL2 runtime, canonical
+      Document the native widget surface, shared SDL3 runtime, canonical
       renderer entry point, transport model, and platform artifact expectations.
 
       [x] 6.3.1.1 Subtask - Document the native widget and styling surface for direct-native `desktop_ui` usage.

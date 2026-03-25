@@ -1,7 +1,7 @@
 # DesktopUi Structure
 
 This subject defines the target internal package structure for creating the
-`desktop_ui` library as a multiplatform SDL2-based desktop runtime package.
+`desktop_ui` library as a multiplatform SDL3-based desktop runtime package.
 
 ## Related General Specs
 
@@ -15,7 +15,7 @@ This subject defines the target internal package structure for creating the
 id: desktop_ui.structure
 kind: architecture
 status: active
-summary: Target package structure for `desktop_ui`, including native widget modules, SDL2 runtime modules, platform-specific integration modules, canonical IUR rendering modules, and transport translation modules.
+summary: Target package structure for `desktop_ui`, including native widget modules, SDL3 runtime modules, platform-specific integration modules, canonical IUR rendering modules, and transport translation modules.
 surface:
   - packages/desktop_ui
   - .spec/specs/desktop_ui/structure.spec.md
@@ -27,12 +27,12 @@ decisions:
 
 ```spec-requirements
 - id: desktop_ui.structure.mix_library_layout
-  statement: The package shall be organized as a standard Mix library with package metadata, native widget modules, shared SDL2 runtime modules, platform integration modules, canonical IUR renderer modules, and tests under `packages/desktop_ui`.
+  statement: The package shall be organized as a standard Mix library with package metadata, native widget modules, shared SDL3 runtime modules, platform integration modules, canonical IUR renderer modules, and tests under `packages/desktop_ui`.
   priority: must
   stability: stable
 
 - id: desktop_ui.structure.shared_runtime_vs_platform_modules
-  statement: Shared desktop runtime logic shall be separated from Windows-, macOS-, and Linux-specific integration modules so platform divergence does not leak into every part of the package.
+  statement: Shared desktop runtime logic, including SDL3 callback lifecycle management, retained rendering preparation, and native display coordination, shall be separated from Windows-, macOS-, and Linux-specific integration modules so platform divergence does not leak into every part of the package.
   priority: must
   stability: stable
 

@@ -22,6 +22,7 @@ surface:
   - .spec/specs/desktop_ui/structure.spec.md
   - .spec/specs/desktop_ui/native_widgets.spec.md
   - .spec/specs/desktop_ui/runtime.spec.md
+  - .spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md
   - .spec/specs/desktop_ui/iur_renderer.spec.md
   - .spec/specs/desktop_ui/transport.spec.md
   - .spec/specs/desktop_ui/platform_artifacts.spec.md
