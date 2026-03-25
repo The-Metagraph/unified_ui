@@ -4,7 +4,7 @@ defmodule DesktopUi.Sdl3.NativeHost do
   state behind the framed host protocol.
   """
 
-  alias DesktopUi.Sdl3.{Lifecycle, Protocol, Renderer}
+  alias DesktopUi.Sdl3.{Events, Images, Lifecycle, Protocol, Renderer, Text}
 
   # Port-backed stdio reads block until the requested byte count is satisfied.
   # Read one byte at a time so framed host messages can be processed as soon as
@@ -35,7 +35,10 @@ defmodule DesktopUi.Sdl3.NativeHost do
       windows: %{primary_id: nil, sessions: [], continuity: :single_window},
       platform_target: nil,
       presented_frames: 0,
-      last_frame: nil
+      last_frame: nil,
+      last_event_batch: nil,
+      text_resources: %{},
+      image_resources: %{}
     }
 
     loop(state, <<>>)
@@ -198,6 +201,142 @@ defmodule DesktopUi.Sdl3.NativeHost do
     {next_state, [response], false}
   end
 
+  defp handle_message(state, %{family: :text, kind: :request} = message) do
+    content = message.payload[:content] || ""
+    text_opts = text_opts(message.payload)
+    cache_key = Text.cache_key(content, text_opts)
+    cached? = Map.has_key?(state.text_resources, cache_key)
+
+    with {:ok, resource} <- Text.prepare(content, text_opts) do
+      prepared_resource =
+        resource
+        |> Map.put(:resource_id, message.payload[:resource_id] || cache_key)
+        |> Map.put(:cache_key, cache_key)
+
+      next_state = put_in(state.text_resources[cache_key], prepared_resource)
+
+      response =
+        Protocol.new_message(
+          :text,
+          :ack,
+          %{
+            resource: prepared_resource,
+            cached?: cached?,
+            cache_size: map_size(next_state.text_resources)
+          },
+          correlation_id: message.id,
+          runtime_id: get_in(state, [:runtime, :runtime_id]),
+          screen_id: get_in(state, [:runtime, :screen_id]),
+          resource_kind: :font
+        )
+
+      {next_state, [response], false}
+    else
+      {:error, details} ->
+        response =
+          Protocol.error_envelope(
+            :text_resource_prepare_failed,
+            %{details: details},
+            correlation_id: message.id,
+            runtime_id: get_in(state, [:runtime, :runtime_id]),
+            screen_id: get_in(state, [:runtime, :screen_id]),
+            resource_kind: :font
+          )
+
+        {state, [response], false}
+    end
+  end
+
+  defp handle_message(state, %{family: :image, kind: :request} = message) do
+    source = message.payload[:source] || ""
+    image_opts = image_opts(message.payload)
+    cache_key = Images.cache_key(source, image_opts)
+    cached? = Map.has_key?(state.image_resources, cache_key)
+
+    with {:ok, resource} <- Images.prepare(source, image_opts) do
+      prepared_resource =
+        resource
+        |> Map.put(:resource_id, message.payload[:resource_id] || cache_key)
+        |> Map.put(:cache_key, cache_key)
+
+      next_state = put_in(state.image_resources[cache_key], prepared_resource)
+
+      response =
+        Protocol.new_message(
+          :image,
+          :ack,
+          %{
+            resource: prepared_resource,
+            cached?: cached?,
+            cache_size: map_size(next_state.image_resources)
+          },
+          correlation_id: message.id,
+          runtime_id: get_in(state, [:runtime, :runtime_id]),
+          screen_id: get_in(state, [:runtime, :screen_id]),
+          resource_kind: :image
+        )
+
+      {next_state, [response], false}
+    else
+      {:error, details} ->
+        response =
+          Protocol.error_envelope(
+            :image_resource_prepare_failed,
+            %{details: details},
+            correlation_id: message.id,
+            runtime_id: get_in(state, [:runtime, :runtime_id]),
+            screen_id: get_in(state, [:runtime, :screen_id]),
+            resource_kind: :image
+          )
+
+        {state, [response], false}
+    end
+  end
+
+  defp handle_message(state, %{family: :events, kind: :batch} = message) do
+    events = List.wrap(message.payload[:events] || [])
+
+    case Events.normalize_batch(events) do
+      {:ok, normalized_events} ->
+        route_summary =
+          normalized_events
+          |> Enum.map(fn event -> if event.boundary == :boundary, do: :canonical_boundary, else: :local_runtime end)
+          |> Enum.frequencies()
+
+        next_state = %{state | last_event_batch: normalized_events}
+
+        response =
+          Protocol.new_message(
+            :events,
+            :ack,
+            %{
+              events: normalized_events,
+              route_summary: route_summary,
+              batch_size: length(normalized_events)
+            },
+            correlation_id: message.id,
+            runtime_id: get_in(state, [:runtime, :runtime_id]),
+            screen_id: get_in(state, [:runtime, :screen_id]),
+            window_id: message.meta[:window_id]
+          )
+
+        {next_state, [response], false}
+
+      {:error, error} ->
+        response =
+          Protocol.error_envelope(
+            :native_event_batch_failed,
+            %{reason: error.reason, details: error.details},
+            correlation_id: message.id,
+            runtime_id: get_in(state, [:runtime, :runtime_id]),
+            screen_id: get_in(state, [:runtime, :screen_id]),
+            window_id: message.meta[:window_id]
+          )
+
+        {state, [response], false}
+    end
+  end
+
   defp handle_message(state, %{family: :shutdown, kind: :request} = message) do
     lifecycle =
       state.lifecycle
@@ -230,7 +369,10 @@ defmodule DesktopUi.Sdl3.NativeHost do
           windows: state.windows,
           platform_target: state.platform_target,
           presented_frames: state.presented_frames,
-          last_frame: state.last_frame
+          last_frame: state.last_frame,
+          last_event_batch: state.last_event_batch,
+          text_resources: Map.keys(state.text_resources),
+          image_resources: Map.keys(state.image_resources)
         },
         correlation_id: message.id,
         runtime_id: get_in(state, [:runtime, :runtime_id]),
@@ -279,5 +421,15 @@ defmodule DesktopUi.Sdl3.NativeHost do
   defp write_message(message) do
     {:ok, frame} = Protocol.frame(message)
     IO.binwrite(:stdio, frame)
+  end
+
+  defp text_opts(payload) do
+    [font: payload[:font], size: payload[:size], weight: payload[:weight]]
+    |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+  end
+
+  defp image_opts(payload) do
+    [size: payload[:size]]
+    |> Enum.reject(fn {_key, value} -> is_nil(value) end)
   end
 end

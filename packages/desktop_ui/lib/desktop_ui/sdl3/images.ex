@@ -8,6 +8,7 @@ defmodule DesktopUi.Sdl3.Images do
     %{
       backend: :sdl_image_equivalent,
       capabilities: [:asset_decode, :surface_preparation, :raw_pixel_fallback],
+      host_caching: true,
       future_platform_image_allowed: true
     }
   end
@@ -30,6 +31,12 @@ defmodule DesktopUi.Sdl3.Images do
   end
 
   def prepare(source, _opts), do: {:error, %{reason: :invalid_image_source, source: source}}
+
+  @spec cache_key(String.t(), keyword()) :: String.t()
+  def cache_key(source, opts \\ []) when is_binary(source) do
+    requested_size = Keyword.get(opts, :size, :original)
+    "image:#{requested_size |> inspect()}:#{:erlang.phash2(source)}"
+  end
 
   @spec from_pixels(binary() | [term()], keyword()) :: {:ok, map()} | {:error, map()}
   def from_pixels(pixels, opts \\ [])

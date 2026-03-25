@@ -104,26 +104,26 @@ Back to index: [README](./README.md)
       [x] 7.3.2.2 Subtask - Implement first-pass drawing for core retained draw operations such as background fills, bounds, placeholder surfaces, text labels, and layer shells.
       [x] 7.3.2.3 Subtask - Implement present and redraw scheduling so frame output is visible, repeatable, and only reissued when runtime redraw intent requires it.
 
-  [ ] 7.4 Section - Text, Image, and Event Round-Trip Execution
+  [x] 7.4 Section - Text, Image, and Event Round-Trip Execution
     Complete the first executable round-trip by turning companion-resource and
     native event seams into real host-managed behavior that feeds back into the
     Elixir runtime.
 
-    [ ] 7.4.1 Task - Implement host-managed text and image resources
+    [x] 7.4.1 Task - Implement host-managed text and image resources
       Turn the existing SDL3 text/image seams into real host-side resource
       preparation that can support presented frames.
 
-      [ ] 7.4.1.1 Subtask - Implement host-side font loading, text measurement, and text surface or texture preparation aligned with the SDL_ttf-first package direction.
-      [ ] 7.4.1.2 Subtask - Implement host-side image decoding and image surface or texture preparation aligned with the SDL_image-first package direction.
-      [ ] 7.4.1.3 Subtask - Define resource caching, invalidation, and failure diagnostics so text/image lifetime remains bounded and reviewable.
+      [x] 7.4.1.1 Subtask - Implement host-side font loading, text measurement, and text surface or texture preparation aligned with the SDL_ttf-first package direction.
+      [x] 7.4.1.2 Subtask - Implement host-side image decoding and image surface or texture preparation aligned with the SDL_image-first package direction.
+      [x] 7.4.1.3 Subtask - Define resource caching, invalidation, and failure diagnostics so text/image lifetime remains bounded and reviewable.
 
-    [ ] 7.4.2 Task - Implement native event flow back into the Elixir runtime
+    [x] 7.4.2 Task - Implement native event flow back into the Elixir runtime
       Close the loop by letting real SDL3 input and window events re-enter the
       retained `desktop_ui` runtime through the host protocol.
 
-      [ ] 7.4.2.1 Subtask - Translate keyboard, pointer, wheel, focus, hover, drag-initiation, and window events from SDL3 into host protocol event envelopes.
-      [ ] 7.4.2.2 Subtask - Reuse `DesktopUi.Sdl3.Events` and `DesktopUi.Transport` semantics so native host execution does not invent a parallel interaction model.
-      [ ] 7.4.2.3 Subtask - Validate end-to-end event round-trips for local handling, boundary-worthy signals, and multiwindow focus transitions.
+      [x] 7.4.2.1 Subtask - Translate keyboard, pointer, wheel, focus, hover, drag-initiation, and window events from SDL3 into host protocol event envelopes.
+      [x] 7.4.2.2 Subtask - Reuse `DesktopUi.Sdl3.Events` and `DesktopUi.Transport` semantics so native host execution does not invent a parallel interaction model.
+      [x] 7.4.2.3 Subtask - Validate end-to-end event round-trips for local handling, boundary-worthy signals, and multiwindow focus transitions.
 
   [ ] 7.5 Section - Tooling, Diagnostics, and Local Execution Workflow
     Make the real native execution path visible and usable for maintainers so
