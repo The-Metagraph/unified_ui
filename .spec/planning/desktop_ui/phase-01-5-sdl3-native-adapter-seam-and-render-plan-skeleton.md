@@ -36,28 +36,28 @@ Back to index: [README](./README.md)
   presentation, event intake, and companion-resource access all have one
   coherent adapter seam before full renderer completeness is pursued.
 
-  [ ] 1.5.1 Section - SDL3 App Ownership and Runtime Handoff
+  [x] 1.5.1 Section - SDL3 App Ownership and Runtime Handoff
     Implement the package-facing adapter modules that own SDL3 application
     lifecycle concerns and connect the existing semantic desktop runtime to
     callback-driven native execution.
 
-    [ ] 1.5.1.1 Task - Define SDL3 app lifecycle adapter modules
+    [x] 1.5.1.1 Task - Define SDL3 app lifecycle adapter modules
       Create the explicit SDL3-facing modules that describe how `desktop_ui`
       boots, iterates, and shuts down through the callback-oriented native app
       model.
 
-      [ ] 1.5.1.1.1 Subtask - Introduce `DesktopUi.Sdl3` and `DesktopUi.Sdl3.App` as the canonical namespace for SDL3-facing adapter entrypoints.
-      [ ] 1.5.1.1.2 Subtask - Define lifecycle contracts for initialization, event callback dispatch, frame iteration, and shutdown without forcing the rest of the package to speak in raw SDL3 callback terms.
-      [ ] 1.5.1.1.3 Subtask - Define bounded adapter diagnostics for invalid boot requests, callback ordering failures, and mismatched shutdown state.
+      [x] 1.5.1.1.1 Subtask - Introduce `DesktopUi.Sdl3` and `DesktopUi.Sdl3.App` as the canonical namespace for SDL3-facing adapter entrypoints.
+      [x] 1.5.1.1.2 Subtask - Define lifecycle contracts for initialization, event callback dispatch, frame iteration, and shutdown without forcing the rest of the package to speak in raw SDL3 callback terms.
+      [x] 1.5.1.1.3 Subtask - Define bounded adapter diagnostics for invalid boot requests, callback ordering failures, and mismatched shutdown state.
 
-    [ ] 1.5.1.2 Task - Define semantic-runtime handoff contracts
+    [x] 1.5.1.2 Task - Define semantic-runtime handoff contracts
       Establish the boundary objects that hand semantic runtime state into the
       SDL3 adapter without collapsing the higher-level package model into
       native-only state.
 
-      [ ] 1.5.1.2.1 Subtask - Define adapter-facing boot requests, window session descriptors, and frame request state that can be produced from the existing `DesktopUi.Runtime` model.
-      [ ] 1.5.1.2.2 Subtask - Define the authoritative handoff between semantic runtime realization, redraw intent, and native presentation requests.
-      [ ] 1.5.1.2.3 Subtask - Preserve the package rule that direct-native and canonical-IUR entrypoints converge onto one shared runtime model before they cross into SDL3-facing adapter code.
+      [x] 1.5.1.2.1 Subtask - Define adapter-facing boot requests, window session descriptors, and frame request state that can be produced from the existing `DesktopUi.Runtime` model.
+      [x] 1.5.1.2.2 Subtask - Define the authoritative handoff between semantic runtime realization, redraw intent, and native presentation requests.
+      [x] 1.5.1.2.3 Subtask - Preserve the package rule that direct-native and canonical-IUR entrypoints converge onto one shared runtime model before they cross into SDL3-facing adapter code.
 
   [ ] 1.5.2 Section - Native Window Registry and Presentation Seam
     Implement the first concrete native window and presentation contracts so
