@@ -34,7 +34,8 @@ defmodule DesktopUi.Sdl3.Window do
           runtime_state.windows.registry
           |> Enum.sort_by(fn {window_id, _window} -> window_id end)
           |> Enum.map(fn {window_id, window} ->
-            ownership_entry = Map.get(ownership.windows, window_id, %{widget_ids: [], layers: []})
+            ownership_entry =
+              ownership_entry(runtime_state, ownership.windows, window_id, window.window_identity)
 
             %{
               id: window_id,
@@ -58,6 +59,24 @@ defmodule DesktopUi.Sdl3.Window do
            sessions: sessions,
            validation_state: :native_window_registry_ready
          }}
+    end
+  end
+
+  defp ownership_entry(%State{} = runtime_state, ownership_windows, window_id, window_identity) do
+    root_window_id = if runtime_state.root.kind == :window, do: "window:#{runtime_state.root.id}"
+    identity_window_id = if is_binary(window_identity), do: "window:#{window_identity}"
+
+    ownership_windows
+    |> Map.get(window_id)
+    |> case do
+      nil ->
+        ownership_windows
+        |> Map.get(root_window_id)
+        |> Kernel.||(Map.get(ownership_windows, identity_window_id))
+        |> Kernel.||(%{widget_ids: [], layers: []})
+
+      entry ->
+        entry
     end
   end
 

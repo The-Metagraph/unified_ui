@@ -30,7 +30,7 @@ Back to index: [README](./README.md)
   package surface even if the first implementation remains skeletal or
   diagnostic-heavy.
 
-[ ] 1.5 Phase 1.5 - SDL3 Native Adapter Seam and Render-Plan Skeleton
+[x] 1.5 Phase 1.5 - SDL3 Native Adapter Seam and Render-Plan Skeleton
   Introduce the first concrete SDL3-facing implementation boundary for
   `desktop_ui` so callback lifecycle ownership, native windows, render-plan
   presentation, event intake, and companion-resource access all have one
@@ -124,23 +124,23 @@ Back to index: [README](./README.md)
       [x] 1.5.4.2.2 Subtask - Document that the adapter skeleton is allowed to use placeholder draw operations while still exposing authoritative lifecycle, window, and event contracts.
       [x] 1.5.4.2.3 Subtask - Define validation expectations that prevent helper surfaces from overstating native rendering completeness before later phases deliver it.
 
-  [ ] 1.5.5 Section - Phase 1.5 Integration Tests
+  [x] 1.5.5 Section - Phase 1.5 Integration Tests
     Validate that the new SDL3 adapter seam is real, bounded, and visible
     through the package even before full native widget drawing exists.
 
-    [ ] 1.5.5.1 Task - SDL3 adapter skeleton integration scenarios
+    [x] 1.5.5.1 Task - SDL3 adapter skeleton integration scenarios
       Verify the package can describe a coherent native SDL3 runtime boundary
       without collapsing semantic widget/runtime code into backend-specific
       details.
 
-      [ ] 1.5.5.1.1 Subtask - Verify SDL3 app lifecycle adapters, runtime handoff objects, native window sessions, and render-plan adapters compile and connect coherently.
-      [ ] 1.5.5.1.2 Subtask - Verify a minimal native screen can produce native-window and render-plan state through the SDL3 adapter seam without requiring full widget-complete drawing.
-      [ ] 1.5.5.1.3 Subtask - Verify invalid callback ordering, malformed event payloads, or broken window ownership fail with deterministic adapter diagnostics.
+      [x] 1.5.5.1.1 Subtask - Verify SDL3 app lifecycle adapters, runtime handoff objects, native window sessions, and render-plan adapters compile and connect coherently.
+      [x] 1.5.5.1.2 Subtask - Verify a minimal native screen can produce native-window and render-plan state through the SDL3 adapter seam without requiring full widget-complete drawing.
+      [x] 1.5.5.1.3 Subtask - Verify invalid callback ordering, malformed event payloads, or broken window ownership fail with deterministic adapter diagnostics.
 
-    [ ] 1.5.5.2 Task - Reference and diagnostics integration scenarios
+    [x] 1.5.5.2 Task - Reference and diagnostics integration scenarios
       Verify the package surfaces the new SDL3 adapter seam clearly enough for
       maintainers to inspect and evolve it safely.
 
-      [ ] 1.5.5.2.1 Subtask - Verify reference helpers expose SDL3 adapter namespaces, lifecycle boundaries, and render-plan responsibilities.
-      [ ] 1.5.5.2.2 Subtask - Verify inspection helpers report adapter readiness, text/image seam availability, and bounded backend-evolution assumptions.
-      [ ] 1.5.5.2.3 Subtask - Verify helper and validation output distinguishes adapter-skeleton coverage from later full-renderer completeness.
+      [x] 1.5.5.2.1 Subtask - Verify reference helpers expose SDL3 adapter namespaces, lifecycle boundaries, and render-plan responsibilities.
+      [x] 1.5.5.2.2 Subtask - Verify inspection helpers report adapter readiness, text/image seam availability, and bounded backend-evolution assumptions.
+      [x] 1.5.5.2.3 Subtask - Verify helper and validation output distinguishes adapter-skeleton coverage from later full-renderer completeness.
