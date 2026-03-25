@@ -278,6 +278,8 @@ defmodule DesktopUi.Validate do
             DesktopUi.Sdl3.Window,
             DesktopUi.Sdl3.RenderPlan,
             DesktopUi.Sdl3.FrameEncoder,
+            DesktopUi.Sdl3.FrameScript,
+            DesktopUi.Sdl3.VisibleRunner,
             DesktopUi.Sdl3.Renderer,
             DesktopUi.Sdl3.Events,
             DesktopUi.Sdl3.Text,
@@ -319,6 +321,18 @@ defmodule DesktopUi.Validate do
           frame_encoder: adapter_surface.frame_encoder,
           validation_state: adapter_surface.validation_state
         }
+      ),
+      check(
+        :frame_script_present,
+        adapter_surface.validation_state.frame_script == :frame_script_ready and
+          adapter_surface.frame_script.format == :tab_separated_key_values,
+        %{frame_script: adapter_surface.frame_script}
+      ),
+      check(
+        :visible_runner_present,
+        adapter_surface.validation_state.visible_runner == :visible_window_runner_ready and
+          adapter_surface.visible_runner.execution_target == :compiled_visible_window,
+        %{visible_runner: adapter_surface.visible_runner}
       ),
       check(
         :renderer_first_backend_bounded,

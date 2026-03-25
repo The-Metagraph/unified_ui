@@ -136,6 +136,8 @@ defmodule DesktopUi.Inspection do
       capabilities: DesktopUi.Sdl3.Capabilities.detect(),
       protocol: DesktopUi.Sdl3.Protocol.contract(),
       frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
+      frame_script: DesktopUi.Sdl3.FrameScript.contract(),
+      visible_runner: DesktopUi.Sdl3.VisibleRunner.contract(),
       renderer: DesktopUi.Sdl3.Renderer.contract(),
       events: DesktopUi.Sdl3.Events.contract(),
       text: DesktopUi.Sdl3.Text.contract(),
@@ -148,6 +150,8 @@ defmodule DesktopUi.Inspection do
         capabilities: DesktopUi.Sdl3.Capabilities.validation_state(),
         protocol: DesktopUi.Sdl3.Protocol.validation_state(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.validation_state(),
+        frame_script: DesktopUi.Sdl3.FrameScript.validation_state(),
+        visible_runner: DesktopUi.Sdl3.VisibleRunner.validation_state(),
         renderer: DesktopUi.Sdl3.Renderer.validation_state(),
         text: DesktopUi.Sdl3.Text.validation_state(),
         images: DesktopUi.Sdl3.Images.validation_state()

@@ -15,6 +15,7 @@ defmodule DesktopUi.Sdl3.NativeBuild do
       executable_name: executable_name(),
       executable_path: executable_path(),
       dependency_detection: [:env_override, :pkg_config, :homebrew_prefix],
+      compiled_modes: [:protocol_host, :visible_frame_runner],
       first_target: :visible_window_host,
       fallback_backend: :elixir_host
     }

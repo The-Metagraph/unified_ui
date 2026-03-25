@@ -78,26 +78,26 @@ Back to index: [README](./README.md)
       [x] 8.2.2.2 Subtask - Keep the current Elixir host available as an explicit fallback for CI and SDL3-less environments.
       [x] 8.2.2.3 Subtask - Surface which backend was chosen through host status, inspection, and run-task output.
 
-  [ ] 8.3 Section - Visible Window Presentation and Frame Lifecycle
+  [x] 8.3 Section - Visible Window Presentation and Frame Lifecycle
     Replace placeholder-only host reporting with real visible SDL3 window and
     frame presentation behavior for the compiled host path.
 
-    [ ] 8.3.1 Task - Implement visible native-window boot and lifecycle handling
+    [x] 8.3.1 Task - Implement visible native-window boot and lifecycle handling
       Make the compiled SDL3 host create real windows, honor the callback
       lifecycle, and remain alive long enough for maintainers to observe the
       rendered frame.
 
-      [ ] 8.3.1.1 Subtask - Map booted `desktop_ui` windows to actual SDL3 windows in the compiled host.
-      [ ] 8.3.1.2 Subtask - Keep callback lifecycle, redraw, and shutdown handling aligned with the existing Elixir-owned runtime contract.
-      [ ] 8.3.1.3 Subtask - Support bounded linger or quit behavior so visible-window runs are testable and maintainable.
+      [x] 8.3.1.1 Subtask - Map booted `desktop_ui` windows to actual SDL3 windows in the compiled host.
+      [x] 8.3.1.2 Subtask - Keep callback lifecycle, redraw, and shutdown handling aligned with the existing Elixir-owned runtime contract.
+      [x] 8.3.1.3 Subtask - Support bounded linger or quit behavior so visible-window runs are testable and maintainable.
 
-    [ ] 8.3.2 Task - Implement real frame drawing for visible placeholder semantics
+    [x] 8.3.2 Task - Implement real frame drawing for visible placeholder semantics
       Use `SDL_Renderer` to draw visible window chrome, surfaces, and
       placeholder widget bounds from the existing retained render plan.
 
-      [ ] 8.3.2.1 Subtask - Realize logical bounds, clear colors, and clip regions in real SDL3 renderer calls.
-      [ ] 8.3.2.2 Subtask - Draw visible placeholder geometry for core draw kinds such as window chrome, layer shells, viewport regions, and widget placeholders.
-      [ ] 8.3.2.3 Subtask - Distinguish real visible drawing from still-unimplemented widget-complete rendering in host diagnostics and renderer summaries.
+      [x] 8.3.2.1 Subtask - Realize logical bounds, clear colors, and clip regions in real SDL3 renderer calls.
+      [x] 8.3.2.2 Subtask - Draw visible placeholder geometry for core draw kinds such as window chrome, layer shells, viewport regions, and widget placeholders.
+      [x] 8.3.2.3 Subtask - Distinguish real visible drawing from still-unimplemented widget-complete rendering in host diagnostics and renderer summaries.
 
   [ ] 8.4 Section - Native Resources, Tooling, and Visible Execution Diagnostics
     Extend the visible host path so it reports native dependency state,

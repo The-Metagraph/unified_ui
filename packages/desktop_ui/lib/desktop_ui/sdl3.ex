@@ -8,6 +8,7 @@ defmodule DesktopUi.Sdl3 do
     Capabilities,
     Events,
     FrameEncoder,
+    FrameScript,
     Host,
     Images,
     Lifecycle,
@@ -18,6 +19,7 @@ defmodule DesktopUi.Sdl3 do
     RenderPlan,
     Renderer,
     Text,
+    VisibleRunner,
     Window
   }
 
@@ -30,6 +32,7 @@ defmodule DesktopUi.Sdl3 do
       App,
       Capabilities,
       FrameEncoder,
+      FrameScript,
       Host,
       NativeBuild,
       PortHost,
@@ -41,7 +44,8 @@ defmodule DesktopUi.Sdl3 do
       Renderer,
       Events,
       Text,
-      Images
+      Images,
+      VisibleRunner
     ]
   end
 
@@ -53,6 +57,8 @@ defmodule DesktopUi.Sdl3 do
       :window_registry,
       :render_plan,
       :frame_encoding,
+      :frame_script,
+      :visible_window_runner,
       :renderer_presentation,
       :host_process,
       :native_build,
@@ -80,7 +86,7 @@ defmodule DesktopUi.Sdl3 do
       fallback_host_backend: Capabilities.contract().fallback_backend,
       lifecycle_model: :callback_oriented,
       first_backend: :renderer,
-      frame_encoding: :host_protocol_payload
+      frame_encoding: [:host_protocol_payload, :frame_script]
     }
   end
 

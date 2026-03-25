@@ -80,6 +80,8 @@ defmodule DesktopUi.Reference do
         capabilities: DesktopUi.Sdl3.Capabilities.detect(),
         protocol: DesktopUi.Sdl3.Protocol.contract(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
+        frame_script: DesktopUi.Sdl3.FrameScript.contract(),
+        visible_runner: DesktopUi.Sdl3.VisibleRunner.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),

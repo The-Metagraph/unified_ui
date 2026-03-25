@@ -16,6 +16,7 @@ defmodule DesktopUi.Sdl3.Capabilities do
       preferred_backend: :compiled_sdl3_host,
       fallback_backend: :elixir_host,
       compiled_host_probe: :json_stdout,
+      visible_runner_probe: :json_stdout,
       required_toolchains: [:cc],
       optional_tooling: [:pkg_config, :brew]
     }
@@ -133,6 +134,7 @@ defmodule DesktopUi.Sdl3.Capabilities do
       executable_present?: built_executable.available?,
       executable_path: built_executable.path,
       launch_ready?: get_in(built_executable, [:probe, :launch_ready?]) || false,
+      visible_runner_ready?: get_in(built_executable, [:probe, :visible_runner_ready?]) || false,
       executable_probe: built_executable.probe,
       buildable?: toolchains.cc.available? and all_required_available?,
       validation_state: NativeBuild.validation_state()
@@ -219,17 +221,28 @@ defmodule DesktopUi.Sdl3.Capabilities do
             %{
               available?: true,
               launch_ready?: Map.get(decoded, "launch_ready", false) == true,
+              visible_runner_ready?: visible_runner_ready?(decoded),
               status: Map.get(decoded, "status", "unknown"),
               backend: Map.get(decoded, "backend"),
               compiled_with: Map.get(decoded, "compiled_with")
             }
 
           _other ->
-            %{available?: true, launch_ready?: false, status: :invalid_probe_payload}
+            %{
+              available?: true,
+              launch_ready?: false,
+              visible_runner_ready?: false,
+              status: :invalid_probe_payload
+            }
         end
 
       _other ->
-        %{available?: true, launch_ready?: false, status: :probe_failed}
+        %{
+          available?: true,
+          launch_ready?: false,
+          visible_runner_ready?: false,
+          status: :probe_failed
+        }
     end
   end
 
@@ -271,5 +284,11 @@ defmodule DesktopUi.Sdl3.Capabilities do
   defp prefix_usable?(prefix, opts) do
     file_exists?(prefix, opts) and file_exists?(Path.join(prefix, "include"), opts) and
       file_exists?(Path.join(prefix, "lib"), opts)
+  end
+
+  defp visible_runner_ready?(decoded) do
+    Map.get(decoded, "visible_runner_ready", false) == true or
+      Map.get(decoded, "launch_ready", false) == true or
+      Map.get(decoded, "status") in ["visible_frame_ready", "protocol_ready"]
   end
 end
