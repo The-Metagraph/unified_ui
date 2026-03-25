@@ -30,6 +30,8 @@ defmodule DesktopUi.DocumentationTest do
     info_style = DesktopUi.Info.style_summary()
     reference_artifacts = DesktopUi.Reference.artifact_summary()
     info_artifacts = DesktopUi.Info.artifact_summary()
+    reference_sdl3 = DesktopUi.Reference.sdl3_summary()
+    info_sdl3 = DesktopUi.Info.sdl3_summary()
 
     assert :native_styled_review in reference_examples.native_ids
     assert :canonical_styled_review in reference_examples.canonical_ids
@@ -49,6 +51,9 @@ defmodule DesktopUi.DocumentationTest do
     assert reference_artifacts.target_platforms == [:windows, :macos, :linux]
     assert reference_artifacts.validation_state.packaging_boundaries == :ready
     assert info_artifacts.target_platforms == [:windows, :macos, :linux]
+    assert reference_sdl3.foundation.runtime_foundation == :sdl3
+    assert reference_sdl3.renderer.first_backend == :sdl_renderer
+    assert info_sdl3.renderer_completeness == :skeleton
   end
 
   test "documentation and validation surfaces expose release and traceability guardrails" do
@@ -59,20 +64,25 @@ defmodule DesktopUi.DocumentationTest do
     assert reference.documentation.maintainer_commands == DesktopUi.Tooling.mix_tasks()
 
     assert reference.documentation.shared_runtime_contract.direct_native_and_canonical_share_runtime
+    assert reference.documentation.sdl3_adapter_surface.foundation.runtime_foundation == :sdl3
 
     assert ".spec/specs/platform_runtimes.spec.md" in reference.documentation.traceability_targets
+    assert ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md" in reference.documentation.traceability_targets
 
     assert reference.validate.inspect == DesktopUi.Inspect
     assert reference.validate.validate == DesktopUi.Validate
+    assert :sdl3_adapter_surface in reference.validate.validation_sections
     assert :documentation_surface in reference.validate.validation_sections
     assert :traceability_alignment in reference.validate.validation_sections
     assert reference.validate.release_readiness_modes == [:summary, :strict]
+    assert Enum.any?(reference.validate.release_gates, &(&1.id == :sdl3_adapter_surface))
+    assert reference.validate.validation_report.sdl3_adapter_surface.status == :pass
     assert reference.validate.documentation_surface.status == :pass
     assert reference.validate.traceability_alignment.status == :pass
 
     assert Enum.any?(
              reference.validate.evolution_rules,
-             &(&1.id == :desktop_ui_not_dsl_or_iur_owner)
+             &(&1.id == :sdl3_renderer_first_backend)
            )
 
     assert summary.validate.documentation_surface == :pass

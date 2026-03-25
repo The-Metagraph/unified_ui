@@ -89,9 +89,11 @@ defmodule DesktopUi.PhaseOneIntegrationTest do
              :transport_diagnostics
            ]
 
-    assert reference.inspection.package_overview.runtime_foundation == :sdl2
+    assert reference.inspection.package_overview.runtime_foundation == :sdl3
     assert reference.inspection.package_overview.runtime_binding == :sdl
+    assert reference.inspection.sdl3_adapter_surface.foundation.runtime_foundation == :sdl3
     assert reference.inspection.validation_surface.transport == :transport_diagnostics_ready
+    assert reference.inspection.validation_surface.sdl3 == :app_handoff_ready
     assert reference.responsibilities.bounded_platform_variation
 
     assert summary.package == :desktop_ui
@@ -104,13 +106,15 @@ defmodule DesktopUi.PhaseOneIntegrationTest do
   test "shared runtime semantics remain visible through package-facing helper APIs" do
     contract = DesktopUi.Inspection.shared_runtime_contract()
 
-    assert contract.assumptions.shared_runtime_foundation == :sdl2
+    assert contract.assumptions.shared_runtime_foundation == :sdl3
+    assert contract.lifecycle_model == :callback_oriented
     assert contract.direct_native_and_canonical_share_runtime
 
     assert DesktopUi.Reference.package_reference().inspection.shared_runtime_contract ==
              contract
 
     assert DesktopUi.Runtime in contract.runtime_modules
+    assert DesktopUi.Sdl3 in contract.sdl3_modules
     assert :native_mount in DesktopUi.Runtime.capabilities()
   end
 end

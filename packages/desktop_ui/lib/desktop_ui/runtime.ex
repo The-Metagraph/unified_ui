@@ -37,6 +37,8 @@ defmodule DesktopUi.Runtime do
       :native_mount,
       :renderer_mount,
       :shared_sdl_runtime,
+      :sdl3_callback_runtime,
+      :sdl3_runtime_handoff,
       :window_registry,
       :redraw_scheduling,
       :foundational_layout_realization,
@@ -64,8 +66,9 @@ defmodule DesktopUi.Runtime do
   @spec assumptions() :: map()
   def assumptions do
     %{
-      shared_runtime_foundation: :sdl2,
+      shared_runtime_foundation: :sdl3,
       shared_runtime_binding: :sdl,
+      lifecycle_model: :callback_oriented,
       shared_runtime_for_native_and_canonical: true,
       platform_variation_bounded: true,
       boundary_local_routing_shared: true,

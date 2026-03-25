@@ -6,6 +6,7 @@ defmodule DesktopUiTest do
     assert DesktopUi.widget() == DesktopUi.Widget
     assert DesktopUi.runtime() == DesktopUi.Runtime
     assert DesktopUi.platform() == DesktopUi.Platform
+    assert DesktopUi.sdl3() == DesktopUi.Sdl3
     assert DesktopUi.layout() == DesktopUi.Layout
     assert DesktopUi.layer() == DesktopUi.Layer
     assert DesktopUi.renderer() == DesktopUi.Renderer
@@ -22,7 +23,7 @@ defmodule DesktopUiTest do
 
   test "mix project keeps desktop runtime policy explicit" do
     assert DesktopUi.MixProject.project()[:app] == :desktop_ui
-    assert DesktopUi.MixProject.sdl_dependency_policy().foundation == :sdl2
+    assert DesktopUi.MixProject.sdl_dependency_policy().foundation == :sdl3
     assert DesktopUi.MixProject.sdl_dependency_policy().binding == :sdl
     refute Keyword.has_key?(DesktopUi.MixProject.application(), :mod)
   end

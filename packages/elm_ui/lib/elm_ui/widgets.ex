@@ -141,6 +141,16 @@ defmodule ElmUi.Widgets do
     Foundational.button(id, label, opts)
   end
 
+  @spec badge(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def badge(id, label, opts \\ []) do
+    Foundational.badge(id, label, opts)
+  end
+
+  @spec hero(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) :: Widget.t()
+  def hero(id, children, opts \\ []) do
+    Foundational.hero(id, children, opts)
+  end
+
   @spec link(String.t() | atom(), String.t(), String.t(), keyword()) :: Widget.t()
   def link(id, label, href, opts \\ []) do
     Foundational.link(id, label, href, opts)
@@ -236,6 +246,11 @@ defmodule ElmUi.Widgets do
           Widget.t()
   def form_builder(id, children, opts \\ []) do
     Forms.form_builder(id, children, opts)
+  end
+
+  @spec form_field(String.t() | atom(), Widget.t() | map() | keyword(), keyword()) :: Widget.t()
+  def form_field(id, control, opts \\ []) do
+    Forms.form_field(id, control, opts)
   end
 
   @spec stack(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
@@ -338,6 +353,21 @@ defmodule ElmUi.Widgets do
   @spec tree_view(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
   def tree_view(id, nodes, opts \\ []) do
     Data.tree_view(id, nodes, opts)
+  end
+
+  @spec stat(String.t() | atom(), keyword()) :: Widget.t()
+  def stat(id, opts \\ []) do
+    Data.stat(id, opts)
+  end
+
+  @spec key_value(String.t() | atom(), String.t(), term(), keyword()) :: Widget.t()
+  def key_value(id, label, value, opts \\ []) do
+    Data.key_value(id, label, value, opts)
+  end
+
+  @spec info_list(String.t() | atom(), [keyword() | map()], keyword()) :: Widget.t()
+  def info_list(id, items, opts \\ []) do
+    Data.info_list(id, items, opts)
   end
 
   @spec markdown_viewer(String.t() | atom(), String.t(), keyword()) :: Widget.t()

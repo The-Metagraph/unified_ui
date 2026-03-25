@@ -9,7 +9,7 @@ defmodule DesktopUi.Platform.Linux do
   def summary do
     %{
       target: :linux,
-      runtime_foundation: :sdl2,
+      runtime_foundation: :sdl3,
       capabilities: capabilities(),
       callbacks: callbacks(),
       notifications: :desktop_portal,

@@ -14,6 +14,7 @@ defmodule DesktopUi.Inspection do
       :platform_profiles,
       :continuity_contract,
       :shared_runtime_contract,
+      :sdl3_adapter_surface,
       :platform_contract,
       :transport_contract,
       :layering_contract,
@@ -24,10 +25,11 @@ defmodule DesktopUi.Inspection do
   @spec package_overview() :: map()
   def package_overview do
     %{
-      runtime_foundation: :sdl2,
+      runtime_foundation: :sdl3,
       runtime_binding: :sdl,
       platform_targets: DesktopUi.Platform.targets(),
       package_areas: DesktopUi.package_areas(),
+      sdl3_adapter: sdl3_adapter_surface(),
       style: %{
         primitives: Map.keys(DesktopUi.Style.primitives()),
         hooks: DesktopUi.Style.widget_style_hooks(),
@@ -110,12 +112,36 @@ defmodule DesktopUi.Inspection do
     %{
       assumptions: DesktopUi.Runtime.assumptions(),
       runtime_modules: DesktopUi.Runtime.modules(),
+      sdl3_modules: DesktopUi.Sdl3.modules(),
       platform_targets: DesktopUi.Platform.targets(),
       layout_kinds: DesktopUi.Layout.kinds(),
       layer_kinds: DesktopUi.Layer.kinds(),
       transport_modes: DesktopUi.Transport.modes(),
+      lifecycle_model: DesktopUi.Sdl3.foundation().lifecycle_model,
       shared_style_model: true,
       direct_native_and_canonical_share_runtime: true
+    }
+  end
+
+  @spec sdl3_adapter_surface() :: map()
+  def sdl3_adapter_surface do
+    %{
+      foundation: DesktopUi.Sdl3.foundation(),
+      modules: DesktopUi.Sdl3.modules(),
+      scope: DesktopUi.Sdl3.adapter_scope(),
+      lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
+      handoff: DesktopUi.Sdl3.App.handoff_contract(),
+      renderer: DesktopUi.Sdl3.Renderer.contract(),
+      events: DesktopUi.Sdl3.Events.contract(),
+      text: DesktopUi.Sdl3.Text.contract(),
+      images: DesktopUi.Sdl3.Images.contract(),
+      renderer_completeness: :skeleton,
+      validation_state: %{
+        adapter: DesktopUi.Sdl3.validation_state(),
+        renderer: DesktopUi.Sdl3.Renderer.validation_state(),
+        text: DesktopUi.Sdl3.Text.validation_state(),
+        images: DesktopUi.Sdl3.Images.validation_state()
+      }
     }
   end
 
@@ -154,7 +180,8 @@ defmodule DesktopUi.Inspection do
       layer: DesktopUi.Layer.validation_state(),
       renderer: DesktopUi.Renderer.validation_state(),
       transport: DesktopUi.Transport.validation_state(),
-      artifacts: DesktopUi.Artifacts.validation_state()
+      artifacts: DesktopUi.Artifacts.validation_state(),
+      sdl3: DesktopUi.Sdl3.validation_state()
     }
   end
 

@@ -19,6 +19,6 @@ Both entry paths use that same runtime backbone:
 - inspection, continuity, artifact, and validation workflows all review that
   shared model rather than a second execution path
 
-SDL2 is the intended shared rendering and input foundation, but the package
+SDL3 is the intended shared rendering and input foundation, but the package
 keeps the binding policy explicit so runtime semantics stay reviewable before
 full platform packaging is introduced.

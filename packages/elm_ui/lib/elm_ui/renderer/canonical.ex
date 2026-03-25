@@ -16,6 +16,50 @@ defmodule ElmUi.Renderer.Canonical do
   defp do_render(%Element{id: nil} = element), do: {:error, Error.missing_identity(element)}
 
   defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:badge, "badge"] do
+    {:ok,
+     Widgets.badge(
+       element.id,
+       first_present(
+         [group_attr(element, :content, :text), content_text(element), attr(element, :text)],
+         ""
+       ),
+       Keyword.merge(base_opts(element),
+         icon: first_present([group_attr(element, :badge, :icon), attr(element, :icon)]),
+         icon_set:
+           first_present([group_attr(element, :badge, :icon_set), attr(element, :icon_set)]),
+         presentation:
+           first_present(
+             [group_attr(element, :badge, :presentation), attr(element, :presentation)],
+             :pill
+           )
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:hero, "hero"] do
+    with {:ok, children} <- map_children(default_children(element)),
+         {:ok, supporting} <- optional_slot_children(element, :supporting),
+         {:ok, actions} <- optional_slot_children(element, :actions) do
+      {:ok,
+       Widgets.hero(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           eyebrow: first_present([group_attr(element, :hero, :eyebrow), attr(element, :eyebrow)]),
+           title: first_present([group_attr(element, :hero, :title), attr(element, :title)]),
+           message:
+             first_present([group_attr(element, :hero, :message), attr(element, :message)]),
+           align: first_present([group_attr(element, :hero, :align), attr(element, :align)]),
+           supporting: supporting,
+           actions: actions
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
        when kind in [:text, "text"] do
     {:ok,
      Widgets.text(element.id, content_text(element, inspect(element.id)), base_opts(element))}
@@ -387,6 +431,54 @@ defmodule ElmUi.Renderer.Canonical do
          filters: attr(element, :filters, []),
          query: attr(element, :query),
          expand_all: attr(element, :expand_all, false)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:stat, "stat"] do
+    {:ok,
+     Widgets.stat(
+       element.id,
+       Keyword.merge(base_opts(element),
+         title: first_present([group_attr(element, :stat, :title), attr(element, :title)]),
+         value: first_present([group_attr(element, :stat, :value), attr(element, :value)]),
+         message: first_present([group_attr(element, :stat, :message), attr(element, :message)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:key_value, "key_value"] do
+    {:ok,
+     Widgets.key_value(
+       element.id,
+       first_present([group_attr(element, :key_value, :label), attr(element, :label)], ""),
+       first_present([group_attr(element, :key_value, :value), attr(element, :value)]),
+       Keyword.merge(base_opts(element),
+         description:
+           first_present([
+             group_attr(element, :key_value, :description),
+             attr(element, :description)
+           ])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:info_list, "info_list"] do
+    {:ok,
+     Widgets.info_list(
+       element.id,
+       first_present([group_attr(element, :info_list, :items), attr(element, :items)], []),
+       Keyword.merge(base_opts(element),
+         ordered:
+           first_present([group_attr(element, :info_list, :ordered?), attr(element, :ordered)], false),
+         empty_state:
+           first_present([
+             group_attr(element, :info_list, :empty_state),
+             attr(element, :empty_state)
+           ])
        )
      )}
   end
@@ -994,6 +1086,24 @@ defmodule ElmUi.Renderer.Canonical do
   end
 
   defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:form_field, "form_field"] do
+    with {:ok, control} <- required_slot_child(element, :control) do
+      {:ok,
+       Widgets.form_field(
+         element.id,
+         control,
+         Keyword.merge(base_opts(element),
+           name: first_present([group_attr(element, :field, :name), attr(element, :name)]),
+           control_id:
+             first_present([group_attr(element, :field, :control_id), attr(element, :control_id)]),
+           label: optional_slot_child(element, :label),
+           help: optional_slot_child(element, :help)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layer, :widget, "layer", "widget"] and kind in [:overlay, "overlay"] do
     with {:ok, base} <- required_slot_child(element, :base),
          {:ok, layers} <- required_layer_children(element) do
@@ -1254,6 +1364,15 @@ defmodule ElmUi.Renderer.Canonical do
       {:ok, widget} -> widget
       {:error, _error} -> nil
     end
+  end
+
+  defp optional_slot_children(%Element{} = element, slot) do
+    element.children
+    |> Enum.filter(fn
+      %Child{slot: child_slot} -> child_slot == slot or child_slot == Atom.to_string(slot)
+      _other -> false
+    end)
+    |> map_children()
   end
 
   defp slot_child(%Element{} = element, slot) do

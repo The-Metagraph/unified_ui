@@ -4,7 +4,7 @@ defmodule DesktopUi.MixProject do
   @version "0.1.0"
   @source_url "https://github.com/pcharbon70/unified_ui"
   @sdl_runtime_policy %{
-    foundation: :sdl2,
+    foundation: :sdl3,
     binding: :sdl,
     binding_status: :deferred,
     phase: :runtime_backbone,
@@ -17,7 +17,7 @@ defmodule DesktopUi.MixProject do
       version: @version,
       elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
-      description: "SDL2-oriented desktop runtime library for the unified ecosystem.",
+      description: "SDL3-oriented desktop runtime library for the unified ecosystem.",
       deps: deps(),
       docs: docs(),
       package: package(),

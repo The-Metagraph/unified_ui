@@ -32,6 +32,11 @@ defmodule DesktopUi.Reference do
     package_reference().artifacts
   end
 
+  @spec sdl3_summary() :: map()
+  def sdl3_summary do
+    package_reference().sdl3
+  end
+
   @spec shared_runtime_contract() :: map()
   def shared_runtime_contract do
     %{
@@ -63,6 +68,19 @@ defmodule DesktopUi.Reference do
         validation_state: DesktopUi.Runtime.validation_state(),
         event_loop_diagnostics:
           DesktopUi.Runtime.EventLoop.diagnostics(DesktopUi.Runtime.EventLoop.scaffold())
+      },
+      sdl3: %{
+        foundation: DesktopUi.Sdl3.foundation(),
+        modules: DesktopUi.Sdl3.modules(),
+        scope: DesktopUi.Sdl3.adapter_scope(),
+        lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
+        handoff: DesktopUi.Sdl3.App.handoff_contract(),
+        renderer: DesktopUi.Sdl3.Renderer.contract(),
+        events: DesktopUi.Sdl3.Events.contract(),
+        text: DesktopUi.Sdl3.Text.contract(),
+        images: DesktopUi.Sdl3.Images.contract(),
+        validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
+        renderer_completeness: :skeleton
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),
@@ -130,6 +148,7 @@ defmodule DesktopUi.Reference do
         continuity_contract: DesktopUi.Inspection.continuity_contract(),
         platform_profiles: DesktopUi.Inspection.platform_profiles(),
         shared_runtime_contract: DesktopUi.Inspection.shared_runtime_contract(),
+        sdl3_adapter_surface: DesktopUi.Inspection.sdl3_adapter_surface(),
         transport_contract: DesktopUi.Inspection.transport_contract(),
         layering_contract: DesktopUi.Inspection.layering_contract(),
         validation_surface: DesktopUi.Inspection.validation_surface()
@@ -145,6 +164,7 @@ defmodule DesktopUi.Reference do
           :layout,
           :layer,
           :runtime,
+          :sdl3,
           :platform,
           :style,
           :theme,
@@ -164,6 +184,7 @@ defmodule DesktopUi.Reference do
         guides: DesktopUi.Tooling.documentation_surface(),
         maintainer_commands: DesktopUi.Tooling.mix_tasks(),
         shared_runtime_contract: shared_runtime_contract(),
+        sdl3_adapter_surface: DesktopUi.Inspection.sdl3_adapter_surface(),
         traceability_targets: DesktopUi.Validate.traceability_targets()
       },
       validate: %{

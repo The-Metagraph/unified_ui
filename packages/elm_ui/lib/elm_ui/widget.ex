@@ -65,6 +65,8 @@ defmodule ElmUi.Widget do
         :label,
         :control,
         :help,
+        :supporting,
+        :actions,
         :header,
         :body,
         :navigation,
@@ -211,12 +213,13 @@ defmodule ElmUi.Widget do
              :select,
              :pick_list,
              :field,
-             :field_group
+             :field_group,
+             :form_field
            ],
       do: :input
 
   def family_for(kind) when kind in [:tabs, :menu], do: :navigation
-  def family_for(kind) when kind in [:list, :table, :tree_view], do: :data
+  def family_for(kind) when kind in [:list, :table, :tree_view, :stat, :key_value, :info_list], do: :data
   def family_for(kind) when kind in [:markdown_viewer, :log_viewer], do: :document
   def family_for(kind) when kind in [:status, :progress, :inline_feedback], do: :feedback
 

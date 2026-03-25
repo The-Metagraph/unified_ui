@@ -1,6 +1,6 @@
 defmodule DesktopUi.Runtime.Frame do
   @moduledoc """
-  Frame coordination scaffold for the shared SDL2 runtime loop.
+  Frame coordination scaffold for the shared SDL3 runtime loop.
   """
 
   @spec scaffold() :: map()

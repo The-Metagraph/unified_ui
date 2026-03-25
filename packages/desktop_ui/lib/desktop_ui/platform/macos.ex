@@ -9,7 +9,7 @@ defmodule DesktopUi.Platform.MacOS do
   def summary do
     %{
       target: :macos,
-      runtime_foundation: :sdl2,
+      runtime_foundation: :sdl3,
       capabilities: capabilities(),
       callbacks: callbacks(),
       notifications: :user_notifications,

@@ -199,6 +199,80 @@ defmodule ElmUi.CanonicalRendererTest do
     assert find_node(model.tree, "inspect-dialog").browser.focusable?
   end
 
+  test "semantic canonical widgets map into the native elm_ui model" do
+    canonical =
+      Element.new(:layout, :column,
+        id: "semantic-dashboard",
+        children: [
+          Foundational.hero(
+            [
+              {:supporting,
+               Foundational.text("Semantic widgets stay semantic.", id: "hero-copy")},
+              {:actions, Foundational.button("Explore", id: "hero-action")}
+            ],
+            id: "docs-hero",
+            eyebrow: "ElmUi",
+            title: "Ship richer dashboards",
+            message: "Author semantic structure once and lower it into IUR."
+          ),
+          Data.stat(
+            id: "artifact-stat",
+            title: "Artifacts shipped",
+            value: "24",
+            message: "Across the current release train"
+          ),
+          Data.key_value("Owner", "Docs team",
+            id: "owner-pair",
+            description: "Maintaining semantic widget coverage"
+          ),
+          Data.info_list(
+            [
+              [
+                id: :semantic,
+                title: "Semantic widgets",
+                value: "In progress",
+                description: "Adding badge, hero, stat, key_value, and info_list"
+              ]
+            ],
+            id: "semantic-list",
+            ordered?: true,
+            empty_state: "No semantic notes"
+          ),
+          Forms.form_builder(
+            [
+              Forms.form_field(
+                Input.text_input(id: "dashboard-name-input", binding: %{name: :dashboard_name}),
+                id: "dashboard-name",
+                name: :dashboard_name,
+                label: "Dashboard name",
+                help: "Used in admin and docs views"
+              )
+            ],
+            id: "settings-form"
+          )
+        ]
+      )
+
+    assert {:ok, %ElmUi.Widget{kind: :column} = root} = ElmUi.Renderer.render(canonical)
+
+    hero = find_widget(root, "docs-hero")
+    stat = find_widget(root, "artifact-stat")
+    key_value = find_widget(root, "owner-pair")
+    info_list = find_widget(root, "semantic-list")
+    form_field = find_widget(root, "dashboard-name")
+
+    assert hero.kind == :hero
+    assert hero.attributes.eyebrow == "ElmUi"
+    assert Enum.map(hero.slot_children.supporting, & &1.id) == ["hero-copy"]
+    assert Enum.map(hero.slot_children.actions, & &1.id) == ["hero-action"]
+    assert stat.kind == :stat
+    assert key_value.kind == :key_value
+    assert info_list.kind == :info_list
+    assert info_list.attributes.ordered
+    assert form_field.kind == :form_field
+    assert hd(form_field.slot_children.control).id == "dashboard-name-input"
+  end
+
   test "canonical panel layouts map into the native layout surface" do
     canonical =
       Element.new(:layout, :panel,

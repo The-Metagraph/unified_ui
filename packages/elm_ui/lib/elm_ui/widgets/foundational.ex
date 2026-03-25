@@ -5,7 +5,7 @@ defmodule ElmUi.Widgets.Foundational do
 
   alias ElmUi.Widgets.Builder
 
-  @kinds [:text, :label, :icon, :image, :button, :link, :separator, :spacer, :content]
+  @kinds [:text, :label, :icon, :image, :button, :badge, :hero, :link, :separator, :spacer, :content]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -91,6 +91,49 @@ defmodule ElmUi.Widgets.Foundational do
       styles: Builder.styles(opts),
       events: Builder.events(opts, on_click: :click),
       metadata: Builder.metadata(opts, %{native_surface: :foundational, action?: true})
+    )
+  end
+
+  @spec badge(String.t() | atom(), String.t(), keyword() | map()) :: ElmUi.Widget.t()
+  def badge(id, label, opts \\ []) when is_binary(label) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:badge,
+      id: id,
+      attributes: %{
+        label: label,
+        icon: Builder.option(opts, :icon),
+        icon_set: Builder.option(opts, :icon_set),
+        presentation: Builder.option(opts, :presentation, :pill)
+      },
+      state: Builder.state(opts),
+      styles: Builder.styles(opts),
+      metadata: Builder.metadata(opts, %{native_surface: :foundational})
+    )
+  end
+
+  @spec hero(String.t() | atom(), [ElmUi.Widget.t() | map() | keyword()], keyword() | map()) ::
+          ElmUi.Widget.t()
+  def hero(id, children \\ [], opts \\ []) when is_list(children) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:hero,
+      id: id,
+      attributes: %{
+        eyebrow: Builder.option(opts, :eyebrow),
+        title: Builder.option(opts, :title),
+        message: Builder.option(opts, :message),
+        align: Builder.option(opts, :align)
+      },
+      slot_children:
+        Builder.slot_map([
+          {:default, children},
+          {:supporting, Builder.option(opts, :supporting)},
+          {:actions, Builder.option(opts, :actions)}
+        ]),
+      state: Builder.state(opts),
+      styles: Builder.styles(opts),
+      metadata: Builder.metadata(opts, %{native_surface: :foundational, container?: true})
     )
   end
 

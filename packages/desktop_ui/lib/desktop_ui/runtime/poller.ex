@@ -1,6 +1,6 @@
 defmodule DesktopUi.Runtime.Poller do
   @moduledoc """
-  Event polling scaffold for the shared SDL2 runtime loop.
+  Event polling scaffold for the shared SDL3 runtime loop.
   """
 
   @spec scaffold() :: map()

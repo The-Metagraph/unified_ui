@@ -6,7 +6,7 @@ defmodule ElmUi.Widgets.Data do
 
   alias ElmUi.Widgets.Builder
 
-  @kinds [:list, :table, :tree_view, :markdown_viewer, :log_viewer]
+  @kinds [:list, :table, :tree_view, :stat, :key_value, :info_list, :markdown_viewer, :log_viewer]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -83,6 +83,57 @@ defmodule ElmUi.Widgets.Data do
     )
   end
 
+  @spec stat(String.t() | atom(), keyword() | map()) :: ElmUi.Widget.t()
+  def stat(id, opts \\ []) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:stat,
+      id: id,
+      attributes: %{
+        title: Builder.option(opts, :title),
+        value: Builder.option(opts, :value),
+        message: Builder.option(opts, :message)
+      },
+      state: Builder.state(opts, [:disabled]),
+      styles: Builder.styles(opts),
+      metadata: Builder.metadata(opts, %{native_surface: :data, review_surface: true})
+    )
+  end
+
+  @spec key_value(String.t() | atom(), String.t(), term(), keyword() | map()) :: ElmUi.Widget.t()
+  def key_value(id, label, value, opts \\ []) when is_binary(label) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:key_value,
+      id: id,
+      attributes: %{
+        label: label,
+        value: value,
+        description: Builder.option(opts, :description)
+      },
+      state: Builder.state(opts, [:disabled]),
+      styles: Builder.styles(opts),
+      metadata: Builder.metadata(opts, %{native_surface: :data, review_surface: true})
+    )
+  end
+
+  @spec info_list(String.t() | atom(), [keyword() | map()], keyword() | map()) :: ElmUi.Widget.t()
+  def info_list(id, items, opts \\ []) when is_list(items) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:info_list,
+      id: id,
+      attributes: %{
+        items: normalize_info_items(items),
+        ordered: Builder.option(opts, :ordered, false),
+        empty_state: Builder.option(opts, :empty_state)
+      },
+      state: Builder.state(opts, [:disabled]),
+      styles: Builder.styles(opts),
+      metadata: Builder.metadata(opts, %{native_surface: :data, review_surface: true})
+    )
+  end
+
   @spec markdown_viewer(String.t() | atom(), String.t(), keyword() | map()) :: ElmUi.Widget.t()
   def markdown_viewer(id, markdown, opts \\ []) when is_binary(markdown) do
     opts = Builder.options(Map.put(Builder.options(opts), :id, id))
@@ -147,6 +198,20 @@ defmodule ElmUi.Widgets.Data do
       |> Builder.maybe_put(:value, Builder.option(item, :value))
       |> Builder.maybe_put(:description, Builder.option(item, :description))
       |> Builder.maybe_put(:selected, Builder.option(item, :selected))
+    end)
+  end
+
+  defp normalize_info_items(items) do
+    Enum.map(items, fn item ->
+      item = Builder.options(item)
+
+      %{}
+      |> Builder.maybe_put(:id, Builder.option(item, :id))
+      |> Builder.maybe_put(:title, Builder.option(item, :title))
+      |> Builder.maybe_put(:value, Builder.option(item, :value))
+      |> Builder.maybe_put(:description, Builder.option(item, :description))
+      |> Builder.maybe_put(:icon, Builder.option(item, :icon))
+      |> Builder.maybe_put(:status, Builder.option(item, :status))
     end)
   end
 

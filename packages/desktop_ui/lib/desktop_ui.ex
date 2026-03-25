@@ -15,6 +15,7 @@ defmodule DesktopUi do
     Reference,
     Renderer,
     Runtime,
+    Sdl3,
     Style,
     Theme,
     Tooling,
@@ -27,6 +28,7 @@ defmodule DesktopUi do
   @type package_area ::
           :widgets
           | :runtime
+          | :sdl3
           | :platform
           | :layout
           | :layer
@@ -46,6 +48,7 @@ defmodule DesktopUi do
     [
       :widgets,
       :runtime,
+      :sdl3,
       :platform,
       :layout,
       :layer,
@@ -73,6 +76,9 @@ defmodule DesktopUi do
 
   @spec platform() :: module()
   def platform, do: Platform
+
+  @spec sdl3() :: module()
+  def sdl3, do: Sdl3
 
   @spec layout() :: module()
   def layout, do: Layout
