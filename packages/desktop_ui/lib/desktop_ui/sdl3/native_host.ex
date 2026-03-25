@@ -4,7 +4,7 @@ defmodule DesktopUi.Sdl3.NativeHost do
   state behind the framed host protocol.
   """
 
-  alias DesktopUi.Sdl3.{Lifecycle, Protocol}
+  alias DesktopUi.Sdl3.{Lifecycle, Protocol, Renderer}
 
   # Port-backed stdio reads block until the requested byte count is satisfied.
   # Read one byte at a time so framed host messages can be processed as soon as
@@ -152,6 +152,50 @@ defmodule DesktopUi.Sdl3.NativeHost do
       )
 
     {%{state | windows: windows}, [response], false}
+  end
+
+  defp handle_message(state, %{family: :frame, kind: :request} = message) do
+    frame = message.payload[:frame] || %{}
+    redraw_status = message.payload[:redraw_status] || :requested
+
+    {:ok, presentation} =
+      Renderer.present_payload(
+        frame,
+        redraw_status: redraw_status,
+        platform_target: state.platform_target
+      )
+
+    next_state = %{
+      state
+      | presented_frames: state.presented_frames + 1,
+        last_frame: %{
+          runtime_id: frame[:runtime_id],
+          screen_id: frame[:screen_id],
+          window_count: length(frame[:windows] || []),
+          draw_operation_count: presentation.draw_operation_count,
+          validation_state: presentation.validation_state
+        }
+    }
+
+    response =
+      Protocol.new_message(
+        :frame,
+        :ack,
+        %{
+          presentation: presentation,
+          host: %{
+            backend: :sdl_renderer,
+            presented_frames: next_state.presented_frames,
+            last_frame: next_state.last_frame
+          }
+        },
+        correlation_id: message.id,
+        runtime_id: frame[:runtime_id] || get_in(state, [:runtime, :runtime_id]),
+        screen_id: frame[:screen_id] || get_in(state, [:runtime, :screen_id]),
+        window_id: message.meta[:window_id] || state.windows.primary_id
+      )
+
+    {next_state, [response], false}
   end
 
   defp handle_message(state, %{family: :shutdown, kind: :request} = message) do

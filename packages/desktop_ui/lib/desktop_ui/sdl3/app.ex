@@ -5,7 +5,7 @@ defmodule DesktopUi.Sdl3.App do
 
   alias DesktopUi.Runtime
   alias DesktopUi.Runtime.State
-  alias DesktopUi.Sdl3.{Lifecycle, PortHost, Protocol, RenderPlan, Window}
+  alias DesktopUi.Sdl3.{FrameEncoder, Lifecycle, PortHost, Protocol, RenderPlan, Window}
   alias UnifiedIUR.Element
 
   @type boot_request :: map()
@@ -121,8 +121,15 @@ defmodule DesktopUi.Sdl3.App do
     with {:ok, boot_request} <- boot_native_screen(screen, opts),
          {:ok, session} <- PortHost.launch_default(opts),
          {:ok, session} <- PortHost.send_message(session, boot_message(boot_request)),
-         {:ok, ack, session} <- PortHost.recv_message(session, Keyword.get(opts, :timeout, 5_000)) do
-      {:ok, %{boot_request: boot_request, host: session, acknowledgement: ack}}
+         {:ok, ack, session} <- PortHost.recv_message(session, Keyword.get(opts, :timeout, 5_000)),
+         {:ok, frame_ack, session} <- present_frame(session, boot_request.frame_request, opts) do
+      {:ok,
+       %{
+         boot_request: boot_request,
+         host: session,
+         acknowledgement: ack,
+         frame_acknowledgement: frame_ack
+       }}
     end
   end
 
@@ -131,8 +138,45 @@ defmodule DesktopUi.Sdl3.App do
     with {:ok, boot_request} <- boot_iur_screen(element, opts),
          {:ok, session} <- PortHost.launch_default(opts),
          {:ok, session} <- PortHost.send_message(session, boot_message(boot_request)),
+         {:ok, ack, session} <- PortHost.recv_message(session, Keyword.get(opts, :timeout, 5_000)),
+         {:ok, frame_ack, session} <- present_frame(session, boot_request.frame_request, opts) do
+      {:ok,
+       %{
+         boot_request: boot_request,
+         host: session,
+         acknowledgement: ack,
+         frame_acknowledgement: frame_ack
+       }}
+    end
+  end
+
+  @spec present_frame(PortHost.t(), map(), keyword()) :: {:ok, map(), PortHost.t()} | {:error, term()}
+  def present_frame(%PortHost{} = session, %{frame_request: frame_request}, opts) do
+    present_frame(session, frame_request, opts)
+  end
+
+  def present_frame(%PortHost{} = session, %{presentation: %{render_plan: %RenderPlan{} = plan}} = frame_request, opts) do
+    with {:ok, frame_payload} <- FrameEncoder.encode(plan),
+         {:ok, session} <-
+           PortHost.send_message(
+             session,
+             Protocol.new_message(
+               :frame,
+               :request,
+               %{
+                 frame: frame_payload,
+                 redraw_status: frame_request.redraw_status,
+                 redraw_reason: frame_request.redraw_reason,
+                 primary_window_id: frame_request.primary_window_id
+               },
+               runtime_id: frame_payload.runtime_id,
+               screen_id: frame_payload.screen_id,
+               window_id: frame_request.primary_window_id,
+               channel: :control
+             )
+           ),
          {:ok, ack, session} <- PortHost.recv_message(session, Keyword.get(opts, :timeout, 5_000)) do
-      {:ok, %{boot_request: boot_request, host: session, acknowledgement: ack}}
+      {:ok, ack, session}
     end
   end
 

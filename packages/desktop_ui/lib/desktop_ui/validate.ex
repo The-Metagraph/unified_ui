@@ -232,6 +232,7 @@ defmodule DesktopUi.Validate do
             DesktopUi.Sdl3.Lifecycle,
             DesktopUi.Sdl3.Window,
             DesktopUi.Sdl3.RenderPlan,
+            DesktopUi.Sdl3.FrameEncoder,
             DesktopUi.Sdl3.Renderer,
             DesktopUi.Sdl3.Events,
             DesktopUi.Sdl3.Text,
@@ -254,14 +255,21 @@ defmodule DesktopUi.Validate do
         %{protocol: adapter_surface.protocol, validation_state: adapter_surface.validation_state}
       ),
       check(
+        :frame_encoding_present,
+        adapter_surface.validation_state.frame_encoder == :frame_encoding_ready and
+          adapter_surface.frame_encoder.payload_family == :frame,
+        %{frame_encoder: adapter_surface.frame_encoder, validation_state: adapter_surface.validation_state}
+      ),
+      check(
         :renderer_first_backend_bounded,
         adapter_surface.renderer.first_backend == :sdl_renderer and
-          adapter_surface.renderer.future_backend == :sdl_gpu,
+          adapter_surface.renderer.future_backend == :sdl_gpu and
+          adapter_surface.validation_state.renderer == :presented_frame_ready,
         %{renderer: adapter_surface.renderer}
       ),
       check(
-        :adapter_skeleton_not_overstated,
-        adapter_surface.renderer_completeness == :skeleton and
+        :adapter_execution_scope_bounded,
+        adapter_surface.renderer_completeness == :first_presented_frames and
           adapter_surface.renderer.placeholder_draw_operations_allowed,
         %{renderer: adapter_surface.renderer, completeness: adapter_surface.renderer_completeness}
       ),

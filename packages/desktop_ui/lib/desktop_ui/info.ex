@@ -52,12 +52,13 @@ defmodule DesktopUi.Info do
         handoff: DesktopUi.Sdl3.App.handoff_contract(),
         host: DesktopUi.Sdl3.PortHost.contract(),
         protocol: DesktopUi.Sdl3.Protocol.contract(),
+        frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
         images: DesktopUi.Sdl3.Images.contract(),
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
-        renderer_completeness: :skeleton
+        renderer_completeness: :first_presented_frames
       },
       widgets: %{
         families: DesktopUi.Widgets.families(),

@@ -6,6 +6,7 @@ defmodule DesktopUi.Sdl3 do
   alias DesktopUi.Sdl3.{
     App,
     Events,
+    FrameEncoder,
     Host,
     Images,
     Lifecycle,
@@ -25,6 +26,7 @@ defmodule DesktopUi.Sdl3 do
     [
       __MODULE__,
       App,
+      FrameEncoder,
       Host,
       PortHost,
       Protocol,
@@ -46,6 +48,7 @@ defmodule DesktopUi.Sdl3 do
       :runtime_handoff,
       :window_registry,
       :render_plan,
+      :frame_encoding,
       :renderer_presentation,
       :host_process,
       :native_host_execution,
@@ -68,7 +71,8 @@ defmodule DesktopUi.Sdl3 do
       protocol_framing: :desktop_ui_sdl3_frame,
       host_execution: :external_process,
       lifecycle_model: :callback_oriented,
-      first_backend: :renderer
+      first_backend: :renderer,
+      frame_encoding: :host_protocol_payload
     }
   end
 

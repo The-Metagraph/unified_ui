@@ -83,26 +83,26 @@ Back to index: [README](./README.md)
       [x] 7.2.2.2 Subtask - Keep overlays, dialogs, popovers, and context menus as in-window layered surfaces by default while preserving their owner-window relationship.
       [x] 7.2.2.3 Subtask - Implement bounded host-side handling for DPI changes, window moves, resize callbacks, and focus transitions without drifting from the shared runtime contract.
 
-  [ ] 7.3 Section - Render-Plan Encoding and First Presented Frames
+  [x] 7.3 Section - Render-Plan Encoding and First Presented Frames
     Convert retained render plans into actual SDL3-presented frames so the
     package moves from placeholder reporting to real native presentation.
 
-    [ ] 7.3.1 Task - Encode retained render plans for host presentation
+    [x] 7.3.1 Task - Encode retained render plans for host presentation
       Define how Elixir-side render plans become host-side drawing commands
       while preserving logical units, clipping, layering, and styling meaning.
 
-      [ ] 7.3.1.1 Subtask - Introduce explicit frame-encoding modules that serialize `DesktopUi.Sdl3.RenderPlan` data into the framed host protocol.
-      [ ] 7.3.1.2 Subtask - Preserve logical bounds, window assignment, clip regions, transient layers, and resolved style output through the encoded frame format.
-      [ ] 7.3.1.3 Subtask - Keep render-plan encoding independent from host drawing internals so future renderer evolution does not rewrite Elixir-side widget or layout semantics.
+      [x] 7.3.1.1 Subtask - Introduce explicit frame-encoding modules that serialize `DesktopUi.Sdl3.RenderPlan` data into the framed host protocol.
+      [x] 7.3.1.2 Subtask - Preserve logical bounds, window assignment, clip regions, transient layers, and resolved style output through the encoded frame format.
+      [x] 7.3.1.3 Subtask - Keep render-plan encoding independent from host drawing internals so future renderer evolution does not rewrite Elixir-side widget or layout semantics.
 
-    [ ] 7.3.2 Task - Present the first real frames through SDL_Renderer
+    [x] 7.3.2 Task - Present the first real frames through SDL_Renderer
       Implement a concrete `SDL_Renderer`-first draw loop that can clear
       windows, apply logical presentation, and draw retained-plan operations
       into visible native frames.
 
-      [ ] 7.3.2.1 Subtask - Implement host-side logical-presentation setup so `desktop_ui` logical units resolve consistently across DPI differences.
-      [ ] 7.3.2.2 Subtask - Implement first-pass drawing for core retained draw operations such as background fills, bounds, placeholder surfaces, text labels, and layer shells.
-      [ ] 7.3.2.3 Subtask - Implement present and redraw scheduling so frame output is visible, repeatable, and only reissued when runtime redraw intent requires it.
+      [x] 7.3.2.1 Subtask - Implement host-side logical-presentation setup so `desktop_ui` logical units resolve consistently across DPI differences.
+      [x] 7.3.2.2 Subtask - Implement first-pass drawing for core retained draw operations such as background fills, bounds, placeholder surfaces, text labels, and layer shells.
+      [x] 7.3.2.3 Subtask - Implement present and redraw scheduling so frame output is visible, repeatable, and only reissued when runtime redraw intent requires it.
 
   [ ] 7.4 Section - Text, Image, and Event Round-Trip Execution
     Complete the first executable round-trip by turning companion-resource and

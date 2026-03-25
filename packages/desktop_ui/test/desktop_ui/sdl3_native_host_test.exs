@@ -14,6 +14,10 @@ defmodule DesktopUi.Sdl3NativeHostTest do
     assert launched.acknowledgement.payload.host.backend == :sdl_renderer
     assert launched.acknowledgement.payload.lifecycle.state == :ready
     assert launched.acknowledgement.payload.windows.primary_id == "window:workspace-foundation"
+    assert launched.frame_acknowledgement.family == :frame
+    assert launched.frame_acknowledgement.kind == :ack
+    assert launched.frame_acknowledgement.payload.presentation.presented_frame?
+    assert launched.frame_acknowledgement.payload.host.presented_frames == 1
     assert PortHost.status(launched.host).liveness == :alive
 
     assert {:ok, shutdown_ack, _host} = App.shutdown_host(launched.host)
@@ -27,6 +31,7 @@ defmodule DesktopUi.Sdl3NativeHostTest do
 
     assert launched.boot_request.runtime.source_kind == :canonical
     assert launched.acknowledgement.payload.host.native_window_count >= 1
+    assert launched.frame_acknowledgement.payload.presentation.window_count >= 1
 
     assert {:ok, _shutdown_ack, _host} = App.shutdown_host(launched.host)
   end

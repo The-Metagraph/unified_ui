@@ -53,7 +53,8 @@ defmodule DesktopUi.DocumentationTest do
     assert info_artifacts.target_platforms == [:windows, :macos, :linux]
     assert reference_sdl3.foundation.runtime_foundation == :sdl3
     assert reference_sdl3.renderer.first_backend == :sdl_renderer
-    assert info_sdl3.renderer_completeness == :skeleton
+    assert reference_sdl3.frame_encoder.payload_family == :frame
+    assert info_sdl3.renderer_completeness == :first_presented_frames
   end
 
   test "documentation and validation surfaces expose release and traceability guardrails" do
