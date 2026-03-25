@@ -500,6 +500,30 @@
       ]
     },
     {
+      "requirement_id": "unified_iur.widgets.semantic_surface",
+      "status": "verified",
+      "notes": "Verified by the maintained semantic widget constructors across foundational, data, and form surfaces.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/foundational.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/widgets/data.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/forms.ex"
+        },
+        {
+          "kind": "command",
+          "run": "grep -nE \"def badge|def hero|def stat|def key_value|def info_list|def form_field\" packages/unified_iur/lib/unified_iur/widgets/foundational.ex packages/unified_iur/lib/unified_iur/widgets/data.ex packages/unified_iur/lib/unified_iur/forms.ex",
+          "cwd": "."
+        }
+      ]
+    },
+    {
       "requirement_id": "unified_iur.widgets.data_and_document_views",
       "inherits_from_requirement_id": "unified_iur.constructs.navigation_feedback_and_data",
       "notes": "Shares the current conformance status of unified_iur.constructs.navigation_feedback_and_data."

@@ -35,7 +35,8 @@ variation explicit:
 
 ## Artifact Workflows
 
-`DesktopUi.Artifacts` makes packaging workflows explicit for each target:
+`DesktopUi.Artifacts` and `DesktopUi.Package` make packaging workflows explicit
+for each target:
 
 - Windows: archive and installer flows
 - macOS: app-bundle and signed-archive flows
@@ -45,6 +46,9 @@ Packaging remains distinct from runtime, renderer, and transport logic. Use:
 
 - `DesktopUi.Reference.artifact_summary/0`
 - `DesktopUi.Info.artifact_summary/0`
+- `DesktopUi.Package.diagnostics/0`
 - `DesktopUi.Validate.artifact_validation/0`
+- `mix desktop_ui.build --target linux --dry-run`
+- `mix desktop_ui.package --target linux --dry-run`
 
 to review artifact assumptions while changing package behavior.

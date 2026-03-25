@@ -34,7 +34,7 @@ defmodule DesktopUi.Info do
 
   @spec package_summary() :: map()
   def package_summary do
-    {:ok, release_readiness} = DesktopUi.Validate.release_readiness(:summary)
+    release_readiness = DesktopUi.Validate.surface_release_readiness()
     capabilities = DesktopUi.Sdl3.Capabilities.detect()
 
     %{
@@ -65,6 +65,15 @@ defmodule DesktopUi.Info do
         run_execution: DesktopUi.Tooling.run_backend_summary(capabilities),
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
         renderer_completeness: :first_presented_frames
+      },
+      build: %{
+        contract: DesktopUi.Build.contract(),
+        targets: DesktopUi.Build.targets()
+      },
+      packaging: %{
+        contract: DesktopUi.Package.contract(),
+        targets: DesktopUi.Package.targets(),
+        validation_state: DesktopUi.Package.validation_state()
       },
       widgets: %{
         families: DesktopUi.Widgets.families(),

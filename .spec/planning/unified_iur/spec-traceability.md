@@ -91,6 +91,7 @@ tasks because they govern other runtime packages:
 | --- | --- | --- | --- |
 | `unified_iur.widgets.input_and_navigation` | `2.2.1` | `2.4.1` | Direct input and navigation widget requirement. |
 | `unified_iur.widgets.data_and_document_views` | `2.4.1` | `3.4.2` | Direct data and document widget requirement. |
+| `unified_iur.widgets.semantic_surface` | `2.1.1` | `2.2.2`, `2.5.1` | Direct semantic widget requirement. |
 | `unified_iur.widgets.overlay_and_feedback` | `3.1.1` | `3.1.2` | Direct overlay and feedback widget requirement. |
 | `unified_iur.widgets.visualization` | `3.3.2` | - | Direct visualization widget requirement. |
 | `unified_iur.widgets.operational_views` | `3.4.1` | `3.4.2` | Direct operational widget requirement. |

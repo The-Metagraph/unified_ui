@@ -163,6 +163,7 @@ defmodule DesktopUi.Validate do
   def artifact_validation do
     diagnostics = DesktopUi.Artifacts.diagnostics()
     boundary_policy = DesktopUi.Artifacts.boundary_policy()
+    packaging = DesktopUi.Package.diagnostics()
 
     checks = [
       check(:all_targets_present, diagnostics.targets == [:windows, :macos, :linux], diagnostics),
@@ -177,6 +178,27 @@ defmodule DesktopUi.Validate do
         :explicit_packaging_per_target,
         Enum.all?(diagnostics.targets, &(DesktopUi.Artifacts.workflow(&1).packaging != [])),
         diagnostics.workflows
+      ),
+      check(
+        :package_surface_present,
+        packaging.validation_state == :target_packaging_surface_ready,
+        packaging
+      ),
+      check(
+        :package_artifact_paths_present,
+        Enum.all?(packaging.target_packages, fn target ->
+          is_binary(target.archive_path) and
+            (is_binary(target.bundle_path) or is_binary(target.payload_root))
+        end),
+        packaging.target_packages
+      ),
+      check(
+        :fallback_warnings_explicit,
+        Enum.all?(packaging.target_packages, fn target ->
+          target.compiled_host_included? or
+            (:compiled_host_missing in target.warnings and :review_bundle_only in target.warnings)
+        end),
+        packaging.target_packages
       )
     ]
 
@@ -205,6 +227,11 @@ defmodule DesktopUi.Validate do
         %{workflows: DesktopUi.Tooling.workflows()}
       ),
       check(
+        :artifact_packaging_workflow_present,
+        :artifact_packaging_review in DesktopUi.Tooling.workflows(),
+        %{workflows: DesktopUi.Tooling.workflows()}
+      ),
+      check(
         :host_execution_workflow_present,
         :host_execution_review in DesktopUi.Tooling.workflows(),
         %{workflows: DesktopUi.Tooling.workflows()}
@@ -214,6 +241,8 @@ defmodule DesktopUi.Validate do
         Enum.all?(
           [
             "mix desktop_ui.inspect",
+            "mix desktop_ui.build",
+            "mix desktop_ui.package",
             "mix desktop_ui.build_host",
             "mix desktop_ui.run",
             "mix desktop_ui.validate"
@@ -227,7 +256,8 @@ defmodule DesktopUi.Validate do
         is_map(run_catalog.execution) and
           is_boolean(run_catalog.execution.visible_runner_ready?) and
           is_boolean(run_catalog.execution.protocol_launch_ready?) and
-          run_catalog.execution.fallback_backend == :elixir_host,
+          run_catalog.execution.fallback_backend == :elixir_host and
+          is_list(run_catalog.execution.target_packages),
         %{execution: run_catalog.execution}
       )
     ]
@@ -471,6 +501,17 @@ defmodule DesktopUi.Validate do
     Map.put(sections, :release_readiness, build_release_readiness(sections, :summary))
   end
 
+  @spec surface_validation_report() :: map()
+  def surface_validation_report do
+    sections = default_sections(skip_host_execution: true)
+    Map.put(sections, :release_readiness, build_release_readiness(sections, :summary))
+  end
+
+  @spec surface_release_readiness() :: map()
+  def surface_release_readiness do
+    surface_validation_report().release_readiness
+  end
+
   @spec validation_summary(map()) :: String.t()
   def validation_summary(report) when is_map(report) do
     [
@@ -609,25 +650,32 @@ defmodule DesktopUi.Validate do
     Code.ensure_loaded?(module) and Enum.member?(module.__info__(:functions), {function, arity})
   end
 
-  defp default_sections do
-    %{
+  defp default_sections(opts \\ []) do
+    sections = %{
       example_coverage: example_coverage(),
       runtime_behavior: runtime_behavior(),
       transport_validation: transport_validation(),
       artifact_validation: artifact_validation(),
       sdl3_adapter_surface: sdl3_adapter_surface(),
-      host_execution_surface: host_execution_surface(),
       tooling_surface: tooling_surface(),
       documentation_surface: documentation_surface(),
       traceability_alignment: traceability_alignment()
     }
+
+    if Keyword.get(opts, :skip_host_execution, false) do
+      sections
+    else
+      Map.put(sections, :host_execution_surface, host_execution_surface())
+    end
   end
 
   defp build_release_readiness(sections, mode) do
     findings = sections |> Map.values() |> Enum.flat_map(& &1.findings)
 
     gates =
-      Enum.map(release_gates(), fn gate ->
+      release_gates()
+      |> Enum.filter(&Map.has_key?(sections, &1.section))
+      |> Enum.map(fn gate ->
         section = Map.fetch!(sections, gate.section)
         Map.put(gate, :status, section.status)
       end)

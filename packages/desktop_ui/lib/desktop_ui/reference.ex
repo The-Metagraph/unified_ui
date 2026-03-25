@@ -51,6 +51,7 @@ defmodule DesktopUi.Reference do
   @spec package_reference() :: map()
   def package_reference do
     capabilities = DesktopUi.Sdl3.Capabilities.detect()
+    validation_report = DesktopUi.Validate.surface_validation_report()
 
     %{
       package: DesktopUi,
@@ -91,6 +92,19 @@ defmodule DesktopUi.Reference do
         run_execution: DesktopUi.Tooling.run_backend_summary(capabilities),
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
         renderer_completeness: :first_presented_frames
+      },
+      build: %{
+        contract: DesktopUi.Build.contract(),
+        targets: DesktopUi.Build.targets(),
+        target_builds: Enum.map(DesktopUi.Build.targets(), &DesktopUi.Build.build_plan(&1))
+      },
+      packaging: %{
+        contract: DesktopUi.Package.contract(),
+        targets: DesktopUi.Package.targets(),
+        diagnostics: DesktopUi.Package.diagnostics(),
+        target_packages:
+          Enum.map(DesktopUi.Package.targets(), &DesktopUi.Package.package_plan(&1)),
+        validation_state: DesktopUi.Package.validation_state()
       },
       platform: %{
         targets: DesktopUi.Platform.targets(),
@@ -200,16 +214,13 @@ defmodule DesktopUi.Reference do
       validate: %{
         inspect: DesktopUi.Inspect,
         validate: DesktopUi.Validate,
-        validation_sections:
-          DesktopUi.Validate.validation_report()
-          |> Map.keys()
-          |> Enum.sort(),
+        validation_sections: validation_report |> Map.keys() |> Enum.sort(),
         release_readiness_modes: [:summary, :strict],
         release_gates: DesktopUi.Validate.release_gates(),
         evolution_rules: DesktopUi.Validate.evolution_rules(),
         documentation_surface: DesktopUi.Validate.documentation_surface(),
         traceability_alignment: DesktopUi.Validate.traceability_alignment(),
-        validation_report: DesktopUi.Validate.validation_report()
+        validation_report: validation_report
       }
     }
   end

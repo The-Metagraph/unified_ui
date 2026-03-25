@@ -74,6 +74,10 @@ Package-local checks:
 - `mix desktop_ui.inspect native_styled_review --format diagnostics`
 - `mix desktop_ui.build_host --dry-run`
 - `mix desktop_ui.build_host`
+- `mix desktop_ui.build --target linux --dry-run`
+- `mix desktop_ui.build --target linux`
+- `mix desktop_ui.package --target linux --dry-run`
+- `mix desktop_ui.package --target linux`
 - `mix desktop_ui.run --format catalog`
 - `mix desktop_ui.run native_foundational --format summary`
 - `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000`
@@ -97,6 +101,8 @@ Use these commands from `packages/desktop_ui`:
 
 - `mix desktop_ui.build_host --dry-run` to inspect compiler and SDL3 dependency state
 - `mix desktop_ui.build_host` to build the native executable when SDL3 is available
+- `mix desktop_ui.build --target linux --dry-run` to inspect staged target output readiness
+- `mix desktop_ui.package --target linux --dry-run` to inspect packaging output and fallback warnings
 - `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000` to prefer the real visible SDL3 window path
 - `mix desktop_ui.run native_foundational --backend fallback` to force the protocol fallback host
 
@@ -105,6 +111,7 @@ The run surface reports:
 - whether the compiled visible runner is ready
 - whether protocol-style compiled launch is ready yet
 - whether text and image companion-library support is native-backed or falling back
+- whether staged build and packaged target artifacts are compiled-host-ready or review-only
 - whether the current execution used a real visible window or the bounded fallback host
 
 Text and image companion libraries remain optional in this phase. Missing

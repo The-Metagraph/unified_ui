@@ -33,6 +33,7 @@ The plan aligns to:
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows.
 7. [Phase 7 - SDL3 Native Host Execution and First Presented Frames](./phase-07-sdl3-native-host-execution-and-first-presented-frames.md): implement the first real executable SDL3 host boundary, framed Elixir-to-native protocol, real window and frame presentation ownership, and event/resource round-trips that move `desktop_ui` from semantic scaffolding to actual native execution.
 8. [Phase 8 - SDL3 Native Build, Visible Window Runtime, and Backend Selection](./phase-08-sdl3-native-build-visible-window-runtime-and-backend-selection.md): implement the first buildable native SDL3 host workflow, backend selection between compiled and fallback execution, and visible-window presentation for maintained package runs.
+9. [Phase 9 - Platform Build, Packaging, and Compliance Activation](./phase-09-platform-build-packaging-and-compliance-activation.md): implement repeatable target staging and packaging workflows, surface shippability diagnostics, and onboard `desktop_ui` into package-scoped conformance.
 
 ## Supporting Docs
 - [Spec Traceability Manifest](./spec-traceability.json): authoritative machine-readable mapping from applicable requirements into this plan.

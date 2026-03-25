@@ -17,6 +17,10 @@ defmodule DesktopUi.InspectionTest do
     assert snapshot.platform.profile.target == :linux
     assert snapshot.platform.artifacts.packaging == [:tar_archive, :appimage_like_bundle]
     assert Enum.any?(DesktopUi.Inspection.helpers(), &(&1 == :runtime_snapshot))
+    assert Enum.any?(DesktopUi.Inspection.helpers(), &(&1 == :packaging_contract))
     assert DesktopUi.Inspection.continuity_contract().validation == [:pass, :fail]
+
+    assert DesktopUi.Inspection.package_overview().packaging.validation_state ==
+             :target_packaging_surface_ready
   end
 end
