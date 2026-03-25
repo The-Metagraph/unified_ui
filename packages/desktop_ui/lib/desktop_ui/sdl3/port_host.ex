@@ -33,6 +33,7 @@ defmodule DesktopUi.Sdl3.PortHost do
     %{
       transport: :port,
       framed_protocol: Protocol.contract().framing,
+      default_runner: :elixir_eval,
       crash_reporting: [:exit_status, :closed],
       liveness_states: [:running, :stopped, :crashed],
       version_negotiation: :explicit
@@ -52,6 +53,33 @@ defmodule DesktopUi.Sdl3.PortHost do
       transport: :port,
       protocol_version: Keyword.get(opts, :protocol_version, hd(Protocol.supported_versions()))
     }
+  end
+
+  @spec default_launch_spec(keyword()) :: map()
+  def default_launch_spec(opts \\ []) do
+    package_root = Path.expand("../../..", __DIR__)
+    code_paths = default_code_paths()
+
+    %{
+      executable: System.find_executable("elixir"),
+      args:
+        Enum.flat_map(code_paths, fn path -> ["-pa", path] end) ++
+          [
+            "--no-halt",
+            "-e",
+            "DesktopUi.Sdl3.NativeHost.main()"
+          ],
+      cd: Keyword.get(opts, :cd, package_root),
+      env: [],
+      transport: :port,
+      protocol_version: Keyword.get(opts, :protocol_version, hd(Protocol.supported_versions()))
+    }
+  end
+
+  @spec launch_default(keyword()) :: {:ok, t()} | {:error, Error.t()}
+  def launch_default(opts \\ []) do
+    spec = default_launch_spec(opts)
+    launch(executable: spec.executable, args: spec.args, cd: spec.cd, env: spec.env)
   end
 
   @impl true
@@ -104,7 +132,7 @@ defmodule DesktopUi.Sdl3.PortHost do
        %{
          session
          | messages_sent: session.messages_sent + 1,
-           last_message_family: Map.get(Protocol.new_message(:diagnostics, :report), :family)
+           last_message_family: nil
        }
        |> record_last_family(message)}
     end
@@ -140,7 +168,9 @@ defmodule DesktopUi.Sdl3.PortHost do
 
         case Protocol.next_message(next_session.buffer) do
           {:ok, message, rest} ->
-            {:ok, message, %{next_session | buffer: rest, messages_received: session.messages_received + 1}}
+            {:ok, message,
+             %{next_session | buffer: rest, messages_received: session.messages_received + 1}}
+            |> record_received_family()
 
           :more ->
             receive_frame(next_session, timeout)
@@ -204,7 +234,7 @@ defmodule DesktopUi.Sdl3.PortHost do
   end
 
   defp port_options(spec) do
-    options = [:binary, :exit_status, :use_stdio, :stderr_to_stdout, :hide]
+    options = [:binary, :exit_status, :use_stdio, :hide]
     options = [{:args, Enum.map(spec.args, &String.to_charlist/1)} | options]
     options = if spec.cwd, do: [{:cd, String.to_charlist(spec.cwd)} | options], else: options
 
@@ -220,5 +250,15 @@ defmodule DesktopUi.Sdl3.PortHost do
   end
 
   defp record_last_family(session, _message), do: session
-end
 
+  defp record_received_family({:ok, message, session}) do
+    {:ok, message, %{session | last_message_family: Map.get(message, :family)}}
+  end
+
+  defp default_code_paths do
+    :code.get_path()
+    |> Enum.map(&List.to_string/1)
+    |> Enum.filter(&String.contains?(&1, "/_build/"))
+    |> Enum.uniq()
+  end
+end

@@ -235,6 +235,18 @@ defmodule DesktopUi.Sdl3.Protocol do
   defp normalize_key(key) when is_binary(key), do: String.to_atom(key)
   defp normalize_key(key), do: key
 
+  defp normalize_value(%_{} = value) do
+    value
+    |> Map.from_struct()
+    |> normalize_value()
+  end
+
+  defp normalize_value(value) when is_tuple(value) do
+    value
+    |> Tuple.to_list()
+    |> Enum.map(&normalize_value/1)
+  end
+
   defp normalize_value(value) when is_map(value) do
     Map.new(value, fn {key, nested} ->
       {normalize_key(key), normalize_value(nested)}
@@ -242,6 +254,7 @@ defmodule DesktopUi.Sdl3.Protocol do
   end
 
   defp normalize_value(value) when is_list(value), do: Enum.map(value, &normalize_value/1)
+  defp normalize_value(value) when is_binary(value), do: maybe_normalize_existing_atom(value)
   defp normalize_value(value), do: value
 
   defp normalize_atom(value) when is_atom(value), do: value
@@ -255,6 +268,18 @@ defmodule DesktopUi.Sdl3.Protocol do
   end
 
   defp normalize_atom(value), do: value
+
+  defp json_safe(%_{} = value) do
+    value
+    |> Map.from_struct()
+    |> json_safe()
+  end
+
+  defp json_safe(value) when is_tuple(value) do
+    value
+    |> Tuple.to_list()
+    |> Enum.map(&json_safe/1)
+  end
 
   defp json_safe(value) when is_map(value) do
     Map.new(value, fn {key, nested} ->
@@ -271,4 +296,16 @@ defmodule DesktopUi.Sdl3.Protocol do
   defp maybe_put(map, _key, nil), do: map
   defp maybe_put(map, _key, []), do: map
   defp maybe_put(map, key, value), do: Map.put(map, key, value)
+
+  defp maybe_normalize_existing_atom(value) do
+    if String.match?(value, ~r/^[a-z][a-z0-9_]*$/) do
+      try do
+        String.to_existing_atom(value)
+      rescue
+        ArgumentError -> value
+      end
+    else
+      value
+    end
+  end
 end

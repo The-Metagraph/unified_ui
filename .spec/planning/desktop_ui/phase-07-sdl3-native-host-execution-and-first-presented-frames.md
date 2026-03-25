@@ -62,26 +62,26 @@ Back to index: [README](./README.md)
       [x] 7.1.2.2 Subtask - Define framing, message correlation, and error envelopes so host communication remains deterministic under partial failures.
       [x] 7.1.2.3 Subtask - Separate control messages from larger payloads so future text/image/resource traffic can evolve without rewriting the whole protocol.
 
-  [ ] 7.2 Section - SDL3 Callback Lifecycle and Native Window Execution
+  [x] 7.2 Section - SDL3 Callback Lifecycle and Native Window Execution
     Turn the current lifecycle and window seam into a real executable SDL3 app
     that owns the native main-thread runtime and maps `desktop_ui` windows onto
     real SDL3 windows.
 
-    [ ] 7.2.1 Task - Implement the callback-driven SDL3 host application skeleton
+    [x] 7.2.1 Task - Implement the callback-driven SDL3 host application skeleton
       Build the first native executable path that uses SDL3’s callback-oriented
       lifecycle to initialize, iterate, process events, and quit cleanly.
 
-      [ ] 7.2.1.1 Subtask - Implement host-side lifecycle handling for `SDL_AppInit`, `SDL_AppEvent`, `SDL_AppIterate`, and `SDL_AppQuit`.
-      [ ] 7.2.1.2 Subtask - Define how booted Elixir runtime state becomes host-managed SDL app state without duplicating semantic runtime logic.
-      [ ] 7.2.1.3 Subtask - Surface deterministic diagnostics for invalid callback ordering, unsupported initialization environments, and unrecoverable host boot failures.
+      [x] 7.2.1.1 Subtask - Implement host-side lifecycle handling for `SDL_AppInit`, `SDL_AppEvent`, `SDL_AppIterate`, and `SDL_AppQuit`.
+      [x] 7.2.1.2 Subtask - Define how booted Elixir runtime state becomes host-managed SDL app state without duplicating semantic runtime logic.
+      [x] 7.2.1.3 Subtask - Surface deterministic diagnostics for invalid callback ordering, unsupported initialization environments, and unrecoverable host boot failures.
 
-    [ ] 7.2.2 Task - Execute real native-window ownership and update flows
+    [x] 7.2.2 Task - Execute real native-window ownership and update flows
       Make the host create, update, focus, resize, and close real SDL3 windows
       according to the package’s native-window mapping rules.
 
-      [ ] 7.2.2.1 Subtask - Map top-level `desktop_ui` windows and multiwindow sessions to real SDL3 windows with stable host-side identities.
-      [ ] 7.2.2.2 Subtask - Keep overlays, dialogs, popovers, and context menus as in-window layered surfaces by default while preserving their owner-window relationship.
-      [ ] 7.2.2.3 Subtask - Implement bounded host-side handling for DPI changes, window moves, resize callbacks, and focus transitions without drifting from the shared runtime contract.
+      [x] 7.2.2.1 Subtask - Map top-level `desktop_ui` windows and multiwindow sessions to real SDL3 windows with stable host-side identities.
+      [x] 7.2.2.2 Subtask - Keep overlays, dialogs, popovers, and context menus as in-window layered surfaces by default while preserving their owner-window relationship.
+      [x] 7.2.2.3 Subtask - Implement bounded host-side handling for DPI changes, window moves, resize callbacks, and focus transitions without drifting from the shared runtime contract.
 
   [ ] 7.3 Section - Render-Plan Encoding and First Presented Frames
     Convert retained render plans into actual SDL3-presented frames so the

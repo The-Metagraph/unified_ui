@@ -9,6 +9,7 @@ defmodule DesktopUi.Sdl3 do
     Host,
     Images,
     Lifecycle,
+    NativeHost,
     PortHost,
     Protocol,
     RenderPlan,
@@ -27,6 +28,7 @@ defmodule DesktopUi.Sdl3 do
       Host,
       PortHost,
       Protocol,
+      NativeHost,
       Lifecycle,
       Window,
       RenderPlan,
@@ -46,6 +48,7 @@ defmodule DesktopUi.Sdl3 do
       :render_plan,
       :renderer_presentation,
       :host_process,
+      :native_host_execution,
       :framed_protocol,
       :port_transport,
       :event_normalization,
@@ -63,6 +66,7 @@ defmodule DesktopUi.Sdl3 do
       binding: :sdl,
       host_transport: :port,
       protocol_framing: :desktop_ui_sdl3_frame,
+      host_execution: :external_process,
       lifecycle_model: :callback_oriented,
       first_backend: :renderer
     }
