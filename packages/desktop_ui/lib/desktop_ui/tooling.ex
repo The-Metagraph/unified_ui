@@ -61,6 +61,8 @@ defmodule DesktopUi.Tooling do
       "mix test",
       "mix desktop_ui.inspect --format catalog",
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
+      "mix desktop_ui.build --target linux --dry-run",
+      "mix desktop_ui.build --target linux",
       "mix desktop_ui.build_host --dry-run",
       "mix desktop_ui.build_host",
       "mix desktop_ui.run --format catalog",
@@ -112,6 +114,7 @@ defmodule DesktopUi.Tooling do
       workflows: workflows(),
       execution: run_backend_summary(capabilities),
       contracts: %{
+        build: DesktopUi.Build.contract(),
         host: DesktopUi.Sdl3.PortHost.contract(),
         native_build: DesktopUi.Sdl3.NativeBuild.contract(),
         capabilities: capabilities,
@@ -139,7 +142,12 @@ defmodule DesktopUi.Tooling do
       visible_runner_ready?: capabilities.build.visible_runner_ready?,
       protocol_launch_ready?: capabilities.build.launch_ready?,
       text: DesktopUi.Sdl3.Text.native_support(capabilities),
-      images: DesktopUi.Sdl3.Images.native_support(capabilities)
+      images: DesktopUi.Sdl3.Images.native_support(capabilities),
+      target_builds:
+        Enum.map(
+          DesktopUi.Build.targets(),
+          &DesktopUi.Build.build_plan(&1, capabilities: capabilities)
+        )
     }
   end
 end

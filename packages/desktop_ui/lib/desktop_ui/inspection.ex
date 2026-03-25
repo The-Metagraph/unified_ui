@@ -57,6 +57,11 @@ defmodule DesktopUi.Inspection do
         canonical_ids: DesktopUi.Examples.canonical_ids(),
         comparison_ids: DesktopUi.Examples.comparison_ids()
       },
+      build: %{
+        contract: DesktopUi.Build.contract(),
+        targets: DesktopUi.Build.targets(),
+        validation_state: DesktopUi.Build.validation_state()
+      },
       transport: transport_contract(),
       platform_profiles: platform_profiles(),
       continuity: continuity_contract(),

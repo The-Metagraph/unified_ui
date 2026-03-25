@@ -92,6 +92,11 @@ defmodule DesktopUi.Reference do
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
         renderer_completeness: :first_presented_frames
       },
+      build: %{
+        contract: DesktopUi.Build.contract(),
+        targets: DesktopUi.Build.targets(),
+        target_builds: Enum.map(DesktopUi.Build.targets(), &DesktopUi.Build.build_plan(&1))
+      },
       platform: %{
         targets: DesktopUi.Platform.targets(),
         modules: DesktopUi.Platform.modules(),

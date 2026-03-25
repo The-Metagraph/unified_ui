@@ -66,6 +66,10 @@ defmodule DesktopUi.Info do
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
         renderer_completeness: :first_presented_frames
       },
+      build: %{
+        contract: DesktopUi.Build.contract(),
+        targets: DesktopUi.Build.targets()
+      },
       widgets: %{
         families: DesktopUi.Widgets.families(),
         kinds: DesktopUi.Widgets.kinds(),
