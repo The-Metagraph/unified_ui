@@ -51,6 +51,8 @@ defmodule DesktopUi.Info do
         lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
         handoff: DesktopUi.Sdl3.App.handoff_contract(),
         host: DesktopUi.Sdl3.PortHost.contract(),
+        native_build: DesktopUi.Sdl3.NativeBuild.contract(),
+        capabilities: DesktopUi.Sdl3.Capabilities.detect(),
         protocol: DesktopUi.Sdl3.Protocol.contract(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),

@@ -271,6 +271,8 @@ defmodule DesktopUi.Validate do
             DesktopUi.Sdl3.App,
             DesktopUi.Sdl3.Host,
             DesktopUi.Sdl3.PortHost,
+            DesktopUi.Sdl3.NativeBuild,
+            DesktopUi.Sdl3.Capabilities,
             DesktopUi.Sdl3.Protocol,
             DesktopUi.Sdl3.Lifecycle,
             DesktopUi.Sdl3.Window,
@@ -292,6 +294,18 @@ defmodule DesktopUi.Validate do
         %{host: adapter_surface.host, validation_state: adapter_surface.validation_state}
       ),
       check(
+        :native_build_surface_present,
+        adapter_surface.validation_state.native_build == :native_build_surface_ready and
+          is_binary(adapter_surface.native_build.executable_path),
+        %{native_build: adapter_surface.native_build}
+      ),
+      check(
+        :capability_detection_surface_present,
+        adapter_surface.validation_state.capabilities == :capability_detection_ready and
+          adapter_surface.capabilities.backend.fallback == :elixir_host,
+        %{capabilities: adapter_surface.capabilities}
+      ),
+      check(
         :framed_protocol_present,
         adapter_surface.validation_state.protocol == :framed_protocol_ready and
           adapter_surface.protocol.framing == :desktop_ui_sdl3_frame,
@@ -301,7 +315,10 @@ defmodule DesktopUi.Validate do
         :frame_encoding_present,
         adapter_surface.validation_state.frame_encoder == :frame_encoding_ready and
           adapter_surface.frame_encoder.payload_family == :frame,
-        %{frame_encoder: adapter_surface.frame_encoder, validation_state: adapter_surface.validation_state}
+        %{
+          frame_encoder: adapter_surface.frame_encoder,
+          validation_state: adapter_surface.validation_state
+        }
       ),
       check(
         :renderer_first_backend_bounded,
@@ -582,8 +599,10 @@ defmodule DesktopUi.Validate do
     }
   end
 
-  defp host_execution_ok?({:ok, %{status: :ok, frame: %{payload: %{presentation: %{presented_frame?: true}}}}}),
-    do: true
+  defp host_execution_ok?(
+         {:ok, %{status: :ok, frame: %{payload: %{presentation: %{presented_frame?: true}}}}}
+       ),
+       do: true
 
   defp host_execution_ok?(_result), do: false
 

@@ -132,6 +132,8 @@ defmodule DesktopUi.Inspection do
       lifecycle: DesktopUi.Sdl3.App.lifecycle_contract(),
       handoff: DesktopUi.Sdl3.App.handoff_contract(),
       host: DesktopUi.Sdl3.PortHost.contract(),
+      native_build: DesktopUi.Sdl3.NativeBuild.contract(),
+      capabilities: DesktopUi.Sdl3.Capabilities.detect(),
       protocol: DesktopUi.Sdl3.Protocol.contract(),
       frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
       renderer: DesktopUi.Sdl3.Renderer.contract(),
@@ -142,6 +144,8 @@ defmodule DesktopUi.Inspection do
       validation_state: %{
         adapter: DesktopUi.Sdl3.validation_state(),
         host: DesktopUi.Sdl3.PortHost.validation_state(),
+        native_build: DesktopUi.Sdl3.NativeBuild.validation_state(),
+        capabilities: DesktopUi.Sdl3.Capabilities.validation_state(),
         protocol: DesktopUi.Sdl3.Protocol.validation_state(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.validation_state(),
         renderer: DesktopUi.Sdl3.Renderer.validation_state(),

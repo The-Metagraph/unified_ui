@@ -22,6 +22,7 @@ defmodule DesktopUi.Tooling do
       :example_review,
       :example_preview,
       :host_execution_review,
+      :native_build_review,
       :reference_inspection,
       :runtime_review,
       :transport_review,
@@ -62,6 +63,7 @@ defmodule DesktopUi.Tooling do
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
       "mix desktop_ui.run --format catalog",
       "mix desktop_ui.run native_foundational --format summary",
+      "mix desktop_ui.run native_foundational --format report",
       "mix desktop_ui.validate --strict",
       "mix spec.traceability.generate desktop_ui",
       "mix spec.plancheck desktop_ui"
@@ -105,6 +107,8 @@ defmodule DesktopUi.Tooling do
       workflows: workflows(),
       contracts: %{
         host: DesktopUi.Sdl3.PortHost.contract(),
+        native_build: DesktopUi.Sdl3.NativeBuild.contract(),
+        capabilities: DesktopUi.Sdl3.Capabilities.detect(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
         images: DesktopUi.Sdl3.Images.contract(),
