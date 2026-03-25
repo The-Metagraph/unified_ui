@@ -185,6 +185,8 @@ defmodule DesktopUi.Validate do
 
   @spec tooling_surface() :: map()
   def tooling_surface do
+    run_catalog = DesktopUi.Tooling.run_catalog()
+
     checks = [
       check(
         :inspect_surface_present,
@@ -210,10 +212,23 @@ defmodule DesktopUi.Validate do
       check(
         :mix_task_surface_present,
         Enum.all?(
-          ["mix desktop_ui.inspect", "mix desktop_ui.run", "mix desktop_ui.validate"],
+          [
+            "mix desktop_ui.inspect",
+            "mix desktop_ui.build_host",
+            "mix desktop_ui.run",
+            "mix desktop_ui.validate"
+          ],
           &Enum.any?(DesktopUi.Tooling.mix_tasks(), fn task -> String.starts_with?(task, &1) end)
         ),
         %{mix_tasks: DesktopUi.Tooling.mix_tasks()}
+      ),
+      check(
+        :run_catalog_reports_backend_diagnostics,
+        is_map(run_catalog.execution) and
+          is_boolean(run_catalog.execution.visible_runner_ready?) and
+          is_boolean(run_catalog.execution.protocol_launch_ready?) and
+          run_catalog.execution.fallback_backend == :elixir_host,
+        %{execution: run_catalog.execution}
       )
     ]
 
@@ -224,8 +239,12 @@ defmodule DesktopUi.Validate do
   def host_execution_surface do
     native_launch = DesktopUi.Inspect.host_execution(:native_foundational)
     canonical_launch = DesktopUi.Inspect.host_execution(:canonical_foundational)
+    run_execution = DesktopUi.Inspect.run_execution(:native_foundational, linger_ms: 1)
     text_contract = DesktopUi.Sdl3.Text.contract()
     image_contract = DesktopUi.Sdl3.Images.contract()
+    capabilities = DesktopUi.Sdl3.Capabilities.detect()
+    text_support = DesktopUi.Sdl3.Text.native_support(capabilities)
+    image_support = DesktopUi.Sdl3.Images.native_support(capabilities)
 
     checks = [
       check(
@@ -251,6 +270,20 @@ defmodule DesktopUi.Validate do
         %{
           app_module: DesktopUi.Sdl3.App,
           event_contract: DesktopUi.Sdl3.Events.contract()
+        }
+      ),
+      check(
+        :run_execution_surface_present,
+        run_execution_ok?(run_execution),
+        %{run_execution: run_execution_details(run_execution)}
+      ),
+      check(
+        :native_resource_support_reported,
+        Map.get(text_support, :requests_bounded_when_missing?, false) and
+          Map.get(image_support, :requests_bounded_when_missing?, false),
+        %{
+          text: text_support,
+          images: image_support
         }
       )
     ]
@@ -622,6 +655,25 @@ defmodule DesktopUi.Validate do
 
   defp host_execution_details({:ok, execution}), do: execution
   defp host_execution_details({:error, reason}), do: %{error: reason}
+
+  defp run_execution_ok?(
+         {:ok,
+          %{
+            backend: backend,
+            execution_mode: execution_mode,
+            visible_window?: visible_window?,
+            fallback_used?: fallback_used?
+          }}
+       )
+       when backend in [:compiled_sdl3_host, :elixir_host] and
+              execution_mode in [:visible_window, :protocol_fallback] and
+              is_boolean(visible_window?) and is_boolean(fallback_used?),
+       do: true
+
+  defp run_execution_ok?(_result), do: false
+
+  defp run_execution_details({:ok, execution}), do: execution
+  defp run_execution_details({:error, reason}), do: %{error: reason}
 
   defp read_traceability_manifest(path) do
     with {:ok, body} <- File.read(path),

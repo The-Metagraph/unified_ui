@@ -62,8 +62,10 @@ defmodule DesktopUi.Tooling do
       "mix desktop_ui.inspect --format catalog",
       "mix desktop_ui.inspect native_styled_review --format diagnostics",
       "mix desktop_ui.build_host --dry-run",
+      "mix desktop_ui.build_host",
       "mix desktop_ui.run --format catalog",
       "mix desktop_ui.run native_foundational --format summary",
+      "mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000",
       "mix desktop_ui.run native_foundational --format report",
       "mix desktop_ui.validate --strict",
       "mix spec.traceability.generate desktop_ui",
@@ -100,17 +102,21 @@ defmodule DesktopUi.Tooling do
 
   @spec run_catalog() :: map()
   def run_catalog do
+    capabilities = DesktopUi.Sdl3.Capabilities.detect()
+
     %{
       runnable_examples:
         DesktopUi.Examples.catalog()
         |> Enum.filter(&(&1.category in [:native, :canonical]))
         |> Enum.map(& &1.id),
       workflows: workflows(),
+      execution: run_backend_summary(capabilities),
       contracts: %{
         host: DesktopUi.Sdl3.PortHost.contract(),
         native_build: DesktopUi.Sdl3.NativeBuild.contract(),
-        capabilities: DesktopUi.Sdl3.Capabilities.detect(),
+        capabilities: capabilities,
         renderer: DesktopUi.Sdl3.Renderer.contract(),
+        visible_runner: DesktopUi.Sdl3.VisibleRunner.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
         images: DesktopUi.Sdl3.Images.contract(),
         events: DesktopUi.Sdl3.Events.contract()
@@ -118,8 +124,22 @@ defmodule DesktopUi.Tooling do
     }
   end
 
-  @spec run_example(atom() | String.t()) :: {:ok, map()} | {:error, term()}
-  def run_example(id) do
-    DesktopUi.Inspect.host_execution(id)
+  @spec run_example(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def run_example(id, opts \\ []) do
+    DesktopUi.Inspect.run_execution(id, opts)
+  end
+
+  @spec run_backend_summary(map()) :: map()
+  def run_backend_summary(capabilities \\ DesktopUi.Sdl3.Capabilities.detect()) do
+    %{
+      recommended_backend:
+        if(capabilities.build.visible_runner_ready?, do: :compiled_sdl3_host, else: :elixir_host),
+      fallback_backend: :elixir_host,
+      buildable?: capabilities.build.buildable?,
+      visible_runner_ready?: capabilities.build.visible_runner_ready?,
+      protocol_launch_ready?: capabilities.build.launch_ready?,
+      text: DesktopUi.Sdl3.Text.native_support(capabilities),
+      images: DesktopUi.Sdl3.Images.native_support(capabilities)
+    }
   end
 end

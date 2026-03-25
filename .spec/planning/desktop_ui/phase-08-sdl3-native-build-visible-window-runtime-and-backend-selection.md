@@ -99,25 +99,25 @@ Back to index: [README](./README.md)
       [x] 8.3.2.2 Subtask - Draw visible placeholder geometry for core draw kinds such as window chrome, layer shells, viewport regions, and widget placeholders.
       [x] 8.3.2.3 Subtask - Distinguish real visible drawing from still-unimplemented widget-complete rendering in host diagnostics and renderer summaries.
 
-  [ ] 8.4 Section - Native Resources, Tooling, and Visible Execution Diagnostics
+  [x] 8.4 Section - Native Resources, Tooling, and Visible Execution Diagnostics
     Extend the visible host path so it reports native dependency state,
     optional resource support, and maintainer workflow details clearly.
 
-    [ ] 8.4.1 Task - Extend native resource handling and diagnostics
+    [x] 8.4.1 Task - Extend native resource handling and diagnostics
       Make text and image companion-library support visible in the compiled-host
       build and runtime story without requiring every machine to have them.
 
-      [ ] 8.4.1.1 Subtask - Add build/runtime diagnostics for SDL3 text and image companion-library availability.
-      [ ] 8.4.1.2 Subtask - Keep text/image requests bounded and reviewable when the visible host is running without full companion-library support.
-      [ ] 8.4.1.3 Subtask - Preserve existing Elixir-side resource contracts while reporting which parts are truly native-backed.
+      [x] 8.4.1.1 Subtask - Add build/runtime diagnostics for SDL3 text and image companion-library availability.
+      [x] 8.4.1.2 Subtask - Keep text/image requests bounded and reviewable when the visible host is running without full companion-library support.
+      [x] 8.4.1.3 Subtask - Preserve existing Elixir-side resource contracts while reporting which parts are truly native-backed.
 
-    [ ] 8.4.2 Task - Update maintainer tooling and docs for visible execution
+    [x] 8.4.2 Task - Update maintainer tooling and docs for visible execution
       Make the visible SDL3 runtime path easy to build, run, inspect, and
       troubleshoot from package-local workflows.
 
-      [ ] 8.4.2.1 Subtask - Extend `mix desktop_ui.run` and related helpers with backend and visible-runtime diagnostics.
-      [ ] 8.4.2.2 Subtask - Document SDL3 native prerequisites, build steps, and fallback behavior in the package README and guides.
-      [ ] 8.4.2.3 Subtask - Extend validation and reference surfaces so maintainers can tell whether native build, native run, and fallback execution are each healthy.
+      [x] 8.4.2.1 Subtask - Extend `mix desktop_ui.run` and related helpers with backend and visible-runtime diagnostics.
+      [x] 8.4.2.2 Subtask - Document SDL3 native prerequisites, build steps, and fallback behavior in the package README and guides.
+      [x] 8.4.2.3 Subtask - Extend validation and reference surfaces so maintainers can tell whether native build, native run, and fallback execution are each healthy.
 
   [ ] 8.5 Section - Phase 8 Integration Tests
     Validate the buildable and visible SDL3 host path end to end while keeping

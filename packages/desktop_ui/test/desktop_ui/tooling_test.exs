@@ -6,6 +6,10 @@ defmodule DesktopUi.ToolingTest do
     assert {:ok, canonical_preview} = DesktopUi.Inspect.preview(:canonical_styled_review)
     assert {:ok, mixed_preview} = DesktopUi.Inspect.preview(:styled_continuity_review)
     assert {:ok, host_execution} = DesktopUi.Inspect.host_execution(:native_foundational)
+
+    assert {:ok, run_execution} =
+             DesktopUi.Inspect.run_execution(:native_foundational, linger_ms: 1)
+
     assert {:ok, rendered_metadata} = DesktopUi.Inspect.render("native_styled_review", :metadata)
 
     assert {:ok, rendered_diagnostics} =
@@ -22,6 +26,8 @@ defmodule DesktopUi.ToolingTest do
     assert mixed_preview.surface.parity.style_resolution_match?
     assert host_execution.status == :ok
     assert host_execution.frame.payload.presentation.presented_frame?
+    assert run_execution.execution_mode in [:visible_window, :protocol_fallback]
+    assert run_execution.backend in [:compiled_sdl3_host, :elixir_host]
     assert rendered_metadata =~ ":native_styled_review"
     assert rendered_diagnostics =~ "tooling_workflows"
     assert rendered_host =~ ":native_foundational"
@@ -67,7 +73,9 @@ defmodule DesktopUi.ToolingTest do
     assert validation_summary =~ "release ready?: true"
     assert validation_report.documentation_surface.status == :pass
     assert validation_report.traceability_alignment.status == :pass
+    assert DesktopUi.Tooling.run_catalog().execution.fallback_backend == :elixir_host
     assert "mix desktop_ui.run --format catalog" in DesktopUi.Tooling.mix_tasks()
+    assert "mix desktop_ui.build_host" in DesktopUi.Tooling.mix_tasks()
     assert "mix spec.traceability.generate desktop_ui" in DesktopUi.Tooling.mix_tasks()
 
     assert Enum.any?(

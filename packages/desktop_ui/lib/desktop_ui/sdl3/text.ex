@@ -3,6 +3,8 @@ defmodule DesktopUi.Sdl3.Text do
   SDL_ttf-first text resource seam for the SDL3 adapter boundary.
   """
 
+  alias DesktopUi.Sdl3.Capabilities
+
   @spec contract() :: map()
   def contract do
     %{
@@ -15,6 +17,23 @@ defmodule DesktopUi.Sdl3.Text do
 
   @spec validation_state() :: atom()
   def validation_state, do: :text_resource_ready
+
+  @spec native_support(map()) :: map()
+  def native_support(capabilities \\ Capabilities.detect()) do
+    native_backend_ready? = get_in(capabilities, [:libraries, :sdl3_ttf, :available?]) || false
+
+    %{
+      library: :sdl3_ttf,
+      native_backend_ready?: native_backend_ready?,
+      active_mode:
+        if(native_backend_ready?,
+          do: :native_companion_library,
+          else: :elixir_measurement_fallback
+        ),
+      fallback_mode: :elixir_measurement_fallback,
+      requests_bounded_when_missing?: true
+    }
+  end
 
   @spec prepare(String.t(), keyword()) :: {:ok, map()} | {:error, map()}
   def prepare(content, opts \\ [])

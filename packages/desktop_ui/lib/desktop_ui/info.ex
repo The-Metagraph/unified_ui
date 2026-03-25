@@ -35,6 +35,7 @@ defmodule DesktopUi.Info do
   @spec package_summary() :: map()
   def package_summary do
     {:ok, release_readiness} = DesktopUi.Validate.release_readiness(:summary)
+    capabilities = DesktopUi.Sdl3.Capabilities.detect()
 
     %{
       package: :desktop_ui,
@@ -52,7 +53,7 @@ defmodule DesktopUi.Info do
         handoff: DesktopUi.Sdl3.App.handoff_contract(),
         host: DesktopUi.Sdl3.PortHost.contract(),
         native_build: DesktopUi.Sdl3.NativeBuild.contract(),
-        capabilities: DesktopUi.Sdl3.Capabilities.detect(),
+        capabilities: capabilities,
         protocol: DesktopUi.Sdl3.Protocol.contract(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
         frame_script: DesktopUi.Sdl3.FrameScript.contract(),
@@ -61,6 +62,7 @@ defmodule DesktopUi.Info do
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
         images: DesktopUi.Sdl3.Images.contract(),
+        run_execution: DesktopUi.Tooling.run_backend_summary(capabilities),
         validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
         renderer_completeness: :first_presented_frames
       },

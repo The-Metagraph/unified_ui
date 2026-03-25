@@ -38,7 +38,7 @@ defmodule DesktopUi.MixTasksTest do
     assert host_output =~ ":native_foundational"
   end
 
-  test "run task prints catalog and host execution output" do
+  test "run task prints catalog and run execution output" do
     catalog_output =
       capture_io(fn ->
         run_task("desktop_ui.run", ["--format", "catalog"])
@@ -50,7 +50,8 @@ defmodule DesktopUi.MixTasksTest do
       end)
 
     assert catalog_output =~ "runnable_examples"
-    assert summary_output =~ "DesktopUi host execution summary"
+    assert summary_output =~ "DesktopUi run summary"
+    assert summary_output =~ "backend:"
     assert summary_output =~ "presented frame?: true"
   end
 

@@ -3,6 +3,9 @@ defmodule DesktopUi.Inspect do
   Maintainer-facing preview and inspection workflows for `desktop_ui` examples.
   """
 
+  alias DesktopUi.Runtime.State
+  alias DesktopUi.Sdl3.{Capabilities, RenderPlan, VisibleRunner}
+
   @spec preview(atom() | String.t()) :: {:ok, map()} | {:error, :unknown_example}
   def preview(id) do
     with {:ok, metadata} <- fetch_metadata(id) do
@@ -26,10 +29,10 @@ defmodule DesktopUi.Inspect do
     }
   end
 
-  @spec host_execution(atom() | String.t()) :: {:ok, map()} | {:error, term()}
-  def host_execution(id) do
+  @spec host_execution(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def host_execution(id, opts \\ []) do
     with {:ok, metadata} <- fetch_metadata(id),
-         {:ok, launched} <- launch_host(metadata),
+         {:ok, launched} <- launch_host(metadata, opts),
          host_status = DesktopUi.Sdl3.PortHost.status(launched.host),
          {:ok, shutdown_ack, host} <- DesktopUi.Sdl3.App.shutdown_host(launched.host) do
       {:ok,
@@ -47,6 +50,17 @@ defmodule DesktopUi.Inspect do
          },
          event_contract: DesktopUi.Sdl3.Events.contract()
        }}
+    end
+  end
+
+  @spec run_execution(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def run_execution(id, opts \\ []) do
+    with {:ok, metadata} <- fetch_metadata(id),
+         capabilities <- Keyword.get(opts, :capabilities, Capabilities.detect()),
+         {:ok, execution_backend} <-
+           select_run_backend(capabilities, Keyword.get(opts, :backend, :auto)),
+         {:ok, execution} <- execute_run(metadata, execution_backend, capabilities, opts) do
+      {:ok, execution}
     end
   end
 
@@ -128,65 +142,210 @@ defmodule DesktopUi.Inspect do
     DesktopUi.Examples.styled_comparison()
   end
 
-  defp launch_host(%{category: :native, id: :native_foundational}) do
+  defp launch_host(%{category: :native, id: :native_foundational}, opts) do
     DesktopUi.Sdl3.App.launch_native_screen(
       DesktopUi.Examples.native_foundational_screen(),
-      platform_target: :linux
+      Keyword.merge([platform_target: :linux], opts)
     )
   end
 
-  defp launch_host(%{category: :native, id: :native_advanced_operations}) do
+  defp launch_host(%{category: :native, id: :native_advanced_operations}, opts) do
     DesktopUi.Sdl3.App.launch_native_screen(
       DesktopUi.Examples.native_advanced_operations_screen(),
-      platform_target: :linux
+      Keyword.merge([platform_target: :linux], opts)
     )
   end
 
-  defp launch_host(%{category: :native, id: :native_transport_review}) do
+  defp launch_host(%{category: :native, id: :native_transport_review}, opts) do
     DesktopUi.Sdl3.App.launch_native_screen(
       DesktopUi.Examples.native_transport_review(),
-      platform_target: :linux
+      Keyword.merge([platform_target: :linux], opts)
     )
   end
 
-  defp launch_host(%{category: :native, id: :native_styled_review}) do
+  defp launch_host(%{category: :native, id: :native_styled_review}, opts) do
     DesktopUi.Sdl3.App.launch_native_screen(
       DesktopUi.Examples.native_styled_review(),
-      platform_target: :linux,
-      theme: :high_contrast
+      Keyword.merge([platform_target: :linux, theme: :high_contrast], opts)
     )
   end
 
-  defp launch_host(%{category: :canonical, id: :canonical_foundational}) do
+  defp launch_host(%{category: :canonical, id: :canonical_foundational}, opts) do
     DesktopUi.Sdl3.App.launch_iur_screen(
       DesktopUi.Examples.canonical_foundational_screen(),
-      platform_target: :linux
+      Keyword.merge([platform_target: :linux], opts)
     )
   end
 
-  defp launch_host(%{category: :canonical, id: :canonical_advanced_operations}) do
+  defp launch_host(%{category: :canonical, id: :canonical_advanced_operations}, opts) do
     DesktopUi.Sdl3.App.launch_iur_screen(
       DesktopUi.Examples.canonical_advanced_operations_screen(),
-      platform_target: :linux
+      Keyword.merge([platform_target: :linux], opts)
     )
   end
 
-  defp launch_host(%{category: :canonical, id: :canonical_transport_review}) do
+  defp launch_host(%{category: :canonical, id: :canonical_transport_review}, opts) do
     DesktopUi.Sdl3.App.launch_iur_screen(
       DesktopUi.Examples.canonical_transport_review(),
-      platform_target: :linux
+      Keyword.merge([platform_target: :linux], opts)
     )
   end
 
-  defp launch_host(%{category: :canonical, id: :canonical_styled_review}) do
+  defp launch_host(%{category: :canonical, id: :canonical_styled_review}, opts) do
     DesktopUi.Sdl3.App.launch_iur_screen(
       DesktopUi.Examples.canonical_styled_review(),
-      platform_target: :linux,
-      theme: :high_contrast
+      Keyword.merge([platform_target: :linux, theme: :high_contrast], opts)
     )
   end
 
-  defp launch_host(%{category: :mixed}), do: {:error, :mixed_examples_do_not_boot_native_hosts}
+  defp launch_host(%{category: :mixed}, _opts),
+    do: {:error, :mixed_examples_do_not_boot_native_hosts}
+
+  defp execute_run(metadata, :compiled_sdl3_host, capabilities, opts) do
+    with {:ok, %RenderPlan{} = plan} <- render_plan_for(metadata, opts),
+         {:ok, execution} <-
+           VisibleRunner.run(plan, Keyword.put(opts, :capabilities, capabilities)) do
+      {:ok,
+       %{
+         id: metadata.id,
+         metadata: metadata,
+         status: :ok,
+         backend: :compiled_sdl3_host,
+         execution_mode: :visible_window,
+         visible_window?: true,
+         presented_frame?: execution.presented_frame?,
+         fallback_used?: false,
+         capabilities: capabilities,
+         resource_support: resource_support(capabilities),
+         details: execution
+       }}
+    end
+  end
+
+  defp execute_run(metadata, :elixir_host, capabilities, opts) do
+    with {:ok, host_execution} <-
+           host_execution(metadata.id, Keyword.put(opts, :backend, :elixir_host)) do
+      {:ok,
+       %{
+         id: metadata.id,
+         metadata: metadata,
+         status: :ok,
+         backend: :elixir_host,
+         execution_mode: :protocol_fallback,
+         visible_window?: false,
+         presented_frame?: host_execution.frame.payload.presentation.presented_frame?,
+         fallback_used?: true,
+         fallback_reason: fallback_reason(capabilities),
+         capabilities: capabilities,
+         resource_support: resource_support(capabilities),
+         details: host_execution
+       }}
+    end
+  end
+
+  defp render_plan_for(metadata, opts) do
+    with {:ok, %State{} = runtime_state} <- runtime_state_for(metadata, opts),
+         {:ok, %RenderPlan{} = plan} <- RenderPlan.build(runtime_state) do
+      {:ok, plan}
+    end
+  end
+
+  defp runtime_state_for(%{category: :native, id: :native_foundational}, opts) do
+    DesktopUi.Runtime.mount_native_screen(
+      DesktopUi.Examples.native_foundational_screen(),
+      Keyword.merge([platform_target: :linux], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :native, id: :native_advanced_operations}, opts) do
+    DesktopUi.Runtime.mount_native_screen(
+      DesktopUi.Examples.native_advanced_operations_screen(),
+      Keyword.merge([platform_target: :linux], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :native, id: :native_transport_review}, opts) do
+    DesktopUi.Runtime.mount_native_screen(
+      DesktopUi.Examples.native_transport_review(),
+      Keyword.merge([platform_target: :linux], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :native, id: :native_styled_review}, opts) do
+    DesktopUi.Runtime.mount_native_screen(
+      DesktopUi.Examples.native_styled_review(),
+      Keyword.merge([platform_target: :linux, theme: :high_contrast], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :canonical, id: :canonical_foundational}, opts) do
+    DesktopUi.Runtime.mount_iur_screen(
+      DesktopUi.Examples.canonical_foundational_screen(),
+      Keyword.merge([platform_target: :linux], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :canonical, id: :canonical_advanced_operations}, opts) do
+    DesktopUi.Runtime.mount_iur_screen(
+      DesktopUi.Examples.canonical_advanced_operations_screen(),
+      Keyword.merge([platform_target: :linux], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :canonical, id: :canonical_transport_review}, opts) do
+    DesktopUi.Runtime.mount_iur_screen(
+      DesktopUi.Examples.canonical_transport_review(),
+      Keyword.merge([platform_target: :linux], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :canonical, id: :canonical_styled_review}, opts) do
+    DesktopUi.Runtime.mount_iur_screen(
+      DesktopUi.Examples.canonical_styled_review(),
+      Keyword.merge([platform_target: :linux, theme: :high_contrast], opts)
+    )
+  end
+
+  defp runtime_state_for(%{category: :mixed}, _opts),
+    do: {:error, :mixed_examples_do_not_mount_runtime_state}
+
+  defp select_run_backend(capabilities, :auto) do
+    if capabilities.build.visible_runner_ready? do
+      {:ok, :compiled_sdl3_host}
+    else
+      {:ok, :elixir_host}
+    end
+  end
+
+  defp select_run_backend(capabilities, :compiled) do
+    if capabilities.build.visible_runner_ready? do
+      {:ok, :compiled_sdl3_host}
+    else
+      {:error,
+       DesktopUi.Runtime.Error.new(
+         :compiled_visible_runner_not_ready,
+         %{capabilities: capabilities.build},
+         :sdl3_visible_runner
+       )}
+    end
+  end
+
+  defp select_run_backend(_capabilities, :fallback), do: {:ok, :elixir_host}
+
+  defp resource_support(capabilities) do
+    %{
+      text: DesktopUi.Sdl3.Text.native_support(capabilities),
+      images: DesktopUi.Sdl3.Images.native_support(capabilities)
+    }
+  end
+
+  defp fallback_reason(capabilities) do
+    %{
+      visible_runner_ready?: capabilities.build.visible_runner_ready?,
+      protocol_launch_ready?: capabilities.build.launch_ready?,
+      executable_probe: capabilities.build.executable_probe
+    }
+  end
 
   defp preview_native(screen, opts) do
     {:ok, state} = DesktopUi.Runtime.mount_native_screen(screen, opts)
