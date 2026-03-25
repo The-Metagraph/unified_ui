@@ -81,27 +81,27 @@ Back to index: [README](./README.md)
       [x] 1.5.2.2.2 Subtask - Define `DesktopUi.Sdl3.Renderer` or equivalent adapter modules that accept render plans and present them through an SDL_Renderer-first contract.
       [x] 1.5.2.2.3 Subtask - Keep render-plan generation and presentation adapter code separate so future SDL3 backend evolution does not rewrite widget or layout semantics.
 
-  [ ] 1.5.3 Section - SDL3 Events and Companion Resource Boundaries
+  [x] 1.5.3 Section - SDL3 Events and Companion Resource Boundaries
     Implement the native input and asset seams that let SDL3 callbacks,
     pointer/keyboard events, text rendering, and image resources enter the
     existing desktop runtime in a bounded way.
 
-    [ ] 1.5.3.1 Task - Define SDL3 event intake and normalization contracts
+    [x] 1.5.3.1 Task - Define SDL3 event intake and normalization contracts
       Create the first SDL3-facing input modules that normalize callback and
       event payloads into the package’s semantic interaction model.
 
-      [ ] 1.5.3.1.1 Subtask - Define `DesktopUi.Sdl3.Events` contracts for keyboard, pointer, wheel, hover, drag-initiation, focus, and multiwindow activation events.
-      [ ] 1.5.3.1.2 Subtask - Define how SDL3 event payloads are normalized before later transport translation maps cross-package meaning into canonical `Jido.Signal` semantics.
-      [ ] 1.5.3.1.3 Subtask - Define diagnostics for unsupported event payloads, invalid focus transitions, and mismatched window-local event routing.
+      [x] 1.5.3.1.1 Subtask - Define `DesktopUi.Sdl3.Events` contracts for keyboard, pointer, wheel, hover, drag-initiation, focus, and multiwindow activation events.
+      [x] 1.5.3.1.2 Subtask - Define how SDL3 event payloads are normalized before later transport translation maps cross-package meaning into canonical `Jido.Signal` semantics.
+      [x] 1.5.3.1.3 Subtask - Define diagnostics for unsupported event payloads, invalid focus transitions, and mismatched window-local event routing.
 
-    [ ] 1.5.3.2 Task - Define text and image companion-library seams
+    [x] 1.5.3.2 Task - Define text and image companion-library seams
       Create explicit package seams for text and image resource preparation so
       later native drawing work does not couple widget semantics directly to
       low-level SDL companion-library usage.
 
-      [ ] 1.5.3.2.1 Subtask - Define `DesktopUi.Sdl3.Text` contracts for font selection, text measurement, and text surface preparation aligned with the SDL_ttf-first spec direction.
-      [ ] 1.5.3.2.2 Subtask - Define `DesktopUi.Sdl3.Images` contracts for image decoding, image surface preparation, and raw-pixel fallback aligned with the SDL_image-first spec direction.
-      [ ] 1.5.3.2.3 Subtask - Keep text and image seams explicit enough that future platform-native resource backends can evolve behind the same adapter boundary.
+      [x] 1.5.3.2.1 Subtask - Define `DesktopUi.Sdl3.Text` contracts for font selection, text measurement, and text surface preparation aligned with the SDL_ttf-first spec direction.
+      [x] 1.5.3.2.2 Subtask - Define `DesktopUi.Sdl3.Images` contracts for image decoding, image surface preparation, and raw-pixel fallback aligned with the SDL_image-first spec direction.
+      [x] 1.5.3.2.3 Subtask - Keep text and image seams explicit enough that future platform-native resource backends can evolve behind the same adapter boundary.
 
   [ ] 1.5.4 Section - Diagnostics, Reference Surfaces, and Evolution Boundaries
     Expose the new SDL3 adapter seam through package-facing inspection and

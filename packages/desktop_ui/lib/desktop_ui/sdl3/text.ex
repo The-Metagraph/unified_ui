@@ -1,0 +1,50 @@
+defmodule DesktopUi.Sdl3.Text do
+  @moduledoc """
+  SDL_ttf-first text resource seam for the SDL3 adapter boundary.
+  """
+
+  @spec contract() :: map()
+  def contract do
+    %{
+      backend: :sdl_ttf_equivalent,
+      capabilities: [:font_selection, :text_measurement, :text_surface_preparation],
+      future_platform_text_allowed: true
+    }
+  end
+
+  @spec validation_state() :: atom()
+  def validation_state, do: :text_resource_ready
+
+  @spec prepare(String.t(), keyword()) :: {:ok, map()} | {:error, map()}
+  def prepare(content, opts \\ [])
+
+  def prepare(content, opts) when is_binary(content) do
+    font = Keyword.get(opts, :font, "default-ui")
+    size = Keyword.get(opts, :size, 14)
+    weight = Keyword.get(opts, :weight, :regular)
+
+    {:ok,
+     %{
+       backend: :sdl_ttf_equivalent,
+       content: content,
+       font: font,
+       size: size,
+       weight: weight,
+       measurement: measure(content, opts),
+       validation_state: validation_state()
+     }}
+  end
+
+  def prepare(content, _opts), do: {:error, %{reason: :invalid_text_content, content: content}}
+
+  @spec measure(String.t(), keyword()) :: map()
+  def measure(content, opts \\ []) when is_binary(content) do
+    size = Keyword.get(opts, :size, 14)
+
+    %{
+      width: max(String.length(content), 1) * max(div(size, 2), 1),
+      height: size + 4,
+      units: :logical
+    }
+  end
+end
