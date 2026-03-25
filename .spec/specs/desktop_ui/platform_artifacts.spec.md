@@ -32,7 +32,7 @@ decisions:
   stability: stable
 
 - id: desktop_ui.platform_artifacts.platform_specific_flows_allowed
-  statement: The package shall allow platform-specific compilation and packaging flows for each target platform artifact rather than assuming one universal build flow can emit every desktop artifact correctly.
+  statement: The package shall allow platform-specific compilation and packaging flows for each target platform artifact, including staging SDL3 runtime components and any adopted companion libraries, rather than assuming one universal build flow can emit every desktop artifact correctly.
   priority: must
   stability: stable
 
@@ -47,7 +47,7 @@ decisions:
   stability: stable
 
 - id: desktop_ui.platform_artifacts.packaging_not_runtime_logic
-  statement: Platform-specific compilation and packaging steps shall remain distinct from widget behavior and runtime logic so artifact delivery concerns do not redefine package semantics.
+  statement: Platform-specific compilation and packaging steps shall remain distinct from widget behavior and runtime logic so artifact delivery concerns do not redefine package semantics, regardless of how SDL3 runtimes and companion libraries are bundled per target.
   priority: must
   stability: stable
 ```

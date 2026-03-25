@@ -13,7 +13,7 @@ Back to index: [README](./README.md)
 - Direct native `desktop_ui` usage may keep interactions local until they cross
   a package boundary.
 - Canonical boundary meaning should be translated once through bounded transport
-  modules rather than leaking SDL2 or platform-local envelopes.
+  modules rather than leaking SDL3 or platform-local envelopes.
 - The shared runtime remains the source of normalized desktop interaction
   meaning even when individual targets expose different raw callbacks.
 
@@ -35,11 +35,11 @@ Back to index: [README](./README.md)
       [x] 4.1.1.3 Subtask - Keep canonical boundary translation aligned with authored `unified_ui` signal descriptors and canonical `UnifiedIUR` interaction payloads.
 
     [x] 4.1.2 Task - Implement native desktop input normalization
-      Normalize SDL2 and platform-local input into one shared native desktop
+      Normalize SDL3 and platform-local input into one shared native desktop
       interaction model before boundary translation occurs.
 
       [x] 4.1.2.1 Subtask - Define the shared native desktop event model for clicks, key input, focus changes, shortcuts, menus, and window-local events.
-      [x] 4.1.2.2 Subtask - Normalize SDL2 and platform-local input families into the shared native event model before any canonical translation occurs.
+      [x] 4.1.2.2 Subtask - Normalize SDL3 and platform-local input families into the shared native event model before any canonical translation occurs.
       [x] 4.1.2.3 Subtask - Add diagnostics for unsupported raw input payloads, invalid normalization state, and ambiguous native event interpretation.
 
   [x] 4.2 Section - Shared Runtime Event Flow
@@ -71,7 +71,7 @@ Back to index: [README](./README.md)
       normalization rules, and no-leakage guarantees.
 
       [x] 4.3.1.1 Subtask - Implement inspection helpers that list canonical-to-native interaction mappings and normalized event families.
-      [x] 4.3.1.2 Subtask - Implement validation helpers that catch raw SDL2 or platform-local leakage at the package boundary.
+      [x] 4.3.1.2 Subtask - Implement validation helpers that catch raw SDL3 or platform-local leakage at the package boundary.
       [x] 4.3.1.3 Subtask - Report deterministic diagnostics for unsupported canonical events, ambiguous routing, and invalid signal payloads.
 
     [x] 4.3.2 Task - Implement transport-focused reference summaries

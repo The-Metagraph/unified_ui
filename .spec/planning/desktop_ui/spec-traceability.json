@@ -535,7 +535,7 @@
       "ownership_note": "Direct native-interaction obligation."
     },
     {
-      "requirement_id": "desktop_ui.runtime.sdl2_foundation",
+      "requirement_id": "desktop_ui.runtime.sdl3_foundation",
       "scope": "direct",
       "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
       "primary_plan_refs": [
@@ -545,7 +545,131 @@
         "1.2.2",
         "1.5.1"
       ],
-      "ownership_note": "Direct shared SDL2 runtime obligation."
+      "ownership_note": "Direct shared SDL3 runtime obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.callback_lifecycle",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "1.2.2"
+      ],
+      "supporting_plan_refs": [
+        "1.2.1",
+        "4.2.2",
+        "1.5.1"
+      ],
+      "ownership_note": "Direct SDL3 callback-lifecycle obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "1.2.1"
+      ],
+      "supporting_plan_refs": [
+        "2.2.1",
+        "5.1.1",
+        "5.3.1"
+      ],
+      "ownership_note": "Direct SDL_Renderer-first backend obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "6.4.2"
+      ],
+      "supporting_plan_refs": [
+        "5.2.1",
+        "6.5.2"
+      ],
+      "ownership_note": "Direct future SDL3 GPU evolution-boundary obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "3.2.1"
+      ],
+      "supporting_plan_refs": [
+        "1.2.2",
+        "5.1.1",
+        "5.2.2"
+      ],
+      "ownership_note": "Direct logical-units and DPI-aware rendering obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "2.2.1"
+      ],
+      "supporting_plan_refs": [
+        "3.2.1",
+        "5.1.1",
+        "6.2.2"
+      ],
+      "ownership_note": "Direct retained-widget-pipeline obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.native_window_mapping",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "3.2.2"
+      ],
+      "supporting_plan_refs": [
+        "1.2.2",
+        "5.2.2",
+        "5.5.2"
+      ],
+      "ownership_note": "Direct native-window mapping obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.in_window_layering",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "3.2.2"
+      ],
+      "supporting_plan_refs": [
+        "3.1.1",
+        "4.2.2",
+        "5.4.2"
+      ],
+      "ownership_note": "Direct in-window layering obligation for transient surfaces."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.text_and_image_companions",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "1.2.1"
+      ],
+      "supporting_plan_refs": [
+        "5.3.1",
+        "6.3.1"
+      ],
+      "ownership_note": "Direct SDL companion-library integration obligation for text and images."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.desktop_input_contract",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "4.2.2"
+      ],
+      "supporting_plan_refs": [
+        "1.2.2",
+        "2.1.2",
+        "5.2.2"
+      ],
+      "ownership_note": "Direct keyboard-first desktop input and focus obligation."
     },
     {
       "requirement_id": "desktop_ui.runtime.shared_runtime_across_targets",

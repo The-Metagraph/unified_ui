@@ -53,7 +53,7 @@ decisions:
   stability: stable
 
 - id: ecosystem.platform_runtimes.desktop_ui_targets
-  statement: `desktop_ui` shall target Windows, macOS, and Linux using an SDL2-based desktop runtime with its own native widget set.
+  statement: `desktop_ui` shall target Windows, macOS, and Linux using an SDL3-based desktop runtime with its own native widget set.
   priority: must
   stability: stable
 

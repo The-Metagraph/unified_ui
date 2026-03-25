@@ -11,6 +11,7 @@ inspect, validate, and package `desktop_ui` as a multiplatform runtime library.
 - [Signal Transport](../signal_transport.spec.md)
 - [DesktopUi Package](./package.spec.md)
 - [DesktopUi Platform Artifacts](./platform_artifacts.spec.md)
+- [DesktopUi SDL3 Runtime And Native Rendering](./sdl3_runtime_rendering.spec.md)
 
 ```spec-meta
 id: desktop_ui.tooling
@@ -48,7 +49,7 @@ decisions:
   stability: stable
 
 - id: desktop_ui.tooling.documentation_surface
-  statement: The package shall document its native widget surface, SDL2-based runtime, canonical IUR renderer entry point, boundary event translation model, and platform-specific artifact expectations as part of package development.
+  statement: The package shall document its native widget surface, SDL3-based runtime, canonical IUR renderer entry point, boundary event translation model, and platform-specific artifact expectations as part of package development.
   priority: must
   stability: stable
 ```

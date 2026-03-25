@@ -24,7 +24,7 @@ The plan aligns to:
 - [UnifiedUi Signals](/Users/Pascal/code/unified/.spec/specs/unified-ui/signals.spec.md)
 
 ## Phase Files
-1. [Phase 1 - Package Scaffold and SDL2 Runtime Backbone](./phase-01-package-scaffold-and-sdl2-runtime-backbone.md): implement the Mix package, shared SDL2 runtime backbone, platform adapter seams, and baseline reference surfaces.
+1. [Phase 1 - Package Scaffold and SDL3 Runtime Backbone](./phase-01-package-scaffold-and-sdl3-runtime-backbone.md): implement the Mix package, shared SDL3 runtime backbone, platform adapter seams, and baseline reference surfaces.
 2. [Phase 2 - Foundational Native Widgets and Baseline IUR Rendering](./phase-02-foundational-native-widgets-and-baseline-iur-rendering.md): implement foundational native widgets, baseline screen composition, and the first canonical `UnifiedIUR` rendering path.
 3. [Phase 3 - Advanced Widgets, Display Systems, and Layered Desktop Behavior](./phase-03-advanced-widgets-display-systems-and-layered-desktop-behavior.md): implement advanced data, overlay, viewport, split-pane, canvas, and multiwindow desktop behavior together with broader canonical renderer coverage.
 4. [Phase 4 - Canonical Boundary Transport and Desktop Event Translation](./phase-04-canonical-boundary-transport-and-desktop-event-translation.md): implement canonical `Jido.Signal` and CloudEvents-compatible boundary translation for native desktop and IUR-rendered flows.
@@ -53,7 +53,7 @@ The plan aligns to:
   IUR ownership boundary.
 - `desktop_ui` must support both direct native desktop usage and canonical
   `UnifiedIUR` rendering through one coherent runtime model.
-- SDL2 is the shared rendering and input foundation, while Windows, macOS, and
+- SDL3 is the shared rendering and input foundation, while Windows, macOS, and
   Linux integrations remain explicitly bounded behind platform adapter seams.
 - Canonical boundary events use `Jido.Signal` and CloudEvents-compatible
   semantics whenever meaning crosses package boundaries.
