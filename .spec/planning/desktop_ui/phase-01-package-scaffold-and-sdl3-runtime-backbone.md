@@ -109,22 +109,22 @@ Back to index: [README](./README.md)
       [x] 1.4.2.2 Subtask - Implement reference surfaces that report direct-native versus canonical-renderer package responsibilities across the shared runtime and adapter split.
       [x] 1.4.2.3 Subtask - Implement inspection helpers that expose SDL3 assumptions, platform seams, and package validation state.
 
-  [x] 1.5 Section - Phase 1 Integration Tests
+  [x] 1.6 Section - Phase 1 Integration Tests
     Validate package bootstrap, shared-runtime wiring, platform seams, native
     widget registration, and reference surfaces end to end.
 
-    [x] 1.5.1 Task - Package and runtime backbone integration scenarios
+    [x] 1.6.1 Task - Package and runtime backbone integration scenarios
       Verify the package loads as a desktop runtime library and that minimal
       native screens boot through the shared SDL3 backbone.
 
-      [x] 1.5.1.1 Subtask - Verify the package compiles and exposes runtime, platform, and renderer entrypoints without taking over application startup.
-      [x] 1.5.1.2 Subtask - Verify a minimal native screen can boot, register a window, and render through the package backbone.
-      [x] 1.5.1.3 Subtask - Verify malformed widget declarations, invalid runtime boot data, or broken platform adapter registration fail with deterministic diagnostics.
+      [x] 1.6.1.1 Subtask - Verify the package compiles and exposes runtime, platform, and renderer entrypoints without taking over application startup.
+      [x] 1.6.1.2 Subtask - Verify a minimal native screen can boot, register a window, and render through the package backbone.
+      [x] 1.6.1.3 Subtask - Verify malformed widget declarations, invalid runtime boot data, or broken platform adapter registration fail with deterministic diagnostics.
 
-    [x] 1.5.2 Task - Reference and platform seam integration scenarios
+    [x] 1.6.2 Task - Reference and platform seam integration scenarios
       Verify package reference helpers remain usable before canonical renderer
       coverage is added.
 
-      [x] 1.5.2.1 Subtask - Verify reference helpers report widget families, runtime modules, and platform boundaries without renderer dependencies.
-      [x] 1.5.2.2 Subtask - Verify inspection surfaces expose SDL3 assumptions, adapter entry points, and validation state.
-      [x] 1.5.2.3 Subtask - Verify shared-runtime semantics remain visible through package-facing helper APIs even while platform-specific seams exist.
+      [x] 1.6.2.1 Subtask - Verify reference helpers report widget families, runtime modules, and platform boundaries without renderer dependencies.
+      [x] 1.6.2.2 Subtask - Verify inspection surfaces expose SDL3 assumptions, adapter entry points, and validation state.
+      [x] 1.6.2.3 Subtask - Verify shared-runtime semantics remain visible through package-facing helper APIs even while platform-specific seams exist.

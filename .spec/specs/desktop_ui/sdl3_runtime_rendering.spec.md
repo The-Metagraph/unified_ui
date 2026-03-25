@@ -54,6 +54,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+  statement: The package shall establish an explicit SDL3-native adapter seam for lifecycle ownership, native-window coordination, render-plan presentation, event normalization, and text-image resource access before full widget-complete native rendering is required.
+  priority: must
+  stability: stable
+
 - id: desktop_ui.sdl3_runtime_rendering.native_window_mapping
   statement: Top-level `desktop_ui` windows and multiwindow flows shall map to real SDL3 windows by default rather than being simulated as child surfaces inside one universal host window.
   priority: must
@@ -92,6 +97,11 @@ decisions:
   given: Maintainers later explore an SDL3 GPU-backed rendering path
   when: The package evolves its internal rendering backend
   then: The change preserves retained widget semantics, canonical rendering meaning, native interaction behavior, and transport boundaries already defined for `desktop_ui`
+
+- id: desktop_ui.sdl3_runtime_rendering.bootstrap_adapter_before_full_drawing
+  given: Maintainers introduce the first SDL3-native implementation seam before every widget can draw completely
+  when: The package adds lifecycle, window, render-plan, event, and resource adapter modules
+  then: The package exposes one coherent native adapter boundary without overstating renderer completeness or changing retained widget semantics
 ```
 
 ## Verification
@@ -105,6 +115,7 @@ decisions:
     - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
     - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
     - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
     - desktop_ui.sdl3_runtime_rendering.native_window_mapping
     - desktop_ui.sdl3_runtime_rendering.in_window_layering
     - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
@@ -112,4 +123,5 @@ decisions:
     - desktop_ui.sdl3_runtime_rendering.present_high_dpi_screen
     - desktop_ui.sdl3_runtime_rendering.coordinate_multiwindow_layers
     - desktop_ui.sdl3_runtime_rendering.evolve_render_backend_without_semantic_drift
+    - desktop_ui.sdl3_runtime_rendering.bootstrap_adapter_before_full_drawing
 ```
