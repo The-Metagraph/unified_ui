@@ -85,7 +85,7 @@ defmodule DesktopUi.Tooling do
       workflows: workflows(),
       preview_surfaces: preview_surfaces(),
       runtime_validation: DesktopUi.Runtime.validation_state(),
-      host_execution_validation: DesktopUi.Validate.host_execution_surface().status,
+      host_execution_validation: DesktopUi.Sdl3.PortHost.validation_state(),
       documentation_validation: DesktopUi.Validate.documentation_surface().status,
       traceability_validation: DesktopUi.Validate.traceability_alignment().status
     }

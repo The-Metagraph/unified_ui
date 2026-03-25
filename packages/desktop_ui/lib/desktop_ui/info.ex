@@ -34,7 +34,7 @@ defmodule DesktopUi.Info do
 
   @spec package_summary() :: map()
   def package_summary do
-    {:ok, release_readiness} = DesktopUi.Validate.release_readiness(:summary)
+    release_readiness = DesktopUi.Validate.surface_release_readiness()
     capabilities = DesktopUi.Sdl3.Capabilities.detect()
 
     %{

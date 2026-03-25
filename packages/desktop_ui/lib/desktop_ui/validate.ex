@@ -501,6 +501,17 @@ defmodule DesktopUi.Validate do
     Map.put(sections, :release_readiness, build_release_readiness(sections, :summary))
   end
 
+  @spec surface_validation_report() :: map()
+  def surface_validation_report do
+    sections = default_sections(skip_host_execution: true)
+    Map.put(sections, :release_readiness, build_release_readiness(sections, :summary))
+  end
+
+  @spec surface_release_readiness() :: map()
+  def surface_release_readiness do
+    surface_validation_report().release_readiness
+  end
+
   @spec validation_summary(map()) :: String.t()
   def validation_summary(report) when is_map(report) do
     [
@@ -639,25 +650,32 @@ defmodule DesktopUi.Validate do
     Code.ensure_loaded?(module) and Enum.member?(module.__info__(:functions), {function, arity})
   end
 
-  defp default_sections do
-    %{
+  defp default_sections(opts \\ []) do
+    sections = %{
       example_coverage: example_coverage(),
       runtime_behavior: runtime_behavior(),
       transport_validation: transport_validation(),
       artifact_validation: artifact_validation(),
       sdl3_adapter_surface: sdl3_adapter_surface(),
-      host_execution_surface: host_execution_surface(),
       tooling_surface: tooling_surface(),
       documentation_surface: documentation_surface(),
       traceability_alignment: traceability_alignment()
     }
+
+    if Keyword.get(opts, :skip_host_execution, false) do
+      sections
+    else
+      Map.put(sections, :host_execution_surface, host_execution_surface())
+    end
   end
 
   defp build_release_readiness(sections, mode) do
     findings = sections |> Map.values() |> Enum.flat_map(& &1.findings)
 
     gates =
-      Enum.map(release_gates(), fn gate ->
+      release_gates()
+      |> Enum.filter(&Map.has_key?(sections, &1.section))
+      |> Enum.map(fn gate ->
         section = Map.fetch!(sections, gate.section)
         Map.put(gate, :status, section.status)
       end)

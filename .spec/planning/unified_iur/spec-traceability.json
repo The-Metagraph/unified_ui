@@ -388,6 +388,19 @@
       "ownership_note": "Direct data and document widget requirement."
     },
     {
+      "requirement_id": "unified_iur.widgets.semantic_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": [
+        "2.1.1"
+      ],
+      "supporting_plan_refs": [
+        "2.2.2",
+        "2.5.1"
+      ],
+      "ownership_note": "Direct semantic widget requirement."
+    },
+    {
       "requirement_id": "unified_iur.widgets.overlay_and_feedback",
       "scope": "direct",
       "source_file": ".spec/specs/unified-iur/widgets.spec.md",

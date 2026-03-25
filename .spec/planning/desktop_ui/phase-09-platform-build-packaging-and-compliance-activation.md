@@ -56,18 +56,18 @@ Back to index: [README](./README.md)
       [x] 9.2.1.2 Subtask - Add `mix desktop_ui.package --target windows|macos|linux [--dry-run]` for reviewable packaging workflows.
       [x] 9.2.1.3 Subtask - Surface archive paths, bundle contents, compiled-host presence, and fallback-only warnings through inspection, reference, and validation helpers.
 
-  [ ] 9.3 Section - DesktopUi Conformance Activation
+  [x] 9.3 Section - DesktopUi Conformance Activation
     Onboard `desktop_ui` into the package-scoped compliance system so its plan,
     implementation, tooling, and artifact surfaces are verified from the repo
     root like the other runtime packages.
 
-    [ ] 9.3.1 Task - Add desktop_ui package conformance coverage
+    [x] 9.3.1 Task - Add desktop_ui package conformance coverage
       Create the machine-readable conformance manifest and the repo-level tests
       that verify `desktop_ui` through `mix spec.compliance`.
 
-      [ ] 9.3.1.1 Subtask - Add `.spec/conformance/desktop_ui/manifest.json` with deterministic evidence for planning, runtime, tooling, build, and packaging surfaces.
-      [ ] 9.3.1.2 Subtask - Update root compliance docs and tests so `mix spec.compliance desktop_ui` is a supported package workflow.
-      [ ] 9.3.1.3 Subtask - Choose an explicit CI enforcement mode for `desktop_ui` based on the evidence added in this phase.
+      [x] 9.3.1.1 Subtask - Add `.spec/conformance/desktop_ui/manifest.json` with deterministic evidence for planning, runtime, tooling, build, and packaging surfaces.
+      [x] 9.3.1.2 Subtask - Update root compliance docs and tests so `mix spec.compliance desktop_ui` is a supported package workflow.
+      [x] 9.3.1.3 Subtask - Choose an explicit CI enforcement mode for `desktop_ui` based on the evidence added in this phase.
 
   [ ] 9.4 Section - Phase 9 Integration Tests
     Validate target staging, packaging, and package-scoped compliance end to

@@ -187,6 +187,19 @@ defmodule Unified.SpecCompliance.ComplianceTest do
     assert compliance_report.summary.aliases == 48
   end
 
+  test "live desktop_ui plancheck and compliance both pass" do
+    plan_report = Unified.SpecCompliance.plancheck("desktop_ui")
+    compliance_report = Unified.SpecCompliance.compliance("desktop_ui", run_commands: true)
+
+    assert plan_report.status == :pass
+    assert compliance_report.status == :pass
+    assert compliance_report.summary.applicable_requirements == 102
+    assert compliance_report.summary.status_counts.verified == 102
+    assert compliance_report.summary.status_counts.waived == 0
+    assert compliance_report.summary.aliases == 49
+    assert compliance_report.summary.ci_enforcement == "required"
+  end
+
   @tag timeout: 720_000
   test "live unified_ui plancheck and compliance both pass" do
     plan_report = Unified.SpecCompliance.plancheck("unified_ui")
@@ -206,8 +219,8 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     assert plan_report.status == :pass
     assert compliance_report.status == :pass
-    assert compliance_report.summary.applicable_requirements == 61
-    assert compliance_report.summary.status_counts.verified == 61
+    assert compliance_report.summary.applicable_requirements == 62
+    assert compliance_report.summary.status_counts.verified == 62
     assert compliance_report.summary.status_counts.waived == 0
     assert compliance_report.summary.aliases == 18
     assert compliance_report.summary.ci_enforcement == "required"
