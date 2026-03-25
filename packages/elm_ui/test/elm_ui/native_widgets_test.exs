@@ -106,6 +106,77 @@ defmodule ElmUi.NativeWidgetsTest do
     assert ElmUi.Widgets.validation_state().display_system_widgets == :ready
   end
 
+  test "semantic foundational, data, and form widgets are available natively" do
+    badge =
+      ElmUi.Widgets.badge("runtime-badge", "Live",
+        icon: :sparkles,
+        icon_set: :system,
+        presentation: :pill
+      )
+
+    hero =
+      ElmUi.Widgets.hero(
+        "docs-hero",
+        [ElmUi.Widgets.text("hero-copy", "Semantic widgets stay semantic.")],
+        eyebrow: "ElmUi",
+        title: "Ship richer dashboards",
+        message: "Preserve authored meaning through the web runtime.",
+        actions: [ElmUi.Widgets.button("hero-action", "Explore")]
+      )
+
+    stat =
+      ElmUi.Widgets.stat("artifact-stat",
+        title: "Artifacts shipped",
+        value: "24",
+        message: "Across the current release train"
+      )
+
+    key_value =
+      ElmUi.Widgets.key_value("owner-pair", "Owner", "Docs team",
+        description: "Maintaining semantic widget coverage"
+      )
+
+    info_list =
+      ElmUi.Widgets.info_list(
+        "semantic-list",
+        [
+          [
+            id: :semantic,
+            title: "Semantic widgets",
+            value: "In progress",
+            description: "Adding badge, hero, stat, key_value, and info_list",
+            icon: :sparkles,
+            status: :active
+          ]
+        ],
+        ordered: true,
+        empty_state: "No semantic notes"
+      )
+
+    form_field =
+      ElmUi.Widgets.form_field(
+        "dashboard-name",
+        ElmUi.Widgets.text_input("dashboard-name-input", name: :dashboard_name),
+        name: :dashboard_name,
+        label: "Dashboard name",
+        help: "Used in admin and docs views"
+      )
+
+    assert badge.kind == :badge
+    assert badge.attributes.presentation == :pill
+    assert hero.kind == :hero
+    assert hero.attributes.eyebrow == "ElmUi"
+    assert hero.slot_children.actions |> hd() |> Map.fetch!(:kind) == :button
+    assert stat.family == :data
+    assert stat.attributes.value == "24"
+    assert key_value.kind == :key_value
+    assert info_list.kind == :info_list
+    assert info_list.attributes.ordered
+    assert form_field.kind == :form_field
+    assert hd(form_field.slot_children.label).kind == :label
+    assert hd(form_field.slot_children.help).kind == :text
+  end
+
   test "expanded native constructors cover the remaining canonical input, layout, and data kinds" do
     numeric_input =
       ElmUi.Widgets.numeric_input("count-input", name: :count, value: 7, min: 0, max: 10)

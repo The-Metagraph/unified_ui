@@ -5,7 +5,7 @@ defmodule ElmUi.Widgets.Forms do
 
   alias ElmUi.Widgets.{Builder, Foundational}
 
-  @kinds [:form_builder, :form, :field_group, :field]
+  @kinds [:form_builder, :form, :field_group, :field, :form_field]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -78,6 +78,16 @@ defmodule ElmUi.Widgets.Forms do
   @spec field(String.t() | atom(), ElmUi.Widget.t() | map() | keyword(), keyword() | map()) ::
           ElmUi.Widget.t()
   def field(id, control, opts \\ []) do
+    build_field(:field, id, control, opts)
+  end
+
+  @spec form_field(String.t() | atom(), ElmUi.Widget.t() | map() | keyword(), keyword() | map()) ::
+          ElmUi.Widget.t()
+  def form_field(id, control, opts \\ []) do
+    build_field(:form_field, id, control, opts)
+  end
+
+  defp build_field(kind, id, control, opts) do
     opts = Builder.options(Map.put(Builder.options(opts), :id, id))
     control = Builder.child!(control)
     control_id = Builder.option(opts, :control_id, control.id)
@@ -104,7 +114,7 @@ defmodule ElmUi.Widgets.Forms do
         help -> Builder.child!(help)
       end
 
-    Builder.widget(:field,
+    Builder.widget(kind,
       id: id,
       attributes: %{
         name: Builder.option(opts, :name),
