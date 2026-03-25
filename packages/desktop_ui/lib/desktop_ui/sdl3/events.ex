@@ -43,18 +43,39 @@ defmodule DesktopUi.Sdl3.Events do
     {:error, Error.new(:unsupported_sdl3_event_payload, %{payload: value}, :sdl3_events)}
   end
 
+  @spec normalize_batch([keyword() | map()]) :: {:ok, [map()]} | {:error, Error.t()}
+  def normalize_batch(events) when is_list(events) do
+    Enum.reduce_while(events, {:ok, []}, fn attrs, {:ok, acc} ->
+      case normalize(attrs) do
+        {:ok, normalized} -> {:cont, {:ok, acc ++ [normalized]}}
+        {:error, %Error{} = error} -> {:halt, {:error, error}}
+      end
+    end)
+  end
+
+  def normalize_batch(value) do
+    {:error, Error.new(:unsupported_sdl3_event_payload, %{payload: value}, :sdl3_events)}
+  end
+
   @spec dispatch(State.t(), keyword() | map()) :: {:ok, State.t(), map()} | {:error, Error.t()}
   def dispatch(%State{} = runtime_state, attrs) when is_map(attrs) or is_list(attrs) do
     with {:ok, normalized} <- normalize(attrs),
-         :ok <- validate_window_route(runtime_state, normalized),
-         :ok <- validate_focus_transition(runtime_state, normalized),
-         {:ok, next_state, route_result} <- Runtime.dispatch_native_event(runtime_state, normalized) do
-      {:ok, next_state, Map.put(route_result, :normalized_event, normalized)}
+         {:ok, next_state, route_result} <- dispatch_normalized(runtime_state, normalized) do
+      {:ok, next_state, route_result}
     end
   end
 
   def dispatch(%State{} = _runtime_state, value) do
     {:error, Error.new(:unsupported_sdl3_event_payload, %{payload: value}, :sdl3_events)}
+  end
+
+  @spec dispatch_normalized(State.t(), map()) :: {:ok, State.t(), map()} | {:error, Error.t()}
+  def dispatch_normalized(%State{} = runtime_state, normalized) when is_map(normalized) do
+    with :ok <- validate_window_route(runtime_state, normalized),
+         :ok <- validate_focus_transition(runtime_state, normalized),
+         {:ok, next_state, route_result} <- Runtime.dispatch_native_event(runtime_state, normalized) do
+      {:ok, next_state, Map.put(route_result, :normalized_event, normalized)}
+    end
   end
 
   @spec diagnostics(keyword() | map()) :: map()
@@ -272,5 +293,13 @@ defmodule DesktopUi.Sdl3.Events do
   defp validate_focus_transition(%State{} = _runtime_state, _normalized), do: :ok
 
   defp normalize_map(attrs) when is_map(attrs), do: Map.new(attrs)
-  defp normalize_map(attrs) when is_list(attrs), do: Enum.into(attrs, %{})
+
+  defp normalize_map(attrs) when is_list(attrs) do
+    attrs
+    |> Enum.map(fn
+      {key, value} -> {key, value}
+      [key, value] -> {key, value}
+    end)
+    |> Enum.into(%{})
+  end
 end

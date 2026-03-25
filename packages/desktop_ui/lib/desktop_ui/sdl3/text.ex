@@ -8,6 +8,7 @@ defmodule DesktopUi.Sdl3.Text do
     %{
       backend: :sdl_ttf_equivalent,
       capabilities: [:font_selection, :text_measurement, :text_surface_preparation],
+      host_caching: true,
       future_platform_text_allowed: true
     }
   end
@@ -36,6 +37,15 @@ defmodule DesktopUi.Sdl3.Text do
   end
 
   def prepare(content, _opts), do: {:error, %{reason: :invalid_text_content, content: content}}
+
+  @spec cache_key(String.t(), keyword()) :: String.t()
+  def cache_key(content, opts \\ []) when is_binary(content) do
+    font = Keyword.get(opts, :font, "default-ui")
+    size = Keyword.get(opts, :size, 14)
+    weight = Keyword.get(opts, :weight, :regular)
+
+    "text:#{font}:#{size}:#{weight}:#{:erlang.phash2(content)}"
+  end
 
   @spec measure(String.t(), keyword()) :: map()
   def measure(content, opts \\ []) when is_binary(content) do

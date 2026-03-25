@@ -8,6 +8,9 @@ mix compile
 mix test
 mix desktop_ui.inspect --format catalog
 mix desktop_ui.inspect native_styled_review --format diagnostics
+mix desktop_ui.inspect native_foundational --format host
+mix desktop_ui.run --format catalog
+mix desktop_ui.run native_foundational --format summary
 mix desktop_ui.validate
 mix desktop_ui.validate --format report
 mix desktop_ui.validate --strict
@@ -28,10 +31,24 @@ Useful helper surfaces while working:
 - `DesktopUi.Reference.transport_summary/0`
 - `DesktopUi.Reference.style_summary/0`
 - `DesktopUi.Reference.artifact_summary/0`
+- `DesktopUi.Inspect.host_execution/1`
+- `DesktopUi.Tooling.run_catalog/0`
 - `DesktopUi.Validate.validation_report/0`
 
 Treat `mix desktop_ui.validate --strict` as the package release-readiness gate
 for day-to-day maintenance.
+
+## Host Execution Notes
+
+- `mix desktop_ui.run` is the package-local entrypoint for the host-backed SDL3
+  execution seam.
+- `mix desktop_ui.inspect ... --format host` reports the same host-backed
+  execution path from the inspection surface.
+- the current host path validates protocol framing, boot/frame acknowledgements,
+  text/image resource preparation, and event round-trips without requiring a
+  separately installed SDL3 runtime on the maintainer machine.
+- placeholder drawing is still explicit; host execution coverage should not be
+  interpreted as full native widget-complete rendering.
 
 ## Evolution Guardrails
 

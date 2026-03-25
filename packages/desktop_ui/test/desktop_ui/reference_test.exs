@@ -11,7 +11,8 @@ defmodule DesktopUi.ReferenceTest do
     assert reference.sdl3.foundation.runtime_foundation == :sdl3
     assert reference.sdl3.renderer.first_backend == :sdl_renderer
     assert reference.sdl3.renderer.future_backend == :sdl_gpu
-    assert reference.sdl3.renderer_completeness == :skeleton
+    assert reference.sdl3.frame_encoder.payload_family == :frame
+    assert reference.sdl3.renderer_completeness == :first_presented_frames
     assert reference.platform.validation_state == :platform_adapter_ready
     assert reference.layout.validation_state.advanced_display_systems == :ready
     assert reference.layer.validation_state.multiwindow_coordination == :ready
@@ -61,6 +62,8 @@ defmodule DesktopUi.ReferenceTest do
     assert reference.inspection.package_overview.runtime_foundation == :sdl3
     assert reference.inspection.sdl3_adapter_surface.foundation.runtime_foundation == :sdl3
     assert reference.inspection.sdl3_adapter_surface.validation_state.adapter == :app_handoff_ready
+    assert reference.inspection.sdl3_adapter_surface.validation_state.frame_encoder ==
+             :frame_encoding_ready
     assert reference.inspection.shared_runtime_contract.direct_native_and_canonical_share_runtime
     assert reference.inspection.shared_runtime_contract.lifecycle_model == :callback_oriented
     assert reference.inspection.transport_contract.no_platform_leakage_guarantee
@@ -70,7 +73,7 @@ defmodule DesktopUi.ReferenceTest do
 
     assert summary.package == :desktop_ui
     assert summary.sdl3.foundation.runtime_foundation == :sdl3
-    assert summary.sdl3.renderer_completeness == :skeleton
+    assert summary.sdl3.renderer_completeness == :first_presented_frames
     assert :window in summary.widgets.families
     assert :window in summary.widgets.kinds
     assert :viewport in summary.layout.kinds

@@ -8,6 +8,7 @@ defmodule Mix.Tasks.DesktopUi.Inspect do
 
       mix desktop_ui.inspect native_styled_review
       mix desktop_ui.inspect styled_continuity_review --format comparison
+      mix desktop_ui.inspect native_foundational --format host
       mix desktop_ui.inspect --format catalog
   """
 
@@ -35,6 +36,7 @@ defmodule Mix.Tasks.DesktopUi.Inspect do
             "metadata" -> :metadata
             "comparison" -> :comparison
             "diagnostics" -> :diagnostics
+            "host" -> :host
             other -> Mix.raise("unsupported inspect format #{inspect(other)}")
           end
 
@@ -48,7 +50,7 @@ defmodule Mix.Tasks.DesktopUi.Inspect do
 
       _ ->
         Mix.raise(
-          "usage: mix desktop_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|catalog]"
+          "usage: mix desktop_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|host|catalog]"
         )
     end
   end

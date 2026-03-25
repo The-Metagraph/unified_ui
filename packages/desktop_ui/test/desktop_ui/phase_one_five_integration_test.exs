@@ -45,7 +45,7 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
     assert Enum.any?(hd(plan.windows).draw_operations, &(&1.draw_kind == :window_chrome))
     assert plan.presentation.placeholder_draw_operations
     assert presentation.backend == :sdl_renderer
-    assert presentation.validation_state == :render_plan_ready
+    assert presentation.validation_state == :presented_frame_ready
   end
 
   test "invalid callback ordering, malformed event payloads, and broken window ownership fail with deterministic adapter diagnostics" do
@@ -78,27 +78,29 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
              DesktopUi.Sdl3.Window.registry(broken_state)
   end
 
-  test "reference and inspection helpers expose SDL3 namespaces, lifecycle boundaries, and skeleton validation state" do
+  test "reference and inspection helpers expose SDL3 namespaces, lifecycle boundaries, and first-frame validation state" do
     reference = DesktopUi.reference()
     inspection = DesktopUi.Inspection.sdl3_adapter_surface()
 
     assert DesktopUi.Sdl3 in reference.sdl3.modules
     assert DesktopUi.Sdl3.RenderPlan in reference.sdl3.modules
+    assert DesktopUi.Sdl3.FrameEncoder in reference.sdl3.modules
     assert :window_registry in reference.sdl3.scope
     assert reference.inspection.sdl3_adapter_surface.lifecycle.foundation == :sdl3
     assert inspection.renderer.first_backend == :sdl_renderer
     assert inspection.renderer.future_backend == :sdl_gpu
-    assert inspection.renderer_completeness == :skeleton
+    assert inspection.renderer_completeness == :first_presented_frames
     assert inspection.validation_state.adapter == :app_handoff_ready
+    assert inspection.validation_state.frame_encoder == :frame_encoding_ready
   end
 
-  test "validation and helper output distinguish SDL3 adapter coverage from full renderer completeness" do
+  test "validation and helper output distinguish SDL3 adapter coverage from first-frame renderer completeness" do
     report = DesktopUi.Validate.validation_report()
     summary = DesktopUi.Validate.validation_summary(report)
 
     assert report.sdl3_adapter_surface.status == :pass
     assert report.release_readiness.status == :pass
-    assert DesktopUi.Info.sdl3_summary().renderer_completeness == :skeleton
+    assert DesktopUi.Info.sdl3_summary().renderer_completeness == :first_presented_frames
     assert DesktopUi.Reference.sdl3_summary().renderer.placeholder_draw_operations_allowed
     assert summary =~ "SDL3 adapter surface passing?: true"
     assert summary =~ "release ready?: true"

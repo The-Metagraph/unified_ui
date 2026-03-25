@@ -1,7 +1,7 @@
 defmodule DesktopUi.Sdl3RenderPlanTest do
   use ExUnit.Case, async: true
 
-  alias DesktopUi.Sdl3.{App, RenderPlan, Renderer, Window}
+  alias DesktopUi.Sdl3.{App, FrameEncoder, RenderPlan, Renderer, Window}
 
   test "native window sessions distinguish top-level windows from transient layers" do
     assert {:ok, state} = DesktopUi.Runtime.mount_native_screen(advanced_screen(), platform_target: :linux)
@@ -28,6 +28,7 @@ defmodule DesktopUi.Sdl3RenderPlanTest do
   test "render plans preserve logical bounds, clipping, and placeholder draw operations" do
     assert {:ok, state} = DesktopUi.Runtime.mount_native_screen(advanced_screen(), platform_target: :linux)
     assert {:ok, plan} = RenderPlan.build(state)
+    assert {:ok, frame_payload} = FrameEncoder.encode(plan)
 
     assert plan.runtime_id == "desktop-ui:operations"
     assert plan.screen_id == "operations"
@@ -46,6 +47,11 @@ defmodule DesktopUi.Sdl3RenderPlanTest do
     assert Enum.any?(operations_window.draw_operations, &(&1.widget_id == "operations-window"))
     assert Enum.any?(operations_window.draw_operations, &(&1.draw_kind == :layer_surface))
     assert Enum.any?(operations_window.draw_operations, &(&1.clip?))
+
+    assert FrameEncoder.contract().payload_family == :frame
+    assert frame_payload.validation_state == :frame_payload_ready
+    assert frame_payload.presentation.logical_presentation.units == :logical
+    assert Enum.any?(frame_payload.windows, &(&1.window_id == "window:operations-window"))
   end
 
   test "SDL3 renderer presents render plans through an SDL_Renderer-first seam" do
@@ -55,11 +61,14 @@ defmodule DesktopUi.Sdl3RenderPlanTest do
 
     assert Renderer.contract().first_backend == :sdl_renderer
     assert Renderer.contract().future_backend == :sdl_gpu
+    assert Renderer.contract().frame_encoder == :host_protocol_payload
     assert Renderer.contract().placeholder_draw_operations_allowed
     assert presentation.backend == :sdl_renderer
+    assert presentation.presented_frame?
     assert presentation.window_count == 2
     assert Enum.any?(presentation.presented_windows, &(&1.window_id == "window:operations-window"))
-    assert presentation.validation_state == :render_plan_ready
+    assert presentation.logical_presentation.units == :logical
+    assert presentation.validation_state == :presented_frame_ready
 
     assert {:ok, boot_request} = App.boot_native_screen(advanced_screen(), platform_target: :linux)
     assert boot_request.windows.validation_state == :native_window_registry_ready
