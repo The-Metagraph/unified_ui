@@ -5,7 +5,7 @@ defmodule DesktopUi.Layout do
 
   alias DesktopUi.Widget
 
-  @kinds [:absolute, :box, :canvas_surface, :scroll_region, :split_pane, :viewport]
+  @kinds [:absolute, :box, :canvas_surface, :grid, :scroll_bar, :scroll_region, :split_pane, :viewport]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -26,6 +26,40 @@ defmodule DesktopUi.Layout do
         gap: Keyword.get(opts, :gap),
         align: Keyword.get(opts, :align),
         justify: Keyword.get(opts, :justify),
+        width: Keyword.get(opts, :width),
+        height: Keyword.get(opts, :height),
+        min_width: Keyword.get(opts, :min_width),
+        max_width: Keyword.get(opts, :max_width),
+        min_height: Keyword.get(opts, :min_height),
+        max_height: Keyword.get(opts, :max_height)
+      },
+      children: children,
+      styles: styles(opts)
+    )
+  end
+
+  @spec grid(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def grid(id, children \\ [], opts \\ []) do
+    Widget.new(:grid,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :grid_container),
+      attributes: %{
+        # Grid dimensions
+        columns: Keyword.get(opts, :columns),
+        rows: Keyword.get(opts, :rows),
+        # Spacing
+        gap: Keyword.get(opts, :gap),
+        column_gap: Keyword.get(opts, :column_gap),
+        row_gap: Keyword.get(opts, :row_gap),
+        # Alignment
+        align: Keyword.get(opts, :align),
+        justify: Keyword.get(opts, :justify),
+        # Container attributes
+        padding: Keyword.get(opts, :padding),
+        margin: Keyword.get(opts, :margin),
+        border: Keyword.get(opts, :border),
+        background: Keyword.get(opts, :background),
+        # Sizing
         width: Keyword.get(opts, :width),
         height: Keyword.get(opts, :height),
         min_width: Keyword.get(opts, :min_width),
@@ -79,6 +113,24 @@ defmodule DesktopUi.Layout do
       },
       slot_children: %{content: [content]},
       events: events(scroll: Keyword.get(opts, :on_scroll)),
+      styles: styles(opts)
+    )
+  end
+
+  @spec scroll_bar(String.t() | atom(), keyword()) :: Widget.t()
+  def scroll_bar(id, opts \\ []) do
+    Widget.new(:scroll_bar,
+      id: id,
+      metadata: metadata(opts, role: :scroll_bar, focusable: false),
+      attributes: %{
+        orientation: Keyword.get(opts, :orientation, :vertical),
+        value: Keyword.get(opts, :value, 0),
+        min: Keyword.get(opts, :min, 0),
+        max: Keyword.get(opts, :max, 100),
+        page_size: Keyword.get(opts, :page_size, 10),
+        thickness: Keyword.get(opts, :thickness, 12)
+      },
+      events: events(scroll: Keyword.get(opts, :on_scroll), change: Keyword.get(opts, :on_change)),
       styles: styles(opts)
     )
   end

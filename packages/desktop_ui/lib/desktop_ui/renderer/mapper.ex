@@ -37,6 +37,25 @@ defmodule DesktopUi.Renderer.Mapper do
     end
   end
 
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:scroll_bar, "scroll_bar"] do
+    {:ok,
+     DesktopUi.Layout.scroll_bar(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         orientation: first_present([attr(element, :orientation)], :vertical),
+         value: first_present([attr(element, :value), binding_value(element)], 0),
+         min: attr(element, :min),
+         max: attr(element, :max),
+         page_size: attr(element, :page_size),
+         thickness: attr(element, :thickness),
+         on_scroll: interaction_payload(element, :change),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
   defp map_element(%Element{type: :widget, kind: kind} = element) when kind in [:text, "text"] do
     {:ok,
      DesktopUi.Widgets.text(
@@ -578,6 +597,22 @@ defmodule DesktopUi.Renderer.Mapper do
   end
 
   defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:status, "status"] do
+    {:ok,
+     DesktopUi.Widgets.status(
+       element.id,
+       label_text(element, "Status"),
+       Keyword.merge(
+         base_opts(element),
+         status: first_present([attr(element, :status), group_attr(element, :status, :state)], :idle),
+         severity: first_present([attr(element, :severity), group_attr(element, :status, :severity)], :info),
+         active: first_present([attr(element, :active), group_attr(element, :status, :active)], true),
+         icon: first_present([attr(element, :icon), group_attr(element, :status, :icon)])
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:progress, "progress"] do
     {:ok,
      DesktopUi.Widgets.progress(
@@ -625,6 +660,25 @@ defmodule DesktopUi.Renderer.Mapper do
        element.id,
        first_present([attr(element, :series)], []),
        Keyword.merge(base_opts(element), axes: first_present([attr(element, :axes)], %{}))
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:sparkline, "sparkline"] do
+    {:ok,
+     DesktopUi.Widgets.sparkline(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         data: first_present([attr(element, :data), group_attr(element, :chart, :data)], []),
+         min: attr(element, :min),
+         max: attr(element, :max),
+         color: first_present([attr(element, :color), group_attr(element, :chart, :color)]),
+         width: attr(element, :width),
+         height: attr(element, :height),
+         show_area: first_present([attr(element, :show_area), group_attr(element, :chart, :show_area)], true),
+         show_dots: first_present([attr(element, :show_dots), group_attr(element, :chart, :show_dots)], false)
+       )
      )}
   end
 
@@ -899,6 +953,43 @@ defmodule DesktopUi.Renderer.Mapper do
          max_width: Map.get(layout_attrs, :max_width),
          min_height: Map.get(layout_attrs, :min_height),
          max_height: Map.get(layout_attrs, :max_height)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element) when kind in [:grid, "grid"] do
+    # Extract layout attributes from IUR attributes
+    layout_attrs = attr(element, :layout) || %{}
+    container_attrs = attr(element, :container) || %{}
+
+    {:ok,
+     DesktopUi.Layout.grid(
+       element.id,
+       [],  # Children will be added via slot_children
+       Keyword.merge(
+         base_opts(element),
+         # Grid dimensions
+         columns: Map.get(layout_attrs, :columns) || attr(element, :columns),
+         rows: Map.get(layout_attrs, :rows) || attr(element, :rows),
+         # Spacing
+         gap: Map.get(layout_attrs, :gap) || attr(element, :gap),
+         column_gap: Map.get(layout_attrs, :column_gap) || attr(element, :column_gap),
+         row_gap: Map.get(layout_attrs, :row_gap) || attr(element, :row_gap),
+         # Alignment
+         align: Map.get(layout_attrs, :align) || attr(element, :align),
+         justify: Map.get(layout_attrs, :justify) || attr(element, :justify),
+         # Container attributes
+         padding: Map.get(container_attrs, :padding) || attr(element, :padding),
+         margin: Map.get(container_attrs, :margin) || attr(element, :margin),
+         border: Map.get(container_attrs, :border) || attr(element, :border),
+         background: Map.get(container_attrs, :background) || attr(element, :background),
+         # Sizing
+         width: Map.get(layout_attrs, :width) || attr(element, :width),
+         height: Map.get(layout_attrs, :height) || attr(element, :height),
+         min_width: Map.get(layout_attrs, :min_width) || attr(element, :min_width),
+         max_width: Map.get(layout_attrs, :max_width) || attr(element, :max_width),
+         min_height: Map.get(layout_attrs, :min_height) || attr(element, :min_height),
+         max_height: Map.get(layout_attrs, :max_height) || attr(element, :max_height)
        )
      )}
   end

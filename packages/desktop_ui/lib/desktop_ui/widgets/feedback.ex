@@ -7,7 +7,30 @@ defmodule DesktopUi.Widgets.Feedback do
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:alert_dialog, :dialog, :inline_feedback, :progress, :status, :toast]
+    [:alert_dialog, :dialog, :inline_feedback, :progress, :sparkline, :status, :toast]
+  end
+
+  @spec sparkline(String.t() | atom(), keyword()) :: Widget.t()
+  def sparkline(id, opts \\ []) do
+    Widget.new(:sparkline,
+      id: id,
+      metadata: metadata(opts, role: :sparkline),
+      state:
+        state(opts,
+          loading: Keyword.get(opts, :loading, false)
+        ),
+      attributes: %{
+        data: Keyword.get(opts, :data, []),
+        min: Keyword.get(opts, :min),
+        max: Keyword.get(opts, :max),
+        color: Keyword.get(opts, :color),
+        width: Keyword.get(opts, :width),
+        height: Keyword.get(opts, :height),
+        show_area: Keyword.get(opts, :show_area, true),
+        show_dots: Keyword.get(opts, :show_dots, false)
+      },
+      styles: styles(opts)
+    )
   end
 
   @spec inline_feedback(String.t() | atom(), keyword()) :: Widget.t()

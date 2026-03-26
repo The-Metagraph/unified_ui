@@ -189,11 +189,17 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       :box ->
         layout_column(children, inner_bounds, node, source, source_index, inherited_clip)
 
+      :grid ->
+        layout_grid(children, inner_bounds, node, source, source_index, inherited_clip)
+
       :split_pane ->
         layout_split_pane(children, inner_bounds, source, source_index, inherited_clip)
 
       kind when kind in [:viewport, :scroll_region] ->
         layout_single_child(children, inner_bounds, inherited_clip || inner_bounds)
+
+      :scroll_bar ->
+        layout_single_child(children, inner_bounds, inner_bounds)
 
       :overlay ->
         layout_overlay(children, inner_bounds, source, source_index, inherited_clip)
@@ -272,6 +278,55 @@ defmodule DesktopUi.Sdl3.RenderPlan do
             ],
           x + child_bounds.width + gap
         }
+      end)
+
+    specs
+  end
+
+  defp layout_grid(children, bounds, node, source, source_index, inherited_clip) do
+    # Get grid dimensions from attributes
+    columns = Map.get(source.attributes, :columns) || Map.get(node.attributes, :columns, 2)
+    rows = Map.get(node.attributes, :rows)
+    gap = gap_px(node) || 8
+
+    # If rows are specified, use them; otherwise calculate based on children count
+    child_count = length(children)
+    calculated_rows = ceil(child_count / columns)
+    row_count = if rows, do: rows, else: calculated_rows
+
+    # Calculate cell dimensions
+    column_gap = Map.get(source.attributes, :column_gap) || gap
+    row_gap = Map.get(source.attributes, :row_gap) || gap
+    total_gap_width = column_gap * max(columns - 1, 0)
+    total_gap_height = row_gap * max(trunc(row_count) - 1, 0)
+
+    cell_width = max((bounds.width - total_gap_width) / columns, 32)
+    cell_height = if rows do
+      max((bounds.height - total_gap_height) / row_count, 32)
+    else
+      # Calculate based on available height divided by rows needed
+      max((bounds.height - total_gap_height) / calculated_rows, 32)
+    end
+
+    specs =
+      Enum.with_index(children)
+      |> Enum.map(fn {child, index} ->
+        col = rem(index, columns)
+        row = div(index, columns)
+
+        x = bounds.x + col * (cell_width + column_gap)
+        y = bounds.y + row * (cell_height + row_gap)
+
+        child_bounds = %{
+          x: round(x),
+          y: round(y),
+          width: round(cell_width),
+          height: round(cell_height),
+          units: :logical
+        }
+
+        {child, Map.get(source_index, normalize_id(child.id), source_stub(child)),
+         child_bounds, inherited_clip}
       end)
 
     specs
@@ -488,7 +543,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         inset_bounds(bounds, padding + 18, 52, padding + 18, padding + 18)
 
       kind
-      when kind in [:overlay, :viewport, :scroll_region, :content, :column, :row, :split_pane, :box] ->
+      when kind in [:overlay, :viewport, :scroll_region, :scroll_bar, :content, :column, :row, :split_pane, :box, :grid] ->
         inset_bounds(bounds, padding + 12, padding + 12, padding + 12, padding + 12)
 
       :canvas_surface ->
@@ -631,6 +686,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:key_value), do: :key_value_block
   defp draw_kind(:info_list), do: :info_list_block
   defp draw_kind(:status), do: :status_block
+  defp draw_kind(:sparkline), do: :sparkline_surface
   defp draw_kind(:progress), do: :progress_block
   defp draw_kind(:inline_feedback), do: :inline_feedback_surface
   defp draw_kind(:process_monitor), do: :process_monitor_surface
@@ -641,6 +697,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:command_palette), do: :command_palette_surface
   defp draw_kind(:gauge), do: :gauge_surface
   defp draw_kind(:viewport), do: :viewport_surface
+  defp draw_kind(:scroll_bar), do: :scroll_bar_surface
   defp draw_kind(:split_pane), do: :split_pane_surface
   defp draw_kind(:overlay), do: :overlay_surface
   defp draw_kind(:context_menu), do: :context_menu_surface
@@ -676,6 +733,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :key_value -> key_value_height(node)
       node.kind == :info_list -> info_list_height(node)
       node.kind == :status -> 32
+      node.kind == :sparkline -> sparkline_height(node)
       node.kind == :progress -> progress_height(node)
       node.kind == :inline_feedback -> 48
       node.kind == :log_viewer -> max(152, 52 + item_count(node) * 26)
@@ -685,6 +743,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :command_palette -> 156
       node.kind == :gauge -> 108
       node.kind == :viewport -> 280
+      node.kind == :scroll_bar -> scroll_bar_thickness(node)
       node.kind == :split_pane -> 320
       node.kind == :dialog -> 240
       node.kind == :canvas_surface -> 200
@@ -765,6 +824,28 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         :lg -> 12
         _ -> 8
       end
+    end
+  end
+
+  defp sparkline_height(node) do
+    case node.attributes[:height] do
+      h when is_integer(h) -> h
+      :xs -> 24
+      :sm -> 32
+      :lg -> 64
+      :xl -> 96
+      _ -> 48
+    end
+  end
+
+  defp scroll_bar_thickness(node) do
+    case node.attributes[:thickness] do
+      t when is_integer(t) -> t
+      :xs -> 8
+      :sm -> 10
+      :lg -> 16
+      :xl -> 20
+      _ -> 12
     end
   end
 

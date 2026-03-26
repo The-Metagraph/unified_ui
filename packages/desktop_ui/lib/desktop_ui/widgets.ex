@@ -41,7 +41,7 @@ defmodule DesktopUi.Widgets do
       Feedback.kinds(),
       Visualization.kinds(),
       Operational.kinds(),
-      [:column, :row, :stack, :status, :window]
+      [:column, :row, :sparkline, :stack, :status, :window]
     ]
     |> List.flatten()
     |> Enum.uniq()
@@ -308,6 +308,11 @@ defmodule DesktopUi.Widgets do
   @spec progress(String.t() | atom(), keyword()) :: Widget.t()
   def progress(id, opts \\ []) do
     Feedback.progress(id, opts)
+  end
+
+  @spec sparkline(String.t() | atom(), keyword()) :: Widget.t()
+  def sparkline(id, opts \\ []) do
+    Feedback.sparkline(id, opts)
   end
 
   @spec gauge(String.t() | atom(), keyword()) :: Widget.t()
