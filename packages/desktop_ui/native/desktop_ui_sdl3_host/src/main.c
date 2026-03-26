@@ -17,6 +17,7 @@
 #define MAX_FONTS 16
 #define MAX_TEXT_CACHE 256
 #define MAX_IMAGE_CACHE 128
+#define MAX_INTERACTION_EVENTS 128
 #define MAX_LINE 4096
 
 typedef struct {
@@ -39,6 +40,7 @@ typedef struct {
 
 typedef struct {
   char window_id[128];
+  char widget_id[128];
   char draw_kind[64];
   char kind[64];
   char family[64];
@@ -50,6 +52,17 @@ typedef struct {
   char attrs[128];
   char content[256];
   char image_source[256];
+  char shortcut[64];
+  char shortcut_intent[64];
+  char click_intent[64];
+  char submit_intent[64];
+  char selection_intent[64];
+  char command_intent[64];
+  char close_intent[64];
+  char navigation_intent[64];
+  char window_identity[64];
+  char overlay_role[64];
+  char selection_mode[32];
   int x;
   int y;
   int width;
@@ -59,6 +72,7 @@ typedef struct {
   int clip_y;
   int clip_width;
   int clip_height;
+  int focusable;
   int disabled;
   int focused;
   int selected;
@@ -85,6 +99,42 @@ typedef struct {
   dui_draw draws[MAX_DRAWS];
   int draw_count;
 } dui_frame;
+
+typedef struct {
+  char type[32];
+  char window_id[128];
+  char widget_id[128];
+  char focus_target[128];
+  char key[32];
+  char modifiers[64];
+  char button[16];
+  int x;
+  int y;
+  int delta_x;
+  int delta_y;
+  char intent[64];
+} dui_interaction_event;
+
+typedef struct {
+  int total_events;
+  int scripted_events;
+  int live_events;
+  int focus_changes;
+  int command_activations;
+  int selection_changes;
+  int submit_actions;
+  int scroll_events;
+  int overlay_transitions;
+  int window_activations;
+  int multiwindow_focus_transfers;
+  char active_window_id[128];
+  char focused_widget_id[128];
+  char last_command_widget_id[128];
+  char last_command_intent[64];
+  char last_selected_widget_id[128];
+  char last_submit_widget_id[128];
+  char last_scroll_widget_id[128];
+} dui_interaction_summary;
 
 typedef struct {
   int size;
@@ -127,6 +177,12 @@ typedef struct {
 typedef struct {
   dui_frame frame;
   dui_resources resources;
+  dui_interaction_event scripted_events[MAX_INTERACTION_EVENTS];
+  int scripted_event_count;
+  int next_scripted_event_index;
+  int last_pointer_x;
+  int last_pointer_y;
+  dui_interaction_summary interaction_summary;
   int linger_ms;
   Uint64 start_ticks;
   int needs_redraw;
@@ -135,6 +191,7 @@ typedef struct {
 
 static void decode_value(char *value);
 static int parse_frame_script(const char *path, dui_frame *frame);
+static int parse_interaction_script(const char *path, dui_app *app);
 static int parse_attrs(char *line, char attrs[][2][256], int max_attrs);
 static void copy_attr(char *dest, size_t dest_size, char attrs[][2][256], int count,
                       const char *key, const char *fallback);
@@ -166,6 +223,26 @@ static void draw_surface_shell(SDL_Renderer *renderer, SDL_FRect rect, dui_color
                                dui_color stroke, const char *border_kind, int focused,
                                int disabled);
 static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw);
+static int copy_window_id_for_native_window(dui_frame *frame, SDL_WindowID native_window_id,
+                                            char *dest, size_t dest_size);
+static int is_focusable_draw(const dui_draw *draw);
+static int point_in_draw(const dui_draw *draw, int x, int y);
+static dui_draw *hit_test_draw(dui_frame *frame, const char *window_id, int x, int y);
+static dui_draw *find_draw_by_widget_id(dui_frame *frame, const char *window_id,
+                                        const char *widget_id);
+static void focus_draw(dui_app *app, const char *window_id, const char *widget_id);
+static void activate_draw(dui_app *app, dui_draw *draw);
+static void select_draw_index(dui_app *app, dui_draw *draw, int index);
+static void close_overlay_draws(dui_app *app, const char *window_id);
+static void apply_scroll(dui_app *app, dui_draw *draw, int delta_y);
+static void apply_keyboard_event(dui_app *app, const dui_interaction_event *event);
+static void apply_pointer_button_event(dui_app *app, const dui_interaction_event *event);
+static void apply_pointer_hover_event(dui_app *app, const dui_interaction_event *event);
+static void apply_wheel_event(dui_app *app, const dui_interaction_event *event);
+static void apply_window_activation_event(dui_app *app, const dui_interaction_event *event);
+static void apply_focus_event(dui_app *app, const dui_interaction_event *event);
+static void apply_interaction_event(dui_app *app, const dui_interaction_event *event,
+                                    int scripted);
 static int string_contains_token(const char *attrs, const char *token);
 static const char *default_font_path(void);
 static int file_exists(const char *path);
@@ -269,6 +346,7 @@ static void destroy_resource_support(dui_app *app) {
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
   dui_app *app = (dui_app *)calloc(1, sizeof(dui_app));
   const char *frame_script = NULL;
+  const char *interaction_script = NULL;
   *appstate = app;
 
   if (app == NULL) {
@@ -291,6 +369,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
 
     if (strcmp(argv[i], "--frame-script") == 0 && i + 1 < argc) {
       frame_script = argv[++i];
+    } else if (strcmp(argv[i], "--interaction-script") == 0 && i + 1 < argc) {
+      interaction_script = argv[++i];
     } else if (strcmp(argv[i], "--linger-ms") == 0 && i + 1 < argc) {
       app->linger_ms = atoi(argv[++i]);
     }
@@ -303,6 +383,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
 
   if (parse_frame_script(frame_script, &app->frame) != 0) {
     fprintf(stderr, "failed to parse frame script %s\n", frame_script);
+    return SDL_APP_FAILURE;
+  }
+
+  if (interaction_script != NULL && parse_interaction_script(interaction_script, app) != 0) {
+    fprintf(stderr, "failed to parse interaction script %s\n", interaction_script);
     return SDL_APP_FAILURE;
   }
 
@@ -332,6 +417,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
   app->start_ticks = SDL_GetTicks();
   app->needs_redraw = 1;
   app->shutdown_requested = 0;
+  memset(&app->interaction_summary, 0, sizeof(app->interaction_summary));
 
   return SDL_APP_CONTINUE;
 }
@@ -357,6 +443,83 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
     app->needs_redraw = 1;
     break;
 
+  case SDL_EVENT_WINDOW_FOCUS_GAINED: {
+    dui_interaction_event normalized = {0};
+    strncpy(normalized.type, "window_activated", sizeof(normalized.type) - 1);
+    copy_window_id_for_native_window(&app->frame, event->window.windowID, normalized.window_id,
+                                     sizeof(normalized.window_id));
+
+    apply_interaction_event(app, &normalized, 0);
+    break;
+  }
+
+  case SDL_EVENT_MOUSE_MOTION: {
+    dui_interaction_event normalized = {0};
+    strncpy(normalized.type, "pointer_hover", sizeof(normalized.type) - 1);
+    normalized.x = (int)event->motion.x;
+    normalized.y = (int)event->motion.y;
+    app->last_pointer_x = normalized.x;
+    app->last_pointer_y = normalized.y;
+    copy_window_id_for_native_window(&app->frame, event->motion.windowID, normalized.window_id,
+                                     sizeof(normalized.window_id));
+
+    apply_interaction_event(app, &normalized, 0);
+    break;
+  }
+
+  case SDL_EVENT_MOUSE_BUTTON_DOWN: {
+    dui_interaction_event normalized = {0};
+    strncpy(normalized.type, "pointer_button", sizeof(normalized.type) - 1);
+    normalized.x = (int)event->button.x;
+    normalized.y = (int)event->button.y;
+    app->last_pointer_x = normalized.x;
+    app->last_pointer_y = normalized.y;
+    strncpy(normalized.button,
+            event->button.button == SDL_BUTTON_RIGHT ? "right" : "left",
+            sizeof(normalized.button) - 1);
+    copy_window_id_for_native_window(&app->frame, event->button.windowID, normalized.window_id,
+                                     sizeof(normalized.window_id));
+
+    apply_interaction_event(app, &normalized, 0);
+    break;
+  }
+
+  case SDL_EVENT_MOUSE_WHEEL: {
+    dui_interaction_event normalized = {0};
+    strncpy(normalized.type, "wheel_scrolled", sizeof(normalized.type) - 1);
+    normalized.x = app->last_pointer_x;
+    normalized.y = app->last_pointer_y;
+    normalized.delta_x = (int)event->wheel.x;
+    normalized.delta_y = (int)event->wheel.y;
+    copy_window_id_for_native_window(&app->frame, event->wheel.windowID, normalized.window_id,
+                                     sizeof(normalized.window_id));
+
+    apply_interaction_event(app, &normalized, 0);
+    break;
+  }
+
+  case SDL_EVENT_KEY_DOWN: {
+    dui_interaction_event normalized = {0};
+    SDL_Keymod mods = SDL_GetModState();
+    strncpy(normalized.type, "keyboard_key_down", sizeof(normalized.type) - 1);
+    strncpy(normalized.key, SDL_GetKeyName(event->key.key), sizeof(normalized.key) - 1);
+
+    if ((mods & SDL_KMOD_CTRL) != 0) {
+      strncpy(normalized.modifiers, "ctrl", sizeof(normalized.modifiers) - 1);
+    } else if ((mods & SDL_KMOD_SHIFT) != 0) {
+      strncpy(normalized.modifiers, "shift", sizeof(normalized.modifiers) - 1);
+    } else if ((mods & SDL_KMOD_ALT) != 0) {
+      strncpy(normalized.modifiers, "alt", sizeof(normalized.modifiers) - 1);
+    } else if ((mods & SDL_KMOD_GUI) != 0) {
+      strncpy(normalized.modifiers, "meta", sizeof(normalized.modifiers) - 1);
+    }
+    copy_window_id_for_native_window(&app->frame, event->key.windowID, normalized.window_id,
+                                     sizeof(normalized.window_id));
+
+    apply_interaction_event(app, &normalized, 0);
+    break;
+  }
+
   default:
     break;
   }
@@ -378,6 +541,10 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     app->needs_redraw = 0;
   }
 
+  if (app->next_scripted_event_index < app->scripted_event_count) {
+    apply_interaction_event(app, &app->scripted_events[app->next_scripted_event_index++], 1);
+  }
+
   if (app->shutdown_requested) {
     return SDL_APP_SUCCESS;
   }
@@ -394,6 +561,27 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
   (void)result;
 
   if (app != NULL) {
+    printf(
+        "{\"interaction_summary\":{\"total_events\":%d,\"scripted_events\":%d,"
+        "\"live_events\":%d,\"focus_changes\":%d,\"command_activations\":%d,"
+        "\"selection_changes\":%d,\"submit_actions\":%d,\"scroll_events\":%d,"
+        "\"overlay_transitions\":%d,\"window_activations\":%d,"
+        "\"multiwindow_focus_transfers\":%d,\"active_window_id\":\"%s\","
+        "\"focused_widget_id\":\"%s\",\"last_command_widget_id\":\"%s\","
+        "\"last_command_intent\":\"%s\",\"last_selected_widget_id\":\"%s\","
+        "\"last_submit_widget_id\":\"%s\",\"last_scroll_widget_id\":\"%s\"}}\n",
+        app->interaction_summary.total_events, app->interaction_summary.scripted_events,
+        app->interaction_summary.live_events, app->interaction_summary.focus_changes,
+        app->interaction_summary.command_activations, app->interaction_summary.selection_changes,
+        app->interaction_summary.submit_actions, app->interaction_summary.scroll_events,
+        app->interaction_summary.overlay_transitions, app->interaction_summary.window_activations,
+        app->interaction_summary.multiwindow_focus_transfers,
+        app->interaction_summary.active_window_id, app->interaction_summary.focused_widget_id,
+        app->interaction_summary.last_command_widget_id,
+        app->interaction_summary.last_command_intent,
+        app->interaction_summary.last_selected_widget_id,
+        app->interaction_summary.last_submit_widget_id,
+        app->interaction_summary.last_scroll_widget_id);
     destroy_frame_windows(&app->frame);
     destroy_resource_support(app);
     free(app);
@@ -458,6 +646,7 @@ static int parse_frame_script(const char *path, dui_frame *frame) {
 
       copy_attr(draw->window_id, sizeof(draw->window_id), attrs, count, "window_id",
                 "window:desktop-ui");
+      copy_attr(draw->widget_id, sizeof(draw->widget_id), attrs, count, "widget_id", "widget");
       copy_attr(draw->draw_kind, sizeof(draw->draw_kind), attrs, count, "draw_kind",
                 "container_surface");
       copy_attr(draw->kind, sizeof(draw->kind), attrs, count, "kind", "widget");
@@ -471,6 +660,26 @@ static int parse_frame_script(const char *path, dui_frame *frame) {
       copy_attr(draw->attrs, sizeof(draw->attrs), attrs, count, "attrs", "");
       copy_attr(draw->content, sizeof(draw->content), attrs, count, "content", "widget");
       copy_attr(draw->image_source, sizeof(draw->image_source), attrs, count, "image_source", "");
+      copy_attr(draw->shortcut, sizeof(draw->shortcut), attrs, count, "shortcut", "");
+      copy_attr(draw->shortcut_intent, sizeof(draw->shortcut_intent), attrs, count,
+                "shortcut_intent", "");
+      copy_attr(draw->click_intent, sizeof(draw->click_intent), attrs, count, "click_intent",
+                "");
+      copy_attr(draw->submit_intent, sizeof(draw->submit_intent), attrs, count, "submit_intent",
+                "");
+      copy_attr(draw->selection_intent, sizeof(draw->selection_intent), attrs, count,
+                "selection_intent", "");
+      copy_attr(draw->command_intent, sizeof(draw->command_intent), attrs, count, "command_intent",
+                "");
+      copy_attr(draw->close_intent, sizeof(draw->close_intent), attrs, count, "close_intent",
+                "");
+      copy_attr(draw->navigation_intent, sizeof(draw->navigation_intent), attrs, count,
+                "navigation_intent", "");
+      copy_attr(draw->window_identity, sizeof(draw->window_identity), attrs, count,
+                "window_identity", "");
+      copy_attr(draw->overlay_role, sizeof(draw->overlay_role), attrs, count, "overlay_role", "");
+      copy_attr(draw->selection_mode, sizeof(draw->selection_mode), attrs, count,
+                "selection_mode", "");
       draw->x = int_attr(attrs, count, "x", 0);
       draw->y = int_attr(attrs, count, "y", 0);
       draw->width = int_attr(attrs, count, "width", 240);
@@ -480,6 +689,7 @@ static int parse_frame_script(const char *path, dui_frame *frame) {
       draw->clip_y = int_attr(attrs, count, "clip_y", draw->y);
       draw->clip_width = int_attr(attrs, count, "clip_width", draw->width);
       draw->clip_height = int_attr(attrs, count, "clip_height", draw->height);
+      draw->focusable = int_attr(attrs, count, "focusable", 0);
       draw->disabled = int_attr(attrs, count, "disabled", 0);
       draw->focused = int_attr(attrs, count, "focused", 0);
       draw->selected = int_attr(attrs, count, "selected", 0);
@@ -552,6 +762,449 @@ static int int_attr(char attrs[][2][256], int count, const char *key, int fallba
   }
 
   return fallback;
+}
+
+static int parse_interaction_script(const char *path, dui_app *app) {
+  FILE *file = fopen(path, "r");
+  if (file == NULL) {
+    return -1;
+  }
+
+  char line[MAX_LINE];
+  while (fgets(line, sizeof(line), file) != NULL) {
+    size_t length = strlen(line);
+    if (length > 0 && line[length - 1] == '\n') {
+      line[length - 1] = '\0';
+    }
+
+    if (strncmp(line, "EVENT\t", 6) == 0) {
+      if (app->scripted_event_count >= MAX_INTERACTION_EVENTS) {
+        continue;
+      }
+
+      dui_interaction_event *event = &app->scripted_events[app->scripted_event_count++];
+      char attrs[20][2][256];
+      int count = parse_attrs(line + 6, attrs, 20);
+
+      copy_attr(event->type, sizeof(event->type), attrs, count, "type", "");
+      copy_attr(event->window_id, sizeof(event->window_id), attrs, count, "window_id", "");
+      copy_attr(event->widget_id, sizeof(event->widget_id), attrs, count, "widget_id", "");
+      copy_attr(event->focus_target, sizeof(event->focus_target), attrs, count, "focus_target", "");
+      copy_attr(event->key, sizeof(event->key), attrs, count, "key", "");
+      copy_attr(event->modifiers, sizeof(event->modifiers), attrs, count, "modifiers", "");
+      copy_attr(event->button, sizeof(event->button), attrs, count, "button", "left");
+      copy_attr(event->intent, sizeof(event->intent), attrs, count, "intent", "");
+      event->x = int_attr(attrs, count, "x", 0);
+      event->y = int_attr(attrs, count, "y", 0);
+      event->delta_x = int_attr(attrs, count, "delta_x", 0);
+      event->delta_y = int_attr(attrs, count, "delta_y", 0);
+    }
+  }
+
+  fclose(file);
+  return 0;
+}
+
+static int is_focusable_draw(const dui_draw *draw) {
+  return draw->focusable && !draw->disabled &&
+         strcmp(draw->draw_kind, "window_chrome") != 0 &&
+         strcmp(draw->draw_kind, "overlay_surface") != 0;
+}
+
+static int copy_window_id_for_native_window(dui_frame *frame, SDL_WindowID native_window_id,
+                                            char *dest, size_t dest_size) {
+  if (dest == NULL || dest_size == 0) {
+    return 0;
+  }
+
+  dest[0] = '\0';
+
+  for (int index = 0; index < frame->window_count; index++) {
+    dui_window *window = &frame->windows[index];
+
+    if (window->window != NULL && SDL_GetWindowID(window->window) == native_window_id) {
+      strncpy(dest, window->window_id, dest_size - 1);
+      dest[dest_size - 1] = '\0';
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+static int point_in_draw(const dui_draw *draw, int x, int y) {
+  return x >= draw->x && x <= (draw->x + draw->width) && y >= draw->y &&
+         y <= (draw->y + draw->height);
+}
+
+static dui_draw *hit_test_draw(dui_frame *frame, const char *window_id, int x, int y) {
+  for (int index = frame->draw_count - 1; index >= 0; index--) {
+    dui_draw *draw = &frame->draws[index];
+
+    if (strcmp(draw->window_id, window_id) != 0) {
+      continue;
+    }
+
+    if ((strcmp(draw->draw_kind, "dialog_surface") == 0 ||
+         strcmp(draw->draw_kind, "context_menu_surface") == 0) &&
+        !draw->open) {
+      continue;
+    }
+
+    if (point_in_draw(draw, x, y)) {
+      return draw;
+    }
+  }
+
+  return NULL;
+}
+
+static dui_draw *find_draw_by_widget_id(dui_frame *frame, const char *window_id,
+                                        const char *widget_id) {
+  if (widget_id == NULL || widget_id[0] == '\0') {
+    return NULL;
+  }
+
+  for (int index = 0; index < frame->draw_count; index++) {
+    dui_draw *draw = &frame->draws[index];
+
+    if (strcmp(draw->widget_id, widget_id) != 0) {
+      continue;
+    }
+
+    if (window_id != NULL && window_id[0] != '\0' && strcmp(draw->window_id, window_id) != 0) {
+      continue;
+    }
+
+    return draw;
+  }
+
+  return NULL;
+}
+
+static void focus_draw(dui_app *app, const char *window_id, const char *widget_id) {
+  if (window_id == NULL || widget_id == NULL || window_id[0] == '\0' || widget_id[0] == '\0') {
+    return;
+  }
+
+  dui_draw *focused_draw = find_draw_by_widget_id(&app->frame, window_id, widget_id);
+  if (focused_draw == NULL || !is_focusable_draw(focused_draw)) {
+    return;
+  }
+
+  int changed = strcmp(app->interaction_summary.focused_widget_id, widget_id) != 0;
+
+  for (int index = 0; index < app->frame.draw_count; index++) {
+    dui_draw *draw = &app->frame.draws[index];
+
+    if (strcmp(draw->window_id, window_id) == 0) {
+      draw->focused = strcmp(draw->widget_id, widget_id) == 0 ? 1 : 0;
+    }
+  }
+
+  strncpy(app->interaction_summary.focused_widget_id, widget_id,
+          sizeof(app->interaction_summary.focused_widget_id) - 1);
+  app->interaction_summary.focused_widget_id[sizeof(app->interaction_summary.focused_widget_id) - 1] =
+      '\0';
+  strncpy(app->interaction_summary.active_window_id, window_id,
+          sizeof(app->interaction_summary.active_window_id) - 1);
+  app->interaction_summary.active_window_id[sizeof(app->interaction_summary.active_window_id) - 1] =
+      '\0';
+
+  if (changed) {
+    app->interaction_summary.focus_changes++;
+  }
+}
+
+static void activate_draw(dui_app *app, dui_draw *draw) {
+  if (draw == NULL || draw->disabled) {
+    return;
+  }
+
+  draw->active = 1;
+
+  if (strcmp(draw->kind, "checkbox") == 0) {
+    draw->checked = draw->checked ? 0 : 1;
+    app->interaction_summary.selection_changes++;
+    strncpy(app->interaction_summary.last_selected_widget_id, draw->widget_id,
+            sizeof(app->interaction_summary.last_selected_widget_id) - 1);
+    app->interaction_summary
+        .last_selected_widget_id[sizeof(app->interaction_summary.last_selected_widget_id) - 1] =
+        '\0';
+  } else if (strcmp(draw->kind, "text_input") == 0) {
+    app->interaction_summary.submit_actions++;
+    strncpy(app->interaction_summary.last_submit_widget_id, draw->widget_id,
+            sizeof(app->interaction_summary.last_submit_widget_id) - 1);
+    app->interaction_summary
+        .last_submit_widget_id[sizeof(app->interaction_summary.last_submit_widget_id) - 1] = '\0';
+  } else if (strcmp(draw->kind, "button") == 0 || strcmp(draw->kind, "command") == 0 ||
+             strcmp(draw->kind, "window_command") == 0) {
+    app->interaction_summary.command_activations++;
+    strncpy(app->interaction_summary.last_command_widget_id, draw->widget_id,
+            sizeof(app->interaction_summary.last_command_widget_id) - 1);
+    app->interaction_summary
+        .last_command_widget_id[sizeof(app->interaction_summary.last_command_widget_id) - 1] =
+        '\0';
+
+    const char *intent = draw->command_intent[0] != '\0' ? draw->command_intent : draw->click_intent;
+    strncpy(app->interaction_summary.last_command_intent, intent,
+            sizeof(app->interaction_summary.last_command_intent) - 1);
+    app->interaction_summary.last_command_intent[sizeof(app->interaction_summary.last_command_intent) -
+                                                 1] = '\0';
+  }
+
+  if (draw->submit_intent[0] != '\0') {
+    app->interaction_summary.submit_actions++;
+    strncpy(app->interaction_summary.last_submit_widget_id, draw->widget_id,
+            sizeof(app->interaction_summary.last_submit_widget_id) - 1);
+    app->interaction_summary
+        .last_submit_widget_id[sizeof(app->interaction_summary.last_submit_widget_id) - 1] = '\0';
+  }
+
+  if (draw->close_intent[0] != '\0' || strcmp(draw->widget_id, "dialog-close") == 0 ||
+      strcasestr(draw->click_intent, "close") != NULL) {
+    close_overlay_draws(app, draw->window_id);
+  }
+}
+
+static void select_draw_index(dui_app *app, dui_draw *draw, int index) {
+  if (draw == NULL) {
+    return;
+  }
+
+  int max_index = draw->item_count > 0 ? draw->item_count - 1 : draw->row_count - 1;
+  if (max_index < 0) {
+    max_index = 0;
+  }
+
+  if (index < 0) {
+    index = 0;
+  }
+
+  if (index > max_index) {
+    index = max_index;
+  }
+
+  draw->selected = 1;
+  draw->current = 1;
+  draw->selected_index = index;
+  draw->current_index = index;
+  app->interaction_summary.selection_changes++;
+  strncpy(app->interaction_summary.last_selected_widget_id, draw->widget_id,
+          sizeof(app->interaction_summary.last_selected_widget_id) - 1);
+  app->interaction_summary.last_selected_widget_id[sizeof(app->interaction_summary.last_selected_widget_id) -
+                                                   1] = '\0';
+}
+
+static void close_overlay_draws(dui_app *app, const char *window_id) {
+  int changed = 0;
+
+  for (int index = 0; index < app->frame.draw_count; index++) {
+    dui_draw *draw = &app->frame.draws[index];
+
+    if (strcmp(draw->window_id, window_id) == 0 &&
+        (strcmp(draw->draw_kind, "dialog_surface") == 0 ||
+         strcmp(draw->draw_kind, "context_menu_surface") == 0) &&
+        draw->open) {
+      draw->open = 0;
+      changed = 1;
+    }
+  }
+
+  if (changed) {
+    app->interaction_summary.overlay_transitions++;
+  }
+}
+
+static void apply_scroll(dui_app *app, dui_draw *draw, int delta_y) {
+  if (draw == NULL) {
+    return;
+  }
+
+  if (draw->item_count > 0 || draw->row_count > 0) {
+    select_draw_index(app, draw, draw->current_index + (delta_y < 0 ? 1 : -1));
+  } else {
+    draw->value = SDL_clamp(draw->value + (delta_y * 8), 0, 100);
+  }
+
+  app->interaction_summary.scroll_events++;
+  strncpy(app->interaction_summary.last_scroll_widget_id, draw->widget_id,
+          sizeof(app->interaction_summary.last_scroll_widget_id) - 1);
+  app->interaction_summary.last_scroll_widget_id[sizeof(app->interaction_summary.last_scroll_widget_id) -
+                                                 1] = '\0';
+}
+
+static void apply_pointer_hover_event(dui_app *app, const dui_interaction_event *event) {
+  dui_draw *draw = find_draw_by_widget_id(&app->frame, event->window_id, event->widget_id);
+  if (draw == NULL) {
+    draw = hit_test_draw(&app->frame, event->window_id, event->x, event->y);
+  }
+
+  if (draw != NULL && (draw->item_count > 0 || draw->row_count > 0)) {
+    int row_count = draw->item_count > 0 ? draw->item_count : draw->row_count;
+    int row_height = SDL_max((draw->height - 16) / SDL_max(row_count, 1), 18);
+    int index = (event->y - draw->y - 8) / SDL_max(row_height, 1);
+    draw->current_index = SDL_clamp(index, 0, SDL_max(row_count - 1, 0));
+  }
+}
+
+static void apply_pointer_button_event(dui_app *app, const dui_interaction_event *event) {
+  dui_draw *draw = find_draw_by_widget_id(&app->frame, event->window_id, event->widget_id);
+  if (draw == NULL) {
+    draw = hit_test_draw(&app->frame, event->window_id, event->x, event->y);
+  }
+
+  if (draw == NULL) {
+    return;
+  }
+
+  focus_draw(app, draw->window_id, draw->widget_id);
+
+  if (draw->item_count > 0 || draw->row_count > 0) {
+    int row_count = draw->item_count > 0 ? draw->item_count : draw->row_count;
+    int row_height = SDL_max((draw->height - 16) / SDL_max(row_count, 1), 18);
+    int index = (event->y - draw->y - 8) / SDL_max(row_height, 1);
+    select_draw_index(app, draw, index);
+
+    if (strcmp(draw->draw_kind, "context_menu_surface") == 0) {
+      close_overlay_draws(app, draw->window_id);
+    }
+
+    return;
+  }
+
+  if (strcmp(draw->widget_id, "dialog-close") == 0 || strcmp(event->button, "right") == 0) {
+    close_overlay_draws(app, draw->window_id);
+  }
+
+  activate_draw(app, draw);
+}
+
+static void apply_focus_event(dui_app *app, const dui_interaction_event *event) {
+  const char *focus_target = event->focus_target[0] != '\0' ? event->focus_target : event->widget_id;
+  focus_draw(app, event->window_id, focus_target);
+}
+
+static void apply_window_activation_event(dui_app *app, const dui_interaction_event *event) {
+  if (event->window_id[0] == '\0') {
+    return;
+  }
+
+  if (app->interaction_summary.active_window_id[0] != '\0' &&
+      strcmp(app->interaction_summary.active_window_id, event->window_id) != 0) {
+    app->interaction_summary.multiwindow_focus_transfers++;
+  }
+
+  strncpy(app->interaction_summary.active_window_id, event->window_id,
+          sizeof(app->interaction_summary.active_window_id) - 1);
+  app->interaction_summary
+      .active_window_id[sizeof(app->interaction_summary.active_window_id) - 1] = '\0';
+  app->interaction_summary.window_activations++;
+}
+
+static void apply_keyboard_event(dui_app *app, const dui_interaction_event *event) {
+  const char *window_id = event->window_id[0] != '\0' ? event->window_id : app->interaction_summary.active_window_id;
+  int focused_index = -1;
+  int focusable_indexes[MAX_DRAWS];
+  int focusable_count = 0;
+
+  for (int index = 0; index < app->frame.draw_count; index++) {
+    dui_draw *draw = &app->frame.draws[index];
+
+    if (strcmp(draw->window_id, window_id) != 0 || !is_focusable_draw(draw)) {
+      continue;
+    }
+
+    focusable_indexes[focusable_count++] = index;
+    if (draw->focused) {
+      focused_index = focusable_count - 1;
+    }
+
+    if (draw->shortcut[0] != '\0' && strlen(event->key) == 1 &&
+        strcasestr(draw->shortcut, event->key) != NULL &&
+        ((string_contains_token(event->modifiers, "ctrl") && strcasestr(draw->shortcut, "ctrl") != NULL) ||
+         (string_contains_token(event->modifiers, "meta") && strcasestr(draw->shortcut, "cmd") != NULL) ||
+         (string_contains_token(event->modifiers, "alt") && strcasestr(draw->shortcut, "alt") != NULL))) {
+      focus_draw(app, draw->window_id, draw->widget_id);
+      activate_draw(app, draw);
+      return;
+    }
+  }
+
+  if (strcasecmp(event->key, "Tab") == 0 && focusable_count > 0) {
+    int next = string_contains_token(event->modifiers, "shift") ? focused_index - 1 : focused_index + 1;
+    if (next < 0) {
+      next = focusable_count - 1;
+    }
+    if (next >= focusable_count) {
+      next = 0;
+    }
+
+    focus_draw(app, window_id, app->frame.draws[focusable_indexes[next]].widget_id);
+    return;
+  }
+
+  if (strcasecmp(event->key, "Escape") == 0) {
+    close_overlay_draws(app, window_id);
+    return;
+  }
+
+  if (focusable_count == 0 || focused_index < 0) {
+    return;
+  }
+
+  dui_draw *focused = &app->frame.draws[focusable_indexes[focused_index]];
+
+  if (strcasecmp(event->key, "Return") == 0 || strcasecmp(event->key, "Enter") == 0 ||
+      strcasecmp(event->key, "Space") == 0) {
+    activate_draw(app, focused);
+    return;
+  }
+
+  if (strcasecmp(event->key, "Down") == 0 || strcasecmp(event->key, "Up") == 0) {
+    int delta = strcasecmp(event->key, "Down") == 0 ? -1 : 1;
+    apply_scroll(app, focused, delta);
+  }
+}
+
+static void apply_wheel_event(dui_app *app, const dui_interaction_event *event) {
+  dui_draw *draw = find_draw_by_widget_id(&app->frame, event->window_id, event->widget_id);
+  if (draw == NULL) {
+    draw = hit_test_draw(&app->frame, event->window_id, event->x, event->y);
+  }
+
+  if (draw != NULL) {
+    apply_scroll(app, draw, event->delta_y);
+  }
+}
+
+static void apply_interaction_event(dui_app *app, const dui_interaction_event *event, int scripted) {
+  if (event == NULL || event->type[0] == '\0') {
+    return;
+  }
+
+  app->interaction_summary.total_events++;
+  app->needs_redraw = 1;
+
+  if (scripted) {
+    app->interaction_summary.scripted_events++;
+  } else {
+    app->interaction_summary.live_events++;
+  }
+
+  if (strcmp(event->type, "focus_changed") == 0) {
+    apply_focus_event(app, event);
+  } else if (strcmp(event->type, "window_activated") == 0) {
+    apply_window_activation_event(app, event);
+  } else if (strcmp(event->type, "pointer_hover") == 0) {
+    apply_pointer_hover_event(app, event);
+  } else if (strcmp(event->type, "pointer_button") == 0) {
+    apply_pointer_button_event(app, event);
+  } else if (strcmp(event->type, "wheel_scrolled") == 0) {
+    apply_wheel_event(app, event);
+  } else if (strcmp(event->type, "keyboard_key_down") == 0) {
+    apply_keyboard_event(app, event);
+  }
 }
 
 static dui_color named_color(const char *name, Uint8 alpha) {
@@ -1309,6 +1962,12 @@ static void render_window(dui_app *app, dui_frame *frame, int window_index) {
   for (int i = 0; i < frame->draw_count; i++) {
     dui_draw *draw = &frame->draws[i];
     if (strcmp(draw->window_id, window->window_id) != 0) {
+      continue;
+    }
+
+    if ((strcmp(draw->draw_kind, "dialog_surface") == 0 ||
+         strcmp(draw->draw_kind, "context_menu_surface") == 0) &&
+        !draw->open) {
       continue;
     }
 

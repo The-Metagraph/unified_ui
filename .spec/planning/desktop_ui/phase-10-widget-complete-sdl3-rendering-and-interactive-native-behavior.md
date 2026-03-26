@@ -81,28 +81,28 @@ Back to index: [README](./README.md)
       [x] 10.2.2.2 Subtask - Preserve component variants, state variants, and inherited theme behavior in visible native output.
       [x] 10.2.2.3 Subtask - Keep style realization consistent between direct-native and canonical-IUR-driven screens.
 
-  [ ] 10.3 Section - Interactive Native Behavior and Event Realization
+  [x] 10.3 Section - Interactive Native Behavior and Event Realization
     Upgrade the visible runner from static frame presentation to real
     interactive native behavior so maintained flows can be exercised by hand in
     desktop windows.
 
-    [ ] 10.3.1 Task - Implement hit-testing, focus, and command interaction
+    [x] 10.3.1 Task - Implement hit-testing, focus, and command interaction
       Make visible native widgets respond to real keyboard and pointer input
       through hit-testing and focus movement that preserve existing runtime
       semantics.
 
-      [ ] 10.3.1.1 Subtask - Implement hit-testing and focus targeting for maintained foundational and advanced widget surfaces.
-      [ ] 10.3.1.2 Subtask - Route keyboard, pointer, and command interactions through the compiled visible runner with the same semantic outcomes as the fallback host.
-      [ ] 10.3.1.3 Subtask - Preserve command shortcuts, selection changes, submit behavior, and dialog or menu transitions in native execution.
+      [x] 10.3.1.1 Subtask - Implement hit-testing and focus targeting for maintained foundational and advanced widget surfaces.
+      [x] 10.3.1.2 Subtask - Route keyboard, pointer, and command interactions through the compiled visible runner with the same semantic outcomes as the fallback host.
+      [x] 10.3.1.3 Subtask - Preserve command shortcuts, selection changes, submit behavior, and dialog or menu transitions in native execution.
 
-    [ ] 10.3.2 Task - Implement scrolling, viewport, and multiwindow interaction behavior
+    [x] 10.3.2 Task - Implement scrolling, viewport, and multiwindow interaction behavior
       Make the visible runner support the maintained desktop interaction flows
       that depend on scroll regions, layered surfaces, and more than one native
       window.
 
-      [ ] 10.3.2.1 Subtask - Implement wheel and scroll-region behavior for maintained viewport and document-like surfaces.
-      [ ] 10.3.2.2 Subtask - Coordinate overlay, popover, dialog, and context-menu interaction semantics inside owning windows.
-      [ ] 10.3.2.3 Subtask - Coordinate window activation, focus transfer, and bounded secondary-window interactions across multiwindow maintained flows.
+      [x] 10.3.2.1 Subtask - Implement wheel and scroll-region behavior for maintained viewport and document-like surfaces.
+      [x] 10.3.2.2 Subtask - Coordinate overlay, popover, dialog, and context-menu interaction semantics inside owning windows.
+      [x] 10.3.2.3 Subtask - Coordinate window activation, focus transfer, and bounded secondary-window interactions across multiwindow maintained flows.
 
   [ ] 10.4 Section - Tooling, Diagnostics, and Renderer Completeness Reporting
     Update the maintainer tooling and review surfaces so the package clearly

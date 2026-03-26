@@ -509,6 +509,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       semantic_role: get_in(node, [:resolved_styles, :semantic_role]) || source.metadata[:role],
       resolved_styles: Map.get(node, :resolved_styles, %{}),
       resource: draw_resource(node),
+      interaction: interaction_metadata(source),
       visual_state: %{
         disabled: truthy?(node.disabled),
         focused:
@@ -555,6 +556,30 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         %{}
     end
   end
+
+  defp interaction_metadata(source) do
+    events = Map.get(source, :events, %{})
+
+    %{
+      focusable: Map.get(source.metadata, :focusable, false),
+      shortcut: Map.get(source.metadata, :shortcut) || get_in(events, [:shortcut, :key]),
+      shortcut_intent: event_intent(Map.get(events, :shortcut)),
+      click_intent: event_intent(Map.get(events, :click)),
+      submit_intent: event_intent(Map.get(events, :submit)),
+      selection_intent: event_intent(Map.get(events, :selection)),
+      command_intent: event_intent(Map.get(events, :command)),
+      close_intent: event_intent(Map.get(events, :close)),
+      navigation_intent: event_intent(Map.get(events, :navigation)),
+      window_identity: Map.get(source.metadata, :window_identity),
+      overlay_role: Map.get(source.metadata, :overlay_role),
+      selection_mode:
+        Map.get(source.metadata, :selection_mode, Map.get(source.attributes, :selection_mode))
+    }
+  end
+
+  defp event_intent(nil), do: nil
+  defp event_intent(event) when is_map(event), do: Map.get(event, :intent)
+  defp event_intent(_event), do: nil
 
   defp draw_content(node) do
     cond do

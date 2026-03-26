@@ -15,6 +15,7 @@ defmodule DesktopUi.Sdl3.FrameEncoder do
         :transient_layers,
         :resolved_styles,
         :resource_descriptors,
+        :interaction_contract,
         :visual_state,
         :metrics,
         :clip_bounds
@@ -108,6 +109,7 @@ defmodule DesktopUi.Sdl3.FrameEncoder do
       semantic_role: operation.semantic_role,
       resolved_styles: operation.resolved_styles,
       resource: Map.get(operation, :resource, %{}),
+      interaction: Map.get(operation, :interaction, %{}),
       visual_state: operation.visual_state,
       metrics: operation.metrics,
       content: operation.content
