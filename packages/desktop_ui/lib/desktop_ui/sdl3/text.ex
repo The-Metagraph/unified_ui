@@ -9,7 +9,12 @@ defmodule DesktopUi.Sdl3.Text do
   def contract do
     %{
       backend: :sdl_ttf_equivalent,
-      capabilities: [:font_selection, :text_measurement, :text_surface_preparation],
+      capabilities: [
+        :font_selection,
+        :text_measurement,
+        :text_surface_preparation,
+        :texture_caching
+      ],
       host_caching: true,
       future_platform_text_allowed: true
     }
@@ -20,16 +25,26 @@ defmodule DesktopUi.Sdl3.Text do
 
   @spec native_support(map()) :: map()
   def native_support(capabilities \\ Capabilities.detect()) do
-    native_backend_ready? = get_in(capabilities, [:libraries, :sdl3_ttf, :available?]) || false
+    library = get_in(capabilities, [:libraries, :sdl3_ttf]) || %{}
+    probe = get_in(capabilities, [:build, :executable_probe]) || %{}
+    native_backend_ready? = get_in(capabilities, [:build, :native_text_ready?]) || false
+    available_on_rebuild? = Map.get(library, :available?, false)
 
     %{
       library: :sdl3_ttf,
+      pkg_config_package: Map.get(library, :package),
       native_backend_ready?: native_backend_ready?,
+      available_on_rebuild?: available_on_rebuild?,
       active_mode:
         if(native_backend_ready?,
           do: :native_companion_library,
           else: :elixir_measurement_fallback
         ),
+      measurement_mode:
+        if(native_backend_ready?, do: :sdl3_ttf_measurement, else: :elixir_measurement_fallback),
+      texture_cache:
+        if(native_backend_ready?, do: :compiled_host_texture_cache, else: :no_native_cache),
+      host_probe_mode: Map.get(probe, :text_mode),
       fallback_mode: :elixir_measurement_fallback,
       requests_bounded_when_missing?: true
     }
@@ -50,6 +65,7 @@ defmodule DesktopUi.Sdl3.Text do
        font: font,
        size: size,
        weight: weight,
+       cache_key: cache_key(content, opts),
        measurement: measure(content, opts),
        validation_state: validation_state()
      }}

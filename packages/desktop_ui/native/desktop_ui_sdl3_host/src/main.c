@@ -1,12 +1,22 @@
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#if defined(DUI_HAS_SDL3_IMAGE)
+#include <SDL3_image/SDL_image.h>
+#endif
+#if defined(DUI_HAS_SDL3_TTF)
+#include <SDL3_ttf/SDL_ttf.h>
+#endif
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_WINDOWS 16
 #define MAX_DRAWS 512
+#define MAX_FONTS 16
+#define MAX_TEXT_CACHE 256
+#define MAX_IMAGE_CACHE 128
 #define MAX_LINE 4096
 
 typedef struct {
@@ -37,7 +47,9 @@ typedef struct {
   char border[64];
   char variant[64];
   char semantic_role[64];
+  char attrs[128];
   char content[256];
+  char image_source[256];
   int x;
   int y;
   int width;
@@ -75,7 +87,46 @@ typedef struct {
 } dui_frame;
 
 typedef struct {
+  int size;
+  int style;
+#if defined(DUI_HAS_SDL3_TTF)
+  TTF_Font *font;
+#endif
+} dui_font_entry;
+
+typedef struct {
+  char key[768];
+  int width;
+  int height;
+#if defined(DUI_HAS_SDL3_TTF)
+  SDL_Texture *texture;
+#endif
+} dui_text_cache_entry;
+
+typedef struct {
+  char source[512];
+  int width;
+  int height;
+#if defined(DUI_HAS_SDL3_IMAGE)
+  SDL_Texture *texture;
+#endif
+} dui_image_cache_entry;
+
+typedef struct {
+  int text_backend_ready;
+  int image_backend_ready;
+  char font_path[512];
+  dui_font_entry fonts[MAX_FONTS];
+  int font_count;
+  dui_text_cache_entry text_cache[MAX_TEXT_CACHE];
+  int text_cache_count;
+  dui_image_cache_entry image_cache[MAX_IMAGE_CACHE];
+  int image_cache_count;
+} dui_resources;
+
+typedef struct {
   dui_frame frame;
+  dui_resources resources;
   int linger_ms;
   Uint64 start_ticks;
   int needs_redraw;
@@ -88,16 +139,23 @@ static int parse_attrs(char *line, char attrs[][2][256], int max_attrs);
 static void copy_attr(char *dest, size_t dest_size, char attrs[][2][256], int count,
                       const char *key, const char *fallback);
 static int int_attr(char attrs[][2][256], int count, const char *key, int fallback);
-static void render_window(dui_frame *frame, int window_index);
+static void render_window(dui_app *app, dui_frame *frame, int window_index);
 static void destroy_frame_windows(dui_frame *frame);
+static void init_resource_support(dui_app *app);
+static void destroy_resource_support(dui_app *app);
 static void print_probe(void);
 static dui_color named_color(const char *name, Uint8 alpha);
+static SDL_Color as_sdl_color(dui_color color);
 static void use_color(SDL_Renderer *renderer, dui_color color);
 static void fill_rect(SDL_Renderer *renderer, SDL_FRect rect, dui_color color);
 static void stroke_rect(SDL_Renderer *renderer, SDL_FRect rect, dui_color color);
 static void fill_inset_rect(SDL_Renderer *renderer, SDL_FRect rect, float inset, dui_color color);
 static void draw_text_bands(SDL_Renderer *renderer, SDL_FRect rect, int content_length,
                             dui_color color, int emphasized);
+static void draw_text_content(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw,
+                              SDL_FRect rect, dui_color color, int emphasized);
+static void draw_image_content(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw,
+                               SDL_FRect rect);
 static void draw_item_rows(SDL_Renderer *renderer, SDL_FRect rect, int count, int current_index,
                            int selected_index, dui_color base, dui_color highlight);
 static void draw_table_grid(SDL_Renderer *renderer, SDL_FRect rect, int columns, int rows,
@@ -105,15 +163,107 @@ static void draw_table_grid(SDL_Renderer *renderer, SDL_FRect rect, int columns,
 static void draw_progress_bar(SDL_Renderer *renderer, SDL_FRect rect, int value, int max_value,
                               dui_color track, dui_color fill);
 static void draw_surface_shell(SDL_Renderer *renderer, SDL_FRect rect, dui_color fill,
-                               dui_color stroke, int focused, int disabled);
-static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw);
+                               dui_color stroke, const char *border_kind, int focused,
+                               int disabled);
+static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw);
+static int string_contains_token(const char *attrs, const char *token);
+static const char *default_font_path(void);
+static int file_exists(const char *path);
+#if defined(DUI_HAS_SDL3_TTF)
+static int text_style_flags(const dui_draw *draw);
+static int text_font_size(const dui_draw *draw, int emphasized);
+static TTF_Font *load_font(dui_app *app, int size, int style);
+static SDL_Texture *text_texture_for(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw,
+                                     dui_color color, int emphasized, int *width, int *height);
+#endif
+#if defined(DUI_HAS_SDL3_IMAGE)
+static SDL_Texture *image_texture_for(dui_app *app, SDL_Renderer *renderer, const char *source,
+                                      int *width, int *height);
+#endif
 
 static void print_probe(void) {
   printf(
       "{\"host\":\"desktop_ui_sdl3_host\",\"status\":\"visible_frame_ready\","
       "\"launch_ready\":false,\"visible_runner_ready\":true,"
-      "\"backend\":\"compiled_sdl3_host\",\"compiled_with\":\"SDL3 %d.%d.%d\"}\n",
-      SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
+      "\"backend\":\"compiled_sdl3_host\",\"compiled_with\":\"SDL3 %d.%d.%d\","
+      "\"native_text_ready\":%s,\"native_image_ready\":%s,"
+      "\"text_mode\":\"%s\",\"image_mode\":\"%s\"}\n",
+      SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION,
+#if defined(DUI_HAS_SDL3_TTF)
+      "true",
+#else
+      "false",
+#endif
+#if defined(DUI_HAS_SDL3_IMAGE)
+      "true",
+#else
+      "false",
+#endif
+#if defined(DUI_HAS_SDL3_TTF)
+      "native_sdl3_ttf",
+#else
+      "fallback_text_bands",
+#endif
+#if defined(DUI_HAS_SDL3_IMAGE)
+      "native_sdl3_image"
+#else
+      "fallback_image_fill"
+#endif
+  );
+}
+
+static void init_resource_support(dui_app *app) {
+  memset(&app->resources, 0, sizeof(app->resources));
+
+#if defined(DUI_HAS_SDL3_TTF)
+  if (TTF_Init()) {
+    const char *font_path = default_font_path();
+    if (font_path != NULL) {
+      strncpy(app->resources.font_path, font_path, sizeof(app->resources.font_path) - 1);
+      app->resources.font_path[sizeof(app->resources.font_path) - 1] = '\0';
+      app->resources.text_backend_ready = 1;
+    } else {
+      fprintf(stderr, "desktop_ui SDL3 host: no usable font path found, falling back to bands\n");
+    }
+  } else {
+    fprintf(stderr, "desktop_ui SDL3 host: TTF_Init failed: %s\n", SDL_GetError());
+  }
+#endif
+
+#if defined(DUI_HAS_SDL3_IMAGE)
+  app->resources.image_backend_ready = 1;
+#endif
+}
+
+static void destroy_resource_support(dui_app *app) {
+#if defined(DUI_HAS_SDL3_TTF)
+  for (int i = 0; i < app->resources.text_cache_count; i++) {
+    if (app->resources.text_cache[i].texture != NULL) {
+      SDL_DestroyTexture(app->resources.text_cache[i].texture);
+      app->resources.text_cache[i].texture = NULL;
+    }
+  }
+
+  for (int i = 0; i < app->resources.font_count; i++) {
+    if (app->resources.fonts[i].font != NULL) {
+      TTF_CloseFont(app->resources.fonts[i].font);
+      app->resources.fonts[i].font = NULL;
+    }
+  }
+
+  if (TTF_WasInit()) {
+    TTF_Quit();
+  }
+#endif
+
+#if defined(DUI_HAS_SDL3_IMAGE)
+  for (int i = 0; i < app->resources.image_cache_count; i++) {
+    if (app->resources.image_cache[i].texture != NULL) {
+      SDL_DestroyTexture(app->resources.image_cache[i].texture);
+      app->resources.image_cache[i].texture = NULL;
+    }
+  }
+#endif
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
@@ -160,6 +310,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
     fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  init_resource_support(app);
 
   for (int i = 0; i < app->frame.window_count; i++) {
     dui_window *window = &app->frame.windows[i];
@@ -221,7 +373,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
   if (app->needs_redraw) {
     for (int i = 0; i < app->frame.window_count; i++) {
-      render_window(&app->frame, i);
+      render_window(app, &app->frame, i);
     }
     app->needs_redraw = 0;
   }
@@ -243,6 +395,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result) {
 
   if (app != NULL) {
     destroy_frame_windows(&app->frame);
+    destroy_resource_support(app);
     free(app);
   }
 
@@ -315,7 +468,9 @@ static int parse_frame_script(const char *path, dui_frame *frame) {
       copy_attr(draw->variant, sizeof(draw->variant), attrs, count, "variant", "default");
       copy_attr(draw->semantic_role, sizeof(draw->semantic_role), attrs, count, "semantic_role",
                 "body");
+      copy_attr(draw->attrs, sizeof(draw->attrs), attrs, count, "attrs", "");
       copy_attr(draw->content, sizeof(draw->content), attrs, count, "content", "widget");
+      copy_attr(draw->image_source, sizeof(draw->image_source), attrs, count, "image_source", "");
       draw->x = int_attr(attrs, count, "x", 0);
       draw->y = int_attr(attrs, count, "y", 0);
       draw->width = int_attr(attrs, count, "width", 240);
@@ -427,6 +582,11 @@ static dui_color named_color(const char *name, Uint8 alpha) {
   return (dui_color){110, 121, 142, alpha};
 }
 
+static SDL_Color as_sdl_color(dui_color color) {
+  SDL_Color converted = {color.r, color.g, color.b, color.a};
+  return converted;
+}
+
 static void use_color(SDL_Renderer *renderer, dui_color color) {
   SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
@@ -471,6 +631,325 @@ static void draw_text_bands(SDL_Renderer *renderer, SDL_FRect rect, int content_
     SDL_FRect band = {left, top + (float)line * (band_height + 6.0f), width, band_height};
     SDL_RenderFillRect(renderer, &band);
   }
+}
+
+static int string_contains_token(const char *attrs, const char *token) {
+  if (attrs == NULL || token == NULL || attrs[0] == '\0' || token[0] == '\0') {
+    return 0;
+  }
+
+  char buffer[128];
+  strncpy(buffer, attrs, sizeof(buffer) - 1);
+  buffer[sizeof(buffer) - 1] = '\0';
+
+  char *part = strtok(buffer, ",");
+  while (part != NULL) {
+    if (strcmp(part, token) == 0) {
+      return 1;
+    }
+
+    part = strtok(NULL, ",");
+  }
+
+  return 0;
+}
+
+static int file_exists(const char *path) {
+  if (path == NULL || path[0] == '\0') {
+    return 0;
+  }
+
+  FILE *file = fopen(path, "rb");
+  if (file == NULL) {
+    return 0;
+  }
+
+  fclose(file);
+  return 1;
+}
+
+static const char *default_font_path(void) {
+  const char *env_path = getenv("DUI_DEFAULT_FONT");
+
+  if (file_exists(env_path)) {
+    return env_path;
+  }
+
+  static const char *candidates[] = {
+      "/System/Library/Fonts/Supplemental/Arial.ttf",
+      "/System/Library/Fonts/SFNS.ttf",
+      "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf",
+      "C:/Windows/Fonts/arial.ttf",
+      NULL};
+
+  for (int i = 0; candidates[i] != NULL; i++) {
+    if (file_exists(candidates[i])) {
+      return candidates[i];
+    }
+  }
+
+  return NULL;
+}
+
+#if defined(DUI_HAS_SDL3_TTF)
+static int text_style_flags(const dui_draw *draw) {
+  int style = TTF_STYLE_NORMAL;
+
+  if (string_contains_token(draw->attrs, "bold") || strcmp(draw->semantic_role, "title") == 0 ||
+      strcmp(draw->semantic_role, "window_chrome") == 0 ||
+      strcmp(draw->semantic_role, "primary_action") == 0 ||
+      strcmp(draw->semantic_role, "status_info") == 0 ||
+      strcmp(draw->semantic_role, "status_warning") == 0 ||
+      strcmp(draw->semantic_role, "status_danger") == 0) {
+    style |= TTF_STYLE_BOLD;
+  }
+
+  if (string_contains_token(draw->attrs, "italic")) {
+    style |= TTF_STYLE_ITALIC;
+  }
+
+  if (string_contains_token(draw->attrs, "underline")) {
+    style |= TTF_STYLE_UNDERLINE;
+  }
+
+  if (string_contains_token(draw->attrs, "strikethrough")) {
+    style |= TTF_STYLE_STRIKETHROUGH;
+  }
+
+  return style;
+}
+
+static int text_font_size(const dui_draw *draw, int emphasized) {
+  if (strcmp(draw->semantic_role, "title") == 0 || string_contains_token(draw->attrs, "uppercase")) {
+    return 24;
+  }
+
+  if (strcmp(draw->semantic_role, "caption") == 0 || strcmp(draw->semantic_role, "label") == 0) {
+    return 13;
+  }
+
+  if (strcmp(draw->semantic_role, "window_chrome") == 0) {
+    return 15;
+  }
+
+  if (emphasized) {
+    return 18;
+  }
+
+  return 16;
+}
+
+static TTF_Font *load_font(dui_app *app, int size, int style) {
+  if (!app->resources.text_backend_ready || app->resources.font_path[0] == '\0') {
+    return NULL;
+  }
+
+  for (int i = 0; i < app->resources.font_count; i++) {
+    dui_font_entry *entry = &app->resources.fonts[i];
+    if (entry->size == size && entry->style == style && entry->font != NULL) {
+      return entry->font;
+    }
+  }
+
+  if (app->resources.font_count >= MAX_FONTS) {
+    return NULL;
+  }
+
+  TTF_Font *font = TTF_OpenFont(app->resources.font_path, (float)size);
+  if (font == NULL) {
+    fprintf(stderr, "desktop_ui SDL3 host: TTF_OpenFont failed for %s: %s\n",
+            app->resources.font_path, SDL_GetError());
+    return NULL;
+  }
+
+  TTF_SetFontStyle(font, style);
+
+  dui_font_entry *entry = &app->resources.fonts[app->resources.font_count++];
+  entry->size = size;
+  entry->style = style;
+  entry->font = font;
+  return font;
+}
+
+static SDL_Texture *text_texture_for(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw,
+                                     dui_color color, int emphasized, int *width, int *height) {
+  if (!app->resources.text_backend_ready || draw->content[0] == '\0') {
+    return NULL;
+  }
+
+  int style = text_style_flags(draw);
+  int font_size = text_font_size(draw, emphasized);
+
+  char normalized[512];
+  size_t length = strlen(draw->content);
+  if (length >= sizeof(normalized)) {
+    length = sizeof(normalized) - 1;
+  }
+
+  for (size_t index = 0; index < length; index++) {
+    char ch = draw->content[index];
+    if (string_contains_token(draw->attrs, "uppercase") && ch >= 'a' && ch <= 'z') {
+      normalized[index] = (char)(ch - 32);
+    } else {
+      normalized[index] = ch;
+    }
+  }
+  normalized[length] = '\0';
+
+  char key[768];
+  snprintf(key, sizeof(key), "%s|%d|%d|%u|%u|%u|%u", normalized, font_size, style, color.r,
+           color.g, color.b, color.a);
+
+  for (int i = 0; i < app->resources.text_cache_count; i++) {
+    dui_text_cache_entry *entry = &app->resources.text_cache[i];
+    if (strcmp(entry->key, key) == 0 && entry->texture != NULL) {
+      *width = entry->width;
+      *height = entry->height;
+      return entry->texture;
+    }
+  }
+
+  if (app->resources.text_cache_count >= MAX_TEXT_CACHE) {
+    return NULL;
+  }
+
+  TTF_Font *font = load_font(app, font_size, style);
+  if (font == NULL) {
+    return NULL;
+  }
+
+  int measured_width = 0;
+  int measured_height = 0;
+  TTF_GetStringSize(font, normalized, strlen(normalized), &measured_width, &measured_height);
+
+  SDL_Surface *surface =
+      TTF_RenderText_Blended(font, normalized, strlen(normalized), as_sdl_color(color));
+  if (surface == NULL) {
+    return NULL;
+  }
+
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+  if (texture == NULL) {
+    SDL_DestroySurface(surface);
+    return NULL;
+  }
+
+  dui_text_cache_entry *entry = &app->resources.text_cache[app->resources.text_cache_count++];
+  strncpy(entry->key, key, sizeof(entry->key) - 1);
+  entry->key[sizeof(entry->key) - 1] = '\0';
+  entry->width = measured_width > 0 ? measured_width : surface->w;
+  entry->height = measured_height > 0 ? measured_height : surface->h;
+  entry->texture = texture;
+
+  *width = entry->width;
+  *height = entry->height;
+
+  SDL_DestroySurface(surface);
+  return texture;
+}
+#endif
+
+static void draw_text_content(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw,
+                              SDL_FRect rect, dui_color color, int emphasized) {
+#if defined(DUI_HAS_SDL3_TTF)
+  if (app->resources.text_backend_ready) {
+    int texture_width = 0;
+    int texture_height = 0;
+    SDL_Texture *texture =
+        text_texture_for(app, renderer, draw, color, emphasized, &texture_width, &texture_height);
+
+    if (texture != NULL) {
+      SDL_FRect target = {rect.x + 8.0f, rect.y + 6.0f, (float)texture_width, (float)texture_height};
+      float available_width = SDL_max(rect.w - 16.0f, 8.0f);
+      float available_height = SDL_max(rect.h - 12.0f, 8.0f);
+
+      if (target.w > available_width) {
+        float ratio = available_width / target.w;
+        target.w = available_width;
+        target.h = SDL_max(target.h * ratio, 8.0f);
+      }
+
+      if (target.h > available_height) {
+        float ratio = available_height / target.h;
+        target.h = available_height;
+        target.w = SDL_max(target.w * ratio, 8.0f);
+      }
+
+      SDL_RenderTexture(renderer, texture, NULL, &target);
+      return;
+    }
+  }
+#endif
+
+  draw_text_bands(renderer, rect, draw->content_length, color, emphasized);
+}
+
+#if defined(DUI_HAS_SDL3_IMAGE)
+static SDL_Texture *image_texture_for(dui_app *app, SDL_Renderer *renderer, const char *source,
+                                      int *width, int *height) {
+  if (!app->resources.image_backend_ready || source == NULL || source[0] == '\0' ||
+      !file_exists(source)) {
+    return NULL;
+  }
+
+  for (int i = 0; i < app->resources.image_cache_count; i++) {
+    dui_image_cache_entry *entry = &app->resources.image_cache[i];
+    if (strcmp(entry->source, source) == 0 && entry->texture != NULL) {
+      *width = entry->width;
+      *height = entry->height;
+      return entry->texture;
+    }
+  }
+
+  if (app->resources.image_cache_count >= MAX_IMAGE_CACHE) {
+    return NULL;
+  }
+
+  SDL_Surface *surface = IMG_Load(source);
+  if (surface == NULL) {
+    return NULL;
+  }
+
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+  if (texture == NULL) {
+    SDL_DestroySurface(surface);
+    return NULL;
+  }
+
+  dui_image_cache_entry *entry = &app->resources.image_cache[app->resources.image_cache_count++];
+  strncpy(entry->source, source, sizeof(entry->source) - 1);
+  entry->source[sizeof(entry->source) - 1] = '\0';
+  entry->width = surface->w;
+  entry->height = surface->h;
+  entry->texture = texture;
+
+  *width = entry->width;
+  *height = entry->height;
+
+  SDL_DestroySurface(surface);
+  return texture;
+}
+#endif
+
+static void draw_image_content(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw,
+                               SDL_FRect rect) {
+#if defined(DUI_HAS_SDL3_IMAGE)
+  if (app->resources.image_backend_ready && draw->image_source[0] != '\0') {
+    int image_width = 0;
+    int image_height = 0;
+    SDL_Texture *texture =
+        image_texture_for(app, renderer, draw->image_source, &image_width, &image_height);
+
+    if (texture != NULL) {
+      SDL_FRect target = {rect.x + 6.0f, rect.y + 6.0f, rect.w - 12.0f, rect.h - 12.0f};
+      SDL_RenderTexture(renderer, texture, NULL, &target);
+      return;
+    }
+  }
+#endif
+
+  fill_inset_rect(renderer, rect, 8.0f, named_color("accent", 90));
 }
 
 static void draw_item_rows(SDL_Renderer *renderer, SDL_FRect rect, int count, int current_index,
@@ -531,13 +1010,31 @@ static void draw_progress_bar(SDL_Renderer *renderer, SDL_FRect rect, int value,
 }
 
 static void draw_surface_shell(SDL_Renderer *renderer, SDL_FRect rect, dui_color fill,
-                               dui_color stroke, int focused, int disabled) {
+                               dui_color stroke, const char *border_kind, int focused,
+                               int disabled) {
   Uint8 alpha = disabled ? 120 : fill.a;
   fill.a = alpha;
   stroke.a = disabled ? 180 : stroke.a;
 
   fill_rect(renderer, rect, fill);
-  stroke_rect(renderer, rect, stroke);
+
+  if (border_kind == NULL || strcmp(border_kind, "none") != 0) {
+    if (border_kind != NULL && strcmp(border_kind, "focus_ring") == 0) {
+      stroke_rect(renderer, rect, named_color("focus_ring", 255));
+    } else {
+      if (border_kind != NULL && strcmp(border_kind, "hairline") == 0) {
+        stroke.a = 150;
+      }
+
+      stroke_rect(renderer, rect, stroke);
+
+      if (border_kind != NULL && strcmp(border_kind, "double") == 0) {
+        stroke_rect(renderer,
+                    (SDL_FRect){rect.x + 3.0f, rect.y + 3.0f, rect.w - 6.0f, rect.h - 6.0f},
+                    stroke);
+      }
+    }
+  }
 
   if (focused) {
     stroke_rect(renderer, (SDL_FRect){rect.x + 2.0f, rect.y + 2.0f, rect.w - 4.0f, rect.h - 4.0f},
@@ -545,20 +1042,40 @@ static void draw_surface_shell(SDL_Renderer *renderer, SDL_FRect rect, dui_color
   }
 }
 
-static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) {
+static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const dui_draw *draw) {
   SDL_FRect rect = {(float)draw->x, (float)draw->y, (float)draw->width, (float)draw->height};
   dui_color surface = named_color(draw->bg, draw->disabled ? 120 : 255);
-  dui_color stroke =
-      strcmp(draw->border, "focus_ring") == 0 ? named_color("focus_ring", 255)
-                                               : named_color(draw->fg, 210);
+  dui_color stroke = strcmp(draw->border, "focus_ring") == 0 ? named_color("focus_ring", 255)
+                                                              : named_color(draw->fg, 210);
   dui_color accent = named_color("accent", 245);
   dui_color selection = named_color("selection", 235);
   dui_color muted = named_color("muted", 190);
   dui_color text = named_color(draw->fg, 230);
 
+  if (strcmp(draw->variant, "quiet") == 0 && strcmp(draw->bg, "surface") == 0) {
+    surface = named_color("canvas", draw->disabled ? 110 : 215);
+  } else if (strcmp(draw->variant, "filled") == 0 && strcmp(draw->bg, "surface") == 0) {
+    surface = named_color("accent", draw->disabled ? 140 : 235);
+    text = named_color("surface", 240);
+  } else if (strcmp(draw->variant, "elevated") == 0 && strcmp(draw->bg, "surface") == 0) {
+    surface = named_color("surface", draw->disabled ? 120 : 250);
+    stroke = named_color("content", 220);
+  }
+
+  if (strcmp(draw->semantic_role, "status_warning") == 0) {
+    text = named_color("warning", 235);
+  } else if (strcmp(draw->semantic_role, "status_danger") == 0) {
+    text = named_color("danger", 235);
+  } else if (strcmp(draw->semantic_role, "status_info") == 0) {
+    text = named_color("info", 235);
+  } else if (strcmp(draw->semantic_role, "primary_action") == 0 &&
+             strcmp(draw->variant, "filled") != 0) {
+    text = named_color("accent", 235);
+  }
+
   if (strcmp(draw->draw_kind, "window_chrome") == 0) {
     draw_surface_shell(renderer, rect, named_color("surface", 255), named_color("content", 220),
-                       draw->focused, 0);
+                       draw->border, draw->focused, 0);
     fill_rect(renderer, (SDL_FRect){rect.x, rect.y, rect.w, 42.0f},
               named_color("canvas", 255));
     fill_rect(renderer, (SDL_FRect){rect.x + 14.0f, rect.y + 14.0f, 12.0f, 12.0f},
@@ -567,8 +1084,9 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
               named_color("warning", 220));
     fill_rect(renderer, (SDL_FRect){rect.x + 54.0f, rect.y + 14.0f, 12.0f, 12.0f},
               named_color("success", 220));
-    draw_text_bands(renderer, (SDL_FRect){rect.x + 88.0f, rect.y + 10.0f, rect.w - 120.0f, 20.0f},
-                    draw->content_length, named_color("content", 230), 1);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 88.0f, rect.y + 10.0f, rect.w - 120.0f, 20.0f},
+                      named_color("content", 230), 1);
     return;
   }
 
@@ -578,7 +1096,8 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
       strcmp(draw->draw_kind, "viewport_surface") == 0 ||
       strcmp(draw->draw_kind, "split_pane_surface") == 0 ||
       strcmp(draw->draw_kind, "canvas_surface") == 0) {
-    draw_surface_shell(renderer, rect, surface, stroke, draw->focused, draw->disabled);
+    draw_surface_shell(renderer, rect, surface, stroke, draw->border, draw->focused,
+                       draw->disabled);
 
     if (strcmp(draw->draw_kind, "split_pane_surface") == 0) {
       use_color(renderer, named_color("muted", 200));
@@ -600,9 +1119,9 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
 
     if (strcmp(draw->draw_kind, "dialog_surface") == 0 ||
         strcmp(draw->draw_kind, "context_menu_surface") == 0) {
-      draw_text_bands(renderer,
-                      (SDL_FRect){rect.x + 14.0f, rect.y + 12.0f, rect.w - 28.0f, 18.0f},
-                      draw->content_length, named_color("content", 230), 1);
+      draw_text_content(app, renderer, draw,
+                        (SDL_FRect){rect.x + 14.0f, rect.y + 12.0f, rect.w - 28.0f, 18.0f},
+                        named_color("content", 230), 1);
     }
     return;
   }
@@ -617,14 +1136,13 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
       fill_rect(renderer, (SDL_FRect){rect.x, rect.y + 2.0f, rect.w, rect.h - 4.0f},
                 named_color("surface", 110));
     }
-    draw_text_bands(renderer, rect, draw->content_length, text,
-                    strcmp(draw->semantic_role, "title") == 0);
+    draw_text_content(app, renderer, draw, rect, text, strcmp(draw->semantic_role, "title") == 0);
     return;
   }
 
   if (strcmp(draw->draw_kind, "icon_block") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 200), named_color("content", 220), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("surface", 200), named_color("content", 220),
+                       draw->border, 0, 0);
     use_color(renderer, named_color("accent", 240));
     SDL_RenderLine(renderer, rect.x + 10.0f, rect.y + 10.0f, rect.x + rect.w - 10.0f,
                    rect.y + rect.h - 10.0f);
@@ -634,9 +1152,9 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
   }
 
   if (strcmp(draw->draw_kind, "image_block") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 220), named_color("accent", 210), 0,
-                       0);
-    fill_inset_rect(renderer, rect, 8.0f, named_color("accent", 90));
+    draw_surface_shell(renderer, rect, named_color("surface", 220), named_color("accent", 210),
+                       draw->border, 0, 0);
+    draw_image_content(app, renderer, draw, rect);
     return;
   }
 
@@ -650,10 +1168,10 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
       fill = selection;
     }
 
-    draw_surface_shell(renderer, rect, fill, border, draw->focused, draw->disabled);
-    draw_text_bands(renderer,
-                    (SDL_FRect){rect.x + 12.0f, rect.y + 8.0f, rect.w - 24.0f, rect.h - 16.0f},
-                    draw->content_length, named_color("content", 235), 1);
+    draw_surface_shell(renderer, rect, fill, border, draw->border, draw->focused, draw->disabled);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 8.0f, rect.w - 24.0f, rect.h - 16.0f},
+                      named_color("content", 235), 1);
     return;
   }
 
@@ -661,10 +1179,10 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
     draw_surface_shell(renderer, rect, named_color("canvas", 255),
                        draw->focused ? named_color("focus_ring", 255)
                                      : named_color("muted", 210),
-                       draw->focused, draw->disabled);
-    draw_text_bands(renderer,
-                    (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 30.0f, rect.h - 18.0f},
-                    draw->content_length, draw->content_length > 0 ? text : muted, 0);
+                       draw->border, draw->focused, draw->disabled);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 30.0f, rect.h - 18.0f},
+                      draw->content_length > 0 ? text : muted, 0);
 
     if (draw->focused) {
       fill_rect(renderer,
@@ -677,22 +1195,22 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
   if (strcmp(draw->draw_kind, "checkbox_control") == 0) {
     SDL_FRect box = {rect.x + 10.0f, rect.y + 8.0f, 18.0f, 18.0f};
     draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("content", 200),
-                       draw->focused, draw->disabled);
+                       draw->border, draw->focused, draw->disabled);
     stroke_rect(renderer, box, named_color("content", 220));
 
     if (draw->checked || draw->selected) {
       fill_inset_rect(renderer, box, 4.0f, named_color("accent", 240));
     }
 
-    draw_text_bands(renderer,
-                    (SDL_FRect){rect.x + 38.0f, rect.y + 8.0f, rect.w - 48.0f, rect.h - 16.0f},
-                    draw->content_length, text, 0);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 38.0f, rect.y + 8.0f, rect.w - 48.0f, rect.h - 16.0f},
+                      text, 0);
     return;
   }
 
   if (strcmp(draw->draw_kind, "tabs_surface") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 210), named_color("content", 180), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("surface", 210), named_color("content", 180),
+                       draw->border, 0, 0);
     draw_item_rows(renderer, (SDL_FRect){rect.x + 6.0f, rect.y + 6.0f, rect.w - 12.0f, rect.h - 12.0f},
                    draw->item_count, draw->current_index, draw->selected_index,
                    named_color("canvas", 180), named_color("accent", 220));
@@ -700,8 +1218,8 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
   }
 
   if (strcmp(draw->draw_kind, "list_surface") == 0 || strcmp(draw->draw_kind, "menu_surface") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 200), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 200),
+                       draw->border, 0, 0);
     draw_item_rows(renderer, rect, draw->item_count, draw->current_index, draw->selected_index,
                    named_color("canvas", 160), named_color("selection", 220));
     return;
@@ -709,16 +1227,16 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
 
   if (strcmp(draw->draw_kind, "table_surface") == 0 ||
       strcmp(draw->draw_kind, "process_monitor_surface") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 210), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 210),
+                       draw->border, 0, 0);
     draw_table_grid(renderer, rect, draw->column_count, draw->row_count,
                     named_color("muted", 150), named_color("accent", 210));
     return;
   }
 
   if (strcmp(draw->draw_kind, "log_viewer_surface") == 0) {
-    draw_surface_shell(renderer, rect, named_color("canvas", 255), named_color("muted", 180), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("canvas", 255), named_color("muted", 180),
+                       draw->border, 0, 0);
     draw_item_rows(renderer, rect, draw->row_count, -1, -1, named_color("surface", 180),
                    named_color("selection", 220));
     return;
@@ -727,14 +1245,14 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
   if (strcmp(draw->draw_kind, "cluster_dashboard_surface") == 0) {
     int count = draw->item_count > 0 ? draw->item_count : 2;
     float card_width = SDL_max((rect.w - 24.0f) / (float)count, 64.0f);
-    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200),
+                       draw->border, 0, 0);
 
     for (int index = 0; index < count; index++) {
       SDL_FRect card = {rect.x + 8.0f + (float)index * card_width, rect.y + 18.0f, card_width - 8.0f,
                         rect.h - 28.0f};
       draw_surface_shell(renderer, card, named_color("canvas", 220), named_color("content", 180),
-                         0, 0);
+                         "single", 0, 0);
       fill_rect(renderer, (SDL_FRect){card.x + 8.0f, card.y + 8.0f, 12.0f, 12.0f},
                 index == 0 ? named_color("success", 230) : named_color("warning", 230));
       draw_text_bands(renderer,
@@ -745,14 +1263,14 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
   }
 
   if (strcmp(draw->draw_kind, "command_palette_surface") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 245), named_color("content", 220), 0,
-                       0);
+    draw_surface_shell(renderer, rect, named_color("surface", 245), named_color("content", 220),
+                       draw->border, 0, 0);
     draw_surface_shell(renderer,
                        (SDL_FRect){rect.x + 10.0f, rect.y + 10.0f, rect.w - 20.0f, 36.0f},
-                       named_color("canvas", 255), named_color("muted", 200), 0, 0);
-    draw_text_bands(renderer,
-                    (SDL_FRect){rect.x + 18.0f, rect.y + 16.0f, rect.w - 36.0f, 20.0f},
-                    draw->content_length, text, 0);
+                       named_color("canvas", 255), named_color("muted", 200), "single", 0, 0);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 18.0f, rect.y + 16.0f, rect.w - 36.0f, 20.0f},
+                      text, 0);
     draw_item_rows(renderer,
                    (SDL_FRect){rect.x + 10.0f, rect.y + 54.0f, rect.w - 20.0f, rect.h - 64.0f},
                    draw->item_count, draw->current_index, draw->selected_index,
@@ -761,28 +1279,29 @@ static void render_draw_operation(SDL_Renderer *renderer, const dui_draw *draw) 
   }
 
   if (strcmp(draw->draw_kind, "gauge_surface") == 0) {
-    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200), 0,
-                       0);
-    draw_text_bands(renderer,
-                    (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 24.0f, 18.0f},
-                    draw->content_length, text, 1);
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200),
+                       draw->border, 0, 0);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 24.0f, 18.0f},
+                      text, 1);
     draw_progress_bar(renderer, rect, draw->value, draw->max_value, named_color("canvas", 190),
                       named_color("accent", 245));
     return;
   }
 
   if (strcmp(draw->draw_kind, "positioned_fragment") == 0) {
-    draw_surface_shell(renderer, rect, named_color("accent", 140), named_color("content", 220), 0,
-                       0);
-    draw_text_bands(renderer, rect, draw->content_length, named_color("content", 235), 0);
+    draw_surface_shell(renderer, rect, named_color("accent", 140), named_color("content", 220),
+                       draw->border, 0, 0);
+    draw_text_content(app, renderer, draw, rect, named_color("content", 235), 0);
     return;
   }
 
-  draw_surface_shell(renderer, rect, surface, stroke, draw->focused, draw->disabled);
-  draw_text_bands(renderer, rect, draw->content_length, text, 0);
+  draw_surface_shell(renderer, rect, surface, stroke, draw->border, draw->focused,
+                     draw->disabled);
+  draw_text_content(app, renderer, draw, rect, text, 0);
 }
 
-static void render_window(dui_frame *frame, int window_index) {
+static void render_window(dui_app *app, dui_frame *frame, int window_index) {
   dui_window *window = &frame->windows[window_index];
   fill_rect(window->renderer, (SDL_FRect){0.0f, 0.0f, (float)window->width, (float)window->height},
             named_color("canvas", 255));
@@ -800,7 +1319,7 @@ static void render_window(dui_frame *frame, int window_index) {
       SDL_SetRenderClipRect(window->renderer, NULL);
     }
 
-    render_draw_operation(window->renderer, draw);
+    render_draw_operation(app, window->renderer, draw);
   }
 
   SDL_SetRenderClipRect(window->renderer, NULL);

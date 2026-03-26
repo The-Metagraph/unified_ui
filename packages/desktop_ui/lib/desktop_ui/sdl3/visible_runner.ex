@@ -16,7 +16,8 @@ defmodule DesktopUi.Sdl3.VisibleRunner do
       input_format: FrameScript.contract().format,
       output_window: :native_sdl3_window,
       linger_control: :bounded_timeout_or_manual_quit,
-      placeholder_drawing: true
+      placeholder_drawing: true,
+      native_resource_realization: [:sdl3_ttf, :sdl3_image, :fallback]
     }
   end
 
@@ -68,10 +69,16 @@ defmodule DesktopUi.Sdl3.VisibleRunner do
          exit_status: status,
          output: String.trim(output),
          render_plan: render_plan_summary(plan),
+         resource_realization: %{
+           text: DesktopUi.Sdl3.Text.native_support(capabilities),
+           images: DesktopUi.Sdl3.Images.native_support(capabilities)
+         },
          capabilities: %{
-           launch_ready?: capabilities.build.launch_ready?,
-           visible_runner_ready?: capabilities.build.visible_runner_ready?,
-           executable_probe: capabilities.build.executable_probe
+           launch_ready?: get_in(capabilities, [:build, :launch_ready?]) || false,
+           visible_runner_ready?: get_in(capabilities, [:build, :visible_runner_ready?]) || false,
+           native_text_ready?: get_in(capabilities, [:build, :native_text_ready?]) || false,
+           native_image_ready?: get_in(capabilities, [:build, :native_image_ready?]) || false,
+           executable_probe: get_in(capabilities, [:build, :executable_probe]) || %{}
          },
          validation_state: validation_state()
        }}

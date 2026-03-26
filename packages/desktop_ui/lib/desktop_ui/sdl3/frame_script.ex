@@ -16,6 +16,7 @@ defmodule DesktopUi.Sdl3.FrameScript do
         :logical_bounds,
         :draw_kinds,
         :resolved_styles,
+        :resource_descriptors,
         :clip_flags,
         :visual_state,
         :metrics,
@@ -84,8 +85,11 @@ defmodule DesktopUi.Sdl3.FrameScript do
           fg: get_in(operation, [:resolved_styles, :fg]),
           border: get_in(operation, [:resolved_styles, :border]),
           variant: get_in(operation, [:resolved_styles, :variant]),
+          attrs: encode_attrs(get_in(operation, [:resolved_styles, :attrs])),
           semantic_role: operation.semantic_role,
           layer_role: operation.layer_role,
+          resource_kind: get_in(operation, [:resource, :kind]),
+          image_source: get_in(operation, [:resource, :source]),
           disabled: get_in(operation, [:visual_state, :disabled]),
           focused: get_in(operation, [:visual_state, :focused]),
           selected: get_in(operation, [:visual_state, :selected]),
@@ -110,6 +114,15 @@ defmodule DesktopUi.Sdl3.FrameScript do
 
     [window_line | draw_lines]
   end
+
+  defp encode_attrs(attrs) when is_list(attrs) do
+    case attrs |> Enum.map(&to_string/1) |> Enum.join(",") do
+      "" -> nil
+      encoded -> encoded
+    end
+  end
+
+  defp encode_attrs(_attrs), do: nil
 
   defp encode_line(tag, attrs) do
     encoded_attrs =

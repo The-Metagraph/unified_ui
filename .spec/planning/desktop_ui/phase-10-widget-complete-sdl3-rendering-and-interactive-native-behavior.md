@@ -59,27 +59,27 @@ Back to index: [README](./README.md)
       [x] 10.1.2.2 Subtask - Realize layered shells, overlay surfaces, viewport regions, split panes, and multiwindow chrome through SDL_Renderer.
       [x] 10.1.2.3 Subtask - Preserve logical-unit layout, clip regions, and bounded platform variation while upgrading visual completeness.
 
-  [ ] 10.2 Section - Native Text, Image, and Style Realization
+  [x] 10.2 Section - Native Text, Image, and Style Realization
     Replace text and image placeholders with real native resource realization so
     the visible runner can present meaningful labels, icons, imagery, and style
     states.
 
-    [ ] 10.2.1 Task - Realize native text and image resources through SDL3 companion libraries
+    [x] 10.2.1 Task - Realize native text and image resources through SDL3 companion libraries
       Make the compiled visible runner render maintained text and image content
       through native SDL3-backed preparation, caching, and draw operations.
 
-      [ ] 10.2.1.1 Subtask - Implement font loading, text measurement, glyph surface preparation, and texture caching through the SDL3 text companion path.
-      [ ] 10.2.1.2 Subtask - Implement image decode, surface preparation, texture caching, and bounded raw-pixel fallback through the SDL3 image companion path.
-      [ ] 10.2.1.3 Subtask - Surface native-versus-fallback text and image realization state through inspection, validation, and run diagnostics.
+      [x] 10.2.1.1 Subtask - Implement font loading, text measurement, glyph surface preparation, and texture caching through the SDL3 text companion path.
+      [x] 10.2.1.2 Subtask - Implement image decode, surface preparation, texture caching, and bounded raw-pixel fallback through the SDL3 image companion path.
+      [x] 10.2.1.3 Subtask - Surface native-versus-fallback text and image realization state through inspection, validation, and run diagnostics.
 
-    [ ] 10.2.2 Task - Realize resolved styles in the visible native renderer
+    [x] 10.2.2 Task - Realize resolved styles in the visible native renderer
       Carry the existing style and theme model through to actual native
       rendering so maintained examples display meaningful component variants and
       state-aware visuals.
 
-      [ ] 10.2.2.1 Subtask - Map resolved colors, borders, spacing, emphasis, and semantic roles to concrete SDL_Renderer draw operations.
-      [ ] 10.2.2.2 Subtask - Preserve component variants, state variants, and inherited theme behavior in visible native output.
-      [ ] 10.2.2.3 Subtask - Keep style realization consistent between direct-native and canonical-IUR-driven screens.
+      [x] 10.2.2.1 Subtask - Map resolved colors, borders, spacing, emphasis, and semantic roles to concrete SDL_Renderer draw operations.
+      [x] 10.2.2.2 Subtask - Preserve component variants, state variants, and inherited theme behavior in visible native output.
+      [x] 10.2.2.3 Subtask - Keep style realization consistent between direct-native and canonical-IUR-driven screens.
 
   [ ] 10.3 Section - Interactive Native Behavior and Event Realization
     Upgrade the visible runner from static frame presentation to real

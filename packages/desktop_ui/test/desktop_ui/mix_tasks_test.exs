@@ -55,6 +55,8 @@ defmodule DesktopUi.MixTasksTest do
     assert summary_output =~ "DesktopUi run summary"
     assert summary_output =~ "backend:"
     assert summary_output =~ "presented frame?: true"
+    assert summary_output =~ "native text mode:"
+    assert summary_output =~ "native image mode:"
   end
 
   test "build_host task prints dry-run compile diagnostics" do

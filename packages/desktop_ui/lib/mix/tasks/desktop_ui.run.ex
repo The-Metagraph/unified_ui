@@ -64,7 +64,9 @@ defmodule Mix.Tasks.DesktopUi.Run do
       "  presented frame?: #{execution.presented_frame?}",
       "  fallback used?: #{execution.fallback_used?}",
       "  visible runner ready?: #{execution.capabilities.build.visible_runner_ready?}",
-      "  protocol launch ready?: #{execution.capabilities.build.launch_ready?}"
+      "  protocol launch ready?: #{execution.capabilities.build.launch_ready?}",
+      "  native text mode: #{execution.resource_support.text.active_mode}",
+      "  native image mode: #{execution.resource_support.images.active_mode}"
     ]
     |> Enum.join("\n")
   end

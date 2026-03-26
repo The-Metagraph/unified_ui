@@ -79,34 +79,21 @@ defmodule DesktopUi.Sdl3.NativeBuild do
     compiler =
       get_in(capabilities, [:toolchains, :cc, :path]) || Keyword.get(opts, :compiler, "cc")
 
-    include_flags =
-      capabilities
-      |> library_prefixes()
-      |> Enum.map(&"-I#{Path.join(&1, "include")}")
-
-    library_search_flags =
-      capabilities
-      |> library_prefixes()
-      |> Enum.map(&"-L#{Path.join(&1, "lib")}")
+    compile_flags =
+      ["-std=c11", "-Wall", "-Wextra", "-O2"]
+      |> Kernel.++(companion_macros(capabilities))
+      |> Kernel.++(compiler_flags(capabilities))
+      |> Enum.uniq()
 
     link_flags =
       capabilities
-      |> available_libraries()
-      |> Enum.map(fn
-        :sdl3 -> "-lSDL3"
-        :sdl3_ttf -> "-lSDL3_ttf"
-        :sdl3_image -> "-lSDL3_image"
-      end)
+      |> linker_flags()
+      |> Enum.uniq()
 
     %{
       compiler: compiler,
-      args:
-        ["-std=c11", "-Wall", "-Wextra", "-O2"]
-        |> Kernel.++(include_flags)
-        |> Kernel.++(source_files())
-        |> Kernel.++(["-o", executable_path()])
-        |> Kernel.++(library_search_flags)
-        |> Kernel.++(link_flags),
+      args: compile_flags ++ source_files() ++ ["-o", executable_path()] ++ link_flags,
+      companion_macros: companion_macros(capabilities),
       output_root: output_root(),
       executable: executable_path(),
       buildable?: capabilities.build.buildable?,
@@ -115,23 +102,45 @@ defmodule DesktopUi.Sdl3.NativeBuild do
     }
   end
 
-  defp library_prefixes(capabilities) do
+  defp compiler_flags(capabilities) do
     capabilities
     |> Map.get(:libraries, %{})
     |> Enum.flat_map(fn {_key, details} ->
-      case Map.get(details, :prefix) do
-        prefix when is_binary(prefix) and prefix != "" -> [prefix]
-        _other -> []
-      end
+      Map.get(details, :cflags, [])
     end)
-    |> Enum.uniq()
   end
 
-  defp available_libraries(capabilities) do
+  defp linker_flags(capabilities) do
     capabilities
     |> Map.get(:libraries, %{})
     |> Enum.flat_map(fn {key, details} ->
-      if Map.get(details, :available?, false), do: [key], else: []
+      if Map.get(details, :available?, false) do
+        case Map.get(details, :libs, []) do
+          [] -> default_link_flags(key)
+          flags -> flags
+        end
+      else
+        []
+      end
     end)
   end
+
+  defp companion_macros(capabilities) do
+    []
+    |> maybe_add_macro(
+      get_in(capabilities, [:libraries, :sdl3_ttf, :available?]),
+      "-DDUI_HAS_SDL3_TTF=1"
+    )
+    |> maybe_add_macro(
+      get_in(capabilities, [:libraries, :sdl3_image, :available?]),
+      "-DDUI_HAS_SDL3_IMAGE=1"
+    )
+  end
+
+  defp maybe_add_macro(flags, true, macro), do: flags ++ [macro]
+  defp maybe_add_macro(flags, _other, _macro), do: flags
+
+  defp default_link_flags(:sdl3), do: ["-lSDL3"]
+  defp default_link_flags(:sdl3_ttf), do: ["-lSDL3_ttf"]
+  defp default_link_flags(:sdl3_image), do: ["-lSDL3_image"]
 end

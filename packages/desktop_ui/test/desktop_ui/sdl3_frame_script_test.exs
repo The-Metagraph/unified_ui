@@ -21,6 +21,7 @@ defmodule DesktopUi.Sdl3FrameScriptTest do
     assert script =~ "current_index=0"
     assert script =~ "focused=1"
     assert script =~ "semantic_role=primary_action"
+    assert script =~ "attrs=bold"
     assert script =~ "units=logical"
   end
 end

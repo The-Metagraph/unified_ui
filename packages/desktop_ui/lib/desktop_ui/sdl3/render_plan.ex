@@ -508,6 +508,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       layer_role: node.layer_role,
       semantic_role: get_in(node, [:resolved_styles, :semantic_role]) || source.metadata[:role],
       resolved_styles: Map.get(node, :resolved_styles, %{}),
+      resource: draw_resource(node),
       visual_state: %{
         disabled: truthy?(node.disabled),
         focused:
@@ -533,6 +534,26 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       },
       content: content
     }
+  end
+
+  defp draw_resource(node) do
+    case node.kind do
+      :image ->
+        %{
+          kind: :image,
+          source: node.attributes[:source],
+          alt: node.attributes[:alt]
+        }
+
+      :icon ->
+        %{
+          kind: :icon,
+          name: node.attributes[:icon]
+        }
+
+      _other ->
+        %{}
+    end
   end
 
   defp draw_content(node) do

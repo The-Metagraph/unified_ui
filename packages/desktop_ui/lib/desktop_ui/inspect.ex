@@ -31,6 +31,8 @@ defmodule DesktopUi.Inspect do
 
   @spec host_execution(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
   def host_execution(id, opts \\ []) do
+    capabilities = Capabilities.detect()
+
     with {:ok, metadata} <- fetch_metadata(id),
          {:ok, launched} <- launch_host(metadata, opts),
          host_status = DesktopUi.Sdl3.PortHost.status(launched.host),
@@ -46,7 +48,11 @@ defmodule DesktopUi.Inspect do
          shutdown: %{acknowledgement: shutdown_ack, final_state: host.state},
          resource_contracts: %{
            text: DesktopUi.Sdl3.Text.contract(),
-           images: DesktopUi.Sdl3.Images.contract()
+            images: DesktopUi.Sdl3.Images.contract()
+         },
+         resource_support: %{
+           text: DesktopUi.Sdl3.Text.native_support(capabilities),
+           images: DesktopUi.Sdl3.Images.native_support(capabilities)
          },
          event_contract: DesktopUi.Sdl3.Events.contract()
        }}

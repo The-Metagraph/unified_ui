@@ -59,11 +59,23 @@ defmodule DesktopUi.Sdl3CapabilitiesTest do
           "/usr/bin/pkg-config", ["--variable=prefix", "sdl3"], _opts ->
             {"/opt/sdl3\n", 0}
 
+          "/usr/bin/pkg-config", ["--cflags", "sdl3"], _opts ->
+            {"-I/opt/sdl3/include\n", 0}
+
+          "/usr/bin/pkg-config", ["--libs", "sdl3"], _opts ->
+            {"-L/opt/sdl3/lib -lSDL3\n", 0}
+
           "/usr/bin/pkg-config", ["--exists", package], _opts
-          when package in ["sdl3_ttf", "sdl3_image"] ->
+          when package in ["sdl3-ttf", "sdl3_ttf", "sdl3-image", "sdl3_image"] ->
             {"", 1}
 
           "/usr/bin/pkg-config", ["--variable=prefix", _package], _opts ->
+            {"", 1}
+
+          "/usr/bin/pkg-config", ["--cflags", _package], _opts ->
+            {"", 1}
+
+          "/usr/bin/pkg-config", ["--libs", _package], _opts ->
             {"", 1}
         end
       )
@@ -103,11 +115,23 @@ defmodule DesktopUi.Sdl3CapabilitiesTest do
           "/usr/bin/pkg-config", ["--variable=prefix", "sdl3"], _opts ->
             {"/opt/sdl3\n", 0}
 
+          "/usr/bin/pkg-config", ["--cflags", "sdl3"], _opts ->
+            {"-I/opt/sdl3/include\n", 0}
+
+          "/usr/bin/pkg-config", ["--libs", "sdl3"], _opts ->
+            {"-L/opt/sdl3/lib -lSDL3\n", 0}
+
           "/usr/bin/pkg-config", ["--exists", package], _opts
-          when package in ["sdl3_ttf", "sdl3_image"] ->
+          when package in ["sdl3-ttf", "sdl3_ttf", "sdl3-image", "sdl3_image"] ->
             {"", 1}
 
           "/usr/bin/pkg-config", ["--variable=prefix", _package], _opts ->
+            {"", 1}
+
+          "/usr/bin/pkg-config", ["--cflags", _package], _opts ->
+            {"", 1}
+
+          "/usr/bin/pkg-config", ["--libs", _package], _opts ->
             {"", 1}
         end
       )
@@ -141,11 +165,23 @@ defmodule DesktopUi.Sdl3CapabilitiesTest do
           "/usr/bin/pkg-config", ["--variable=prefix", "sdl3"], _opts ->
             {"/opt/sdl3\n", 0}
 
+          "/usr/bin/pkg-config", ["--cflags", "sdl3"], _opts ->
+            {"-I/opt/sdl3/include\n", 0}
+
+          "/usr/bin/pkg-config", ["--libs", "sdl3"], _opts ->
+            {"-L/opt/sdl3/lib -lSDL3\n", 0}
+
           "/usr/bin/pkg-config", ["--exists", package], _opts
-          when package in ["sdl3_ttf", "sdl3_image"] ->
+          when package in ["sdl3-ttf", "sdl3_ttf", "sdl3-image", "sdl3_image"] ->
             {"", 1}
 
           "/usr/bin/pkg-config", ["--variable=prefix", _package], _opts ->
+            {"", 1}
+
+          "/usr/bin/pkg-config", ["--cflags", _package], _opts ->
+            {"", 1}
+
+          "/usr/bin/pkg-config", ["--libs", _package], _opts ->
             {"", 1}
         end
       )
@@ -153,5 +189,71 @@ defmodule DesktopUi.Sdl3CapabilitiesTest do
     assert result.backend.recommended == :compiled_sdl3_host
     assert result.build.launch_ready?
     assert result.build.visible_runner_ready?
+  end
+
+  test "capability detection accepts hyphenated SDL3 companion pkg-config names and compile plans emit macros" do
+    capabilities =
+      Capabilities.detect(
+        env: %{},
+        find_executable: fn
+          "cc" -> "/usr/bin/cc"
+          "pkg-config" -> "/usr/bin/pkg-config"
+          _other -> nil
+        end,
+        file_exists?: fn _ -> false end,
+        run_cmd: fn
+          "/usr/bin/pkg-config", ["--exists", "sdl3"], _opts ->
+            {"", 0}
+
+          "/usr/bin/pkg-config", ["--variable=prefix", "sdl3"], _opts ->
+            {"/opt/sdl3\n", 0}
+
+          "/usr/bin/pkg-config", ["--cflags", "sdl3"], _opts ->
+            {"-I/opt/sdl3/include\n", 0}
+
+          "/usr/bin/pkg-config", ["--libs", "sdl3"], _opts ->
+            {"-L/opt/sdl3/lib -lSDL3\n", 0}
+
+          "/usr/bin/pkg-config", ["--exists", "sdl3-ttf"], _opts ->
+            {"", 0}
+
+          "/usr/bin/pkg-config", ["--variable=prefix", "sdl3-ttf"], _opts ->
+            {"/opt/sdl3_ttf\n", 0}
+
+          "/usr/bin/pkg-config", ["--cflags", "sdl3-ttf"], _opts ->
+            {"-I/opt/sdl3_ttf/include\n", 0}
+
+          "/usr/bin/pkg-config", ["--libs", "sdl3-ttf"], _opts ->
+            {"-L/opt/sdl3_ttf/lib -lSDL3_ttf -lSDL3\n", 0}
+
+          "/usr/bin/pkg-config", ["--exists", "sdl3-image"], _opts ->
+            {"", 0}
+
+          "/usr/bin/pkg-config", ["--variable=prefix", "sdl3-image"], _opts ->
+            {"/opt/sdl3_image\n", 0}
+
+          "/usr/bin/pkg-config", ["--cflags", "sdl3-image"], _opts ->
+            {"-I/opt/sdl3_image/include -DAVIF_DLL\n", 0}
+
+          "/usr/bin/pkg-config", ["--libs", "sdl3-image"], _opts ->
+            {"-L/opt/sdl3_image/lib -lSDL3_image -lSDL3\n", 0}
+
+          "/usr/bin/pkg-config", [_op, _package], _opts ->
+            {"", 1}
+        end
+      )
+
+    plan = NativeBuild.compile_plan(capabilities: capabilities)
+
+    assert capabilities.libraries.sdl3_ttf.package == "sdl3-ttf"
+    assert capabilities.libraries.sdl3_image.package == "sdl3-image"
+    assert capabilities.build.native_text_ready?
+    assert capabilities.build.native_image_ready?
+    assert "-DDUI_HAS_SDL3_TTF=1" in plan.args
+    assert "-DDUI_HAS_SDL3_IMAGE=1" in plan.args
+    assert "-I/opt/sdl3_ttf/include" in plan.args
+    assert "-DAVIF_DLL" in plan.args
+    assert "-lSDL3_ttf" in plan.args
+    assert "-lSDL3_image" in plan.args
   end
 end

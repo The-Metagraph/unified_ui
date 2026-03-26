@@ -137,6 +137,8 @@ defmodule DesktopUi.Inspection do
 
   @spec sdl3_adapter_surface() :: map()
   def sdl3_adapter_surface do
+    capabilities = DesktopUi.Sdl3.Capabilities.detect()
+
     %{
       foundation: DesktopUi.Sdl3.foundation(),
       modules: DesktopUi.Sdl3.modules(),
@@ -145,7 +147,7 @@ defmodule DesktopUi.Inspection do
       handoff: DesktopUi.Sdl3.App.handoff_contract(),
       host: DesktopUi.Sdl3.PortHost.contract(),
       native_build: DesktopUi.Sdl3.NativeBuild.contract(),
-      capabilities: DesktopUi.Sdl3.Capabilities.detect(),
+      capabilities: capabilities,
       protocol: DesktopUi.Sdl3.Protocol.contract(),
       frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
       frame_script: DesktopUi.Sdl3.FrameScript.contract(),
@@ -154,6 +156,8 @@ defmodule DesktopUi.Inspection do
       events: DesktopUi.Sdl3.Events.contract(),
       text: DesktopUi.Sdl3.Text.contract(),
       images: DesktopUi.Sdl3.Images.contract(),
+      text_support: DesktopUi.Sdl3.Text.native_support(capabilities),
+      image_support: DesktopUi.Sdl3.Images.native_support(capabilities),
       renderer_completeness: :first_presented_frames,
       validation_state: %{
         adapter: DesktopUi.Sdl3.validation_state(),

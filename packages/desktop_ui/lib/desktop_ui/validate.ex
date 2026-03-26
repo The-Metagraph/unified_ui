@@ -256,6 +256,8 @@ defmodule DesktopUi.Validate do
         is_map(run_catalog.execution) and
           is_boolean(run_catalog.execution.visible_runner_ready?) and
           is_boolean(run_catalog.execution.protocol_launch_ready?) and
+          is_atom(run_catalog.execution.text.active_mode) and
+          is_atom(run_catalog.execution.images.active_mode) and
           run_catalog.execution.fallback_backend == :elixir_host and
           is_list(run_catalog.execution.target_packages),
         %{execution: run_catalog.execution}
@@ -310,7 +312,9 @@ defmodule DesktopUi.Validate do
       check(
         :native_resource_support_reported,
         Map.get(text_support, :requests_bounded_when_missing?, false) and
-          Map.get(image_support, :requests_bounded_when_missing?, false),
+          Map.get(image_support, :requests_bounded_when_missing?, false) and
+          is_atom(Map.get(text_support, :active_mode)) and
+          is_atom(Map.get(image_support, :active_mode)),
         %{
           text: text_support,
           images: image_support
@@ -413,8 +417,14 @@ defmodule DesktopUi.Validate do
       check(
         :resource_seams_present,
         adapter_surface.validation_state.text == :text_resource_ready and
-          adapter_surface.validation_state.images == :image_resource_ready,
-        %{validation_state: adapter_surface.validation_state}
+          adapter_surface.validation_state.images == :image_resource_ready and
+          is_atom(adapter_surface.text_support.active_mode) and
+          is_atom(adapter_surface.image_support.active_mode),
+        %{
+          validation_state: adapter_surface.validation_state,
+          text_support: adapter_surface.text_support,
+          image_support: adapter_surface.image_support
+        }
       )
     ]
 

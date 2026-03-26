@@ -9,7 +9,7 @@ defmodule DesktopUi.Sdl3.Images do
   def contract do
     %{
       backend: :sdl_image_equivalent,
-      capabilities: [:asset_decode, :surface_preparation, :raw_pixel_fallback],
+      capabilities: [:asset_decode, :surface_preparation, :texture_caching, :raw_pixel_fallback],
       host_caching: true,
       future_platform_image_allowed: true
     }
@@ -20,13 +20,22 @@ defmodule DesktopUi.Sdl3.Images do
 
   @spec native_support(map()) :: map()
   def native_support(capabilities \\ Capabilities.detect()) do
-    native_backend_ready? = get_in(capabilities, [:libraries, :sdl3_image, :available?]) || false
+    library = get_in(capabilities, [:libraries, :sdl3_image]) || %{}
+    probe = get_in(capabilities, [:build, :executable_probe]) || %{}
+    native_backend_ready? = get_in(capabilities, [:build, :native_image_ready?]) || false
+    available_on_rebuild? = Map.get(library, :available?, false)
 
     %{
       library: :sdl3_image,
+      pkg_config_package: Map.get(library, :package),
       native_backend_ready?: native_backend_ready?,
+      available_on_rebuild?: available_on_rebuild?,
       active_mode:
         if(native_backend_ready?, do: :native_companion_library, else: :raw_pixel_fallback),
+      decode_mode: if(native_backend_ready?, do: :sdl3_image_decode, else: :raw_pixel_fallback),
+      texture_cache:
+        if(native_backend_ready?, do: :compiled_host_texture_cache, else: :no_native_cache),
+      host_probe_mode: Map.get(probe, :image_mode),
       fallback_mode: :raw_pixel_fallback,
       requests_bounded_when_missing?: true
     }
@@ -41,6 +50,7 @@ defmodule DesktopUi.Sdl3.Images do
        backend: :sdl_image_equivalent,
        source: source,
        requested_size: Keyword.get(opts, :size, :original),
+       cache_key: cache_key(source, opts),
        decoding: :asset_decode,
        validation_state: validation_state()
      }}
