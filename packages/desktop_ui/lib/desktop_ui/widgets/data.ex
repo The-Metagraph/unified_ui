@@ -7,7 +7,60 @@ defmodule DesktopUi.Widgets.Data do
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:inspector, :markdown_viewer, :table, :tree_view]
+    [:inspector, :info_list, :key_value, :markdown_viewer, :stat, :table, :tree_view]
+  end
+
+  @spec stat(String.t() | atom(), keyword()) :: Widget.t()
+  def stat(id, opts \\ []) do
+    Widget.new(:stat,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :stat),
+      state: state(opts, loading: Keyword.get(opts, :loading, false)),
+      attributes: %{
+        value: Keyword.get(opts, :value),
+        label: Keyword.get(opts, :label),
+        unit: Keyword.get(opts, :unit),
+        trend: Keyword.get(opts, :trend),
+        previous_value: Keyword.get(opts, :previous_value),
+        size: Keyword.get(opts, :size, :md),
+        variant: Keyword.get(opts, :variant, :default)
+      },
+      styles: styles(opts)
+    )
+  end
+
+  @spec key_value(String.t() | atom(), keyword()) :: Widget.t()
+  def key_value(id, opts \\ []) do
+    Widget.new(:key_value,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :key_value),
+      state: state(opts),
+      attributes: %{
+        key: Keyword.get(opts, :key),
+        value: Keyword.get(opts, :value),
+        align: Keyword.get(opts, :align, :left),
+        size: Keyword.get(opts, :size, :md),
+        variant: Keyword.get(opts, :variant, :default)
+      },
+      styles: styles(opts)
+    )
+  end
+
+  @spec info_list(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def info_list(id, items, opts \\ []) do
+    Widget.new(:info_list,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :info_list),
+      state: state(opts),
+      attributes: %{
+        items: normalize_items(items),
+        size: Keyword.get(opts, :size, :md),
+        variant: Keyword.get(opts, :variant, :default),
+        show_icons: Keyword.get(opts, :show_icons, true),
+        compact: Keyword.get(opts, :compact, false)
+      },
+      styles: styles(opts)
+    )
   end
 
   @spec table(String.t() | atom(), [map() | keyword()], [map() | keyword()], keyword()) ::

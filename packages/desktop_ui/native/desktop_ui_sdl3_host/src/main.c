@@ -2078,6 +2078,106 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
     return;
   }
 
+  if (strcmp(draw->draw_kind, "tree_view_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    int item_count = draw->item_count > 0 ? draw->item_count : 3;
+    float row_height = 28.0f;
+    float indent = 20.0f;
+
+    for (int i = 0; i < item_count && (i * row_height) < (rect.h - 16.0f); i++) {
+      int depth = (i % 3);
+      float x = rect.x + 8.0f + depth * indent;
+      float y = rect.y + 8.0f + i * row_height;
+
+      SDL_FRect expand_rect = {x, y + 4.0f, 12.0f, 12.0f};
+      stroke_rect(renderer, expand_rect, named_color("content", 200));
+      SDL_RenderLine(renderer, expand_rect.x + 3.0f, expand_rect.y + expand_rect.h / 2.0f,
+                     expand_rect.x + expand_rect.w - 3.0f, expand_rect.y + expand_rect.h / 2.0f);
+
+      if (i < 2) {
+        SDL_RenderLine(renderer, expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + 4.0f,
+                       expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + expand_rect.h - 4.0f);
+      }
+
+      SDL_FRect item_rect = {x + 18.0f, y, rect.w - x - rect.x - 24.0f, row_height};
+      draw_text_bands(renderer, item_rect, 12, named_color("content", 230), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "stat_block") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    SDL_FRect value_rect = {rect.x + 12.0f, rect.y + 12.0f, rect.w - 24.0f, rect.h * 0.55f};
+
+    if (draw->value > 0 || draw->content_length > 0) {
+      use_color(renderer, named_color("accent", 240));
+      draw_text_bands(renderer, value_rect, 8, named_color("accent", 240), 1);
+    } else {
+      draw_text_bands(renderer, value_rect, 8, named_color("muted", 200), 1);
+    }
+
+    SDL_FRect label_rect = {rect.x + 12.0f, rect.y + rect.h * 0.62f, rect.w - 24.0f, rect.h * 0.28f};
+    draw_text_bands(renderer, label_rect, 12, named_color("muted", 220), 0);
+
+    if (draw->selected || draw->active) {
+      int trend = draw->value > 0 ? 1 : (draw->value < 0 ? -1 : 0);
+      SDL_FRect trend_rect = {rect.x + rect.w - 28.0f, rect.y + 12.0f, 16.0f, 16.0f};
+
+      if (trend > 0) {
+        use_color(renderer, named_color("success", 220));
+        SDL_RenderLine(renderer, trend_rect.x + 4.0f, trend_rect.y + trend_rect.h - 4.0f,
+                       trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + 4.0f);
+        SDL_RenderLine(renderer, trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + 4.0f,
+                       trend_rect.x + trend_rect.w - 4.0f, trend_rect.y + trend_rect.h - 4.0f);
+      } else if (trend < 0) {
+        use_color(renderer, named_color("error", 220));
+        SDL_RenderLine(renderer, trend_rect.x + 4.0f, trend_rect.y + 4.0f,
+                       trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + trend_rect.h - 4.0f);
+        SDL_RenderLine(renderer, trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + trend_rect.h - 4.0f,
+                       trend_rect.x + trend_rect.w - 4.0f, trend_rect.y + 4.0f);
+      }
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "key_value_block") == 0) {
+    float mid_x = rect.x + rect.w * 0.45f;
+    SDL_FRect key_rect = {rect.x + 12.0f, rect.y + 8.0f, mid_x - rect.x - 16.0f, rect.h - 16.0f};
+    SDL_FRect value_rect = {mid_x + 4.0f, rect.y + 8.0f, rect.w - (mid_x - rect.x) - 16.0f, rect.h - 16.0f};
+
+    draw_text_bands(renderer, key_rect, 10, named_color("muted", 220), 0);
+    draw_text_bands(renderer, value_rect, 15, named_color("content", 240), 0);
+
+    if (draw->focused) {
+      stroke_rect(renderer, (SDL_FRect){rect.x + 4.0f, rect.y + 4.0f, rect.w - 8.0f, rect.h - 8.0f},
+                   named_color("focus_ring", 255));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "info_list_block") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    int item_count = draw->item_count > 0 ? draw->item_count : 2;
+    float row_height = 24.0f;
+
+    for (int i = 0; i < item_count && (i * row_height) < (rect.h - 8.0f); i++) {
+      float y = rect.y + 8.0f + i * row_height;
+
+      SDL_FRect icon_rect = {rect.x + 10.0f, y + 2.0f, 16.0f, 16.0f};
+      fill_rect(renderer, icon_rect, named_color("accent", 210));
+
+      SDL_FRect item_rect = {rect.x + 34.0f, y, rect.w - 44.0f, row_height};
+      draw_text_bands(renderer, item_rect, 15, named_color("content", 230), 0);
+    }
+    return;
+  }
+
   if (strcmp(draw->draw_kind, "cluster_dashboard_surface") == 0) {
     int count = draw->item_count > 0 ? draw->item_count : 2;
     float card_width = SDL_max((rect.w - 24.0f) / (float)count, 64.0f);

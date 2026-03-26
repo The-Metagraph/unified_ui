@@ -436,6 +436,55 @@ defmodule DesktopUi.Renderer.Mapper do
      )}
   end
 
+  defp map_element(%Element{type: :widget, kind: kind} = element) when kind in [:stat, "stat"] do
+    {:ok,
+     DesktopUi.Widgets.stat(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         label: first_present([attr(element, :label), group_attr(element, :stat, :label), label_text(element)]),
+         unit: first_present([attr(element, :unit), group_attr(element, :stat, :unit)]),
+         trend: first_present([attr(element, :trend), group_attr(element, :stat, :trend)]),
+         previous_value: first_present([attr(element, :previous_value), group_attr(element, :stat, :previous_value)]),
+         size: first_present([attr(element, :size), group_attr(element, :stat, :size)], :md),
+         variant: first_present([attr(element, :variant), group_attr(element, :stat, :variant)], :default)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:key_value, "key_value"] do
+    {:ok,
+     DesktopUi.Widgets.key_value(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         key: first_present([attr(element, :key), group_attr(element, :key_value, :key)]),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         align: first_present([attr(element, :align), group_attr(element, :key_value, :align)], :left),
+         size: first_present([attr(element, :size), group_attr(element, :key_value, :size)], :md),
+         variant: first_present([attr(element, :variant), group_attr(element, :key_value, :variant)], :default)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:info_list, "info_list"] do
+    {:ok,
+     DesktopUi.Widgets.info_list(
+       element.id,
+       first_present([attr(element, :items), group_attr(element, :data, :items)], []),
+       Keyword.merge(
+         base_opts(element),
+         size: first_present([attr(element, :size), group_attr(element, :info_list, :size)], :md),
+         variant: first_present([attr(element, :variant), group_attr(element, :info_list, :variant)], :default),
+         show_icons: first_present([attr(element, :show_icons), group_attr(element, :info_list, :show_icons)], true),
+         compact: first_present([attr(element, :compact), group_attr(element, :info_list, :compact)], false)
+       )
+     )}
+  end
+
   defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:inspector, "inspector"] do
     {:ok,

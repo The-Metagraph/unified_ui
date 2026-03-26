@@ -265,6 +265,21 @@ defmodule DesktopUi.Widgets do
     Data.tree_view(id, nodes, opts)
   end
 
+  @spec stat(String.t() | atom(), keyword()) :: Widget.t()
+  def stat(id, opts \\ []) do
+    Data.stat(id, opts)
+  end
+
+  @spec key_value(String.t() | atom(), keyword()) :: Widget.t()
+  def key_value(id, opts \\ []) do
+    Data.key_value(id, opts)
+  end
+
+  @spec info_list(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def info_list(id, items, opts \\ []) do
+    Data.info_list(id, items, opts)
+  end
+
   @spec inspector(String.t() | atom(), map() | keyword(), keyword()) :: Widget.t()
   def inspector(id, subject, opts \\ []) do
     Data.inspector(id, subject, opts)

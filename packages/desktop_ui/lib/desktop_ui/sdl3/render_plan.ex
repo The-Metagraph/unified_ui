@@ -621,6 +621,10 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:list), do: :list_surface
   defp draw_kind(:menu), do: :menu_surface
   defp draw_kind(:table), do: :table_surface
+  defp draw_kind(:tree_view), do: :tree_view_surface
+  defp draw_kind(:stat), do: :stat_block
+  defp draw_kind(:key_value), do: :key_value_block
+  defp draw_kind(:info_list), do: :info_list_block
   defp draw_kind(:process_monitor), do: :process_monitor_surface
   defp draw_kind(:log_viewer), do: :log_viewer_surface
   defp draw_kind(:cluster_dashboard), do: :cluster_dashboard_surface
@@ -657,6 +661,10 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :list -> 56 + item_count(node) * 34
       node.kind == :menu -> 52 + item_count(node) * 28
       node.kind in [:table, :process_monitor] -> 88 + row_count(node) * 28
+      node.kind == :tree_view -> tree_view_height(node)
+      node.kind == :stat -> stat_height(node)
+      node.kind == :key_value -> key_value_height(node)
+      node.kind == :info_list -> info_list_height(node)
       node.kind == :log_viewer -> max(152, 52 + item_count(node) * 26)
       node.kind == :cluster_dashboard -> 160
       node.kind == :command_palette -> 156
@@ -690,6 +698,45 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       base + min(option_count(node), 6) * 36
     else
       base
+    end
+  end
+
+  defp tree_view_height(node) do
+    base = 64
+    node_count = item_count(node)
+    if node_count > 0 do
+      base + min(node_count, 8) * 28
+    else
+      base
+    end
+  end
+
+  defp stat_height(node) do
+    case node.attributes[:size] do
+      :xs -> 56
+      :sm -> 72
+      :lg -> 120
+      :xl -> 140
+      _ -> 96
+    end
+  end
+
+  defp key_value_height(node) do
+    case node.attributes[:size] do
+      :xs -> 32
+      :sm -> 40
+      :lg -> 64
+      _ -> 48
+    end
+  end
+
+  defp info_list_height(node) do
+    base = 32
+    item_count = item_count(node)
+    if item_count > 0 do
+      base + min(item_count, 10) * 24
+    else
+      base + 24
     end
   end
 
@@ -745,6 +792,18 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :select ->
         min(240, available_width)
 
+      node.kind == :stat ->
+        stat_width(node, available_width)
+
+      node.kind == :key_value ->
+        min(200, available_width)
+
+      node.kind == :info_list ->
+        min(240, available_width)
+
+      node.kind == :tree_view ->
+        min(240, available_width)
+
       node.kind in [:text, :label] ->
         min(max(String.length(draw_content(node)) * 12, 96), available_width)
 
@@ -773,6 +832,16 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp link_width(node, available_width) do
     content_length = String.length(draw_content(node))
     min(max(content_length * 11, 64), available_width)
+  end
+
+  defp stat_width(node, available_width) do
+    case node.attributes[:size] do
+      :xs -> min(96, available_width)
+      :sm -> min(128, available_width)
+      :lg -> min(200, available_width)
+      :xl -> min(240, available_width)
+      _ -> min(160, available_width)
+    end
   end
 
   defp option_count(node) do
