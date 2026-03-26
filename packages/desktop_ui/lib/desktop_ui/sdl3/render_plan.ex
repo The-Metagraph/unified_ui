@@ -625,6 +625,9 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:stat), do: :stat_block
   defp draw_kind(:key_value), do: :key_value_block
   defp draw_kind(:info_list), do: :info_list_block
+  defp draw_kind(:status), do: :status_block
+  defp draw_kind(:progress), do: :progress_block
+  defp draw_kind(:inline_feedback), do: :inline_feedback_surface
   defp draw_kind(:process_monitor), do: :process_monitor_surface
   defp draw_kind(:log_viewer), do: :log_viewer_surface
   defp draw_kind(:cluster_dashboard), do: :cluster_dashboard_surface
@@ -665,6 +668,9 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :stat -> stat_height(node)
       node.kind == :key_value -> key_value_height(node)
       node.kind == :info_list -> info_list_height(node)
+      node.kind == :status -> 32
+      node.kind == :progress -> progress_height(node)
+      node.kind == :inline_feedback -> 48
       node.kind == :log_viewer -> max(152, 52 + item_count(node) * 26)
       node.kind == :cluster_dashboard -> 160
       node.kind == :command_palette -> 156
@@ -740,6 +746,19 @@ defmodule DesktopUi.Sdl3.RenderPlan do
     end
   end
 
+  defp progress_height(node) do
+    if node.attributes[:indeterminate] do
+      8
+    else
+      case node.attributes[:size] do
+        :xs -> 6
+        :sm -> 8
+        :lg -> 12
+        _ -> 8
+      end
+    end
+  end
+
   defp separator_thickness(node) do
     if node.attributes[:orientation] == :vertical, do: 1, else: 1
   end
@@ -802,6 +821,15 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         min(240, available_width)
 
       node.kind == :tree_view ->
+        min(240, available_width)
+
+      node.kind == :status ->
+        min(120, available_width)
+
+      node.kind == :progress ->
+        min(160, available_width)
+
+      node.kind == :inline_feedback ->
         min(240, available_width)
 
       node.kind in [:text, :label] ->

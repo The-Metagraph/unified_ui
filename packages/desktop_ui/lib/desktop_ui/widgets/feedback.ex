@@ -7,7 +7,34 @@ defmodule DesktopUi.Widgets.Feedback do
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:alert_dialog, :dialog, :progress, :status, :toast]
+    [:alert_dialog, :dialog, :inline_feedback, :progress, :status, :toast]
+  end
+
+  @spec inline_feedback(String.t() | atom(), keyword()) :: Widget.t()
+  def inline_feedback(id, opts \\ []) do
+    Widget.new(:inline_feedback,
+      id: id,
+      metadata:
+        metadata(opts,
+          focusable: false,
+          role: :inline_feedback,
+          overlay_role: :inline_feedback
+        ),
+      state:
+        state(opts,
+          open: Keyword.get(opts, :open, true),
+          severity: Keyword.get(opts, :severity, :info)
+        ),
+      attributes: %{
+        message: Keyword.get(opts, :message),
+        placement: Keyword.get(opts, :placement, :bottom),
+        dismissible: Keyword.get(opts, :dismissible, true),
+        auto_hide: Keyword.get(opts, :auto_hide, true),
+        timeout_ms: Keyword.get(opts, :timeout_ms, 3_000)
+      },
+      events: events(close: Keyword.get(opts, :on_close), dismiss: Keyword.get(opts, :on_dismiss)),
+      styles: styles(opts)
+    )
   end
 
   @spec dialog(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()

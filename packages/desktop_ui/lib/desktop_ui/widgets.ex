@@ -295,6 +295,11 @@ defmodule DesktopUi.Widgets do
     Feedback.toast(id, message, opts)
   end
 
+  @spec inline_feedback(String.t() | atom(), keyword()) :: Widget.t()
+  def inline_feedback(id, opts \\ []) do
+    Feedback.inline_feedback(id, opts)
+  end
+
   @spec alert_dialog(String.t() | atom(), String.t(), [Widget.t()], keyword()) :: Widget.t()
   def alert_dialog(id, message, children, opts \\ []) do
     Feedback.alert_dialog(id, message, children, opts)

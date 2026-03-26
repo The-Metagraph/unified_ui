@@ -2178,6 +2178,79 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
     return;
   }
 
+  if (strcmp(draw->draw_kind, "status_block") == 0) {
+    dui_color status_color = named_color("muted", 220);
+
+    if (strcmp(draw->semantic_role, "success") == 0) {
+      status_color = named_color("success", 220);
+    } else if (strcmp(draw->semantic_role, "warning") == 0) {
+      status_color = named_color("warning", 220);
+    } else if (strcmp(draw->semantic_role, "error") == 0) {
+      status_color = named_color("error", 220);
+    } else if (strcmp(draw->semantic_role, "info") == 0) {
+      status_color = named_color("info", 220);
+    }
+
+    SDL_FRect icon_rect = {rect.x + 8.0f, rect.y + 8.0f, 16.0f, 16.0f};
+    fill_rect(renderer, icon_rect, status_color);
+
+    SDL_FRect text_rect = {rect.x + 32.0f, rect.y + 6.0f, rect.w - 40.0f, rect.h - 12.0f};
+    draw_text_bands(renderer, text_rect, 15, named_color("content", 230), 0);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "progress_block") == 0) {
+    int value = draw->value > 0 ? draw->value : 0;
+    int max_value = draw->max_value > 0 ? draw->max_value : 100;
+
+    if (draw->loading || value < 0) {
+      int dash_count = 8;
+      float dash_width = rect.w / (float)dash_count;
+
+      for (int i = 0; i < dash_count; i++) {
+        SDL_FRect dash = {rect.x + i * dash_width, rect.y, dash_width - 4.0f, rect.h};
+        fill_rect(renderer, dash, named_color("muted", (160 + (i % 2) * 40) % 255));
+      }
+    } else {
+      float normalized = (float)value / (float)max_value;
+      float fill_width = rect.w * normalized;
+
+      fill_rect(renderer, rect, named_color("muted", 160));
+      fill_rect(renderer, (SDL_FRect){rect.x, rect.y, fill_width, rect.h}, named_color("accent", 220));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "inline_feedback_surface") == 0) {
+    dui_color feedback_color = named_color("surface", 240);
+
+    if (strcmp(draw->semantic_role, "success") == 0) {
+      feedback_color = named_color("success", 240);
+    } else if (strcmp(draw->semantic_role, "warning") == 0) {
+      feedback_color = named_color("warning", 240);
+    } else if (strcmp(draw->semantic_role, "error") == 0) {
+      feedback_color = named_color("error", 240);
+    } else if (strcmp(draw->semantic_role, "info") == 0) {
+      feedback_color = named_color("info", 240);
+    }
+
+    fill_rect(renderer, rect, feedback_color);
+    stroke_rect(renderer, rect, named_color("content", 200));
+
+    if (draw->dismissible) {
+      SDL_FRect close_rect = {rect.x + rect.w - 20.0f, rect.y + 6.0f, 14.0f, 14.0f};
+      use_color(renderer, named_color("content", 200));
+      SDL_RenderLine(renderer, close_rect.x + 3.0f, close_rect.y + 3.0f,
+                     close_rect.x + close_rect.w - 3.0f, close_rect.y + close_rect.h - 3.0f);
+      SDL_RenderLine(renderer, close_rect.x + close_rect.w - 3.0f, close_rect.y + 3.0f,
+                     close_rect.x + 3.0f, close_rect.y + close_rect.h - 3.0f);
+    }
+
+    SDL_FRect text_rect = {rect.x + 12.0f, rect.y + 8.0f, rect.w - 44.0f, rect.h - 16.0f};
+    draw_text_bands(renderer, text_rect, 20, named_color("content", 240), 0);
+    return;
+  }
+
   if (strcmp(draw->draw_kind, "cluster_dashboard_surface") == 0) {
     int count = draw->item_count > 0 ? draw->item_count : 2;
     float card_width = SDL_max((rect.w - 24.0f) / (float)count, 64.0f);

@@ -546,6 +546,24 @@ defmodule DesktopUi.Renderer.Mapper do
   end
 
   defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:inline_feedback, "inline_feedback"] do
+    {:ok,
+     DesktopUi.Widgets.inline_feedback(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         message: first_present([attr(element, :message), attr(element, :content), label_text(element)]),
+         severity: first_present([attr(element, :severity), group_attr(element, :feedback, :severity)], :info),
+         placement: first_present([attr(element, :placement), group_attr(element, :feedback, :placement)], :bottom),
+         dismissible: first_present([attr(element, :dismissible), group_attr(element, :feedback, :dismissible)], true),
+         auto_hide: first_present([attr(element, :auto_hide), group_attr(element, :feedback, :auto_hide)], true),
+         timeout_ms: first_present([attr(element, :timeout_ms), group_attr(element, :feedback, :timeout_ms)], 3_000),
+         on_close: interaction_payload(element, :close)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:progress, "progress"] do
     {:ok,
      DesktopUi.Widgets.progress(
