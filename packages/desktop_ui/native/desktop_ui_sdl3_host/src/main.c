@@ -938,7 +938,7 @@ static void activate_draw(dui_app *app, dui_draw *draw) {
     app->interaction_summary
         .last_submit_widget_id[sizeof(app->interaction_summary.last_submit_widget_id) - 1] = '\0';
   } else if (strcmp(draw->kind, "button") == 0 || strcmp(draw->kind, "command") == 0 ||
-             strcmp(draw->kind, "window_command") == 0) {
+             strcmp(draw->kind, "window_command") == 0 || strcmp(draw->kind, "link") == 0) {
     app->interaction_summary.command_activations++;
     strncpy(app->interaction_summary.last_command_widget_id, draw->widget_id,
             sizeof(app->interaction_summary.last_command_widget_id) - 1);
@@ -1946,6 +1946,74 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
     draw_surface_shell(renderer, rect, named_color("accent", 140), named_color("content", 220),
                        draw->border, 0, 0);
     draw_text_content(app, renderer, draw, rect, named_color("content", 235), 0);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "badge_block") == 0) {
+    dui_color badge_bg = named_color("accent", 220);
+    dui_color badge_fg = named_color("canvas", 255);
+
+    if (strcmp(draw->variant, "success") == 0) {
+      badge_bg = named_color("success", 200);
+    } else if (strcmp(draw->variant, "warning") == 0) {
+      badge_bg = named_color("warning", 220);
+    } else if (strcmp(draw->variant, "error") == 0) {
+      badge_bg = named_color("error", 200);
+    } else if (strcmp(draw->variant, "info") == 0) {
+      badge_bg = named_color("info", 210);
+    }
+
+    float radius = rect.h * 0.4f;
+    fill_rect(renderer, rect, badge_bg);
+    draw_text_content(app, renderer, draw, rect, badge_fg, 0);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "hero_block") == 0) {
+    fill_rect(renderer, rect, named_color("accent", 240));
+    draw_text_content(app, renderer, draw,
+                     (SDL_FRect){rect.x + 32.0f, rect.y + 24.0f, rect.w - 64.0f, 48.0f},
+                     named_color("canvas", 255), 1);
+
+    if (draw->content_length > 0 && strlen(draw->attrs) > 0) {
+      draw_text_content(app, renderer, draw,
+                       (SDL_FRect){rect.x + 32.0f, rect.y + 80.0f, rect.w - 64.0f, 24.0f},
+                       named_color("canvas", 230), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "link_control") == 0) {
+    dui_color link_color = draw->focused ? named_color("accent", 240) : named_color("accent", 220);
+    if (draw->active) {
+      link_color = named_color("accent", 180);
+    }
+
+    draw_text_content(app, renderer, draw, rect, link_color, 0);
+
+    float underline_y = rect.y + rect.h - 4.0f;
+    SDL_RenderLine(renderer, rect.x, underline_y, rect.x + rect.w, underline_y);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "separator_line") == 0) {
+    dui_color sep_color = named_color("muted", 180);
+
+    if (strcmp(draw->variant, "strong") == 0) {
+      sep_color = named_color("content", 200);
+    }
+
+    if (draw->width > draw->height) {
+      float mid_y = rect.y + rect.h / 2.0f;
+      SDL_RenderLine(renderer, rect.x, mid_y, rect.x + rect.w, mid_y);
+    } else {
+      float mid_x = rect.x + rect.w / 2.0f;
+      SDL_RenderLine(renderer, mid_x, rect.y, mid_x, rect.y + rect.h);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "spacer_gap") == 0) {
     return;
   }
 

@@ -139,6 +139,16 @@ defmodule DesktopUi.Widgets do
     Foundational.image(id, source, opts)
   end
 
+  @spec badge(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def badge(id, content, opts \\ []) do
+    Foundational.badge(id, content, opts)
+  end
+
+  @spec hero(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def hero(id, headline, opts \\ []) do
+    Foundational.hero(id, headline, opts)
+  end
+
   @spec spacer(String.t() | atom(), keyword()) :: Widget.t()
   def spacer(id, opts \\ []) do
     Foundational.spacer(id, opts)

@@ -105,6 +105,39 @@ defmodule DesktopUi.Renderer.Mapper do
   end
 
   defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:badge, "badge"] do
+    {:ok,
+     DesktopUi.Widgets.badge(
+       element.id,
+       content_text(element, to_string(element.id)),
+       Keyword.merge(
+         base_opts(element),
+         size: first_present([group_attr(element, :badge, :size), attr(element, :size)], :md),
+         variant: first_present([group_attr(element, :badge, :variant), attr(element, :variant)], :default)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:hero, "hero"] do
+    {:ok,
+     DesktopUi.Widgets.hero(
+       element.id,
+       first_present(
+         [group_attr(element, :hero, :headline), attr(element, :headline), label_text(element)],
+         "Hero"
+       ),
+       Keyword.merge(
+         base_opts(element),
+         subheadline:
+           first_present([group_attr(element, :hero, :subheadline), attr(element, :subheadline)]),
+         image: first_present([group_attr(element, :hero, :image), attr(element, :image)]),
+         actions: first_present([group_attr(element, :hero, :actions), attr(element, :actions)], [])
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:button, "button"] do
     {:ok,
      DesktopUi.Widgets.button(

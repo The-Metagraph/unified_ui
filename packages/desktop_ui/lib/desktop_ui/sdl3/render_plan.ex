@@ -600,10 +600,15 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:label), do: :label_block
   defp draw_kind(:icon), do: :icon_block
   defp draw_kind(:image), do: :image_block
+  defp draw_kind(:badge), do: :badge_block
+  defp draw_kind(:hero), do: :hero_block
   defp draw_kind(kind) when kind in [:button, :window_command], do: :button_control
   defp draw_kind(:command), do: :command_control
+  defp draw_kind(:link), do: :link_control
   defp draw_kind(:text_input), do: :text_input_control
   defp draw_kind(:checkbox), do: :checkbox_control
+  defp draw_kind(:separator), do: :separator_line
+  defp draw_kind(:spacer), do: :spacer_gap
   defp draw_kind(:tabs), do: :tabs_surface
   defp draw_kind(:list), do: :list_surface
   defp draw_kind(:menu), do: :menu_surface
@@ -624,9 +629,14 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp preferred_height(node) do
     cond do
       node.kind in [:text, :label] -> 28
+      node.kind == :badge -> badge_height(node)
+      node.kind == :hero -> 180
       node.kind in [:button, :command, :window_command] -> 42
+      node.kind == :link -> 32
       node.kind == :checkbox -> 36
       node.kind == :text_input -> 46
+      node.kind == :separator -> separator_thickness(node)
+      node.kind == :spacer -> spacer_size(node)
       node.kind == :tabs -> 52
       node.kind == :list -> 56 + item_count(node) * 34
       node.kind == :menu -> 52 + item_count(node) * 28
@@ -646,13 +656,44 @@ defmodule DesktopUi.Sdl3.RenderPlan do
     end
   end
 
+  defp badge_height(node) do
+    case node.attributes[:size] do
+      :sm -> 20
+      :lg -> 32
+      _ -> 24
+    end
+  end
+
+  defp separator_thickness(node) do
+    if node.attributes[:orientation] == :vertical, do: 1, else: 1
+  end
+
+  defp spacer_size(node) do
+    case node.attributes[:size] do
+      :xs -> 4
+      :sm -> 8
+      :lg -> 24
+      :xl -> 32
+      _ -> 16
+    end
+  end
+
   defp preferred_width(node, available_width) do
     cond do
       node.kind == :icon ->
         56
 
+      node.kind == :badge ->
+        badge_width(node)
+
+      node.kind == :hero ->
+        min(600, available_width)
+
       node.kind in [:button, :command, :window_command] ->
         min(180, available_width)
+
+      node.kind == :link ->
+        link_width(node, available_width)
 
       node.kind == :checkbox ->
         min(220, available_width)
@@ -663,9 +704,31 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :text_input ->
         min(320, available_width)
 
+      node.kind == :separator ->
+        available_width
+
+      node.kind == :spacer ->
+        spacer_size(node)
+
       true ->
         max(div(available_width, 2), 96)
     end
+  end
+
+  defp badge_width(node) do
+    content_length = String.length(draw_content(node))
+    base_width = content_length * 10 + 16
+
+    case node.attributes[:size] do
+      :sm -> max(32, base_width)
+      :lg -> max(48, base_width + 8)
+      _ -> max(40, base_width)
+    end
+  end
+
+  defp link_width(node, available_width) do
+    content_length = String.length(draw_content(node))
+    min(max(content_length * 11, 64), available_width)
   end
 
   defp expandable_indexes(children) do
