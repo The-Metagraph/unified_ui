@@ -18,17 +18,21 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
     assert native_boot.lifecycle.state == :ready
     assert native_boot.windows.validation_state == :native_window_registry_ready
     assert native_boot.frame_request.validation_state == :render_plan_ready
-    assert native_boot.frame_request.presentation.render_plan.presentation.backend == :sdl_renderer
+
+    assert native_boot.frame_request.presentation.render_plan.presentation.backend ==
+             :sdl_renderer
+
     assert native_boot.frame_request.presentation.render_plan.diagnostics.draw_operation_count > 0
 
     assert canonical_boot.foundation == :sdl3
     assert canonical_boot.runtime.source_kind == :canonical
     assert canonical_boot.runtime.direct_native_and_canonical_share_runtime
+
     assert canonical_boot.frame_request.presentation.render_plan.presentation.validation_state ==
              :render_plan_ready
   end
 
-  test "minimal native screens can produce native-window and render-plan state without full widget-complete drawing" do
+  test "minimal native screens can produce native-window state and widget-complete draw plans" do
     assert {:ok, state} =
              DesktopUi.Runtime.mount_native_screen(
                DesktopUi.Examples.native_foundational_screen(),
@@ -43,15 +47,20 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
     assert registry.continuity == :single_window
     assert hd(plan.windows).logical_bounds.units == :logical
     assert Enum.any?(hd(plan.windows).draw_operations, &(&1.draw_kind == :window_chrome))
-    assert plan.presentation.placeholder_draw_operations
+    refute plan.presentation.placeholder_draw_operations
+    assert plan.presentation.widget_complete_draw_operations
     assert presentation.backend == :sdl_renderer
+    assert presentation.widget_complete_draw_operations?
     assert presentation.validation_state == :presented_frame_ready
   end
 
   test "invalid callback ordering, malformed event payloads, and broken window ownership fail with deterministic adapter diagnostics" do
     lifecycle =
       DesktopUi.Sdl3.Lifecycle.scaffold()
-      |> DesktopUi.Sdl3.Lifecycle.begin_boot(%{runtime_id: "desktop-ui:broken", screen_id: "broken"})
+      |> DesktopUi.Sdl3.Lifecycle.begin_boot(%{
+        runtime_id: "desktop-ui:broken",
+        screen_id: "broken"
+      })
       |> DesktopUi.Sdl3.Lifecycle.fail(:callback_order_violation, %{callback: :app_quit})
 
     assert lifecycle.last_error.reason == :callback_order_violation

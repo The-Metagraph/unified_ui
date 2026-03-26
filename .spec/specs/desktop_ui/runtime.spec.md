@@ -46,6 +46,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: desktop_ui.runtime.interactive_visible_execution
+  statement: The compiled visible-window runtime shall support maintained keyboard, pointer, focus, scrolling, selection, command, and multiwindow interaction flows through real hit-testing and event dispatch while preserving the same semantic outcomes as the fallback and canonical runtime paths.
+  priority: must
+  stability: stable
+
 - id: desktop_ui.runtime.platform_variation_bounded
   statement: Platform-specific runtime behavior may vary where operating-system integration requires it, but those variations shall remain bounded behind the shared `desktop_ui` runtime model.
   priority: must
@@ -59,6 +64,11 @@ decisions:
   given: The same native or canonical-IUR-driven screen is launched on Windows, macOS, and Linux
   when: `desktop_ui` runs the screen
   then: The package preserves one runtime model and one canonical UI meaning while allowing target-specific integration details underneath
+
+- id: desktop_ui.runtime_interact_with_visible_native_window
+  given: A maintainer runs a compiled visible-window `desktop_ui` example and interacts with focusable controls, pointers, scrolling regions, and secondary windows
+  when: Input events flow through the runtime
+  then: The runtime preserves the same binding, command, transport, and window-management semantics expected by native and canonical package flows
 ```
 
 ## Verification
@@ -71,6 +81,8 @@ decisions:
     - desktop_ui.runtime.shared_runtime_across_targets
     - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
     - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
     - desktop_ui.runtime.platform_variation_bounded
     - desktop_ui.runtime_run_same_screen_on_multiple_targets
+    - desktop_ui.runtime_interact_with_visible_native_window
 ```

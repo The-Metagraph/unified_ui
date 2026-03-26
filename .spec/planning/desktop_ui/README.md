@@ -4,24 +4,25 @@ This directory contains a phased implementation plan for creating the current
 `desktop_ui` package defined by the root ecosystem and package design specs.
 
 The plan aligns to:
-- [Architecture](/Users/Pascal/code/unified/.spec/specs/architecture.spec.md)
-- [Platform Runtimes](/Users/Pascal/code/unified/.spec/specs/platform_runtimes.spec.md)
-- [Signal Transport](/Users/Pascal/code/unified/.spec/specs/signal_transport.spec.md)
-- [DesktopUi Package](/Users/Pascal/code/unified/.spec/specs/desktop_ui/package.spec.md)
-- [DesktopUi Structure](/Users/Pascal/code/unified/.spec/specs/desktop_ui/structure.spec.md)
-- [DesktopUi Native Widgets](/Users/Pascal/code/unified/.spec/specs/desktop_ui/native_widgets.spec.md)
-- [DesktopUi Runtime](/Users/Pascal/code/unified/.spec/specs/desktop_ui/runtime.spec.md)
-- [DesktopUi IUR Renderer](/Users/Pascal/code/unified/.spec/specs/desktop_ui/iur_renderer.spec.md)
-- [DesktopUi Transport](/Users/Pascal/code/unified/.spec/specs/desktop_ui/transport.spec.md)
-- [DesktopUi Platform Artifacts](/Users/Pascal/code/unified/.spec/specs/desktop_ui/platform_artifacts.spec.md)
-- [DesktopUi Tooling](/Users/Pascal/code/unified/.spec/specs/desktop_ui/tooling.spec.md)
-- [UnifiedIUR Package](/Users/Pascal/code/unified/.spec/specs/unified-iur/package.spec.md)
-- [UnifiedIUR Widgets](/Users/Pascal/code/unified/.spec/specs/unified-iur/widgets.spec.md)
-- [UnifiedIUR Display Systems](/Users/Pascal/code/unified/.spec/specs/unified-iur/display_systems.spec.md)
-- [UnifiedIUR Theming](/Users/Pascal/code/unified/.spec/specs/unified-iur/theming.spec.md)
-- [UnifiedIUR Interactions](/Users/Pascal/code/unified/.spec/specs/unified-iur/interactions.spec.md)
-- [UnifiedUi Package](/Users/Pascal/code/unified/.spec/specs/unified-ui/package.spec.md)
-- [UnifiedUi Signals](/Users/Pascal/code/unified/.spec/specs/unified-ui/signals.spec.md)
+- [Architecture](../../specs/architecture.spec.md)
+- [Platform Runtimes](../../specs/platform_runtimes.spec.md)
+- [Signal Transport](../../specs/signal_transport.spec.md)
+- [DesktopUi Package](../../specs/desktop_ui/package.spec.md)
+- [DesktopUi Structure](../../specs/desktop_ui/structure.spec.md)
+- [DesktopUi Native Widgets](../../specs/desktop_ui/native_widgets.spec.md)
+- [DesktopUi Runtime](../../specs/desktop_ui/runtime.spec.md)
+- [DesktopUi SDL3 Runtime And Native Rendering](../../specs/desktop_ui/sdl3_runtime_rendering.spec.md)
+- [DesktopUi IUR Renderer](../../specs/desktop_ui/iur_renderer.spec.md)
+- [DesktopUi Transport](../../specs/desktop_ui/transport.spec.md)
+- [DesktopUi Platform Artifacts](../../specs/desktop_ui/platform_artifacts.spec.md)
+- [DesktopUi Tooling](../../specs/desktop_ui/tooling.spec.md)
+- [UnifiedIUR Package](../../specs/unified-iur/package.spec.md)
+- [UnifiedIUR Widgets](../../specs/unified-iur/widgets.spec.md)
+- [UnifiedIUR Display Systems](../../specs/unified-iur/display_systems.spec.md)
+- [UnifiedIUR Theming](../../specs/unified-iur/theming.spec.md)
+- [UnifiedIUR Interactions](../../specs/unified-iur/interactions.spec.md)
+- [UnifiedUi Package](../../specs/unified-ui/package.spec.md)
+- [UnifiedUi Signals](../../specs/unified-ui/signals.spec.md)
 
 ## Phase Files
 1. [Phase 1 - Package Scaffold and SDL3 Runtime Backbone](./phase-01-package-scaffold-and-sdl3-runtime-backbone.md): implement the Mix package, shared SDL3 runtime backbone, platform adapter seams, and baseline reference surfaces.
@@ -34,6 +35,7 @@ The plan aligns to:
 7. [Phase 7 - SDL3 Native Host Execution and First Presented Frames](./phase-07-sdl3-native-host-execution-and-first-presented-frames.md): implement the first real executable SDL3 host boundary, framed Elixir-to-native protocol, real window and frame presentation ownership, and event/resource round-trips that move `desktop_ui` from semantic scaffolding to actual native execution.
 8. [Phase 8 - SDL3 Native Build, Visible Window Runtime, and Backend Selection](./phase-08-sdl3-native-build-visible-window-runtime-and-backend-selection.md): implement the first buildable native SDL3 host workflow, backend selection between compiled and fallback execution, and visible-window presentation for maintained package runs.
 9. [Phase 9 - Platform Build, Packaging, and Compliance Activation](./phase-09-platform-build-packaging-and-compliance-activation.md): implement repeatable target staging and packaging workflows, surface shippability diagnostics, and onboard `desktop_ui` into package-scoped conformance.
+10. [Phase 10 - Widget-Complete SDL3 Rendering and Interactive Native Behavior](./phase-10-widget-complete-sdl3-rendering-and-interactive-native-behavior.md): implement widget-complete native drawing, SDL3-backed text and image realization, and interactive visible-window behavior for maintained desktop flows.
 
 ## Supporting Docs
 - [Spec Traceability Manifest](./spec-traceability.json): authoritative machine-readable mapping from applicable requirements into this plan.

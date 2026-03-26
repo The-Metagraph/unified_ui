@@ -41,6 +41,7 @@ defmodule DesktopUi.Sdl3.Renderer do
   @spec present_payload(map(), keyword()) :: {:ok, map()}
   def present_payload(frame_payload, opts \\ []) when is_map(frame_payload) do
     windows = Map.get(frame_payload, :windows, [])
+    draw_operations = Enum.flat_map(windows, &Map.get(&1, :draw_operations, []))
     redraw_status = Keyword.get(opts, :redraw_status, :requested)
 
     {:ok,
@@ -50,8 +51,10 @@ defmodule DesktopUi.Sdl3.Renderer do
        logical_presentation: get_in(frame_payload, [:presentation, :logical_presentation]),
        window_count: length(windows),
        presented_frame?: windows != [],
-       draw_operation_count:
-         windows |> Enum.map(&length(&1.draw_operations)) |> Enum.sum(),
+       widget_complete_draw_operations?:
+         get_in(frame_payload, [:presentation, :widget_complete_draw_operations]) || false,
+       draw_operation_count: length(draw_operations),
+       draw_kind_counts: Enum.frequencies_by(draw_operations, & &1.draw_kind),
        presented_windows:
          Enum.map(windows, fn window ->
            %{
@@ -59,6 +62,7 @@ defmodule DesktopUi.Sdl3.Renderer do
              render_target: :native_window,
              presented?: true,
              draw_operations: length(window.draw_operations),
+             draw_kind_counts: Enum.frequencies_by(window.draw_operations, & &1.draw_kind),
              clip_regions: length(window.clip_regions),
              transient_layers: Enum.map(window.transient_layers, & &1.widget_id),
              clear_color: clear_color(window),

@@ -11,7 +11,16 @@ defmodule DesktopUi.Sdl3.FrameScript do
       format: :tab_separated_key_values,
       header: "DESKTOP_UI_SDL3_FRAME",
       version: 1,
-      preserves: [:window_titles, :logical_bounds, :draw_kinds, :resolved_styles, :clip_flags],
+      preserves: [
+        :window_titles,
+        :logical_bounds,
+        :draw_kinds,
+        :resolved_styles,
+        :clip_flags,
+        :visual_state,
+        :metrics,
+        :clip_bounds
+      ],
       target: :compiled_visible_runner
     }
   end
@@ -67,9 +76,34 @@ defmodule DesktopUi.Sdl3.FrameScript do
           height: get_in(operation, [:logical_bounds, :height]),
           units: get_in(operation, [:logical_bounds, :units]),
           clip: operation.clip?,
+          clip_x: get_in(operation, [:clip_bounds, :x]),
+          clip_y: get_in(operation, [:clip_bounds, :y]),
+          clip_width: get_in(operation, [:clip_bounds, :width]),
+          clip_height: get_in(operation, [:clip_bounds, :height]),
           bg: get_in(operation, [:resolved_styles, :bg]),
+          fg: get_in(operation, [:resolved_styles, :fg]),
+          border: get_in(operation, [:resolved_styles, :border]),
           variant: get_in(operation, [:resolved_styles, :variant]),
+          semantic_role: operation.semantic_role,
           layer_role: operation.layer_role,
+          disabled: get_in(operation, [:visual_state, :disabled]),
+          focused: get_in(operation, [:visual_state, :focused]),
+          selected: get_in(operation, [:visual_state, :selected]),
+          checked: get_in(operation, [:visual_state, :checked]),
+          active: get_in(operation, [:visual_state, :active]),
+          open: get_in(operation, [:visual_state, :open]),
+          current: get_in(operation, [:visual_state, :current]),
+          loading: get_in(operation, [:visual_state, :loading]),
+          child_count: get_in(operation, [:metrics, :child_count]),
+          item_count: get_in(operation, [:metrics, :item_count]),
+          row_count: get_in(operation, [:metrics, :row_count]),
+          column_count: get_in(operation, [:metrics, :column_count]),
+          series_count: get_in(operation, [:metrics, :series_count]),
+          current_index: get_in(operation, [:metrics, :current_index]),
+          selected_index: get_in(operation, [:metrics, :selected_index]),
+          value: get_in(operation, [:metrics, :value]),
+          max_value: get_in(operation, [:metrics, :max_value]),
+          content_length: get_in(operation, [:metrics, :content_length]),
           content: operation.content
         )
       end)
@@ -83,6 +117,7 @@ defmodule DesktopUi.Sdl3.FrameScript do
       |> Enum.flat_map(fn
         {_key, nil} -> []
         {_key, []} -> []
+        {key, value} when is_boolean(value) -> ["#{key}=#{if(value, do: 1, else: 0)}"]
         {key, value} -> ["#{key}=#{URI.encode_www_form(to_string(value))}"]
       end)
 

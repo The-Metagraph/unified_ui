@@ -18,7 +18,7 @@ mapping, scaling, and backend evolution boundaries.
 id: desktop_ui.sdl3_runtime_rendering
 kind: runtime
 status: active
-summary: Target SDL3-native runtime and rendering contract for `desktop_ui`, including callback lifecycle ownership, SDL_Renderer-first display, retained widget rendering, DPI-aware logical sizing, and native window mapping.
+summary: Target SDL3-native runtime and rendering contract for `desktop_ui`, including callback lifecycle ownership, SDL_Renderer-first display, retained widget rendering, widget-complete visible realization, DPI-aware logical sizing, and native window mapping.
 surface:
   - packages/desktop_ui
   - .spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md
@@ -59,6 +59,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+  statement: After the SDL3 adapter seam and first presented frames exist, the compiled visible-window runtime shall realize the maintained native and canonical widget families through real SDL_Renderer drawing semantics rather than remaining limited to placeholder-only frame presentation.
+  priority: must
+  stability: stable
+
 - id: desktop_ui.sdl3_runtime_rendering.native_window_mapping
   statement: Top-level `desktop_ui` windows and multiwindow flows shall map to real SDL3 windows by default rather than being simulated as child surfaces inside one universal host window.
   priority: must
@@ -71,6 +76,11 @@ decisions:
 
 - id: desktop_ui.sdl3_runtime_rendering.text_and_image_companions
   statement: The initial native text and image pipeline shall rely on SDL3 companion-library integration equivalent to SDL_ttf and SDL_image, while allowing future platform-native text or image backends if package semantics remain unchanged.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.sdl3_runtime_rendering.native_resource_realization
+  statement: The compiled visible-window runtime shall realize maintained text and image resources through native SDL3 companion-library-backed preparation, caching, and draw operations whenever those libraries are present, while surfacing bounded diagnostics and fallback behavior when they are absent.
   priority: must
   stability: stable
 
@@ -102,6 +112,16 @@ decisions:
   given: Maintainers introduce the first SDL3-native implementation seam before every widget can draw completely
   when: The package adds lifecycle, window, render-plan, event, and resource adapter modules
   then: The package exposes one coherent native adapter boundary without overstating renderer completeness or changing retained widget semantics
+
+- id: desktop_ui.sdl3_runtime_rendering.render_maintained_examples_with_real_widget_drawing
+  given: Maintained foundational, advanced, transport, and styled examples are run through the compiled visible-window path
+  when: The SDL3 host presents native windows through SDL_Renderer
+  then: The host renders widget-complete geometry, text, imagery, and style states for those maintained example surfaces instead of only drawing placeholder frame shells
+
+- id: desktop_ui.sdl3_runtime_rendering.realize_native_text_and_image_resources
+  given: The compiled visible-window runtime receives text and image resources while SDL3 companion libraries are present
+  when: The host prepares and renders those resources
+  then: Text and image content are realized through the native SDL3-backed pipeline and diagnostics report whether native or fallback handling was used
 ```
 
 ## Verification
@@ -116,12 +136,16 @@ decisions:
     - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
     - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
     - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
     - desktop_ui.sdl3_runtime_rendering.native_window_mapping
     - desktop_ui.sdl3_runtime_rendering.in_window_layering
     - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
     - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
     - desktop_ui.sdl3_runtime_rendering.present_high_dpi_screen
     - desktop_ui.sdl3_runtime_rendering.coordinate_multiwindow_layers
     - desktop_ui.sdl3_runtime_rendering.evolve_render_backend_without_semantic_drift
     - desktop_ui.sdl3_runtime_rendering.bootstrap_adapter_before_full_drawing
+    - desktop_ui.sdl3_runtime_rendering.render_maintained_examples_with_real_widget_drawing
+    - desktop_ui.sdl3_runtime_rendering.realize_native_text_and_image_resources
 ```
