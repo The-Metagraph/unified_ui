@@ -15,6 +15,20 @@ defmodule DesktopUi.Renderer.Mapper do
     {:error, Error.new(:missing_canonical_identity, %{kind: element.kind, type: element.type})}
   end
 
+  # Handle screen elements - extract the default child and render that
+  def map(%Element{type: :composite, kind: :screen, children: children}, opts) do
+    case Enum.find(children, fn %Child{slot: slot} -> slot == :default end) do
+      nil ->
+        {:error, Error.new(:empty_screen, %{id: "screen"})}
+
+      %Child{element: %Element{} = child_element} ->
+        map(child_element, opts)
+
+      %Child{element: nil} ->
+        {:error, Error.new(:screen_empty_content, %{id: "screen"})}
+    end
+  end
+
   def map(%Element{} = element, _opts) do
     with :ok <- validate_bindings(element),
          {:ok, slot_children} <- map_children(element.children),
@@ -852,6 +866,39 @@ defmodule DesktopUi.Renderer.Mapper do
          x: first_present([attr(element, :x)], 0),
          y: first_present([attr(element, :y)], 0),
          z_index: first_present([attr(element, :z_index)], 0)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :layout, kind: kind} = element) when kind in [:box, "box"] do
+    # Extract container attributes from IUR attributes
+    container_attrs = attr(element, :container) || %{}
+
+    # Extract layout attributes from IUR attributes
+    layout_attrs = attr(element, :layout) || %{}
+
+    {:ok,
+     DesktopUi.Layout.box(
+       element.id,
+       [],  # Children will be added via slot_children
+       Keyword.merge(
+         base_opts(element),
+         # Container attributes
+         padding: Map.get(container_attrs, :padding),
+         margin: Map.get(container_attrs, :margin),
+         border: Map.get(container_attrs, :border),
+         background: Map.get(container_attrs, :background),
+         clip?: Map.get(container_attrs, :clip?),
+         # Layout attributes
+         gap: Map.get(layout_attrs, :gap),
+         align: Map.get(layout_attrs, :align),
+         justify: Map.get(layout_attrs, :justify),
+         width: Map.get(layout_attrs, :width),
+         height: Map.get(layout_attrs, :height),
+         min_width: Map.get(layout_attrs, :min_width),
+         max_width: Map.get(layout_attrs, :max_width),
+         min_height: Map.get(layout_attrs, :min_height),
+         max_height: Map.get(layout_attrs, :max_height)
        )
      )}
   end

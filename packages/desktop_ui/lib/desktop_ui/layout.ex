@@ -5,10 +5,38 @@ defmodule DesktopUi.Layout do
 
   alias DesktopUi.Widget
 
-  @kinds [:absolute, :canvas_surface, :scroll_region, :split_pane, :viewport]
+  @kinds [:absolute, :box, :canvas_surface, :scroll_region, :split_pane, :viewport]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
+
+  @spec box(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def box(id, children \\ [], opts \\ []) do
+    Widget.new(:box,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :box_container),
+      attributes: %{
+        # Container attributes
+        padding: Keyword.get(opts, :padding),
+        margin: Keyword.get(opts, :margin),
+        border: Keyword.get(opts, :border),
+        background: Keyword.get(opts, :background),
+        clip?: Keyword.get(opts, :clip?, false),
+        # Layout attributes
+        gap: Keyword.get(opts, :gap),
+        align: Keyword.get(opts, :align),
+        justify: Keyword.get(opts, :justify),
+        width: Keyword.get(opts, :width),
+        height: Keyword.get(opts, :height),
+        min_width: Keyword.get(opts, :min_width),
+        max_width: Keyword.get(opts, :max_width),
+        min_height: Keyword.get(opts, :min_height),
+        max_height: Keyword.get(opts, :max_height)
+      },
+      children: children,
+      styles: styles(opts)
+    )
+  end
 
   @spec validation_state() :: map()
   def validation_state do
