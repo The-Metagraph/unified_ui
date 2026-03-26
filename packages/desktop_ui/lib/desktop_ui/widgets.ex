@@ -139,6 +139,16 @@ defmodule DesktopUi.Widgets do
     Foundational.image(id, source, opts)
   end
 
+  @spec badge(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def badge(id, content, opts \\ []) do
+    Foundational.badge(id, content, opts)
+  end
+
+  @spec hero(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def hero(id, headline, opts \\ []) do
+    Foundational.hero(id, headline, opts)
+  end
+
   @spec spacer(String.t() | atom(), keyword()) :: Widget.t()
   def spacer(id, opts \\ []) do
     Foundational.spacer(id, opts)
@@ -172,6 +182,36 @@ defmodule DesktopUi.Widgets do
   @spec text_input(String.t() | atom(), keyword()) :: Widget.t()
   def text_input(id, opts \\ []) do
     Input.text_input(id, opts)
+  end
+
+  @spec numeric_input(String.t() | atom(), keyword()) :: Widget.t()
+  def numeric_input(id, opts \\ []) do
+    Input.numeric_input(id, opts)
+  end
+
+  @spec slider(String.t() | atom(), keyword()) :: Widget.t()
+  def slider(id, opts \\ []) do
+    Input.slider(id, opts)
+  end
+
+  @spec date_input(String.t() | atom(), keyword()) :: Widget.t()
+  def date_input(id, opts \\ []) do
+    Input.date_input(id, opts)
+  end
+
+  @spec time_input(String.t() | atom(), keyword()) :: Widget.t()
+  def time_input(id, opts \\ []) do
+    Input.time_input(id, opts)
+  end
+
+  @spec file_input(String.t() | atom(), keyword()) :: Widget.t()
+  def file_input(id, opts \\ []) do
+    Input.file_input(id, opts)
+  end
+
+  @spec pick_list(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def pick_list(id, options, opts \\ []) do
+    Input.pick_list(id, options, opts)
   end
 
   @spec checkbox(String.t() | atom(), String.t(), keyword()) :: Widget.t()
@@ -225,6 +265,21 @@ defmodule DesktopUi.Widgets do
     Data.tree_view(id, nodes, opts)
   end
 
+  @spec stat(String.t() | atom(), keyword()) :: Widget.t()
+  def stat(id, opts \\ []) do
+    Data.stat(id, opts)
+  end
+
+  @spec key_value(String.t() | atom(), keyword()) :: Widget.t()
+  def key_value(id, opts \\ []) do
+    Data.key_value(id, opts)
+  end
+
+  @spec info_list(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def info_list(id, items, opts \\ []) do
+    Data.info_list(id, items, opts)
+  end
+
   @spec inspector(String.t() | atom(), map() | keyword(), keyword()) :: Widget.t()
   def inspector(id, subject, opts \\ []) do
     Data.inspector(id, subject, opts)
@@ -238,6 +293,11 @@ defmodule DesktopUi.Widgets do
   @spec toast(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def toast(id, message, opts \\ []) do
     Feedback.toast(id, message, opts)
+  end
+
+  @spec inline_feedback(String.t() | atom(), keyword()) :: Widget.t()
+  def inline_feedback(id, opts \\ []) do
+    Feedback.inline_feedback(id, opts)
   end
 
   @spec alert_dialog(String.t() | atom(), String.t(), [Widget.t()], keyword()) :: Widget.t()
@@ -288,6 +348,16 @@ defmodule DesktopUi.Widgets do
   @spec command_palette(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
   def command_palette(id, commands, opts \\ []) do
     Operational.command_palette(id, commands, opts)
+  end
+
+  @spec stream_widget(String.t() | atom(), keyword()) :: Widget.t()
+  def stream_widget(id, opts \\ []) do
+    Operational.stream_widget(id, opts)
+  end
+
+  @spec supervision_tree_viewer(String.t() | atom(), keyword()) :: Widget.t()
+  def supervision_tree_viewer(id, opts \\ []) do
+    Operational.supervision_tree_viewer(id, opts)
   end
 
   @spec process_monitor(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()

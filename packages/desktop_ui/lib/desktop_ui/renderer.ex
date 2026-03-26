@@ -22,56 +22,79 @@ defmodule DesktopUi.Renderer do
     ]
   end
 
+  @doc """
+  All 45 canonical IUR widget kinds supported by the desktop_ui renderer.
+  Each kind has dedicated native widget mapping, draw kind handling, and
+  SDL3 rendering implementation.
+  """
   @spec supported_kinds() :: [atom()]
   def supported_kinds do
     [
-      :breadcrumbs,
+      # Foundational (13)
+      :badge,
       :button,
-      :canvas,
-      :canvas_surface,
-      :checkbox,
-      :cluster_dashboard,
-      :column,
       :command,
-      :command_palette,
-      :context_menu,
       :content,
-      :dialog,
-      :gauge,
+      :hero,
       :icon,
       :image,
-      :inspector,
       :label,
-      :line_chart,
       :link,
-      :list,
-      :log_viewer,
-      :markdown_viewer,
-      :menu,
-      :multi_window,
-      :overlay,
-      :popover,
-      :process_monitor,
-      :progress,
-      :radio_group,
-      :row,
-      :scroll_region,
-      :select,
       :separator,
-      :split_pane,
       :spacer,
-      :stack,
-      :table,
-      :tabs,
       :text,
-      :text_input,
-      :timeline,
-      :toast,
       :toggle,
+      # Input (10)
+      :checkbox,
+      :date_input,
+      :file_input,
+      :numeric_input,
+      :pick_list,
+      :radio_group,
+      :select,
+      :slider,
+      :text_input,
+      :time_input,
+      # Navigation (4)
+      :breadcrumbs,
+      :list,
+      :menu,
+      :tabs,
+      # Data (7)
+      :inspector,
+      :info_list,
+      :key_value,
+      :markdown_viewer,
+      :stat,
+      :table,
       :tree_view,
-      :viewport,
-      :window,
-      :window_command
+      # Feedback (6)
+      :alert_dialog,
+      :dialog,
+      :inline_feedback,
+      :progress,
+      :status,
+      :toast,
+      # Operational (7)
+      :cluster_dashboard,
+      :command_palette,
+      :log_viewer,
+      :process_monitor,
+      :stream_widget,
+      :supervision_tree_viewer,
+      :window_command,
+      # Visualization (5)
+      :bar_chart,
+      :canvas,
+      :gauge,
+      :line_chart,
+      :timeline,
+      # Layout & Structure (3)
+      :column,
+      :row,
+      :stack,
+      # Container (1)
+      :window
     ]
   end
 

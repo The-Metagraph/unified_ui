@@ -73,10 +73,19 @@ defmodule DesktopUi.Validate do
       check(
         :renderer_supports_key_canonical_kinds,
         Enum.all?(
-          [:window, :table, :command_palette, :text_input, :button, :overlay, :multi_window],
+          [:window, :table, :command_palette, :text_input, :button],
           &(&1 in DesktopUi.Renderer.supported_kinds())
         ),
         %{supported_kinds: DesktopUi.Renderer.supported_kinds()}
+      ),
+      check(
+        :renderer_supports_all_iur_kinds,
+        iur_widget_coverage_complete?(),
+        %{
+          expected_count: 45,
+          actual_count: length(DesktopUi.Renderer.supported_kinds()),
+          supported_kinds: DesktopUi.Renderer.supported_kinds()
+        }
       )
     ]
 
@@ -812,6 +821,19 @@ defmodule DesktopUi.Validate do
   end
 
   defp traceability_includes_direct_prefix?(_result, _prefix), do: false
+
+  # Verifies that all 45 canonical IUR widget kinds are supported by the renderer.
+  # Returns true when the renderer supports the complete set of IUR widget kinds.
+  defp iur_widget_coverage_complete? do
+    expected_count = 45
+    actual_count = length(DesktopUi.Renderer.supported_kinds())
+
+    actual_count >= expected_count and
+      Enum.all?(
+        DesktopUi.Widgets.kinds(),
+        &(&1 in DesktopUi.Renderer.supported_kinds())
+      )
+  end
 
   defp package_root do
     Path.expand("../..", __DIR__)

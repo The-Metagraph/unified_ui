@@ -89,8 +89,11 @@ typedef struct {
   int current_index;
   int selected_index;
   int value;
+  int min_value;
   int max_value;
   int content_length;
+  int dismissible;
+  int paused;
 } dui_draw;
 
 typedef struct {
@@ -359,12 +362,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
   for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "--probe") == 0) {
       print_probe();
-      return SDL_APP_SUCCESS;
+      exit(0);
     }
 
     if (strcmp(argv[i], "--version") == 0) {
       printf("%d.%d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
-      return SDL_APP_SUCCESS;
+      exit(0);
     }
 
     if (strcmp(argv[i], "--frame-script") == 0 && i + 1 < argc) {
@@ -938,7 +941,7 @@ static void activate_draw(dui_app *app, dui_draw *draw) {
     app->interaction_summary
         .last_submit_widget_id[sizeof(app->interaction_summary.last_submit_widget_id) - 1] = '\0';
   } else if (strcmp(draw->kind, "button") == 0 || strcmp(draw->kind, "command") == 0 ||
-             strcmp(draw->kind, "window_command") == 0) {
+             strcmp(draw->kind, "window_command") == 0 || strcmp(draw->kind, "link") == 0) {
     app->interaction_summary.command_activations++;
     strncpy(app->interaction_summary.last_command_widget_id, draw->widget_id,
             sizeof(app->interaction_summary.last_command_widget_id) - 1);
@@ -1861,6 +1864,189 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
     return;
   }
 
+  if (strcmp(draw->draw_kind, "numeric_input_control") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255),
+                       draw->focused ? named_color("focus_ring", 255)
+                                     : named_color("muted", 210),
+                       draw->border, draw->focused, draw->disabled);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 48.0f, rect.h - 18.0f},
+                      draw->value != 0 ? text : muted, 0);
+
+    SDL_FRect minus_rect = {rect.x + rect.w - 34.0f, rect.y + 8.0f, 12.0f, rect.h - 16.0f};
+    SDL_FRect plus_rect = {rect.x + rect.w - 18.0f, rect.y + 8.0f, 14.0f, rect.h - 16.0f};
+
+    fill_rect(renderer, minus_rect, named_color("surface", 235));
+    stroke_rect(renderer, minus_rect, named_color("content", 200));
+    use_color(renderer, named_color("content", 220));
+    SDL_RenderLine(renderer, minus_rect.x + 3.0f, minus_rect.y + minus_rect.h / 2.0f,
+                   minus_rect.x + minus_rect.w - 3.0f, minus_rect.y + minus_rect.h / 2.0f);
+
+    fill_rect(renderer, plus_rect, named_color("surface", 235));
+    stroke_rect(renderer, plus_rect, named_color("content", 200));
+    use_color(renderer, named_color("content", 220));
+    SDL_RenderLine(renderer, plus_rect.x + 2.0f, plus_rect.y + plus_rect.h / 2.0f,
+                   plus_rect.x + plus_rect.w - 2.0f, plus_rect.y + plus_rect.h / 2.0f);
+    SDL_RenderLine(renderer, plus_rect.x + plus_rect.w / 2.0f, plus_rect.y + 3.0f,
+                   plus_rect.x + plus_rect.w / 2.0f, plus_rect.y + plus_rect.h - 3.0f);
+
+    if (draw->focused) {
+      fill_rect(renderer,
+                (SDL_FRect){rect.x + rect.w - 16.0f, rect.y + 10.0f, 2.0f, rect.h - 20.0f},
+                named_color("focus_ring", 255));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "slider_control") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 235),
+                       draw->focused ? named_color("focus_ring", 255) : named_color("content", 200),
+                       draw->border, draw->focused, draw->disabled);
+
+    float track_padding = 8.0f;
+    SDL_FRect track = {rect.x + track_padding, rect.y + rect.h / 2.0f - 2.0f,
+                       rect.w - track_padding * 2.0f, 4.0f};
+    fill_rect(renderer, track, named_color("muted", 160));
+
+    int min_val = draw->min_value > 0 ? draw->min_value : 0;
+    int max_val = draw->max_value > 0 ? draw->max_value : 100;
+    float normalized = (float)(draw->value - min_val) / (float)(max_val - min_val);
+    float thumb_x = track.x + normalized * track.w;
+    float thumb_y = rect.y + rect.h / 2.0f;
+    SDL_FRect thumb = {thumb_x - 8.0f, thumb_y - 8.0f, 16.0f, 16.0f};
+
+    fill_rect(renderer, thumb, draw->focused ? named_color("accent", 240) : named_color("accent", 220));
+
+    if (draw->content_length > 0) {
+      draw_text_content(app, renderer, draw,
+                        (SDL_FRect){rect.x + 8.0f, rect.y + 6.0f, rect.w - 16.0f, 14.0f},
+                        named_color("muted", 220), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "date_input_control") == 0 ||
+      strcmp(draw->draw_kind, "time_input_control") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255),
+                       draw->focused ? named_color("focus_ring", 255) : named_color("muted", 210),
+                       draw->border, draw->focused, draw->disabled);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 48.0f, rect.h - 18.0f},
+                      draw->content_length > 0 ? text : muted, 0);
+
+    SDL_FRect picker_rect = {rect.x + rect.w - 32.0f, rect.y + 8.0f, 22.0f, rect.h - 16.0f};
+    fill_rect(renderer, picker_rect, named_color("surface", 235));
+    use_color(renderer, named_color("content", 200));
+
+    for (int i = 0; i < 3; i++) {
+      float dot_x = picker_rect.x + 5.0f + i * 6.0f;
+      float dot_y = picker_rect.y + picker_rect.h / 2.0f;
+      SDL_RenderLine(renderer, dot_x, dot_y - 2.0f, dot_x, dot_y + 2.0f);
+    }
+
+    if (draw->focused) {
+      fill_rect(renderer,
+                (SDL_FRect){rect.x + rect.w - 16.0f, rect.y + 10.0f, 2.0f, rect.h - 20.0f},
+                named_color("focus_ring", 255));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "file_input_control") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255),
+                       draw->focused ? named_color("focus_ring", 255) : named_color("muted", 210),
+                       draw->border, draw->focused, draw->disabled);
+
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 90.0f, rect.h - 18.0f},
+                      draw->content_length > 0 ? text : muted, 0);
+
+    SDL_FRect browse_rect = {rect.x + rect.w - 76.0f, rect.y + 8.0f, 68.0f, rect.h - 16.0f};
+    fill_rect(renderer, browse_rect, named_color("surface", 235));
+    stroke_rect(renderer, browse_rect, named_color("content", 200));
+    use_color(renderer, named_color("content", 230));
+
+    if (draw->focused) {
+      fill_rect(renderer,
+                (SDL_FRect){rect.x + rect.w - 16.0f, rect.y + 10.0f, 2.0f, rect.h - 20.0f},
+                named_color("focus_ring", 255));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "pick_list_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255),
+                       draw->focused ? named_color("focus_ring", 255) : named_color("muted", 210),
+                       draw->border, draw->focused, draw->disabled);
+
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 48.0f, rect.h - 18.0f},
+                      draw->content_length > 0 ? text : muted, 0);
+
+    SDL_FRect dropdown_rect = {rect.x + rect.w - 32.0f, rect.y + 10.0f, 22.0f, rect.h - 20.0f};
+    use_color(renderer, draw->focused ? named_color("accent", 220) : named_color("content", 200));
+
+    float cx = dropdown_rect.x + dropdown_rect.w / 2.0f;
+    float cy = dropdown_rect.y + dropdown_rect.h / 2.0f;
+    SDL_RenderLine(renderer, cx - 4.0f, cy - 2.0f, cx + 4.0f, cy - 2.0f);
+    SDL_RenderLine(renderer, cx + 4.0f, cy - 2.0f, cx, cy + 3.0f);
+    SDL_RenderLine(renderer, cx, cy + 3.0f, cx - 4.0f, cy - 2.0f);
+
+    if (draw->focused) {
+      fill_rect(renderer,
+                (SDL_FRect){rect.x + rect.w - 16.0f, rect.y + 10.0f, 2.0f, rect.h - 20.0f},
+                named_color("focus_ring", 255));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "radio_group_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("content", 200),
+                       draw->border, draw->focused, draw->disabled);
+
+    int option_count = draw->item_count > 0 ? draw->item_count : 3;
+    float option_height = (rect.h - 16.0f) / (float)option_count;
+
+    for (int i = 0; i < option_count; i++) {
+      SDL_FRect radio_rect = {rect.x + 10.0f, rect.y + 8.0f + i * option_height, 18.0f, 18.0f};
+      stroke_rect(renderer, radio_rect, named_color("content", 220));
+
+      if (i == draw->selected_index) {
+        fill_inset_rect(renderer, radio_rect, 3.0f, named_color("accent", 240));
+      }
+
+      SDL_FRect label_rect = {rect.x + 38.0f, rect.y + 8.0f + i * option_height,
+                              rect.w - 48.0f, option_height};
+      draw_text_bands(renderer, label_rect, 15, named_color("content", 230), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "select_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255),
+                       draw->focused ? named_color("focus_ring", 255) : named_color("muted", 210),
+                       draw->border, draw->focused, draw->disabled);
+    draw_text_content(app, renderer, draw,
+                      (SDL_FRect){rect.x + 12.0f, rect.y + 10.0f, rect.w - 48.0f, rect.h - 18.0f},
+                      text, 0);
+
+    SDL_FRect dropdown_rect = {rect.x + rect.w - 32.0f, rect.y + 10.0f, 22.0f, rect.h - 20.0f};
+    use_color(renderer, draw->focused ? named_color("accent", 220) : named_color("content", 200));
+
+    float cx = dropdown_rect.x + dropdown_rect.w / 2.0f;
+    float cy = dropdown_rect.y + dropdown_rect.h / 2.0f;
+    SDL_RenderLine(renderer, cx - 4.0f, cy - 2.0f, cx + 4.0f, cy - 2.0f);
+    SDL_RenderLine(renderer, cx + 4.0f, cy - 2.0f, cx, cy + 3.0f);
+    SDL_RenderLine(renderer, cx, cy + 3.0f, cx - 4.0f, cy - 2.0f);
+
+    if (draw->focused) {
+      fill_rect(renderer,
+                (SDL_FRect){rect.x + rect.w - 16.0f, rect.y + 10.0f, 2.0f, rect.h - 20.0f},
+                named_color("focus_ring", 255));
+    }
+    return;
+  }
+
   if (strcmp(draw->draw_kind, "tabs_surface") == 0) {
     draw_surface_shell(renderer, rect, named_color("surface", 210), named_color("content", 180),
                        draw->border, 0, 0);
@@ -1892,6 +2078,179 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
                        draw->border, 0, 0);
     draw_item_rows(renderer, rect, draw->row_count, -1, -1, named_color("surface", 180),
                    named_color("selection", 220));
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "tree_view_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    int item_count = draw->item_count > 0 ? draw->item_count : 3;
+    float row_height = 28.0f;
+    float indent = 20.0f;
+
+    for (int i = 0; i < item_count && (i * row_height) < (rect.h - 16.0f); i++) {
+      int depth = (i % 3);
+      float x = rect.x + 8.0f + depth * indent;
+      float y = rect.y + 8.0f + i * row_height;
+
+      SDL_FRect expand_rect = {x, y + 4.0f, 12.0f, 12.0f};
+      stroke_rect(renderer, expand_rect, named_color("content", 200));
+      SDL_RenderLine(renderer, expand_rect.x + 3.0f, expand_rect.y + expand_rect.h / 2.0f,
+                     expand_rect.x + expand_rect.w - 3.0f, expand_rect.y + expand_rect.h / 2.0f);
+
+      if (i < 2) {
+        SDL_RenderLine(renderer, expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + 4.0f,
+                       expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + expand_rect.h - 4.0f);
+      }
+
+      SDL_FRect item_rect = {x + 18.0f, y, rect.w - x - rect.x - 24.0f, row_height};
+      draw_text_bands(renderer, item_rect, 12, named_color("content", 230), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "stat_block") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    SDL_FRect value_rect = {rect.x + 12.0f, rect.y + 12.0f, rect.w - 24.0f, rect.h * 0.55f};
+
+    if (draw->value > 0 || draw->content_length > 0) {
+      use_color(renderer, named_color("accent", 240));
+      draw_text_bands(renderer, value_rect, 8, named_color("accent", 240), 1);
+    } else {
+      draw_text_bands(renderer, value_rect, 8, named_color("muted", 200), 1);
+    }
+
+    SDL_FRect label_rect = {rect.x + 12.0f, rect.y + rect.h * 0.62f, rect.w - 24.0f, rect.h * 0.28f};
+    draw_text_bands(renderer, label_rect, 12, named_color("muted", 220), 0);
+
+    if (draw->selected || draw->active) {
+      int trend = draw->value > 0 ? 1 : (draw->value < 0 ? -1 : 0);
+      SDL_FRect trend_rect = {rect.x + rect.w - 28.0f, rect.y + 12.0f, 16.0f, 16.0f};
+
+      if (trend > 0) {
+        use_color(renderer, named_color("success", 220));
+        SDL_RenderLine(renderer, trend_rect.x + 4.0f, trend_rect.y + trend_rect.h - 4.0f,
+                       trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + 4.0f);
+        SDL_RenderLine(renderer, trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + 4.0f,
+                       trend_rect.x + trend_rect.w - 4.0f, trend_rect.y + trend_rect.h - 4.0f);
+      } else if (trend < 0) {
+        use_color(renderer, named_color("error", 220));
+        SDL_RenderLine(renderer, trend_rect.x + 4.0f, trend_rect.y + 4.0f,
+                       trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + trend_rect.h - 4.0f);
+        SDL_RenderLine(renderer, trend_rect.x + trend_rect.w / 2.0f, trend_rect.y + trend_rect.h - 4.0f,
+                       trend_rect.x + trend_rect.w - 4.0f, trend_rect.y + 4.0f);
+      }
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "key_value_block") == 0) {
+    float mid_x = rect.x + rect.w * 0.45f;
+    SDL_FRect key_rect = {rect.x + 12.0f, rect.y + 8.0f, mid_x - rect.x - 16.0f, rect.h - 16.0f};
+    SDL_FRect value_rect = {mid_x + 4.0f, rect.y + 8.0f, rect.w - (mid_x - rect.x) - 16.0f, rect.h - 16.0f};
+
+    draw_text_bands(renderer, key_rect, 10, named_color("muted", 220), 0);
+    draw_text_bands(renderer, value_rect, 15, named_color("content", 240), 0);
+
+    if (draw->focused) {
+      stroke_rect(renderer, (SDL_FRect){rect.x + 4.0f, rect.y + 4.0f, rect.w - 8.0f, rect.h - 8.0f},
+                   named_color("focus_ring", 255));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "info_list_block") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 235), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    int item_count = draw->item_count > 0 ? draw->item_count : 2;
+    float row_height = 24.0f;
+
+    for (int i = 0; i < item_count && (i * row_height) < (rect.h - 8.0f); i++) {
+      float y = rect.y + 8.0f + i * row_height;
+
+      SDL_FRect icon_rect = {rect.x + 10.0f, y + 2.0f, 16.0f, 16.0f};
+      fill_rect(renderer, icon_rect, named_color("accent", 210));
+
+      SDL_FRect item_rect = {rect.x + 34.0f, y, rect.w - 44.0f, row_height};
+      draw_text_bands(renderer, item_rect, 15, named_color("content", 230), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "status_block") == 0) {
+    dui_color status_color = named_color("muted", 220);
+
+    if (strcmp(draw->semantic_role, "success") == 0) {
+      status_color = named_color("success", 220);
+    } else if (strcmp(draw->semantic_role, "warning") == 0) {
+      status_color = named_color("warning", 220);
+    } else if (strcmp(draw->semantic_role, "error") == 0) {
+      status_color = named_color("error", 220);
+    } else if (strcmp(draw->semantic_role, "info") == 0) {
+      status_color = named_color("info", 220);
+    }
+
+    SDL_FRect icon_rect = {rect.x + 8.0f, rect.y + 8.0f, 16.0f, 16.0f};
+    fill_rect(renderer, icon_rect, status_color);
+
+    SDL_FRect text_rect = {rect.x + 32.0f, rect.y + 6.0f, rect.w - 40.0f, rect.h - 12.0f};
+    draw_text_bands(renderer, text_rect, 15, named_color("content", 230), 0);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "progress_block") == 0) {
+    int value = draw->value > 0 ? draw->value : 0;
+    int max_value = draw->max_value > 0 ? draw->max_value : 100;
+
+    if (draw->loading || value < 0) {
+      int dash_count = 8;
+      float dash_width = rect.w / (float)dash_count;
+
+      for (int i = 0; i < dash_count; i++) {
+        SDL_FRect dash = {rect.x + i * dash_width, rect.y, dash_width - 4.0f, rect.h};
+        fill_rect(renderer, dash, named_color("muted", (160 + (i % 2) * 40) % 255));
+      }
+    } else {
+      float normalized = (float)value / (float)max_value;
+      float fill_width = rect.w * normalized;
+
+      fill_rect(renderer, rect, named_color("muted", 160));
+      fill_rect(renderer, (SDL_FRect){rect.x, rect.y, fill_width, rect.h}, named_color("accent", 220));
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "inline_feedback_surface") == 0) {
+    dui_color feedback_color = named_color("surface", 240);
+
+    if (strcmp(draw->semantic_role, "success") == 0) {
+      feedback_color = named_color("success", 240);
+    } else if (strcmp(draw->semantic_role, "warning") == 0) {
+      feedback_color = named_color("warning", 240);
+    } else if (strcmp(draw->semantic_role, "error") == 0) {
+      feedback_color = named_color("error", 240);
+    } else if (strcmp(draw->semantic_role, "info") == 0) {
+      feedback_color = named_color("info", 240);
+    }
+
+    fill_rect(renderer, rect, feedback_color);
+    stroke_rect(renderer, rect, named_color("content", 200));
+
+    if (draw->dismissible) {
+      SDL_FRect close_rect = {rect.x + rect.w - 20.0f, rect.y + 6.0f, 14.0f, 14.0f};
+      use_color(renderer, named_color("content", 200));
+      SDL_RenderLine(renderer, close_rect.x + 3.0f, close_rect.y + 3.0f,
+                     close_rect.x + close_rect.w - 3.0f, close_rect.y + close_rect.h - 3.0f);
+      SDL_RenderLine(renderer, close_rect.x + close_rect.w - 3.0f, close_rect.y + 3.0f,
+                     close_rect.x + 3.0f, close_rect.y + close_rect.h - 3.0f);
+    }
+
+    SDL_FRect text_rect = {rect.x + 12.0f, rect.y + 8.0f, rect.w - 44.0f, rect.h - 16.0f};
+    draw_text_bands(renderer, text_rect, 20, named_color("content", 240), 0);
     return;
   }
 
@@ -1942,10 +2301,142 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
     return;
   }
 
+  if (strcmp(draw->draw_kind, "stream_widget_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255), named_color("muted", 180),
+                       draw->border, 0, 0);
+
+    int row_count = draw->row_count > 0 ? draw->row_count : 10;
+    float row_height = 18.0f;
+    float visible_rows = (rect.h - 16.0f) / row_height;
+
+    for (int i = 0; i < (int)visible_rows && i < row_count; i++) {
+      float y = rect.y + 8.0f + i * row_height;
+      SDL_FRect row_rect = {rect.x + 10.0f, y, rect.w - 20.0f, row_height - 2.0f};
+
+      dui_color row_color = named_color("content", 230);
+      if (draw->loading || i == (row_count - 1)) {
+        row_color = named_color("muted", 200);
+      }
+
+      draw_text_bands(renderer, row_rect, 12, row_color, 0);
+    }
+
+    if (draw->paused) {
+      SDL_FRect pause_indicator = {rect.x + rect.w - 24.0f, rect.y + rect.h - 20.0f, 16.0f, 16.0f};
+      fill_rect(renderer, pause_indicator, named_color("warning", 220));
+      SDL_RenderLine(renderer, pause_indicator.x + 4.0f, pause_indicator.y + 8.0f,
+                     pause_indicator.x + pause_indicator.w - 4.0f, pause_indicator.y + 8.0f);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "supervision_tree_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    int node_count = draw->item_count > 0 ? draw->item_count : 4;
+    float row_height = 32.0f;
+
+    for (int i = 0; i < node_count && (i * row_height) < (rect.h - 16.0f); i++) {
+      int depth = (i % 4);
+      float x = rect.x + 12.0f + depth * 20.0f;
+      float y = rect.y + 8.0f + i * row_height;
+
+      dui_color state_color = named_color("success", 220);
+      if (i % 4 == 1) state_color = named_color("warning", 220);
+      else if (i % 4 == 2) state_color = named_color("error", 220);
+      else if (i % 4 == 3) state_color = named_color("muted", 200);
+
+      SDL_FRect state_rect = {x, y + 6.0f, 10.0f, 10.0f};
+      fill_rect(renderer, state_rect, state_color);
+
+      SDL_FRect expand_rect = {x + 16.0f, y + 6.0f, 12.0f, 12.0f};
+      stroke_rect(renderer, expand_rect, named_color("content", 200));
+      SDL_RenderLine(renderer, expand_rect.x + 3.0f, expand_rect.y + expand_rect.h / 2.0f,
+                     expand_rect.x + expand_rect.w - 3.0f, expand_rect.y + expand_rect.h / 2.0f);
+      if (i < 2) {
+        SDL_RenderLine(renderer, expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + 4.0f,
+                       expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + expand_rect.h - 4.0f);
+      }
+
+      SDL_FRect label_rect = {x + 34.0f, y, rect.w - x - rect.x - 44.0f, row_height};
+      draw_text_bands(renderer, label_rect, 16, named_color("content", 230), 0);
+    }
+    return;
+  }
+
   if (strcmp(draw->draw_kind, "positioned_fragment") == 0) {
     draw_surface_shell(renderer, rect, named_color("accent", 140), named_color("content", 220),
                        draw->border, 0, 0);
     draw_text_content(app, renderer, draw, rect, named_color("content", 235), 0);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "badge_block") == 0) {
+    dui_color badge_bg = named_color("accent", 220);
+    dui_color badge_fg = named_color("canvas", 255);
+
+    if (strcmp(draw->variant, "success") == 0) {
+      badge_bg = named_color("success", 200);
+    } else if (strcmp(draw->variant, "warning") == 0) {
+      badge_bg = named_color("warning", 220);
+    } else if (strcmp(draw->variant, "error") == 0) {
+      badge_bg = named_color("error", 200);
+    } else if (strcmp(draw->variant, "info") == 0) {
+      badge_bg = named_color("info", 210);
+    }
+
+    float radius = rect.h * 0.4f;
+    fill_rect(renderer, rect, badge_bg);
+    draw_text_content(app, renderer, draw, rect, badge_fg, 0);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "hero_block") == 0) {
+    fill_rect(renderer, rect, named_color("accent", 240));
+    draw_text_content(app, renderer, draw,
+                     (SDL_FRect){rect.x + 32.0f, rect.y + 24.0f, rect.w - 64.0f, 48.0f},
+                     named_color("canvas", 255), 1);
+
+    if (draw->content_length > 0 && strlen(draw->attrs) > 0) {
+      draw_text_content(app, renderer, draw,
+                       (SDL_FRect){rect.x + 32.0f, rect.y + 80.0f, rect.w - 64.0f, 24.0f},
+                       named_color("canvas", 230), 0);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "link_control") == 0) {
+    dui_color link_color = draw->focused ? named_color("accent", 240) : named_color("accent", 220);
+    if (draw->active) {
+      link_color = named_color("accent", 180);
+    }
+
+    draw_text_content(app, renderer, draw, rect, link_color, 0);
+
+    float underline_y = rect.y + rect.h - 4.0f;
+    SDL_RenderLine(renderer, rect.x, underline_y, rect.x + rect.w, underline_y);
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "separator_line") == 0) {
+    dui_color sep_color = named_color("muted", 180);
+
+    if (strcmp(draw->variant, "strong") == 0) {
+      sep_color = named_color("content", 200);
+    }
+
+    if (draw->width > draw->height) {
+      float mid_y = rect.y + rect.h / 2.0f;
+      SDL_RenderLine(renderer, rect.x, mid_y, rect.x + rect.w, mid_y);
+    } else {
+      float mid_x = rect.x + rect.w / 2.0f;
+      SDL_RenderLine(renderer, mid_x, rect.y, mid_x, rect.y + rect.h);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "spacer_gap") == 0) {
     return;
   }
 

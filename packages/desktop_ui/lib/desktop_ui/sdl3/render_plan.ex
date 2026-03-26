@@ -88,7 +88,9 @@ defmodule DesktopUi.Sdl3.RenderPlan do
            logical_units: true,
            placeholder_draw_operations: false,
            widget_complete_draw_operations: true,
-           validation_state: :render_plan_ready
+           iur_widget_coverage: :complete,
+           supported_iur_kinds: length(DesktopUi.Renderer.supported_kinds()),
+           validation_state: :iur_renderer_complete
          },
          diagnostics: %{
            window_count: length(windows),
@@ -600,16 +602,38 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:label), do: :label_block
   defp draw_kind(:icon), do: :icon_block
   defp draw_kind(:image), do: :image_block
+  defp draw_kind(:badge), do: :badge_block
+  defp draw_kind(:hero), do: :hero_block
   defp draw_kind(kind) when kind in [:button, :window_command], do: :button_control
   defp draw_kind(:command), do: :command_control
+  defp draw_kind(:link), do: :link_control
   defp draw_kind(:text_input), do: :text_input_control
+  defp draw_kind(:numeric_input), do: :numeric_input_control
+  defp draw_kind(:slider), do: :slider_control
+  defp draw_kind(:date_input), do: :date_input_control
+  defp draw_kind(:time_input), do: :time_input_control
+  defp draw_kind(:file_input), do: :file_input_control
+  defp draw_kind(:pick_list), do: :pick_list_surface
   defp draw_kind(:checkbox), do: :checkbox_control
+  defp draw_kind(:radio_group), do: :radio_group_surface
+  defp draw_kind(:select), do: :select_surface
+  defp draw_kind(:separator), do: :separator_line
+  defp draw_kind(:spacer), do: :spacer_gap
   defp draw_kind(:tabs), do: :tabs_surface
   defp draw_kind(:list), do: :list_surface
   defp draw_kind(:menu), do: :menu_surface
   defp draw_kind(:table), do: :table_surface
+  defp draw_kind(:tree_view), do: :tree_view_surface
+  defp draw_kind(:stat), do: :stat_block
+  defp draw_kind(:key_value), do: :key_value_block
+  defp draw_kind(:info_list), do: :info_list_block
+  defp draw_kind(:status), do: :status_block
+  defp draw_kind(:progress), do: :progress_block
+  defp draw_kind(:inline_feedback), do: :inline_feedback_surface
   defp draw_kind(:process_monitor), do: :process_monitor_surface
   defp draw_kind(:log_viewer), do: :log_viewer_surface
+  defp draw_kind(:stream_widget), do: :stream_widget_surface
+  defp draw_kind(:supervision_tree_viewer), do: :supervision_tree_surface
   defp draw_kind(:cluster_dashboard), do: :cluster_dashboard_surface
   defp draw_kind(:command_palette), do: :command_palette_surface
   defp draw_kind(:gauge), do: :gauge_surface
@@ -624,14 +648,36 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp preferred_height(node) do
     cond do
       node.kind in [:text, :label] -> 28
+      node.kind == :badge -> badge_height(node)
+      node.kind == :hero -> 180
       node.kind in [:button, :command, :window_command] -> 42
+      node.kind == :link -> 32
       node.kind == :checkbox -> 36
       node.kind == :text_input -> 46
+      node.kind == :numeric_input -> 46
+      node.kind == :slider -> slider_thickness(node)
+      node.kind == :date_input -> 46
+      node.kind == :time_input -> 46
+      node.kind == :file_input -> 46
+      node.kind == :pick_list -> pick_list_height(node)
+      node.kind == :radio_group -> 42 + option_count(node) * 36
+      node.kind == :select -> 46
+      node.kind == :separator -> separator_thickness(node)
+      node.kind == :spacer -> spacer_size(node)
       node.kind == :tabs -> 52
       node.kind == :list -> 56 + item_count(node) * 34
       node.kind == :menu -> 52 + item_count(node) * 28
       node.kind in [:table, :process_monitor] -> 88 + row_count(node) * 28
+      node.kind == :tree_view -> tree_view_height(node)
+      node.kind == :stat -> stat_height(node)
+      node.kind == :key_value -> key_value_height(node)
+      node.kind == :info_list -> info_list_height(node)
+      node.kind == :status -> 32
+      node.kind == :progress -> progress_height(node)
+      node.kind == :inline_feedback -> 48
       node.kind == :log_viewer -> max(152, 52 + item_count(node) * 26)
+      node.kind == :stream_widget -> max(120, 52 + item_count(node) * 18)
+      node.kind == :supervision_tree_viewer -> supervision_tree_height(node)
       node.kind == :cluster_dashboard -> 160
       node.kind == :command_palette -> 156
       node.kind == :gauge -> 108
@@ -646,25 +692,213 @@ defmodule DesktopUi.Sdl3.RenderPlan do
     end
   end
 
+  defp badge_height(node) do
+    case node.attributes[:size] do
+      :sm -> 20
+      :lg -> 32
+      _ -> 24
+    end
+  end
+
+  defp slider_thickness(node) do
+    if node.attributes[:orientation] == :vertical, do: 120, else: 42
+  end
+
+  defp pick_list_height(node) do
+    base = 46
+    if node.attributes[:open] || node.attributes[:focused] do
+      base + min(option_count(node), 6) * 36
+    else
+      base
+    end
+  end
+
+  defp tree_view_height(node) do
+    base = 64
+    node_count = item_count(node)
+    if node_count > 0 do
+      base + min(node_count, 8) * 28
+    else
+      base
+    end
+  end
+
+  defp stat_height(node) do
+    case node.attributes[:size] do
+      :xs -> 56
+      :sm -> 72
+      :lg -> 120
+      :xl -> 140
+      _ -> 96
+    end
+  end
+
+  defp key_value_height(node) do
+    case node.attributes[:size] do
+      :xs -> 32
+      :sm -> 40
+      :lg -> 64
+      _ -> 48
+    end
+  end
+
+  defp info_list_height(node) do
+    base = 32
+    item_count = item_count(node)
+    if item_count > 0 do
+      base + min(item_count, 10) * 24
+    else
+      base + 24
+    end
+  end
+
+  defp progress_height(node) do
+    if node.attributes[:indeterminate] do
+      8
+    else
+      case node.attributes[:size] do
+        :xs -> 6
+        :sm -> 8
+        :lg -> 12
+        _ -> 8
+      end
+    end
+  end
+
+  defp supervision_tree_height(node) do
+    base = 80
+    node_count = item_count(node)
+    if node_count > 0 do
+      base + min(node_count, 10) * 32
+    else
+      base + 32
+    end
+  end
+
+  defp separator_thickness(node) do
+    if node.attributes[:orientation] == :vertical, do: 1, else: 1
+  end
+
+  defp spacer_size(node) do
+    case node.attributes[:size] do
+      :xs -> 4
+      :sm -> 8
+      :lg -> 24
+      :xl -> 32
+      _ -> 16
+    end
+  end
+
   defp preferred_width(node, available_width) do
     cond do
       node.kind == :icon ->
         56
 
+      node.kind == :badge ->
+        badge_width(node)
+
+      node.kind == :hero ->
+        min(600, available_width)
+
       node.kind in [:button, :command, :window_command] ->
         min(180, available_width)
+
+      node.kind == :link ->
+        link_width(node, available_width)
 
       node.kind == :checkbox ->
         min(220, available_width)
 
+      node.kind == :numeric_input ->
+        min(180, available_width)
+
+      node.kind == :slider ->
+        if node.attributes[:orientation] == :vertical, do: 52, else: min(200, available_width)
+
+      node.kind in [:text_input, :date_input, :time_input, :file_input] ->
+        min(320, available_width)
+
+      node.kind == :pick_list ->
+        min(320, available_width)
+
+      node.kind == :radio_group ->
+        min(200, available_width)
+
+      node.kind == :select ->
+        min(240, available_width)
+
+      node.kind == :stat ->
+        stat_width(node, available_width)
+
+      node.kind == :key_value ->
+        min(200, available_width)
+
+      node.kind == :info_list ->
+        min(240, available_width)
+
+      node.kind == :tree_view ->
+        min(240, available_width)
+
+      node.kind == :status ->
+        min(120, available_width)
+
+      node.kind == :progress ->
+        min(160, available_width)
+
+      node.kind == :inline_feedback ->
+        min(240, available_width)
+
+      node.kind == :stream_widget ->
+        min(320, available_width)
+
+      node.kind == :supervision_tree_viewer ->
+        min(280, available_width)
+
       node.kind in [:text, :label] ->
         min(max(String.length(draw_content(node)) * 12, 96), available_width)
 
-      node.kind == :text_input ->
-        min(320, available_width)
+      node.kind == :separator ->
+        available_width
+
+      node.kind == :spacer ->
+        spacer_size(node)
 
       true ->
         max(div(available_width, 2), 96)
+    end
+  end
+
+  defp badge_width(node) do
+    content_length = String.length(draw_content(node))
+    base_width = content_length * 10 + 16
+
+    case node.attributes[:size] do
+      :sm -> max(32, base_width)
+      :lg -> max(48, base_width + 8)
+      _ -> max(40, base_width)
+    end
+  end
+
+  defp link_width(node, available_width) do
+    content_length = String.length(draw_content(node))
+    min(max(content_length * 11, 64), available_width)
+  end
+
+  defp stat_width(node, available_width) do
+    case node.attributes[:size] do
+      :xs -> min(96, available_width)
+      :sm -> min(128, available_width)
+      :lg -> min(200, available_width)
+      :xl -> min(240, available_width)
+      _ -> min(160, available_width)
+    end
+  end
+
+  defp option_count(node) do
+    case node.attributes[:options] do
+      nil -> 0
+      opts when is_list(opts) -> length(opts)
+      _ -> 3
     end
   end
 

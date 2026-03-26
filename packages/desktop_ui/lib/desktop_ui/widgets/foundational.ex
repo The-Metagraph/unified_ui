@@ -8,9 +8,11 @@ defmodule DesktopUi.Widgets.Foundational do
   @spec kinds() :: [atom()]
   def kinds do
     [
+      :badge,
       :button,
       :command,
       :content,
+      :hero,
       :icon,
       :image,
       :label,
@@ -90,6 +92,37 @@ defmodule DesktopUi.Widgets.Foundational do
       metadata: metadata(opts, focusable: false, role: :separator),
       state: state(opts),
       attributes: %{orientation: Keyword.get(opts, :orientation, :horizontal)},
+      styles: styles(opts)
+    )
+  end
+
+  @spec badge(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def badge(id, content, opts \\ []) do
+    Widget.new(:badge,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :badge),
+      state: state(opts),
+      attributes: %{
+        content: content,
+        size: Keyword.get(opts, :size, :md),
+        variant: Keyword.get(opts, :variant, :default)
+      },
+      styles: styles(opts)
+    )
+  end
+
+  @spec hero(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def hero(id, headline, opts \\ []) do
+    Widget.new(:hero,
+      id: id,
+      metadata: metadata(opts, focusable: false, role: :hero),
+      state: state(opts),
+      attributes: %{
+        headline: headline,
+        subheadline: Keyword.get(opts, :subheadline),
+        image: Keyword.get(opts, :image),
+        actions: Keyword.get(opts, :actions, [])
+      },
       styles: styles(opts)
     )
   end

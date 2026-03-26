@@ -36,6 +36,7 @@ The plan aligns to:
 8. [Phase 8 - SDL3 Native Build, Visible Window Runtime, and Backend Selection](./phase-08-sdl3-native-build-visible-window-runtime-and-backend-selection.md): implement the first buildable native SDL3 host workflow, backend selection between compiled and fallback execution, and visible-window presentation for maintained package runs.
 9. [Phase 9 - Platform Build, Packaging, and Compliance Activation](./phase-09-platform-build-packaging-and-compliance-activation.md): implement repeatable target staging and packaging workflows, surface shippability diagnostics, and onboard `desktop_ui` into package-scoped conformance.
 10. [Phase 10 - Widget-Complete SDL3 Rendering and Interactive Native Behavior](./phase-10-widget-complete-sdl3-rendering-and-interactive-native-behavior.md): implement widget-complete native drawing, SDL3-backed text and image realization, and interactive visible-window behavior for maintained desktop flows.
+11. [Phase 11 - IUR Widget Completeness](./phase-11-iur-widget-completeness.md): implement dedicated rendering for all remaining canonical IUR widget kinds, including foundational gaps, form input completeness, data display widgets, feedback widgets, and advanced operational widgets.
 
 ## Supporting Docs
 - [Spec Traceability Manifest](./spec-traceability.json): authoritative machine-readable mapping from applicable requirements into this plan.
