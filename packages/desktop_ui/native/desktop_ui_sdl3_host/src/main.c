@@ -89,8 +89,11 @@ typedef struct {
   int current_index;
   int selected_index;
   int value;
+  int min_value;
   int max_value;
   int content_length;
+  int dismissible;
+  int paused;
 } dui_draw;
 
 typedef struct {
