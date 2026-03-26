@@ -238,8 +238,16 @@ defmodule UnifiedExamples.Shared.Tooling do
 
   defp build_launch_descriptor(loaded, opts) do
     port = Keyword.get(opts, :port, loaded.app.launch_port())
+    runtime = Keyword.get(opts, :runtime)
     argv = ["phx.server"]
-    env = [{"PORT", Integer.to_string(port)}]
+
+    env =
+      [{"PORT", Integer.to_string(port)}] ++
+      case runtime do
+        nil -> []
+        runtime when is_binary(runtime) -> [{"UNIFIED_RUNTIME", runtime}]
+      end
+
     path = loaded.app.launch_path()
     url = "http://127.0.0.1:#{port}#{path}"
 
