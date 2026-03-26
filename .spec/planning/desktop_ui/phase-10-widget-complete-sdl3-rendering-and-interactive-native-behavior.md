@@ -118,16 +118,16 @@ Back to index: [README](./README.md)
       [x] 10.4.1.2 Subtask - Update validation and release-readiness reporting to include widget-complete rendering, native text-image realization, and interactive execution gates.
       [x] 10.4.1.3 Subtask - Document the expected manual-review workflow for maintained examples on SDL3-ready maintainer machines.
 
-  [ ] 10.5 Section - Phase 10 Integration Tests
+  [x] 10.5 Section - Phase 10 Integration Tests
     Validate widget-complete rendering, native resource realization, and
     interactive visible-window behavior end to end while preserving bounded
     fallback behavior on machines without SDL3.
 
-    [ ] 10.5.1 Task - Widget-complete rendering and interaction integration scenarios
+    [x] 10.5.1 Task - Widget-complete rendering and interaction integration scenarios
       Verify maintained examples render and behave natively through the
       compiled SDL3 visible runner while preserving runtime and transport
       meaning.
 
-      [ ] 10.5.1.1 Subtask - Verify maintained foundational, advanced, transport, and styled examples render widget-complete frames with native text and image realization when companion libraries are present.
-      [ ] 10.5.1.2 Subtask - Verify focus, pointer, scrolling, command, and multiwindow interaction flows preserve the same semantic outcomes across compiled-native and fallback host paths.
-      [ ] 10.5.1.3 Subtask - Verify inspection, validation, and run diagnostics report widget-complete native execution accurately and degrade explicitly when SDL3 or companion resources are unavailable.
+      [x] 10.5.1.1 Subtask - Verify maintained foundational, advanced, transport, and styled examples render widget-complete frames with native text and image realization when companion libraries are present.
+      [x] 10.5.1.2 Subtask - Verify focus, pointer, scrolling, command, and multiwindow interaction flows preserve the same semantic outcomes across compiled-native and fallback host paths.
+      [x] 10.5.1.3 Subtask - Verify inspection, validation, and run diagnostics report widget-complete native execution accurately and degrade explicitly when SDL3 or companion resources are unavailable.

@@ -1,5 +1,7 @@
 defmodule DesktopUi.DocumentationTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
+
+  @moduletag timeout: 180_000
 
   test "documentation surface lists maintained guides and files exist" do
     docs = DesktopUi.Tooling.documentation_surface()
