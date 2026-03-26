@@ -7,7 +7,7 @@ defmodule DesktopUi.Runtime.Shutdown do
 
   @spec stop(State.t()) :: {:ok, State.t()} | {:error, Error.t()}
   def stop(%State{} = runtime_state) do
-    if get_in(runtime_state, [:lifecycle, :runtime]) == :ready do
+    if get_in(runtime_state.lifecycle, [:runtime]) == :ready do
       {:ok,
        %{
          runtime_state

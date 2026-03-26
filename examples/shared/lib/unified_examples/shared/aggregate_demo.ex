@@ -235,10 +235,10 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
   end
 
   defp default_port do
-    System.get_env("PORT", "4000")
+    System.get_env("PORT", "5000")
     |> String.to_integer()
   rescue
-    ArgumentError -> 4000
+    ArgumentError -> 5000
   end
 
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)

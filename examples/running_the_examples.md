@@ -18,7 +18,7 @@ mix deps.get
 mix phx.server
 ```
 
-Then open `http://127.0.0.1:4000/`.
+Then open `http://127.0.0.1:5000/`.
 
 Run the aggregate demo app:
 
@@ -105,7 +105,7 @@ but these are common starting points:
 
 ## Ports and URLs
 
-By default, Phoenix serves an example app at `http://127.0.0.1:4000/`.
+By default, Phoenix serves an example app at `http://127.0.0.1:5000/`.
 
 To use a different port:
 

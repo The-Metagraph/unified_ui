@@ -186,6 +186,9 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       kind when kind in [:row, :content] ->
         layout_row(children, inner_bounds, node, source, source_index, inherited_clip)
 
+      :box ->
+        layout_column(children, inner_bounds, node, source, source_index, inherited_clip)
+
       :split_pane ->
         layout_split_pane(children, inner_bounds, source, source_index, inherited_clip)
 
@@ -485,7 +488,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         inset_bounds(bounds, padding + 18, 52, padding + 18, padding + 18)
 
       kind
-      when kind in [:overlay, :viewport, :scroll_region, :content, :column, :row, :split_pane] ->
+      when kind in [:overlay, :viewport, :scroll_region, :content, :column, :row, :split_pane, :box] ->
         inset_bounds(bounds, padding + 12, padding + 12, padding + 12, padding + 12)
 
       :canvas_surface ->
