@@ -362,12 +362,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv) {
   for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "--probe") == 0) {
       print_probe();
-      return SDL_APP_SUCCESS;
+      exit(0);
     }
 
     if (strcmp(argv[i], "--version") == 0) {
       printf("%d.%d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
-      return SDL_APP_SUCCESS;
+      exit(0);
     }
 
     if (strcmp(argv[i], "--frame-script") == 0 && i + 1 < argc) {
