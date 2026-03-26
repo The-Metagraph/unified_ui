@@ -88,7 +88,9 @@ defmodule DesktopUi.Sdl3.RenderPlan do
            logical_units: true,
            placeholder_draw_operations: false,
            widget_complete_draw_operations: true,
-           validation_state: :render_plan_ready
+           iur_widget_coverage: :complete,
+           supported_iur_kinds: length(DesktopUi.Renderer.supported_kinds()),
+           validation_state: :iur_renderer_complete
          },
          diagnostics: %{
            window_count: length(windows),
