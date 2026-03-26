@@ -5,6 +5,11 @@ defmodule Unified.SpecCompliance.CITest do
 
   import SpecComplianceTestSupport
 
+  setup_all do
+    ensure_spec_state!()
+    :ok
+  end
+
   test "detects only packages affected by changed files" do
     root = tmp_root!("ci_changed_packages")
 
@@ -156,5 +161,14 @@ defmodule Unified.SpecCompliance.CITest do
     assert report.summary.warn_failures == 0
     assert Enum.map(report.packages, & &1.package) == ["desktop_ui"]
     assert hd(report.packages).ci_enforcement == "required"
+  end
+
+  defp ensure_spec_state! do
+    state_path = Path.join(File.cwd!(), ".spec/state.json")
+
+    unless File.exists?(state_path) do
+      Mix.Task.reenable("spec.plan")
+      Mix.Task.run("spec.plan")
+    end
   end
 end

@@ -52,6 +52,7 @@ defmodule DesktopUi.Reference do
   def package_reference do
     capabilities = DesktopUi.Sdl3.Capabilities.detect()
     validation_report = DesktopUi.Validate.surface_validation_report()
+    inspection_surface = DesktopUi.Inspection.sdl3_adapter_surface()
 
     %{
       package: DesktopUi,
@@ -84,14 +85,16 @@ defmodule DesktopUi.Reference do
         protocol: DesktopUi.Sdl3.Protocol.contract(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
         frame_script: DesktopUi.Sdl3.FrameScript.contract(),
+        interaction_script: DesktopUi.Sdl3.InteractionScript.contract(),
         visible_runner: DesktopUi.Sdl3.VisibleRunner.contract(),
         renderer: DesktopUi.Sdl3.Renderer.contract(),
         events: DesktopUi.Sdl3.Events.contract(),
         text: DesktopUi.Sdl3.Text.contract(),
         images: DesktopUi.Sdl3.Images.contract(),
         run_execution: DesktopUi.Tooling.run_backend_summary(capabilities),
-        validation_state: DesktopUi.Inspection.sdl3_adapter_surface().validation_state,
-        renderer_completeness: :first_presented_frames
+        manual_review_workflow: DesktopUi.Inspection.manual_review_workflow(),
+        validation_state: inspection_surface.validation_state,
+        renderer_completeness: inspection_surface.renderer_completeness
       },
       build: %{
         contract: DesktopUi.Build.contract(),

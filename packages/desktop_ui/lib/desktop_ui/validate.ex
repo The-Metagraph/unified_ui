@@ -237,6 +237,11 @@ defmodule DesktopUi.Validate do
         %{workflows: DesktopUi.Tooling.workflows()}
       ),
       check(
+        :interactive_native_review_workflow_present,
+        :interactive_native_review in DesktopUi.Tooling.workflows(),
+        %{workflows: DesktopUi.Tooling.workflows()}
+      ),
+      check(
         :mix_task_surface_present,
         Enum.all?(
           [
@@ -256,6 +261,11 @@ defmodule DesktopUi.Validate do
         is_map(run_catalog.execution) and
           is_boolean(run_catalog.execution.visible_runner_ready?) and
           is_boolean(run_catalog.execution.protocol_launch_ready?) and
+          run_catalog.execution.renderer_completeness == :widget_complete_interactive and
+          is_boolean(run_catalog.execution.interactive_visible_execution_ready?) and
+          is_map(run_catalog.execution.manual_review_workflow) and
+          is_atom(run_catalog.execution.text.active_mode) and
+          is_atom(run_catalog.execution.images.active_mode) and
           run_catalog.execution.fallback_backend == :elixir_host and
           is_list(run_catalog.execution.target_packages),
         %{execution: run_catalog.execution}
@@ -308,9 +318,16 @@ defmodule DesktopUi.Validate do
         %{run_execution: run_execution_details(run_execution)}
       ),
       check(
+        :run_execution_reports_interaction_diagnostics,
+        run_execution_interaction_ok?(run_execution),
+        %{run_execution: run_execution_details(run_execution)}
+      ),
+      check(
         :native_resource_support_reported,
         Map.get(text_support, :requests_bounded_when_missing?, false) and
-          Map.get(image_support, :requests_bounded_when_missing?, false),
+          Map.get(image_support, :requests_bounded_when_missing?, false) and
+          is_atom(Map.get(text_support, :active_mode)) and
+          is_atom(Map.get(image_support, :active_mode)),
         %{
           text: text_support,
           images: image_support
@@ -342,6 +359,7 @@ defmodule DesktopUi.Validate do
             DesktopUi.Sdl3.RenderPlan,
             DesktopUi.Sdl3.FrameEncoder,
             DesktopUi.Sdl3.FrameScript,
+            DesktopUi.Sdl3.InteractionScript,
             DesktopUi.Sdl3.VisibleRunner,
             DesktopUi.Sdl3.Renderer,
             DesktopUi.Sdl3.Events,
@@ -392,9 +410,16 @@ defmodule DesktopUi.Validate do
         %{frame_script: adapter_surface.frame_script}
       ),
       check(
+        :interaction_script_present,
+        adapter_surface.validation_state.interaction_script == :interaction_script_ready and
+          adapter_surface.interaction_script.format == :tab_separated_key_values,
+        %{interaction_script: adapter_surface.interaction_script}
+      ),
+      check(
         :visible_runner_present,
         adapter_surface.validation_state.visible_runner == :visible_window_runner_ready and
-          adapter_surface.visible_runner.execution_target == :compiled_visible_window,
+          adapter_surface.visible_runner.execution_target == :compiled_visible_window and
+          adapter_surface.visible_runner.interactive_execution,
         %{visible_runner: adapter_surface.visible_runner}
       ),
       check(
@@ -406,15 +431,25 @@ defmodule DesktopUi.Validate do
       ),
       check(
         :adapter_execution_scope_bounded,
-        adapter_surface.renderer_completeness == :first_presented_frames and
-          adapter_surface.renderer.placeholder_draw_operations_allowed,
+        adapter_surface.renderer_completeness == :widget_complete_interactive and
+          adapter_surface.renderer.widget_complete_draw_operations and
+          adapter_surface.renderer.interactive_visible_execution and
+          not adapter_surface.renderer.placeholder_draw_operations_allowed,
         %{renderer: adapter_surface.renderer, completeness: adapter_surface.renderer_completeness}
       ),
       check(
         :resource_seams_present,
         adapter_surface.validation_state.text == :text_resource_ready and
-          adapter_surface.validation_state.images == :image_resource_ready,
-        %{validation_state: adapter_surface.validation_state}
+          adapter_surface.validation_state.images == :image_resource_ready and
+          is_atom(adapter_surface.text_support.active_mode) and
+          is_atom(adapter_surface.image_support.active_mode) and
+          is_map(adapter_surface.manual_review_workflow),
+        %{
+          validation_state: adapter_surface.validation_state,
+          text_support: adapter_surface.text_support,
+          image_support: adapter_surface.image_support,
+          manual_review_workflow: adapter_surface.manual_review_workflow
+        }
       )
     ]
 
@@ -522,6 +557,8 @@ defmodule DesktopUi.Validate do
       "  artifact validation passing?: #{report.artifact_validation.status == :pass}",
       "  SDL3 adapter surface passing?: #{report.sdl3_adapter_surface.status == :pass}",
       "  host execution surface passing?: #{report.host_execution_surface.status == :pass}",
+      "  widget-complete native rendering?: #{report.sdl3_adapter_surface.status == :pass}",
+      "  interactive native execution?: #{report.host_execution_surface.status == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
       "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
       "  traceability alignment passing?: #{report.traceability_alignment.status == :pass}",
@@ -556,12 +593,12 @@ defmodule DesktopUi.Validate do
       ),
       gate(
         :sdl3_adapter_surface,
-        "Keep the SDL3 adapter seam explicit, discoverable, and bounded while native rendering remains host-backed and placeholder-drawn where necessary.",
+        "Keep the SDL3 adapter seam explicit, discoverable, and aligned with widget-complete interactive SDL3 rendering.",
         :sdl3_adapter_surface
       ),
       gate(
         :host_execution_surface,
-        "Keep the host-backed execution path runnable, inspectable, and event/resource aware.",
+        "Keep the host-backed execution path runnable, inspectable, event/resource aware, and interaction-diagnostic rich.",
         :host_execution_surface
       ),
       gate(
@@ -719,6 +756,24 @@ defmodule DesktopUi.Validate do
        do: true
 
   defp run_execution_ok?(_result), do: false
+
+  defp run_execution_interaction_ok?(
+         {:ok, %{backend: :compiled_sdl3_host, details: %{interaction_summary: summary}}}
+       )
+       when is_map(summary),
+       do:
+         is_integer(Map.get(summary, "total_events")) and
+           is_integer(Map.get(summary, "focus_changes")) and
+           is_integer(Map.get(summary, "window_activations"))
+
+  defp run_execution_interaction_ok?(
+         {:ok,
+          %{backend: :elixir_host, fallback_used?: true, details: %{frame: %{payload: payload}}}}
+       )
+       when is_map(payload),
+       do: true
+
+  defp run_execution_interaction_ok?(_result), do: false
 
   defp run_execution_details({:ok, execution}), do: execution
   defp run_execution_details({:error, reason}), do: %{error: reason}

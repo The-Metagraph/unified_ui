@@ -9,7 +9,17 @@ defmodule DesktopUi.Sdl3.FrameEncoder do
   def contract do
     %{
       payload_family: :frame,
-      preserves: [:logical_bounds, :clip_regions, :transient_layers, :resolved_styles],
+      preserves: [
+        :logical_bounds,
+        :clip_regions,
+        :transient_layers,
+        :resolved_styles,
+        :resource_descriptors,
+        :interaction_contract,
+        :visual_state,
+        :metrics,
+        :clip_bounds
+      ],
       host_drawing_independent: true,
       first_backend: :sdl_renderer
     }
@@ -36,13 +46,15 @@ defmodule DesktopUi.Sdl3.FrameEncoder do
          },
          clip_regions_preserved: true,
          transient_layers_preserved: true,
+         widget_complete_draw_operations: plan.presentation.widget_complete_draw_operations,
          window_count: length(windows)
        },
        diagnostics: %{
          window_count: length(windows),
          draw_operation_count: Enum.sum(Enum.map(windows, &length(&1.draw_operations))),
          clip_region_count: Enum.sum(Enum.map(windows, &length(&1.clip_regions))),
-         render_plan_validation_state: plan.presentation.validation_state
+         render_plan_validation_state: plan.presentation.validation_state,
+         draw_kind_counts: plan.diagnostics.draw_kind_counts
        },
        validation_state: :frame_payload_ready
      }}
@@ -92,8 +104,14 @@ defmodule DesktopUi.Sdl3.FrameEncoder do
       draw_kind: operation.draw_kind,
       logical_bounds: operation.logical_bounds,
       clip?: operation.clip?,
+      clip_bounds: operation.clip_bounds,
       layer_role: operation.layer_role,
+      semantic_role: operation.semantic_role,
       resolved_styles: operation.resolved_styles,
+      resource: Map.get(operation, :resource, %{}),
+      interaction: Map.get(operation, :interaction, %{}),
+      visual_state: operation.visual_state,
+      metrics: operation.metrics,
       content: operation.content
     }
   end

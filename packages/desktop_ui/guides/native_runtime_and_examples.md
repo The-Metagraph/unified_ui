@@ -54,8 +54,19 @@ can run through the compiled visible-window host:
 - `mix desktop_ui.build_host`
 - `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000`
 - `mix desktop_ui.run canonical_foundational --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run native_advanced_operations --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run native_transport_review --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run native_styled_review --backend compiled --linger-ms 3000`
+
+That visible review loop is expected to show:
+
+- widget-complete native rendering instead of placeholder-only geometry
+- native text and image realization when SDL3 companion libraries are present
+- keyboard and pointer interaction with focus, command, selection, and scroll behavior
+- bounded dialog, context-menu, and multiwindow transitions
 
 When SDL3 or its companion libraries are missing, `desktop_ui` keeps the run
 path reviewable by falling back explicitly to the Elixir-host protocol path.
 That fallback still exercises boot, frame, transport, and bounded resource
-contracts, but it does not overstate native visible completeness.
+contracts, but it does not overstate native visible completeness or pretend the
+compiled interactive renderer is active.

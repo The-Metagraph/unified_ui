@@ -594,7 +594,10 @@
         "1.5.2.2",
         "2.2.1",
         "5.1.1",
-        "5.3.1"
+        "5.3.1",
+        "10.1.1",
+        "10.1.2",
+        "10.2.2"
       ],
       "ownership_note": "Direct SDL_Renderer-first backend obligation."
     },
@@ -657,6 +660,21 @@
       "ownership_note": "Direct SDL3 adapter-seam obligation before full renderer completeness."
     },
     {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "10.1.1"
+      ],
+      "supporting_plan_refs": [
+        "10.1.2",
+        "10.2.2",
+        "10.4.1",
+        "10.5.1"
+      ],
+      "ownership_note": "Direct widget-complete visible SDL3 rendering obligation."
+    },
+    {
       "requirement_id": "desktop_ui.sdl3_runtime_rendering.native_window_mapping",
       "scope": "direct",
       "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
@@ -694,9 +712,24 @@
       "supporting_plan_refs": [
         "1.5.3.2",
         "5.3.1",
-        "6.3.1"
+        "6.3.1",
+        "10.2.1"
       ],
       "ownership_note": "Direct SDL companion-library integration obligation for text and images."
+    },
+    {
+      "requirement_id": "desktop_ui.sdl3_runtime_rendering.native_resource_realization",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md",
+      "primary_plan_refs": [
+        "10.2.1"
+      ],
+      "supporting_plan_refs": [
+        "10.2.2",
+        "10.4.1",
+        "10.5.1"
+      ],
+      "ownership_note": "Direct native text and image realization obligation for the compiled visible runner."
     },
     {
       "requirement_id": "desktop_ui.sdl3_runtime_rendering.desktop_input_contract",
@@ -708,7 +741,9 @@
       "supporting_plan_refs": [
         "1.2.2",
         "2.1.2",
-        "5.2.2"
+        "5.2.2",
+        "10.3.1",
+        "10.3.2"
       ],
       "ownership_note": "Direct keyboard-first desktop input and focus obligation."
     },
@@ -750,9 +785,25 @@
         "1.5.3.1",
         "4.1.2",
         "4.2.2",
-        "5.5.2"
+        "5.5.2",
+        "10.3.1",
+        "10.3.2"
       ],
       "ownership_note": "Direct runtime lifecycle and input obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.interactive_visible_execution",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "10.3.1"
+      ],
+      "supporting_plan_refs": [
+        "10.3.2",
+        "10.4.1",
+        "10.5.1"
+      ],
+      "ownership_note": "Direct interactive visible-window execution obligation."
     },
     {
       "requirement_id": "desktop_ui.runtime.platform_variation_bounded",

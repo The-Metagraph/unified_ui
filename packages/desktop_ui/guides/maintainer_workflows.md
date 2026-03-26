@@ -18,6 +18,8 @@ mix desktop_ui.build_host
 mix desktop_ui.run --format catalog
 mix desktop_ui.run native_foundational --format summary
 mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000
+mix desktop_ui.run native_advanced_operations --backend compiled --linger-ms 3000
+mix desktop_ui.run native_styled_review --backend compiled --linger-ms 3000
 mix desktop_ui.run native_foundational --backend fallback
 mix desktop_ui.validate
 mix desktop_ui.validate --format report
@@ -61,9 +63,28 @@ for day-to-day maintenance.
   execution seam directly.
 - text and image support remain bounded when SDL3 companion libraries are
   missing; the run and validation surfaces report that state explicitly.
-- placeholder drawing is still explicit; visible SDL3 execution means real
-  native windows and frames are shown, not that every widget is already
-  widget-complete.
+- compiled visible SDL3 execution is now expected to be widget-complete and
+  interactive for the maintained examples on SDL3-ready machines.
+- the run surface now distinguishes widget-complete interactive execution from
+  the bounded fallback review path and reports interaction-event diagnostics.
+
+## Manual SDL3 Review Loop
+
+On SDL3-ready maintainer machines, use this review loop from
+`packages/desktop_ui`:
+
+- `mix desktop_ui.build_host`
+- `mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run native_advanced_operations --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run native_transport_review --backend compiled --linger-ms 3000`
+- `mix desktop_ui.run native_styled_review --backend compiled --linger-ms 3000`
+
+During that loop, review:
+
+- visible widget completeness rather than placeholder geometry
+- native text and image realization diagnostics
+- keyboard focus movement, command activation, scrolling, and pointer behavior
+- dialog, context-menu, and multiwindow transitions
 
 ## Evolution Guardrails
 

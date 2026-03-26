@@ -12,7 +12,10 @@ defmodule DesktopUi.ReferenceTest do
     assert reference.sdl3.renderer.first_backend == :sdl_renderer
     assert reference.sdl3.renderer.future_backend == :sdl_gpu
     assert reference.sdl3.frame_encoder.payload_family == :frame
-    assert reference.sdl3.renderer_completeness == :first_presented_frames
+    assert reference.sdl3.interaction_script.format == :tab_separated_key_values
+    assert reference.sdl3.renderer_completeness == :widget_complete_interactive
+    assert reference.sdl3.visible_runner.interactive_execution
+    assert length(reference.sdl3.manual_review_workflow.compiled_visible_review) > 0
     assert reference.packaging.contract.output_family == :packaged_target_directory
     assert Enum.any?(reference.packaging.target_packages, &(&1.target == :macos))
     assert reference.packaging.validation_state == :target_packaging_surface_ready
@@ -80,7 +83,8 @@ defmodule DesktopUi.ReferenceTest do
 
     assert summary.package == :desktop_ui
     assert summary.sdl3.foundation.runtime_foundation == :sdl3
-    assert summary.sdl3.renderer_completeness == :first_presented_frames
+    assert summary.sdl3.renderer_completeness == :widget_complete_interactive
+    assert length(summary.sdl3.manual_review_workflow.expectations) > 0
     assert summary.packaging.contract.output_family == :packaged_target_directory
     assert summary.packaging.validation_state == :target_packaging_surface_ready
     assert :window in summary.widgets.families

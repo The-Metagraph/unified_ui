@@ -193,8 +193,8 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     assert plan_report.status == :pass
     assert compliance_report.status == :pass
-    assert compliance_report.summary.applicable_requirements == 102
-    assert compliance_report.summary.status_counts.verified == 102
+    assert compliance_report.summary.applicable_requirements == 105
+    assert compliance_report.summary.status_counts.verified == 105
     assert compliance_report.summary.status_counts.waived == 0
     assert compliance_report.summary.aliases == 49
     assert compliance_report.summary.ci_enforcement == "required"

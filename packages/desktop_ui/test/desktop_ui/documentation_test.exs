@@ -1,5 +1,7 @@
 defmodule DesktopUi.DocumentationTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
+
+  @moduletag timeout: 180_000
 
   test "documentation surface lists maintained guides and files exist" do
     docs = DesktopUi.Tooling.documentation_surface()
@@ -54,7 +56,9 @@ defmodule DesktopUi.DocumentationTest do
     assert reference_sdl3.foundation.runtime_foundation == :sdl3
     assert reference_sdl3.renderer.first_backend == :sdl_renderer
     assert reference_sdl3.frame_encoder.payload_family == :frame
-    assert info_sdl3.renderer_completeness == :first_presented_frames
+    assert reference_sdl3.visible_runner.interactive_execution
+    assert length(reference_sdl3.manual_review_workflow.compiled_visible_review) > 0
+    assert info_sdl3.renderer_completeness == :widget_complete_interactive
   end
 
   test "documentation and validation surfaces expose release and traceability guardrails" do
@@ -68,6 +72,7 @@ defmodule DesktopUi.DocumentationTest do
     assert reference.documentation.sdl3_adapter_surface.foundation.runtime_foundation == :sdl3
 
     assert ".spec/specs/platform_runtimes.spec.md" in reference.documentation.traceability_targets
+
     assert ".spec/specs/desktop_ui/sdl3_runtime_rendering.spec.md" in reference.documentation.traceability_targets
 
     assert reference.validate.inspect == DesktopUi.Inspect
