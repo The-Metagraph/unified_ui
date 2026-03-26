@@ -16,7 +16,7 @@ config :phoenix, :json_library, Jason
 
 config app, endpoint,
   url: [host: "127.0.0.1"],
-  http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
+  http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "5000")],
   server: Mix.env() == :dev,
   secret_key_base: String.duplicate("0123456789abcdef", 4),
   live_view: [signing_salt: "unifiedexamples"],

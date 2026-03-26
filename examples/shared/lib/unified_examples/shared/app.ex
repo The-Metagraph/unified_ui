@@ -100,10 +100,10 @@ defmodule UnifiedExamples.Shared.App do
       end
 
       defp default_launch_port do
-        System.get_env("PORT", "4000")
+        System.get_env("PORT", "5000")
         |> String.to_integer()
       rescue
-        ArgumentError -> 4000
+        ArgumentError -> 5000
       end
 
       defp runtime_opts(opts) do

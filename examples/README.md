@@ -106,7 +106,7 @@ mix deps.get
 mix phx.server
 ```
 
-The default mount URL is `http://127.0.0.1:4000/`, and you can override the
+The default mount URL is `http://127.0.0.1:5000/`, and you can override the
 port with `PORT=4100 mix phx.server`.
 
 Aggregate demo workflow:
