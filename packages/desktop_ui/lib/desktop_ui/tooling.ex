@@ -99,6 +99,17 @@ defmodule DesktopUi.Tooling do
     DesktopUi.Inspect.preview(id)
   end
 
+  @doc """
+  Inspect a canonical IUR element.
+  Compatible interface with LiveUi.Tooling for runtime adapter support.
+  """
+  @spec inspect_canonical(UnifiedIUR.Element.t(), keyword()) :: {:ok, map()} | {:error, term()}
+  def inspect_canonical(%UnifiedIUR.Element{} = element, opts \\ []) do
+    # For inspection purposes, we can use the live_ui tooling since
+    # the IUR is runtime-agnostic and inspection focuses on structure
+    LiveUi.Tooling.inspect_canonical(element, opts)
+  end
+
   @spec validation_report() :: map()
   def validation_report do
     DesktopUi.Validate.validation_report()

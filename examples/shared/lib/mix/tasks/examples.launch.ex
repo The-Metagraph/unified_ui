@@ -9,6 +9,7 @@ defmodule Mix.Tasks.Examples.Launch do
       mix examples.launch button --dry-run
       mix examples.launch button --smoke-test
       mix examples.launch overlay --port 4104
+      mix examples.launch overlay --runtime desktop_ui
   """
 
   alias UnifiedExamples.Shared.{AggregateDemo, Tooling}
@@ -17,12 +18,12 @@ defmodule Mix.Tasks.Examples.Launch do
   def run(args) do
     {opts, positional, _invalid} =
       OptionParser.parse(args,
-        switches: [dry_run: :boolean, smoke_test: :boolean, port: :integer]
+        switches: [dry_run: :boolean, smoke_test: :boolean, port: :integer, runtime: :string]
       )
 
     dry_run? = Keyword.get(opts, :dry_run, false)
     smoke_test? = Keyword.get(opts, :smoke_test, false)
-    launch_opts = Keyword.take(opts, [:port])
+    launch_opts = Keyword.take(opts, [:port, :runtime])
 
     case positional do
       [directory] ->
@@ -71,7 +72,7 @@ defmodule Mix.Tasks.Examples.Launch do
         end
 
       _ ->
-        Mix.raise("usage: mix examples.launch DIRECTORY [--port PORT] [--dry-run] [--smoke-test]")
+        Mix.raise("usage: mix examples.launch DIRECTORY [--port PORT] [--runtime RUNTIME] [--dry-run] [--smoke-test]")
     end
   end
 

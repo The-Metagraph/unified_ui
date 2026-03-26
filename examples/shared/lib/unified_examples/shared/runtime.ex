@@ -7,6 +7,7 @@ defmodule UnifiedExamples.Shared.Runtime do
   alias UnifiedIUR.Element.Child
   alias UnifiedIUR.Container
   alias UnifiedUi.Compiler
+  alias UnifiedExamples.Shared.RuntimeAdapter
 
   @spec compile(module(), keyword() | map()) :: {:ok, UnifiedUi.Compiler.Result.t()}
   def compile(module, opts \\ []) when is_atom(module) do
@@ -23,13 +24,13 @@ defmodule UnifiedExamples.Shared.Runtime do
     Compiler.iur!(module, opts)
   end
 
-  @spec mount(module(), keyword()) :: {:ok, LiveUi.Runtime.State.t()} | {:error, term()}
+  @spec mount(module(), keyword()) :: {:ok, term()} | {:error, term()}
   def mount(module, opts \\ []) when is_atom(module) do
     with {:ok, runtime_state} <-
            module
            |> iur!(opts)
            |> renderable_element()
-           |> LiveUi.Runtime.mount_iur(opts) do
+           |> RuntimeAdapter.mount_iur(opts) do
       {:ok, maybe_decorate_runtime_state(module, runtime_state)}
     end
   end
@@ -50,7 +51,7 @@ defmodule UnifiedExamples.Shared.Runtime do
     with {:ok, assigns} <- component_assigns(module, opts) do
       html =
         assigns
-        |> LiveUi.Runtime.component().render()
+        |> RuntimeAdapter.component_module().render()
         |> Phoenix.HTML.Safe.to_iodata()
         |> IO.iodata_to_binary()
 
@@ -63,7 +64,7 @@ defmodule UnifiedExamples.Shared.Runtime do
     module
     |> iur!(opts)
     |> renderable_element()
-    |> LiveUi.Tooling.inspect_canonical(opts)
+    |> RuntimeAdapter.tooling_module().inspect_canonical(opts)
   end
 
   @spec runtime_component_id(module()) :: String.t()

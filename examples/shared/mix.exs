@@ -31,7 +31,8 @@ defmodule UnifiedExamples.Shared.MixProject do
       {:plug_cowboy, "~> 2.7"},
       {:unified_ui, path: "../../packages/unified-ui"},
       {:unified_iur, path: "../../packages/unified_iur"},
-      {:live_ui, path: "../../packages/live_ui"}
+      {:live_ui, path: "../../packages/live_ui"},
+      {:desktop_ui, path: "../../packages/desktop_ui", optional: true}
     ]
   end
 

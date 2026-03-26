@@ -99,6 +99,26 @@ defmodule DesktopUi.Runtime do
     end
   end
 
+  @doc """
+  Mount an IUR element using the desktop runtime.
+  Compatible interface with LiveUi.Runtime for runtime adapter support.
+  """
+  @spec mount_iur(Element.t(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
+  def mount_iur(%Element{} = element, opts \\ []) do
+    mount_iur_screen(element, opts)
+  end
+
+  @doc """
+  Returns the LiveView component module for server-rendered HTML.
+  For desktop_ui, this delegates to live_ui for browser compatibility.
+  """
+  @spec component() :: module()
+  def component do
+    # Desktop UI can be previewed in browser via live_ui components
+    # This allows unified examples to work with both runtimes
+    LiveUi.Runtime.component()
+  end
+
   @spec shutdown(State.t()) :: {:ok, State.t()} | {:error, Error.t()}
   def shutdown(%State{} = runtime_state) do
     Shutdown.stop(runtime_state)
