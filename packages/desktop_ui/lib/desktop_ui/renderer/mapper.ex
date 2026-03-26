@@ -219,6 +219,110 @@ defmodule DesktopUi.Renderer.Mapper do
   end
 
   defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:numeric_input, "numeric_input"] do
+    {:ok,
+     DesktopUi.Widgets.numeric_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)], 0),
+         binding: binding_name(element),
+         min: attr(element, :min),
+         max: attr(element, :max),
+         step: first_present([attr(element, :step), group_attr(element, :input, :step)], 1),
+         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], ""),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element) when kind in [:slider, "slider"] do
+    {:ok,
+     DesktopUi.Widgets.slider(
+       element.id,
+      Keyword.merge(
+        base_opts(element),
+        value: first_present([attr(element, :value), binding_value(element)], 0),
+        binding: binding_name(element),
+        min: attr(element, :min),
+        max: attr(element, :max),
+        step: first_present([attr(element, :step), group_attr(element, :input, :step)], 1),
+        show_value: first_present([attr(element, :show_value), group_attr(element, :input, :show_value)], true),
+        orientation: first_present([attr(element, :orientation), group_attr(element, :input, :orientation)], :horizontal),
+        on_change: interaction_payload(element, :change)
+      )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:date_input, "date_input"] do
+    {:ok,
+     DesktopUi.Widgets.date_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         min: attr(element, :min),
+         max: attr(element, :max),
+         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], "YYYY-MM-DD"),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:time_input, "time_input"] do
+    {:ok,
+     DesktopUi.Widgets.time_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         format: first_present([attr(element, :format), group_attr(element, :input, :format)], :"24h"),
+         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], "HH:MM"),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:file_input, "file_input"] do
+    {:ok,
+     DesktopUi.Widgets.file_input(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)]),
+         binding: binding_name(element),
+         accept: first_present([attr(element, :accept), group_attr(element, :input, :accept)]),
+         multiple: first_present([attr(element, :multiple), group_attr(element, :input, :multiple)], false),
+         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], "Choose file..."),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:pick_list, "pick_list"] do
+    {:ok,
+     DesktopUi.Widgets.pick_list(
+       element.id,
+       first_present([group_attr(element, :selection, :options), attr(element, :options)], []),
+       Keyword.merge(
+         base_opts(element),
+         selected: first_present([attr(element, :selected), binding_value(element)]),
+         binding: binding_name(element),
+         searchable: first_present([attr(element, :searchable), group_attr(element, :selection, :searchable)], true),
+         multiple: first_present([attr(element, :multiple), group_attr(element, :selection, :multiple)], false),
+         placeholder: first_present([attr(element, :placeholder), group_attr(element, :selection, :placeholder)], "Select..."),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:checkbox, "checkbox"] do
     {:ok,
      DesktopUi.Widgets.checkbox(

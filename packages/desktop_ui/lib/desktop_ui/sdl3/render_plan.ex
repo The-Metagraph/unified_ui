@@ -606,7 +606,15 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:command), do: :command_control
   defp draw_kind(:link), do: :link_control
   defp draw_kind(:text_input), do: :text_input_control
+  defp draw_kind(:numeric_input), do: :numeric_input_control
+  defp draw_kind(:slider), do: :slider_control
+  defp draw_kind(:date_input), do: :date_input_control
+  defp draw_kind(:time_input), do: :time_input_control
+  defp draw_kind(:file_input), do: :file_input_control
+  defp draw_kind(:pick_list), do: :pick_list_surface
   defp draw_kind(:checkbox), do: :checkbox_control
+  defp draw_kind(:radio_group), do: :radio_group_surface
+  defp draw_kind(:select), do: :select_surface
   defp draw_kind(:separator), do: :separator_line
   defp draw_kind(:spacer), do: :spacer_gap
   defp draw_kind(:tabs), do: :tabs_surface
@@ -635,6 +643,14 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :link -> 32
       node.kind == :checkbox -> 36
       node.kind == :text_input -> 46
+      node.kind == :numeric_input -> 46
+      node.kind == :slider -> slider_thickness(node)
+      node.kind == :date_input -> 46
+      node.kind == :time_input -> 46
+      node.kind == :file_input -> 46
+      node.kind == :pick_list -> pick_list_height(node)
+      node.kind == :radio_group -> 42 + option_count(node) * 36
+      node.kind == :select -> 46
       node.kind == :separator -> separator_thickness(node)
       node.kind == :spacer -> spacer_size(node)
       node.kind == :tabs -> 52
@@ -661,6 +677,19 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       :sm -> 20
       :lg -> 32
       _ -> 24
+    end
+  end
+
+  defp slider_thickness(node) do
+    if node.attributes[:orientation] == :vertical, do: 120, else: 42
+  end
+
+  defp pick_list_height(node) do
+    base = 46
+    if node.attributes[:open] || node.attributes[:focused] do
+      base + min(option_count(node), 6) * 36
+    else
+      base
     end
   end
 
@@ -698,11 +727,26 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :checkbox ->
         min(220, available_width)
 
+      node.kind == :numeric_input ->
+        min(180, available_width)
+
+      node.kind == :slider ->
+        if node.attributes[:orientation] == :vertical, do: 52, else: min(200, available_width)
+
+      node.kind in [:text_input, :date_input, :time_input, :file_input] ->
+        min(320, available_width)
+
+      node.kind == :pick_list ->
+        min(320, available_width)
+
+      node.kind == :radio_group ->
+        min(200, available_width)
+
+      node.kind == :select ->
+        min(240, available_width)
+
       node.kind in [:text, :label] ->
         min(max(String.length(draw_content(node)) * 12, 96), available_width)
-
-      node.kind == :text_input ->
-        min(320, available_width)
 
       node.kind == :separator ->
         available_width
@@ -729,6 +773,14 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp link_width(node, available_width) do
     content_length = String.length(draw_content(node))
     min(max(content_length * 11, 64), available_width)
+  end
+
+  defp option_count(node) do
+    case node.attributes[:options] do
+      nil -> 0
+      opts when is_list(opts) -> length(opts)
+      _ -> 3
+    end
   end
 
   defp expandable_indexes(children) do

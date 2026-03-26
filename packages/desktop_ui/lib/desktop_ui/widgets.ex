@@ -184,6 +184,36 @@ defmodule DesktopUi.Widgets do
     Input.text_input(id, opts)
   end
 
+  @spec numeric_input(String.t() | atom(), keyword()) :: Widget.t()
+  def numeric_input(id, opts \\ []) do
+    Input.numeric_input(id, opts)
+  end
+
+  @spec slider(String.t() | atom(), keyword()) :: Widget.t()
+  def slider(id, opts \\ []) do
+    Input.slider(id, opts)
+  end
+
+  @spec date_input(String.t() | atom(), keyword()) :: Widget.t()
+  def date_input(id, opts \\ []) do
+    Input.date_input(id, opts)
+  end
+
+  @spec time_input(String.t() | atom(), keyword()) :: Widget.t()
+  def time_input(id, opts \\ []) do
+    Input.time_input(id, opts)
+  end
+
+  @spec file_input(String.t() | atom(), keyword()) :: Widget.t()
+  def file_input(id, opts \\ []) do
+    Input.file_input(id, opts)
+  end
+
+  @spec pick_list(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def pick_list(id, options, opts \\ []) do
+    Input.pick_list(id, options, opts)
+  end
+
   @spec checkbox(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def checkbox(id, label, opts \\ []) do
     Input.checkbox(id, label, opts)
