@@ -699,6 +699,49 @@ defmodule DesktopUi.Renderer.Mapper do
   end
 
   defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:stream_widget, "stream_widget"] do
+    {:ok,
+     DesktopUi.Widgets.stream_widget(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         entries: first_present([attr(element, :entries), group_attr(element, :data, :entries)], []),
+         follow: first_present([attr(element, :follow), group_attr(element, :stream, :follow)], true),
+         filter: first_present([attr(element, :filter), group_attr(element, :stream, :filter)]),
+         level: first_present([attr(element, :level), group_attr(element, :stream, :level)]),
+         line_limit: first_present([attr(element, :line_limit), group_attr(element, :stream, :line_limit)], 1000),
+         streaming: first_present([attr(element, :streaming), group_attr(element, :stream, :streaming)], true),
+         paused: first_present([attr(element, :paused), group_attr(element, :stream, :paused)], false),
+         on_pause: interaction_payload(element, :pause),
+         on_resume: interaction_payload(element, :resume),
+         on_clear: interaction_payload(element, :clear),
+         on_filter: interaction_payload(element, :filter)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:supervision_tree_viewer, "supervision_tree_viewer"] do
+    {:ok,
+     DesktopUi.Widgets.supervision_tree_viewer(
+       element.id,
+       Keyword.merge(
+         base_opts(element),
+         tree: first_present([attr(element, :tree), group_attr(element, :supervision, :tree)], []),
+         query: first_present([attr(element, :query), group_attr(element, :supervision, :query)]),
+         application: first_present([attr(element, :application), group_attr(element, :supervision, :application)]),
+         selection_binding: binding_name(element),
+         expanded: first_present([attr(element, :expanded), group_attr(element, :supervision, :expanded)], []),
+         selected: first_present([attr(element, :selected), binding_value(element)]),
+         on_select: interaction_payload(element, :selection),
+         on_expand: interaction_payload(element, :expand),
+         on_collapse: interaction_payload(element, :collapse),
+         on_refresh: interaction_payload(element, :refresh)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:window_command, "window_command"] do
     {:ok,
      DesktopUi.Widgets.window_command(

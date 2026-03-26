@@ -7,7 +7,76 @@ defmodule DesktopUi.Widgets.Operational do
 
   @spec kinds() :: [atom()]
   def kinds do
-    [:cluster_dashboard, :command_palette, :log_viewer, :process_monitor, :window_command]
+    [:cluster_dashboard, :command_palette, :log_viewer, :process_monitor, :stream_widget,
+     :supervision_tree_viewer, :window_command]
+  end
+
+  @spec stream_widget(String.t() | atom(), keyword()) :: Widget.t()
+  def stream_widget(id, opts \\ []) do
+    Widget.new(:stream_widget,
+      id: id,
+      metadata:
+        metadata(opts,
+          focusable: true,
+          role: :stream_widget
+        ),
+      state:
+        state(opts,
+          streaming: Keyword.get(opts, :streaming, true),
+          paused: Keyword.get(opts, :paused, false),
+          line_limit: Keyword.get(opts, :line_limit, 1000)
+        ),
+      attributes: %{
+        entries: normalize_items(Keyword.get(opts, :entries, [])),
+        follow: Keyword.get(opts, :follow, true),
+        filter: Keyword.get(opts, :filter),
+        level: Keyword.get(opts, :level)
+      },
+      events:
+        events(
+          pause: Keyword.get(opts, :on_pause),
+          resume: Keyword.get(opts, :on_resume),
+          clear: Keyword.get(opts, :on_clear),
+          filter: Keyword.get(opts, :on_filter)
+        ),
+      styles: styles(opts)
+    )
+  end
+
+  @spec supervision_tree_viewer(String.t() | atom(), keyword()) :: Widget.t()
+  def supervision_tree_viewer(id, opts \\ []) do
+    Widget.new(:supervision_tree_viewer,
+      id: id,
+      metadata:
+        metadata(opts,
+          focusable: true,
+          role: :supervision_tree_viewer
+        ),
+      state:
+        state(opts,
+          expanded: Keyword.get(opts, :expanded, []),
+          selected: Keyword.get(opts, :selected)
+        ),
+      bindings:
+        bindings(
+          selection: Keyword.get(opts, :selection_binding, Keyword.get(opts, :binding)),
+          expansion: Keyword.get(opts, :expansion_binding)
+        ),
+      attributes: %{
+        tree: normalize_items(Keyword.get(opts, :tree, [])),
+        query: Keyword.get(opts, :query),
+        show_children: Keyword.get(opts, :show_children, true),
+        application: Keyword.get(opts, :application)
+      },
+      events:
+        events(
+          select: Keyword.get(opts, :on_select),
+          expand: Keyword.get(opts, :on_expand),
+          collapse: Keyword.get(opts, :on_collapse),
+          refresh: Keyword.get(opts, :on_refresh)
+        ),
+      styles: styles(opts)
+    )
   end
 
   @spec log_viewer(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()

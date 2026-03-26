@@ -2298,6 +2298,70 @@ static void render_draw_operation(dui_app *app, SDL_Renderer *renderer, const du
     return;
   }
 
+  if (strcmp(draw->draw_kind, "stream_widget_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("canvas", 255), named_color("muted", 180),
+                       draw->border, 0, 0);
+
+    int row_count = draw->row_count > 0 ? draw->row_count : 10;
+    float row_height = 18.0f;
+    float visible_rows = (rect.h - 16.0f) / row_height;
+
+    for (int i = 0; i < (int)visible_rows && i < row_count; i++) {
+      float y = rect.y + 8.0f + i * row_height;
+      SDL_FRect row_rect = {rect.x + 10.0f, y, rect.w - 20.0f, row_height - 2.0f};
+
+      dui_color row_color = named_color("content", 230);
+      if (draw->loading || i == (row_count - 1)) {
+        row_color = named_color("muted", 200);
+      }
+
+      draw_text_bands(renderer, row_rect, 12, row_color, 0);
+    }
+
+    if (draw->paused) {
+      SDL_FRect pause_indicator = {rect.x + rect.w - 24.0f, rect.y + rect.h - 20.0f, 16.0f, 16.0f};
+      fill_rect(renderer, pause_indicator, named_color("warning", 220));
+      SDL_RenderLine(renderer, pause_indicator.x + 4.0f, pause_indicator.y + 8.0f,
+                     pause_indicator.x + pause_indicator.w - 4.0f, pause_indicator.y + 8.0f);
+    }
+    return;
+  }
+
+  if (strcmp(draw->draw_kind, "supervision_tree_surface") == 0) {
+    draw_surface_shell(renderer, rect, named_color("surface", 230), named_color("muted", 200),
+                       draw->border, 0, 0);
+
+    int node_count = draw->item_count > 0 ? draw->item_count : 4;
+    float row_height = 32.0f;
+
+    for (int i = 0; i < node_count && (i * row_height) < (rect.h - 16.0f); i++) {
+      int depth = (i % 4);
+      float x = rect.x + 12.0f + depth * 20.0f;
+      float y = rect.y + 8.0f + i * row_height;
+
+      dui_color state_color = named_color("success", 220);
+      if (i % 4 == 1) state_color = named_color("warning", 220);
+      else if (i % 4 == 2) state_color = named_color("error", 220);
+      else if (i % 4 == 3) state_color = named_color("muted", 200);
+
+      SDL_FRect state_rect = {x, y + 6.0f, 10.0f, 10.0f};
+      fill_rect(renderer, state_rect, state_color);
+
+      SDL_FRect expand_rect = {x + 16.0f, y + 6.0f, 12.0f, 12.0f};
+      stroke_rect(renderer, expand_rect, named_color("content", 200));
+      SDL_RenderLine(renderer, expand_rect.x + 3.0f, expand_rect.y + expand_rect.h / 2.0f,
+                     expand_rect.x + expand_rect.w - 3.0f, expand_rect.y + expand_rect.h / 2.0f);
+      if (i < 2) {
+        SDL_RenderLine(renderer, expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + 4.0f,
+                       expand_rect.x + expand_rect.w / 2.0f, expand_rect.y + expand_rect.h - 4.0f);
+      }
+
+      SDL_FRect label_rect = {x + 34.0f, y, rect.w - x - rect.x - 44.0f, row_height};
+      draw_text_bands(renderer, label_rect, 16, named_color("content", 230), 0);
+    }
+    return;
+  }
+
   if (strcmp(draw->draw_kind, "positioned_fragment") == 0) {
     draw_surface_shell(renderer, rect, named_color("accent", 140), named_color("content", 220),
                        draw->border, 0, 0);

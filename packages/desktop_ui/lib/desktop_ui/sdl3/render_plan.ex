@@ -630,6 +630,8 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:inline_feedback), do: :inline_feedback_surface
   defp draw_kind(:process_monitor), do: :process_monitor_surface
   defp draw_kind(:log_viewer), do: :log_viewer_surface
+  defp draw_kind(:stream_widget), do: :stream_widget_surface
+  defp draw_kind(:supervision_tree_viewer), do: :supervision_tree_surface
   defp draw_kind(:cluster_dashboard), do: :cluster_dashboard_surface
   defp draw_kind(:command_palette), do: :command_palette_surface
   defp draw_kind(:gauge), do: :gauge_surface
@@ -672,6 +674,8 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :progress -> progress_height(node)
       node.kind == :inline_feedback -> 48
       node.kind == :log_viewer -> max(152, 52 + item_count(node) * 26)
+      node.kind == :stream_widget -> max(120, 52 + item_count(node) * 18)
+      node.kind == :supervision_tree_viewer -> supervision_tree_height(node)
       node.kind == :cluster_dashboard -> 160
       node.kind == :command_palette -> 156
       node.kind == :gauge -> 108
@@ -759,6 +763,16 @@ defmodule DesktopUi.Sdl3.RenderPlan do
     end
   end
 
+  defp supervision_tree_height(node) do
+    base = 80
+    node_count = item_count(node)
+    if node_count > 0 do
+      base + min(node_count, 10) * 32
+    else
+      base + 32
+    end
+  end
+
   defp separator_thickness(node) do
     if node.attributes[:orientation] == :vertical, do: 1, else: 1
   end
@@ -831,6 +845,12 @@ defmodule DesktopUi.Sdl3.RenderPlan do
 
       node.kind == :inline_feedback ->
         min(240, available_width)
+
+      node.kind == :stream_widget ->
+        min(320, available_width)
+
+      node.kind == :supervision_tree_viewer ->
+        min(280, available_width)
 
       node.kind in [:text, :label] ->
         min(max(String.length(draw_content(node)) * 12, 96), available_width)

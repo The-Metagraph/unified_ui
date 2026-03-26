@@ -350,6 +350,16 @@ defmodule DesktopUi.Widgets do
     Operational.command_palette(id, commands, opts)
   end
 
+  @spec stream_widget(String.t() | atom(), keyword()) :: Widget.t()
+  def stream_widget(id, opts \\ []) do
+    Operational.stream_widget(id, opts)
+  end
+
+  @spec supervision_tree_viewer(String.t() | atom(), keyword()) :: Widget.t()
+  def supervision_tree_viewer(id, opts \\ []) do
+    Operational.supervision_tree_viewer(id, opts)
+  end
+
   @spec process_monitor(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
   def process_monitor(id, processes, opts \\ []) do
     Operational.process_monitor(id, processes, opts)
