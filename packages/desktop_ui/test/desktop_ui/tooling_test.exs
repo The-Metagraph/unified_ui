@@ -70,10 +70,20 @@ defmodule DesktopUi.ToolingTest do
     assert validation_summary =~ "DesktopUi validation summary"
     assert validation_summary =~ "SDL3 adapter surface passing?: true"
     assert validation_summary =~ "host execution surface passing?: true"
+    assert validation_summary =~ "widget-complete native rendering?: true"
+    assert validation_summary =~ "interactive native execution?: true"
     assert validation_summary =~ "release ready?: true"
     assert validation_report.documentation_surface.status == :pass
     assert validation_report.traceability_alignment.status == :pass
     assert DesktopUi.Tooling.run_catalog().execution.fallback_backend == :elixir_host
+
+    assert DesktopUi.Tooling.run_catalog().execution.renderer_completeness ==
+             :widget_complete_interactive
+
+    assert DesktopUi.Tooling.run_catalog().execution.manual_review_workflow.compiled_visible_review !=
+             []
+
+    assert :interactive_native_review in DesktopUi.Tooling.workflows()
 
     assert Enum.any?(
              DesktopUi.Tooling.run_catalog().execution.target_packages,

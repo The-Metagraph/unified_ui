@@ -63,6 +63,9 @@ defmodule Mix.Tasks.DesktopUi.Run do
       "  visible window?: #{execution.visible_window?}",
       "  presented frame?: #{execution.presented_frame?}",
       "  fallback used?: #{execution.fallback_used?}",
+      "  renderer completeness: #{renderer_completeness(execution)}",
+      "  interactive visible execution?: #{execution.execution_mode == :visible_window}",
+      "  interaction events observed: #{interaction_event_count(execution)}",
       "  visible runner ready?: #{execution.capabilities.build.visible_runner_ready?}",
       "  protocol launch ready?: #{execution.capabilities.build.launch_ready?}",
       "  native text mode: #{execution.resource_support.text.active_mode}",
@@ -83,4 +86,13 @@ defmodule Mix.Tasks.DesktopUi.Run do
   defp parse_backend("compiled"), do: :compiled
   defp parse_backend("fallback"), do: :fallback
   defp parse_backend(other), do: Mix.raise("unsupported run backend #{inspect(other)}")
+
+  defp renderer_completeness(%{execution_mode: :visible_window}), do: :widget_complete_interactive
+  defp renderer_completeness(_execution), do: :bounded_fallback_review
+
+  defp interaction_event_count(%{details: %{interaction_summary: %{"total_events" => total}}})
+       when is_integer(total),
+       do: total
+
+  defp interaction_event_count(_execution), do: 0
 end

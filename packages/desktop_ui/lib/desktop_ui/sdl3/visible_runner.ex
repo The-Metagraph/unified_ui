@@ -16,7 +16,10 @@ defmodule DesktopUi.Sdl3.VisibleRunner do
       input_format: [FrameScript.contract().format, InteractionScript.contract().format],
       output_window: :native_sdl3_window,
       linger_control: :bounded_timeout_or_manual_quit,
-      placeholder_drawing: true,
+      widget_complete_rendering: true,
+      interactive_execution: true,
+      interaction_summary_reported: true,
+      placeholder_drawing: false,
       native_resource_realization: [:sdl3_ttf, :sdl3_image, :fallback]
     }
   end

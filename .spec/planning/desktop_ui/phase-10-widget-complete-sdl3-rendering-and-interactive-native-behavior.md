@@ -104,19 +104,19 @@ Back to index: [README](./README.md)
       [x] 10.3.2.2 Subtask - Coordinate overlay, popover, dialog, and context-menu interaction semantics inside owning windows.
       [x] 10.3.2.3 Subtask - Coordinate window activation, focus transfer, and bounded secondary-window interactions across multiwindow maintained flows.
 
-  [ ] 10.4 Section - Tooling, Diagnostics, and Renderer Completeness Reporting
+  [x] 10.4 Section - Tooling, Diagnostics, and Renderer Completeness Reporting
     Update the maintainer tooling and review surfaces so the package clearly
     reports when widget-complete native rendering and interactive behavior are
     available.
 
-    [ ] 10.4.1 Task - Expose renderer-completeness and interaction diagnostics through maintainer tooling
+    [x] 10.4.1 Task - Expose renderer-completeness and interaction diagnostics through maintainer tooling
       Make run, inspect, validate, and reference surfaces reflect the new
       widget-complete native runtime status instead of the older
       first-presented-frame milestone.
 
-      [ ] 10.4.1.1 Subtask - Update inspection and run surfaces to distinguish placeholder-only execution from widget-complete interactive execution.
-      [ ] 10.4.1.2 Subtask - Update validation and release-readiness reporting to include widget-complete rendering, native text-image realization, and interactive execution gates.
-      [ ] 10.4.1.3 Subtask - Document the expected manual-review workflow for maintained examples on SDL3-ready maintainer machines.
+      [x] 10.4.1.1 Subtask - Update inspection and run surfaces to distinguish placeholder-only execution from widget-complete interactive execution.
+      [x] 10.4.1.2 Subtask - Update validation and release-readiness reporting to include widget-complete rendering, native text-image realization, and interactive execution gates.
+      [x] 10.4.1.3 Subtask - Document the expected manual-review workflow for maintained examples on SDL3-ready maintainer machines.
 
   [ ] 10.5 Section - Phase 10 Integration Tests
     Validate widget-complete rendering, native resource realization, and

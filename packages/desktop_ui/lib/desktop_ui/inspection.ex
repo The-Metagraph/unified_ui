@@ -11,6 +11,7 @@ defmodule DesktopUi.Inspection do
       :package_overview,
       :runtime_snapshot,
       :style_nodes,
+      :manual_review_workflow,
       :platform_profiles,
       :continuity_contract,
       :shared_runtime_contract,
@@ -69,6 +70,7 @@ defmodule DesktopUi.Inspection do
         diagnostics: DesktopUi.Package.diagnostics(),
         validation_state: DesktopUi.Package.validation_state()
       },
+      manual_review_workflow: manual_review_workflow(),
       transport: transport_contract(),
       platform_profiles: platform_profiles(),
       continuity: continuity_contract(),
@@ -135,6 +137,31 @@ defmodule DesktopUi.Inspection do
     }
   end
 
+  @spec manual_review_workflow() :: map()
+  def manual_review_workflow do
+    %{
+      compiled_visible_review: [
+        "mix desktop_ui.build_host --dry-run",
+        "mix desktop_ui.build_host",
+        "mix desktop_ui.run native_foundational --backend compiled --linger-ms 3000",
+        "mix desktop_ui.run native_advanced_operations --backend compiled --linger-ms 3000",
+        "mix desktop_ui.run native_transport_review --backend compiled --linger-ms 3000",
+        "mix desktop_ui.run native_styled_review --backend compiled --linger-ms 3000"
+      ],
+      fallback_review: [
+        "mix desktop_ui.run native_foundational --backend fallback",
+        "mix desktop_ui.inspect native_foundational --format host"
+      ],
+      expectations: [
+        :widget_complete_rendering,
+        :native_text_and_image_diagnostics,
+        :interactive_keyboard_and_pointer_review,
+        :multiwindow_and_overlay_review,
+        :explicit_fallback_when_sdl3_unavailable
+      ]
+    }
+  end
+
   @spec sdl3_adapter_surface() :: map()
   def sdl3_adapter_surface do
     capabilities = DesktopUi.Sdl3.Capabilities.detect()
@@ -151,6 +178,7 @@ defmodule DesktopUi.Inspection do
       protocol: DesktopUi.Sdl3.Protocol.contract(),
       frame_encoder: DesktopUi.Sdl3.FrameEncoder.contract(),
       frame_script: DesktopUi.Sdl3.FrameScript.contract(),
+      interaction_script: DesktopUi.Sdl3.InteractionScript.contract(),
       visible_runner: DesktopUi.Sdl3.VisibleRunner.contract(),
       renderer: DesktopUi.Sdl3.Renderer.contract(),
       events: DesktopUi.Sdl3.Events.contract(),
@@ -158,7 +186,8 @@ defmodule DesktopUi.Inspection do
       images: DesktopUi.Sdl3.Images.contract(),
       text_support: DesktopUi.Sdl3.Text.native_support(capabilities),
       image_support: DesktopUi.Sdl3.Images.native_support(capabilities),
-      renderer_completeness: :first_presented_frames,
+      manual_review_workflow: manual_review_workflow(),
+      renderer_completeness: :widget_complete_interactive,
       validation_state: %{
         adapter: DesktopUi.Sdl3.validation_state(),
         host: DesktopUi.Sdl3.PortHost.validation_state(),
@@ -167,6 +196,7 @@ defmodule DesktopUi.Inspection do
         protocol: DesktopUi.Sdl3.Protocol.validation_state(),
         frame_encoder: DesktopUi.Sdl3.FrameEncoder.validation_state(),
         frame_script: DesktopUi.Sdl3.FrameScript.validation_state(),
+        interaction_script: DesktopUi.Sdl3.InteractionScript.validation_state(),
         visible_runner: DesktopUi.Sdl3.VisibleRunner.validation_state(),
         renderer: DesktopUi.Sdl3.Renderer.validation_state(),
         text: DesktopUi.Sdl3.Text.validation_state(),

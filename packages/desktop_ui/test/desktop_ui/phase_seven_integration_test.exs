@@ -22,8 +22,10 @@ defmodule DesktopUi.PhaseSevenIntegrationTest do
 
     assert native_launch.acknowledgement.payload.host.runtime_state == :running
     assert native_launch.frame_acknowledgement.payload.presentation.presented_frame?
+
     assert native_launch.frame_acknowledgement.payload.presentation.logical_presentation.units ==
              :logical
+
     assert native_launch.frame_acknowledgement.payload.host.presented_frames == 1
 
     assert canonical_launch.boot_request.runtime.source_kind == :canonical
@@ -104,10 +106,12 @@ defmodule DesktopUi.PhaseSevenIntegrationTest do
     assert run_output =~ "DesktopUi run summary"
     assert run_output =~ "backend:"
     assert run_output =~ "presented frame?: true"
+    assert run_output =~ "renderer completeness:"
+    assert run_output =~ "interactive visible execution?:"
     assert validate_output =~ "host execution surface passing?: true"
     assert DesktopUi.Validate.host_execution_surface().status == :pass
-    assert DesktopUi.Info.sdl3_summary().renderer_completeness == :first_presented_frames
-    assert DesktopUi.Sdl3.Renderer.contract().placeholder_draw_operations_allowed
+    assert DesktopUi.Info.sdl3_summary().renderer_completeness == :widget_complete_interactive
+    refute DesktopUi.Sdl3.Renderer.contract().placeholder_draw_operations_allowed
 
     assert {:error, %Error{reason: :invalid_sdl3_protocol_magic}} =
              DesktopUi.Sdl3.Protocol.next_message("BADF000000")

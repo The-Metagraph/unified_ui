@@ -14,7 +14,9 @@ defmodule DesktopUi.Sdl3.Renderer do
       preserves_render_plan_semantics: true,
       frame_encoder: :host_protocol_payload,
       logical_presentation: :letterbox,
-      placeholder_draw_operations_allowed: true
+      widget_complete_draw_operations: true,
+      interactive_visible_execution: true,
+      placeholder_draw_operations_allowed: false
     }
   end
 

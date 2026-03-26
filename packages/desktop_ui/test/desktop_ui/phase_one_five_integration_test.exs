@@ -87,7 +87,7 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
              DesktopUi.Sdl3.Window.registry(broken_state)
   end
 
-  test "reference and inspection helpers expose SDL3 namespaces, lifecycle boundaries, and first-frame validation state" do
+  test "reference and inspection helpers expose SDL3 namespaces, lifecycle boundaries, and widget-complete validation state" do
     reference = DesktopUi.reference()
     inspection = DesktopUi.Inspection.sdl3_adapter_surface()
 
@@ -98,20 +98,23 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
     assert reference.inspection.sdl3_adapter_surface.lifecycle.foundation == :sdl3
     assert inspection.renderer.first_backend == :sdl_renderer
     assert inspection.renderer.future_backend == :sdl_gpu
-    assert inspection.renderer_completeness == :first_presented_frames
+    assert inspection.interaction_script.format == :tab_separated_key_values
+    assert inspection.renderer_completeness == :widget_complete_interactive
     assert inspection.validation_state.adapter == :app_handoff_ready
     assert inspection.validation_state.frame_encoder == :frame_encoding_ready
+    assert inspection.validation_state.interaction_script == :interaction_script_ready
   end
 
-  test "validation and helper output distinguish SDL3 adapter coverage from first-frame renderer completeness" do
+  test "validation and helper output distinguish widget-complete SDL3 execution from bounded fallback review" do
     report = DesktopUi.Validate.validation_report()
     summary = DesktopUi.Validate.validation_summary(report)
 
     assert report.sdl3_adapter_surface.status == :pass
     assert report.release_readiness.status == :pass
-    assert DesktopUi.Info.sdl3_summary().renderer_completeness == :first_presented_frames
-    assert DesktopUi.Reference.sdl3_summary().renderer.placeholder_draw_operations_allowed
+    assert DesktopUi.Info.sdl3_summary().renderer_completeness == :widget_complete_interactive
+    refute DesktopUi.Reference.sdl3_summary().renderer.placeholder_draw_operations_allowed
     assert summary =~ "SDL3 adapter surface passing?: true"
+    assert summary =~ "widget-complete native rendering?: true"
     assert summary =~ "release ready?: true"
   end
 end

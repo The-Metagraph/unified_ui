@@ -81,7 +81,9 @@ defmodule DesktopUi.Sdl3RenderPlanTest do
     assert Renderer.contract().first_backend == :sdl_renderer
     assert Renderer.contract().future_backend == :sdl_gpu
     assert Renderer.contract().frame_encoder == :host_protocol_payload
-    assert Renderer.contract().placeholder_draw_operations_allowed
+    assert Renderer.contract().widget_complete_draw_operations
+    assert Renderer.contract().interactive_visible_execution
+    refute Renderer.contract().placeholder_draw_operations_allowed
     assert presentation.backend == :sdl_renderer
     assert presentation.presented_frame?
     assert presentation.widget_complete_draw_operations?
