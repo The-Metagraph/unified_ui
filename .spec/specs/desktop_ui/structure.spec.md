@@ -21,6 +21,7 @@ surface:
   - .spec/specs/desktop_ui/structure.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - desktop_ui.runtime.screen_navigation
 ```
 
 ## Requirements
@@ -60,6 +61,11 @@ decisions:
   statement: The package structure shall not introduce authored DSL ownership or canonical IUR ownership inside `desktop_ui`; those concerns remain in `unified_ui` and `unified_iur`.
   priority: must
   stability: stable
+
+- id: desktop_ui.structure.navigation_modules
+  statement: The package shall provide dedicated navigation modules for screen-to-screen navigation, including a navigation controller GenServer, a screen registry, and navigation event routing integrated with the transport layer.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -84,5 +90,11 @@ decisions:
     - desktop_ui.structure.transport_translation_modules
     - desktop_ui.structure.platform_artifact_modules
     - desktop_ui.structure.no_dsl_or_iur_authorship
+    - desktop_ui.structure.navigation_modules
     - desktop_ui.structure.add_platform_support_without_runtime_drift
+
+- kind: source_file
+  target: .spec/decisions/desktop_ui/desktop_ui.runtime.screen_navigation.md
+  covers:
+    - desktop_ui.structure.navigation_modules
 ```
