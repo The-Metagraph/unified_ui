@@ -5,6 +5,7 @@ Phoenix LiveView library.
 
 ## Related General Specs
 
+- [Application Authority](../application_authority.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [LiveUi Package](./package.spec.md)

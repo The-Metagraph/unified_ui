@@ -5,6 +5,7 @@ event meaning and its native desktop interaction model.
 
 ## Related General Specs
 
+- [Application Authority](../application_authority.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [DesktopUi Package](./package.spec.md)
@@ -15,7 +16,7 @@ event meaning and its native desktop interaction model.
 id: desktop_ui.transport
 kind: integration
 status: active
-summary: Target boundary-translation contract for `desktop_ui`, preserving canonical event meaning across native desktop interactions.
+summary: Target boundary-translation contract for `desktop_ui`, preserving canonical event meaning and application-authoritative behavior across native desktop interactions.
 surface:
   - packages/desktop_ui
   - .spec/specs/desktop_ui/transport.spec.md
@@ -33,6 +34,11 @@ decisions:
 
 - id: desktop_ui.transport.native_desktop_event_model
   statement: The package may use its own native desktop interaction model internally, but that model shall translate to and from canonical boundary meaning without loss of event intent.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.transport.application_authority_preserved
+  statement: Event translation shall preserve the application-authoritative behavior required by the `desktop_ui` runtime instead of moving canonical decision-making into platform-local callback handling or native-host-only logic.
   priority: must
   stability: stable
 
@@ -74,6 +80,7 @@ decisions:
   covers:
     - desktop_ui.transport.canonical_boundary_events
     - desktop_ui.transport.native_desktop_event_model
+    - desktop_ui.transport.application_authority_preserved
     - desktop_ui.transport.platform_input_normalization
     - desktop_ui.transport.no_boundary_leakage
     - desktop_ui.transport.direct_native_usage_allowed

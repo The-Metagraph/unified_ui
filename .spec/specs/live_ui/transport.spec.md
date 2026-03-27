@@ -5,6 +5,7 @@ meaning and its native LiveView interaction model.
 
 ## Related General Specs
 
+- [Application Authority](../application_authority.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [LiveUi Package](./package.spec.md)

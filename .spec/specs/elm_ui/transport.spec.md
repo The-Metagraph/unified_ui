@@ -5,6 +5,7 @@ meaning and its native Phoenix-and-Elm interaction model.
 
 ## Related General Specs
 
+- [Application Authority](../application_authority.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [ElmUi Package](./package.spec.md)

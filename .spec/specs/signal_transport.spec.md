@@ -69,7 +69,7 @@ decisions:
 - id: ecosystem.signal_transport.desktop_bridge_evolving
   covers:
     - ecosystem.signal_transport.desktop_translation
-  reason: The desktop runtime is expected to normalize native input into canonical signals, but the SDL2 event bridge is still evolving.
+  reason: The desktop runtime is expected to normalize native input into canonical signals, but the SDL3 event bridge is still evolving.
 
 - id: ecosystem.signal_transport.terminal_bridge_evolving
   covers:
