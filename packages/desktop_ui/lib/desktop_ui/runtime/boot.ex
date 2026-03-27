@@ -3,6 +3,7 @@ defmodule DesktopUi.Runtime.Boot do
   Runtime boot helpers for the `desktop_ui` Phase 1 backbone.
   """
 
+  alias DesktopUi.Navigation.Controller
   alias DesktopUi.Platform
   alias DesktopUi.Runtime.{Error, EventLoop, Realization, Screen, State, StyleResolver, Window}
   alias DesktopUi.Widget
@@ -30,6 +31,46 @@ defmodule DesktopUi.Runtime.Boot do
         :canonical,
         opts
       )
+    end
+  end
+
+  @spec start_navigation_controller(State.t(), keyword()) :: {:ok, State.t()} | {:error, term()}
+  def start_navigation_controller(state, opts \\ []) do
+    registry = Keyword.get(opts, :registry)
+    initial_screen = Keyword.get(opts, :initial_screen)
+
+    cond do
+      !registry && !initial_screen ->
+        # No navigation needed
+        {:ok, state}
+
+      initial_screen ->
+        screen_module = elem(initial_screen, 1)
+        params = elem(initial_screen, 2)
+
+        case Controller.start_link(
+               name: nil,
+               registry: registry,
+               initial_screen: initial_screen
+             ) do
+          {:ok, controller} ->
+            nav_state = Controller.get_state(controller)
+
+            {:ok,
+             %{
+               state
+               | navigation_controller: controller,
+                 current_screen_module: screen_module,
+                 navigation_state: nav_state,
+                 screen_params: params
+             }}
+
+          {:error, reason} ->
+            {:error, Error.new(:navigation_controller_start_failed, %{reason: reason}, :runtime_boot)}
+        end
+
+      true ->
+        {:ok, state}
     end
   end
 

@@ -105,6 +105,28 @@ defmodule DesktopUi.Navigation.Controller do
     |> State.current_screen()
   end
 
+  @doc """
+  Stops the navigation controller.
+
+  Used during runtime shutdown to clean up the navigation process.
+  """
+  @spec stop(GenServer.server() | atom()) :: :ok
+  def stop(server) when is_pid(server) do
+    if Process.alive?(server) do
+      GenServer.stop(server, :normal, 5000)
+    else
+      :ok
+    end
+  end
+
+  def stop(server) when is_atom(server) do
+    if Process.whereis(server) do
+      GenServer.stop(server, :normal, 5000)
+    else
+      :ok
+    end
+  end
+
   # Callbacks
 
   @impl true
