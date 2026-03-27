@@ -892,6 +892,177 @@ defmodule DesktopUi.Examples do
     }
   end
 
+  # Navigation Examples
+
+  @spec basic_navigation_screen() :: map()
+  def basic_navigation_screen do
+    %{
+      id: "basic-navigation",
+      title: "Basic Navigation Example",
+      root:
+        DesktopUi.Widgets.window("nav-window", "Navigation Demo", [
+          DesktopUi.Widgets.column("nav-layout", [
+            DesktopUi.Widgets.content("nav-header", [
+              DesktopUi.Widgets.label("nav-title", "Navigation Demo"),
+              DesktopUi.Widgets.text("nav-subtitle", "Demonstrates home, list, and detail screens")
+            ]),
+            DesktopUi.Widgets.menu(
+              "nav-menu",
+              [
+                %{id: :home, label: "Home"},
+                %{id: :items, label: "Items"},
+                %{id: :settings, label: "Settings"}
+              ],
+              current: :home,
+              binding: :current_screen,
+              on_navigate: %{family: :navigation, type: :navigate_to}
+            ),
+            DesktopUi.Widgets.content("nav-content", [
+              DesktopUi.Widgets.text("nav-hint", "Select a screen from the menu above")
+            ])
+          ])
+        ]),
+      metadata: %{
+        example_id: :basic_navigation,
+        source: :native,
+        coverage: [:navigation_widgets, :screen_navigation, :menu_navigation],
+        navigation_pattern: :simple_menu,
+        screens: [:home, :items, :settings]
+      }
+    }
+  end
+
+  @spec history_navigation_screen() :: map()
+  def history_navigation_screen do
+    %{
+      id: "history-navigation",
+      title: "History Navigation Example",
+      root:
+        DesktopUi.Widgets.window("history-window", "History Navigation", [
+          DesktopUi.Widgets.column("history-layout", [
+            DesktopUi.Widgets.content("history-header", [
+              DesktopUi.Widgets.label("history-title", "History Navigation"),
+              DesktopUi.Widgets.text("history-subtitle", "Demonstrates back/forward navigation")
+            ]),
+            DesktopUi.Widgets.row("history-nav-buttons", [
+              DesktopUi.Widgets.button("back-button", "← Back",
+                go_back: true,
+                disabled: false
+              ),
+              DesktopUi.Widgets.button("forward-button", "Forward →",
+                go_forward: true,
+                disabled: true
+              )
+            ]),
+            DesktopUi.Widgets.content("history-content", [
+              DesktopUi.Widgets.text("history-trail", "History: Home > Items > Detail"),
+              DesktopUi.Widgets.breadcrumbs(
+                "history-breadcrumbs",
+                [
+                  %{id: :home, label: "Home"},
+                  %{id: :items, label: "Items"},
+                  %{id: :detail, label: "Item Details"}
+                ],
+                current: :detail
+              )
+            ])
+          ])
+        ]),
+      metadata: %{
+        example_id: :history_navigation,
+        source: :native,
+        coverage: [:navigation_widgets, :screen_navigation, :history_stack],
+        navigation_pattern: :history_based,
+        screens: [:home, :items, :detail]
+      }
+    }
+  end
+
+  @spec modal_navigation_screen() :: map()
+  def modal_navigation_screen do
+    %{
+      id: "modal-navigation",
+      title: "Modal Navigation Example",
+      root:
+        DesktopUi.Widgets.window("modal-window", "Modal Dialog Demo", [
+          DesktopUi.Widgets.column("modal-layout", [
+            DesktopUi.Widgets.content("modal-header", [
+              DesktopUi.Widgets.label("modal-title", "Modal Dialog Demo"),
+              DesktopUi.Widgets.text("modal-subtitle", "Demonstrates independent modal stack")
+            ]),
+            DesktopUi.Widgets.content("modal-content", [
+              DesktopUi.Widgets.text("modal-hint", "Click button to open a modal dialog"),
+              DesktopUi.Widgets.button("confirm-button", "Open Confirm Dialog",
+                open_modal: :confirm_dialog
+              ),
+              DesktopUi.Widgets.button("settings-button", "Open Settings Modal",
+                open_modal: :settings
+              )
+            ])
+          ])
+        ]),
+      metadata: %{
+        example_id: :modal_navigation,
+        source: :native,
+        coverage: [:navigation_widgets, :screen_navigation, :modal_stack],
+        navigation_pattern: :modal_dialogs,
+        screens: [:main, :confirm_dialog, :settings],
+        modals: [:confirm_dialog, :settings]
+      }
+    }
+  end
+
+  @spec master_detail_navigation_screen() :: map()
+  def master_detail_navigation_screen do
+    %{
+      id: "master-detail-navigation",
+      title: "Master-Detail Navigation",
+      root:
+        DesktopUi.Widgets.window("master-detail-window", "Master-Detail View", [
+          DesktopUi.Widgets.row("master-detail-layout", [
+            # Master panel (list of items)
+            DesktopUi.Widgets.column("master-panel", [
+              DesktopUi.Widgets.content("master-header", [
+                DesktopUi.Widgets.label("master-title", "Items")
+              ]),
+              DesktopUi.Widgets.list(
+                "item-list",
+                [
+                  %{id: :item1, label: "Item 1"},
+                  %{id: :item2, label: "Item 2"},
+                  %{id: :item3, label: "Item 3"}
+                ],
+                current: :item1,
+                binding: :selected_item,
+                on_navigate: %{family: :navigation, type: :navigate_to, screen_id: :detail}
+              )
+            ]),
+            # Detail panel (selected item details)
+            DesktopUi.Widgets.column("detail-panel", [
+              DesktopUi.Widgets.content("detail-header", [
+                DesktopUi.Widgets.label("detail-title", "Details"),
+                DesktopUi.Widgets.button("edit-button", "Edit",
+                  navigate_to: :edit,
+                  navigate_params: %{item_id: :item1}
+                )
+              ]),
+              DesktopUi.Widgets.content("detail-content", [
+                DesktopUi.Widgets.text("detail-name", "Item 1"),
+                DesktopUi.Widgets.text("detail-desc", "Description for Item 1")
+              ])
+            ])
+          ])
+        ]),
+      metadata: %{
+        example_id: :master_detail_navigation,
+        source: :native,
+        coverage: [:navigation_widgets, :screen_navigation, :list_navigation],
+        navigation_pattern: :master_detail,
+        screens: [:master, :detail, :edit]
+      }
+    }
+  end
+
   @spec normalized_input_comparison() :: map()
   def normalized_input_comparison do
     shortcut_profiles =
@@ -1016,7 +1187,11 @@ defmodule DesktopUi.Examples do
       :native_foundational,
       :native_advanced_operations,
       :native_transport_review,
-      :native_styled_review
+      :native_styled_review,
+      :basic_navigation,
+      :history_navigation,
+      :modal_navigation,
+      :master_detail_navigation
     ]
 
   @spec canonical_ids() :: [atom()]
@@ -1202,6 +1377,39 @@ defmodule DesktopUi.Examples do
         parity_group: :style_review,
         parity_with: [:native_styled_review, :canonical_styled_review],
         coverage: [:style_continuity, :theme_alignment, :artifact_targets]
+      },
+      # Navigation examples
+      %{
+        id: :basic_navigation,
+        category: :native,
+        workflow: :navigation_review,
+        parity_group: nil,
+        parity_with: [],
+        coverage: [:navigation_widgets, :screen_navigation, :menu_navigation]
+      },
+      %{
+        id: :history_navigation,
+        category: :native,
+        workflow: :navigation_review,
+        parity_group: nil,
+        parity_with: [],
+        coverage: [:navigation_widgets, :screen_navigation, :history_stack]
+      },
+      %{
+        id: :modal_navigation,
+        category: :native,
+        workflow: :navigation_review,
+        parity_group: nil,
+        parity_with: [],
+        coverage: [:navigation_widgets, :screen_navigation, :modal_stack]
+      },
+      %{
+        id: :master_detail_navigation,
+        category: :native,
+        workflow: :navigation_review,
+        parity_group: nil,
+        parity_with: [],
+        coverage: [:navigation_widgets, :screen_navigation, :list_navigation]
       }
     ]
   end
