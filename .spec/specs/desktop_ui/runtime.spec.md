@@ -10,6 +10,7 @@ multiplatform SDL3-based desktop library.
 - [DesktopUi Package](./package.spec.md)
 - [DesktopUi Native Widgets](./native_widgets.spec.md)
 - [DesktopUi Transport](./transport.spec.md)
+- [DesktopUi Structure](./structure.spec.md)
 
 ```spec-meta
 id: desktop_ui.runtime
@@ -21,6 +22,7 @@ surface:
   - .spec/specs/desktop_ui/runtime.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - desktop_ui.runtime.screen_navigation
 ```
 
 ## Requirements
@@ -55,6 +57,36 @@ decisions:
   statement: Platform-specific runtime behavior may vary where operating-system integration requires it, but those variations shall remain bounded behind the shared `desktop_ui` runtime model.
   priority: must
   stability: stable
+
+- id: desktop_ui.runtime.screen_navigation_support
+  statement: The runtime shall provide navigation primitives for moving between screens within a window, including history stack tracking, back/forward navigation, and modal dialogs.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.runtime.navigation_controller_process
+  statement: Screen navigation shall be managed by a dedicated GenServer that maintains navigation state independent of window state, allowing windows to persist across screen transitions.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.runtime.screen_registry
+  statement: Applications shall be able to register screen modules with identifiers for navigation lookup, and the runtime shall resolve navigation targets from this registry.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.runtime.navigation_actions
+  statement: The runtime shall support navigation actions including `navigate/2` for history-push transitions, `replace/2` for history-neutral transitions, `go_back/0` and `go_forward/0` for history traversal, and `open_modal/2`/`close_modal/0` for modal dialogs.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.runtime.navigation_event_routing
+  statement: Widgets shall emit navigation signals (`:navigate_to`, `:replace_with`, `:go_back`, etc.) that route to the navigation controller, and the runtime shall update the current screen state in response to navigation actions.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.runtime.modal_stack_independence
+  statement: Modal dialogs shall be managed on a separate stack from main navigation history, allowing overlays to open and close without affecting back/forward navigation state.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -69,6 +101,31 @@ decisions:
   given: A maintainer runs a compiled visible-window `desktop_ui` example and interacts with focusable controls, pointers, scrolling regions, and secondary windows
   when: Input events flow through the runtime
   then: The runtime preserves the same binding, command, transport, and window-management semantics expected by native and canonical package flows
+
+- id: desktop_ui.runtime_navigate_between_screens
+  given: A desktop_ui application with multiple registered screens
+  when: A widget emits a `:navigate_to` signal for a registered screen
+  then: The navigation controller updates the current screen, pushes the previous screen onto the history stack, and the runtime renders the new screen within the same window
+
+- id: desktop_ui.runtime_back_navigation
+  given: A user has navigated through multiple screens (home → list → detail)
+  when: The user triggers `:go_back` navigation
+  then: The navigation controller pops from the history stack to return to the previous screen, and the forward stack stores the detail screen for potential forward navigation
+
+- id: desktop_ui.runtime_replace_current_screen
+  given: A user is viewing a screen and an error occurs or an auth redirect is needed
+  when: The navigation controller receives a `:replace` action
+  then: The current screen is replaced without adding to the history stack, preventing back navigation to the replaced screen
+
+- id: desktop_ui.runtime_modal_dialog_independent_history
+  given: A user is viewing a screen with navigation history
+  when: A modal dialog is opened via `:open_modal` and then closed
+  then: The modal appears on top of the current screen, and closing it returns to the same screen without affecting the navigation history stack
+
+- id: desktop_ui.runtime_window_persists_across_screen_transitions
+  given: A window is open displaying a screen
+  when: Navigation occurs to a different screen
+  then: The window remains open with the same position, size, and platform state; only the screen content changes
 ```
 
 ## Verification
@@ -83,6 +140,27 @@ decisions:
     - desktop_ui.runtime.window_lifecycle_and_input
     - desktop_ui.runtime.interactive_visible_execution
     - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
     - desktop_ui.runtime_run_same_screen_on_multiple_targets
     - desktop_ui.runtime_interact_with_visible_native_window
+    - desktop_ui.runtime_navigate_between_screens
+    - desktop_ui.runtime_back_navigation
+    - desktop_ui.runtime_replace_current_screen
+    - desktop_ui.runtime_modal_dialog_independent_history
+    - desktop_ui.runtime_window_persists_across_screen_transitions
+
+- kind: source_file
+  target: .spec/decisions/desktop_ui/desktop_ui.runtime.screen_navigation.md
+  covers:
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
 ```

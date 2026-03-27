@@ -1,9 +1,41 @@
 defmodule DesktopUi.Widgets.Navigation do
   @moduledoc """
   Foundational navigation widgets for direct-native `desktop_ui`.
+
+  This module provides both widget constructors for navigation widgets
+  (menu, tabs, breadcrumbs, list) and helpers for integrating with
+  the screen navigation system.
+
+  ## Screen Navigation
+
+  Screen navigation allows widgets to emit navigation signals that
+  are routed to the navigation controller for screen transitions.
+
+      # Navigate to another screen on button click
+      button = DesktopUi.Widgets.button("Go to Detail",
+        navigate_to: :detail,
+        navigate_params: %{item_id: 123}
+      )
+
+      # Navigate with replace
+      DesktopUi.Widgets.button("Show Error",
+        replace_with: :error,
+        navigate_params: %{code: 404}
+      )
+
+      # Go back button
+      DesktopUi.Widgets.button("Back", go_back: true)
+
+      # Open modal
+      DesktopUi.Widgets.button("Confirm",
+        open_modal: :confirm_dialog,
+        navigate_params: %{message: "Are you sure?"}
+      )
+
   """
 
   alias DesktopUi.Widget
+  alias DesktopUi.Navigation.Signal
 
   @spec kinds() :: [atom()]
   def kinds do
@@ -29,6 +61,109 @@ defmodule DesktopUi.Widgets.Navigation do
   def list(id, items, opts \\ []) do
     navigation_widget(:list, id, items, opts)
   end
+
+  @doc """
+  Creates a navigation signal for navigating to a screen.
+
+  ## Options
+
+  * `:navigate_to` - Screen ID to navigate to (adds to history)
+  * `:replace_with` - Screen ID to replace current with (no history entry)
+  * `:go_back` - Set to true to go back in history
+  * `:go_forward` - Set to true to go forward in history
+  * `:open_modal` - Screen ID to open as modal
+  * `:close_modal` - Set to true to close top modal
+  * `:navigate_params` - Params to pass with navigation
+
+  ## Examples
+
+      signal = Navigation.signal_for(navigate_to: :detail, navigate_params: %{item_id: 123})
+      # => %Signal{type: :navigate_to, screen_id: :detail, params: %{item_id: 123}}
+
+  """
+  @spec signal_for(keyword()) :: Signal.t() | nil
+  def signal_for(opts) when is_list(opts), do: opts |> Enum.into(%{}) |> signal_for()
+
+  def signal_for(%{navigate_to: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    Signal.navigate(screen_id, Map.get(opts, :navigate_params, %{}))
+  end
+
+  def signal_for(%{replace_with: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    Signal.replace(screen_id, Map.get(opts, :navigate_params, %{}))
+  end
+
+  def signal_for(%{go_back: true}) do
+    Signal.go_back()
+  end
+
+  def signal_for(%{go_forward: true}) do
+    Signal.go_forward()
+  end
+
+  def signal_for(%{open_modal: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    Signal.open_modal(screen_id, Map.get(opts, :navigate_params, %{}))
+  end
+
+  def signal_for(%{close_modal: true}) do
+    Signal.close_modal()
+  end
+
+  def signal_for(_), do: nil
+
+  @doc """
+  Returns the navigation event payload for a widget based on navigation options.
+
+  This is used internally by widget builders to attach navigation events.
+
+  ## Examples
+
+      payload = Navigation.event_payload(navigate_to: :detail)
+      # => %{family: :navigation, type: :navigate_to, screen_id: :detail}
+
+  """
+  @spec event_payload(keyword()) :: map() | nil
+  def event_payload(opts) when is_list(opts), do: opts |> Enum.into(%{}) |> event_payload()
+
+  def event_payload(%{navigate_to: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    %{
+      family: :navigation,
+      type: :navigate_to,
+      screen_id: screen_id,
+      params: Map.get(opts, :navigate_params, %{})
+    }
+  end
+
+  def event_payload(%{replace_with: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    %{
+      family: :navigation,
+      type: :replace_with,
+      screen_id: screen_id,
+      params: Map.get(opts, :navigate_params, %{})
+    }
+  end
+
+  def event_payload(%{go_back: true}) do
+    %{family: :navigation, type: :go_back}
+  end
+
+  def event_payload(%{go_forward: true}) do
+    %{family: :navigation, type: :go_forward}
+  end
+
+  def event_payload(%{open_modal: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    %{
+      family: :navigation,
+      type: :open_modal,
+      screen_id: screen_id,
+      params: Map.get(opts, :navigate_params, %{})
+    }
+  end
+
+  def event_payload(%{close_modal: true}) do
+    %{family: :navigation, type: :close_modal}
+  end
+
+  def event_payload(_), do: nil
 
   defp navigation_widget(kind, id, items, opts) do
     Widget.new(kind,
