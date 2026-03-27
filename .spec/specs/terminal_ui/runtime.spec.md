@@ -5,7 +5,6 @@ This subject defines the target runtime behavior of `terminal_ui` as a
 
 ## Related General Specs
 
-- [Application Authority](../application_authority.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [TerminalUi Package](./package.spec.md)
@@ -17,7 +16,7 @@ This subject defines the target runtime behavior of `terminal_ui` as a
 id: terminal_ui.runtime
 kind: runtime
 status: active
-summary: Target terminal runtime contract for `terminal_ui`, including application-authoritative UI coordination plus backend selection, terminal lifecycle coordination, and shared runtime semantics across richer and limited terminal environments.
+summary: Target terminal runtime contract for `terminal_ui`, including backend selection, terminal lifecycle coordination, and shared runtime semantics across richer and limited terminal environments.
 surface:
   - packages/terminal_ui
   - .spec/specs/terminal_ui/runtime.spec.md
@@ -30,16 +29,6 @@ decisions:
 ```spec-requirements
 - id: terminal_ui.runtime.term_ui_foundation
   statement: The terminal runtime shall use a `term_ui`-backed rendering and input foundation while allowing package-local adapter layers to preserve `terminal_ui` package semantics.
-  priority: must
-  stability: stable
-
-- id: terminal_ui.runtime.application_authoritative_model
-  statement: The application side of `terminal_ui` shall hold the authoritative representation of terminal UI meaning, canonical event translation, and runtime coordination at the ecosystem boundary, with backend-local behavior kept subordinate to that application-side model.
-  priority: must
-  stability: stable
-
-- id: terminal_ui.runtime.backend_local_state_bounded
-  statement: Backend-local state may exist for terminal negotiation, resize handling, focus restoration, redraw coordination, or similar native concerns, but that state shall not redefine canonical package-boundary event meaning.
   priority: must
   stability: stable
 
@@ -80,8 +69,6 @@ decisions:
   target: .spec/specs/terminal_ui/runtime.spec.md
   covers:
     - terminal_ui.runtime.term_ui_foundation
-    - terminal_ui.runtime.application_authoritative_model
-    - terminal_ui.runtime.backend_local_state_bounded
     - terminal_ui.runtime.shared_runtime_across_backends
     - terminal_ui.runtime.native_and_iur_entrypoints_share_runtime
     - terminal_ui.runtime.terminal_lifecycle_and_input

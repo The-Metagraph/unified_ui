@@ -5,7 +5,6 @@ This subject defines the target Phoenix server-side runtime behavior of
 
 ## Related General Specs
 
-- [Application Authority](../application_authority.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [ElmUi Package](./package.spec.md)

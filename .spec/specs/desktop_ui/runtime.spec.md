@@ -5,7 +5,6 @@ multiplatform SDL3-based desktop library.
 
 ## Related General Specs
 
-- [Application Authority](../application_authority.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [DesktopUi Package](./package.spec.md)
@@ -17,7 +16,7 @@ multiplatform SDL3-based desktop library.
 id: desktop_ui.runtime
 kind: runtime
 status: active
-summary: Target multiplatform desktop runtime contract for `desktop_ui`, including application-authoritative UI coordination plus SDL3-based rendering and input coordination across Windows, macOS, and Linux.
+summary: Target multiplatform desktop runtime contract for `desktop_ui`, including SDL3-based rendering and input coordination across Windows, macOS, and Linux.
 surface:
   - packages/desktop_ui
   - .spec/specs/desktop_ui/runtime.spec.md
@@ -31,16 +30,6 @@ decisions:
 ```spec-requirements
 - id: desktop_ui.runtime.sdl3_foundation
   statement: The desktop runtime shall use SDL3 as the shared rendering and input foundation across supported desktop targets while allowing platform integration layers to supply target-specific behavior where needed.
-  priority: must
-  stability: stable
-
-- id: desktop_ui.runtime.application_authoritative_model
-  statement: The application side of `desktop_ui` shall hold the authoritative representation of desktop UI meaning, canonical event translation, and runtime coordination at the ecosystem boundary, with SDL3- and platform-local behavior kept subordinate to that application-side model.
-  priority: must
-  stability: stable
-
-- id: desktop_ui.runtime.platform_local_state_bounded
-  statement: Platform-local and host-local state may exist for window realization, redraw coordination, focus handling, or similar native concerns, but that state shall not redefine canonical package-boundary event meaning.
   priority: must
   stability: stable
 
@@ -146,8 +135,6 @@ decisions:
   target: .spec/specs/desktop_ui/runtime.spec.md
   covers:
     - desktop_ui.runtime.sdl3_foundation
-    - desktop_ui.runtime.application_authoritative_model
-    - desktop_ui.runtime.platform_local_state_bounded
     - desktop_ui.runtime.shared_runtime_across_targets
     - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
     - desktop_ui.runtime.window_lifecycle_and_input

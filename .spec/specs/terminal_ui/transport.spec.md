@@ -5,7 +5,6 @@ event meaning and its native terminal interaction model.
 
 ## Related General Specs
 
-- [Application Authority](../application_authority.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
 - [TerminalUi Package](./package.spec.md)
@@ -17,7 +16,7 @@ event meaning and its native terminal interaction model.
 id: terminal_ui.transport
 kind: integration
 status: active
-summary: Target boundary-translation contract for `terminal_ui`, preserving canonical event meaning and application-authoritative behavior across terminal-native interactions and capability-aware fallback modes.
+summary: Target boundary-translation contract for `terminal_ui`, preserving canonical event meaning across terminal-native interactions and capability-aware fallback modes.
 surface:
   - packages/terminal_ui
   - .spec/specs/terminal_ui/transport.spec.md
@@ -35,11 +34,6 @@ decisions:
 
 - id: terminal_ui.transport.native_terminal_event_model
   statement: The package may use its own native terminal interaction model internally, but that model shall translate to and from canonical boundary meaning without loss of event intent.
-  priority: must
-  stability: stable
-
-- id: terminal_ui.transport.application_authority_preserved
-  statement: Event translation shall preserve the application-authoritative behavior required by the `terminal_ui` runtime instead of moving canonical decision-making into backend-local input handling.
   priority: must
   stability: stable
 
@@ -81,7 +75,6 @@ decisions:
   covers:
     - terminal_ui.transport.canonical_boundary_events
     - terminal_ui.transport.native_terminal_event_model
-    - terminal_ui.transport.application_authority_preserved
     - terminal_ui.transport.backend_input_normalization
     - terminal_ui.transport.no_boundary_leakage
     - terminal_ui.transport.direct_native_usage_allowed
