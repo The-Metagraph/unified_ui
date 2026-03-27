@@ -79,7 +79,7 @@ defmodule DesktopUi.Navigation do
 
   """
 
-  alias DesktopUi.Navigation.{Controller, State}
+  alias DesktopUi.Navigation.{Controller, Lifecycle, Registry, State}
 
   @type screen_id :: atom() | String.t()
   @type screen_module :: module()
@@ -94,6 +94,8 @@ defmodule DesktopUi.Navigation do
     [
       __MODULE__,
       Controller,
+      Lifecycle,
+      Registry,
       State
     ]
   end
