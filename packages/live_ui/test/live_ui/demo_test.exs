@@ -11,6 +11,8 @@ defmodule LiveUi.DemoTest do
     assert demo.total_examples > 0
     assert demo.html =~ "Live UI Workbench"
     assert demo.html =~ ~s(data-live-ui-widget="screen-shell")
+    assert demo.html =~ ~s(href="#{LiveUi.Demo.path(example: :native_styled_profile, category: :native)}")
+    refute demo.html =~ ~s(phx-click="select_example")
   end
 
   test "native example workbench renders a preview through the shared runtime" do

@@ -90,7 +90,11 @@ defmodule Mix.Tasks.LiveUi.Demo do
           press Ctrl+C twice to stop
         """)
 
-        await_shutdown(Keyword.get(opts, :linger_ms))
+        try do
+          await_shutdown(Keyword.get(opts, :linger_ms))
+        after
+          stop_server(launch.server)
+        end
 
       {:error, reason} ->
         Mix.raise("unable to launch live_ui demo server: #{inspect(reason)}")
@@ -138,6 +142,12 @@ defmodule Mix.Tasks.LiveUi.Demo do
 
   defp await_shutdown(milliseconds) when is_integer(milliseconds) and milliseconds >= 0 do
     Process.sleep(milliseconds)
+  end
+
+  defp stop_server(server) when is_pid(server) do
+    if Process.alive?(server) do
+      Supervisor.stop(server)
+    end
   end
 
   defp usage do
