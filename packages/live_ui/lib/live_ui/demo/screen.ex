@@ -6,6 +6,7 @@ defmodule LiveUi.Demo.Screen do
 
   use LiveUi.Screen, id: :live_ui_demo, title: "Live UI Demo"
 
+  alias LiveUi.Demo
   alias LiveUi.Demo.{Catalog, Style}
 
   @impl true
@@ -15,48 +16,6 @@ defmodule LiveUi.Demo.Screen do
       selected_category: Catalog.default_category(),
       selected_example: nil
     }
-  end
-
-  @impl true
-  def event_routes do
-    %{
-      "select_home" => :select_home,
-      "select_category" => :select_category,
-      "select_example" => :select_example
-    }
-  end
-
-  @impl true
-  def handle_event(:select_home, _payload, assigns) do
-    {:ok, %{assigns | view: :home, selected_example: nil}}
-  end
-
-  def handle_event(:select_category, %{"category" => category}, assigns) do
-    selected_category = Catalog.normalize_category(category) || assigns.selected_category
-    {:ok, %{assigns | view: :home, selected_category: selected_category, selected_example: nil}}
-  end
-
-  def handle_event(:select_example, %{"example" => example} = payload, assigns) do
-    case Catalog.fetch_example(example) do
-      {:ok, resolved} ->
-        category =
-          payload
-          |> Map.get("category")
-          |> Catalog.normalize_category()
-          |> Kernel.||(Catalog.primary_category(resolved))
-          |> Kernel.||(assigns.selected_category)
-
-        {:ok,
-         %{
-           assigns
-           | view: :example,
-             selected_category: category,
-             selected_example: resolved.id
-         }}
-
-      {:error, _reason} ->
-        {:ok, assigns}
-    end
   end
 
   @impl true
@@ -108,6 +67,7 @@ defmodule LiveUi.Demo.Screen do
       |> Map.put(:title_style, Style.text("live-ui-demo-title", tone: :success))
       |> Map.put(:muted_style, Style.text("live-ui-demo-muted"))
       |> Map.put(:home_button_style, Style.button("live-ui-demo-home-button", variant: :quiet))
+      |> Map.put(:overview_path, overview_path(assigns.current_category))
 
     ~H"""
     <LiveUi.Widgets.Box.render id="live-ui-demo-topbar" padding="lg" border="subtle" background="panel" {@panel_style}>
@@ -132,13 +92,7 @@ defmodule LiveUi.Demo.Screen do
       </div>
 
       <div>
-        <LiveUi.Widgets.Button.render
-          id="live-ui-demo-home-action"
-          label="Overview"
-          phx-click="select_home"
-          phx-target={@event_target}
-          {@home_button_style}
-        />
+        <%= nav_link("live-ui-demo-home-action", "Overview", @overview_path, @home_button_style) %>
       </div>
 
       <div>
@@ -176,7 +130,7 @@ defmodule LiveUi.Demo.Screen do
         {@muted_style}
       />
 
-      <div>
+      <div class="live-ui-demo-sidebar-group live-ui-demo-sidebar-lanes">
         <%= for category <- @categories do %>
           <%= category_button(assigns, category) %>
         <% end %>
@@ -188,7 +142,7 @@ defmodule LiveUi.Demo.Screen do
         {@muted_style}
       />
 
-      <div>
+      <div class="live-ui-demo-sidebar-group live-ui-demo-sidebar-examples">
         <%= for example <- @sidebar_examples do %>
           <%= example_button(assigns, example) %>
         <% end %>
@@ -209,16 +163,15 @@ defmodule LiveUi.Demo.Screen do
       assigns
       |> Map.put(:category, category)
       |> Map.put(:button_style, button_style)
+      |> Map.put(:category_path, category_path(category.id))
 
     ~H"""
-    <LiveUi.Widgets.Button.render
-      id={"live-ui-demo-category-#{@category.id}"}
-      label={"#{@category.title} (#{@category.example_count})"}
-      phx-click="select_category"
-      phx-target={@event_target}
-      phx-value-category={@category.id}
-      {@button_style}
-    />
+    <%= nav_link(
+      "live-ui-demo-category-#{@category.id}",
+      "#{@category.title} (#{@category.example_count})",
+      @category_path,
+      @button_style
+    ) %>
     """
   end
 
@@ -237,17 +190,15 @@ defmodule LiveUi.Demo.Screen do
       assigns
       |> Map.put(:example, example)
       |> Map.put(:button_style, button_style)
+      |> Map.put(:example_path, example_path(example.id, assigns.current_category))
 
     ~H"""
-    <LiveUi.Widgets.Button.render
-      id={"live-ui-demo-example-#{@example.id}"}
-      label={@example.title}
-      phx-click="select_example"
-      phx-target={@event_target}
-      phx-value-example={@example.id}
-      phx-value-category={@current_category}
-      {@button_style}
-    />
+    <%= nav_link(
+      "live-ui-demo-example-#{@example.id}",
+      @example.title,
+      @example_path,
+      @button_style
+    ) %>
     """
   end
 
@@ -261,17 +212,17 @@ defmodule LiveUi.Demo.Screen do
       |> Map.put(:muted_style, Style.text("live-ui-demo-content-copy"))
       |> Map.put(:title_style, Style.text("live-ui-demo-content-title", tone: :accent))
       |> Map.put(:home_button_style, Style.button("live-ui-demo-back-button", variant: :quiet))
+      |> Map.put(:overview_path, overview_path(assigns.current_category))
 
     ~H"""
     <LiveUi.Layout.Column.render id="live-ui-demo-content" gap="lg" {@stack_style}>
       <LiveUi.Widgets.Box.render id="live-ui-demo-example-header" padding="lg" border="subtle" background="panel" {@panel_style}>
-        <LiveUi.Widgets.Button.render
-          id="live-ui-demo-example-home"
-          label="Back To Overview"
-          phx-click="select_home"
-          phx-target={@event_target}
-          {@home_button_style}
-        />
+        <%= nav_link(
+          "live-ui-demo-example-home",
+          "Back To Overview",
+          @overview_path,
+          @home_button_style
+        ) %>
         <LiveUi.Widgets.Text.render
           id="live-ui-demo-example-path"
           content={"#{String.upcase(to_string(@example.path))} example"}
@@ -306,6 +257,7 @@ defmodule LiveUi.Demo.Screen do
       |> Map.put(:panel_style, Style.panel("live-ui-demo-home-panel"))
       |> Map.put(:muted_style, Style.text("live-ui-demo-home-copy"))
       |> Map.put(:title_style, Style.text("live-ui-demo-home-title", tone: :accent))
+      |> Map.put(:current_lane, Enum.find(assigns.categories, &(&1.id == assigns.current_category)))
 
     ~H"""
     <LiveUi.Layout.Column.render id="live-ui-demo-home" gap="lg" {@stack_style}>
@@ -323,71 +275,39 @@ defmodule LiveUi.Demo.Screen do
         <LiveUi.Widgets.Text.render
           id="live-ui-demo-hero-copy"
           content={
-            "Use the lane cards below to jump into a styled profile, a canonical overlay workflow, or a transport comparison without leaving the package boundary."
+            "Use the left sidebar to switch lanes and open a maintained example without leaving the shared runtime surface."
           }
           {@muted_style}
         />
       </LiveUi.Widgets.Box.render>
 
-      <LiveUi.Layout.Grid.render id="live-ui-demo-category-grid" columns={2} gap="lg" {@grid_style}>
-        <%= for category <- @categories do %>
-          <%= category_card(assigns, category) %>
-        <% end %>
-      </LiveUi.Layout.Grid.render>
+      <LiveUi.Widgets.Box.render id="live-ui-demo-lane-summary" padding="lg" border="subtle" background="panel" {@panel_style}>
+        <LiveUi.Widgets.Text.render
+          id="live-ui-demo-lane-summary-title"
+          content={"Current lane: #{@current_lane.title}"}
+          {@title_style}
+        />
+        <LiveUi.Widgets.Text.render
+          id="live-ui-demo-lane-summary-copy"
+          content={@current_lane.description}
+          {@muted_style}
+        />
+        <LiveUi.Widgets.Text.render
+          id="live-ui-demo-lane-summary-featured"
+          content={"Featured example: #{@current_lane.featured_example.title}"}
+          {@muted_style}
+        />
+        <div class="live-ui-demo-overview-list">
+          <%= for example <- Enum.take(@sidebar_examples, 4) do %>
+            <LiveUi.Widgets.Text.render
+              id={"live-ui-demo-overview-example-#{example.id}"}
+              content={"Example: #{example.title}"}
+              {@muted_style}
+            />
+          <% end %>
+        </div>
+      </LiveUi.Widgets.Box.render>
     </LiveUi.Layout.Column.render>
-    """
-  end
-
-  defp category_card(assigns, category) do
-    featured = category.featured_example
-
-    assigns =
-      assigns
-      |> Map.put(:category, category)
-      |> Map.put(:featured, featured)
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-category-card"))
-      |> Map.put(:button_style, Style.button("live-ui-demo-category-open"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-category-copy"))
-      |> Map.put(:title_style, Style.text("live-ui-demo-category-title", tone: :accent))
-
-    ~H"""
-    <LiveUi.Widgets.Box.render
-      id={"live-ui-demo-card-#{@category.id}"}
-      padding="lg"
-      border="subtle"
-      background="panel"
-      {@panel_style}
-    >
-      <LiveUi.Widgets.Text.render
-        id={"live-ui-demo-card-count-#{@category.id}"}
-        content={"#{@category.example_count} examples"}
-        {@muted_style}
-      />
-      <LiveUi.Widgets.Text.render
-        id={"live-ui-demo-card-title-#{@category.id}"}
-        content={@category.title}
-        {@title_style}
-      />
-      <LiveUi.Widgets.Text.render
-        id={"live-ui-demo-card-description-#{@category.id}"}
-        content={@category.description}
-        {@muted_style}
-      />
-      <LiveUi.Widgets.Text.render
-        id={"live-ui-demo-card-featured-#{@category.id}"}
-        content={"Featured: #{@featured.title}"}
-        {@muted_style}
-      />
-      <LiveUi.Widgets.Button.render
-        id={"live-ui-demo-card-open-#{@category.id}"}
-        label={"Open #{@featured.title}"}
-        phx-click="select_example"
-        phx-target={@event_target}
-        phx-value-example={@featured.id}
-        phx-value-category={@category.id}
-        {@button_style}
-      />
-    </LiveUi.Widgets.Box.render>
     """
   end
 
@@ -510,5 +430,44 @@ defmodule LiveUi.Demo.Screen do
       {:error, reason} -> %{mode: :error, reason: reason}
     end
   end
-end
 
+  defp overview_path(category) do
+    Demo.path(category: category)
+  end
+
+  defp category_path(category) do
+    Demo.path(category: category)
+  end
+
+  defp example_path(example, category) do
+    Demo.path(example: example, category: category)
+  end
+
+  defp nav_link(id, label, path, style) do
+    assigns = %{
+      link_id: id,
+      label: label,
+      path: path,
+      style: style,
+      link_attrs: Map.get(style, :rest, %{}),
+      tone: Map.get(style, :tone),
+      variant: Map.get(style, :variant),
+      state: Map.get(style, :state)
+    }
+
+    ~H"""
+    <.link
+      patch={@path}
+      id={@link_id}
+      class={@style.class}
+      data-live-ui-widget="link"
+      data-live-ui-tone={@tone}
+      data-live-ui-variant={@variant}
+      data-live-ui-state={@state}
+      {@link_attrs}
+    >
+      <%= @label %>
+    </.link>
+    """
+  end
+end
