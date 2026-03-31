@@ -145,7 +145,7 @@ defmodule LiveUi.Style do
         ]),
       attrs: native_attrs,
       role: normalize_optional(fetch(opts, :role)),
-      browser: Browser.realize(canonical),
+      browser: Browser.realize(canonical_for_browser(canonical, state)),
       canonical: canonical
     }
   end
@@ -169,7 +169,7 @@ defmodule LiveUi.Style do
         canonical: CanonicalStyle.merge(parent.canonical, child.canonical)
       }
 
-    %{merged | browser: Browser.realize(merged.canonical)}
+    %{merged | browser: Browser.realize(canonical_for_browser(merged.canonical, merged.state))}
   end
 
   @spec browser_contract() :: [Browser.precedence_stage()]
@@ -298,6 +298,42 @@ defmodule LiveUi.Style do
     profile = new(style_profile)
     merge_attr_maps(profile.attrs, profile.browser.attrs)
   end
+
+  defp canonical_for_browser(%CanonicalStyle{} = canonical, state) do
+    state_key = denormalize_optional(state)
+    state_variant = state_variant_for_browser(canonical, state_key)
+
+    canonical =
+      case state_variant do
+        nil -> canonical
+        variant -> CanonicalStyle.merge(canonical, variant)
+      end
+
+    %{canonical | state_variants: drop_state_variant(canonical.state_variants, state_key)}
+  end
+
+  defp state_variant_for_browser(_canonical, nil), do: nil
+
+  defp state_variant_for_browser(%CanonicalStyle{} = canonical, state_key) do
+    CanonicalStyle.state_variant(canonical, state_key) ||
+      state_key
+      |> alternate_state_key()
+      |> case do
+        nil -> nil
+        alternate -> CanonicalStyle.state_variant(canonical, alternate)
+      end
+  end
+
+  defp drop_state_variant(variants, nil), do: variants
+
+  defp drop_state_variant(variants, state_key) do
+    variants
+    |> Map.delete(state_key)
+    |> Map.delete(alternate_state_key(state_key))
+  end
+
+  defp alternate_state_key(value) when is_atom(value), do: Atom.to_string(value)
+  defp alternate_state_key(_value), do: nil
 
   defp emphasis_tone(%CanonicalStyle{} = style) do
     style.emphasis

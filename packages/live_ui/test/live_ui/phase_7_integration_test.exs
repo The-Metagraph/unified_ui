@@ -237,7 +237,7 @@ defmodule LiveUi.Phase7IntegrationTest do
              "visibility.disabled?"
            ]
 
-    assert diagnostics.ignored_fields == ["state_variants"]
+    assert diagnostics.ignored_fields == ["state_variants.active"]
   end
 
   defp box_slot(content) do

@@ -244,7 +244,19 @@ defmodule LiveUi.Style.Browser do
 
   defp ignored_fields(%CanonicalStyle{} = style) do
     []
-    |> maybe_append(style.state_variants != %{}, "state_variants")
+    |> Enum.concat(ignored_state_variants(style.state_variants))
+  end
+
+  defp ignored_state_variants(variants) when variants == %{}, do: []
+
+  defp ignored_state_variants(variants) when is_map(variants) do
+    variants
+    |> Map.keys()
+    |> Enum.map_join(",", fn key -> "state_variants.#{key}" end)
+    |> case do
+      "" -> []
+      value -> String.split(value, ",")
+    end
   end
 
   defp border_vars(border) when border in [%{}, nil], do: %{}
