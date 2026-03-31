@@ -10,6 +10,8 @@ defmodule Mix.Tasks.LiveUi.Demo do
       mix live_ui.demo native_styled_profile --format html
       mix live_ui.demo styled_continuity_compare --format report
       mix live_ui.demo --format catalog
+      mix live_ui.demo --serve
+      mix live_ui.demo native_styled_profile --serve --port 4040
   """
 
   @impl Mix.Task
@@ -17,30 +19,48 @@ defmodule Mix.Tasks.LiveUi.Demo do
     Mix.Task.run("app.start")
 
     {opts, positional, invalid} =
-      OptionParser.parse(args, switches: [format: :string, category: :string])
+      OptionParser.parse(args,
+        switches: [
+          category: :string,
+          format: :string,
+          host: :string,
+          linger_ms: :integer,
+          port: :integer,
+          serve: :boolean
+        ]
+      )
 
     if invalid != [] do
-      Mix.raise("usage: mix live_ui.demo [home|EXAMPLE_ID] [--format summary|html|report|catalog]")
+      Mix.raise(usage())
     end
 
     format = Keyword.get(opts, :format, "summary")
     category = Keyword.get(opts, :category)
+    request = request_opts(positional, category)
 
-    case {format, positional} do
-      {"catalog", []} ->
-        Mix.shell().info(format_catalog())
+    if Keyword.get(opts, :serve, false) do
+      serve_demo(request,
+        host: Keyword.get(opts, :host, LiveUi.Demo.default_host()),
+        linger_ms: Keyword.get(opts, :linger_ms),
+        port: Keyword.get(opts, :port, LiveUi.Demo.default_port())
+      )
+    else
+      case {format, positional} do
+        {"catalog", []} ->
+          Mix.shell().info(format_catalog())
 
-      {chosen_format, []} ->
-        run_demo(chosen_format, [category: category])
+        {chosen_format, []} ->
+          run_demo(chosen_format, request)
 
-      {chosen_format, ["home"]} ->
-        run_demo(chosen_format, [category: category])
+        {chosen_format, ["home"]} ->
+          run_demo(chosen_format, request)
 
-      {chosen_format, [example_id]} ->
-        run_demo(chosen_format, [category: category, example: example_id])
+        {chosen_format, [_example_id]} ->
+          run_demo(chosen_format, request)
 
-      _other ->
-        Mix.raise("usage: mix live_ui.demo [home|EXAMPLE_ID] [--format summary|html|report|catalog]")
+        _other ->
+          Mix.raise(usage())
+      end
     end
   end
 
@@ -51,6 +71,29 @@ defmodule Mix.Tasks.LiveUi.Demo do
 
       {:error, reason} ->
         Mix.raise("unable to render live_ui demo: #{inspect(reason)}")
+    end
+  end
+
+  defp serve_demo(request, opts) do
+    serve_opts =
+      request ++
+        [
+          host: Keyword.fetch!(opts, :host),
+          port: Keyword.fetch!(opts, :port)
+        ]
+
+    case LiveUi.Demo.serve(serve_opts) do
+      {:ok, launch} ->
+        Mix.shell().info("""
+        LiveUi demo server
+          url: #{launch.url}
+          press Ctrl+C twice to stop
+        """)
+
+        await_shutdown(Keyword.get(opts, :linger_ms))
+
+      {:error, reason} ->
+        Mix.raise("unable to launch live_ui demo server: #{inspect(reason)}")
     end
   end
 
@@ -81,7 +124,26 @@ defmodule Mix.Tasks.LiveUi.Demo do
     |> inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
   end
 
+  defp request_opts([], category), do: [category: category]
+  defp request_opts(["home"], category), do: [category: category]
+  defp request_opts([example_id], category), do: [category: category, example: example_id]
+  defp request_opts(_other, _category), do: Mix.raise(usage())
+
+  defp await_shutdown(nil) do
+    receive do
+    after
+      :infinity -> :ok
+    end
+  end
+
+  defp await_shutdown(milliseconds) when is_integer(milliseconds) and milliseconds >= 0 do
+    Process.sleep(milliseconds)
+  end
+
+  defp usage do
+    "usage: mix live_ui.demo [home|EXAMPLE_ID] [--format summary|html|report|catalog] [--serve --port PORT --host HOST]"
+  end
+
   defp selected_example_label(nil), do: "none"
   defp selected_example_label(example), do: to_string(example.id)
 end
-

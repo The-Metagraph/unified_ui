@@ -3,12 +3,20 @@ defmodule LiveUi.Demo do
   Package-local example workbench for `live_ui`.
   """
 
-  alias LiveUi.Demo.{Catalog, Screen}
+  alias LiveUi.Demo.{Catalog, Screen, Server}
 
   @type view :: :home | :example
+  @default_host "127.0.0.1"
+  @default_port 4040
 
   @spec screen() :: module()
   def screen, do: Screen
+
+  @spec default_host() :: String.t()
+  def default_host, do: @default_host
+
+  @spec default_port() :: pos_integer()
+  def default_port, do: @default_port
 
   @spec catalog() :: map()
   def catalog do
@@ -19,9 +27,50 @@ defmodule LiveUi.Demo do
     }
   end
 
+  @spec screen_assigns(keyword()) :: {:ok, map()} | {:error, term()}
+  def screen_assigns(opts \\ []) do
+    initial_assigns(opts)
+  end
+
+  @spec path(keyword()) :: String.t()
+  def path(opts \\ []) do
+    base =
+      case Keyword.get(opts, :example) do
+        nil -> "/"
+        example -> "/examples/" <> normalize_example_id(example)
+      end
+
+    case opts |> Keyword.get(:category) |> Catalog.normalize_category() do
+      nil -> base
+      category -> base <> "?category=" <> Atom.to_string(category)
+    end
+  end
+
+  @spec serve(keyword()) :: {:ok, map()} | {:error, term()}
+  def serve(opts \\ []) do
+    host = Keyword.get(opts, :host, @default_host)
+    port = Keyword.get(opts, :port, @default_port)
+    launch_path = path(opts)
+
+    case Server.start_link(host: host, port: port) do
+      {:ok, server} ->
+        {:ok,
+         %{
+           server: server,
+           host: host,
+           port: port,
+           path: launch_path,
+           url: Server.url(host: host, port: port, path: launch_path)
+         }}
+
+      other ->
+        other
+    end
+  end
+
   @spec run(keyword()) :: {:ok, map()} | {:error, term()}
   def run(opts \\ []) do
-    with {:ok, assigns} <- initial_assigns(opts),
+    with {:ok, assigns} <- screen_assigns(opts),
          {:ok, runtime_state} <- LiveUi.Runtime.mount(Screen, assigns: assigns) do
       selected_example = Catalog.find_example(assigns.selected_example)
 
@@ -47,6 +96,13 @@ defmodule LiveUi.Demo do
   def html(opts \\ []) do
     {:ok, %{html: html}} = run(opts)
     html
+  end
+
+  defp normalize_example_id(example) do
+    case Catalog.find_example(example) do
+      %{id: id} -> to_string(id)
+      _other -> to_string(example)
+    end
   end
 
   defp initial_assigns(opts) do

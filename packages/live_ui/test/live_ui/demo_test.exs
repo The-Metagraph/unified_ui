@@ -32,4 +32,13 @@ defmodule LiveUi.DemoTest do
     assert demo.preview.report =~ "profile"
     assert demo.preview.report =~ "runtime_action"
   end
+
+  test "browser host paths support home lanes and deep-linked examples" do
+    assert LiveUi.Demo.path() == "/"
+    assert LiveUi.Demo.path(category: :transport) == "/?category=transport"
+    assert LiveUi.Demo.path(example: :native_styled_profile) == "/examples/native_styled_profile"
+
+    assert LiveUi.Demo.path(example: :native_styled_profile, category: :native) ==
+             "/examples/native_styled_profile?category=native"
+  end
 end
