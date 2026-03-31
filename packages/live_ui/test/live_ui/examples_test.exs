@@ -133,6 +133,7 @@ defmodule LiveUi.ExamplesTest do
     assert {:ok, continuity} = LiveUi.Examples.StyledContinuityComparison.compare()
 
     assert continuity.profile.continuity.widgets_aligned?
+    assert continuity.profile.continuity.browser_style_aligned?
     assert continuity.profile.continuity.runtime_model_aligned?
     assert continuity.profile.diagnostics == []
     assert "box" in continuity.profile.shared_widgets
@@ -141,6 +142,7 @@ defmodule LiveUi.ExamplesTest do
     assert "button" in continuity.profile.shared_widgets
 
     assert continuity.operations.continuity.widgets_aligned?
+    assert continuity.operations.continuity.browser_style_aligned?
     assert continuity.operations.continuity.runtime_model_aligned?
     assert continuity.operations.diagnostics == []
     assert "overlay-surface" in continuity.operations.shared_widgets

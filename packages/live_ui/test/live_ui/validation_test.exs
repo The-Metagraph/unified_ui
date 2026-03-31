@@ -7,6 +7,7 @@ defmodule LiveUi.ValidationTest do
     assert report.example_health.all_passing?
     assert report.example_coverage.complete?
     assert report.continuity.aligned?
+    assert report.continuity.browser_style_aligned?
     assert report.transport.sound?
     assert report.runtime_authority.server_authoritative?
     assert report.documentation_surface.complete?
@@ -21,6 +22,7 @@ defmodule LiveUi.ValidationTest do
     assert summary =~ "LiveUi validation summary"
     assert summary =~ "examples passing?: true"
     assert summary =~ "continuity aligned?: true"
+    assert summary =~ "browser style aligned?: true"
     assert summary =~ "documentation complete?: true"
     assert summary =~ "release ready?: true"
   end

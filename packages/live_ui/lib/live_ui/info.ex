@@ -87,6 +87,7 @@ defmodule LiveUi.Info do
       shared_widgets: Map.get(report, :shared_widgets, []),
       native_only_widgets: Map.get(report, :native_only_widgets, []),
       canonical_only_widgets: Map.get(report, :canonical_only_widgets, []),
+      browser_style: Map.get(report, :browser_style, %{}),
       diagnostics: Map.get(report, :diagnostics, []),
       continuity: Map.get(report, :continuity, %{})
     }

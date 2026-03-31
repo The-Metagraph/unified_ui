@@ -16,6 +16,8 @@ defmodule LiveUi.ExportTest do
     assert comparison =~ "native_styled_operations"
     assert comparison =~ "canonical_styled_operations"
     assert comparison =~ "widgets_aligned?"
+    assert comparison =~ "browser_style_aligned?"
+    assert comparison =~ "browser_style"
 
     assert {:ok, diagnostics} = LiveUi.Export.example(:native_styled_profile, :diagnostics)
     assert diagnostics =~ "diagnostics"

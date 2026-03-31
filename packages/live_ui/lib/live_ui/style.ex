@@ -268,8 +268,9 @@ defmodule LiveUi.Style do
     theme = fetch(opts, :theme, Theme.default())
     theme_attachment = normalize_map(Map.get(element.attributes, :theme, %{}))
     local_style = Map.get(element.attributes, :style, %{})
+    component = style_component_for_element(element)
 
-    resolve(theme, element.kind,
+    resolve(theme, component,
       theme_id: fetch(theme_attachment, :id),
       variant: fetch(theme_attachment, :variant),
       state: fetch(theme_attachment, :state),
@@ -298,6 +299,9 @@ defmodule LiveUi.Style do
     profile = new(style_profile)
     merge_attr_maps(profile.attrs, profile.browser.attrs)
   end
+
+  defp style_component_for_element(%Element{kind: :overlay}), do: :overlay_surface
+  defp style_component_for_element(%Element{} = element), do: element.kind
 
   defp canonical_for_browser(%CanonicalStyle{} = canonical, state) do
     state_key = denormalize_optional(state)

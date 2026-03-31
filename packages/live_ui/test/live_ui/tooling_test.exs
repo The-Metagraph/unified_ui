@@ -58,6 +58,23 @@ defmodule LiveUi.ToolingTest do
     )
   end
 
+  defp canonical_drift_element do
+    Container.box(
+      [
+        Layout.column([
+          Foundational.text("Ready",
+            id: "status",
+            style: %{foreground: "#f97316", extra: %{class: "native-status"}},
+            theme: %{id: :live_ui}
+          )
+        ])
+      ],
+      id: "styled-screen",
+      style: %{extra: %{class: "native-shell"}},
+      theme: %{id: :live_ui, variant: :panel}
+    )
+  end
+
   test "tooling inspects native and canonical runtime output through one snapshot shape" do
     assert {:ok, native} = LiveUi.Tooling.inspect_native(StyledInspectableScreen)
     assert {:ok, canonical} = LiveUi.Tooling.inspect_canonical(canonical_element())
@@ -70,6 +87,9 @@ defmodule LiveUi.ToolingTest do
     assert "text" in canonical.widgets
     assert "success" in native.tones
     assert "success" in canonical.tones
+    assert "--live-ui-gap" in native.browser_style.css_var_keys
+    assert native.browser_style.realized_fields != []
+    assert canonical.browser_style.css_var_keys != []
   end
 
   test "tooling compares native and canonical outputs and reports continuity diagnostics" do
@@ -82,9 +102,30 @@ defmodule LiveUi.ToolingTest do
     assert "text" in report.shared_widgets
     assert report.continuity.runtime_model_aligned?
     assert report.continuity.tone_overlap?
+    refute report.continuity.browser_style_aligned?
     assert report.native_only_widgets != []
     assert report.canonical_only_widgets != []
     assert Enum.any?(report.diagnostics, &(&1.reason == :native_only_behavior))
     assert Enum.any?(report.diagnostics, &(&1.reason == :canonical_only_behavior))
+    assert Enum.any?(report.diagnostics, &(&1.reason == :browser_style_drift))
+    assert report.browser_style.shape_mismatches != []
+  end
+
+  test "tooling reports browser-style drift for shared entries with conflicting realized output" do
+    assert {:ok, report} =
+             LiveUi.Tooling.compare_native_and_canonical(
+               StyledInspectableScreen,
+               canonical_drift_element()
+             )
+
+    refute report.browser_style.aligned?
+    assert "status" in report.browser_style.drift_ids
+
+    status_report = Enum.find(report.browser_style.entry_reports, &(&1.id == "status"))
+
+    assert status_report.status == :drift
+    assert status_report.native_only_css_vars == []
+    assert status_report.canonical_only_css_vars != []
+    assert Enum.any?(report.diagnostics, &(&1.reason == :browser_style_drift))
   end
 end
