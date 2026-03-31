@@ -184,6 +184,13 @@ defmodule LiveUi.Style do
     |> Map.fetch!(:browser)
   end
 
+  @spec browser_diagnostics(t() | keyword() | map() | nil) :: Browser.diagnostics()
+  def browser_diagnostics(style_profile) do
+    style_profile
+    |> browser_output()
+    |> Map.fetch!(:diagnostics)
+  end
+
   @spec browser_supported_fields() :: [Browser.top_level_field()]
   def browser_supported_fields do
     [

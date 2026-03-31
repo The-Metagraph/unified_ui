@@ -143,4 +143,24 @@ defmodule LiveUi.RendererStyleTest do
     assert html =~ "--live-ui-foreground: #ffffff"
     assert html =~ "--live-ui-border-color: #38bdf8"
   end
+
+  test "renderer preserves legacy local classes and attrs alongside realized output" do
+    element =
+      Foundational.text("Legacy",
+        id: "legacy-copy",
+        style: %{
+          foreground: "#f97316",
+          extra: %{
+            class: "legacy-copy",
+            attrs: %{"data-legacy" => "true"}
+          }
+        }
+      )
+
+    html = render_component(&LiveUi.Renderer.render/1, %{element: element})
+
+    assert html =~ "legacy-copy"
+    assert html =~ "data-legacy=\"true\""
+    assert html =~ "--live-ui-foreground: #f97316"
+  end
 end

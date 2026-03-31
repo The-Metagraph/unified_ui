@@ -166,4 +166,53 @@ defmodule LiveUi.StyleTest do
     assert assigns.rest["style"] =~ "--live-ui-foreground: #0f172a"
     assert String.ends_with?(assigns.rest["style"], "--live-ui-foreground: #ffffff")
   end
+
+  test "semantic hook fallback remains explicit when direct browser colors are absent" do
+    assigns =
+      LiveUi.Style.component_assigns(:text,
+        theme: LiveUi.Theme.default(),
+        tone: :success,
+        class: "legacy-tone"
+      )
+
+    html =
+      render_component(
+        &LiveUi.Widgets.Text.render/1,
+        %{
+          id: "status",
+          content: "Ready"
+        }
+        |> Map.merge(assigns)
+      )
+
+    assert html =~ "data-live-ui-tone=\"success\""
+    assert html =~ "data-live-ui-browser-style=\"mixed\""
+    assert html =~ "data-live-ui-browser-fallback=\"mixed\""
+    assert html =~ "class=\"live-ui-text legacy-tone\""
+    refute html =~ "--live-ui-foreground:"
+  end
+
+  test "browser diagnostics surface ignored and unsupported foundational style fields" do
+    profile =
+      LiveUi.Style.resolve(LiveUi.Theme.default(), :text,
+        local_style: %{
+          text: %{blink?: true, reverse?: true},
+          visibility: %{disabled?: true},
+          state_variants: %{active: %{foreground: "#ffffff"}}
+        }
+      )
+
+    diagnostics = LiveUi.Style.browser_diagnostics(profile)
+
+    assert diagnostics.fallback == :mixed
+
+    assert diagnostics.unsupported_fields == [
+             "text.blink?",
+             "text.reverse?",
+             "visibility.disabled?"
+           ]
+
+    assert diagnostics.ignored_fields == ["state_variants"]
+    assert profile.browser.attrs["data-live-ui-ignored-style-fields"] == "state_variants"
+  end
 end

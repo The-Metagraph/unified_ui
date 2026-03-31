@@ -42,6 +42,13 @@ defmodule LiveUi.Style.Browser do
 
   @type mode :: :semantic_only | :mixed | :realized
 
+  @type diagnostics :: %{
+          fallback: :semantic_hooks | :mixed | :realized_output,
+          semantic_only_fields: [top_level_field()],
+          unsupported_fields: [diagnostic_field()],
+          ignored_fields: [diagnostic_field()]
+        }
+
   @type t :: %__MODULE__{
           mode: mode(),
           css_vars: %{optional(String.t()) => String.t()},
@@ -49,6 +56,7 @@ defmodule LiveUi.Style.Browser do
           realized_fields: [top_level_field()],
           semantic_only_fields: [top_level_field()],
           unsupported_fields: [diagnostic_field()],
+          diagnostics: diagnostics(),
           precedence: [precedence_stage()]
         }
 
@@ -60,13 +68,26 @@ defmodule LiveUi.Style.Browser do
     :browser_host_attrs
   ]
 
-  @enforce_keys [:css_vars, :attrs, :realized_fields, :semantic_only_fields, :unsupported_fields]
+  @enforce_keys [
+    :css_vars,
+    :attrs,
+    :realized_fields,
+    :semantic_only_fields,
+    :unsupported_fields,
+    :diagnostics
+  ]
   defstruct mode: :semantic_only,
             css_vars: %{},
             attrs: %{},
             realized_fields: [],
             semantic_only_fields: [],
             unsupported_fields: [],
+            diagnostics: %{
+              fallback: :semantic_hooks,
+              semantic_only_fields: [],
+              unsupported_fields: [],
+              ignored_fields: []
+            },
             precedence: @default_precedence
 
   @spec new(keyword() | map() | t() | nil) :: t()
@@ -76,7 +97,13 @@ defmodule LiveUi.Style.Browser do
       attrs: %{},
       realized_fields: [],
       semantic_only_fields: [],
-      unsupported_fields: []
+      unsupported_fields: [],
+      diagnostics: %{
+        fallback: :semantic_hooks,
+        semantic_only_fields: [],
+        unsupported_fields: [],
+        ignored_fields: []
+      }
     }
   end
 
@@ -88,6 +115,12 @@ defmodule LiveUi.Style.Browser do
       realized_fields: normalize_atom_fields(browser.realized_fields),
       semantic_only_fields: normalize_atom_fields(browser.semantic_only_fields),
       unsupported_fields: normalize_diagnostics(browser.unsupported_fields),
+      diagnostics:
+        normalize_diagnostics_map(
+          browser.diagnostics,
+          browser.semantic_only_fields,
+          browser.unsupported_fields
+        ),
       precedence: normalize_precedence(browser.precedence)
     }
   end
@@ -103,6 +136,13 @@ defmodule LiveUi.Style.Browser do
       semantic_only_fields:
         browser |> fetch(:semantic_only_fields, []) |> normalize_atom_fields(),
       unsupported_fields: browser |> fetch(:unsupported_fields, []) |> normalize_diagnostics(),
+      diagnostics:
+        browser
+        |> fetch(:diagnostics, %{})
+        |> normalize_diagnostics_map(
+          fetch(browser, :semantic_only_fields, []),
+          fetch(browser, :unsupported_fields, [])
+        ),
       precedence: browser |> fetch(:precedence, @default_precedence) |> normalize_precedence()
     }
   end
@@ -147,27 +187,50 @@ defmodule LiveUi.Style.Browser do
       |> unsupported_fields()
       |> Enum.sort_by(&to_string/1)
 
+    ignored_fields =
+      canonical
+      |> ignored_fields()
+      |> Enum.sort_by(&to_string/1)
+
     mode = infer_mode(css_vars, semantic_only_fields, unsupported_fields)
+    diagnostics = diagnostics(mode, semantic_only_fields, unsupported_fields, ignored_fields)
 
     %__MODULE__{
       mode: mode,
       css_vars: css_vars,
       attrs:
-        browser_attrs(mode, css_vars, realized_fields, semantic_only_fields, unsupported_fields),
+        browser_attrs(
+          mode,
+          css_vars,
+          realized_fields,
+          semantic_only_fields,
+          unsupported_fields,
+          ignored_fields
+        ),
       realized_fields: realized_fields,
       semantic_only_fields: semantic_only_fields,
       unsupported_fields: unsupported_fields,
+      diagnostics: diagnostics,
       precedence: @default_precedence
     }
   end
 
-  defp browser_attrs(mode, css_vars, realized_fields, semantic_only_fields, unsupported_fields) do
+  defp browser_attrs(
+         mode,
+         css_vars,
+         realized_fields,
+         semantic_only_fields,
+         unsupported_fields,
+         ignored_fields
+       ) do
     %{}
     |> maybe_put("style", inline_style(css_vars))
     |> maybe_put("data-live-ui-browser-style", Atom.to_string(mode))
+    |> maybe_put("data-live-ui-browser-fallback", fallback_label(mode))
     |> maybe_put("data-live-ui-realized-style-fields", join_fields(realized_fields))
     |> maybe_put("data-live-ui-semantic-style-fields", join_fields(semantic_only_fields))
     |> maybe_put("data-live-ui-unsupported-style-fields", join_fields(unsupported_fields))
+    |> maybe_put("data-live-ui-ignored-style-fields", join_fields(ignored_fields))
   end
 
   defp semantic_fields(%CanonicalStyle{} = style) do
@@ -177,6 +240,11 @@ defmodule LiveUi.Style.Browser do
 
   defp unsupported_fields(%CanonicalStyle{} = style) do
     text_unsupported(style.text) ++ visibility_unsupported(style.visibility)
+  end
+
+  defp ignored_fields(%CanonicalStyle{} = style) do
+    []
+    |> maybe_append(style.state_variants != %{}, "state_variants")
   end
 
   defp border_vars(border) when border in [%{}, nil], do: %{}
@@ -281,6 +349,21 @@ defmodule LiveUi.Style.Browser do
         :mixed
     end
   end
+
+  defp diagnostics(mode, semantic_only_fields, unsupported_fields, ignored_fields) do
+    %{
+      fallback: fallback_mode(mode),
+      semantic_only_fields: semantic_only_fields,
+      unsupported_fields: unsupported_fields,
+      ignored_fields: ignored_fields
+    }
+  end
+
+  defp fallback_mode(:semantic_only), do: :semantic_hooks
+  defp fallback_mode(:mixed), do: :mixed
+  defp fallback_mode(:realized), do: :realized_output
+
+  defp fallback_label(mode), do: mode |> fallback_mode() |> Atom.to_string()
 
   defp text_realized?(%TextAttributes{} = text) do
     Enum.any?([
@@ -417,6 +500,37 @@ defmodule LiveUi.Style.Browser do
     |> Enum.uniq()
   end
 
+  defp normalize_diagnostics_map(map, semantic_only_fields, unsupported_fields)
+       when is_map(map) do
+    %{
+      fallback:
+        map
+        |> fetch(:fallback, :semantic_hooks)
+        |> normalize_fallback(),
+      semantic_only_fields:
+        map
+        |> fetch(:semantic_only_fields, semantic_only_fields)
+        |> normalize_atom_fields(),
+      unsupported_fields:
+        map
+        |> fetch(:unsupported_fields, unsupported_fields)
+        |> normalize_diagnostics(),
+      ignored_fields:
+        map
+        |> fetch(:ignored_fields, [])
+        |> normalize_diagnostics()
+    }
+  end
+
+  defp normalize_diagnostics_map(_other, semantic_only_fields, unsupported_fields) do
+    %{
+      fallback: :semantic_hooks,
+      semantic_only_fields: normalize_atom_fields(semantic_only_fields),
+      unsupported_fields: normalize_diagnostics(unsupported_fields),
+      ignored_fields: []
+    }
+  end
+
   defp normalize_precedence(precedence) do
     precedence
     |> List.wrap()
@@ -451,6 +565,20 @@ defmodule LiveUi.Style.Browser do
   end
 
   defp normalize_mode(_other), do: :semantic_only
+
+  defp normalize_fallback(value)
+       when value in [:semantic_hooks, :mixed, :realized_output],
+       do: value
+
+  defp normalize_fallback(value) when is_binary(value) do
+    value
+    |> String.to_existing_atom()
+    |> normalize_fallback()
+  rescue
+    ArgumentError -> :semantic_hooks
+  end
+
+  defp normalize_fallback(_other), do: :semantic_hooks
 
   defp normalize_field_atom(field) when is_atom(field), do: field
 
