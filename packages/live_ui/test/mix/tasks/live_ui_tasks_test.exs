@@ -22,6 +22,26 @@ defmodule Mix.Tasks.LiveUiTasksTest do
     assert catalog =~ "styled_continuity_compare"
   end
 
+  test "demo task prints summary and html output" do
+    summary =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.demo")
+        Mix.Tasks.LiveUi.Demo.run([])
+      end)
+
+    assert summary =~ "LiveUi demo summary"
+    assert summary =~ "view: home"
+
+    html =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.demo")
+        Mix.Tasks.LiveUi.Demo.run(["native_styled_profile", "--format", "html"])
+      end)
+
+    assert html =~ "Native Styled Profile"
+    assert html =~ "data-live-ui-runtime=\"screen\""
+  end
+
   test "inspect and export tasks print comparison-oriented maintainer output" do
     inspection =
       capture_io(fn ->

@@ -19,7 +19,8 @@ defmodule LiveUi.Tooling do
   ]
 
   @type workflow ::
-          :preview
+          :demo
+          | :preview
           | :reference_examples
           | :inspection
           | :styling_inspection
@@ -31,6 +32,7 @@ defmodule LiveUi.Tooling do
   @spec workflows() :: [workflow()]
   def workflows do
     [
+      :demo,
       :preview,
       :reference_examples,
       :inspection,
@@ -45,6 +47,7 @@ defmodule LiveUi.Tooling do
   @spec mix_tasks() :: [String.t()]
   def mix_tasks do
     [
+      "mix live_ui.demo",
       "mix live_ui.preview",
       "mix live_ui.inspect",
       "mix live_ui.export",
