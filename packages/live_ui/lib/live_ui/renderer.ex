@@ -809,6 +809,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :dialog}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Dialog.render
       id={element_id(@element, "dialog")}
@@ -821,6 +823,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -830,6 +833,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :alert_dialog}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.AlertDialog.render
       id={element_id(@element, "alert-dialog")}
@@ -841,6 +846,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -886,6 +892,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :overlay}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.OverlaySurface.render
       id={element_id(@element, "overlay-surface")}
@@ -897,6 +905,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <:base :for={child <- child_elements(@element, :base)}>
         <.render element={child} event_target={@event_target} />
@@ -909,6 +918,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :viewport}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Viewport.render
       id={element_id(@element, "viewport")}
@@ -925,6 +936,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -979,6 +991,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :canvas}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Canvas.render
       id={element_id(@element, "canvas")}
@@ -992,6 +1006,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end

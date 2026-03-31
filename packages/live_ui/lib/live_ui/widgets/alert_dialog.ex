@@ -3,6 +3,9 @@ defmodule LiveUi.Widgets.AlertDialog do
   Native alert-dialog widget for destructive or attention-demanding flows.
   """
 
+  alias LiveUi.BrowserAttrs
+  alias LiveUi.Style.Browser
+
   use LiveUi.Component, family: :overlay, name: :alert_dialog, slots: [:inner_block, :actions]
 
   LiveUi.Component.common_attrs()
@@ -16,6 +19,9 @@ defmodule LiveUi.Widgets.AlertDialog do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign(assigns, :resolved_rest, BrowserAttrs.merge(browser_attrs(assigns), assigns.rest))
+
     ~H"""
     <section
       id={@id}
@@ -28,7 +34,7 @@ defmodule LiveUi.Widgets.AlertDialog do
       data-live-ui-variant={@variant}
       data-live-ui-state={@state}
       class={@class}
-      {@rest}
+      {@resolved_rest}
     >
       <div data-live-ui-alert-slot="header">
         <%= if @title do %>
@@ -41,5 +47,41 @@ defmodule LiveUi.Widgets.AlertDialog do
       <% end %>
     </section>
     """
+  end
+
+  defp browser_attrs(assigns) do
+    Browser.realize(%{
+      spacing: %{padding: "lg"},
+      sizing: %{width: "30rem"}
+    }).css_vars
+    |> Map.merge(severity_css(assigns.severity))
+    |> BrowserAttrs.from_css_vars()
+  end
+
+  defp severity_css(nil), do: %{}
+
+  defp severity_css(value) do
+    case to_string(value) do
+      "critical" ->
+        %{
+          "--live-ui-border-color" => "var(--live-ui-theme-critical)",
+          "--live-ui-background" =>
+            "color-mix(in srgb, var(--live-ui-theme-surface-panel) 86%, var(--live-ui-theme-critical) 14%)"
+        }
+
+      "success" ->
+        %{
+          "--live-ui-border-color" => "var(--live-ui-theme-success)",
+          "--live-ui-background" =>
+            "color-mix(in srgb, var(--live-ui-theme-surface-panel) 88%, var(--live-ui-theme-success) 12%)"
+        }
+
+      _other ->
+        %{
+          "--live-ui-border-color" => "var(--live-ui-theme-warning)",
+          "--live-ui-background" =>
+            "color-mix(in srgb, var(--live-ui-theme-surface-panel) 88%, var(--live-ui-theme-warning) 12%)"
+        }
+    end
   end
 end

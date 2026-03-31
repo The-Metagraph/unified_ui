@@ -49,11 +49,20 @@ defmodule LiveUi.RendererStyleTest do
               %{kind: :text, position: %{x: 3, y: 2}, text: "Plot"}
             ],
             id: "analytics-canvas",
-            style: %{extra: %{class: "analytics-canvas"}},
+            style: %{
+              background: "#08101f",
+              border_color: "#334155",
+              extra: %{class: "analytics-canvas"}
+            },
             theme: %{id: :live_ui, variant: :analysis}
           ),
           id: "analytics-viewport",
-          style: %{extra: %{class: "analytics-viewport"}},
+          style: %{
+            background: "#020617",
+            border_color: "#1d4ed8",
+            sizing: %{height: "18rem"},
+            extra: %{class: "analytics-viewport"}
+          },
           theme: %{id: :live_ui}
         ),
         [
@@ -63,11 +72,12 @@ defmodule LiveUi.RendererStyleTest do
                id: "overlay-copy"
              ),
              id: "style-dialog",
-             title: "Style"
+             title: "Style",
+             style: %{border_color: "#60a5fa", background: "#0f172a"}
            )}
         ],
         id: "analytics-overlay",
-        style: %{extra: %{class: "analytics-overlay"}},
+        style: %{background: "#020617", extra: %{class: "analytics-overlay"}},
         theme: %{id: :live_ui, variant: :modal}
       )
 
@@ -76,12 +86,18 @@ defmodule LiveUi.RendererStyleTest do
     assert html =~ "data-live-ui-widget=\"overlay-surface\""
     assert html =~ "data-live-ui-variant=\"modal\""
     assert html =~ "analytics-overlay"
+    assert html =~ "--live-ui-background: #020617"
     assert html =~ "data-live-ui-widget=\"viewport\""
     assert html =~ "analytics-viewport"
+    assert html =~ "--live-ui-height: 18rem"
+    assert html =~ "--live-ui-border-color: #1d4ed8"
     assert html =~ "data-live-ui-widget=\"canvas\""
     assert html =~ "data-live-ui-variant=\"analysis\""
     assert html =~ "analytics-canvas"
     assert html =~ "live-ui-canvas-analysis"
+    assert html =~ "--live-ui-background: #08101f"
+    assert html =~ "--live-ui-border-color: #334155"
+    assert html =~ "--live-ui-border-color: #60a5fa"
   end
 
   test "equivalent canonical style input produces deterministic native styling output" do
