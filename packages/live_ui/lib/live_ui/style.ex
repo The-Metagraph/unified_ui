@@ -12,6 +12,7 @@ defmodule LiveUi.Style do
   alias LiveUi.Theme
   alias UnifiedIUR.Element
   alias UnifiedIUR.Style, as: CanonicalStyle
+  alias UnifiedIUR.Token
 
   @type t :: %__MODULE__{
           component: atom() | String.t() | nil,
@@ -120,11 +121,14 @@ defmodule LiveUi.Style do
       )
 
     resolved_theme_id = fetch(opts, :theme_id, theme.id)
+    unresolved_token_refs = unresolved_token_refs(theme, fetch(opts, :token_refs, []))
+    unresolved_roles = unresolved_roles(theme, fetch(opts, :role))
 
     native_attrs =
       native
       |> fetch(:attrs, %{})
       |> Map.merge(normalize_attrs(fetch(opts, :attrs, %{})))
+      |> Map.merge(style_diagnostic_attrs(unresolved_token_refs, unresolved_roles))
       |> maybe_put("data-live-ui-theme", resolved_theme_id)
       |> maybe_put("data-live-ui-style-component", component)
       |> maybe_put("data-live-ui-style-role", fetch(opts, :role))
@@ -302,6 +306,47 @@ defmodule LiveUi.Style do
 
   defp style_component_for_element(%Element{kind: :overlay}), do: :overlay_surface
   defp style_component_for_element(%Element{} = element), do: element.kind
+
+  defp style_diagnostic_attrs(unresolved_token_refs, unresolved_roles) do
+    %{}
+    |> maybe_put("data-live-ui-unresolved-token-refs", join_csv(unresolved_token_refs))
+    |> maybe_put("data-live-ui-unresolved-style-roles", join_csv(unresolved_roles))
+  end
+
+  defp unresolved_token_refs(theme, token_refs) do
+    token_refs
+    |> List.wrap()
+    |> Enum.reduce([], fn token_ref, unresolved ->
+      case Token.new(token_ref) do
+        %{kind: :token_ref, path: path} ->
+          if is_nil(Theme.token(theme, path)) do
+            [Enum.map_join(path, ".", &to_string/1) | unresolved]
+          else
+            unresolved
+          end
+
+        _other ->
+          unresolved
+      end
+    end)
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  defp unresolved_roles(_theme, nil), do: []
+
+  defp unresolved_roles(theme, role) do
+    role_key = to_string(role)
+
+    if Map.has_key?(theme.roles, role) or Map.has_key?(theme.roles, role_key) do
+      []
+    else
+      [role_key]
+    end
+  end
+
+  defp join_csv([]), do: nil
+  defp join_csv(values), do: Enum.join(values, ",")
 
   defp canonical_for_browser(%CanonicalStyle{} = canonical, state) do
     state_key = denormalize_optional(state)

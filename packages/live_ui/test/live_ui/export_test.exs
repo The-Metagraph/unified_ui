@@ -22,5 +22,17 @@ defmodule LiveUi.ExportTest do
     assert {:ok, diagnostics} = LiveUi.Export.example(:native_styled_profile, :diagnostics)
     assert diagnostics =~ "diagnostics"
     assert diagnostics =~ "canonical_styled_profile"
+    assert diagnostics =~ "native_browser_style"
+  end
+
+  test "export can print style-focused output and browser-style artifacts" do
+    assert {:ok, style} = LiveUi.Export.example(:native_styled_profile, :style)
+    assert style =~ "browser_style_nodes"
+    assert style =~ "realized_entry_ids"
+
+    assert {:ok, artifact} = LiveUi.Export.example(:native_styled_profile, :artifact)
+    assert artifact =~ "browser_style_nodes"
+    assert artifact =~ "html"
+    assert artifact =~ "canonical"
   end
 end

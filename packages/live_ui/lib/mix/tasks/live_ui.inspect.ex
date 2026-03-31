@@ -8,6 +8,7 @@ defmodule Mix.Tasks.LiveUi.Inspect do
 
       mix live_ui.inspect native_styled_profile
       mix live_ui.inspect native_styled_operations --format diagnostics
+      mix live_ui.inspect canonical_styled_profile --format style
       mix live_ui.inspect canonical_styled_profile --format comparison
       mix live_ui.inspect --format catalog
   """
@@ -30,6 +31,7 @@ defmodule Mix.Tasks.LiveUi.Inspect do
             "metadata" -> :metadata
             "comparison" -> :comparison
             "diagnostics" -> :diagnostics
+            "style" -> :style
             other -> Mix.raise("unsupported inspect format #{inspect(other)}")
           end
 
@@ -43,7 +45,7 @@ defmodule Mix.Tasks.LiveUi.Inspect do
 
       _ ->
         Mix.raise(
-          "usage: mix live_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|catalog]"
+          "usage: mix live_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|style|catalog]"
         )
     end
   end

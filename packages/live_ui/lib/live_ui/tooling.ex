@@ -267,6 +267,7 @@ defmodule LiveUi.Tooling do
       |> IO.iodata_to_binary()
 
     entries = widget_entries(html)
+    browser_style_nodes = browser_style_entry_reports(entries)
 
     %{
       path: path,
@@ -282,7 +283,8 @@ defmodule LiveUi.Tooling do
       states:
         entries |> Enum.map(& &1.state) |> Enum.reject(&is_nil/1) |> Enum.uniq() |> Enum.sort(),
       entries: entries,
-      browser_style: browser_style_summary(entries),
+      browser_style_nodes: browser_style_nodes,
+      browser_style: browser_style_summary(browser_style_nodes),
       html: html,
       server_authoritative?: true
     }
@@ -319,46 +321,131 @@ defmodule LiveUi.Tooling do
       semantic_fields: csv_attribute(tag, "data-live-ui-semantic-style-fields"),
       unsupported_fields: csv_attribute(tag, "data-live-ui-unsupported-style-fields"),
       ignored_fields: csv_attribute(tag, "data-live-ui-ignored-style-fields"),
+      unresolved_token_refs: csv_attribute(tag, "data-live-ui-unresolved-token-refs"),
+      unresolved_roles: csv_attribute(tag, "data-live-ui-unresolved-style-roles"),
       css_vars: css_var_map(attribute(tag, "style"))
     }
   end
 
-  defp browser_style_summary(entries) do
-    browser_entries = Enum.map(entries, &Map.get(&1, :browser_style, %{}))
+  defp browser_style_entry_reports(entries) do
+    Enum.map(entries, fn entry ->
+      browser_style = Map.get(entry, :browser_style, %{})
+
+      %{
+        id: entry.id,
+        widget: entry.widget,
+        tone: entry.tone,
+        variant: entry.variant,
+        state: entry.state,
+        class: entry.class,
+        mode: Map.get(browser_style, :mode),
+        fallback: Map.get(browser_style, :fallback),
+        realized_fields: Map.get(browser_style, :realized_fields, []),
+        semantic_fields: Map.get(browser_style, :semantic_fields, []),
+        unsupported_fields: Map.get(browser_style, :unsupported_fields, []),
+        ignored_fields: Map.get(browser_style, :ignored_fields, []),
+        unresolved_token_refs: Map.get(browser_style, :unresolved_token_refs, []),
+        unresolved_roles: Map.get(browser_style, :unresolved_roles, []),
+        css_vars: Map.get(browser_style, :css_vars, %{}),
+        css_var_keys:
+          browser_style
+          |> Map.get(:css_vars, %{})
+          |> Map.keys()
+          |> Enum.sort()
+      }
+    end)
+  end
+
+  defp browser_style_summary(entry_reports) do
+    unresolved_reference_entry_ids =
+      entry_reports
+      |> Enum.filter(&(&1.unresolved_token_refs != [] or &1.unresolved_roles != []))
+      |> Enum.map(& &1.id)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.sort()
 
     %{
       modes:
-        browser_entries
-        |> Enum.map(&Map.get(&1, :mode))
+        entry_reports
+        |> Enum.map(& &1.mode)
         |> Enum.reject(&is_nil/1)
         |> Enum.uniq()
         |> Enum.sort(),
       fallbacks:
-        browser_entries
-        |> Enum.map(&Map.get(&1, :fallback))
+        entry_reports
+        |> Enum.map(& &1.fallback)
         |> Enum.reject(&is_nil/1)
         |> Enum.uniq()
         |> Enum.sort(),
       realized_fields:
-        browser_entries
-        |> Enum.flat_map(&Map.get(&1, :realized_fields, []))
+        entry_reports
+        |> Enum.flat_map(& &1.realized_fields)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      semantic_fields:
+        entry_reports
+        |> Enum.flat_map(& &1.semantic_fields)
         |> Enum.uniq()
         |> Enum.sort(),
       unsupported_fields:
-        browser_entries
-        |> Enum.flat_map(&Map.get(&1, :unsupported_fields, []))
+        entry_reports
+        |> Enum.flat_map(& &1.unsupported_fields)
         |> Enum.uniq()
         |> Enum.sort(),
       ignored_fields:
-        browser_entries
-        |> Enum.flat_map(&Map.get(&1, :ignored_fields, []))
+        entry_reports
+        |> Enum.flat_map(& &1.ignored_fields)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      unresolved_token_refs:
+        entry_reports
+        |> Enum.flat_map(& &1.unresolved_token_refs)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      unresolved_roles:
+        entry_reports
+        |> Enum.flat_map(& &1.unresolved_roles)
         |> Enum.uniq()
         |> Enum.sort(),
       css_var_keys:
-        browser_entries
-        |> Enum.flat_map(fn entry -> entry |> Map.get(:css_vars, %{}) |> Map.keys() end)
+        entry_reports
+        |> Enum.flat_map(& &1.css_var_keys)
         |> Enum.uniq()
-        |> Enum.sort()
+        |> Enum.sort(),
+      mode_counts: count_values(entry_reports, & &1.mode),
+      fallback_counts: count_values(entry_reports, & &1.fallback),
+      unsupported_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.unsupported_fields != []))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      ignored_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.ignored_fields != []))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      unresolved_reference_entry_ids: unresolved_reference_entry_ids,
+      semantic_only_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.mode == "semantic_only"))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      mixed_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.mode == "mixed"))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      realized_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.mode == "realized"))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      entry_reports: entry_reports
     }
   end
 
@@ -468,6 +555,18 @@ defmodule LiveUi.Tooling do
         Map.get(canonical_browser, :ignored_fields, [])
       )
 
+    unresolved_token_ref_drift =
+      symmetric_difference(
+        Map.get(native_browser, :unresolved_token_refs, []),
+        Map.get(canonical_browser, :unresolved_token_refs, [])
+      )
+
+    unresolved_role_drift =
+      symmetric_difference(
+        Map.get(native_browser, :unresolved_roles, []),
+        Map.get(canonical_browser, :unresolved_roles, [])
+      )
+
     fallback_mismatch? =
       Map.get(native_browser, :fallback) != Map.get(canonical_browser, :fallback)
 
@@ -499,6 +598,8 @@ defmodule LiveUi.Tooling do
       semantic_field_drift: semantic_field_drift,
       unsupported_field_drift: unsupported_field_drift,
       ignored_field_drift: ignored_field_drift,
+      unresolved_token_ref_drift: unresolved_token_ref_drift,
+      unresolved_role_drift: unresolved_role_drift,
       fallback_mismatch?: fallback_mismatch?,
       mode_mismatch?: mode_mismatch?
     }
@@ -518,6 +619,8 @@ defmodule LiveUi.Tooling do
       semantic_fields: Map.get(browser_style, :semantic_fields, []),
       unsupported_fields: Map.get(browser_style, :unsupported_fields, []),
       ignored_fields: Map.get(browser_style, :ignored_fields, []),
+      unresolved_token_refs: Map.get(browser_style, :unresolved_token_refs, []),
+      unresolved_roles: Map.get(browser_style, :unresolved_roles, []),
       css_vars: Map.get(browser_style, :css_vars, %{})
     }
   end
@@ -567,6 +670,14 @@ defmodule LiveUi.Tooling do
     |> MapSet.symmetric_difference(right)
     |> MapSet.to_list()
     |> Enum.sort()
+  end
+
+  defp count_values(values, mapper) do
+    values
+    |> Enum.map(mapper)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.frequencies()
+    |> Map.new(fn {key, value} -> {to_string(key), value} end)
   end
 
   defp maybe_add_diagnostic(diagnostics, _reason, []), do: diagnostics

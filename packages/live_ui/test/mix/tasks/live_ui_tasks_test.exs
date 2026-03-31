@@ -20,6 +20,15 @@ defmodule Mix.Tasks.LiveUiTasksTest do
 
     assert catalog =~ "native_display"
     assert catalog =~ "styled_continuity_compare"
+
+    artifact =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.preview")
+        Mix.Tasks.LiveUi.Preview.run(["native_styled_profile", "--format", "artifact"])
+      end)
+
+    assert artifact =~ "browser_style_nodes"
+    assert artifact =~ "html"
   end
 
   test "demo task prints summary and html output" do
@@ -72,6 +81,15 @@ defmodule Mix.Tasks.LiveUiTasksTest do
     assert inspection =~ "canonical_styled_operations"
     assert inspection =~ "widgets_aligned?"
 
+    style_inspection =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.inspect")
+        Mix.Tasks.LiveUi.Inspect.run(["canonical_styled_profile", "--format", "style"])
+      end)
+
+    assert style_inspection =~ "browser_style"
+    assert style_inspection =~ "browser_style_nodes"
+
     export =
       capture_io(fn ->
         Mix.Task.reenable("live_ui.export")
@@ -80,6 +98,15 @@ defmodule Mix.Tasks.LiveUiTasksTest do
 
     assert export =~ "review_artifact"
     assert export =~ "native_styled_profile"
+
+    artifact_export =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.export")
+        Mix.Tasks.LiveUi.Export.run(["native_styled_profile", "--format", "artifact"])
+      end)
+
+    assert artifact_export =~ "browser_style_nodes"
+    assert artifact_export =~ "canonical"
   end
 
   defp free_port do
