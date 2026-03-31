@@ -17,6 +17,18 @@ defmodule LiveUi.Tooling do
     "guides/canonical_rendering_and_transport.md",
     "guides/maintainer_workflows.md"
   ]
+  @browser_style_approximation_rules [
+    %{
+      id: :metadata_only_difference,
+      description:
+        "Treat native and canonical output as approximated when the emitted CSS variables match but browser-style metadata differs."
+    },
+    %{
+      id: :stateful_fallback_alignment,
+      description:
+        "Allow approximated parity when both paths preserve the same visible style output while using different fallback modes."
+    }
+  ]
 
   @type workflow ::
           :demo
@@ -120,6 +132,7 @@ defmodule LiveUi.Tooling do
       "  examples passing?: #{report.example_health.all_passing?}",
       "  example coverage complete?: #{report.example_coverage.complete?}",
       "  continuity aligned?: #{report.continuity.aligned?}",
+      "  browser style aligned?: #{report.continuity.browser_style_aligned?}",
       "  transport sound?: #{report.transport.sound?}",
       "  server authoritative?: #{report.runtime_authority.server_authoritative?}",
       "  documentation complete?: #{report.documentation_surface.complete?}",
@@ -201,6 +214,7 @@ defmodule LiveUi.Tooling do
       canonical_widgets = MapSet.new(canonical.widgets)
       native_tones = MapSet.new(native.tones)
       canonical_tones = MapSet.new(canonical.tones)
+      browser_style = compare_browser_style_entries(native.entries, canonical.entries)
 
       native_only_widgets =
         MapSet.difference(native_widgets, canonical_widgets) |> MapSet.to_list() |> Enum.sort()
@@ -218,6 +232,7 @@ defmodule LiveUi.Tooling do
         []
         |> maybe_add_diagnostic(:native_only_behavior, native_only_widgets)
         |> maybe_add_diagnostic(:canonical_only_behavior, canonical_only_widgets)
+        |> maybe_add_browser_style_diagnostics(browser_style)
 
       {:ok,
        %{
@@ -227,12 +242,15 @@ defmodule LiveUi.Tooling do
          native_only_widgets: native_only_widgets,
          canonical_only_widgets: canonical_only_widgets,
          shared_tones: shared_tones,
+         browser_style: browser_style,
          diagnostics: diagnostics,
          continuity: %{
            widgets_aligned?: native_only_widgets == [] and canonical_only_widgets == [],
            tone_overlap?: shared_tones != [],
            runtime_model_aligned?:
-             native.server_authoritative? and canonical.server_authoritative?
+             native.server_authoritative? and canonical.server_authoritative?,
+           browser_style_aligned?: browser_style.aligned?,
+           browser_style_approximated?: browser_style.approximated_ids != []
          }
        }}
     end
@@ -249,6 +267,7 @@ defmodule LiveUi.Tooling do
       |> IO.iodata_to_binary()
 
     entries = widget_entries(html)
+    browser_style_nodes = browser_style_entry_reports(entries)
 
     %{
       path: path,
@@ -264,6 +283,8 @@ defmodule LiveUi.Tooling do
       states:
         entries |> Enum.map(& &1.state) |> Enum.reject(&is_nil/1) |> Enum.uniq() |> Enum.sort(),
       entries: entries,
+      browser_style_nodes: browser_style_nodes,
+      browser_style: browser_style_summary(browser_style_nodes),
       html: html,
       server_authoritative?: true
     }
@@ -286,22 +307,425 @@ defmodule LiveUi.Tooling do
         tone: attribute(tag, "data-live-ui-tone"),
         variant: attribute(tag, "data-live-ui-variant"),
         state: attribute(tag, "data-live-ui-state"),
-        class: attribute(tag, "class")
+        class: attribute(tag, "class"),
+        browser_style: browser_style_payload(tag)
       }
     end)
   end
 
+  defp browser_style_payload(tag) do
+    %{
+      mode: attribute(tag, "data-live-ui-browser-style"),
+      fallback: attribute(tag, "data-live-ui-browser-fallback"),
+      realized_fields: csv_attribute(tag, "data-live-ui-realized-style-fields"),
+      semantic_fields: csv_attribute(tag, "data-live-ui-semantic-style-fields"),
+      unsupported_fields: csv_attribute(tag, "data-live-ui-unsupported-style-fields"),
+      ignored_fields: csv_attribute(tag, "data-live-ui-ignored-style-fields"),
+      unresolved_token_refs: csv_attribute(tag, "data-live-ui-unresolved-token-refs"),
+      unresolved_roles: csv_attribute(tag, "data-live-ui-unresolved-style-roles"),
+      css_vars: css_var_map(attribute(tag, "style"))
+    }
+  end
+
+  defp browser_style_entry_reports(entries) do
+    Enum.map(entries, fn entry ->
+      browser_style = Map.get(entry, :browser_style, %{})
+
+      %{
+        id: entry.id,
+        widget: entry.widget,
+        tone: entry.tone,
+        variant: entry.variant,
+        state: entry.state,
+        class: entry.class,
+        mode: Map.get(browser_style, :mode),
+        fallback: Map.get(browser_style, :fallback),
+        realized_fields: Map.get(browser_style, :realized_fields, []),
+        semantic_fields: Map.get(browser_style, :semantic_fields, []),
+        unsupported_fields: Map.get(browser_style, :unsupported_fields, []),
+        ignored_fields: Map.get(browser_style, :ignored_fields, []),
+        unresolved_token_refs: Map.get(browser_style, :unresolved_token_refs, []),
+        unresolved_roles: Map.get(browser_style, :unresolved_roles, []),
+        css_vars: Map.get(browser_style, :css_vars, %{}),
+        css_var_keys:
+          browser_style
+          |> Map.get(:css_vars, %{})
+          |> Map.keys()
+          |> Enum.sort()
+      }
+    end)
+  end
+
+  defp browser_style_summary(entry_reports) do
+    unresolved_reference_entry_ids =
+      entry_reports
+      |> Enum.filter(&(&1.unresolved_token_refs != [] or &1.unresolved_roles != []))
+      |> Enum.map(& &1.id)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.sort()
+
+    %{
+      modes:
+        entry_reports
+        |> Enum.map(& &1.mode)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      fallbacks:
+        entry_reports
+        |> Enum.map(& &1.fallback)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      realized_fields:
+        entry_reports
+        |> Enum.flat_map(& &1.realized_fields)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      semantic_fields:
+        entry_reports
+        |> Enum.flat_map(& &1.semantic_fields)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      unsupported_fields:
+        entry_reports
+        |> Enum.flat_map(& &1.unsupported_fields)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      ignored_fields:
+        entry_reports
+        |> Enum.flat_map(& &1.ignored_fields)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      unresolved_token_refs:
+        entry_reports
+        |> Enum.flat_map(& &1.unresolved_token_refs)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      unresolved_roles:
+        entry_reports
+        |> Enum.flat_map(& &1.unresolved_roles)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      css_var_keys:
+        entry_reports
+        |> Enum.flat_map(& &1.css_var_keys)
+        |> Enum.uniq()
+        |> Enum.sort(),
+      mode_counts: count_values(entry_reports, & &1.mode),
+      fallback_counts: count_values(entry_reports, & &1.fallback),
+      unsupported_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.unsupported_fields != []))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      ignored_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.ignored_fields != []))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      unresolved_reference_entry_ids: unresolved_reference_entry_ids,
+      semantic_only_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.mode == "semantic_only"))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      mixed_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.mode == "mixed"))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      realized_entry_ids:
+        entry_reports
+        |> Enum.filter(&(&1.mode == "realized"))
+        |> Enum.map(& &1.id)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.sort(),
+      entry_reports: entry_reports
+    }
+  end
+
+  defp compare_browser_style_entries(native_entries, canonical_entries) do
+    native_by_id = entries_by_id(native_entries)
+    canonical_by_id = entries_by_id(canonical_entries)
+
+    native_ids = Map.keys(native_by_id) |> Enum.sort()
+    canonical_ids = Map.keys(canonical_by_id) |> Enum.sort()
+
+    shared_ids =
+      MapSet.intersection(MapSet.new(native_ids), MapSet.new(canonical_ids))
+      |> MapSet.to_list()
+      |> Enum.sort()
+
+    {entry_reports, shape_mismatches} =
+      Enum.reduce(shared_ids, {[], []}, fn id, {reports, mismatches} ->
+        native_entry = Map.fetch!(native_by_id, id)
+        canonical_entry = Map.fetch!(canonical_by_id, id)
+
+        if native_entry.widget == canonical_entry.widget do
+          {[compare_browser_entry(native_entry, canonical_entry) | reports], mismatches}
+        else
+          {reports,
+           [
+             %{
+               id: id,
+               native_widget: native_entry.widget,
+               canonical_widget: canonical_entry.widget
+             }
+             | mismatches
+           ]}
+        end
+      end)
+
+    entry_reports = Enum.sort_by(entry_reports, & &1.id)
+    shape_mismatches = Enum.sort_by(shape_mismatches, & &1.id)
+    drift_ids = entry_reports |> Enum.filter(&(&1.status == :drift)) |> Enum.map(& &1.id)
+
+    approximated_ids =
+      entry_reports |> Enum.filter(&(&1.status == :approximated)) |> Enum.map(& &1.id)
+
+    %{
+      aligned?: drift_ids == [] and shape_mismatches == [],
+      matched_entry_ids: Enum.map(entry_reports, & &1.id),
+      native_only_entry_ids: native_ids -- shared_ids,
+      canonical_only_entry_ids: canonical_ids -- shared_ids,
+      approximated_ids: approximated_ids,
+      drift_ids: drift_ids,
+      shape_mismatches: shape_mismatches,
+      entry_reports: entry_reports,
+      approximation_rules: @browser_style_approximation_rules
+    }
+  end
+
+  defp compare_browser_entry(native_entry, canonical_entry) do
+    native_browser = Map.get(native_entry, :browser_style, %{})
+    canonical_browser = Map.get(canonical_entry, :browser_style, %{})
+
+    native_css_vars = Map.get(native_browser, :css_vars, %{})
+    canonical_css_vars = Map.get(canonical_browser, :css_vars, %{})
+
+    shared_css_keys =
+      Map.keys(native_css_vars)
+      |> MapSet.new()
+      |> MapSet.intersection(MapSet.new(Map.keys(canonical_css_vars)))
+      |> MapSet.to_list()
+      |> Enum.sort()
+
+    conflicting_css_vars =
+      Enum.reduce(shared_css_keys, [], fn key, acc ->
+        native_value = Map.get(native_css_vars, key)
+        canonical_value = Map.get(canonical_css_vars, key)
+
+        if native_value == canonical_value do
+          acc
+        else
+          [%{key: key, native: native_value, canonical: canonical_value} | acc]
+        end
+      end)
+      |> Enum.reverse()
+
+    native_only_css_vars = Map.keys(native_css_vars) -- shared_css_keys
+    canonical_only_css_vars = Map.keys(canonical_css_vars) -- shared_css_keys
+
+    realized_field_drift =
+      symmetric_difference(
+        Map.get(native_browser, :realized_fields, []),
+        Map.get(canonical_browser, :realized_fields, [])
+      )
+
+    semantic_field_drift =
+      symmetric_difference(
+        Map.get(native_browser, :semantic_fields, []),
+        Map.get(canonical_browser, :semantic_fields, [])
+      )
+
+    unsupported_field_drift =
+      symmetric_difference(
+        Map.get(native_browser, :unsupported_fields, []),
+        Map.get(canonical_browser, :unsupported_fields, [])
+      )
+
+    ignored_field_drift =
+      symmetric_difference(
+        Map.get(native_browser, :ignored_fields, []),
+        Map.get(canonical_browser, :ignored_fields, [])
+      )
+
+    unresolved_token_ref_drift =
+      symmetric_difference(
+        Map.get(native_browser, :unresolved_token_refs, []),
+        Map.get(canonical_browser, :unresolved_token_refs, [])
+      )
+
+    unresolved_role_drift =
+      symmetric_difference(
+        Map.get(native_browser, :unresolved_roles, []),
+        Map.get(canonical_browser, :unresolved_roles, [])
+      )
+
+    fallback_mismatch? =
+      Map.get(native_browser, :fallback) != Map.get(canonical_browser, :fallback)
+
+    mode_mismatch? = Map.get(native_browser, :mode) != Map.get(canonical_browser, :mode)
+
+    status =
+      cond do
+        conflicting_css_vars != [] or native_only_css_vars != [] or canonical_only_css_vars != [] or
+          unsupported_field_drift != [] or ignored_field_drift != [] or fallback_mismatch? ->
+          :drift
+
+        mode_mismatch? or realized_field_drift != [] or semantic_field_drift != [] ->
+          :approximated
+
+        true ->
+          :aligned
+      end
+
+    %{
+      id: native_entry.id,
+      widget: native_entry.widget,
+      status: status,
+      native: browser_entry_summary(native_browser),
+      canonical: browser_entry_summary(canonical_browser),
+      conflicting_css_vars: conflicting_css_vars,
+      native_only_css_vars: Enum.sort(native_only_css_vars),
+      canonical_only_css_vars: Enum.sort(canonical_only_css_vars),
+      realized_field_drift: realized_field_drift,
+      semantic_field_drift: semantic_field_drift,
+      unsupported_field_drift: unsupported_field_drift,
+      ignored_field_drift: ignored_field_drift,
+      unresolved_token_ref_drift: unresolved_token_ref_drift,
+      unresolved_role_drift: unresolved_role_drift,
+      fallback_mismatch?: fallback_mismatch?,
+      mode_mismatch?: mode_mismatch?
+    }
+  end
+
+  defp entries_by_id(entries) do
+    entries
+    |> Enum.reject(&is_nil(&1.id))
+    |> Map.new(fn entry -> {entry.id, entry} end)
+  end
+
+  defp browser_entry_summary(browser_style) do
+    %{
+      mode: Map.get(browser_style, :mode),
+      fallback: Map.get(browser_style, :fallback),
+      realized_fields: Map.get(browser_style, :realized_fields, []),
+      semantic_fields: Map.get(browser_style, :semantic_fields, []),
+      unsupported_fields: Map.get(browser_style, :unsupported_fields, []),
+      ignored_fields: Map.get(browser_style, :ignored_fields, []),
+      unresolved_token_refs: Map.get(browser_style, :unresolved_token_refs, []),
+      unresolved_roles: Map.get(browser_style, :unresolved_roles, []),
+      css_vars: Map.get(browser_style, :css_vars, %{})
+    }
+  end
+
+  defp csv_attribute(tag, name) do
+    case attribute(tag, name) do
+      nil -> []
+      value -> String.split(value, ",", trim: true) |> Enum.sort()
+    end
+  end
+
+  defp css_var_map(nil), do: %{}
+
+  defp css_var_map(style) do
+    style
+    |> String.split(";", trim: true)
+    |> Enum.reduce(%{}, fn declaration, acc ->
+      case String.split(declaration, ":", parts: 2) do
+        [key, value] ->
+          key = String.trim(key)
+          value = String.trim(value)
+
+          if String.starts_with?(key, "--live-ui-") and value != "" do
+            Map.put(acc, key, value)
+          else
+            acc
+          end
+
+        _other ->
+          acc
+      end
+    end)
+  end
+
   defp attribute(tag, name) do
-    case Regex.run(~r/#{Regex.escape(name)}="([^"]+)"/, tag, capture: :all_but_first) do
+    case Regex.run(~r/(?:^|\s)#{Regex.escape(name)}="([^"]+)"/, tag, capture: :all_but_first) do
       [value] -> value
       _ -> nil
     end
+  end
+
+  defp symmetric_difference(left, right) do
+    left = MapSet.new(left)
+    right = MapSet.new(right)
+
+    left
+    |> MapSet.symmetric_difference(right)
+    |> MapSet.to_list()
+    |> Enum.sort()
+  end
+
+  defp count_values(values, mapper) do
+    values
+    |> Enum.map(mapper)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.frequencies()
+    |> Map.new(fn {key, value} -> {to_string(key), value} end)
   end
 
   defp maybe_add_diagnostic(diagnostics, _reason, []), do: diagnostics
 
   defp maybe_add_diagnostic(diagnostics, reason, widgets) do
     diagnostics ++ [%{reason: reason, widgets: widgets}]
+  end
+
+  defp maybe_add_browser_style_diagnostics(diagnostics, %{
+         drift_ids: [],
+         shape_mismatches: [],
+         approximated_ids: []
+       }) do
+    diagnostics
+  end
+
+  defp maybe_add_browser_style_diagnostics(diagnostics, browser_style) do
+    diagnostics
+    |> maybe_add_browser_style_drift(browser_style)
+    |> maybe_add_browser_style_approximation(browser_style)
+  end
+
+  defp maybe_add_browser_style_drift(diagnostics, %{drift_ids: [], shape_mismatches: []}),
+    do: diagnostics
+
+  defp maybe_add_browser_style_drift(diagnostics, browser_style) do
+    diagnostics ++
+      [
+        %{
+          reason: :browser_style_drift,
+          entry_ids: browser_style.drift_ids,
+          shape_mismatches: browser_style.shape_mismatches
+        }
+      ]
+  end
+
+  defp maybe_add_browser_style_approximation(diagnostics, %{approximated_ids: []}),
+    do: diagnostics
+
+  defp maybe_add_browser_style_approximation(diagnostics, browser_style) do
+    diagnostics ++
+      [
+        %{
+          reason: :browser_style_approximation,
+          entry_ids: browser_style.approximated_ids,
+          rules: browser_style.approximation_rules
+        }
+      ]
   end
 
   defp example_health_report(catalog) do
@@ -370,7 +794,8 @@ defmodule LiveUi.Tooling do
               id: example.id,
               ok?:
                 report.continuity.widgets_aligned? and report.continuity.tone_overlap? and
-                  report.continuity.runtime_model_aligned?,
+                  report.continuity.runtime_model_aligned? and
+                  report.continuity.browser_style_aligned?,
               report: report,
               diagnostics: comparison.diagnostics
             }
@@ -389,6 +814,8 @@ defmodule LiveUi.Tooling do
       total: length(results),
       results: results,
       failing_ids: failing_ids,
+      browser_style_aligned?:
+        Enum.all?(results, &get_in(&1, [:report, :continuity, :browser_style_aligned?])),
       aligned?: failing_ids == []
     }
   end
@@ -465,7 +892,7 @@ defmodule LiveUi.Tooling do
       ),
       gate(
         :continuity,
-        "Styled native and canonical continuity pairs stay aligned.",
+        "Styled native and canonical continuity pairs stay aligned, including browser-visible style output.",
         report.continuity.aligned?
       ),
       gate(

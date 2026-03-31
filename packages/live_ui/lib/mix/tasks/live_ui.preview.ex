@@ -8,6 +8,7 @@ defmodule Mix.Tasks.LiveUi.Preview do
 
       mix live_ui.preview
       mix live_ui.preview native_styled_profile
+      mix live_ui.preview native_styled_profile --format artifact
       mix live_ui.preview canonical_styled_operations --format html
       mix live_ui.preview styled_continuity_compare --format report
   """
@@ -29,6 +30,7 @@ defmodule Mix.Tasks.LiveUi.Preview do
             "report" -> :report
             "html" -> :html
             "metadata" -> :metadata
+            "artifact" -> :artifact
             other -> Mix.raise("unsupported preview format #{inspect(other)}")
           end
 
@@ -41,7 +43,9 @@ defmodule Mix.Tasks.LiveUi.Preview do
         end
 
       _ ->
-        Mix.raise("usage: mix live_ui.preview [EXAMPLE_ID] [--format report|html|metadata]")
+        Mix.raise(
+          "usage: mix live_ui.preview [EXAMPLE_ID] [--format report|html|metadata|artifact]"
+        )
     end
   end
 end

@@ -7,8 +7,10 @@ defmodule Mix.Tasks.LiveUi.Export do
   Prints a stable exported representation of a maintained `live_ui` example.
 
       mix live_ui.export native_styled_profile
+      mix live_ui.export native_styled_profile --format artifact
       mix live_ui.export canonical_styled_operations --format html
       mix live_ui.export native_styled_profile --format comparison
+      mix live_ui.export native_styled_profile --format style
       mix live_ui.export --format catalog
   """
 
@@ -31,6 +33,8 @@ defmodule Mix.Tasks.LiveUi.Export do
             "html" -> :html
             "comparison" -> :comparison
             "diagnostics" -> :diagnostics
+            "style" -> :style
+            "artifact" -> :artifact
             other -> Mix.raise("unsupported export format #{inspect(other)}")
           end
 
@@ -44,7 +48,7 @@ defmodule Mix.Tasks.LiveUi.Export do
 
       _ ->
         Mix.raise(
-          "usage: mix live_ui.export [EXAMPLE_ID] [--format metadata|report|html|comparison|diagnostics|catalog]"
+          "usage: mix live_ui.export [EXAMPLE_ID] [--format metadata|report|html|comparison|diagnostics|style|artifact|catalog]"
         )
     end
   end

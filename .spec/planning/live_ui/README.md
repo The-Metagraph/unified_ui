@@ -31,6 +31,8 @@ The plan aligns to:
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, and release-readiness gates.
 7. [Phase 7 - Browser Style Output Contract and Foundational Realization](./phase-07-browser-style-output-contract-and-foundational-realization.md): define the browser-facing style contract, lower foundational canonical style values into browser-visible output, and establish the shared realization pattern for later widget coverage.
 8. [Phase 8 - Layout, Layer, and Advanced Widget Style Realization](./phase-08-layout-layer-and-advanced-widget-style-realization.md): extend browser-visible canonical styling into layout geometry, layered display surfaces, and the advanced widget catalog.
+9. [Phase 9 - Canonical-Native Parity, Tooling, and Demo Alignment](./phase-09-canonical-native-parity-tooling-and-demo-alignment.md): add browser-visible parity rules, richer style-realization tooling, and demo/example upgrades that prove canonical styling now affects browser output directly.
+10. [Phase 10 - Documentation, Validation, and Release Readiness for Style Realization](./phase-10-documentation-validation-and-release-readiness-for-style-realization.md): finish the rollout with migration guidance, validation gates, hardening, and release-readiness coverage for browser-realized canonical styling.
 
 ## Shared Conventions
 - Numbering:

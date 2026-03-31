@@ -3,6 +3,8 @@ defmodule LiveUi.Examples.NativeStyledOperationsScreen do
   Maintained native styling example for overlay-driven operational workflows.
   """
 
+  alias LiveUi.Examples.StyledExampleStyles
+
   use LiveUi.Screen, id: :native_styled_operations, title: "Native Styled Operations"
 
   @impl true
@@ -29,35 +31,35 @@ defmodule LiveUi.Examples.NativeStyledOperationsScreen do
         :overlay_style,
         LiveUi.Style.component_assigns(:overlay_surface,
           theme: theme,
-          class: "ops-overlay"
+          style: StyledExampleStyles.operations_overlay()
         )
       )
       |> Map.put(
         :viewport_style,
         LiveUi.Style.component_assigns(:viewport,
           theme: theme,
-          class: "ops-viewport"
+          style: StyledExampleStyles.operations_viewport()
         )
       )
       |> Map.put(
         :canvas_style,
         LiveUi.Style.component_assigns(:canvas,
           theme: theme,
-          class: "ops-canvas"
+          style: StyledExampleStyles.operations_canvas()
         )
       )
       |> Map.put(
         :dialog_style,
         LiveUi.Style.component_assigns(:dialog,
           theme: theme,
-          class: "ops-dialog"
+          style: StyledExampleStyles.operations_dialog()
         )
       )
       |> Map.put(
         :cluster_style,
         LiveUi.Style.component_assigns(:cluster_dashboard,
           theme: theme,
-          class: "ops-cluster"
+          style: StyledExampleStyles.operations_cluster()
         )
       )
 

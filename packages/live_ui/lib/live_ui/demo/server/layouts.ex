@@ -206,15 +206,6 @@ defmodule LiveUi.Demo.Server.Layouts do
       gap: 0.55rem;
     }
 
-    #live-ui-demo-sidebar .live-ui-demo-button {
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      text-align: left;
-      box-sizing: border-box;
-      text-decoration: none;
-    }
-
     [data-live-ui-demo-story="true"] {
       margin-bottom: 1rem;
       border: 1px solid hsl(152 100% 50% / 0.18);

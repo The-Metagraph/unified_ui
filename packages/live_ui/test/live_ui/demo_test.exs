@@ -11,7 +11,10 @@ defmodule LiveUi.DemoTest do
     assert demo.total_examples > 0
     assert demo.html =~ "Live UI Workbench"
     assert demo.html =~ ~s(data-live-ui-widget="screen-shell")
-    assert demo.html =~ ~s(href="#{LiveUi.Demo.path(example: :native_styled_profile, category: :native)}")
+
+    assert demo.html =~
+             ~s(href="#{LiveUi.Demo.path(example: :native_styled_profile, category: :native)}")
+
     refute demo.html =~ ~s(phx-click="select_example")
   end
 
@@ -23,7 +26,9 @@ defmodule LiveUi.DemoTest do
     assert demo.selected_example.title == "Native Styled Profile"
     assert demo.preview.mode == :html
     assert demo.preview.html =~ "profile-shell"
-    assert Enum.any?(demo.preview.widgets, &(&1.widget == "button"))
+    assert "button" in demo.preview.widgets
+    assert demo.preview.browser_style.realized_fields != []
+    assert demo.preview.browser_style_nodes != []
   end
 
   test "mixed example workbench renders a comparison report" do
