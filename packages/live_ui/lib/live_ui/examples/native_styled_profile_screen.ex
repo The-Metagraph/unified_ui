@@ -3,6 +3,8 @@ defmodule LiveUi.Examples.NativeStyledProfileScreen do
   Maintained native styling example for a directly authored profile screen.
   """
 
+  alias LiveUi.Examples.StyledExampleStyles
+
   use LiveUi.Screen, id: :native_styled_profile, title: "Native Styled Profile"
 
   @impl true
@@ -20,29 +22,35 @@ defmodule LiveUi.Examples.NativeStyledProfileScreen do
         :box_style,
         LiveUi.Style.component_assigns(:box,
           theme: theme,
-          class: "profile-shell"
+          style: StyledExampleStyles.profile_shell()
         )
       )
       |> Map.put(
-        :text_style,
+        :title_style,
         LiveUi.Style.component_assigns(:text,
           theme: theme,
-          tone: :success,
-          class: "profile-copy"
+          style: StyledExampleStyles.profile_title()
+        )
+      )
+      |> Map.put(
+        :status_style,
+        LiveUi.Style.component_assigns(:text,
+          theme: theme,
+          style: StyledExampleStyles.profile_status()
         )
       )
       |> Map.put(
         :input_style,
         LiveUi.Style.component_assigns(:text_input,
           theme: theme,
-          class: "profile-name-input"
+          style: StyledExampleStyles.profile_input()
         )
       )
       |> Map.put(
         :button_style,
         LiveUi.Style.component_assigns(:button,
           theme: theme,
-          class: "profile-save"
+          style: StyledExampleStyles.profile_button()
         )
       )
 
@@ -54,8 +62,8 @@ defmodule LiveUi.Examples.NativeStyledProfileScreen do
       background="panel"
       {@box_style}
     >
-      <LiveUi.Widgets.Text.render id="profile-title" content="Profile" {@text_style} />
-      <LiveUi.Widgets.Text.render id="profile-status" content={@status} {@text_style} />
+      <LiveUi.Widgets.Text.render id="profile-title" content="Profile" {@title_style} />
+      <LiveUi.Widgets.Text.render id="profile-status" content={@status} {@status_style} />
       <LiveUi.Widgets.TextInput.render
         id="profile-name"
         name="name"

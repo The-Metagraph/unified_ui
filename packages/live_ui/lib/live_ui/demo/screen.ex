@@ -20,7 +20,9 @@ defmodule LiveUi.Demo.Screen do
 
   @impl true
   def render(assigns) do
-    current_category = Catalog.normalize_category(assigns.selected_category) || Catalog.default_category()
+    current_category =
+      Catalog.normalize_category(assigns.selected_category) || Catalog.default_category()
+
     selected_example = Catalog.find_example(assigns.selected_example)
 
     assigns =
@@ -32,9 +34,8 @@ defmodule LiveUi.Demo.Screen do
       |> Map.put(:sidebar_examples, Catalog.category_examples(current_category))
       |> Map.put(:path_counts, Catalog.path_counts())
       |> Map.put(:shell_style, Style.shell())
-      |> Map.put(:stack_style, Style.layout(:column, "live-ui-demo-stack"))
-      |> Map.put(:row_style, Style.layout(:row, "live-ui-demo-row"))
-      |> Map.put(:grid_style, Style.layout(:grid, "live-ui-demo-grid"))
+      |> Map.put(:stack_style, Style.layout(:column))
+      |> Map.put(:row_style, Style.layout(:row, class: "live-ui-demo-row"))
 
     ~H"""
     <LiveUi.Widgets.ScreenShell.render id="live-ui-demo" title={title()} {@shell_style}>
@@ -55,18 +56,19 @@ defmodule LiveUi.Demo.Screen do
       title: title(),
       families: [:styling, :navigation, :comparison],
       comparable_to: nil,
-      summary: "Package-local `live_ui` workbench for maintained native, canonical, and mixed examples."
+      summary:
+        "Package-local `live_ui` workbench for maintained native, canonical, and mixed examples."
     }
   end
 
   defp topbar(assigns) do
     assigns =
       assigns
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-topbar"))
-      |> Map.put(:eyebrow_style, Style.text("live-ui-demo-eyebrow", tone: :accent))
-      |> Map.put(:title_style, Style.text("live-ui-demo-title", tone: :success))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-muted"))
-      |> Map.put(:home_button_style, Style.button("live-ui-demo-home-button", variant: :quiet))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:eyebrow_style, Style.text(tone: :accent, strong?: true))
+      |> Map.put(:title_style, Style.text(tone: :success, strong?: true))
+      |> Map.put(:muted_style, Style.text())
+      |> Map.put(:home_button_style, Style.button(variant: :quiet))
       |> Map.put(:overview_path, overview_path(assigns.current_category))
 
     ~H"""
@@ -119,8 +121,8 @@ defmodule LiveUi.Demo.Screen do
   defp sidebar(assigns) do
     assigns =
       assigns
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-sidebar"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-sidebar-copy"))
+      |> Map.put(:panel_style, Style.panel(class: "live-ui-demo-sidebar"))
+      |> Map.put(:muted_style, Style.text())
 
     ~H"""
     <LiveUi.Widgets.Box.render id="live-ui-demo-sidebar" padding="lg" border="subtle" background="panel" {@panel_style}>
@@ -154,9 +156,9 @@ defmodule LiveUi.Demo.Screen do
   defp category_button(assigns, category) do
     button_style =
       if category.id == assigns.current_category do
-        Style.button("live-ui-demo-category-button is-current", variant: :solid, state: :active)
+        Style.button(class: "is-current", variant: :solid, state: :active, full_width?: true)
       else
-        Style.button("live-ui-demo-category-button", variant: :quiet)
+        Style.button(variant: :quiet, full_width?: true)
       end
 
     assigns =
@@ -181,9 +183,9 @@ defmodule LiveUi.Demo.Screen do
 
     button_style =
       if selected? do
-        Style.button("live-ui-demo-example-button is-current", variant: :solid, state: :active)
+        Style.button(class: "is-current", variant: :solid, state: :active, full_width?: true)
       else
-        Style.button("live-ui-demo-example-button", variant: :quiet)
+        Style.button(variant: :quiet, full_width?: true)
       end
 
     assigns =
@@ -208,10 +210,10 @@ defmodule LiveUi.Demo.Screen do
     assigns =
       assigns
       |> Map.put(:example, example)
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-content"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-content-copy"))
-      |> Map.put(:title_style, Style.text("live-ui-demo-content-title", tone: :accent))
-      |> Map.put(:home_button_style, Style.button("live-ui-demo-back-button", variant: :quiet))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
+      |> Map.put(:title_style, Style.text(tone: :accent, strong?: true))
+      |> Map.put(:home_button_style, Style.button(variant: :quiet))
       |> Map.put(:overview_path, overview_path(assigns.current_category))
 
     ~H"""
@@ -246,6 +248,7 @@ defmodule LiveUi.Demo.Screen do
       </LiveUi.Widgets.Box.render>
 
       <%= preview_panel(assigns) %>
+      <%= browser_style_panel(assigns) %>
       <%= metadata_panel(assigns) %>
     </LiveUi.Layout.Column.render>
     """
@@ -254,10 +257,13 @@ defmodule LiveUi.Demo.Screen do
   defp content(assigns) do
     assigns =
       assigns
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-home-panel"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-home-copy"))
-      |> Map.put(:title_style, Style.text("live-ui-demo-home-title", tone: :accent))
-      |> Map.put(:current_lane, Enum.find(assigns.categories, &(&1.id == assigns.current_category)))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
+      |> Map.put(:title_style, Style.text(tone: :accent, strong?: true))
+      |> Map.put(
+        :current_lane,
+        Enum.find(assigns.categories, &(&1.id == assigns.current_category))
+      )
 
     ~H"""
     <LiveUi.Layout.Column.render id="live-ui-demo-home" gap="lg" {@stack_style}>
@@ -315,8 +321,8 @@ defmodule LiveUi.Demo.Screen do
     assigns =
       assigns
       |> Map.put(:preview_data, preview)
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-preview-panel"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-preview-copy"))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
 
     ~H"""
     <LiveUi.Widgets.Box.render id="live-ui-demo-preview" padding="lg" border="subtle" background="panel" {@panel_style}>
@@ -341,8 +347,8 @@ defmodule LiveUi.Demo.Screen do
     assigns =
       assigns
       |> Map.put(:preview_data, preview)
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-preview-panel"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-preview-copy"))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
 
     ~H"""
     <LiveUi.Widgets.Box.render id="live-ui-demo-preview-report" padding="lg" border="subtle" background="panel" {@panel_style}>
@@ -359,8 +365,8 @@ defmodule LiveUi.Demo.Screen do
   defp preview_panel(assigns) do
     assigns =
       assigns
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-preview-panel"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-preview-copy"))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
 
     ~H"""
     <LiveUi.Widgets.Box.render id="live-ui-demo-preview-empty" padding="lg" border="subtle" background="panel" {@panel_style}>
@@ -373,13 +379,72 @@ defmodule LiveUi.Demo.Screen do
     """
   end
 
+  defp browser_style_panel(%{preview: %{browser_style: browser_style} = preview} = assigns) do
+    style_nodes = Map.get(preview, :browser_style_nodes, [])
+
+    assigns =
+      assigns
+      |> Map.put(:browser_style, browser_style)
+      |> Map.put(:style_nodes, Enum.take(style_nodes, 4))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
+      |> Map.put(:title_style, Style.text(tone: :success, strong?: true))
+
+    ~H"""
+    <LiveUi.Widgets.Box.render id="live-ui-demo-browser-style" padding="lg" border="subtle" background="panel" {@panel_style}>
+      <LiveUi.Widgets.Text.render
+        id="live-ui-demo-browser-style-title"
+        content="Browser Style Surface"
+        {@title_style}
+      />
+      <LiveUi.Widgets.Text.render
+        id="live-ui-demo-browser-style-modes"
+        content={"Modes: " <> Enum.join(@browser_style.modes, ", ")}
+        {@muted_style}
+      />
+      <LiveUi.Widgets.Text.render
+        id="live-ui-demo-browser-style-realized"
+        content={"Realized fields: " <> Enum.join(@browser_style.realized_fields, ", ")}
+        {@muted_style}
+      />
+      <LiveUi.Widgets.Text.render
+        id="live-ui-demo-browser-style-css-vars"
+        content={"CSS vars: " <> Enum.join(@browser_style.css_var_keys, ", ")}
+        {@muted_style}
+      />
+      <LiveUi.Widgets.Text.render
+        id="live-ui-demo-browser-style-unsupported"
+        content={"Unsupported fields: " <> empty_label(@browser_style.unsupported_fields)}
+        {@muted_style}
+      />
+      <LiveUi.Widgets.Text.render
+        id="live-ui-demo-browser-style-ignored"
+        content={"Ignored fields: " <> empty_label(@browser_style.ignored_fields)}
+        {@muted_style}
+      />
+
+      <div class="live-ui-demo-overview-list">
+        <%= for node <- @style_nodes do %>
+          <LiveUi.Widgets.Text.render
+            id={"live-ui-demo-browser-style-node-#{node.id}"}
+            content={"#{node.id}: " <> Enum.join(node.css_var_keys, ", ")}
+            {@muted_style}
+          />
+        <% end %>
+      </div>
+    </LiveUi.Widgets.Box.render>
+    """
+  end
+
+  defp browser_style_panel(_assigns), do: nil
+
   defp metadata_panel(assigns) do
     preview = assigns.preview || %{}
 
     assigns =
       assigns
-      |> Map.put(:panel_style, Style.panel("live-ui-demo-metadata-panel"))
-      |> Map.put(:muted_style, Style.text("live-ui-demo-metadata-copy"))
+      |> Map.put(:panel_style, Style.panel())
+      |> Map.put(:muted_style, Style.text())
       |> Map.put(:preview, preview)
 
     ~H"""
@@ -416,6 +481,12 @@ defmodule LiveUi.Demo.Screen do
         :if={Map.has_key?(@preview, :bridge_hooks)}
         id="live-ui-demo-metadata-hooks"
         content={"Bridge hooks: " <> inspect(@preview.bridge_hooks)}
+        {@muted_style}
+      />
+      <LiveUi.Widgets.Text.render
+        :if={Map.has_key?(@preview, :browser_style)}
+        id="live-ui-demo-metadata-browser-style"
+        content={"Browser style nodes: #{length(Map.get(@preview, :browser_style_nodes, []))}"}
         {@muted_style}
       />
     </LiveUi.Widgets.Box.render>
@@ -470,4 +541,7 @@ defmodule LiveUi.Demo.Screen do
     </.link>
     """
   end
+
+  defp empty_label([]), do: "none"
+  defp empty_label(values), do: Enum.join(values, ", ")
 end

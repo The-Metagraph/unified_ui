@@ -20,12 +20,14 @@ defmodule LiveUi.Demo.Catalog do
     },
     mixed: %{
       title: "Mixed",
-      description: "Comparison-oriented review surfaces that keep multiple runtime paths visible.",
+      description:
+        "Comparison-oriented review surfaces that keep multiple runtime paths visible.",
       featured_example: :styled_continuity_compare
     },
     styling: %{
       title: "Styling",
-      description: "Theme-aware examples that exercise tone, continuity, and component styling hooks.",
+      description:
+        "Theme-aware examples that exercise tone, continuity, and component styling hooks.",
       featured_example: :native_styled_operations
     },
     transport: %{
@@ -35,7 +37,8 @@ defmodule LiveUi.Demo.Catalog do
     },
     continuity: %{
       title: "Continuity",
-      description: "Paired native and canonical examples that should stay aligned as the package evolves.",
+      description:
+        "Paired native and canonical examples that should stay aligned as the package evolves.",
       featured_example: :native_styled_profile
     }
   }
@@ -145,27 +148,25 @@ defmodule LiveUi.Demo.Catalog do
     fetch_example(id)
   end
 
-  defp preview_for(%{path: :native, module: module, id: id}) do
-    with {:ok, runtime_state} <- LiveUi.Runtime.mount(module) do
+  defp preview_for(%{path: :native, id: id}) do
+    with {:ok, inspection} <- LiveUi.Tooling.preview_example(id) do
       {:ok,
-       runtime_preview(
-         "demo-preview-native-#{id}",
-         runtime_state,
-         native?: true,
-         canonical?: false
-       )}
+       inspection.result
+       |> Map.put(:mode, :html)
+       |> Map.put(:runtime_mode, Map.get(inspection.result, :mode))
+       |> Map.put(:native?, true)
+       |> Map.put(:canonical?, false)}
     end
   end
 
-  defp preview_for(%{path: :canonical, module: module, id: id}) do
-    with {:ok, runtime_state} <- LiveUi.Runtime.mount_iur(module.element()) do
+  defp preview_for(%{path: :canonical, id: id}) do
+    with {:ok, inspection} <- LiveUi.Tooling.preview_example(id) do
       {:ok,
-       runtime_preview(
-         "demo-preview-canonical-#{id}",
-         runtime_state,
-         native?: false,
-         canonical?: true
-       )}
+       inspection.result
+       |> Map.put(:mode, :html)
+       |> Map.put(:runtime_mode, Map.get(inspection.result, :mode))
+       |> Map.put(:native?, false)
+       |> Map.put(:canonical?, true)}
     end
   end
 
@@ -178,47 +179,6 @@ defmodule LiveUi.Demo.Catalog do
          report:
            inspect(inspection.result, pretty: true, width: 100, limit: :infinity, sort_maps: true)
        }}
-    end
-  end
-
-  defp runtime_preview(dom_id, runtime_state, opts) do
-    html =
-      LiveUi.Runtime.component().render(%{
-        id: dom_id,
-        runtime_state: runtime_state
-      })
-      |> Phoenix.HTML.Safe.to_iodata()
-      |> IO.iodata_to_binary()
-
-    %{
-      mode: :html,
-      html: html,
-      widgets: widget_entries(html),
-      event_routes: Map.keys(runtime_state.event_routes) |> Enum.sort(),
-      bridge_hooks: Enum.sort(runtime_state.bridge_hooks),
-      native?: Keyword.fetch!(opts, :native?),
-      canonical?: Keyword.fetch!(opts, :canonical?)
-    }
-  end
-
-  defp widget_entries(html) do
-    ~r/<[^>]*data-live-ui-widget="[^"]+"[^>]*>/
-    |> Regex.scan(html)
-    |> Enum.map(fn [tag] ->
-      %{
-        id: attribute(tag, "id"),
-        widget: attribute(tag, "data-live-ui-widget"),
-        tone: attribute(tag, "data-live-ui-tone"),
-        variant: attribute(tag, "data-live-ui-variant"),
-        state: attribute(tag, "data-live-ui-state")
-      }
-    end)
-  end
-
-  defp attribute(tag, name) do
-    case Regex.run(~r/#{Regex.escape(name)}="([^"]+)"/, tag, capture: :all_but_first) do
-      [value] -> value
-      _ -> nil
     end
   end
 

@@ -3,6 +3,7 @@ defmodule LiveUi.Examples.CanonicalStyledProfile do
   Maintained canonical styling example for the profile continuity workflow.
   """
 
+  alias LiveUi.Examples.StyledExampleStyles
   alias UnifiedIUR.Container
   alias UnifiedIUR.Widgets.{Foundational, Input}
 
@@ -11,18 +12,12 @@ defmodule LiveUi.Examples.CanonicalStyledProfile do
       [
         Foundational.text("Profile",
           id: "profile-title",
-          style: %{
-            emphasis: %{tone: :success},
-            extra: %{class: "profile-copy"}
-          },
+          style: StyledExampleStyles.profile_title(),
           theme: %{id: :live_ui}
         ),
         Foundational.text("Connected",
           id: "profile-status",
-          style: %{
-            emphasis: %{tone: :success},
-            extra: %{class: "profile-copy"}
-          },
+          style: StyledExampleStyles.profile_status(),
           theme: %{id: :live_ui}
         ),
         Input.text_input(
@@ -30,12 +25,12 @@ defmodule LiveUi.Examples.CanonicalStyledProfile do
           name: "name",
           value: "Pascal",
           placeholder: "Name",
-          style: %{extra: %{class: "profile-name-input"}},
+          style: StyledExampleStyles.profile_input(),
           theme: %{id: :live_ui}
         ),
         Foundational.button("Save",
           id: "profile-save",
-          style: %{extra: %{class: "profile-save"}},
+          style: StyledExampleStyles.profile_button(),
           theme: %{id: :live_ui}
         )
       ],
@@ -43,7 +38,7 @@ defmodule LiveUi.Examples.CanonicalStyledProfile do
       padding: "lg",
       border: "subtle",
       background: "panel",
-      style: %{extra: %{class: "profile-shell"}},
+      style: StyledExampleStyles.profile_shell(),
       theme: %{id: :live_ui}
     )
   end

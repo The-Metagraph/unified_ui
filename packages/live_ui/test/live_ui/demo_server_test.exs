@@ -26,6 +26,8 @@ defmodule LiveUi.DemoServerTest do
 
     assert body =~ "Native Styled Profile"
     assert body =~ "Focused example"
+    assert body =~ "Browser Style Surface"
+    assert body =~ "Browser style nodes"
   end
 
   defp wait_for_body(url, attempts \\ 20)

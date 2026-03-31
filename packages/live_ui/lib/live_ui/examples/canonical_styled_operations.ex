@@ -3,6 +3,7 @@ defmodule LiveUi.Examples.CanonicalStyledOperations do
   Maintained canonical styling example for overlay and operational continuity.
   """
 
+  alias LiveUi.Examples.StyledExampleStyles
   alias UnifiedIUR.{Canvas, Layer, Viewport}
   alias UnifiedIUR.Widgets.Advanced
 
@@ -17,7 +18,7 @@ defmodule LiveUi.Examples.CanonicalStyledOperations do
           width: 80,
           height: 24,
           background: "analysis",
-          style: %{extra: %{class: "ops-canvas"}},
+          style: StyledExampleStyles.operations_canvas(),
           theme: %{id: :live_ui}
         ),
         id: "ops-viewport",
@@ -25,7 +26,7 @@ defmodule LiveUi.Examples.CanonicalStyledOperations do
         width: "80",
         height: "24",
         sync_group: "ops",
-        style: %{extra: %{class: "ops-viewport"}},
+        style: StyledExampleStyles.operations_viewport(),
         theme: %{id: :live_ui}
       )
 
@@ -38,12 +39,12 @@ defmodule LiveUi.Examples.CanonicalStyledOperations do
           ],
           id: "ops-cluster",
           summary: %{healthy: 2, degraded: 0},
-          style: %{extra: %{class: "ops-cluster"}},
+          style: StyledExampleStyles.operations_cluster(),
           theme: %{id: :live_ui}
         ),
         id: "ops-dialog",
         title: "Cluster Health",
-        style: %{extra: %{class: "ops-dialog"}},
+        style: StyledExampleStyles.operations_dialog(),
         theme: %{id: :live_ui}
       )
 
@@ -53,7 +54,7 @@ defmodule LiveUi.Examples.CanonicalStyledOperations do
       id: "ops-overlay",
       mode: :stacked,
       background_fill: :scrim,
-      style: %{extra: %{class: "ops-overlay"}},
+      style: StyledExampleStyles.operations_overlay(),
       theme: %{id: :live_ui}
     )
   end
