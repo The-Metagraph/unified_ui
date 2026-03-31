@@ -252,16 +252,26 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :row}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Layout.Row.render
       id={element_id(@element, "row")}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
+      padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
       align={string_optional(get_in(@element.attributes, [:layout, :align]))}
       justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
+      width={string_optional(get_in(@element.attributes, [:layout, :width]))}
+      height={string_optional(get_in(@element.attributes, [:layout, :height]))}
+      min_width={string_optional(get_in(@element.attributes, [:layout, :min_width]))}
+      min_height={string_optional(get_in(@element.attributes, [:layout, :min_height]))}
+      max_width={string_optional(get_in(@element.attributes, [:layout, :max_width]))}
+      max_height={string_optional(get_in(@element.attributes, [:layout, :max_height]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -271,16 +281,26 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :column}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Layout.Column.render
       id={element_id(@element, "column")}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
+      padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
       align={string_optional(get_in(@element.attributes, [:layout, :align]))}
       justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
+      width={string_optional(get_in(@element.attributes, [:layout, :width]))}
+      height={string_optional(get_in(@element.attributes, [:layout, :height]))}
+      min_width={string_optional(get_in(@element.attributes, [:layout, :min_width]))}
+      min_height={string_optional(get_in(@element.attributes, [:layout, :min_height]))}
+      max_width={string_optional(get_in(@element.attributes, [:layout, :max_width]))}
+      max_height={string_optional(get_in(@element.attributes, [:layout, :max_height]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -290,16 +310,28 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :grid}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Layout.Grid.render
       id={element_id(@element, "grid")}
       columns={integer_optional(get_in(@element.attributes, [:layout, :columns]))}
       rows={integer_optional(get_in(@element.attributes, [:layout, :rows]))}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
+      padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
+      align={string_optional(get_in(@element.attributes, [:layout, :align]))}
+      justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
+      width={string_optional(get_in(@element.attributes, [:layout, :width]))}
+      height={string_optional(get_in(@element.attributes, [:layout, :height]))}
+      min_width={string_optional(get_in(@element.attributes, [:layout, :min_width]))}
+      min_height={string_optional(get_in(@element.attributes, [:layout, :min_height]))}
+      max_width={string_optional(get_in(@element.attributes, [:layout, :max_width]))}
+      max_height={string_optional(get_in(@element.attributes, [:layout, :max_height]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />

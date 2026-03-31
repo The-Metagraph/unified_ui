@@ -8,7 +8,7 @@ defmodule LiveUi.Stylesheet do
 
   @spec css() :: String.t()
   def css do
-    Enum.join([theme_tokens(), layout_css(), foundational_css()], "\n\n")
+    Enum.join([theme_tokens(), reset_css(), layout_css(), foundational_css()], "\n\n")
   end
 
   defp theme_tokens do
@@ -39,6 +39,45 @@ defmodule LiveUi.Stylesheet do
     """
   end
 
+  defp reset_css do
+    ~S"""
+    [data-live-ui-widget] {
+      --live-ui-foreground: initial;
+      --live-ui-background: initial;
+      --live-ui-border-color: initial;
+      --live-ui-border-width: initial;
+      --live-ui-border-style: initial;
+      --live-ui-border-radius: initial;
+      --live-ui-padding: initial;
+      --live-ui-padding-inline: initial;
+      --live-ui-padding-block: initial;
+      --live-ui-margin: initial;
+      --live-ui-margin-inline: initial;
+      --live-ui-margin-block: initial;
+      --live-ui-gap: initial;
+      --live-ui-width: initial;
+      --live-ui-height: initial;
+      --live-ui-min-width: initial;
+      --live-ui-min-height: initial;
+      --live-ui-max-width: initial;
+      --live-ui-max-height: initial;
+      --live-ui-align-items: initial;
+      --live-ui-justify-content: initial;
+      --live-ui-text-align: initial;
+      --live-ui-align-self: initial;
+      --live-ui-display: initial;
+      --live-ui-grid-columns: initial;
+      --live-ui-grid-rows: initial;
+      --live-ui-font-weight: initial;
+      --live-ui-font-style: initial;
+      --live-ui-text-decoration: initial;
+      --live-ui-text-opacity: initial;
+      --live-ui-opacity: initial;
+      --live-ui-visibility: initial;
+    }
+    """
+  end
+
   defp layout_css do
     ~S"""
     [data-live-ui-runtime="screen"] {
@@ -46,46 +85,51 @@ defmodule LiveUi.Stylesheet do
       gap: 1rem;
     }
 
+    [data-live-ui-widget="row"],
     [data-live-ui-widget="column"] {
       display: flex;
-      flex-direction: column;
       min-width: 0;
+      width: var(--live-ui-width, auto);
+      height: var(--live-ui-height, auto);
+      min-width: var(--live-ui-min-width, 0);
+      min-height: var(--live-ui-min-height, auto);
+      max-width: var(--live-ui-max-width, none);
+      max-height: var(--live-ui-max-height, none);
+      align-self: var(--live-ui-align-self, auto);
+      align-items: var(--live-ui-align-items, stretch);
+      justify-content: var(--live-ui-justify-content, flex-start);
+      gap: var(--live-ui-gap, 0);
+      padding: var(--live-ui-padding, var(--live-ui-padding-block, 0) var(--live-ui-padding-inline, 0));
+      margin: var(--live-ui-margin, var(--live-ui-margin-block, 0) var(--live-ui-margin-inline, 0));
+    }
+
+    [data-live-ui-widget="column"] {
+      flex-direction: column;
     }
 
     [data-live-ui-widget="row"] {
-      display: flex;
       flex-wrap: wrap;
+      flex-direction: row;
       align-items: flex-start;
-      min-width: 0;
     }
 
     [data-live-ui-widget="grid"] {
       display: grid;
       min-width: 0;
-    }
-
-    [data-live-ui-gap="sm"] {
-      gap: var(--live-ui-gap-sm);
-    }
-
-    [data-live-ui-gap="md"] {
-      gap: var(--live-ui-gap-md);
-    }
-
-    [data-live-ui-gap="lg"] {
-      gap: var(--live-ui-gap-lg);
-    }
-
-    [data-live-ui-gap="xl"] {
-      gap: var(--live-ui-gap-xl);
-    }
-
-    [data-live-ui-widget="grid"][data-live-ui-columns="2"] {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    [data-live-ui-widget="grid"][data-live-ui-columns="3"] {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      width: var(--live-ui-width, auto);
+      height: var(--live-ui-height, auto);
+      min-width: var(--live-ui-min-width, 0);
+      min-height: var(--live-ui-min-height, auto);
+      max-width: var(--live-ui-max-width, none);
+      max-height: var(--live-ui-max-height, none);
+      align-self: var(--live-ui-align-self, auto);
+      align-items: var(--live-ui-align-items, stretch);
+      justify-content: var(--live-ui-justify-content, stretch);
+      gap: var(--live-ui-gap, 0);
+      padding: var(--live-ui-padding, var(--live-ui-padding-block, 0) var(--live-ui-padding-inline, 0));
+      margin: var(--live-ui-margin, var(--live-ui-margin-block, 0) var(--live-ui-margin-inline, 0));
+      grid-template-columns: repeat(var(--live-ui-grid-columns, 1), minmax(0, 1fr));
+      grid-template-rows: repeat(var(--live-ui-grid-rows, auto), minmax(0, auto));
     }
     """
   end

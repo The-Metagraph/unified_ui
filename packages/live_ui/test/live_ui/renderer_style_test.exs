@@ -163,4 +163,51 @@ defmodule LiveUi.RendererStyleTest do
     assert html =~ "data-legacy=\"true\""
     assert html =~ "--live-ui-foreground: #f97316"
   end
+
+  test "renderer lowers canonical layout geometry into the same browser-visible attrs as native layout primitives" do
+    element =
+      UnifiedIUR.Layout.grid(
+        [
+          UnifiedIUR.Layout.row(
+            [Foundational.text("Row child", id: "row-copy")],
+            id: "metrics-row",
+            gap: "sm",
+            padding: "lg",
+            align: "center",
+            justify: "between",
+            width: "80%"
+          ),
+          UnifiedIUR.Layout.column(
+            [Foundational.text("Column child", id: "column-copy")],
+            id: "detail-column",
+            gap: "md",
+            padding: "sm",
+            align: "end",
+            justify: "start",
+            max_width: "28rem"
+          )
+        ],
+        id: "analytics-grid",
+        columns: 2,
+        rows: 1,
+        gap: "lg",
+        padding: "md",
+        align: "center",
+        justify: "between",
+        width: "100%",
+        min_height: "12rem"
+      )
+
+    html = render_component(&LiveUi.Renderer.render/1, %{element: element})
+
+    assert html =~ "--live-ui-grid-columns: 2"
+    assert html =~ "--live-ui-grid-rows: 1"
+    assert html =~ "--live-ui-gap: 1rem"
+    assert html =~ "--live-ui-padding: 0.75rem"
+    assert html =~ "--live-ui-align-items: center"
+    assert html =~ "--live-ui-justify-content: space-between"
+    assert html =~ "--live-ui-width: 100%"
+    assert html =~ "--live-ui-min-height: 12rem"
+    assert html =~ "--live-ui-max-width: 28rem"
+  end
 end

@@ -429,7 +429,21 @@ defmodule LiveUi.Style.Browser do
   defp serialize_length(nil), do: nil
   defp serialize_length(value) when is_integer(value), do: "#{value}px"
   defp serialize_length(value) when is_float(value), do: "#{value}px"
-  defp serialize_length(value) when is_binary(value), do: value
+
+  defp serialize_length(value) when is_binary(value) do
+    case String.trim(value) do
+      "none" -> "0"
+      "hairline" -> "0.5px"
+      "thin" -> "1px"
+      "sm" -> "0.5rem"
+      "md" -> "0.75rem"
+      "lg" -> "1rem"
+      "xl" -> "1.5rem"
+      "xxl" -> "2rem"
+      "full" -> "100%"
+      trimmed -> trimmed
+    end
+  end
 
   defp serialize_length(value) when is_atom(value) do
     case value do
@@ -454,7 +468,14 @@ defmodule LiveUi.Style.Browser do
   defp serialize_align(:start), do: "flex-start"
   defp serialize_align(:end), do: "flex-end"
   defp serialize_align(value) when is_atom(value), do: Atom.to_string(value)
-  defp serialize_align(value), do: to_string(value)
+
+  defp serialize_align(value) when is_binary(value) do
+    case String.trim(value) do
+      "start" -> "flex-start"
+      "end" -> "flex-end"
+      trimmed -> trimmed
+    end
+  end
 
   defp serialize_justify(nil), do: nil
   defp serialize_justify(:start), do: "flex-start"
@@ -463,7 +484,17 @@ defmodule LiveUi.Style.Browser do
   defp serialize_justify(:around), do: "space-around"
   defp serialize_justify(:evenly), do: "space-evenly"
   defp serialize_justify(value) when is_atom(value), do: Atom.to_string(value)
-  defp serialize_justify(value), do: to_string(value)
+
+  defp serialize_justify(value) when is_binary(value) do
+    case String.trim(value) do
+      "start" -> "flex-start"
+      "end" -> "flex-end"
+      "between" -> "space-between"
+      "around" -> "space-around"
+      "evenly" -> "space-evenly"
+      trimmed -> trimmed
+    end
+  end
 
   defp serialize_text_align(nil), do: nil
   defp serialize_text_align(value) when is_atom(value), do: Atom.to_string(value)
