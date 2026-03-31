@@ -3,6 +3,8 @@ defmodule LiveUi.Demo.Server.Layouts do
 
   use Phoenix.Component
 
+  alias LiveUi.Stylesheet
+
   def root(var!(assigns)) do
     ~H"""
     <!DOCTYPE html>
@@ -12,6 +14,7 @@ defmodule LiveUi.Demo.Server.Layouts do
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content={Plug.CSRFProtection.get_csrf_token()} />
         <title><%= @page_title || "LiveUi Demo" %></title>
+        <style><%= Phoenix.HTML.raw(Stylesheet.css()) %></style>
         <style><%= Phoenix.HTML.raw(css()) %></style>
       </head>
       <body class="unified-example-shell">
@@ -115,6 +118,19 @@ defmodule LiveUi.Demo.Server.Layouts do
     .example-app-runtime {
       padding: 1.25rem;
       backdrop-filter: blur(14px);
+      --live-ui-theme-surface-base: hsl(0 0% 10%);
+      --live-ui-theme-surface-panel: hsl(0 0% 12%);
+      --live-ui-theme-foreground: var(--example-foreground);
+      --live-ui-theme-foreground-muted: hsl(0 0% 80%);
+      --live-ui-theme-border-muted: var(--example-border);
+      --live-ui-theme-border-strong: var(--example-border-strong);
+      --live-ui-theme-accent: var(--example-primary);
+      --live-ui-theme-accent-strong: var(--example-primary-strong);
+      --live-ui-theme-accent-soft: hsl(152 100% 50% / 0.08);
+      --live-ui-theme-success: var(--example-primary);
+      --live-ui-theme-warning: var(--example-yellow);
+      --live-ui-theme-critical: hsl(0 82% 60%);
+      --live-ui-shadow-action: 0 14px 34px hsl(152 100% 50% / 0.18);
     }
 
     .example-app-header-top {
@@ -190,137 +206,6 @@ defmodule LiveUi.Demo.Server.Layouts do
       gap: 0.55rem;
     }
 
-    [data-live-ui-runtime="screen"] {
-      display: grid;
-      gap: 1rem;
-    }
-
-    [data-live-ui-widget="column"] {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    [data-live-ui-widget="row"] {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      min-width: 0;
-    }
-
-    [data-live-ui-widget="grid"] {
-      display: grid;
-      min-width: 0;
-    }
-
-    [data-live-ui-gap="sm"] {
-      gap: var(--gap-sm);
-    }
-
-    [data-live-ui-gap="md"] {
-      gap: var(--gap-md);
-    }
-
-    [data-live-ui-gap="lg"] {
-      gap: var(--gap-lg);
-    }
-
-    [data-live-ui-gap="xl"] {
-      gap: var(--gap-xl);
-    }
-
-    [data-live-ui-widget="grid"][data-live-ui-columns="2"] {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    [data-live-ui-widget="grid"][data-live-ui-columns="3"] {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .live-ui-box {
-      box-sizing: border-box;
-    }
-
-    .live-ui-box.live-ui-box-panel,
-    .live-ui-screen-shell {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      border: 1px solid var(--example-border);
-      border-radius: 16px;
-      background:
-        linear-gradient(180deg, hsl(0 0% 12% / 0.98) 0%, hsl(0 0% 10% / 0.98) 100%);
-      box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.04);
-    }
-
-    .live-ui-screen-shell {
-      padding: 1rem;
-    }
-
-    .live-ui-box.live-ui-box-panel {
-      padding: 1.2rem;
-    }
-
-    .live-ui-text {
-      color: var(--example-foreground);
-      line-height: 1.6;
-    }
-
-    .live-ui-text[data-live-ui-tone="accent"],
-    .live-ui-text[data-live-ui-tone="success"] {
-      color: var(--example-primary);
-    }
-
-    .live-ui-button {
-      appearance: none;
-      border-radius: 12px;
-      border: 1px solid var(--example-border-strong);
-      padding: 0.8rem 1.15rem;
-      min-height: 2.8rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font: inherit;
-      font-size: 0.92rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition:
-        transform 120ms ease,
-        box-shadow 160ms ease,
-        filter 160ms ease,
-        border-color 160ms ease;
-    }
-
-    .live-ui-button:hover {
-      transform: translateY(-1px);
-    }
-
-    .live-ui-button:focus-visible {
-      outline: 2px solid hsl(192 100% 50% / 0.9);
-      outline-offset: 2px;
-    }
-
-    .live-ui-button.live-ui-button-solid {
-      color: hsl(0 0% 4%);
-      background: linear-gradient(
-        180deg,
-        hsl(152 100% 50% / 0.98) 0%,
-        hsl(152 100% 42% / 0.92) 100%
-      );
-      border-color: hsl(152 100% 50% / 0.45);
-      box-shadow:
-        inset 0 1px 0 hsl(0 0% 100% / 0.22),
-        0 14px 34px hsl(152 100% 50% / 0.18);
-    }
-
-    .live-ui-button.live-ui-button-quiet {
-      color: var(--example-primary);
-      background: hsl(152 100% 50% / 0.08);
-      border-color: hsl(152 100% 50% / 0.22);
-    }
-
     #live-ui-demo-sidebar .live-ui-demo-button {
       width: 100%;
       display: flex;
@@ -328,18 +213,6 @@ defmodule LiveUi.Demo.Server.Layouts do
       text-align: left;
       box-sizing: border-box;
       text-decoration: none;
-    }
-
-    .live-ui-text-input {
-      width: 100%;
-      min-height: 2.8rem;
-      border-radius: 12px;
-      border: 1px solid var(--example-border-strong);
-      padding: 0.7rem 0.85rem;
-      font: inherit;
-      color: var(--example-foreground);
-      background: hsl(0 0% 100% / 0.04);
-      box-sizing: border-box;
     }
 
     [data-live-ui-demo-story="true"] {

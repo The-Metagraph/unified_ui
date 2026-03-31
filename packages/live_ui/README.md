@@ -63,6 +63,13 @@ By default the demo listens on [http://127.0.0.1:4040](http://127.0.0.1:4040). Y
 mix live_ui.demo native_styled_profile --serve --port 4050
 ```
 
+For your own browser-hosted `live_ui` surfaces, load the shared stylesheet in
+the host layout:
+
+```elixir
+<style><%= Phoenix.HTML.raw(LiveUi.Stylesheet.css()) %></style>
+```
+
 ## Reference Guides
 
 Use the package guides for the package contract details:
