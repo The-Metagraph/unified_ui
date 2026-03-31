@@ -17,6 +17,7 @@ defmodule LiveUi do
     Screen,
     Signals,
     Style,
+    Stylesheet,
     Theme,
     Tooling,
     Transport,
@@ -72,6 +73,9 @@ defmodule LiveUi do
 
   @spec style() :: module()
   def style, do: Style
+
+  @spec stylesheet() :: module()
+  def stylesheet, do: Stylesheet
 
   @spec tooling() :: module()
   def tooling, do: Tooling

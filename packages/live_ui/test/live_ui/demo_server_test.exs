@@ -13,6 +13,8 @@ defmodule LiveUi.DemoServerTest do
     assert body =~ "data-phx-main"
     assert body =~ "Overview"
     assert body =~ ~s(href="/examples/native_styled_profile?category=native")
+    assert body =~ "--live-ui-theme-accent"
+    assert body =~ ".live-ui-button.live-ui-button-solid"
     refute body =~ "Featured demo routes"
   end
 

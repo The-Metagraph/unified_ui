@@ -102,4 +102,65 @@ defmodule LiveUi.RendererStyleTest do
     assert render_component(&LiveUi.Renderer.render/1, %{element: left}) ==
              render_component(&LiveUi.Renderer.render/1, %{element: right})
   end
+
+  test "renderer forwards realized browser attrs to foundational widgets" do
+    element =
+      Container.box(
+        [
+          Foundational.text("Ready",
+            id: "status-copy",
+            style: %{foreground: "#22c55e", text: %{underline?: true}}
+          ),
+          Foundational.button("Save",
+            id: "save-button",
+            style: %{background: "#1d4ed8", foreground: "#ffffff"}
+          ),
+          UnifiedIUR.Widgets.Input.text_input(
+            id: "name-input",
+            name: :name,
+            placeholder: "Name",
+            style: %{background: "#0f172a", border_color: "#38bdf8"}
+          )
+        ],
+        id: "profile-panel",
+        style: %{
+          background: "#020617",
+          border_color: "#334155",
+          border: %{radius: :lg}
+        },
+        theme: %{id: :live_ui, variant: :panel}
+      )
+
+    html = render_component(&LiveUi.Renderer.render/1, %{element: element})
+
+    assert html =~ "data-live-ui-browser-style=\"mixed\""
+    assert html =~ "--live-ui-background: #020617"
+    assert html =~ "--live-ui-border-color: #334155"
+    assert html =~ "--live-ui-border-radius: 1rem"
+    assert html =~ "--live-ui-foreground: #22c55e"
+    assert html =~ "--live-ui-text-decoration: underline"
+    assert html =~ "--live-ui-background: #1d4ed8"
+    assert html =~ "--live-ui-foreground: #ffffff"
+    assert html =~ "--live-ui-border-color: #38bdf8"
+  end
+
+  test "renderer preserves legacy local classes and attrs alongside realized output" do
+    element =
+      Foundational.text("Legacy",
+        id: "legacy-copy",
+        style: %{
+          foreground: "#f97316",
+          extra: %{
+            class: "legacy-copy",
+            attrs: %{"data-legacy" => "true"}
+          }
+        }
+      )
+
+    html = render_component(&LiveUi.Renderer.render/1, %{element: element})
+
+    assert html =~ "legacy-copy"
+    assert html =~ "data-legacy=\"true\""
+    assert html =~ "--live-ui-foreground: #f97316"
+  end
 end

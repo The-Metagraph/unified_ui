@@ -80,6 +80,8 @@ defmodule LiveUi.Renderer do
   attr(:event_target, :any, default: nil)
 
   def render(%{element: %Element{kind: :text}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Text.render
       id={element_id(@element, "text")}
@@ -88,6 +90,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -137,11 +140,13 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :button}} = assigns) do
+    interaction_attrs = interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+
     assigns =
-      assign(
-        assigns,
-        :interaction_attrs,
-        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      assign(assigns, :interaction_attrs, interaction_attrs)
+      |> assign(
+        :style_attrs,
+        merge_global_attrs(style_rest(assigns.element), interaction_attrs)
       )
 
     ~H"""
@@ -153,7 +158,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
-      {@interaction_attrs}
+      {@style_attrs}
     />
     """
   end
@@ -218,7 +223,14 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :box}} = assigns) do
-    assigns = assign(assigns, :accessibility_attrs, accessibility_attrs(assigns.element))
+    accessibility_attrs = accessibility_attrs(assigns.element)
+
+    assigns =
+      assign(assigns, :accessibility_attrs, accessibility_attrs)
+      |> assign(
+        :style_attrs,
+        merge_global_attrs(style_rest(assigns.element), accessibility_attrs)
+      )
 
     ~H"""
     <LiveUi.Widgets.Box.render
@@ -230,7 +242,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
-      {@accessibility_attrs}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -366,6 +378,7 @@ defmodule LiveUi.Renderer do
       when kind in [:text_input, :numeric_input, :date_input, :time_input, :file_input] do
     assigns =
       assign(assigns, :change_interaction, primary_change_interaction(assigns.element))
+      |> assign(:style_attrs, style_rest(assigns.element))
 
     ~H"""
     <%= if @change_interaction && @event_target do %>
@@ -389,6 +402,7 @@ defmodule LiveUi.Renderer do
           variant={theme_variant(@element)}
           state={style_state(@element)}
           class={style_class(@element)}
+          {@style_attrs}
         />
       </form>
     <% else %>
@@ -402,6 +416,7 @@ defmodule LiveUi.Renderer do
         variant={theme_variant(@element)}
         state={style_state(@element)}
         class={style_class(@element)}
+        {@style_attrs}
       />
     <% end %>
     """
@@ -1102,9 +1117,42 @@ defmodule LiveUi.Renderer do
   defp style_state(%Element{} = element), do: element |> style_profile() |> Map.get(:state)
   defp style_class(%Element{} = element), do: element |> style_profile() |> Map.get(:class)
 
+  defp style_rest(%Element{} = element),
+    do: element |> style_profile() |> NativeStyle.to_assigns() |> Map.get(:rest, %{})
+
   defp style_profile(%Element{} = element) do
     NativeStyle.from_element(element)
   end
+
+  defp merge_global_attrs(left, right) do
+    normalize_global_attrs(left)
+    |> Map.merge(normalize_global_attrs(right), fn
+      "style", left_value, right_value -> merge_inline_styles(left_value, right_value)
+      _key, _left_value, right_value -> right_value
+    end)
+  end
+
+  defp normalize_global_attrs(attrs) when is_list(attrs) do
+    Map.new(attrs, fn {key, value} -> {to_string(key), to_string(value)} end)
+  end
+
+  defp normalize_global_attrs(attrs) when is_map(attrs) do
+    Map.new(attrs, fn {key, value} -> {to_string(key), to_string(value)} end)
+  end
+
+  defp normalize_global_attrs(_other), do: %{}
+
+  defp merge_inline_styles(left, right) do
+    [left, right]
+    |> Enum.map(&normalize_optional_style/1)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join("; ")
+    |> normalize_optional_style()
+  end
+
+  defp normalize_optional_style(nil), do: nil
+  defp normalize_optional_style(""), do: nil
+  defp normalize_optional_style(value), do: value |> to_string() |> String.trim()
 
   defp accessibility_attrs(%Element{} = element) do
     accessibility = Map.get(element.attributes, :accessibility, %{})
