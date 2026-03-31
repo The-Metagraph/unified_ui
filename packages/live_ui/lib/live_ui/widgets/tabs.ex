@@ -26,13 +26,17 @@ defmodule LiveUi.Widgets.Tabs do
           <button
             type="button"
             role="tab"
-            aria-selected={if to_string(item[:id]) == @active_item, do: "true", else: "false"}
-            disabled={item[:disabled]}
-            data-item-id={item[:id]}
-          ><%= item[:label] %></button>
+            aria-selected={if to_string(fetch(item, :id)) == @active_item, do: "true", else: "false"}
+            disabled={fetch(item, :disabled) || fetch(item, :disabled?)}
+            data-item-id={fetch(item, :id)}
+          ><%= fetch(item, :label) %></button>
         <% end %>
       </div>
     </div>
     """
+  end
+
+  defp fetch(item, key) when is_map(item) do
+    Map.get(item, key) || Map.get(item, Atom.to_string(key))
   end
 end

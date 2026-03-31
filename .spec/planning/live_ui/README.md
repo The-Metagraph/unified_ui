@@ -30,6 +30,7 @@ The plan aligns to:
 5. [Phase 5 - Native Styling, Runtime Inspection, and Native-IUR Continuity](./phase-05-native-styling-runtime-inspection-and-native-iur-continuity.md): implement native theming and styling, runtime inspection surfaces, and deterministic continuity between native and canonical rendering paths.
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, and release-readiness gates.
 7. [Phase 7 - Browser Style Output Contract and Foundational Realization](./phase-07-browser-style-output-contract-and-foundational-realization.md): define the browser-facing style contract, lower foundational canonical style values into browser-visible output, and establish the shared realization pattern for later widget coverage.
+8. [Phase 8 - Layout, Layer, and Advanced Widget Style Realization](./phase-08-layout-layer-and-advanced-widget-style-realization.md): extend browser-visible canonical styling into layout geometry, layered display surfaces, and the advanced widget catalog.
 
 ## Shared Conventions
 - Numbering:

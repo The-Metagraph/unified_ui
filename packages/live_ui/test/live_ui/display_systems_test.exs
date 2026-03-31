@@ -70,4 +70,25 @@ defmodule LiveUi.DisplaySystemsTest do
     assert html =~ "data-live-ui-widget=\"viewport\""
     assert html =~ "data-live-ui-widget=\"canvas\""
   end
+
+  test "viewport and canvas realize browser-visible surface geometry and display treatment" do
+    html =
+      Phoenix.HTML.raw("""
+      #{render_component(&LiveUi.Widgets.Viewport.render/1, %{id: "viewport", axis: "both", width: "28rem", height: "18rem", offset_x: 3, offset_y: 8, scrollbars: "always", inner_block: [%{__slot__: :inner_block, inner_block: fn _, _ -> "Viewport" end}]})}
+      #{render_component(&LiveUi.Widgets.Canvas.render/1, %{id: "canvas", width: 48, height: 18, background: "analysis", operations: [%{kind: :text, position: %{x: 2, y: 3}, text: "Plot"}]})}
+      """)
+      |> Phoenix.HTML.safe_to_string()
+
+    assert html =~ "--live-ui-width: 28rem"
+    assert html =~ "--live-ui-height: 18rem"
+    assert html =~ "--live-ui-viewport-offset-x: 3"
+    assert html =~ "--live-ui-viewport-offset-y: 8"
+    assert html =~ "--live-ui-overflow-x: scroll"
+    assert html =~ "--live-ui-overflow-y: scroll"
+    assert html =~ "--live-ui-canvas-columns: 48"
+    assert html =~ "--live-ui-canvas-rows: 18"
+    assert html =~ "--live-ui-background: linear-gradient"
+    assert html =~ "--live-ui-canvas-col: 3"
+    assert html =~ "--live-ui-canvas-row: 4"
+  end
 end

@@ -120,6 +120,13 @@ defmodule LiveUi.Theme do
             modal: %{background: "#1f2937"}
           }
         },
+        alert_dialog: %{
+          default: %{emphasis: %{tone: :warning}},
+          variants: %{
+            critical: %{border_color: "#dc2626"},
+            warning: %{border_color: "#d97706"}
+          }
+        },
         toast: %{
           default: %{emphasis: %{tone: :success}},
           states: %{
@@ -200,6 +207,15 @@ defmodule LiveUi.Theme do
             tone: :surface,
             variant: :modal,
             class: "live-ui-dialog"
+          },
+          alert_dialog: %{
+            tone: :warning,
+            variant: :warning,
+            class: "live-ui-alert-dialog",
+            variant_classes: %{
+              critical: "live-ui-alert-dialog-critical",
+              warning: "live-ui-alert-dialog-warning"
+            }
           },
           toast: %{
             tone: :success,

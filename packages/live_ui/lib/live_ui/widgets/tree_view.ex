@@ -35,16 +35,28 @@ defmodule LiveUi.Widgets.TreeView do
 
   defp tree_node(assigns) do
     ~H"""
-    <li data-node-id={@node[:id]} data-selected={@node[:selected]} data-expanded={@node[:expanded]}>
-      <span><%= @node[:label] || @node[:value] %></span>
-      <%= if @node[:children] do %>
+    <li data-node-id={fetch(@node, :id)} data-selected={selected?(@node)} data-expanded={expanded?(@node)}>
+      <span><%= fetch(@node, :label) || fetch(@node, :value) %></span>
+      <%= if fetch(@node, :children) do %>
         <ul>
-          <%= for child <- @node[:children] do %>
+          <%= for child <- fetch(@node, :children) do %>
             <.tree_node node={child} />
           <% end %>
         </ul>
       <% end %>
     </li>
     """
+  end
+
+  defp selected?(node) do
+    fetch(node, :selected) || fetch(node, :selected?)
+  end
+
+  defp expanded?(node) do
+    fetch(node, :expanded) || fetch(node, :expanded?)
+  end
+
+  defp fetch(node, key) when is_map(node) do
+    Map.get(node, key) || Map.get(node, Atom.to_string(key))
   end
 end

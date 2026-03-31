@@ -252,16 +252,26 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :row}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Layout.Row.render
       id={element_id(@element, "row")}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
+      padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
       align={string_optional(get_in(@element.attributes, [:layout, :align]))}
       justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
+      width={string_optional(get_in(@element.attributes, [:layout, :width]))}
+      height={string_optional(get_in(@element.attributes, [:layout, :height]))}
+      min_width={string_optional(get_in(@element.attributes, [:layout, :min_width]))}
+      min_height={string_optional(get_in(@element.attributes, [:layout, :min_height]))}
+      max_width={string_optional(get_in(@element.attributes, [:layout, :max_width]))}
+      max_height={string_optional(get_in(@element.attributes, [:layout, :max_height]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -271,16 +281,26 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :column}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Layout.Column.render
       id={element_id(@element, "column")}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
+      padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
       align={string_optional(get_in(@element.attributes, [:layout, :align]))}
       justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
+      width={string_optional(get_in(@element.attributes, [:layout, :width]))}
+      height={string_optional(get_in(@element.attributes, [:layout, :height]))}
+      min_width={string_optional(get_in(@element.attributes, [:layout, :min_width]))}
+      min_height={string_optional(get_in(@element.attributes, [:layout, :min_height]))}
+      max_width={string_optional(get_in(@element.attributes, [:layout, :max_width]))}
+      max_height={string_optional(get_in(@element.attributes, [:layout, :max_height]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -290,16 +310,28 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :grid}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Layout.Grid.render
       id={element_id(@element, "grid")}
       columns={integer_optional(get_in(@element.attributes, [:layout, :columns]))}
       rows={integer_optional(get_in(@element.attributes, [:layout, :rows]))}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
+      padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
+      align={string_optional(get_in(@element.attributes, [:layout, :align]))}
+      justify={string_optional(get_in(@element.attributes, [:layout, :justify]))}
+      width={string_optional(get_in(@element.attributes, [:layout, :width]))}
+      height={string_optional(get_in(@element.attributes, [:layout, :height]))}
+      min_width={string_optional(get_in(@element.attributes, [:layout, :min_width]))}
+      min_height={string_optional(get_in(@element.attributes, [:layout, :min_height]))}
+      max_width={string_optional(get_in(@element.attributes, [:layout, :max_width]))}
+      max_height={string_optional(get_in(@element.attributes, [:layout, :max_height]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
@@ -520,6 +552,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :tabs}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Tabs.render
       id={element_id(@element, "tabs")}
@@ -529,6 +563,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -548,6 +583,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :list}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.List.render
       id={element_id(@element, "list")}
@@ -558,6 +595,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -578,6 +616,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :tree_view}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.TreeView.render
       id={element_id(@element, "tree-view")}
@@ -587,11 +627,14 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: :status}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Status.render
       id={element_id(@element, "status")}
@@ -602,6 +645,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -639,6 +683,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :inline_feedback}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.InlineFeedback.render
       id={element_id(@element, "inline-feedback")}
@@ -649,11 +695,14 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: :markdown_viewer}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.MarkdownViewer.render
       id={element_id(@element, "markdown-viewer")}
@@ -663,6 +712,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -683,6 +733,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :stream_widget}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.StreamWidget.render
       id={element_id(@element, "stream-widget")}
@@ -692,6 +744,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -710,6 +763,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :cluster_dashboard}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.ClusterDashboard.render
       id={element_id(@element, "cluster-dashboard")}
@@ -719,6 +774,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -751,6 +807,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :bar_chart}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.BarChart.render
       id={element_id(@element, "bar-chart")}
@@ -759,11 +817,14 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: :line_chart}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.LineChart.render
       id={element_id(@element, "line-chart")}
@@ -772,11 +833,14 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
 
   def render(%{element: %Element{kind: :dialog}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Dialog.render
       id={element_id(@element, "dialog")}
@@ -789,6 +853,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -798,6 +863,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :alert_dialog}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.AlertDialog.render
       id={element_id(@element, "alert-dialog")}
@@ -809,6 +876,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -818,6 +886,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :toast}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Toast.render
       id={element_id(@element, "toast")}
@@ -829,6 +899,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -854,6 +925,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :overlay}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.OverlaySurface.render
       id={element_id(@element, "overlay-surface")}
@@ -865,6 +938,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <:base :for={child <- child_elements(@element, :base)}>
         <.render element={child} event_target={@event_target} />
@@ -877,6 +951,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :viewport}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Viewport.render
       id={element_id(@element, "viewport")}
@@ -893,6 +969,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     >
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
@@ -947,6 +1024,8 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :canvas}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
     ~H"""
     <LiveUi.Widgets.Canvas.render
       id={element_id(@element, "canvas")}
@@ -960,6 +1039,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end

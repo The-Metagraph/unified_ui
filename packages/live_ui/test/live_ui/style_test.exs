@@ -212,7 +212,27 @@ defmodule LiveUi.StyleTest do
              "visibility.disabled?"
            ]
 
-    assert diagnostics.ignored_fields == ["state_variants"]
-    assert profile.browser.attrs["data-live-ui-ignored-style-fields"] == "state_variants"
+    assert diagnostics.ignored_fields == ["state_variants.active"]
+    assert profile.browser.attrs["data-live-ui-ignored-style-fields"] == "state_variants.active"
+  end
+
+  test "browser realization applies the active state variant when a supported state is selected" do
+    profile =
+      LiveUi.Style.resolve(LiveUi.Theme.default(), :status,
+        state: :active,
+        local_style: %{
+          border_color: "#334155",
+          state_variants: %{
+            active: %{foreground: "#ffffff", background: "#0f172a", border_color: "#2563eb"}
+          }
+        }
+      )
+
+    diagnostics = LiveUi.Style.browser_diagnostics(profile)
+
+    assert diagnostics.ignored_fields == []
+    assert profile.browser.attrs["style"] =~ "--live-ui-foreground: #ffffff"
+    assert profile.browser.attrs["style"] =~ "--live-ui-background: #0f172a"
+    assert profile.browser.attrs["style"] =~ "--live-ui-border-color: #2563eb"
   end
 end

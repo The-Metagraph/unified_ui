@@ -26,23 +26,31 @@ defmodule LiveUi.Widgets.List do
       <%= if @ordered do %>
         <ol>
           <%= for item <- @items do %>
-            <li data-item-id={item[:id]} data-selected={item[:selected]}>
-              <span><%= item[:label] || item[:value] %></span>
-              <small :if={item[:description]}><%= item[:description] %></small>
+            <li data-item-id={fetch(item, :id)} data-selected={selected?(item)}>
+              <span><%= fetch(item, :label) || fetch(item, :value) %></span>
+              <small :if={fetch(item, :description)}><%= fetch(item, :description) %></small>
             </li>
           <% end %>
         </ol>
       <% else %>
         <ul>
           <%= for item <- @items do %>
-            <li data-item-id={item[:id]} data-selected={item[:selected]}>
-              <span><%= item[:label] || item[:value] %></span>
-              <small :if={item[:description]}><%= item[:description] %></small>
+            <li data-item-id={fetch(item, :id)} data-selected={selected?(item)}>
+              <span><%= fetch(item, :label) || fetch(item, :value) %></span>
+              <small :if={fetch(item, :description)}><%= fetch(item, :description) %></small>
             </li>
           <% end %>
         </ul>
       <% end %>
     </section>
     """
+  end
+
+  defp selected?(item) do
+    fetch(item, :selected) || fetch(item, :selected?)
+  end
+
+  defp fetch(item, key) when is_map(item) do
+    Map.get(item, key) || Map.get(item, Atom.to_string(key))
   end
 end
