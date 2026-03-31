@@ -29,6 +29,7 @@ The plan aligns to:
 4. [Phase 4 - Canonical Boundary Transport and Event Translation](./phase-04-canonical-boundary-transport-and-event-translation.md): implement canonical `Jido.Signal` and CloudEvents-compatible boundary translation for direct native and IUR-rendered flows.
 5. [Phase 5 - Native Styling, Runtime Inspection, and Native-IUR Continuity](./phase-05-native-styling-runtime-inspection-and-native-iur-continuity.md): implement native theming and styling, runtime inspection surfaces, and deterministic continuity between native and canonical rendering paths.
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, and release-readiness gates.
+7. [Phase 7 - Browser Style Output Contract and Foundational Realization](./phase-07-browser-style-output-contract-and-foundational-realization.md): define the browser-facing style contract, lower foundational canonical style values into browser-visible output, and establish the shared realization pattern for later widget coverage.
 
 ## Shared Conventions
 - Numbering:

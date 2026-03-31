@@ -2,8 +2,13 @@ defmodule LiveUi.Style do
   @moduledoc """
   Native style-resolution helpers for direct `live_ui` usage and canonical
   `UnifiedIUR` lowering.
+
+  Resolved profiles preserve semantic hooks such as `tone`, `variant`, `state`,
+  and classes while also carrying a browser realization payload that can be
+  emitted as CSS variables and browser attrs.
   """
 
+  alias LiveUi.Style.Browser
   alias LiveUi.Theme
   alias UnifiedIUR.Element
   alias UnifiedIUR.Style, as: CanonicalStyle
@@ -17,6 +22,7 @@ defmodule LiveUi.Style do
           class: String.t() | nil,
           attrs: map(),
           role: String.t() | nil,
+          browser: Browser.t(),
           canonical: CanonicalStyle.t()
         }
 
@@ -29,12 +35,21 @@ defmodule LiveUi.Style do
             class: nil,
             attrs: %{},
             role: nil,
+            browser: Browser.new(nil),
             canonical: %CanonicalStyle{}
 
   @spec new(keyword() | map() | t() | nil) :: t()
-  def new(nil), do: %__MODULE__{canonical: CanonicalStyle.new(nil), attrs: %{}}
+  def new(nil) do
+    %__MODULE__{
+      canonical: CanonicalStyle.new(nil),
+      attrs: %{},
+      browser: Browser.new(nil)
+    }
+  end
 
   def new(%__MODULE__{} = style) do
+    canonical = CanonicalStyle.new(style.canonical)
+
     %__MODULE__{
       component: style.component,
       theme_id: style.theme_id,
@@ -44,13 +59,16 @@ defmodule LiveUi.Style do
       class: normalize_class(style.class),
       attrs: normalize_attrs(style.attrs),
       role: normalize_optional(style.role),
-      canonical: CanonicalStyle.new(style.canonical)
+      browser: browser_payload(style.browser, canonical),
+      canonical: canonical
     }
   end
 
   def new(style) when is_list(style), do: style |> Enum.into(%{}) |> new()
 
   def new(style) when is_map(style) do
+    canonical = CanonicalStyle.new(fetch(style, :canonical, fetch(style, :local_style)))
+
     %__MODULE__{
       component: fetch(style, :component),
       theme_id: fetch(style, :theme_id),
@@ -60,7 +78,8 @@ defmodule LiveUi.Style do
       class: normalize_class(fetch(style, :class)),
       attrs: normalize_attrs(fetch(style, :attrs, %{})),
       role: normalize_optional(fetch(style, :role)),
-      canonical: CanonicalStyle.new(fetch(style, :canonical, fetch(style, :local_style)))
+      browser: browser_payload(fetch(style, :browser), canonical),
+      canonical: canonical
     }
   end
 
@@ -126,6 +145,7 @@ defmodule LiveUi.Style do
         ]),
       attrs: native_attrs,
       role: normalize_optional(fetch(opts, :role)),
+      browser: Browser.realize(canonical),
       canonical: canonical
     }
   end
@@ -135,24 +155,61 @@ defmodule LiveUi.Style do
     parent = new(parent)
     child = new(child)
 
-    %__MODULE__{
-      component: child.component || parent.component,
-      theme_id: child.theme_id || parent.theme_id,
-      tone: child.tone || parent.tone,
-      variant: child.variant || parent.variant,
-      state: child.state || parent.state,
-      class: merge_classes([parent.class, child.class]),
-      attrs: Map.merge(parent.attrs, child.attrs),
-      role: child.role || parent.role,
-      canonical: CanonicalStyle.merge(parent.canonical, child.canonical)
-    }
+    merged =
+      %__MODULE__{
+        component: child.component || parent.component,
+        theme_id: child.theme_id || parent.theme_id,
+        tone: child.tone || parent.tone,
+        variant: child.variant || parent.variant,
+        state: child.state || parent.state,
+        class: merge_classes([parent.class, child.class]),
+        attrs: Map.merge(parent.attrs, child.attrs),
+        role: child.role || parent.role,
+        browser: Browser.new(nil),
+        canonical: CanonicalStyle.merge(parent.canonical, child.canonical)
+      }
+
+    %{merged | browser: Browser.realize(merged.canonical)}
+  end
+
+  @spec browser_contract() :: [Browser.precedence_stage()]
+  def browser_contract do
+    Browser.new(nil).precedence
+  end
+
+  @spec browser_output(t() | keyword() | map() | nil) :: Browser.t()
+  def browser_output(style_profile) do
+    style_profile
+    |> new()
+    |> Map.fetch!(:browser)
+  end
+
+  @spec browser_supported_fields() :: [Browser.top_level_field()]
+  def browser_supported_fields do
+    [
+      :foreground,
+      :background,
+      :border_color,
+      :border,
+      :text,
+      :spacing,
+      :sizing,
+      :alignment,
+      :visibility
+    ]
+  end
+
+  @spec browser_semantic_only_fields() :: [Browser.top_level_field()]
+  def browser_semantic_only_fields do
+    [:emphasis]
   end
 
   @spec component_assigns(atom() | String.t(), keyword() | map()) :: map()
   def component_assigns(component, opts \\ []) do
-    theme = fetch(normalize_map(opts), :theme, Theme.default())
-    attrs = normalize_map(fetch(normalize_map(opts), :assigns, %{}))
-    apply(attrs, theme, component, opts)
+    normalized_opts = normalize_map(opts)
+    theme = fetch(normalized_opts, :theme, Theme.default())
+    attrs = normalize_map(fetch(normalized_opts, :assigns, %{}))
+    apply(attrs, theme, component, normalized_opts)
   end
 
   @spec apply(
@@ -179,10 +236,9 @@ defmodule LiveUi.Style do
       })
 
     rest =
-      assigns
-      |> fetch(:rest, %{})
-      |> normalize_attrs()
-      |> Map.merge(profile.attrs)
+      profile
+      |> combined_rest_attrs()
+      |> merge_attr_maps(fetch(assigns, :rest, %{}))
 
     metadata =
       assigns
@@ -221,13 +277,19 @@ defmodule LiveUi.Style do
   @spec to_assigns(t() | keyword() | map() | nil) :: map()
   def to_assigns(style_profile) do
     style_profile = new(style_profile)
+    rest = combined_rest_attrs(style_profile)
 
     %{}
     |> maybe_put(:tone, style_profile.tone)
     |> maybe_put(:variant, style_profile.variant)
     |> maybe_put(:state, style_profile.state)
     |> maybe_put(:class, style_profile.class)
-    |> maybe_put(:rest, if(style_profile.attrs == %{}, do: nil, else: style_profile.attrs))
+    |> maybe_put(:rest, if(rest == %{}, do: nil, else: rest))
+  end
+
+  defp combined_rest_attrs(style_profile) do
+    profile = new(style_profile)
+    merge_attr_maps(profile.attrs, profile.browser.attrs)
   end
 
   defp emphasis_tone(%CanonicalStyle{} = style) do
@@ -269,6 +331,25 @@ defmodule LiveUi.Style do
     |> Map.get(denormalize_optional(state))
     |> normalize_class()
   end
+
+  defp merge_attr_maps(left, right) do
+    normalize_attrs(left)
+    |> Map.merge(normalize_attrs(right), fn
+      "style", left_value, right_value -> merge_inline_styles(left_value, right_value)
+      _key, _left_value, right_value -> right_value
+    end)
+  end
+
+  defp merge_inline_styles(left, right) do
+    [left, right]
+    |> Enum.map(&normalize_class/1)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join("; ")
+    |> normalize_class()
+  end
+
+  defp browser_payload(nil, canonical), do: Browser.realize(canonical)
+  defp browser_payload(browser, _canonical), do: Browser.new(browser)
 
   defp normalize_attrs(attrs) when is_map(attrs) do
     Map.new(attrs, fn {key, value} -> {to_string(key), to_string(value)} end)
