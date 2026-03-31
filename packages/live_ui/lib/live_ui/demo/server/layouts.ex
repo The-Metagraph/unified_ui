@@ -173,7 +173,6 @@ defmodule LiveUi.Demo.Server.Layouts do
       color: hsl(0 0% 91% / 0.88);
     }
 
-    .live-ui-demo-launches,
     .live-ui-demo-metrics {
       display: flex;
       flex-wrap: wrap;
@@ -181,34 +180,14 @@ defmodule LiveUi.Demo.Server.Layouts do
       margin-top: 1rem;
     }
 
-    .live-ui-demo-link {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      min-width: 10rem;
-      padding: 0.8rem 0.95rem;
-      border-radius: 14px;
-      border: 1px solid hsl(152 100% 50% / 0.18);
-      color: var(--example-foreground);
-      background: linear-gradient(180deg, hsl(152 100% 50% / 0.08), hsl(0 0% 100% / 0.02));
-      text-decoration: none;
-      transition:
-        transform 120ms ease,
-        border-color 160ms ease,
-        box-shadow 160ms ease;
+    .live-ui-demo-sidebar-group {
+      display: grid;
+      gap: 0.7rem;
     }
 
-    .live-ui-demo-link small {
-      color: var(--example-muted);
-      font-size: 0.76rem;
-      line-height: 1.5;
-    }
-
-    .live-ui-demo-link:hover,
-    .live-ui-demo-link:focus-visible {
-      transform: translateY(-1px);
-      border-color: hsl(152 100% 50% / 0.34);
-      box-shadow: 0 14px 30px hsl(152 100% 50% / 0.12);
+    .live-ui-demo-overview-list {
+      display: grid;
+      gap: 0.55rem;
     }
 
     [data-live-ui-runtime="screen"] {
@@ -340,6 +319,15 @@ defmodule LiveUi.Demo.Server.Layouts do
       color: var(--example-primary);
       background: hsl(152 100% 50% / 0.08);
       border-color: hsl(152 100% 50% / 0.22);
+    }
+
+    #live-ui-demo-sidebar .live-ui-demo-button {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      text-align: left;
+      box-sizing: border-box;
+      text-decoration: none;
     }
 
     .live-ui-text-input {

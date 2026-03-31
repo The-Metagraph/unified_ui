@@ -12,6 +12,8 @@ defmodule LiveUi.DemoServerTest do
     assert body =~ "Live UI Workbench"
     assert body =~ "data-phx-main"
     assert body =~ "Overview"
+    assert body =~ ~s(href="/examples/native_styled_profile?category=native")
+    refute body =~ "Featured demo routes"
   end
 
   test "browser host deep-links directly to an example" do

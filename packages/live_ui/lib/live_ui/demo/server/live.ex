@@ -64,29 +64,12 @@ defmodule LiveUi.Demo.Server.Live do
           `LiveUi.Runtime` component the package exposes everywhere else.
         </p>
         <p class="example-app-notes">
-          Native screen events now stay inside the shared server-authoritative runtime, so the
-          lane picker and example navigation are clickable in the browser instead of being static
-          HTML output.
+          Use the left sidebar inside the runtime surface to switch lanes and open the maintained
+          example pages directly.
         </p>
         <p class="example-app-notes live-ui-demo-status">
           <%= current_status(@selected_category, @selected_example) %>
         </p>
-
-        <nav class="live-ui-demo-launches" aria-label="Featured demo routes">
-          <.link patch={Demo.path()} class="live-ui-demo-link">
-            Overview
-          </.link>
-
-          <%= for category <- @categories do %>
-            <.link
-              patch={Demo.path(example: category.featured_example.id, category: category.id)}
-              class="live-ui-demo-link"
-            >
-              <span><%= category.title %></span>
-              <small><%= category.featured_example.title %></small>
-            </.link>
-          <% end %>
-        </nav>
 
         <div class="live-ui-demo-metrics">
           <span>Examples: <%= @total_examples %></span>
@@ -128,7 +111,7 @@ defmodule LiveUi.Demo.Server.Live do
         value -> Atom.to_string(value)
       end
 
-    "Current lane: #{category_label}. Pick a featured route above or use the in-runtime sidebar to drill down."
+    "Current lane: #{category_label}. Use the left sidebar to open any example in that lane."
   end
 
   defp current_status(category, example) do
