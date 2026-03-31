@@ -106,6 +106,20 @@ defmodule LiveUi.Runtime.ScreenComponent do
     handle_canonical_event(encoded_interaction, params, socket)
   end
 
+  @impl true
+  def handle_event(event, params, socket) when is_binary(event) and is_map(params) do
+    case State.handle_event(socket.assigns.runtime_state, event, params) do
+      {:ok, updated_runtime_state} ->
+        {:noreply,
+         socket
+         |> assign(:runtime_state, updated_runtime_state)
+         |> assign(:runtime_event_error, nil)}
+
+      {:error, reason} ->
+        {:noreply, assign(socket, :runtime_event_error, reason)}
+    end
+  end
+
   defp handle_canonical_event(encoded_interaction, params, socket) do
     runtime_state = socket.assigns.runtime_state
 

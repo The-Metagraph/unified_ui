@@ -67,6 +67,20 @@ defmodule LiveUi.RuntimeTest do
     assert html =~ ">0<"
   end
 
+  test "runtime live component routes native screen events through the mounted screen" do
+    assert {:ok, runtime_state} = LiveUi.Runtime.mount(CounterScreen)
+
+    socket =
+      %Phoenix.LiveView.Socket{}
+      |> Phoenix.Component.assign(:runtime_state, runtime_state)
+
+    assert {:noreply, updated_socket} =
+             LiveUi.Runtime.ScreenComponent.handle_event("increment", %{"step" => 2}, socket)
+
+    assert updated_socket.assigns.runtime_state.assigns.count == 2
+    assert updated_socket.assigns.runtime_event_error == nil
+  end
+
   test "runtime returns deterministic diagnostics for invalid screens and routes" do
     assert {:error, %LiveUi.Runtime.Error{reason: :invalid_screen_module}} =
              LiveUi.Runtime.mount(InvalidScreen)
