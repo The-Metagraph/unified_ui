@@ -4,6 +4,7 @@ defmodule LiveUi do
   """
 
   alias LiveUi.{
+    Demo,
     Display,
     Examples,
     Forms,
@@ -23,11 +24,11 @@ defmodule LiveUi do
     Widgets
   }
 
-  @type package_area :: :widgets | :runtime | :renderer | :transport | :tooling | :styling
+  @type package_area :: :widgets | :runtime | :renderer | :transport | :tooling | :styling | :demo
 
   @spec package_areas() :: [package_area()]
   def package_areas do
-    [:widgets, :runtime, :renderer, :transport, :tooling, :styling]
+    [:widgets, :runtime, :renderer, :transport, :tooling, :styling, :demo]
   end
 
   @spec widgets() :: module()
@@ -74,6 +75,9 @@ defmodule LiveUi do
 
   @spec tooling() :: module()
   def tooling, do: Tooling
+
+  @spec demo() :: module()
+  def demo, do: Demo
 
   @spec reference() :: map()
   def reference, do: Reference.package_reference()

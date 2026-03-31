@@ -4,11 +4,12 @@ This guide covers the repeatable maintainer workflow for evolving `LiveUi`.
 
 ## Daily Package Review Workflow
 
-1. Review the maintained example catalog with `mix live_ui.preview`.
-2. Inspect native or canonical example structure with `mix live_ui.inspect`.
-3. Export metadata, HTML, comparisons, or diagnostics with `mix live_ui.export`.
-4. Run `mix live_ui.validate` to review continuity, transport, and authority status.
-5. Run `mix live_ui.validate --strict` before treating a runtime-boundary change as release ready.
+1. Review the package-local demo with `mix live_ui.demo`.
+2. Review the maintained example catalog with `mix live_ui.preview`.
+3. Inspect native or canonical example structure with `mix live_ui.inspect`.
+4. Export metadata, HTML, comparisons, or diagnostics with `mix live_ui.export`.
+5. Run `mix live_ui.validate` to review continuity, transport, and authority status.
+6. Run `mix live_ui.validate --strict` before treating a runtime-boundary change as release ready.
 
 ## Adding a New Native Widget Family
 
