@@ -22,6 +22,46 @@ defmodule Mix.Tasks.LiveUiTasksTest do
     assert catalog =~ "styled_continuity_compare"
   end
 
+  test "demo task prints summary and html output" do
+    summary =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.demo")
+        Mix.Tasks.LiveUi.Demo.run([])
+      end)
+
+    assert summary =~ "LiveUi demo summary"
+    assert summary =~ "view: home"
+
+    html =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.demo")
+        Mix.Tasks.LiveUi.Demo.run(["native_styled_profile", "--format", "html"])
+      end)
+
+    assert html =~ "Native Styled Profile"
+    assert html =~ "data-live-ui-runtime=\"screen\""
+  end
+
+  test "demo task can launch the browser host mode" do
+    port = free_port()
+
+    output =
+      capture_io(fn ->
+        Mix.Task.reenable("live_ui.demo")
+
+        Mix.Tasks.LiveUi.Demo.run([
+          "--serve",
+          "--port",
+          Integer.to_string(port),
+          "--linger-ms",
+          "10"
+        ])
+      end)
+
+    assert output =~ "LiveUi demo server"
+    assert output =~ "http://127.0.0.1:#{port}/"
+  end
+
   test "inspect and export tasks print comparison-oriented maintainer output" do
     inspection =
       capture_io(fn ->
@@ -40,5 +80,12 @@ defmodule Mix.Tasks.LiveUiTasksTest do
 
     assert export =~ "review_artifact"
     assert export =~ "native_styled_profile"
+  end
+
+  defp free_port do
+    {:ok, socket} = :gen_tcp.listen(0, [:binary, active: false, packet: :raw, reuseaddr: true])
+    {:ok, port} = :inet.port(socket)
+    :ok = :gen_tcp.close(socket)
+    port
   end
 end

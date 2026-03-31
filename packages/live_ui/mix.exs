@@ -28,6 +28,7 @@ defmodule LiveUi.MixProject do
       {:jido_signal, "~> 2.0"},
       {:phoenix, "~> 1.8"},
       {:phoenix_live_view, "~> 1.1"},
+      {:plug_cowboy, "~> 2.7"},
       {:unified_iur, path: "../unified_iur"}
     ]
   end
