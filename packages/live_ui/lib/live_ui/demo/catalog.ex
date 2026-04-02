@@ -3,43 +3,51 @@ defmodule LiveUi.Demo.Catalog do
   Catalog helpers for the package-local `live_ui` demo workbench.
   """
 
-  alias LiveUi.Examples
+  alias LiveUi.Component
 
-  @category_order [:native, :canonical, :mixed, :styling, :transport, :continuity]
+  @category_order [
+    :foundational,
+    :input,
+    :navigation,
+    :data,
+    :feedback,
+    :operational,
+    :overlay,
+    :display
+  ]
 
   @category_profiles %{
-    native: %{
-      title: "Native",
-      description: "Directly authored LiveView screens rendered through the shared runtime.",
-      featured_example: :native_styled_profile
+    foundational: %{
+      title: "Foundational",
+      description: "Core building-block widgets for text, structure, and shell composition."
     },
-    canonical: %{
-      title: "Canonical",
-      description: "UnifiedIUR-driven screens lowered through the same runtime boundary.",
-      featured_example: :canonical_styled_operations
+    input: %{
+      title: "Input",
+      description: "Form and value-entry widgets for text, toggle, and selection flows."
     },
-    mixed: %{
-      title: "Mixed",
-      description:
-        "Comparison-oriented review surfaces that keep multiple runtime paths visible.",
-      featured_example: :styled_continuity_compare
+    navigation: %{
+      title: "Navigation",
+      description: "Widgets that move users between views, commands, and destinations."
     },
-    styling: %{
-      title: "Styling",
-      description:
-        "Theme-aware examples that exercise tone, continuity, and component styling hooks.",
-      featured_example: :native_styled_operations
+    data: %{
+      title: "Data",
+      description: "Widgets for lists, tables, trees, and document-like information surfaces."
     },
-    transport: %{
-      title: "Transport",
-      description: "Local, boundary, and canonical signal flows with their runtime translations.",
-      featured_example: :boundary_transport_compare
+    feedback: %{
+      title: "Feedback",
+      description: "Status and chart widgets that explain progress, health, and change over time."
     },
-    continuity: %{
-      title: "Continuity",
-      description:
-        "Paired native and canonical examples that should stay aligned as the package evolves.",
-      featured_example: :native_styled_profile
+    operational: %{
+      title: "Operational",
+      description: "Monitoring and runtime-observability widgets for systems-oriented screens."
+    },
+    overlay: %{
+      title: "Overlay",
+      description: "Dialog and layered-surface widgets for transient or elevated interactions."
+    },
+    display: %{
+      title: "Display",
+      description: "Viewport and canvas-oriented widgets for advanced presentation surfaces."
     }
   }
 
@@ -47,7 +55,7 @@ defmodule LiveUi.Demo.Catalog do
   def categories, do: @category_order
 
   @spec default_category() :: atom()
-  def default_category, do: :native
+  def default_category, do: :foundational
 
   @spec category_count() :: non_neg_integer()
   def category_count, do: length(categories())
@@ -64,7 +72,8 @@ defmodule LiveUi.Demo.Catalog do
 
   @spec catalog() :: [map()]
   def catalog do
-    Examples.catalog()
+    @category_order
+    |> Enum.flat_map(&category_examples/1)
   end
 
   @spec normalize_category(atom() | String.t() | nil) :: atom() | nil
@@ -82,32 +91,30 @@ defmodule LiveUi.Demo.Catalog do
   def category_info(category) when category in @category_order do
     profile = Map.fetch!(@category_profiles, category)
     examples = category_examples(category)
-    featured_example = find_example(profile.featured_example)
 
     %{
       id: category,
       title: profile.title,
       description: profile.description,
-      featured_example: featured_example,
       example_count: length(examples)
     }
   end
 
   @spec category_examples(atom()) :: [map()]
   def category_examples(category) when category in @category_order do
-    catalog()
-    |> Enum.filter(&category_member?(&1, category))
-    |> Enum.sort_by(&{path_rank(&1.path), &1.title})
+    category
+    |> category_modules()
+    |> Enum.map(&widget_example(&1, category))
   end
 
   @spec find_example(atom() | String.t() | nil) :: map() | nil
   def find_example(nil), do: nil
 
   def find_example(id) do
-    case Examples.find(id) do
-      {:ok, example} -> decorate_example(example)
-      :error -> nil
-    end
+    wanted = to_string(id)
+
+    catalog()
+    |> Enum.find(&(to_string(&1.id) == wanted))
   end
 
   @spec fetch_example(atom() | String.t()) :: {:ok, map()} | {:error, term()}
@@ -120,8 +127,7 @@ defmodule LiveUi.Demo.Catalog do
 
   @spec primary_category(atom() | String.t() | map()) :: atom() | nil
   def primary_category(%{} = example) do
-    example_categories(example)
-    |> List.first()
+    Map.get(example, :primary_category, Map.get(example, :category))
   end
 
   def primary_category(id) do
@@ -132,80 +138,121 @@ defmodule LiveUi.Demo.Catalog do
 
   @spec example_categories(map()) :: [atom()]
   def example_categories(%{} = example) do
-    Enum.filter(@category_order, &category_member?(example, &1))
+    example
+    |> primary_category()
+    |> case do
+      nil -> []
+      category -> [category]
+    end
   end
 
   @spec preview(atom() | String.t() | map()) :: {:ok, map()} | {:error, term()}
   def preview(example_or_id) do
     with {:ok, example} <- normalize_example(example_or_id) do
-      preview_for(example)
+      {:ok,
+       %{
+         mode: :empty,
+         example: example
+       }}
     end
   end
 
-  defp normalize_example(%{} = example), do: {:ok, decorate_example(example)}
+  defp normalize_example(%{} = example), do: {:ok, example}
 
   defp normalize_example(id) do
     fetch_example(id)
   end
 
-  defp preview_for(%{path: :native, id: id}) do
-    with {:ok, inspection} <- LiveUi.Tooling.preview_example(id) do
-      {:ok,
-       inspection.result
-       |> Map.put(:mode, :html)
-       |> Map.put(:runtime_mode, Map.get(inspection.result, :mode))
-       |> Map.put(:native?, true)
-       |> Map.put(:canonical?, false)}
-    end
+  defp category_modules(:foundational), do: LiveUi.Widgets.Foundational.modules()
+  defp category_modules(:input), do: LiveUi.Widgets.Input.modules()
+  defp category_modules(:navigation), do: LiveUi.Widgets.Navigation.modules()
+  defp category_modules(:data), do: LiveUi.Widgets.Data.modules()
+  defp category_modules(:feedback), do: LiveUi.Widgets.Feedback.modules()
+  defp category_modules(:operational), do: LiveUi.Widgets.Operational.modules()
+  defp category_modules(:overlay), do: LiveUi.Widgets.Overlay.modules()
+  defp category_modules(:display), do: LiveUi.Widgets.Display.modules()
+
+  defp widget_example(module, category) do
+    metadata = Component.metadata(module)
+    category_title = category_title(category)
+    family_title = titleize(metadata.family)
+
+    %{
+      id: metadata.name,
+      title: titleize(metadata.name),
+      module: module,
+      path: :widget,
+      category: category,
+      categories: [category],
+      primary_category: category,
+      families: [metadata.family],
+      comparable_to: nil,
+      summary: widget_summary(metadata, category_title, family_title),
+      preview_id: "widget:#{metadata.name}",
+      review_artifact: "live_ui/widgets/#{metadata.name}",
+      coverage: %{
+        native?: false,
+        canonical?: false,
+        transport?: metadata.events != [],
+        continuity?: false,
+        advanced?: category in [:data, :feedback, :operational, :overlay, :display]
+      },
+      runtime_obligations: %{
+        category: category,
+        widget_family: metadata.family
+      },
+      component: %{
+        family: metadata.family,
+        name: metadata.name,
+        assigns: metadata.assigns,
+        slots: metadata.slots,
+        style_hooks: metadata.style_hooks,
+        events: metadata.events
+      }
+    }
   end
 
-  defp preview_for(%{path: :canonical, id: id}) do
-    with {:ok, inspection} <- LiveUi.Tooling.preview_example(id) do
-      {:ok,
-       inspection.result
-       |> Map.put(:mode, :html)
-       |> Map.put(:runtime_mode, Map.get(inspection.result, :mode))
-       |> Map.put(:native?, false)
-       |> Map.put(:canonical?, true)}
-    end
+  defp widget_summary(metadata, category_title, family_title) do
+    [
+      family_sentence(family_title),
+      slot_sentence(metadata.slots),
+      event_sentence(metadata.events)
+    ]
+    |> Enum.reject(&is_nil/1)
+    |> Enum.join(" ")
+    |> then(fn details -> "#{category_title} widget. #{details}" end)
   end
 
-  defp preview_for(%{path: :mixed, id: id} = example) do
-    with {:ok, inspection} <- LiveUi.Tooling.inspect_example(id) do
-      {:ok,
-       %{
-         mode: :report,
-         example: example,
-         report:
-           inspect(inspection.result, pretty: true, width: 100, limit: :infinity, sort_maps: true)
-       }}
-    end
+  defp family_sentence(family_title), do: "Belongs to the #{family_title} family."
+
+  defp slot_sentence([]), do: "No slots."
+
+  defp slot_sentence(slots) do
+    "Slots: " <> Enum.map_join(slots, ", ", &titleize/1) <> "."
   end
 
-  defp decorate_example(example) do
-    example
-    |> Map.put(:categories, example_categories(example))
-    |> Map.put(:primary_category, primary_category_without_recursion(example))
+  defp event_sentence([]), do: "No runtime events."
+
+  defp event_sentence(events) do
+    "Events: " <> Enum.map_join(events, ", ", &titleize/1) <> "."
   end
 
-  defp primary_category_without_recursion(example) do
-    Enum.find(@category_order, &category_member?(example, &1))
+  defp category_title(category) do
+    @category_profiles
+    |> Map.fetch!(category)
+    |> Map.fetch!(:title)
   end
 
-  defp category_member?(example, :native), do: example.path == :native
-  defp category_member?(example, :canonical), do: example.path == :canonical
-  defp category_member?(example, :mixed), do: example.path == :mixed
-  defp category_member?(example, :styling), do: :styling in example.families
-
-  defp category_member?(example, :transport) do
-    :transport in example.families or :signal in example.families
+  defp titleize(value) when is_atom(value) do
+    value
+    |> Atom.to_string()
+    |> titleize()
   end
 
-  defp category_member?(example, :continuity) do
-    :continuity in example.families or not is_nil(example.comparable_to)
+  defp titleize(value) when is_binary(value) do
+    value
+    |> String.replace("_", " ")
+    |> String.split()
+    |> Enum.map_join(" ", &String.capitalize/1)
   end
-
-  defp path_rank(:native), do: 0
-  defp path_rank(:canonical), do: 1
-  defp path_rank(:mixed), do: 2
 end

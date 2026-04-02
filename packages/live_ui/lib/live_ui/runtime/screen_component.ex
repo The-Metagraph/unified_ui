@@ -26,6 +26,7 @@ defmodule LiveUi.Runtime.ScreenComponent do
       |> Map.put_new(:last_translation, nil)
       |> Map.put_new(:runtime_event_error, nil)
       |> Map.put_new(:interaction_demo, interaction_demo(assigns.runtime_state))
+      |> Map.put_new(:show_demo_panels, true)
       |> Map.put(:demo_active?, not is_nil(assigns[:last_translation]))
 
     ~H"""
@@ -36,43 +37,35 @@ defmodule LiveUi.Runtime.ScreenComponent do
     >
       <%= render_screen(@runtime_state, "##{@id}") %>
 
-      <section data-live-ui-demo-story="true">
-        <h2>Meaningful Interaction Story</h2>
+      <%= if @show_demo_panels do %>
+        <section data-live-ui-demo-story="true">
+          <h2>Meaningful Interaction Story</h2>
 
-        <%= if @last_translation && @last_translation.signal do %>
-          <p data-live-ui-demo-status="true">
-            <%= runtime_summary(@interaction_demo, @last_translation) %>
-          </p>
-          <p :if={@interaction_demo[:outcome]} data-live-ui-demo-outcome="true">
-            <%= @interaction_demo[:outcome] %>
-          </p>
-          <p :if={payload_highlight(@last_translation)} data-live-ui-demo-payload="true">
-            Latest payload highlight: <%= payload_highlight(@last_translation) %>
-          </p>
-        <% else %>
-          <p data-live-ui-demo-empty="true">
-            <%= @interaction_demo[:idle_prompt] ||
-              "No signal captured yet. Trigger the example interaction to emit and inspect its canonical signal." %>
-          </p>
-        <% end %>
-      </section>
+          <%= if @last_translation && @last_translation.signal do %>
+            <p data-live-ui-demo-status="true">
+              <%= runtime_summary(@interaction_demo, @last_translation) %>
+            </p>
+            <p :if={@interaction_demo[:outcome]} data-live-ui-demo-outcome="true">
+              <%= @interaction_demo[:outcome] %>
+            </p>
+            <p :if={payload_highlight(@last_translation)} data-live-ui-demo-payload="true">
+              Latest payload highlight: <%= payload_highlight(@last_translation) %>
+            </p>
+          <% end %>
+        </section>
 
-      <section data-live-ui-signal-preview="true">
-        <h2>Canonical Signal Preview</h2>
+        <section data-live-ui-signal-preview="true">
+          <h2>Canonical Signal Preview</h2>
 
-        <%= if @last_translation && @last_translation.signal do %>
-          <p data-live-ui-signal-status="true">Signal captured from the latest interaction.</p>
-          <p data-live-ui-signal-type="true"><%= @last_translation.signal.type %></p>
-          <p data-live-ui-runtime-event="true"><%= @last_translation.runtime_event %></p>
-          <pre data-live-ui-signal-payload="true"><%= inspect(@last_translation.signal.data, pretty: true, limit: :infinity) %></pre>
-          <pre data-live-ui-signal-translation="true"><%= inspect(@last_translation, pretty: true, limit: :infinity) %></pre>
-        <% else %>
-          <p data-live-ui-signal-empty="true">
-            <%= @interaction_demo[:idle_prompt] ||
-              "No signal captured yet. Trigger the example interaction to emit and inspect its canonical signal." %>
-          </p>
-        <% end %>
-      </section>
+          <%= if @last_translation && @last_translation.signal do %>
+            <p data-live-ui-signal-status="true">Signal captured from the latest interaction.</p>
+            <p data-live-ui-signal-type="true"><%= @last_translation.signal.type %></p>
+            <p data-live-ui-runtime-event="true"><%= @last_translation.runtime_event %></p>
+            <pre data-live-ui-signal-payload="true"><%= inspect(@last_translation.signal.data, pretty: true, limit: :infinity) %></pre>
+            <pre data-live-ui-signal-translation="true"><%= inspect(@last_translation, pretty: true, limit: :infinity) %></pre>
+          <% end %>
+        </section>
+      <% end %>
 
       <pre :if={@runtime_event_error} data-live-ui-runtime-event-error="true"><%= inspect(@runtime_event_error, pretty: true, limit: :infinity) %></pre>
     </section>

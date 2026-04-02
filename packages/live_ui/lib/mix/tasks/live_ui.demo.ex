@@ -7,11 +7,11 @@ defmodule Mix.Tasks.LiveUi.Demo do
   Prints package-local `live_ui` demo output.
 
       mix live_ui.demo
-      mix live_ui.demo native_styled_profile --format html
-      mix live_ui.demo styled_continuity_compare --format report
+      mix live_ui.demo button --format html
+      mix live_ui.demo table --format report
       mix live_ui.demo --format catalog
       mix live_ui.demo --serve
-      mix live_ui.demo native_styled_profile --serve --port 4040
+      mix live_ui.demo dialog --serve --port 4040
   """
 
   @impl Mix.Task
@@ -106,9 +106,9 @@ defmodule Mix.Tasks.LiveUi.Demo do
       "LiveUi demo summary",
       "  view: #{execution.view}",
       "  category: #{execution.selected_category}",
-      "  selected example: #{selected_example_label(execution.selected_example)}",
-      "  examples in lane: #{length(execution.examples)}",
-      "  total examples: #{execution.total_examples}"
+      "  selected widget: #{selected_example_label(execution.selected_example)}",
+      "  widgets in category: #{length(execution.examples)}",
+      "  total widgets: #{execution.total_examples}"
     ]
     |> Enum.join("\n")
   end

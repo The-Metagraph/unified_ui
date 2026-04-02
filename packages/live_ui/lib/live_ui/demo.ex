@@ -85,7 +85,7 @@ defmodule LiveUi.Demo do
          total_examples: Catalog.total_example_count(),
          category_count: Catalog.category_count(),
          path_counts: Catalog.path_counts(),
-         preview: maybe_preview(selected_example),
+         preview: nil,
          html: render_runtime(runtime_state),
          event_routes: Map.keys(runtime_state.event_routes) |> Enum.sort()
        }}
@@ -133,19 +133,11 @@ defmodule LiveUi.Demo do
     end
   end
 
-  defp maybe_preview(nil), do: nil
-
-  defp maybe_preview(example) do
-    case Catalog.preview(example.id) do
-      {:ok, preview} -> preview
-      {:error, reason} -> %{mode: :error, reason: reason}
-    end
-  end
-
   defp render_runtime(runtime_state) do
     LiveUi.Runtime.component().render(%{
       id: "live-ui-demo-runtime",
-      runtime_state: runtime_state
+      runtime_state: runtime_state,
+      show_demo_panels: false
     })
     |> Phoenix.HTML.Safe.to_iodata()
     |> IO.iodata_to_binary()
