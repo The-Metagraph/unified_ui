@@ -15,12 +15,13 @@ Phoenix LiveView library.
 id: live_ui.runtime
 kind: runtime
 status: active
-summary: Target LiveView runtime contract for `live_ui`, including server-authoritative state, LiveView composition, and bounded browser-bridge behavior.
+summary: Target LiveView runtime contract for `live_ui`, including server-authoritative state, screen composition through widget LiveComponents, and bounded browser-bridge behavior.
 surface:
   - packages/live_ui
   - .spec/specs/live_ui/runtime.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - live_ui.runtime.widget_livecomponents
 ```
 
 ## Requirements
@@ -32,7 +33,12 @@ decisions:
   stability: stable
 
 - id: live_ui.runtime.liveview_component_execution
-  statement: The runtime shall realize native widgets and IUR-rendered widgets through Phoenix LiveView components and assigns-driven rendering rather than through a separate client-side runtime authority.
+  statement: The runtime shall realize native widgets and IUR-rendered widgets through Phoenix LiveComponent-backed widget boundaries composed inside the server-led screen runtime rather than through plain helper-only widget surfaces or a separate client-side runtime authority.
+  priority: must
+  stability: stable
+
+- id: live_ui.runtime.widget_component_local_state
+  statement: Widget components may own bounded local UI lifecycle and ephemeral state, but that state shall remain subordinate to server-authoritative screen or application state and to canonical boundary meaning.
   priority: must
   stability: stable
 
@@ -64,6 +70,11 @@ decisions:
   given: A user interacts with a screen built directly with native `live_ui` widgets
   when: The widget interaction stays inside the package
   then: The package handles the native event through its LiveView runtime model without requiring canonical IUR as an intermediate step
+
+- id: live_ui.runtime.screen_composes_widget_components
+  given: A Phoenix LiveView screen is built directly with `live_ui`
+  when: The screen renders buttons, inputs, overlays, or data widgets
+  then: The screen composes mountable widget component boundaries inside the shared runtime instead of bypassing them with ad hoc HTML fragments
 ```
 
 ## Verification
@@ -74,9 +85,11 @@ decisions:
   covers:
     - live_ui.runtime.server_authoritative_model
     - live_ui.runtime.liveview_component_execution
+    - live_ui.runtime.widget_component_local_state
     - live_ui.runtime.hooks_only_where_necessary
     - live_ui.runtime.native_and_iur_entrypoints_share_runtime
     - live_ui.runtime.state_and_render_continuity
     - live_ui.runtime.handle_canonical_event_server_side
     - live_ui.runtime_handle_direct_native_event
+    - live_ui.runtime.screen_composes_widget_components
 ```
