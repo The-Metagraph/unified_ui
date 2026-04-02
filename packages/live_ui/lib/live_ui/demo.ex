@@ -3,7 +3,7 @@ defmodule LiveUi.Demo do
   Package-local example workbench for `live_ui`.
   """
 
-  alias LiveUi.Demo.{Catalog, Screen, Server}
+  alias LiveUi.Demo.{Catalog, Screen, Server, WidgetPreviewState}
 
   @type view :: :home | :example
   @default_host "127.0.0.1"
@@ -115,20 +115,22 @@ defmodule LiveUi.Demo do
     case Keyword.get(opts, :example) do
       nil ->
         {:ok,
-         %{
+         base_assigns(category)
+         |> Map.merge(%{
            view: :home,
            selected_category: category,
            selected_example: nil
-         }}
+         })}
 
       example_id ->
         with {:ok, example} <- Catalog.fetch_example(example_id) do
           {:ok,
-           %{
+           base_assigns(Catalog.primary_category(example.id) || category)
+           |> Map.merge(%{
              view: :example,
              selected_category: Catalog.primary_category(example.id) || category,
              selected_example: example.id
-           }}
+           })}
         end
     end
   end
@@ -141,6 +143,14 @@ defmodule LiveUi.Demo do
       {:ok, preview} -> preview
       {:error, reason} -> %{mode: :error, reason: reason}
     end
+  end
+
+  defp base_assigns(category) do
+    %{
+      selected_category: category,
+      widget_demo_state: WidgetPreviewState.defaults(),
+      canonical_interaction_hook: &WidgetPreviewState.apply/2
+    }
   end
 
   defp render_runtime(runtime_state) do

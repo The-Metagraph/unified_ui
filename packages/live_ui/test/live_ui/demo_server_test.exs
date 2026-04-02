@@ -52,6 +52,7 @@ defmodule LiveUi.DemoServerTest do
     refute body =~ "No signal captured yet"
     refute body =~ "Rendered Preview"
     refute body =~ "Comparison Report"
+    assert body =~ ~s(id="live-ui-demo-example-metadata")
     assert body =~ "Category: Foundational | Widget family: Content"
   end
 

@@ -26,7 +26,13 @@ defmodule LiveUi.Widgets.Menu do
       <ul>
         <%= for item <- @items do %>
           <li data-active={to_string(item[:id]) == @active_item}>
-            <button type="button" disabled={item[:disabled]} data-item-id={item[:id]}>
+            <button
+              type="button"
+              disabled={item[:disabled]}
+              data-item-id={item[:id]}
+              class={item[:class]}
+              {Map.get(item, :attrs, %{})}
+            >
               <%= item[:label] %>
             </button>
           </li>
