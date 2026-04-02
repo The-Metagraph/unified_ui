@@ -27,6 +27,7 @@ surface:
   - .spec/specs/live_ui/tooling.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - live_ui.runtime.widget_livecomponents
 ```
 
 ## Requirements
@@ -39,6 +40,11 @@ decisions:
 
 - id: live_ui.package.native_runtime_library
   statement: The package shall be a native widget and signal library that is usable directly through its own LiveView-oriented widget surface and not only through canonical IUR rendering.
+  priority: must
+  stability: stable
+
+- id: live_ui.package.widget_component_library_surface
+  statement: The direct-use native `live_ui` library surface shall be a mountable Phoenix LiveComponent-oriented widget library for use inside LiveView screens, not only a collection of stateless HTML helpers.
   priority: must
   stability: stable
 
@@ -75,6 +81,7 @@ decisions:
   covers:
     - live_ui.package.library_identity
     - live_ui.package.native_runtime_library
+    - live_ui.package.widget_component_library_surface
     - live_ui.package.iur_renderer_entrypoint
     - live_ui.package.not_dsl_or_iur_owner
     - live_ui.package.traceable_to_root_specs

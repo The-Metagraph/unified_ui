@@ -15,12 +15,13 @@ into its native LiveView widget surface.
 id: live_ui.iur_renderer
 kind: subsystem
 status: active
-summary: Target canonical IUR renderer contract for `live_ui`, including full surface coverage and deterministic mapping into native LiveView widgets.
+summary: Target canonical IUR renderer contract for `live_ui`, including full surface coverage and deterministic mapping into native widget component boundaries.
 surface:
   - packages/live_ui
   - .spec/specs/live_ui/iur_renderer.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - live_ui.runtime.widget_livecomponents
 ```
 
 ## Requirements
@@ -50,6 +51,11 @@ decisions:
   statement: The canonical IUR renderer shall realize canonical meaning by reusing the package's native widget, styling, and runtime model rather than introducing a second unrelated rendering stack.
   priority: must
   stability: stable
+
+- id: live_ui.iur_renderer.targets_widget_component_boundaries
+  statement: Canonical IUR constructs shall map into the same mountable widget component boundaries used by direct native `live_ui` usage rather than into a renderer-only widget realization path.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -58,7 +64,7 @@ decisions:
 - id: live_ui.iur_renderer.render_canonical_screen
   given: A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
   when: `live_ui` renders that screen
-  then: The package maps the canonical structure into native LiveView components while preserving canonical visual and interaction meaning
+  then: The package maps the canonical structure into native widget component boundaries while preserving canonical visual and interaction meaning
 ```
 
 ## Verification
@@ -72,5 +78,6 @@ decisions:
     - live_ui.iur_renderer.deterministic_mapping
     - live_ui.iur_renderer.meaning_preservation
     - live_ui.iur_renderer.native_widget_reuse
+    - live_ui.iur_renderer.targets_widget_component_boundaries
     - live_ui.iur_renderer.render_canonical_screen
 ```

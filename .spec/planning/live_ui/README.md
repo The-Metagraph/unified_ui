@@ -33,6 +33,10 @@ The plan aligns to:
 8. [Phase 8 - Layout, Layer, and Advanced Widget Style Realization](./phase-08-layout-layer-and-advanced-widget-style-realization.md): extend browser-visible canonical styling into layout geometry, layered display surfaces, and the advanced widget catalog.
 9. [Phase 9 - Canonical-Native Parity, Tooling, and Demo Alignment](./phase-09-canonical-native-parity-tooling-and-demo-alignment.md): add browser-visible parity rules, richer style-realization tooling, and demo/example upgrades that prove canonical styling now affects browser output directly.
 10. [Phase 10 - Documentation, Validation, and Release Readiness for Style Realization](./phase-10-documentation-validation-and-release-readiness-for-style-realization.md): finish the rollout with migration guidance, validation gates, hardening, and release-readiness coverage for browser-realized canonical styling.
+11. [Phase 11 - Widget LiveComponent Contract and Runtime Backbone Realignment](./phase-11-widget-livecomponent-contract-and-runtime-backbone-realignment.md): establish the shared widget LiveComponent contract, stable widget identity and routing model, and the runtime backbone needed to make widgets real mountable component boundaries.
+12. [Phase 12 - Foundational, Input, Navigation, and Form Widget Component Migration](./phase-12-foundational-input-navigation-and-form-widget-component-migration.md): migrate the foundational widget families, forms, and navigation surfaces onto the new widget-component architecture while keeping the direct-use API ergonomic.
+13. [Phase 13 - Advanced Widget Component Migration and Canonical Renderer Convergence](./phase-13-advanced-widget-component-migration-and-canonical-renderer-convergence.md): migrate advanced data, feedback, overlay, operational, and display widgets and make canonical rendering target the same widget component boundaries.
+14. [Phase 14 - Tooling, Demo, Validation, and Release Readiness for Widget Components](./phase-14-tooling-demo-validation-and-release-readiness-for-widget-components.md): finish the widget-component transition with demo/example upgrades, tooling visibility, validation gates, documentation, and cleanup of legacy helper-only paths.
 
 ## Shared Conventions
 - Numbering:
@@ -53,3 +57,5 @@ The plan aligns to:
 - The runtime remains server-authoritative; browser hooks are bounded support surfaces rather than independent runtime authorities.
 - Canonical boundary events use `Jido.Signal` and CloudEvents-compatible semantics whenever meaning crosses package boundaries.
 - Native widgets, styling, and interactions must be sufficient to realize the full canonical `UnifiedIUR` surface without introducing a second unrelated renderer stack.
+- Post-baseline phases may extend the original six-phase plan when package behavior exposes a meaningful gap between preserved canonical semantics and browser-visible realization.
+- The current intended architecture for `live_ui` is that native widgets are real mountable LiveComponent-backed runtime units composed inside a shared server-authoritative screen runtime.
