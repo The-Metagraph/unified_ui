@@ -37,6 +37,9 @@ defmodule LiveUi.InfoTest do
   test "widget summaries expose metadata contracts" do
     assert %{
              module: LiveUi.Widgets.ScreenShell,
+             component_module: LiveUi.Widgets.ScreenShell.Component,
+             mountable?: true,
+             runtime_boundary: :live_component,
              family: :layout,
              name: :screen_shell,
              slots: [:inner_block],

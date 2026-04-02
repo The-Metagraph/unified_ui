@@ -8,9 +8,25 @@ defmodule LiveUi.ComponentTest do
 
     assert metadata.family == :content
     assert metadata.name == :text
+    assert metadata.component_module == LiveUi.Widgets.Text.Component
+    assert metadata.mountable?
+    assert metadata.identity_keys == [:id]
     assert :id in metadata.assigns
     assert :content in metadata.assigns
     assert :tone in metadata.style_hooks
+  end
+
+  test "widgets expose a mountable component helper that delegates to the live component boundary" do
+    html =
+      render_component(&LiveUi.Widgets.Button.component/1, %{
+        id: "save",
+        label: "Save"
+      })
+
+    assert html =~ "data-live-ui-widget=\"button\""
+    assert html =~ "data-live-ui-widget-boundary=\"button\""
+    assert html =~ "data-live-ui-widget-key=\"native:content:button:save:root\""
+    assert html =~ ">Save<"
   end
 
   test "function components render through liveview-native boundaries" do
@@ -44,6 +60,13 @@ defmodule LiveUi.ComponentTest do
     assert button.events == [:click]
     assert link.events == [:click, :navigate]
     assert LiveUi.Component.style_hooks() == [:tone, :variant, :state]
+  end
+
+  test "layout primitives remain structural unless a dedicated lifecycle boundary is required" do
+    assert LiveUi.Layout.structural?(LiveUi.Layout.Row)
+    assert LiveUi.Layout.structural?(LiveUi.Layout.Column)
+    assert LiveUi.Layout.structural?(LiveUi.Layout.Grid)
+    refute LiveUi.Layout.structural?(LiveUi.Widgets.Button)
   end
 
   test "foundational widgets render baseline visual and container surfaces" do
