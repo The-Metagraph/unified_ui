@@ -3,6 +3,8 @@ defmodule LiveUi.Demo.Server.Layouts do
 
   use Phoenix.Component
 
+  alias LiveUi.Stylesheet
+
   def root(var!(assigns)) do
     ~H"""
     <!DOCTYPE html>
@@ -12,6 +14,7 @@ defmodule LiveUi.Demo.Server.Layouts do
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content={Plug.CSRFProtection.get_csrf_token()} />
         <title><%= @page_title || "LiveUi Demo" %></title>
+        <style><%= Phoenix.HTML.raw(Stylesheet.css()) %></style>
         <style><%= Phoenix.HTML.raw(css()) %></style>
       </head>
       <body class="unified-example-shell">

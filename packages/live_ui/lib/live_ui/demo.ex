@@ -85,7 +85,7 @@ defmodule LiveUi.Demo do
          total_examples: Catalog.total_example_count(),
          category_count: Catalog.category_count(),
          path_counts: Catalog.path_counts(),
-         preview: nil,
+         preview: maybe_preview(selected_example),
          html: render_runtime(runtime_state),
          event_routes: Map.keys(runtime_state.event_routes) |> Enum.sort()
        }}
@@ -130,6 +130,16 @@ defmodule LiveUi.Demo do
              selected_example: example.id
            }}
         end
+    end
+  end
+
+  defp maybe_preview(nil), do: nil
+  defp maybe_preview(%{path: :widget}), do: nil
+
+  defp maybe_preview(example) do
+    case Catalog.preview(example.id) do
+      {:ok, preview} -> preview
+      {:error, reason} -> %{mode: :error, reason: reason}
     end
   end
 

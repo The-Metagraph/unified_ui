@@ -3,7 +3,7 @@ defmodule LiveUi.Demo.Catalog do
   Catalog helpers for the package-local `live_ui` demo workbench.
   """
 
-  alias LiveUi.Component
+  alias LiveUi.{Component, Examples}
 
   @category_order [
     :foundational,
@@ -113,8 +113,7 @@ defmodule LiveUi.Demo.Catalog do
   def find_example(id) do
     wanted = to_string(id)
 
-    catalog()
-    |> Enum.find(&(to_string(&1.id) == wanted))
+    Enum.find(catalog(), &(to_string(&1.id) == wanted)) || maintained_example(wanted)
   end
 
   @spec fetch_example(atom() | String.t()) :: {:ok, map()} | {:error, term()}
@@ -149,18 +148,49 @@ defmodule LiveUi.Demo.Catalog do
   @spec preview(atom() | String.t() | map()) :: {:ok, map()} | {:error, term()}
   def preview(example_or_id) do
     with {:ok, example} <- normalize_example(example_or_id) do
-      {:ok,
-       %{
-         mode: :empty,
-         example: example
-       }}
+      preview_for(example)
     end
   end
 
-  defp normalize_example(%{} = example), do: {:ok, example}
+  defp normalize_example(%{path: :widget} = example), do: {:ok, example}
+
+  defp normalize_example(%{} = example) do
+    {:ok, decorate_maintained_example(example)}
+  end
 
   defp normalize_example(id) do
     fetch_example(id)
+  end
+
+  defp preview_for(%{path: :widget} = example) do
+    {:ok,
+     %{
+       mode: :empty,
+       example: example
+     }}
+  end
+
+  defp preview_for(%{path: path, id: id}) when path in [:native, :canonical] do
+    with {:ok, inspection} <- LiveUi.Tooling.preview_example(id) do
+      {:ok,
+       inspection.result
+       |> Map.put(:mode, :html)
+       |> Map.put(:runtime_mode, Map.get(inspection.result, :mode))
+       |> Map.put(:native?, path == :native)
+       |> Map.put(:canonical?, path == :canonical)}
+    end
+  end
+
+  defp preview_for(%{path: :mixed, id: id} = example) do
+    with {:ok, inspection} <- LiveUi.Tooling.inspect_example(id) do
+      {:ok,
+       %{
+         mode: :report,
+         example: example,
+         report:
+           inspect(inspection.result, pretty: true, width: 100, limit: :infinity, sort_maps: true)
+       }}
+    end
   end
 
   defp category_modules(:foundational), do: LiveUi.Widgets.Foundational.modules()
@@ -254,5 +284,19 @@ defmodule LiveUi.Demo.Catalog do
     |> String.replace("_", " ")
     |> String.split()
     |> Enum.map_join(" ", &String.capitalize/1)
+  end
+
+  defp maintained_example(id) do
+    case Examples.find(id) do
+      {:ok, example} -> decorate_maintained_example(example)
+      :error -> nil
+    end
+  end
+
+  defp decorate_maintained_example(example) do
+    example
+    |> Map.put(:categories, [])
+    |> Map.put(:primary_category, nil)
+    |> Map.put(:hidden?, true)
   end
 end
