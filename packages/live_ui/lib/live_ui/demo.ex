@@ -134,6 +134,7 @@ defmodule LiveUi.Demo do
   end
 
   defp maybe_preview(nil), do: nil
+  defp maybe_preview(%{path: :widget}), do: nil
 
   defp maybe_preview(example) do
     case Catalog.preview(example.id) do
@@ -145,7 +146,8 @@ defmodule LiveUi.Demo do
   defp render_runtime(runtime_state) do
     LiveUi.Runtime.component().render(%{
       id: "live-ui-demo-runtime",
-      runtime_state: runtime_state
+      runtime_state: runtime_state,
+      show_demo_panels: false
     })
     |> Phoenix.HTML.Safe.to_iodata()
     |> IO.iodata_to_binary()

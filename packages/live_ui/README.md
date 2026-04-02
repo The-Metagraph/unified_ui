@@ -57,17 +57,10 @@ mix deps.get
 mix live_ui.demo --serve
 ```
 
-By default the demo listens on [http://127.0.0.1:4040](http://127.0.0.1:4040). You can deep-link to a maintained example and change the port too:
+By default the demo listens on [http://127.0.0.1:4040](http://127.0.0.1:4040). You can deep-link to a widget entry and change the port too:
 
 ```bash
-mix live_ui.demo native_styled_profile --serve --port 4050
-```
-
-For your own browser-hosted `live_ui` surfaces, load the shared stylesheet in
-the host layout:
-
-```elixir
-<style><%= Phoenix.HTML.raw(LiveUi.Stylesheet.css()) %></style>
+mix live_ui.demo button --serve --port 4050
 ```
 
 ## Reference Guides

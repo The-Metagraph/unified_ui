@@ -10,11 +10,24 @@ defmodule LiveUi.DemoServerTest do
     body = wait_for_body("http://127.0.0.1:#{port}/")
 
     assert body =~ "Live UI Workbench"
+    assert body =~ "live_ui package demo"
+
+    assert body =~
+             "Browse the package-local demo through the same server-authoritative runtime the package exposes everywhere else."
+
     assert body =~ "data-phx-main"
-    assert body =~ "Overview"
-    assert body =~ ~s(href="/examples/native_styled_profile?category=native")
-    assert body =~ "--live-ui-theme-accent"
-    assert body =~ ".live-ui-button.live-ui-button-solid"
+    assert body =~ ~s(id="live-ui-demo-category-tabs")
+    assert body =~ ~s(data-item-id="button")
+    assert body =~ ">Button<"
+    refute body =~ "Meaningful Interaction Story"
+    refute body =~ "Canonical Signal Preview"
+    refute body =~ "No signal captured yet"
+    refute body =~ "<h1>Live UI Demo</h1>"
+    refute body =~ ">Overview<"
+    refute body =~ "Examples:"
+    refute body =~ "Native:"
+    refute body =~ "Canonical:"
+    refute body =~ "Mixed:"
     refute body =~ "Featured demo routes"
   end
 
@@ -22,12 +35,24 @@ defmodule LiveUi.DemoServerTest do
     port = free_port()
     {:ok, _server} = start_supervised({LiveUi.Demo.Server, host: "127.0.0.1", port: port})
 
-    body = wait_for_body("http://127.0.0.1:#{port}/examples/native_styled_profile")
+    body = wait_for_body("http://127.0.0.1:#{port}/examples/button")
 
-    assert body =~ "Native Styled Profile"
-    assert body =~ "Focused example"
-    assert body =~ "Browser Style Surface"
-    assert body =~ "Browser style nodes"
+    assert body =~ "Button"
+    assert body =~ ~s(id="live-ui-demo-widget-button-panel")
+    assert body =~ ~s(id="live-ui-demo-widget-button-button")
+    assert body =~ ~s(data-live-ui-widget="button")
+
+    assert body =~
+             "Browse the package-local demo through the same server-authoritative runtime the package exposes everywhere else."
+
+    refute body =~ "live-ui-demo-example-breadcrumbs"
+    refute body =~ ~s(id="live-ui-demo-interaction-grid")
+    refute body =~ "Meaningful Interaction Story"
+    refute body =~ "Canonical Signal Preview"
+    refute body =~ "No signal captured yet"
+    refute body =~ "Rendered Preview"
+    refute body =~ "Comparison Report"
+    assert body =~ "Category: Foundational | Widget family: Content"
   end
 
   defp wait_for_body(url, attempts \\ 20)

@@ -99,51 +99,21 @@ defmodule LiveUi.Demo.Server.Layouts do
       margin: 0 auto;
       padding: 2.5rem 0 4rem;
       display: grid;
-      gap: 1.5rem;
-    }
-
-    .example-app-header,
-    .example-app-runtime {
-      border: 1px solid var(--example-border);
-      border-radius: 18px;
-      background:
-        linear-gradient(180deg, hsl(0 0% 11% / 0.96) 0%, hsl(0 0% 7% / 0.98) 100%);
-      box-shadow: var(--example-shadow);
-    }
-
-    .example-app-header {
-      padding: 1.5rem 1.5rem 1.35rem;
-    }
-
-    .example-app-runtime {
-      padding: 1.25rem;
-      backdrop-filter: blur(14px);
-      --live-ui-theme-surface-base: hsl(0 0% 10%);
-      --live-ui-theme-surface-panel: hsl(0 0% 12%);
-      --live-ui-theme-foreground: var(--example-foreground);
-      --live-ui-theme-foreground-muted: hsl(0 0% 80%);
-      --live-ui-theme-border-muted: var(--example-border);
-      --live-ui-theme-border-strong: var(--example-border-strong);
-      --live-ui-theme-accent: var(--example-primary);
-      --live-ui-theme-accent-strong: var(--example-primary-strong);
-      --live-ui-theme-accent-soft: hsl(152 100% 50% / 0.08);
-      --live-ui-theme-success: var(--example-primary);
-      --live-ui-theme-warning: var(--example-yellow);
-      --live-ui-theme-critical: hsl(0 82% 60%);
-      --live-ui-shadow-action: 0 14px 34px hsl(152 100% 50% / 0.18);
-    }
-
-    .example-app-header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 0.85rem;
+    }
+
+    .live-ui-demo-browser-header-top {
+      align-items: flex-start;
+      justify-content: space-between;
       flex-wrap: wrap;
     }
 
-    .example-app-kicker {
-      margin: 0;
+    .live-ui-demo-browser-copy {
+      flex: 1 1 24rem;
+      min-width: 0;
+    }
+
+    .live-ui-demo-browser-kicker {
       color: var(--example-primary);
       text-transform: uppercase;
       letter-spacing: 0.16em;
@@ -151,49 +121,29 @@ defmodule LiveUi.Demo.Server.Layouts do
       font-weight: 700;
     }
 
-    .example-app-widget,
-    .live-ui-demo-metrics span {
-      display: inline-flex;
-      align-items: center;
-      border: 1px solid hsl(192 100% 50% / 0.3);
-      border-radius: 999px;
-      padding: 0.3rem 0.7rem;
-      color: var(--example-cyan);
-      background: hsl(192 100% 50% / 0.08);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .example-app-title {
-      margin: 0;
+    .live-ui-demo-browser-title {
+      display: block;
       font-size: clamp(1.5rem, 3vw, 2.3rem);
       line-height: 1.08;
       letter-spacing: -0.03em;
     }
 
-    .example-app-summary,
-    .example-app-notes {
-      margin: 0.65rem 0 0;
+    .live-ui-demo-browser-summary,
+    .live-ui-demo-browser-notes,
+    .live-ui-demo-browser-status {
+      display: block;
       max-width: 70ch;
       color: hsl(0 0% 91% / 0.82);
       line-height: 1.7;
       font-size: 0.98rem;
     }
 
-    .example-app-notes {
+    .live-ui-demo-browser-notes {
       color: var(--example-muted);
     }
 
-    .live-ui-demo-status {
+    .live-ui-demo-browser-status {
       color: hsl(0 0% 91% / 0.88);
-    }
-
-    .live-ui-demo-metrics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1rem;
     }
 
     .live-ui-demo-sidebar-group {
@@ -201,9 +151,230 @@ defmodule LiveUi.Demo.Server.Layouts do
       gap: 0.7rem;
     }
 
-    .live-ui-demo-overview-list {
+    .live-ui-demo-category-tabs-title {
+      color: var(--example-primary);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .live-ui-demo-category-tabs [role="tablist"] {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .live-ui-demo-category-tabs [role="tab"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.45rem;
+      padding: 0.6rem 0.9rem;
+      border: 1px solid var(--example-border-strong);
+      border-radius: 999px;
+      background: hsl(0 0% 100% / 0.04);
+      color: hsl(0 0% 91% / 0.78);
+      text-decoration: none;
+      font: inherit;
+      font-size: 0.78rem;
+      line-height: 1.2;
+      cursor: pointer;
+      transition:
+        transform 120ms ease,
+        border-color 160ms ease,
+        background 160ms ease,
+        color 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    .live-ui-demo-category-tabs [role="tab"]:hover {
+      transform: translateY(-1px);
+      border-color: hsl(192 100% 50% / 0.28);
+      color: hsl(0 0% 95%);
+    }
+
+    .live-ui-demo-category-tabs [role="tab"]:focus-visible {
+      outline: 2px solid hsl(192 100% 50% / 0.9);
+      outline-offset: 2px;
+    }
+
+    .live-ui-demo-category-tabs [role="tab"][aria-selected="true"] {
+      color: hsl(0 0% 4%);
+      background: linear-gradient(
+        180deg,
+        hsl(152 100% 50% / 0.98) 0%,
+        hsl(152 100% 42% / 0.92) 100%
+      );
+      border-color: hsl(152 100% 50% / 0.45);
+      box-shadow:
+        inset 0 1px 0 hsl(0 0% 100% / 0.2),
+        0 10px 26px hsl(152 100% 50% / 0.14);
+    }
+
+    .live-ui-demo-category-tabs [role="tab"][disabled] {
+      opacity: 0.48;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    [data-live-ui-runtime="screen"] {
       display: grid;
-      gap: 0.55rem;
+      gap: 1rem;
+    }
+
+    [data-live-ui-widget="column"] {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    [data-live-ui-widget="row"] {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    [data-live-ui-widget="grid"] {
+      display: grid;
+      min-width: 0;
+    }
+
+    [data-live-ui-gap="sm"] {
+      gap: var(--gap-sm);
+    }
+
+    [data-live-ui-gap="md"] {
+      gap: var(--gap-md);
+    }
+
+    [data-live-ui-gap="lg"] {
+      gap: var(--gap-lg);
+    }
+
+    [data-live-ui-gap="xl"] {
+      gap: var(--gap-xl);
+    }
+
+    [data-live-ui-widget="grid"][data-live-ui-columns="2"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    [data-live-ui-widget="grid"][data-live-ui-columns="3"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .live-ui-box {
+      box-sizing: border-box;
+    }
+
+    .live-ui-box.live-ui-box-panel,
+    .live-ui-screen-shell {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      border: 1px solid var(--example-border);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, hsl(0 0% 12% / 0.98) 0%, hsl(0 0% 10% / 0.98) 100%);
+      box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.04);
+    }
+
+    .live-ui-screen-shell {
+      padding: 1rem;
+    }
+
+    .live-ui-box.live-ui-box-panel {
+      padding: 1.2rem;
+    }
+
+    .live-ui-text {
+      color: var(--example-foreground);
+      line-height: 1.6;
+    }
+
+    .live-ui-text[data-live-ui-tone="accent"],
+    .live-ui-text[data-live-ui-tone="success"] {
+      color: var(--example-primary);
+    }
+
+    .live-ui-button {
+      appearance: none;
+      border-radius: 12px;
+      border: 1px solid var(--example-border-strong);
+      padding: 0.8rem 1.15rem;
+      min-height: 2.8rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition:
+        transform 120ms ease,
+        box-shadow 160ms ease,
+        filter 160ms ease,
+        border-color 160ms ease;
+    }
+
+    .live-ui-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .live-ui-button:focus-visible {
+      outline: 2px solid hsl(192 100% 50% / 0.9);
+      outline-offset: 2px;
+    }
+
+    .live-ui-button.live-ui-button-solid {
+      color: hsl(0 0% 4%);
+      background: linear-gradient(
+        180deg,
+        hsl(152 100% 50% / 0.98) 0%,
+        hsl(152 100% 42% / 0.92) 100%
+      );
+      border-color: hsl(152 100% 50% / 0.45);
+      box-shadow:
+        inset 0 1px 0 hsl(0 0% 100% / 0.22),
+        0 14px 34px hsl(152 100% 50% / 0.18);
+    }
+
+    .live-ui-button.live-ui-button-quiet {
+      color: var(--example-primary);
+      background: hsl(152 100% 50% / 0.08);
+      border-color: hsl(152 100% 50% / 0.22);
+    }
+
+    #live-ui-demo-sidebar .live-ui-demo-button {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      text-align: left;
+      box-sizing: border-box;
+      text-decoration: none;
+    }
+
+    .live-ui-text-input {
+      width: 100%;
+      min-height: 2.8rem;
+      border-radius: 12px;
+      border: 1px solid var(--example-border-strong);
+      padding: 0.7rem 0.85rem;
+      font: inherit;
+      color: var(--example-foreground);
+      background: hsl(0 0% 100% / 0.04);
+      box-sizing: border-box;
+    }
+
+    .live-ui-demo-interaction-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      align-items: stretch;
     }
 
     [data-live-ui-demo-story="true"] {
@@ -211,6 +382,7 @@ defmodule LiveUi.Demo.Server.Layouts do
       border: 1px solid hsl(152 100% 50% / 0.18);
       border-radius: 14px;
       padding: 1rem;
+      min-height: 6.75rem;
       background:
         linear-gradient(180deg, hsl(152 100% 50% / 0.08) 0%, hsl(0 0% 8% / 0.98) 100%);
     }
@@ -219,6 +391,7 @@ defmodule LiveUi.Demo.Server.Layouts do
       border: 1px solid hsl(192 100% 50% / 0.18);
       border-radius: 14px;
       padding: 1rem;
+      min-height: 6.75rem;
       background:
         linear-gradient(180deg, hsl(192 100% 50% / 0.06) 0%, hsl(0 0% 9% / 0.98) 100%);
     }
@@ -299,21 +472,18 @@ defmodule LiveUi.Demo.Server.Layouts do
         padding: 1rem 0 2rem;
       }
 
-      .example-app-header,
-      .example-app-runtime,
       .live-ui-box.live-ui-box-panel,
       .live-ui-screen-shell {
         border-radius: 14px;
       }
 
-      .example-app-header,
-      .example-app-runtime {
-        padding: 1rem;
-      }
-
       [data-live-ui-widget="grid"][data-live-ui-columns="2"],
       [data-live-ui-widget="grid"][data-live-ui-columns="3"] {
         grid-template-columns: 1fr;
+      }
+
+      .live-ui-demo-interaction-grid {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
     """
