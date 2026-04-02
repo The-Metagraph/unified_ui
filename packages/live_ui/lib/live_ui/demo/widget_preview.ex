@@ -3,9 +3,11 @@ defmodule LiveUi.Demo.WidgetPreview do
 
   use Phoenix.Component
 
-  alias LiveUi.Demo.Style
+  alias LiveUi.Demo.{CanonicalWidgetPreview, Style}
 
   attr(:example, :map, required: true)
+  attr(:demo_state, :map, default: %{})
+  attr(:event_target, :string, default: nil)
 
   @sample_image_uri "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='140' viewBox='0 0 240 140'><rect width='240' height='140' rx='16' fill='%23131d31'/><circle cx='58' cy='46' r='18' fill='%232563eb'/><path d='M34 114L86 62l28 28 20-20 38 44H34z' fill='%23059669'/><rect x='122' y='28' width='80' height='12' rx='6' fill='%23f9fafb' opacity='0.86'/><rect x='122' y='52' width='62' height='10' rx='5' fill='%23f9fafb' opacity='0.6'/></svg>"
 
@@ -15,6 +17,10 @@ defmodule LiveUi.Demo.WidgetPreview do
       |> assign(:id_base, "live-ui-demo-widget-#{assigns.example.id}")
       |> assign(:panel_style, Style.direct(:box, variant: :panel))
       |> assign(:title_style, Style.direct(:text, tone: :accent))
+      |> assign(
+        :canonical_element,
+        CanonicalWidgetPreview.element(assigns.example, assigns.demo_state, "live-ui-demo-widget-#{assigns.example.id}")
+      )
 
     ~H"""
     <LiveUi.Widgets.Box.render
@@ -29,7 +35,11 @@ defmodule LiveUi.Demo.WidgetPreview do
         content="Widget Preview"
         {@title_style}
       />
-      <%= preview(assigns) %>
+      <%= if @canonical_element do %>
+        <LiveUi.Renderer.render element={@canonical_element} event_target={@event_target} />
+      <% else %>
+        <%= preview(assigns) %>
+      <% end %>
     </LiveUi.Widgets.Box.render>
     """
   end

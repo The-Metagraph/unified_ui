@@ -26,7 +26,12 @@ defmodule LiveUi.Widgets.List do
       <%= if @ordered do %>
         <ol>
           <%= for item <- @items do %>
-            <li data-item-id={fetch(item, :id)} data-selected={selected?(item)}>
+            <li
+              data-item-id={fetch(item, :id)}
+              data-selected={selected?(item)}
+              class={fetch(item, :class)}
+              {fetch(item, :attrs) || %{}}
+            >
               <span><%= fetch(item, :label) || fetch(item, :value) %></span>
               <small :if={fetch(item, :description)}><%= fetch(item, :description) %></small>
             </li>
@@ -35,7 +40,12 @@ defmodule LiveUi.Widgets.List do
       <% else %>
         <ul>
           <%= for item <- @items do %>
-            <li data-item-id={fetch(item, :id)} data-selected={selected?(item)}>
+            <li
+              data-item-id={fetch(item, :id)}
+              data-selected={selected?(item)}
+              class={fetch(item, :class)}
+              {fetch(item, :attrs) || %{}}
+            >
               <span><%= fetch(item, :label) || fetch(item, :value) %></span>
               <small :if={fetch(item, :description)}><%= fetch(item, :description) %></small>
             </li>

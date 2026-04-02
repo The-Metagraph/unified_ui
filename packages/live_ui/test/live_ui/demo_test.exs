@@ -62,6 +62,7 @@ defmodule LiveUi.DemoTest do
     refute demo.html =~ ~s(id="live-ui-demo-metadata-card")
     refute demo.html =~ "Rendered Preview"
     refute demo.html =~ "Comparison Report"
+    assert demo.html =~ ~s(id="live-ui-demo-example-metadata")
     assert demo.html =~ "Category: Foundational | Widget family: Content"
   end
 
@@ -73,6 +74,7 @@ defmodule LiveUi.DemoTest do
     assert demo.preview == nil
     refute demo.html =~ "Comparison Report"
     assert demo.html =~ "Current category: Overlay"
+    assert demo.html =~ ~s(id="live-ui-demo-example-metadata")
     assert demo.html =~ "Category: Overlay | Widget family: Overlay"
     assert demo.html =~ ~s(id="live-ui-demo-widget-toast-toast")
     assert demo.html =~ ~s(data-live-ui-widget="toast")

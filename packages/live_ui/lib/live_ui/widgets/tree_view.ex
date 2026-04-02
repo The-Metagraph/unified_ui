@@ -35,7 +35,13 @@ defmodule LiveUi.Widgets.TreeView do
 
   defp tree_node(assigns) do
     ~H"""
-    <li data-node-id={fetch(@node, :id)} data-selected={selected?(@node)} data-expanded={expanded?(@node)}>
+    <li
+      data-node-id={fetch(@node, :id)}
+      data-selected={selected?(@node)}
+      data-expanded={expanded?(@node)}
+      class={fetch(@node, :class)}
+      {fetch(@node, :attrs) || %{}}
+    >
       <span><%= fetch(@node, :label) || fetch(@node, :value) %></span>
       <%= if fetch(@node, :children) do %>
         <ul>

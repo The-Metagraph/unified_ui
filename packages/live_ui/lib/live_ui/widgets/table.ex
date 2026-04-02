@@ -32,7 +32,12 @@ defmodule LiveUi.Widgets.Table do
       </thead>
       <tbody>
         <%= for row <- @rows do %>
-          <tr data-row-id={row[:id]} data-selected={row[:selected]}>
+          <tr
+            data-row-id={row[:id]}
+            data-selected={row[:selected]}
+            class={row[:class]}
+            {Map.get(row, :attrs, %{})}
+          >
             <%= for cell <- row[:cells] || [] do %>
               <td><%= cell %></td>
             <% end %>

@@ -158,8 +158,13 @@ defmodule LiveUi.Demo.Screen do
       assigns
       |> Map.put(:example, example)
       |> Map.put(:panel_style, Style.panel("live-ui-demo-content"))
+      |> Map.put(:metadata_panel_style, Style.panel("live-ui-demo-example-metadata"))
       |> Map.put(:muted_style, Style.text("live-ui-demo-content-copy"))
       |> Map.put(:title_style, Style.text("live-ui-demo-content-title", tone: :accent))
+      |> Map.put(
+        :category_metadata,
+        "Category: #{category_title(example.primary_category)} | Widget family: #{category_title(List.first(example.families))}"
+      )
 
     ~H"""
     <LiveUi.Layout.Column.render id="live-ui-demo-content" gap="lg" {@stack_style}>
@@ -176,16 +181,27 @@ defmodule LiveUi.Demo.Screen do
           content={@example.summary}
           {@muted_style}
         />
+      </LiveUi.Widgets.Box.render>
+
+      <WidgetPreview.render
+        example={@example}
+        demo_state={@widget_demo_state}
+        event_target={@event_target}
+      />
+
+      <LiveUi.Widgets.Box.render
+        id="live-ui-demo-example-metadata"
+        padding="lg"
+        border="subtle"
+        background="panel"
+        {@metadata_panel_style}
+      >
         <LiveUi.Widgets.Text.render
           id="live-ui-demo-example-categories"
-          content={
-            "Category: #{category_title(@example.primary_category)} | Widget family: #{category_title(List.first(@example.families))}"
-          }
+          content={@category_metadata}
           {@muted_style}
         />
       </LiveUi.Widgets.Box.render>
-
-      <WidgetPreview.render example={@example} />
     </LiveUi.Layout.Column.render>
     """
   end

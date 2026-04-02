@@ -164,6 +164,13 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :link}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :interaction_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
     ~H"""
     <LiveUi.Widgets.Link.render
       id={element_id(@element, "link")}
@@ -174,6 +181,7 @@ defmodule LiveUi.Renderer do
       variant={theme_variant(@element)}
       state={style_state(@element)}
       class={style_class(@element)}
+      {@interaction_attrs}
     />
     """
   end
@@ -540,7 +548,7 @@ defmodule LiveUi.Renderer do
     ~H"""
     <LiveUi.Widgets.Menu.render
       id={element_id(@element, "menu")}
-      items={navigation_items(@element)}
+      items={navigation_items(@element, @event_target)}
       active_item={string_optional(get_in(@element.attributes, [:navigation, :active_item]))}
       orientation={string_value(get_in(@element.attributes, [:navigation, :orientation]), "vertical")}
       tone={style_tone(@element)}
@@ -557,7 +565,7 @@ defmodule LiveUi.Renderer do
     ~H"""
     <LiveUi.Widgets.Tabs.render
       id={element_id(@element, "tabs")}
-      items={navigation_items(@element)}
+      items={navigation_items(@element, @event_target)}
       active_item={string_optional(get_in(@element.attributes, [:navigation, :active_item]))}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
@@ -569,11 +577,20 @@ defmodule LiveUi.Renderer do
   end
 
   def render(%{element: %Element{kind: :command_palette}} = assigns) do
+    assigns =
+      assigns
+      |> assign(
+        :input_attrs,
+        direct_change_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+      |> assign(:palette_items, command_palette_items(assigns.element, Map.get(assigns, :event_target)))
+
     ~H"""
     <LiveUi.Widgets.CommandPalette.render
       id={element_id(@element, "command-palette")}
       query={string_optional(get_in(@element.attributes, [:command_palette, :query]))}
-      items={command_palette_items(@element)}
+      items={@palette_items}
+      input_attrs={@input_attrs}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
       state={style_state(@element)}
@@ -588,7 +605,7 @@ defmodule LiveUi.Renderer do
     ~H"""
     <LiveUi.Widgets.List.render
       id={element_id(@element, "list")}
-      items={list_items(@element)}
+      items={list_items(@element, @event_target)}
       ordered={boolean_default(get_in(@element.attributes, [:list, :ordered?]), false)}
       selection_mode={string_value(get_in(@element.attributes, [:list, :selection_mode]), "single")}
       tone={style_tone(@element)}
@@ -605,7 +622,7 @@ defmodule LiveUi.Renderer do
     <LiveUi.Widgets.Table.render
       id={element_id(@element, "table")}
       columns={get_in(@element.attributes, [:table, :columns]) || []}
-      rows={get_in(@element.attributes, [:table, :rows]) || []}
+      rows={table_rows(@element, @event_target)}
       dense={boolean_default(get_in(@element.attributes, [:table, :dense?]), false)}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
@@ -621,7 +638,7 @@ defmodule LiveUi.Renderer do
     ~H"""
     <LiveUi.Widgets.TreeView.render
       id={element_id(@element, "tree-view")}
-      nodes={get_in(@element.attributes, [:tree, :nodes]) || []}
+      nodes={tree_nodes(@element, @event_target)}
       selection_mode={string_value(get_in(@element.attributes, [:tree, :selection_mode]), "single")}
       tone={style_tone(@element)}
       variant={theme_variant(@element)}
@@ -912,7 +929,7 @@ defmodule LiveUi.Renderer do
     ~H"""
     <LiveUi.Widgets.ContextMenu.render
       id={element_id(@element, "context-menu")}
-      items={context_menu_items(@element)}
+      items={context_menu_items(@element, @event_target)}
       placement={placement_value(get_in(@element.attributes, [:context_menu, :placement]), "bottom-start")}
       anchor={get_in(@element.attributes, [:context_menu, :anchor]) || %{}}
       active_item={string_optional(get_in(@element.attributes, [:context_menu, :active_item]))}
@@ -1101,12 +1118,8 @@ defmodule LiveUi.Renderer do
     |> Enum.find(&match?(%Interaction{family: ^family}, &1))
   end
 
-  defp primary_click_interaction(%Element{} = element) do
-    primary_interaction(element, :click)
-  end
-
   defp interaction_event_attrs(%Element{} = element, event_target) do
-    case {primary_click_interaction(element), event_target} do
+    case {primary_action_interaction(element), event_target} do
       {%Interaction{} = interaction, target} when not is_nil(target) ->
         [
           {:"phx-click", "canonical_interaction"},
@@ -1123,6 +1136,23 @@ defmodule LiveUi.Renderer do
 
   defp primary_change_interaction(%Element{} = element) do
     primary_interaction(element, :change)
+  end
+
+  defp direct_change_interaction_attrs(%Element{} = element, event_target) do
+    case {primary_change_interaction(element), event_target} do
+      {%Interaction{} = interaction, target} when not is_nil(target) ->
+        %{
+          :"phx-input" => "canonical_change_interaction",
+          :"phx-change" => "canonical_change_interaction",
+          :"phx-target" => target,
+          :"phx-value-change-interaction" => encode_interaction(interaction),
+          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind)),
+          :"phx-value-widget" => Atom.to_string(element.kind)
+        }
+
+      _ ->
+        %{}
+    end
   end
 
   defp encode_interaction(%Interaction{} = interaction) do
@@ -1153,15 +1183,21 @@ defmodule LiveUi.Renderer do
     end
   end
 
-  defp list_items(%Element{} = element) do
-    get_in(element.attributes, [:list, :items]) || []
+  defp list_items(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :list, :items])
+    |> List.wrap()
+    |> Enum.map(&normalize_list_item(&1, element, event_target))
   end
 
-  defp navigation_items(%Element{} = element) do
-    get_in(element.attributes, [:navigation, :items]) || []
+  defp navigation_items(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :navigation, :items])
+    |> List.wrap()
+    |> Enum.map(&normalize_navigation_item(&1, element, event_target))
   end
 
-  defp command_palette_items(%Element{} = element) do
+  defp command_palette_items(%Element{} = element, event_target) do
     active_command = get_in(element.attributes, [:command_palette, :active_command])
 
     element
@@ -1171,18 +1207,39 @@ defmodule LiveUi.Renderer do
       command = Map.new(command)
       command_id = Map.get(command, :id) || Map.get(command, "id")
 
-      Map.put(command, :active, command_id == active_command)
+      command
+      |> Map.put(:active, command_id == active_command)
+      |> maybe_put_item_attrs(collection_item_attrs(element, event_target, command_id))
     end)
   end
 
-  defp context_menu_items(%Element{} = element) do
+  defp context_menu_items(%Element{} = element, event_target) do
     element
     |> child_elements(:menu)
     |> List.first()
     |> case do
-      %Element{} = menu -> navigation_items(menu)
+      %Element{} = menu ->
+        menu
+        |> get_in([Access.key(:attributes), :navigation, :items])
+        |> List.wrap()
+        |> Enum.map(&normalize_navigation_item(&1, element, event_target))
+
       _ -> []
     end
+  end
+
+  defp table_rows(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :table, :rows])
+    |> List.wrap()
+    |> Enum.map(&normalize_table_row(&1, element, event_target))
+  end
+
+  defp tree_nodes(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :tree, :nodes])
+    |> List.wrap()
+    |> Enum.map(&normalize_tree_node(&1, element, event_target))
   end
 
   defp chart_values(%Element{} = element) do
@@ -1380,6 +1437,87 @@ defmodule LiveUi.Renderer do
   defp maybe_attr(attrs, _key, nil), do: attrs
   defp maybe_attr(attrs, _key, ""), do: attrs
   defp maybe_attr(attrs, key, value), do: [{key, value} | attrs]
+
+  defp primary_action_interaction(%Element{} = element) do
+    primary_interaction(element, :click) ||
+      primary_interaction(element, :navigation) ||
+      primary_interaction(element, :command)
+  end
+
+  defp primary_collection_interaction(%Element{} = element) do
+    primary_interaction(element, :selection) ||
+      primary_interaction(element, :click) ||
+      primary_interaction(element, :navigation) ||
+      primary_interaction(element, :command)
+  end
+
+  defp collection_item_attrs(%Element{} = element, event_target, item_id) do
+    case {primary_collection_interaction(element), event_target, item_id} do
+      {%Interaction{} = interaction, target, id} when not is_nil(target) and not is_nil(id) ->
+        %{
+          :"phx-click" => "canonical_interaction",
+          :"phx-target" => target,
+          :"phx-value-interaction" => encode_interaction(interaction),
+          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind)),
+          :"phx-value-widget" => Atom.to_string(element.kind),
+          :"phx-value-item_id" => to_string(id)
+        }
+
+      _ ->
+        %{}
+    end
+  end
+
+  defp normalize_navigation_item(item, source_element, event_target) do
+    item = Map.new(item)
+    item_id = Map.get(item, :id) || Map.get(item, "id")
+
+    item
+    |> Map.put(:disabled, Map.get(item, :disabled, Map.get(item, :disabled?)))
+    |> Map.put(:active, Map.get(item, :active, Map.get(item, :active?)))
+    |> maybe_put_item_attrs(collection_item_attrs(source_element, event_target, item_id))
+  end
+
+  defp normalize_list_item(item, source_element, event_target) do
+    item = Map.new(item)
+    item_id = Map.get(item, :id) || Map.get(item, "id")
+
+    item
+    |> Map.put(:selected, Map.get(item, :selected, Map.get(item, :selected?)))
+    |> maybe_put_item_attrs(collection_item_attrs(source_element, event_target, item_id))
+  end
+
+  defp normalize_table_row(row, source_element, event_target) do
+    row = Map.new(row)
+    row_id = Map.get(row, :id) || Map.get(row, "id")
+
+    row
+    |> Map.put(:selected, Map.get(row, :selected, Map.get(row, :selected?)))
+    |> maybe_put_item_attrs(collection_item_attrs(source_element, event_target, row_id))
+  end
+
+  defp normalize_tree_node(node, source_element, event_target) do
+    node = Map.new(node)
+    node_id = Map.get(node, :id) || Map.get(node, "id")
+
+    children =
+      node
+      |> Map.get(:children, Map.get(node, "children", []))
+      |> List.wrap()
+      |> Enum.map(&normalize_tree_node(&1, source_element, event_target))
+
+    node
+    |> Map.put(:selected, Map.get(node, :selected, Map.get(node, :selected?)))
+    |> Map.put(:expanded, Map.get(node, :expanded, Map.get(node, :expanded?)))
+    |> Map.put(:children, children)
+    |> maybe_put_item_attrs(collection_item_attrs(source_element, event_target, node_id))
+  end
+
+  defp maybe_put_item_attrs(item, attrs) when attrs == %{}, do: item
+
+  defp maybe_put_item_attrs(item, attrs) do
+    Map.update(item, :attrs, attrs, &Map.merge(Map.new(&1), attrs))
+  end
 
   defp primary_control_interaction(%Element{} = element) do
     primary_interaction(element, :change) || primary_interaction(element, :selection)
