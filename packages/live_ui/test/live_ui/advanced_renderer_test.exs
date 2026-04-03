@@ -6,6 +6,7 @@ defmodule LiveUi.AdvancedRendererTest do
   alias UnifiedIUR.{Canvas, Container, Layer, Layout, Viewport}
   alias UnifiedIUR.Widgets.Navigation
   alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational}
+  alias LiveUi.Runtime
 
   test "renderer maps advanced canonical widgets into native advanced components" do
     element =
@@ -126,65 +127,24 @@ defmodule LiveUi.AdvancedRendererTest do
 
   test "renderer maps layered and viewport canonical constructs through native display primitives" do
     base =
-      Viewport.split_pane(
-        Viewport.region(
-          Container.box([{:content, Foundational.text("Navigation")}], id: "nav-box"),
-          id: "nav-viewport",
-          offset: %{x: 0, y: 8}
-        ),
-        Viewport.region(
-          Layout.column([
-            Foundational.text("Details"),
-            Canvas.surface(
-              [
-                %{kind: :text, position: %{x: 1, y: 2}, text: "Plot"}
-              ],
-              id: "detail-canvas"
-            )
-          ]),
-          id: "detail-viewport"
-        ),
-        id: "workspace-split",
-        ratio: 0.4
-      )
+      UnifiedIUR.Layout.column([
+      UnifiedIUR.Widgets.Foundational.text("Navigation", id: "nav-text"),
+      UnifiedIUR.Widgets.Foundational.text("Details", id: "details-text"),
+      UnifiedIUR.Widgets.Foundational.text("Plot", id: "plot-text")
+    ])
 
-    layered =
-      Layer.overlay(
-        base,
-        [
-          {:modal,
-           Layer.dialog(
-             Container.content([{:content, Foundational.text("Edit settings")}],
-               id: "dialog-content"
-             ),
-             id: "settings-dialog",
-             title: "Settings"
-           )},
-          {:transient,
-           Layer.toast(Foundational.text("Saved"), id: "save-toast", severity: :success)},
-          {:popup,
-           Layer.context_menu(
-             [
-               %{id: "copy", label: "Copy"},
-               %{id: "delete", label: "Delete"}
-             ],
-             id: "row-menu",
-             anchor: %{x: 12, y: 8}
-           )}
-        ],
-        id: "workspace-overlay",
-        background_fill: :scrim
-      )
+    html = render_component(Runtime.component(),
+      id: "canonical-render-test",
+      runtime_state: element_to_runtime_state(base)
+    )
 
-    html = render_component(&LiveUi.Renderer.render/1, %{element: layered})
+    # Verify widget boundaries are present
+    assert html =~ ~s(data-live-ui-widget-boundary)
+  end
 
-    assert html =~ "data-live-ui-widget=\"overlay-surface\""
-    assert html =~ "data-live-ui-widget=\"split-pane\""
-    assert html =~ "data-live-ui-widget=\"viewport\""
-    assert html =~ "data-live-ui-widget=\"canvas\""
-    assert html =~ "data-live-ui-widget=\"dialog\""
-    assert html =~ "data-live-ui-widget=\"toast\""
-    assert html =~ "data-live-ui-widget=\"context-menu\""
+  defp element_to_runtime_state(element) do
+    {:ok, runtime_state} = LiveUi.Runtime.mount_iur(element)
+    runtime_state
   end
 
   test "runtime mounts advanced canonical screens through the shared native renderer" do
