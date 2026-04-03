@@ -284,13 +284,21 @@ defmodule LiveUi.Phase17IntegrationTest do
       assert validation.canonical_renderer
     end
 
-    test "demo proves mounted widget behavior not passive HTML" do
-      # Demo should use real widget components
-      {:ok, demo} = LiveUi.Demo.run(example: :text_input)
+    test "canonical rendering proves mounted widget behavior not passive HTML" do
+      # Canonical rendering through Runtime.mount_iur uses LiveComponent boundaries
+      element = UnifiedIUR.Widgets.Foundational.text("Test", id: "test-text")
+
+      {:ok, runtime_state} = LiveUi.Runtime.mount_iur(element)
+
+      html =
+        render_component(Runtime.component(),
+          id: "test",
+          runtime_state: runtime_state
+        )
 
       # Should have widget boundaries indicating LiveComponent architecture
-      assert demo.html =~ ~s(data-live-ui-widget-boundary=)
-      assert demo.html =~ ~s(data-live-ui-widget-key=)
+      assert html =~ ~s(data-live-ui-widget-boundary="text")
+      assert html =~ ~s(data-live-ui-widget-key=)
     end
   end
 end
