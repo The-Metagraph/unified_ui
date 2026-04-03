@@ -3,6 +3,8 @@ defmodule LiveUi.Tooling do
   Package-facing entrypoint for inspection and validation helpers.
   """
 
+  import Phoenix.LiveViewTest
+
   alias Jido.Signal
   alias LiveUi.Examples
   alias LiveUi.Runtime.State
@@ -263,8 +265,10 @@ defmodule LiveUi.Tooling do
     html =
       runtime_state
       |> render_runtime()
-      |> Phoenix.HTML.Safe.to_iodata()
-      |> IO.iodata_to_binary()
+      |> case do
+        rendered when is_binary(rendered) -> rendered
+        rendered -> Phoenix.HTML.Safe.to_iodata(rendered) |> IO.iodata_to_binary()
+      end
 
     entries = widget_entries(html)
     browser_style_nodes = browser_style_entry_reports(entries)
@@ -291,7 +295,10 @@ defmodule LiveUi.Tooling do
   end
 
   defp render_runtime(%State{} = runtime_state) do
-    LiveUi.Runtime.component().render(%{
+    # Use render_component/3 from LiveViewTest to properly handle LiveComponents
+    # The direct .render/1 approach doesn't work when the rendered content
+    # contains nested LiveComponents (our widget components)
+    Phoenix.LiveViewTest.render_component(LiveUi.Runtime.component(), %{
       id: "tooling-runtime",
       runtime_state: runtime_state
     })

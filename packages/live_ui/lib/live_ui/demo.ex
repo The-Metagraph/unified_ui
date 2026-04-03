@@ -3,6 +3,8 @@ defmodule LiveUi.Demo do
   Package-local example workbench for `live_ui`.
   """
 
+  import Phoenix.LiveViewTest
+
   alias LiveUi.Demo.{Catalog, Screen, Server, WidgetPreviewState}
 
   @type view :: :home | :example
@@ -154,12 +156,13 @@ defmodule LiveUi.Demo do
   end
 
   defp render_runtime(runtime_state) do
-    LiveUi.Runtime.component().render(%{
+    # Use render_component/3 from LiveViewTest to properly handle LiveComponents
+    # The direct .render/1 approach doesn't work when the rendered content
+    # contains nested LiveComponents (our widget components)
+    render_component(LiveUi.Runtime.component(), %{
       id: "live-ui-demo-runtime",
       runtime_state: runtime_state,
       show_demo_panels: false
     })
-    |> Phoenix.HTML.Safe.to_iodata()
-    |> IO.iodata_to_binary()
   end
 end
