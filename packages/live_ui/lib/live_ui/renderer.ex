@@ -84,7 +84,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Text.render
+    <LiveUi.Widgets.Text.component
       id={element_id(@element, "text")}
       content={content_text(@element)}
       tone={style_tone(@element)}
@@ -98,7 +98,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :label}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Label.render
+    <LiveUi.Widgets.Label.component
       id={element_id(@element, "label")}
       for={label_for(@element)}
       content={content_text(@element)}
@@ -112,7 +112,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :icon}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Icon.render
+    <LiveUi.Widgets.Icon.component
       id={element_id(@element, "icon")}
       name={string_value(get_in(@element.attributes, [:icon, :name]), "icon")}
       set={string_optional(get_in(@element.attributes, [:icon, :set]))}
@@ -127,7 +127,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :image}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Image.render
+    <LiveUi.Widgets.Image.component
       id={element_id(@element, "image")}
       src={string_value(get_in(@element.attributes, [:image, :source]), "")}
       alt={string_value(get_in(@element.attributes, [:image, :alt_text]), "")}
@@ -151,7 +151,7 @@ defmodule LiveUi.Renderer do
       )
 
     ~H"""
-    <LiveUi.Widgets.Button.render
+    <LiveUi.Widgets.Button.component
       id={element_id(@element, "button")}
       label={content_text(@element)}
       disabled={state_boolean(@element, :disabled?)}
@@ -173,7 +173,7 @@ defmodule LiveUi.Renderer do
       )
 
     ~H"""
-    <LiveUi.Widgets.Link.render
+    <LiveUi.Widgets.Link.component
       id={element_id(@element, "link")}
       label={content_text(@element)}
       href={string_value(get_in(@element.attributes, [:link, :target]), "#")}
@@ -189,7 +189,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :separator}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Separator.render
+    <LiveUi.Widgets.Separator.component
       id={element_id(@element, "separator")}
       orientation={string_value(get_in(@element.attributes, [:separator, :orientation]), "horizontal")}
       tone={style_tone(@element)}
@@ -202,7 +202,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :spacer}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Spacer.render
+    <LiveUi.Widgets.Spacer.component
       id={element_id(@element, "spacer")}
       size={string_value(get_in(@element.attributes, [:spacer, :size]), "md")}
       grow={integer_value(get_in(@element.attributes, [:spacer, :grow]), 0)}
@@ -216,7 +216,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :content}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Content.render
+    <LiveUi.Widgets.Content.component
       id={element_id(@element, "content")}
       role={string_value(get_in(@element.attributes, [:container, :role]), "content")}
       tone={style_tone(@element)}
@@ -227,7 +227,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Widgets.Content.render>
+    </LiveUi.Widgets.Content.component>
     """
   end
 
@@ -242,7 +242,7 @@ defmodule LiveUi.Renderer do
       )
 
     ~H"""
-    <LiveUi.Widgets.Box.render
+    <LiveUi.Widgets.Box.component
       id={element_id(@element, "box")}
       padding={string_optional(get_in(@element.attributes, [:container, :padding]))}
       border={string_optional(get_in(@element.attributes, [:container, :border]))}
@@ -256,7 +256,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Widgets.Box.render>
+    </LiveUi.Widgets.Box.component>
     """
   end
 
@@ -264,7 +264,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Layout.Row.render
+    <LiveUi.Layout.Row.component
       id={element_id(@element, "row")}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
       padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
@@ -285,7 +285,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Layout.Row.render>
+    </LiveUi.Layout.Row.component>
     """
   end
 
@@ -293,7 +293,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Layout.Column.render
+    <LiveUi.Layout.Column.component
       id={element_id(@element, "column")}
       gap={string_optional(get_in(@element.attributes, [:layout, :gap]))}
       padding={string_optional(get_in(@element.attributes, [:layout, :padding]))}
@@ -314,7 +314,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Layout.Column.render>
+    </LiveUi.Layout.Column.component>
     """
   end
 
@@ -322,7 +322,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Layout.Grid.render
+    <LiveUi.Layout.Grid.component
       id={element_id(@element, "grid")}
       columns={integer_optional(get_in(@element.attributes, [:layout, :columns]))}
       rows={integer_optional(get_in(@element.attributes, [:layout, :rows]))}
@@ -345,7 +345,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Layout.Grid.render>
+    </LiveUi.Layout.Grid.component>
     """
   end
 
@@ -358,7 +358,7 @@ defmodule LiveUi.Renderer do
       )
 
     ~H"""
-    <LiveUi.Forms.FormBuilder.render
+    <LiveUi.Forms.FormBuilder.component
       id={element_id(@element, "form-builder")}
       autocomplete={boolean_default(get_in(@element.attributes, [:form, :autocomplete?]), true)}
       tone={style_tone(@element)}
@@ -370,13 +370,13 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Forms.FormBuilder.render>
+    </LiveUi.Forms.FormBuilder.component>
     """
   end
 
   def render(%{element: %Element{kind: :field_group}} = assigns) do
     ~H"""
-    <LiveUi.Forms.FieldGroup.render
+    <LiveUi.Forms.FieldGroup.component
       id={element_id(@element, "field-group")}
       legend={string_optional(get_in(@element.attributes, [:group, :legend]))}
       description={string_optional(get_in(@element.attributes, [:group, :description]))}
@@ -388,13 +388,13 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Forms.FieldGroup.render>
+    </LiveUi.Forms.FieldGroup.component>
     """
   end
 
   def render(%{element: %Element{kind: :field}} = assigns) do
     ~H"""
-    <LiveUi.Forms.Field.render
+    <LiveUi.Forms.Field.component
       id={element_id(@element, "field")}
       name={string_optional(get_in(@element.attributes, [:field, :name]))}
       tone={style_tone(@element)}
@@ -411,7 +411,7 @@ defmodule LiveUi.Renderer do
       <:help :for={child <- child_elements(@element, :help)}>
         <.render element={child} event_target={@event_target} />
       </:help>
-    </LiveUi.Forms.Field.render>
+    </LiveUi.Forms.Field.component>
     """
   end
 
@@ -433,7 +433,7 @@ defmodule LiveUi.Renderer do
         <input type="hidden" name="interaction" value={encode_interaction(@change_interaction)} />
         <input type="hidden" name="element_id" value={element_id(@element, "element")} />
         <input type="hidden" name="widget" value={to_string(@element.kind)} />
-        <LiveUi.Widgets.TextInput.render
+        <LiveUi.Widgets.TextInput.component
           id={element_id(@element, "input")}
           name={binding_name(@element)}
           value={binding_value(@element)}
@@ -447,7 +447,7 @@ defmodule LiveUi.Renderer do
         />
       </form>
     <% else %>
-      <LiveUi.Widgets.TextInput.render
+      <LiveUi.Widgets.TextInput.component
         id={element_id(@element, "input")}
         name={binding_name(@element)}
         value={binding_value(@element)}
@@ -479,7 +479,7 @@ defmodule LiveUi.Renderer do
         <input type="hidden" name="interaction" value={encode_interaction(@change_interaction)} />
         <input type="hidden" name="element_id" value={element_id(@element, "element")} />
         <input type="hidden" name="widget" value={to_string(@element.kind)} />
-        <LiveUi.Widgets.Toggle.render
+        <LiveUi.Widgets.Toggle.component
           id={element_id(@element, "toggle")}
           name={binding_name(@element)}
           checked={boolean_default(binding_value(@element), false)}
@@ -490,7 +490,7 @@ defmodule LiveUi.Renderer do
         />
       </form>
     <% else %>
-      <LiveUi.Widgets.Toggle.render
+      <LiveUi.Widgets.Toggle.component
         id={element_id(@element, "toggle")}
         name={binding_name(@element)}
         checked={boolean_default(binding_value(@element), false)}
@@ -519,7 +519,7 @@ defmodule LiveUi.Renderer do
         <input type="hidden" name="interaction" value={encode_interaction(@change_interaction)} />
         <input type="hidden" name="element_id" value={element_id(@element, "element")} />
         <input type="hidden" name="widget" value={to_string(@element.kind)} />
-        <LiveUi.Widgets.Select.render
+        <LiveUi.Widgets.Select.component
           id={element_id(@element, "select")}
           name={binding_name(@element)}
           options={selection_options(@element)}
@@ -531,7 +531,7 @@ defmodule LiveUi.Renderer do
         />
       </form>
     <% else %>
-      <LiveUi.Widgets.Select.render
+      <LiveUi.Widgets.Select.component
         id={element_id(@element, "select")}
         name={binding_name(@element)}
         options={selection_options(@element)}
@@ -547,7 +547,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :menu}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Menu.render
+    <LiveUi.Widgets.Menu.component
       id={element_id(@element, "menu")}
       items={navigation_items(@element, @event_target)}
       active_item={string_optional(get_in(@element.attributes, [:navigation, :active_item]))}
@@ -564,7 +564,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Tabs.render
+    <LiveUi.Widgets.Tabs.component
       id={element_id(@element, "tabs")}
       items={navigation_items(@element, @event_target)}
       active_item={string_optional(get_in(@element.attributes, [:navigation, :active_item]))}
@@ -587,7 +587,7 @@ defmodule LiveUi.Renderer do
       |> assign(:palette_items, command_palette_items(assigns.element, Map.get(assigns, :event_target)))
 
     ~H"""
-    <LiveUi.Widgets.CommandPalette.render
+    <LiveUi.Widgets.CommandPalette.component
       id={element_id(@element, "command-palette")}
       query={string_optional(get_in(@element.attributes, [:command_palette, :query]))}
       items={@palette_items}
@@ -604,7 +604,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.List.render
+    <LiveUi.Widgets.List.component
       id={element_id(@element, "list")}
       items={list_items(@element, @event_target)}
       ordered={boolean_default(get_in(@element.attributes, [:list, :ordered?]), false)}
@@ -620,7 +620,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :table}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Table.render
+    <LiveUi.Widgets.Table.component
       id={element_id(@element, "table")}
       columns={get_in(@element.attributes, [:table, :columns]) || []}
       rows={table_rows(@element, @event_target)}
@@ -637,7 +637,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.TreeView.render
+    <LiveUi.Widgets.TreeView.component
       id={element_id(@element, "tree-view")}
       nodes={tree_nodes(@element, @event_target)}
       selection_mode={string_value(get_in(@element.attributes, [:tree, :selection_mode]), "single")}
@@ -654,7 +654,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Status.render
+    <LiveUi.Widgets.Status.component
       id={element_id(@element, "status")}
       text={string_value(get_in(@element.attributes, [:feedback, :text]), "")}
       severity={string_value(get_in(@element.attributes, [:feedback, :severity]), "info")}
@@ -670,7 +670,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :progress}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Progress.render
+    <LiveUi.Widgets.Progress.component
       id={element_id(@element, "progress")}
       current={integer_value(get_in(@element.attributes, [:progress, :current]), 0)}
       total={integer_value(get_in(@element.attributes, [:progress, :total]), 100)}
@@ -686,7 +686,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :gauge}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Gauge.render
+    <LiveUi.Widgets.Gauge.component
       id={element_id(@element, "gauge")}
       value={integer_value(get_in(@element.attributes, [:gauge, :value]), 0)}
       min={integer_value(get_in(@element.attributes, [:gauge, :min]), 0)}
@@ -704,7 +704,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.InlineFeedback.render
+    <LiveUi.Widgets.InlineFeedback.component
       id={element_id(@element, "inline-feedback")}
       message={string_value(get_in(@element.attributes, [:feedback, :message]), "")}
       title={string_optional(get_in(@element.attributes, [:feedback, :title]))}
@@ -722,7 +722,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.MarkdownViewer.render
+    <LiveUi.Widgets.MarkdownViewer.component
       id={element_id(@element, "markdown-viewer")}
       source={string_value(get_in(@element.attributes, [:document, :source]), "")}
       mode={string_value(get_in(@element.attributes, [:document, :mode]), "rendered")}
@@ -737,7 +737,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :log_viewer}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.LogViewer.render
+    <LiveUi.Widgets.LogViewer.component
       id={element_id(@element, "log-viewer")}
       entries={get_in(@element.attributes, [:logs, :entries]) || []}
       wrap={boolean_default(get_in(@element.attributes, [:logs, :wrap?]), true)}
@@ -754,7 +754,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.StreamWidget.render
+    <LiveUi.Widgets.StreamWidget.component
       id={element_id(@element, "stream-widget")}
       entries={get_in(@element.attributes, [:stream, :entries]) || []}
       ordering={string_value(get_in(@element.attributes, [:stream, :ordering]), "append_only")}
@@ -769,7 +769,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :process_monitor}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.ProcessMonitor.render
+    <LiveUi.Widgets.ProcessMonitor.component
       id={element_id(@element, "process-monitor")}
       processes={get_in(@element.attributes, [:monitor, :processes]) || []}
       tone={style_tone(@element)}
@@ -784,7 +784,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.ClusterDashboard.render
+    <LiveUi.Widgets.ClusterDashboard.component
       id={element_id(@element, "cluster-dashboard")}
       nodes={get_in(@element.attributes, [:cluster, :nodes]) || []}
       summary={get_in(@element.attributes, [:cluster, :summary]) || %{}}
@@ -799,7 +799,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :supervision_tree_viewer}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.SupervisionTreeViewer.render
+    <LiveUi.Widgets.SupervisionTreeViewer.component
       id={element_id(@element, "supervision-tree-viewer")}
       nodes={get_in(@element.attributes, [:inspection, :nodes]) || []}
       expanded={boolean_default(get_in(@element.attributes, [:inspection, :expanded?]), true)}
@@ -813,7 +813,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :sparkline}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.Sparkline.render
+    <LiveUi.Widgets.Sparkline.component
       id={element_id(@element, "sparkline")}
       series={chart_values(@element)}
       tone={style_tone(@element)}
@@ -828,7 +828,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.BarChart.render
+    <LiveUi.Widgets.BarChart.component
       id={element_id(@element, "bar-chart")}
       series={get_in(@element.attributes, [:chart, :series]) || []}
       tone={style_tone(@element)}
@@ -844,7 +844,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.LineChart.render
+    <LiveUi.Widgets.LineChart.component
       id={element_id(@element, "line-chart")}
       series={get_in(@element.attributes, [:chart, :series]) || []}
       tone={style_tone(@element)}
@@ -860,7 +860,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Dialog.render
+    <LiveUi.Widgets.Dialog.component
       id={element_id(@element, "dialog")}
       title={string_optional(get_in(@element.attributes, [:dialog, :title]))}
       modal={boolean_default(get_in(@element.attributes, [:dialog, :modal?]), true)}
@@ -876,7 +876,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Widgets.Dialog.render>
+    </LiveUi.Widgets.Dialog.component>
     """
   end
 
@@ -884,7 +884,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.AlertDialog.render
+    <LiveUi.Widgets.AlertDialog.component
       id={element_id(@element, "alert-dialog")}
       title={string_optional(get_in(@element.attributes, [:alert_dialog, :title]))}
       severity={string_value(get_in(@element.attributes, [:alert_dialog, :severity]), "warning")}
@@ -899,7 +899,7 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Widgets.AlertDialog.render>
+    </LiveUi.Widgets.AlertDialog.component>
     """
   end
 
@@ -907,7 +907,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Toast.render
+    <LiveUi.Widgets.Toast.component
       id={element_id(@element, "toast")}
       placement={placement_value(get_in(@element.attributes, [:toast, :placement]), "top-end")}
       duration_ms={integer_value(get_in(@element.attributes, [:toast, :duration_ms]), 5000)}
@@ -922,13 +922,13 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Widgets.Toast.render>
+    </LiveUi.Widgets.Toast.component>
     """
   end
 
   def render(%{element: %Element{kind: :context_menu}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.ContextMenu.render
+    <LiveUi.Widgets.ContextMenu.component
       id={element_id(@element, "context-menu")}
       items={context_menu_items(@element, @event_target)}
       placement={placement_value(get_in(@element.attributes, [:context_menu, :placement]), "bottom-start")}
@@ -946,7 +946,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.OverlaySurface.render
+    <LiveUi.Widgets.OverlaySurface.component
       id={element_id(@element, "overlay-surface")}
       mode={string_value(get_in(@element.attributes, [:overlay, :mode]), "stacked")}
       background_fill={string_value(get_in(@element.attributes, [:overlay, :background_fill]), "transparent")}
@@ -964,7 +964,7 @@ defmodule LiveUi.Renderer do
       <:overlay :for={child <- overlay_children(@element)}>
         <.render element={child} event_target={@event_target} />
       </:overlay>
-    </LiveUi.Widgets.OverlaySurface.render>
+    </LiveUi.Widgets.OverlaySurface.component>
     """
   end
 
@@ -972,7 +972,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Viewport.render
+    <LiveUi.Widgets.Viewport.component
       id={element_id(@element, "viewport")}
       axis={string_value(get_in(@element.attributes, [:viewport, :axis]), "vertical")}
       offset_x={integer_value(get_in(@element.attributes, [:viewport, :offset, :x]), 0)}
@@ -992,13 +992,13 @@ defmodule LiveUi.Renderer do
       <%= for child <- child_elements(@element, :content) do %>
         <.render element={child} event_target={@event_target} />
       <% end %>
-    </LiveUi.Widgets.Viewport.render>
+    </LiveUi.Widgets.Viewport.component>
     """
   end
 
   def render(%{element: %Element{kind: :scroll_bar}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.ScrollBar.render
+    <LiveUi.Widgets.ScrollBar.component
       id={element_id(@element, "scroll-bar")}
       orientation={string_value(get_in(@element.attributes, [:scroll_bar, :orientation]), "vertical")}
       position_start={float_value(get_in(@element.attributes, [:scroll_bar, :position, :start]), 0.0)}
@@ -1017,7 +1017,7 @@ defmodule LiveUi.Renderer do
 
   def render(%{element: %Element{kind: :split_pane}} = assigns) do
     ~H"""
-    <LiveUi.Widgets.SplitPane.render
+    <LiveUi.Widgets.SplitPane.component
       id={element_id(@element, "split-pane")}
       direction={string_value(get_in(@element.attributes, [:split, :direction]), "horizontal")}
       ratio={float_value(get_in(@element.attributes, [:split, :ratio]), 0.5)}
@@ -1037,7 +1037,7 @@ defmodule LiveUi.Renderer do
       <:secondary :for={child <- child_elements(@element, :secondary)}>
         <.render element={child} event_target={@event_target} />
       </:secondary>
-    </LiveUi.Widgets.SplitPane.render>
+    </LiveUi.Widgets.SplitPane.component>
     """
   end
 
@@ -1045,7 +1045,7 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Widgets.Canvas.render
+    <LiveUi.Widgets.Canvas.component
       id={element_id(@element, "canvas")}
       operations={get_in(@element.attributes, [:canvas, :operations]) || []}
       width={integer_optional(get_in(@element.attributes, [:canvas, :width]))}
