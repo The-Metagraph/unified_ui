@@ -129,8 +129,7 @@ defmodule LiveUi.Component do
       )
 
     component_module = component_module(module)
-    # TODO: Add widget-local state when Runtime.State.widget_local_state/2 is implemented
-    widget_local_state = nil
+    widget_local_state = fetch_widget_local_state(runtime_state, widget_identity)
 
     ~H"""
     <.live_component
@@ -145,6 +144,12 @@ defmodule LiveUi.Component do
     />
     """
   end
+
+  defp fetch_widget_local_state(%RuntimeState{} = runtime_state, widget_identity) do
+    RuntimeState.widget_local_state(runtime_state, widget_identity)
+  end
+
+  defp fetch_widget_local_state(_other, _widget_identity), do: %{}
 
   defp runtime_mode(%RuntimeState{mode: mode}), do: mode
   defp runtime_mode(_other), do: :native

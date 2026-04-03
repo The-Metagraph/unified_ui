@@ -47,4 +47,22 @@ defmodule LiveUi.Runtime.Error do
       details: %{screen: inspect(screen), route: route, result: inspect(result)}
     }
   end
+
+  @spec widget_event_failed(term()) :: t()
+  def widget_event_failed(reason) do
+    %__MODULE__{
+      reason: :widget_event_failed,
+      message: "widget event handler failed",
+      details: %{reason: inspect(reason)}
+    }
+  end
+
+  @spec invalid_widget_event_payload() :: t()
+  def invalid_widget_event_payload do
+    %__MODULE__{
+      reason: :invalid_widget_event_payload,
+      message: "widget event payload must contain widget_component, widget_key, and widget_event",
+      details: nil
+    }
+  end
 end

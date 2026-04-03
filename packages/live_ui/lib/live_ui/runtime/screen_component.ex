@@ -101,6 +101,29 @@ defmodule LiveUi.Runtime.ScreenComponent do
 
   @impl true
   def handle_event(event, params, socket) when is_binary(event) and is_map(params) do
+    case event do
+      "widget_component_event" ->
+        handle_widget_component_event(params, socket)
+
+      _other ->
+        handle_screen_event(event, params, socket)
+    end
+  end
+
+  defp handle_widget_component_event(params, socket) do
+    case State.handle_widget_event(socket.assigns.runtime_state, params) do
+      {:ok, updated_runtime_state} ->
+        {:noreply,
+         socket
+         |> assign(:runtime_state, updated_runtime_state)
+         |> assign(:runtime_event_error, nil)}
+
+      {:error, reason} ->
+        {:noreply, assign(socket, :runtime_event_error, reason)}
+    end
+  end
+
+  defp handle_screen_event(event, params, socket) do
     case State.handle_event(socket.assigns.runtime_state, event, params) do
       {:ok, updated_runtime_state} ->
         {:noreply,
