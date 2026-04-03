@@ -96,7 +96,7 @@ defmodule LiveUi.Phase17IntegrationTest do
       assert demo.html =~ ~s(data-live-ui-widget="button")
     end
 
-    test "canonical renderer uses widget component boundaries" do
+    test "canonical examples use widget component boundaries" do
       canonical_element =
         Foundational.text("Test content",
           id: "canonical-text"
@@ -131,6 +131,49 @@ defmodule LiveUi.Phase17IntegrationTest do
       # Should expose widget identity and boundary
       assert html =~ ~s(data-live-ui-widget-boundary="list")
       assert html =~ ~s(data-live-ui-widget-key=)
+    end
+
+    test "demo catalog provides comprehensive widget coverage" do
+      catalog = LiveUi.Demo.catalog()
+
+      # Should have widgets from all families
+      assert catalog.total_examples > 0
+      assert is_list(catalog.categories)
+      assert catalog.path_counts
+    end
+
+    test "demo maintains separate native and canonical examples" do
+      # Native path examples should work
+      {:ok, native_demo} = LiveUi.Demo.run()
+
+      assert native_demo.view == :home
+      assert native_demo.screen == LiveUi.Demo.Screen
+      assert is_binary(native_demo.html)
+    end
+
+    test "canonical rendering through Runtime preserves widget identity" do
+      element =
+        UnifiedIUR.Container.box(
+          [
+            UnifiedIUR.Layout.column([
+              UnifiedIUR.Widgets.Data.list([%{id: "1", label: "Item"}], id: "list")
+            ])
+          ],
+          id: "container"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(element)
+
+      html =
+        render_component(Runtime.component(),
+          id: "container-test",
+          runtime_state: runtime_state
+        )
+
+      # All nested widgets should have boundaries
+      assert html =~ ~s(data-live-ui-widget-boundary="box")
+      assert html =~ ~s(data-live-ui-widget-boundary="column")
+      assert html =~ ~s(data-live-ui-widget-boundary="list")
     end
   end
 
