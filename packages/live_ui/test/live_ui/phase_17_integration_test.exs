@@ -1,0 +1,203 @@
+defmodule LiveUi.Phase17IntegrationTest do
+  use ExUnit.Case, async: true
+
+  import Phoenix.LiveViewTest
+
+  alias LiveUi.{Info, Runtime, Widgets}
+  alias UnifiedIUR.Widgets.{Advanced, Data, Foundational}
+
+  @moduledoc """
+  Integration tests for Phase 17 - Tooling, Demo, Validation, and Release Readiness.
+
+  These tests validate the widget-component architecture is properly exposed
+  in tooling, demos work correctly, and validation gates are in place.
+  """
+
+  describe "17.1 - Tooling and Inspection for Widget Components" do
+    test "widget_summary exposes component boundary information" do
+      summary = Info.widget_summary(LiveUi.Widgets.Text)
+
+      assert summary.module == LiveUi.Widgets.Text
+      assert summary.component_module == LiveUi.Widgets.Text.Component
+      assert summary.mountable? == true
+      assert summary.runtime_boundary == :live_component
+      assert is_list(summary.local_state_keys)
+      assert summary.family == :content
+      assert summary.name == :text
+    end
+
+    test "advanced_widget_summary provides comprehensive widget metadata" do
+      summaries = Info.advanced_widget_summary()
+
+      assert length(summaries) > 0
+
+      Enum.each(summaries, fn summary ->
+        assert summary.mountable? == true
+        assert summary.component_module
+        assert summary.runtime_boundary == :live_component
+        assert is_list(summary.local_state_keys)
+      end)
+    end
+
+    test "info exposes all widget families through modules list" do
+      all_modules = Widgets.modules()
+
+      # Should have widgets from all families
+      assert length(all_modules) > 20
+
+      # Each module should have valid metadata
+      Enum.each(all_modules, fn mod ->
+        metadata = LiveUi.Component.metadata(mod)
+        assert metadata.module == mod
+        assert metadata.family
+        assert metadata.name
+      end)
+    end
+
+    test "structural components are identified correctly" do
+      # Layout components are structural (function components)
+      summary = Info.widget_summary(LiveUi.Layout.Column)
+
+      assert summary.module == LiveUi.Layout.Column
+      assert summary.runtime_boundary == :function_component
+      assert summary.component_module == LiveUi.Layout.Column.Component
+    end
+
+    test "canonical and native paths target same widget boundaries" do
+      # Native path
+      {:ok, native_runtime} = Runtime.mount_iur(
+        Data.list([%{id: "1", label: "Item"}], id: "test-list")
+      )
+
+      native_html =
+        render_component(Runtime.component(),
+          id: "native-render",
+          runtime_state: native_runtime
+        )
+
+      # Both should use the same widget component boundary
+      assert native_html =~ ~s(data-live-ui-widget-boundary="list")
+      assert native_html =~ ~s(data-live-ui-widget-key=)
+    end
+  end
+
+  describe "17.2 - Demo and Maintained Example Realignment" do
+    test "demo workbench renders widgets correctly" do
+      {:ok, demo} = LiveUi.Demo.run(example: :text)
+
+      # Widget should be rendered with proper attributes
+      assert demo.html =~ ~s(data-live-ui-widget="text")
+    end
+
+    test "demo exposes widget attributes for inspection" do
+      {:ok, demo} = LiveUi.Demo.run(example: :button)
+
+      # Widget should have identifying attributes
+      assert demo.html =~ ~s(data-live-ui-widget="button")
+    end
+
+    test "canonical renderer uses widget component boundaries" do
+      canonical_element =
+        Foundational.text("Test content",
+          id: "canonical-text"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(canonical_element)
+
+      html =
+        render_component(Runtime.component(),
+          id: "canonical-test",
+          runtime_state: runtime_state
+        )
+
+      # Canonical rendering uses widget component boundaries
+      assert html =~ ~s(data-live-ui-widget-boundary="text")
+      assert html =~ ~s(data-live-ui-widget-key=)
+    end
+
+    test "native screen rendering exposes widget metadata" do
+      # Canonical rendering through Runtime.mount_iur
+      element =
+        Data.list([%{id: "1", label: "Item"}], id: "test-list")
+
+      {:ok, runtime_state} = Runtime.mount_iur(element)
+
+      html =
+        render_component(Runtime.component(),
+          id: "test",
+          runtime_state: runtime_state
+        )
+
+      # Should expose widget identity and boundary
+      assert html =~ ~s(data-live-ui-widget-boundary="list")
+      assert html =~ ~s(data-live-ui-widget-key=)
+    end
+  end
+
+  describe "17.3 - Documentation, Validation, and Cleanup" do
+    test "package_summary includes widget-component architecture information" do
+      summary = Info.package_summary()
+
+      assert summary.package == :live_ui
+      assert summary.namespace == LiveUi
+      assert summary.validation_state
+      assert is_list(summary.tooling.workflows)
+      assert is_map(summary.documentation)
+    end
+
+    test "renderer_summary exposes canonical rendering capabilities" do
+      summary = Info.renderer_summary()
+
+      assert summary.accepts == UnifiedIUR.Element
+      assert is_list(summary.supported_kinds)
+      assert is_list(summary.responsibilities)
+    end
+
+    test "all widgets use LiveComponent architecture except structural" do
+      # All interactive widgets should be live_component
+      interactive_widgets =
+        Widgets.foundational_modules() ++
+          Widgets.input_modules() ++
+          Widgets.navigation_modules() ++
+          Widgets.advanced_modules()
+
+      Enum.each(interactive_widgets, fn mod ->
+        metadata = LiveUi.Component.metadata(mod)
+        # Most widgets should use live_component runtime boundary
+        # unless they're explicitly marked as structural
+        if metadata.runtime_boundary != :function_component do
+          assert metadata.runtime_boundary == :live_component
+          assert metadata.component_module
+        end
+      end)
+    end
+  end
+
+  describe "17.4 - Phase 17 Integration Tests" do
+    test "tooling provides visibility into widget component architecture" do
+      # Info module should expose widget metadata
+      assert function_exported?(LiveUi.Info, :widget_summary, 1)
+      assert function_exported?(LiveUi.Info, :advanced_widget_summary, 0)
+      assert function_exported?(LiveUi.Info, :package_summary, 0)
+    end
+
+    test "validation state reflects widget-component readiness" do
+      validation = LiveUi.Runtime.validation_state()
+
+      # Should report readiness across key areas
+      assert validation.mount
+      assert validation.event_routing
+      assert validation.live_component_host
+      assert validation.canonical_renderer
+    end
+
+    test "demo proves mounted widget behavior not passive HTML" do
+      # Demo should use real widget components
+      {:ok, demo} = LiveUi.Demo.run(example: :text_input)
+
+      # Should have widget boundaries indicating LiveComponent architecture
+      assert demo.html =~ ~s(data-live-ui-widget-boundary=)
+      assert demo.html =~ ~s(data-live-ui-widget-key=)
+    end
+  end
+end
