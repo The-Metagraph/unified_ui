@@ -229,4 +229,151 @@ defmodule LiveUi.Phase16IntegrationTest do
       assert html =~ ~s(data-live-ui-widget="cluster-dashboard")
     end
   end
+
+  describe "16.2 - Cross-Family Widget Composition Scenarios" do
+    test "multi-family screen with foundational, data, and feedback widgets" do
+      # Complex screen combining widgets from multiple families
+      complex_screen =
+        Container.box(
+          [
+            Layout.column([
+              Data.list(
+                [
+                  %{id: "item-1", label: "Overview", selected?: true},
+                  %{id: "item-2", label: "Activity"}
+                ],
+                id: "nav-list"
+              ),
+              Feedback.status("System healthy",
+                id: "status-indicator",
+                severity: "success"
+              )
+            ])
+          ],
+          id: "dashboard-panel"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(complex_screen)
+
+      html =
+        render_component(Runtime.component(),
+          id: "complex-screen-test",
+          runtime_state: runtime_state
+        )
+
+      # Verify multiple widget boundaries are present
+      assert html =~ ~s(data-live-ui-widget-boundary="box")
+      assert html =~ ~s(data-live-ui-widget-boundary="column")
+      assert html =~ ~s(data-live-ui-widget-boundary="list")
+      assert html =~ ~s(data-live-ui-widget-boundary="status")
+    end
+
+    test "screen with input, navigation, and data widgets composes correctly" do
+      # Screen combining inputs, navigation, and data display
+      composite_screen =
+        Container.box(
+          [
+            Layout.column([
+              Data.table(
+                [
+                  %{id: "name", label: "Name"},
+                  %{id: "role", label: "Role"}
+                ],
+                [
+                  %{id: "user-1", cells: ["Alice", "Admin"]},
+                  %{id: "user-2", cells: ["Bob", "User"]}
+                ],
+                id: "users-table"
+              )
+            ])
+          ],
+          id: "users-panel"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(composite_screen)
+
+      html =
+        render_component(Runtime.component(),
+          id: "composite-screen-test",
+          runtime_state: runtime_state
+        )
+
+      # Verify all widget component boundaries render
+      assert html =~ ~s(data-live-ui-widget-boundary="box")
+      assert html =~ ~s(data-live-ui-widget-boundary="column")
+      assert html =~ ~s(data-live-ui-widget-boundary="table")
+    end
+
+    test "operational dashboard with advanced, feedback, and layout widgets" do
+      # Operational dashboard combining multiple widget families
+      dashboard_screen =
+        Container.box(
+          [
+            Layout.column([
+              Advanced.cluster_dashboard(
+                [
+                  %{id: "node-1", status: :healthy}
+                ],
+                id: "cluster-status",
+                summary: %{healthy: 1}
+              ),
+              Advanced.stream_widget(
+                [
+                  %{id: "evt-1", severity: "info", message: "Monitoring started"}
+                ],
+                id: "event-stream"
+              ),
+              Feedback.gauge(id: "cpu-gauge", value: 45, label: "CPU")
+            ])
+          ],
+          id: "ops-dashboard"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(dashboard_screen)
+
+      html =
+        render_component(Runtime.component(),
+          id: "ops-dashboard-test",
+          runtime_state: runtime_state
+        )
+
+      # Verify all widget families render correctly
+      assert html =~ ~s(data-live-ui-widget-boundary="cluster_dashboard")
+      assert html =~ ~s(data-live-ui-widget-boundary="stream_widget")
+      assert html =~ ~s(data-live-ui-widget-boundary="gauge")
+    end
+
+    test "complex nested layout preserves widget identity through all boundaries" do
+      # Deeply nested widget composition
+      nested_screen =
+        Container.box(
+          [
+            Layout.row([
+              Layout.column([
+                Data.list([%{id: "1", label: "Item"}], id: "col-1-list")
+              ], id: "col-left"),
+              Layout.column([
+                Feedback.status("Ready", id: "col-2-status")
+              ], id: "col-right")
+            ], id: "main-row")
+          ],
+          id: "nested-layout"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(nested_screen)
+
+      html =
+        render_component(Runtime.component(),
+          id: "nested-test",
+          runtime_state: runtime_state
+        )
+
+      # Verify all nested widget boundaries are present
+      assert html =~ ~s(data-live-ui-widget-boundary="box")
+      assert html =~ ~s(data-live-ui-widget-boundary="row")
+      assert html =~ ~s(data-live-ui-widget-boundary="column")
+      assert html =~ ~s(data-live-ui-widget-boundary="list")
+      assert html =~ ~s(data-live-ui-widget-boundary="status")
+    end
+  end
 end
