@@ -57,6 +57,7 @@ tasks because they govern other runtime packages:
 | `live_ui.package.iur_renderer_entrypoint` | `2.3.2` | `3.3.1`, `6.3.1`, `6.4.1` | Direct live_ui package obligation. |
 | `live_ui.package.not_dsl_or_iur_owner` | `1.1.2` | `6.4.2` | Direct live_ui boundary obligation. |
 | `live_ui.package.traceable_to_root_specs` | `6.4.1` | `6.4.2`, `6.3.2` | Direct live_ui documentation and governance obligation. |
+| `live_ui.package.widget_component_library_surface` | `11.1` | `11.1.1` | Phase 11: Native surface is a mountable LiveComponent-oriented widget library. |
 ### `structure.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -66,6 +67,9 @@ tasks because they govern other runtime packages:
 | `live_ui.structure.hooks_are_isolated` | `1.3.2` | `3.2.2`, `4.2.2`, `6.4.1` | Direct browser-bridge isolation obligation. |
 | `live_ui.structure.transport_translation_modules` | `1.1.2` | `4.1.1`, `4.2.1`, `4.3.1` | Direct live_ui transport-structure obligation. |
 | `live_ui.structure.no_dsl_or_iur_authorship` | `1.1.2` | `6.4.2` | Direct live_ui boundary obligation. |
+| `live_ui.structure.widget_livecomponent_modules` | `11.1` | `11.1.1` | Phase 11: Widget LiveComponent modules for native widget surface. |
+| `live_ui.structure.screen_and_renderer_target_widget_boundaries` | `11.2` | `11.2.1` | Phase 11: Screen and renderer compose widget component instances. |
+| `live_ui.structure.helper_wrappers_remain_thin` | `11.3` | `11.3.1` | Phase 11: Helper wrappers remain thin facades over widget components. |
 ### `native_widgets.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -74,6 +78,9 @@ tasks because they govern other runtime packages:
 | `live_ui.native_widgets.liveview_native_composition` | `1.2.2` | `2.2.1`, `2.3.2`, `5.3.2` | Direct LiveView-native composition obligation. |
 | `live_ui.native_widgets.theme_and_style_surface` | `5.1.1` | `5.1.2`, `5.2.1`, `5.2.1`, `5.5.1` | Direct styling and theming obligation. |
 | `live_ui.native_widgets.interaction_surface` | `2.2.1` | `2.2.2`, `3.2.1`, `4.1.1`, `4.2.1`, `4.4.1` | Direct native-interaction obligation. |
+| `live_ui.native_widgets.mountable_widget_components` | `11.1` | `11.1.1` | Phase 11: Each native widget has mountable LiveComponent boundary. |
+| `live_ui.native_widgets.helper_apis_delegate_to_components` | `11.3` | `11.3.1` | Phase 11: Helper APIs delegate to widget component boundary. |
+| `live_ui.native_widgets.bounded_widget_state` | `11.2` | `11.2.2` | Phase 11: Widget components may own bounded local UI state. |
 ### `runtime.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -82,6 +89,7 @@ tasks because they govern other runtime packages:
 | `live_ui.runtime.hooks_only_where_necessary` | `1.3.2` | `3.2.2`, `4.2.2`, `4.5.2` | Direct bounded-hook obligation. |
 | `live_ui.runtime.native_and_iur_entrypoints_share_runtime` | `1.3.1` | `2.3.2`, `3.3.1`, `4.5.2` | Direct runtime-convergence obligation. |
 | `live_ui.runtime.state_and_render_continuity` | `2.3.2` | `3.3.1`, `5.3.2`, `5.5.2` | Direct continuity obligation. |
+| `live_ui.runtime.widget_component_local_state` | `11.2` | `11.2.2` | Phase 11: Widget components may own bounded local UI lifecycle state. |
 ### `iur_renderer.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -90,6 +98,7 @@ tasks because they govern other runtime packages:
 | `live_ui.iur_renderer.deterministic_mapping` | `2.3.2` | `3.3.1`, `5.2.1`, `5.3.2`, `6.2.2` | Direct renderer determinism obligation. |
 | `live_ui.iur_renderer.meaning_preservation` | `2.3.2` | `3.3.1`, `4.5.1`, `5.3.2`, `5.5.2` | Direct canonical-meaning obligation. |
 | `live_ui.iur_renderer.native_widget_reuse` | `2.3.2` | `3.3.1`, `5.3.1`, `5.3.2` | Direct renderer-stack convergence obligation. |
+| `live_ui.iur_renderer.targets_widget_component_boundaries` | `11.2` | `11.2.1`, `11.4` | Phase 11: Canonical IUR maps to widget component boundaries via function components. |
 ### `transport.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

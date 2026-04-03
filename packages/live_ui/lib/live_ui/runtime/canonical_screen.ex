@@ -18,7 +18,7 @@ defmodule LiveUi.Runtime.CanonicalScreen do
   @impl true
   def render(assigns) do
     ~H"""
-    <LiveUi.Renderer.render element={@iur} event_target={@event_target} />
+    <LiveUi.Renderer.render element={@iur} runtime_state={@runtime_state} event_target={@event_target} />
     """
   end
 end

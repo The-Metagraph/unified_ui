@@ -43,6 +43,10 @@ defmodule LiveUi.Info do
 
     %{
       module: metadata.module,
+      component_module: metadata.component_module,
+      mountable?: metadata.mountable?,
+      runtime_boundary: metadata.runtime_boundary,
+      local_state_keys: metadata.local_state_keys,
       family: metadata.family,
       name: metadata.name,
       assigns: metadata.assigns,

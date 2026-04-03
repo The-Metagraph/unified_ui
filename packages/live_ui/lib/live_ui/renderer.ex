@@ -77,6 +77,7 @@ defmodule LiveUi.Renderer do
   end
 
   attr(:element, :any, required: true)
+  attr(:runtime_state, :any, default: nil)
   attr(:event_target, :any, default: nil)
 
   def render(%{element: %Element{kind: :text}} = assigns) do
