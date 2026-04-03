@@ -69,6 +69,37 @@ defmodule LiveUi.ComponentTest do
     refute LiveUi.Layout.structural?(LiveUi.Widgets.Button)
   end
 
+  test "component metadata identifies structural vs interactive components" do
+    row_metadata = LiveUi.Component.metadata(LiveUi.Layout.Row)
+    button_metadata = LiveUi.Component.metadata(LiveUi.Widgets.Button)
+
+    assert LiveUi.Component.Metadata.structural?(row_metadata)
+    refute LiveUi.Component.Metadata.structural?(button_metadata)
+
+    refute LiveUi.Component.Metadata.interactive?(row_metadata)
+    assert LiveUi.Component.Metadata.interactive?(button_metadata)
+  end
+
+  test "Component helper functions identify structural and interactive widgets" do
+    assert LiveUi.Component.structural?(LiveUi.Layout.Row)
+    assert LiveUi.Component.structural?(LiveUi.Layout.Column)
+    assert LiveUi.Component.structural?(LiveUi.Layout.Grid)
+    assert LiveUi.Component.structural?(LiveUi.Widgets.Separator)
+    assert LiveUi.Component.structural?(LiveUi.Widgets.Spacer)
+
+    refute LiveUi.Component.structural?(LiveUi.Widgets.Button)
+    refute LiveUi.Component.structural?(LiveUi.Widgets.TextInput)
+    refute LiveUi.Component.structural?(LiveUi.Widgets.Text)
+
+    refute LiveUi.Component.interactive?(LiveUi.Layout.Row)
+    refute LiveUi.Component.interactive?(LiveUi.Layout.Column)
+    refute LiveUi.Component.interactive?(LiveUi.Widgets.Separator)
+
+    assert LiveUi.Component.interactive?(LiveUi.Widgets.Button)
+    assert LiveUi.Component.interactive?(LiveUi.Widgets.TextInput)
+    assert LiveUi.Component.interactive?(LiveUi.Widgets.Text)
+  end
+
   test "foundational widgets render baseline visual and container surfaces" do
     html =
       render_component(&LiveUi.Widgets.Box.render/1, %{

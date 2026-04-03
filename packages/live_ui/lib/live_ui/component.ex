@@ -40,6 +40,28 @@ defmodule LiveUi.Component do
     |> Identity.new(assigns, opts)
   end
 
+  @doc """
+  Returns true if the given module is a structural component (layout or display family).
+
+  Structural components don't handle events and don't need LiveComponent boundaries.
+  """
+  @spec structural?(module()) :: boolean()
+  def structural?(module) when is_atom(module) do
+    module
+    |> metadata()
+    |> Metadata.structural?()
+  end
+
+  @doc """
+  Returns true if the given module is an interactive component that handles events.
+  """
+  @spec interactive?(module()) :: boolean()
+  def interactive?(module) when is_atom(module) do
+    module
+    |> metadata()
+    |> Metadata.interactive?()
+  end
+
   defmacro common_attrs do
     quote do
       attr(:id, :string, required: true)
@@ -60,13 +82,25 @@ defmodule LiveUi.Component do
     widget_events = Keyword.get(opts, :events, [])
     widget_local_state_keys = Keyword.get(opts, :local_state_keys, [])
 
+    # Pure layout primitives that don't need LiveComponent overhead
+    # These are the core structural helpers for composition
+    structural_primitives = [
+      {:layout, :row},
+      {:layout, :column},
+      {:layout, :grid},
+      {:layout, :separator},
+      {:layout, :spacer}
+    ]
+    structural = {family, name} in structural_primitives
+
     quote bind_quoted: [
             family: family,
             name: name,
             slots: slots,
             widget_assigns_contract: widget_assigns_contract,
             widget_events: widget_events,
-            widget_local_state_keys: widget_local_state_keys
+            widget_local_state_keys: widget_local_state_keys,
+            structural: structural
           ] do
       use Phoenix.Component
 
@@ -78,6 +112,7 @@ defmodule LiveUi.Component do
       @live_ui_component_assigns widget_assigns_contract
       @live_ui_component_events widget_events
       @live_ui_component_local_state_keys widget_local_state_keys
+      @live_ui_structural structural
 
       wrapper_module = __MODULE__
       @live_ui_component_module Module.concat(__MODULE__, Component)
@@ -95,7 +130,14 @@ defmodule LiveUi.Component do
 
       @impl true
       def metadata do
-        Metadata.new(__MODULE__,
+        component_class =
+          if @live_ui_structural do
+            :structural
+          else
+            nil
+          end
+
+        base_metadata = [
           family: @live_ui_component_family,
           name: @live_ui_component_name,
           assigns: LiveUi.Component.common_assigns() ++ @live_ui_component_assigns,
@@ -104,11 +146,25 @@ defmodule LiveUi.Component do
           events: @live_ui_component_events,
           component_module: @live_ui_component_module,
           wrapper_module: __MODULE__,
-          mountable?: true,
-          local_state_keys: @live_ui_component_local_state_keys,
-          identity_keys: [:id],
-          runtime_boundary: :live_component
-        )
+          component_class: component_class
+        ]
+
+        metadata =
+          if @live_ui_structural do
+            # Pure layout primitives don't need LiveComponent overhead
+            Keyword.put(base_metadata, :runtime_boundary, :function_component)
+          else
+            # All other components use LiveComponent for event handling and lifecycle
+            base_metadata ++
+              [
+                mountable?: true,
+                local_state_keys: @live_ui_component_local_state_keys,
+                identity_keys: [:id],
+                runtime_boundary: :live_component
+              ]
+          end
+
+        Metadata.new(__MODULE__, metadata)
       end
 
       def component(var!(assigns)) when is_map(var!(assigns)) do
