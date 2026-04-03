@@ -3,7 +3,10 @@ defmodule LiveUi.Component do
   Shared contract for native `live_ui` widgets.
   """
 
+  use Phoenix.Component
+
   alias LiveUi.Component.Metadata
+  alias LiveUi.Runtime.State, as: RuntimeState
   alias LiveUi.Widget.Identity
 
   @type assigns_contract :: [atom()]
@@ -41,7 +44,7 @@ defmodule LiveUi.Component do
   end
 
   @doc """
-  Returns true if the given module is a structural component (layout or display family).
+  Returns true if the given module is a structural component (pure layout primitives).
 
   Structural components don't handle events and don't need LiveComponent boundaries.
   """
@@ -61,6 +64,62 @@ defmodule LiveUi.Component do
     |> metadata()
     |> Metadata.interactive?()
   end
+
+  @doc """
+  Mounts a widget component with runtime state integration.
+
+  This function handles the connection between the shared runtime state
+  and individual widget components, providing:
+  - Widget identity for addressing and event routing
+  - Widget local state scoped to the component boundary
+  - Event target for routing widget events back to the runtime
+  - Mode tracking (native vs canonical rendering)
+
+  ## Expected Assigns
+
+  * `:module` - The widget module to mount
+  * `:assigns` - The assigns to pass to the widget
+  * `:runtime_state` - Optional runtime state for local state integration
+  * `:event_target` - Optional event target for widget events
+  * `:path` - Optional path for nested widget addressing
+  """
+  @spec mount(keyword() | map()) :: Phoenix.LiveView.Rendered.t()
+  def mount(assigns) when is_list(assigns), do: mount(Map.new(assigns))
+
+  def mount(assigns) do
+    module = Map.fetch!(assigns, :module)
+    widget_assigns = Map.fetch!(assigns, :assigns)
+    runtime_state = Map.get(assigns, :runtime_state)
+    event_target = Map.get(assigns, :event_target)
+    path = Map.get(assigns, :path, [])
+
+    widget_mode = runtime_mode(runtime_state)
+    widget_identity =
+      widget_identity(module, widget_assigns,
+        mode: widget_mode,
+        path: path
+      )
+
+    component_module = component_module(module)
+    # TODO: Add widget-local state when Runtime.State.widget_local_state/2 is implemented
+    widget_local_state = nil
+
+    ~H"""
+    <.live_component
+      module={component_module}
+      id={widget_identity.id}
+      widget_assigns={widget_assigns}
+      widget_identity={widget_identity}
+      widget_local_state={widget_local_state}
+      event_target={event_target}
+      path={path}
+      mode={widget_mode}
+    />
+    """
+  end
+
+  defp runtime_mode(%RuntimeState{mode: mode}), do: mode
+  defp runtime_mode(_other), do: :native
 
   defmacro common_attrs do
     quote do
