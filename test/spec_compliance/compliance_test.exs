@@ -182,8 +182,8 @@ defmodule Unified.SpecCompliance.ComplianceTest do
 
     assert plan_report.status == :pass
     assert compliance_report.status == :pass
-    assert compliance_report.summary.applicable_requirements == 83
-    assert compliance_report.summary.status_counts.verified == 83
+    assert compliance_report.summary.applicable_requirements == 92
+    assert compliance_report.summary.status_counts.verified == 92
     assert compliance_report.summary.aliases == 48
   end
 
