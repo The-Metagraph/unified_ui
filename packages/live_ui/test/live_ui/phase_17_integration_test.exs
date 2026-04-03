@@ -194,6 +194,11 @@ defmodule LiveUi.Phase17IntegrationTest do
       assert summary.accepts == UnifiedIUR.Element
       assert is_list(summary.supported_kinds)
       assert is_list(summary.responsibilities)
+
+      # Should support advanced widget kinds
+      assert :markdown_viewer in summary.supported_kinds
+      assert :stream_widget in summary.supported_kinds
+      assert :cluster_dashboard in summary.supported_kinds
     end
 
     test "all widgets use LiveComponent architecture except structural" do
@@ -213,6 +218,51 @@ defmodule LiveUi.Phase17IntegrationTest do
           assert metadata.component_module
         end
       end)
+    end
+
+    test "structural components are clearly distinguished from LiveComponents" do
+      # Layout components are structural (function components, not LiveComponents)
+      structural_modules = LiveUi.Layout.modules()
+
+      Enum.each(structural_modules, fn mod ->
+        metadata = LiveUi.Component.metadata(mod)
+
+        # Structural components use function_component runtime boundary
+        assert metadata.runtime_boundary == :function_component
+
+        # They still have a Component module for compatibility
+        assert metadata.component_module
+      end)
+    end
+
+    test "validation state confirms widget-component architecture is ready" do
+      validation = LiveUi.Runtime.validation_state()
+
+      # Should report ready state across key areas
+      assert validation.mount == :ready
+      assert validation.event_routing == :ready
+      assert validation.live_component_host == :ready
+      assert validation.canonical_renderer == :advanced_ready
+    end
+
+    test "style_summary exposes theme component information" do
+      summary = Info.style_summary()
+
+      assert summary.theme_id
+      assert is_list(summary.native_components)
+      assert summary.token_count > 0
+    end
+
+    test "widget_summary exposes local_state_keys for bounded state" do
+      # Widgets with local state should have local_state_keys defined
+      widget_with_state = LiveUi.Widgets.TextInput
+
+      summary = Info.widget_summary(widget_with_state)
+
+      assert summary.local_state_keys
+      assert is_list(summary.local_state_keys)
+      assert summary.mountable? == true
+      assert summary.runtime_boundary == :live_component
     end
   end
 
