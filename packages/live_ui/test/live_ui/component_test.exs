@@ -100,6 +100,22 @@ defmodule LiveUi.ComponentTest do
     assert LiveUi.Component.interactive?(LiveUi.Widgets.Text)
   end
 
+  test "Component can distinguish widget component modules from function components" do
+    # Interactive widgets have widget component architecture
+    assert LiveUi.Component.widget_component?(LiveUi.Widgets.Button)
+    assert LiveUi.Component.widget_component?(LiveUi.Widgets.TextInput)
+    assert LiveUi.Component.widget_component?(LiveUi.Widgets.Text)
+
+    # Structural components don't use widget component architecture
+    refute LiveUi.Component.widget_component?(LiveUi.Layout.Row)
+    refute LiveUi.Component.widget_component?(LiveUi.Layout.Column)
+    refute LiveUi.Component.widget_component?(LiveUi.Layout.Grid)
+
+    # All widget components have compatibility wrappers
+    assert LiveUi.Component.has_compatibility_wrapper?(LiveUi.Widgets.Button)
+    assert LiveUi.Component.has_compatibility_wrapper?(LiveUi.Widgets.Text)
+  end
+
   test "foundational widgets render baseline visual and container surfaces" do
     html =
       render_component(&LiveUi.Widgets.Box.render/1, %{

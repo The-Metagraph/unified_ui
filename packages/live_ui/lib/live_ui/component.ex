@@ -66,6 +66,34 @@ defmodule LiveUi.Component do
   end
 
   @doc """
+  Returns true if the given module uses the full widget LiveComponent architecture.
+
+  Widget components have:
+  - A Component submodule using LiveUi.Widget
+  - A component/1 function for compatibility
+  - mount_defaults, event_routes, local_state_keys, and handle_widget_event callbacks
+
+  Non-component widgets are pure function components without LiveComponent overhead.
+  """
+  @spec widget_component?(module()) :: boolean()
+  def widget_component?(module) when is_atom(module) do
+    module
+    |> metadata()
+    |> Metadata.requires_live_component?()
+  end
+
+  @doc """
+  Returns true if the module has a compatibility wrapper for transitional use.
+
+  Modules with widget LiveComponent architecture also provide a component/1 function
+  that wraps the LiveComponent in a function component interface for backward compatibility.
+  """
+  @spec has_compatibility_wrapper?(module()) :: boolean()
+  def has_compatibility_wrapper?(module) when is_atom(module) do
+    widget_component?(module)
+  end
+
+  @doc """
   Mounts a widget component with runtime state integration.
 
   This function handles the connection between the shared runtime state
