@@ -364,6 +364,18 @@
       "ownership_note": "Direct live_ui documentation and governance obligation."
     },
     {
+      "requirement_id": "live_ui.package.widget_component_library_surface",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/package.spec.md",
+      "primary_plan_refs": [
+        "11.1"
+      ],
+      "supporting_plan_refs": [
+        "11.1.1"
+      ],
+      "ownership_note": "Phase 11: Native surface is a mountable LiveComponent-oriented widget library."
+    },
+    {
       "requirement_id": "live_ui.structure.mix_library_layout",
       "scope": "direct",
       "source_file": ".spec/specs/live_ui/structure.spec.md",
@@ -443,6 +455,42 @@
         "6.4.2"
       ],
       "ownership_note": "Direct live_ui boundary obligation."
+    },
+    {
+      "requirement_id": "live_ui.structure.widget_livecomponent_modules",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/structure.spec.md",
+      "primary_plan_refs": [
+        "11.1"
+      ],
+      "supporting_plan_refs": [
+        "11.1.1"
+      ],
+      "ownership_note": "Phase 11: Widget LiveComponent modules for native widget surface."
+    },
+    {
+      "requirement_id": "live_ui.structure.screen_and_renderer_target_widget_boundaries",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/structure.spec.md",
+      "primary_plan_refs": [
+        "11.2"
+      ],
+      "supporting_plan_refs": [
+        "11.2.1"
+      ],
+      "ownership_note": "Phase 11: Screen and renderer compose widget component instances."
+    },
+    {
+      "requirement_id": "live_ui.structure.helper_wrappers_remain_thin",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/structure.spec.md",
+      "primary_plan_refs": [
+        "11.3"
+      ],
+      "supporting_plan_refs": [
+        "11.3.1"
+      ],
+      "ownership_note": "Phase 11: Helper wrappers remain thin facades over widget components."
     },
     {
       "requirement_id": "live_ui.native_widgets.direct_native_surface",
@@ -527,6 +575,42 @@
       "ownership_note": "Direct native-interaction obligation."
     },
     {
+      "requirement_id": "live_ui.native_widgets.mountable_widget_components",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/native_widgets.spec.md",
+      "primary_plan_refs": [
+        "11.1"
+      ],
+      "supporting_plan_refs": [
+        "11.1.1"
+      ],
+      "ownership_note": "Phase 11: Each native widget has mountable LiveComponent boundary."
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.helper_apis_delegate_to_components",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/native_widgets.spec.md",
+      "primary_plan_refs": [
+        "11.3"
+      ],
+      "supporting_plan_refs": [
+        "11.3.1"
+      ],
+      "ownership_note": "Phase 11: Helper APIs delegate to widget component boundary."
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.bounded_widget_state",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/native_widgets.spec.md",
+      "primary_plan_refs": [
+        "11.2"
+      ],
+      "supporting_plan_refs": [
+        "11.2.2"
+      ],
+      "ownership_note": "Phase 11: Widget components may own bounded local UI state."
+    },
+    {
       "requirement_id": "live_ui.runtime.server_authoritative_model",
       "scope": "direct",
       "source_file": ".spec/specs/live_ui/runtime.spec.md",
@@ -595,6 +679,18 @@
         "5.5.2"
       ],
       "ownership_note": "Direct continuity obligation."
+    },
+    {
+      "requirement_id": "live_ui.runtime.widget_component_local_state",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "11.2"
+      ],
+      "supporting_plan_refs": [
+        "11.2.2"
+      ],
+      "ownership_note": "Phase 11: Widget components may own bounded local UI lifecycle state."
     },
     {
       "requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
@@ -667,6 +763,19 @@
         "5.3.2"
       ],
       "ownership_note": "Direct renderer-stack convergence obligation."
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.targets_widget_component_boundaries",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/iur_renderer.spec.md",
+      "primary_plan_refs": [
+        "11.2"
+      ],
+      "supporting_plan_refs": [
+        "11.2.1",
+        "11.4"
+      ],
+      "ownership_note": "Phase 11: Canonical IUR maps to widget component boundaries via function components."
     },
     {
       "requirement_id": "live_ui.transport.canonical_boundary_events",

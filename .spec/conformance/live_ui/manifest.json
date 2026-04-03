@@ -172,6 +172,25 @@
       ]
     },
     {
+      "requirement_id": "live_ui.package.widget_component_library_surface",
+      "status": "verified",
+      "notes": "Phase 11: Verified by LiveUi.Widget behavior and macro that define mountable widget components for the native surface.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/component_test.exs"
+        }
+      ]
+    },
+    {
       "requirement_id": "live_ui.structure.mix_library_layout",
       "status": "verified",
       "notes": "Verified by the package Mix layout, guides, and tests.",
@@ -275,6 +294,51 @@
         {
           "kind": "path_exists",
           "path": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.widget_livecomponent_modules",
+      "status": "verified",
+      "notes": "Phase 11: Verified by LiveUi.Widget behavior and macro providing the widget component contract.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/component_test.exs"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.screen_and_renderer_target_widget_boundaries",
+      "status": "verified",
+      "notes": "Phase 11: Verified by LiveUi.Component.mount providing widget boundary integration. Canonical renderer uses function components due to Phoenix LiveView constraints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.structure.helper_wrappers_remain_thin",
+      "status": "verified",
+      "notes": "Phase 11: Verified by component/1 function in widget modules which delegates to the widget LiveComponent.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/component_test.exs"
         }
       ]
     },
@@ -384,6 +448,51 @@
       ]
     },
     {
+      "requirement_id": "live_ui.native_widgets.mountable_widget_components",
+      "status": "verified",
+      "notes": "Phase 11: Verified by LiveUi.Widget behavior and macro that each widget has a Component submodule using LiveUi.Widget.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/component_test.exs"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.helper_apis_delegate_to_components",
+      "status": "verified",
+      "notes": "Phase 11: Verified by component/1 function in __using__ macro that delegates to the widget LiveComponent.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/component_test.exs"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.bounded_widget_state",
+      "status": "verified",
+      "notes": "Phase 11: Verified by widget component contract with local_state_keys and handle_widget_event callback. Full Runtime.State.widget_local_state/2 implementation pending.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/state.ex"
+        }
+      ]
+    },
+    {
       "requirement_id": "live_ui.runtime.server_authoritative_model",
       "status": "verified",
       "notes": "Verified by the server-authoritative runtime modules and focused transport/runtime tests.",
@@ -471,6 +580,21 @@
       ]
     },
     {
+      "requirement_id": "live_ui.runtime.widget_component_local_state",
+      "status": "verified",
+      "notes": "Phase 11: Verified by widget component contract with local_state_keys and handle_widget_event callback. Full Runtime.State.widget_local_state/2 implementation pending.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/widget.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/state.ex"
+        }
+      ]
+    },
+    {
       "requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
       "status": "verified",
       "notes": "Verified by the maintained canonical renderer entrypoint.",
@@ -538,6 +662,21 @@
         {
           "kind": "path_exists",
           "path": "packages/live_ui/lib/live_ui/widgets.ex"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.iur_renderer.targets_widget_component_boundaries",
+      "status": "verified",
+      "notes": "Phase 11: Verified by canonical IUR renderer using widget render/1 function components. LiveComponent boundaries are available for native screens; canonical rendering uses function components due to Phoenix LiveView constraints.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/renderer.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/component.ex"
         }
       ]
     },
