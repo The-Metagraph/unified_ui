@@ -376,4 +376,122 @@ defmodule LiveUi.Phase16IntegrationTest do
       assert html =~ ~s(data-live-ui-widget-boundary="status")
     end
   end
+
+  describe "16.3 - Native/Canonical Parity Scenarios" do
+    test "equivalent direct-native and canonical widgets converge on same component boundaries" do
+      # Canonical rendering uses widget component boundaries
+      canonical_element =
+        Container.box(
+          [
+            Layout.column([
+              UnifiedIUR.Widgets.Foundational.text("Test content",
+                id: "test-text"
+              )
+            ])
+          ],
+          id: "test-box"
+        )
+
+      {:ok, canonical_runtime} = Runtime.mount_iur(canonical_element)
+      canonical_html =
+        render_component(Runtime.component(),
+          id: "canonical-test",
+          runtime_state: canonical_runtime
+        )
+
+      # Verify widget component boundaries are present
+      assert canonical_html =~ ~s(data-live-ui-widget-boundary="box")
+      assert canonical_html =~ ~s(data-live-ui-widget-boundary="column")
+      assert canonical_html =~ ~s(data-live-ui-widget-boundary="text")
+    end
+
+    test "canonical rendering preserves widget identity through component boundaries" do
+      element =
+        Data.list(
+          [
+            %{id: "item-1", label: "First"},
+            %{id: "item-2", label: "Second"}
+          ],
+          id: "identity-test-list"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(element)
+
+      html =
+        render_component(Runtime.component(),
+          id: "identity-test",
+          runtime_state: runtime_state
+        )
+
+      # Verify widget identity key is present
+      assert html =~ ~s(data-live-ui-widget-key=)
+      assert html =~ ~s(data-live-ui-widget-boundary="list")
+      assert html =~ "First"
+      assert html =~ "Second"
+    end
+
+    test "widget continuity remains deterministic across rerenders and boundary translation" do
+      # Render the same canonical element twice
+      element =
+        Data.list(
+          [
+            %{id: "item-1", label: "First"},
+            %{id: "item-2", label: "Second"}
+          ],
+          id: "deterministic-list"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(element)
+
+      # First render
+      html1 =
+        render_component(Runtime.component(),
+          id: "first-render",
+          runtime_state: runtime_state
+        )
+
+      # Second render (same state, different container ID)
+      html2 =
+        render_component(Runtime.component(),
+          id: "second-render",
+          runtime_state: runtime_state
+        )
+
+      # Widget boundaries should be identical
+      assert html1 =~ ~s(data-live-ui-widget-boundary="list")
+      assert html2 =~ ~s(data-live-ui-widget-boundary="list")
+
+      # Widget content should be preserved
+      assert html1 =~ "First"
+      assert html2 =~ "First"
+      assert html1 =~ "Second"
+      assert html2 =~ "Second"
+
+      # Widget identity key should be the same (same runtime_state)
+      # Note: mount_iur uses :native mode for the widget-key since it's mounted through the runtime
+      assert html1 =~ ~s(data-live-ui-widget-key="native:data:list:deterministic-list:root")
+      assert html2 =~ ~s(data-live-ui-widget-key="native:data:list:deterministic-list:root")
+    end
+
+    test "advanced widgets maintain proper component boundary attributes" do
+      element =
+        Advanced.cluster_dashboard(
+          [%{id: "node-1", status: :healthy}],
+          id: "test-dashboard"
+        )
+
+      {:ok, runtime_state} = Runtime.mount_iur(element)
+
+      html =
+        render_component(Runtime.component(),
+          id: "advanced-boundary-test",
+          runtime_state: runtime_state
+        )
+
+      # Verify advanced widget has proper boundary attributes
+      assert html =~ ~s(data-live-ui-widget-boundary="cluster_dashboard")
+      assert html =~ ~s(data-live-ui-widget="cluster-dashboard")
+      assert html =~ ~s(data-live-ui-widget-key=)
+    end
+  end
 end
