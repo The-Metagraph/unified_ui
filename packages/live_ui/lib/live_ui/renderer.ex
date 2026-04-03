@@ -84,21 +84,14 @@ defmodule LiveUi.Renderer do
     assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
 
     ~H"""
-    <LiveUi.Component.mount
-      module={LiveUi.Widgets.Text}
-      assigns={
-        %{
-          id: element_id(@element, "text"),
-          content: content_text(@element),
-          tone: style_tone(@element),
-          variant: theme_variant(@element),
-          state: style_state(@element),
-          class: style_class(@element)
-        }
-        |> Map.merge(@style_attrs)
-      }
-      runtime_state={@runtime_state}
-      event_target={@event_target}
+    <LiveUi.Widgets.Text.render
+      id={element_id(@element, "text")}
+      content={content_text(@element)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
@@ -158,22 +151,15 @@ defmodule LiveUi.Renderer do
       )
 
     ~H"""
-    <LiveUi.Component.mount
-      module={LiveUi.Widgets.Button}
-      assigns={
-        %{
-          id: element_id(@element, "button"),
-          label: content_text(@element),
-          disabled: state_boolean(@element, :disabled?),
-          tone: style_tone(@element),
-          variant: theme_variant(@element),
-          state: style_state(@element),
-          class: style_class(@element)
-        }
-        |> Map.merge(@style_attrs)
-      }
-      runtime_state={@runtime_state}
-      event_target={@event_target}
+    <LiveUi.Widgets.Button.render
+      id={element_id(@element, "button")}
+      label={content_text(@element)}
+      disabled={state_boolean(@element, :disabled?)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
     />
     """
   end
