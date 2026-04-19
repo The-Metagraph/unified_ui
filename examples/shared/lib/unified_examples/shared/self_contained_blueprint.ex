@@ -10,6 +10,7 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
   @template_macro "UnifiedExamples.Shared.Template"
   @fixture_module "UnifiedExamples.Shared.Fixtures"
   @inventory_guide_path "guides/self_contained_inventory.md"
+  @blueprint_guide_path "guides/self_contained_blueprint.md"
 
   @browser_shell_classes [
     "example-app-shell",
@@ -81,10 +82,120 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
 
   @shared_helper_modules Enum.flat_map(@helper_surface_categories, fn {_category, modules} -> modules end)
 
-  @spec guide_paths() :: %{inventory: String.t()}
+  @required_local_runtime_modules [
+    %{
+      id: :application,
+      responsibility: "Own the Phoenix application startup tree for one example project."
+    },
+    %{
+      id: :endpoint,
+      responsibility: "Own the Phoenix endpoint and browser runtime configuration."
+    },
+    %{
+      id: :router,
+      responsibility: "Own the browser route and mount path for the example app."
+    },
+    %{
+      id: :layouts,
+      responsibility: "Own the browser shell HTML and CSS emitted by the example app."
+    },
+    %{
+      id: :live,
+      responsibility: "Own the LiveView entrypoint that renders the focused screen."
+    }
+  ]
+
+  @required_local_authored_modules [
+    %{
+      id: :screen,
+      responsibility: "Own the focused `unified_ui` screen and widget composition for the example."
+    },
+    %{
+      id: :theme,
+      responsibility: "Own the localized `:example_suite_default` theme definition."
+    },
+    %{
+      id: :style_profile,
+      responsibility: "Own the localized shell, panel, title, summary, notes, and control style ids."
+    },
+    %{
+      id: :helpers,
+      responsibility: "Own any local helper functions needed by the screen without delegating back to `examples/shared/`."
+    }
+  ]
+
+  @conditional_local_surfaces [
+    %{
+      id: :fixtures,
+      when_needed: "Use a project-local fixture module when the example currently depends on `UnifiedExamples.Shared.Fixtures`."
+    },
+    %{
+      id: :interaction_support,
+      when_needed: "Use project-local interaction or metadata helpers when the example needs focused reviewer guidance."
+    },
+    %{
+      id: :documentation,
+      when_needed: "Keep README and migration notes with the example project when local details are necessary to run or review it."
+    }
+  ]
+
+  @forbidden_shared_surfaces [
+    %{
+      surface: "examples/shared",
+      kind: :path_dependency,
+      rule: "Focused example apps must not depend on the shared support package in the target state."
+    },
+    %{
+      surface: "UnifiedExamples.Shared.App",
+      kind: :repo_macro,
+      rule: "Project-local runtime modules must replace the shared app scaffolding macro."
+    },
+    %{
+      surface: "UnifiedExamples.Shared.Template",
+      kind: :repo_macro,
+      rule: "Project-local screen, theme, and style modules must replace the shared template macro."
+    },
+    %{
+      surface: "example_panel/1 and example_form_panel/1",
+      kind: :repo_macro_helper,
+      rule: "Local functions and explicit authored modules must replace shared panel helper macros."
+    }
+  ]
+
+  @allowed_framework_macros [
+    "use Phoenix.LiveView",
+    "use Phoenix.Component",
+    "use UnifiedUi.Dsl"
+  ]
+
+  @validation_rules [
+    %{
+      id: :no_examples_shared_path_dependency,
+      description: "Reject any focused example app that still depends on `examples/shared/`."
+    },
+    %{
+      id: :no_repo_scaffolding_macros,
+      description: "Reject any focused example app that still uses repository-owned helper macros for app or screen scaffolding."
+    },
+    %{
+      id: :explicit_runtime_modules_present,
+      description: "Require local application, endpoint, router, layouts, and LiveView entrypoint modules."
+    },
+    %{
+      id: :explicit_authored_modules_present,
+      description: "Require local screen, theme, style, and helper modules, plus local fixtures when the example needs them."
+    },
+    %{
+      id: :preserved_visual_baseline,
+      description: "Require the preserved browser shell classes, default theme id, theme tokens, semantic roles, and component style ids."
+    }
+  ]
+
+  @spec guide_paths() :: %{inventory: String.t(), blueprint: String.t()}
   def guide_paths do
     %{
-      inventory: Path.join(Shared.shared_root(), @inventory_guide_path)
+      inventory: Path.join(Shared.shared_root(), @inventory_guide_path),
+      blueprint: Path.join(Shared.shared_root(), @blueprint_guide_path)
     }
   end
 
@@ -149,6 +260,7 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
   def current_baseline do
     %{
       inventory_guide_path: guide_paths().inventory,
+      blueprint_guide_path: guide_paths().blueprint,
       browser_shell_source_path: shared_source_path("app.ex"),
       template_source_path: shared_source_path("template.ex"),
       default_theme_id: Template.default_theme_id(),
@@ -158,6 +270,25 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
       semantic_roles: @semantic_roles,
       theme_tokens: @theme_tokens,
       component_style_ids: @component_style_ids
+    }
+  end
+
+  @spec target_blueprint() :: map()
+  def target_blueprint do
+    %{
+      guide_path: guide_paths().blueprint,
+      required_local_runtime_modules: @required_local_runtime_modules,
+      required_local_authored_modules: @required_local_authored_modules,
+      conditional_local_surfaces: @conditional_local_surfaces
+    }
+  end
+
+  @spec abstraction_boundary_policy() :: map()
+  def abstraction_boundary_policy do
+    %{
+      forbidden_shared_surfaces: @forbidden_shared_surfaces,
+      allowed_framework_macros: @allowed_framework_macros,
+      validation_rules: @validation_rules
     }
   end
 

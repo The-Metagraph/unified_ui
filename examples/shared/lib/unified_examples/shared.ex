@@ -131,6 +131,16 @@ defmodule UnifiedExamples.Shared do
     SelfContainedBlueprint.current_baseline()
   end
 
+  @spec self_contained_blueprint_target() :: map()
+  def self_contained_blueprint_target do
+    SelfContainedBlueprint.target_blueprint()
+  end
+
+  @spec self_contained_blueprint_policy() :: map()
+  def self_contained_blueprint_policy do
+    SelfContainedBlueprint.abstraction_boundary_policy()
+  end
+
   @spec suite_report() :: map()
   def suite_report do
     Reporting.suite_report()
