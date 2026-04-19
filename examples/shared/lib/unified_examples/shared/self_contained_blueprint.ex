@@ -378,6 +378,107 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
     }
   end
 
+  @spec phase_one_report() :: map()
+  def phase_one_report do
+    inventory = inventory()
+    baseline = current_baseline()
+    blueprint = target_blueprint()
+    policy = abstraction_boundary_policy()
+    proof = reference_blueprint_proof()
+
+    checks = %{
+      inventory_complete?:
+        inventory.directories_without_app_macro == [] and
+          inventory.directories_without_template_macro == [],
+      guide_bundle_present?: Enum.all?(Map.values(guide_paths()), &File.exists?/1),
+      baseline_source_present?: baseline_source_present?(),
+      runtime_blueprint_complete?:
+        Enum.map(blueprint.required_local_runtime_modules, & &1.id) == [
+          :application,
+          :endpoint,
+          :router,
+          :layouts,
+          :live
+        ],
+      authored_blueprint_complete?:
+        Enum.map(blueprint.required_local_authored_modules, & &1.id) == [
+          :screen,
+          :theme,
+          :style_profile,
+          :helpers
+        ],
+      conditional_surfaces_complete?:
+        Enum.map(blueprint.conditional_local_surfaces, & &1.id) == [
+          :fixtures,
+          :interaction_support,
+          :documentation
+        ],
+      forbidden_surface_policy_complete?:
+        Enum.map(policy.forbidden_shared_surfaces, & &1.surface) == [
+          "examples/shared",
+          "UnifiedExamples.Shared.App",
+          "UnifiedExamples.Shared.Template",
+          "example_panel/1 and example_form_panel/1"
+        ],
+      allowed_framework_macros_complete?:
+        policy.allowed_framework_macros == [
+          "use Phoenix.LiveView",
+          "use Phoenix.Component",
+          "use UnifiedUi.Dsl"
+        ],
+      validation_rules_complete?:
+        Enum.map(policy.validation_rules, & &1.id) == [
+          :no_examples_shared_path_dependency,
+          :no_repo_scaffolding_macros,
+          :explicit_runtime_modules_present,
+          :explicit_authored_modules_present,
+          :preserved_visual_baseline
+        ],
+      reference_examples_exist?:
+        Enum.all?(proof.reference_examples, &(&1.directory in Shared.app_directories())),
+      reference_shapes_complete?:
+        Enum.map(proof.reference_examples, & &1.proof_kind) == [
+          :low_complexity_content,
+          :input_oriented,
+          :high_complexity_runtime
+        ],
+      replacement_map_complete?:
+        Enum.map(proof.shared_to_local_replacements, & &1.shared_surface) == [
+          "UnifiedExamples.Shared.App",
+          "UnifiedExamples.Shared.Template",
+          "UnifiedExamples.Shared.Fixtures"
+        ]
+    }
+
+    %{
+      guide_paths: guide_paths(),
+      inventory: inventory,
+      baseline: baseline,
+      blueprint: blueprint,
+      policy: policy,
+      proof: proof,
+      checks: checks,
+      valid?: Enum.all?(Map.values(checks), & &1)
+    }
+  end
+
+  @spec phase_one_summary(map()) :: String.t()
+  def phase_one_summary(report) do
+    [
+      "Phase 1 self-contained blueprint",
+      "valid?: #{report.valid?}",
+      "inventory_complete?: #{report.checks.inventory_complete?}",
+      "guide_bundle_present?: #{report.checks.guide_bundle_present?}",
+      "baseline_source_present?: #{report.checks.baseline_source_present?}",
+      "runtime_blueprint_complete?: #{report.checks.runtime_blueprint_complete?}",
+      "authored_blueprint_complete?: #{report.checks.authored_blueprint_complete?}",
+      "reference_examples_exist?: #{report.checks.reference_examples_exist?}",
+      "reference_shapes_complete?: #{report.checks.reference_shapes_complete?}",
+      "replacement_map_complete?: #{report.checks.replacement_map_complete?}"
+    ]
+    |> Enum.join("\n")
+  end
+
   @spec baseline_source_present?() :: boolean()
   def baseline_source_present? do
     app_source = File.read!(shared_source_path("app.ex"))

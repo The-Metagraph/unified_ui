@@ -146,6 +146,11 @@ defmodule UnifiedExamples.Shared do
     SelfContainedBlueprint.reference_blueprint_proof()
   end
 
+  @spec self_contained_blueprint_phase_one_report() :: map()
+  def self_contained_blueprint_phase_one_report do
+    SelfContainedBlueprint.phase_one_report()
+  end
+
   @spec suite_report() :: map()
   def suite_report do
     Reporting.suite_report()
