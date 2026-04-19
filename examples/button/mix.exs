@@ -35,7 +35,6 @@ defmodule UnifiedExamples.Button.MixProject do
       {:phoenix_live_view, "~> 1.1"},
       {:plug_cowboy, "~> 2.7"},
       {:lazy_html, ">= 0.1.0", only: :test},
-      {:unified_examples_shared, path: "../shared"},
       {:unified_ui, path: "../../packages/unified-ui"},
       {:unified_iur, path: "../../packages/unified_iur"},
       {:live_ui, path: "../../packages/live_ui"}
