@@ -5,31 +5,48 @@ defmodule UnifiedExamples.ButtonTest do
   import Phoenix.LiveViewTest
 
   alias UnifiedExamples.Button
-  alias UnifiedExamples.Shared.Tooling
+  alias UnifiedExamples.Button.Screen
 
   @endpoint UnifiedExamples.Button.Endpoint
 
-  test "button example exposes standalone example metadata" do
+  test "button example exposes self-contained example metadata" do
     metadata = Button.metadata()
 
     assert metadata.id == :button_example_screen
     assert metadata.root_id == :button_example_screen_root
     assert metadata.title == "Button Widget Example"
+    assert metadata.summary == "Focused action-oriented example using the local example shell"
 
     assert metadata.notes ==
-             "Click the button to inspect the canonical signal compiled from the authored DSL."
+             "Click the button to inspect the canonical signal compiled from the self-contained authored DSL."
 
     assert metadata.widget == :button
     assert metadata.theme_id == :example_suite_default
     assert metadata.app == :unified_example_button
     assert metadata.directory == "examples/button"
     assert metadata.purpose == :widget_proof
+    assert metadata.template_mode == :local
+    refute metadata.uses_examples_shared?
+    assert metadata.runtime_modules == [
+             UnifiedExamples.Button.Application,
+             UnifiedExamples.Button.Endpoint,
+             UnifiedExamples.Button.Router,
+             UnifiedExamples.Button.Layouts,
+             UnifiedExamples.Button.Live
+           ]
+    assert metadata.authored_modules == [
+             UnifiedExamples.Button.Screen,
+             UnifiedExamples.Button.Theme,
+             UnifiedExamples.Button.StyleProfile,
+             UnifiedExamples.Button.Helpers
+           ]
     assert metadata.interaction_demo.mode == :custom
     assert metadata.interaction_demo.family == :click
     assert metadata.interaction_demo.source == :primary_widget
+    assert Screen.local_style_profile() == Screen.shared_style_profile()
   end
 
-  test "button example renders the shared shell and the focused action widget" do
+  test "button example renders the local shell and the focused action widget" do
     assert {:ok, runtime_state} = Button.boot()
     assert {:ok, html} = Button.render_html()
 
@@ -46,16 +63,16 @@ defmodule UnifiedExamples.ButtonTest do
   end
 
   test "button example boots through its Phoenix LiveView app entrypoint" do
-    assert {:ok, smoke} = Tooling.smoke_launch("button")
+    conn = get(build_conn(), "/")
+    body = html_response(conn, 200)
 
-    assert smoke.status == 200
-    assert smoke.body =~ "data-example-directory=\"examples/button\""
-    assert smoke.body =~ "Button Widget Example"
-    assert smoke.body =~ "jido_run inspired live_ui example"
-    assert smoke.body =~ "data-live-ui-widget=\"button\""
-    assert smoke.body =~ "<meta name=\"csrf-token\""
-    assert smoke.body =~ "/vendor/phoenix/phoenix.js"
-    assert smoke.body =~ "/vendor/live_view/phoenix_live_view.js"
+    assert body =~ "data-example-directory=\"examples/button\""
+    assert body =~ "Button Widget Example"
+    assert body =~ "jido_run inspired live_ui example"
+    assert body =~ "data-live-ui-widget=\"button\""
+    assert body =~ "<meta name=\"csrf-token\""
+    assert body =~ "/vendor/phoenix/phoenix.js"
+    assert body =~ "/vendor/live_view/phoenix_live_view.js"
   end
 
   test "button example clicks surface the canonical signal preview through LiveView" do
