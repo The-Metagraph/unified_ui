@@ -68,6 +68,34 @@ defmodule UnifiedExamples.SelfContainedBlueprintTest do
     assert Enum.any?(policy.validation_rules, &(&1.id == :preserved_visual_baseline))
   end
 
+  test "reference blueprint proof selects one content, one input, and one advanced example" do
+    proof = SelfContainedBlueprint.reference_blueprint_proof()
+
+    assert proof.guide_path == SelfContainedBlueprint.guide_paths().proof
+
+    assert Enum.map(proof.reference_examples, & &1.directory) == [
+             "button",
+             "text_input",
+             "cluster_dashboard"
+           ]
+
+    assert Enum.map(proof.reference_examples, & &1.proof_kind) == [
+             :low_complexity_content,
+             :input_oriented,
+             :high_complexity_runtime
+           ]
+
+    assert Enum.any?(
+             proof.shared_to_local_replacements,
+             &(&1.shared_surface == "UnifiedExamples.Shared.App" and :application in &1.local_replacement)
+           )
+
+    assert Enum.any?(
+             proof.reference_examples,
+             &(&1.directory == "cluster_dashboard" and :fixtures in &1.target_local_modules.conditional)
+           )
+  end
+
   test "inventory guide documents the current helper map and baseline" do
     guide = File.read!(SelfContainedBlueprint.guide_paths().inventory)
 
@@ -88,5 +116,17 @@ defmodule UnifiedExamples.SelfContainedBlueprintTest do
     assert guide =~ "UnifiedExamples.Shared.Template"
     assert guide =~ "use Phoenix.LiveView"
     assert guide =~ ":preserved_visual_baseline"
+  end
+
+  test "proof guide documents the selected reference examples and replacement map" do
+    guide = File.read!(SelfContainedBlueprint.guide_paths().proof)
+
+    assert guide =~ "UnifiedExamples.Shared.App"
+    assert guide =~ "UnifiedExamples.Shared.Template"
+    assert guide =~ "UnifiedExamples.Shared.Fixtures"
+    assert guide =~ "`button`"
+    assert guide =~ "`text_input`"
+    assert guide =~ "`cluster_dashboard`"
+    assert guide =~ "reference_blueprint_proof/0"
   end
 end

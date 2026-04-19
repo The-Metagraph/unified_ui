@@ -11,6 +11,7 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
   @fixture_module "UnifiedExamples.Shared.Fixtures"
   @inventory_guide_path "guides/self_contained_inventory.md"
   @blueprint_guide_path "guides/self_contained_blueprint.md"
+  @proof_guide_path "guides/reference_blueprint_proof.md"
 
   @browser_shell_classes [
     "example-app-shell",
@@ -191,11 +192,86 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
     }
   ]
 
-  @spec guide_paths() :: %{inventory: String.t(), blueprint: String.t()}
+  @shared_to_local_replacements [
+    %{
+      shared_surface: "UnifiedExamples.Shared.App",
+      local_replacement: [
+        :application,
+        :endpoint,
+        :router,
+        :layouts,
+        :live
+      ],
+      proof_goal: "Replace generated runtime scaffolding with explicit project-local modules."
+    },
+    %{
+      shared_surface: "UnifiedExamples.Shared.Template",
+      local_replacement: [
+        :screen,
+        :theme,
+        :style_profile,
+        :helpers
+      ],
+      proof_goal: "Replace shared screen composition with explicit local authored modules."
+    },
+    %{
+      shared_surface: "UnifiedExamples.Shared.Fixtures",
+      local_replacement: [:fixtures],
+      proof_goal: "Move shared fixtures local only for examples that actually need fixture data."
+    }
+  ]
+
+  @reference_examples [
+    %{
+      directory: "button",
+      proof_kind: :low_complexity_content,
+      family: :content,
+      why_selected:
+        "Button is the clearest low-complexity proof because it uses the shared app and template macros without needing shared fixtures.",
+      target_local_modules: %{
+        runtime: [:application, :endpoint, :router, :layouts, :live],
+        authored: [:screen, :theme, :style_profile, :helpers],
+        conditional: []
+      },
+      proof_goal:
+        "Prove that the suite shell, accent action styling, and authored click interaction can move local without changing the review surface."
+    },
+    %{
+      directory: "text_input",
+      proof_kind: :input_oriented,
+      family: :input,
+      why_selected:
+        "Text input is the simplest input-oriented example that still exercises the form shell, primary input styling, and reviewer-facing interaction notes.",
+      target_local_modules: %{
+        runtime: [:application, :endpoint, :router, :layouts, :live],
+        authored: [:screen, :theme, :style_profile, :helpers],
+        conditional: [:interaction_support]
+      },
+      proof_goal:
+        "Prove that form-oriented examples can replace shared panel helpers and keep the same input styling and interaction storytelling locally."
+    },
+    %{
+      directory: "cluster_dashboard",
+      proof_kind: :high_complexity_runtime,
+      family: :operational,
+      why_selected:
+        "Cluster dashboard is the highest-value advanced proof because it depends on shared fixtures and a more involved operational surface while still needing the same suite shell.",
+      target_local_modules: %{
+        runtime: [:application, :endpoint, :router, :layouts, :live],
+        authored: [:screen, :theme, :style_profile, :helpers],
+        conditional: [:fixtures, :interaction_support]
+      },
+      proof_goal:
+        "Prove that fixture-heavy operational examples can move local without losing the preserved browser shell or theme and style baseline."
+    }
+  ]
+
+  @spec guide_paths() :: %{inventory: String.t(), blueprint: String.t(), proof: String.t()}
   def guide_paths do
     %{
       inventory: Path.join(Shared.shared_root(), @inventory_guide_path),
-      blueprint: Path.join(Shared.shared_root(), @blueprint_guide_path)
+      blueprint: Path.join(Shared.shared_root(), @blueprint_guide_path),
+      proof: Path.join(Shared.shared_root(), @proof_guide_path)
     }
   end
 
@@ -261,6 +337,7 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
     %{
       inventory_guide_path: guide_paths().inventory,
       blueprint_guide_path: guide_paths().blueprint,
+      proof_guide_path: guide_paths().proof,
       browser_shell_source_path: shared_source_path("app.ex"),
       template_source_path: shared_source_path("template.ex"),
       default_theme_id: Template.default_theme_id(),
@@ -289,6 +366,15 @@ defmodule UnifiedExamples.Shared.SelfContainedBlueprint do
       forbidden_shared_surfaces: @forbidden_shared_surfaces,
       allowed_framework_macros: @allowed_framework_macros,
       validation_rules: @validation_rules
+    }
+  end
+
+  @spec reference_blueprint_proof() :: map()
+  def reference_blueprint_proof do
+    %{
+      guide_path: guide_paths().proof,
+      shared_to_local_replacements: @shared_to_local_replacements,
+      reference_examples: @reference_examples
     }
   end
 

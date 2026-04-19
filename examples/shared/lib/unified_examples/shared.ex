@@ -141,6 +141,11 @@ defmodule UnifiedExamples.Shared do
     SelfContainedBlueprint.abstraction_boundary_policy()
   end
 
+  @spec self_contained_blueprint_proof() :: map()
+  def self_contained_blueprint_proof do
+    SelfContainedBlueprint.reference_blueprint_proof()
+  end
+
   @spec suite_report() :: map()
   def suite_report do
     Reporting.suite_report()
