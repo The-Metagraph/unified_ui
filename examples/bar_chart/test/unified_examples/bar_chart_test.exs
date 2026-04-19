@@ -1,38 +1,80 @@
 defmodule UnifiedExamples.BarChartTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
-  alias UnifiedIUR.Tree
+  import Phoenix.ConnTest
+
   alias UnifiedExamples.BarChart
+  alias UnifiedExamples.BarChart.Screen
 
-  test "bar chart example exposes standalone example metadata" do
-    assert BarChart.metadata() == %{
-             id: :bar_chart_example_screen,
-             root_id: :bar_chart_example_screen_root,
-             title: "Bar Chart Widget Example",
-             summary: "Focused feedback-oriented example using the shared suite shell",
-             notes:
-               "Bar chart examples foreground one canonical categorical chart inside the shared shell.",
-             widget: :bar_chart,
-             theme_id: :example_suite_default,
-             app: :unified_example_bar_chart,
-             directory: "examples/bar_chart",
-             purpose: :widget_proof
-           }
+  @endpoint UnifiedExamples.BarChart.Endpoint
+
+  test "bar chart example exposes self-contained example metadata" do
+    metadata = BarChart.metadata()
+
+    assert metadata.id == :bar_chart_example_screen
+    assert metadata.root_id == :bar_chart_example_screen_root
+    assert metadata.title == "Bar Chart Widget Example"
+    assert metadata.summary == "Focused feedback-oriented example using the local example shell"
+    assert metadata.notes == "Bar chart examples foreground one canonical categorical chart inside the local shell."
+    assert metadata.widget == :bar_chart
+    assert metadata.theme_id == :example_suite_default
+    assert metadata.app == :unified_example_bar_chart
+    assert metadata.directory == "examples/bar_chart"
+    assert metadata.purpose == :widget_proof
+    assert metadata.template_mode == :local
+    refute metadata.uses_examples_shared?
+    assert metadata.runtime_modules == [
+             UnifiedExamples.BarChart.Application,
+             UnifiedExamples.BarChart.Endpoint,
+             UnifiedExamples.BarChart.Router,
+             UnifiedExamples.BarChart.Layouts,
+             UnifiedExamples.BarChart.Live
+           ]
+    assert metadata.authored_modules == [
+             UnifiedExamples.BarChart.Screen,
+             UnifiedExamples.BarChart.Theme,
+             UnifiedExamples.BarChart.StyleProfile,
+             UnifiedExamples.BarChart.Helpers
+           ]
+    assert metadata.style_contract.component_style_ids == [
+             :example_shell,
+             :example_panel,
+             :example_form_shell,
+             :example_title,
+             :example_summary,
+             :example_notes,
+             :example_primary_button,
+             :example_primary_input
+           ]
+    assert metadata.interaction_demo.mode == :shared_trigger
+    assert metadata.interaction_demo.family == :click
+    assert Screen.local_style_profile() == Screen.shared_style_profile()
   end
 
-  test "bar chart example renders the shared shell and foregrounds one primary bar chart" do
+  test "bar chart example renders the local shell and foregrounds one primary bar chart" do
     assert {:ok, runtime_state} = BarChart.boot()
     assert {:ok, html} = BarChart.render_html()
 
     assert runtime_state.mode == :canonical
     assert runtime_state.assigns.iur.id == :bar_chart_example_screen_shell
-
-    assert %UnifiedIUR.Element{kind: :bar_chart} =
-             Tree.find_by_id(runtime_state.assigns.iur, :bar_chart_example_primary_chart)
-
     assert html =~ "data-live-ui-widget=\"box\""
     assert html =~ "data-live-ui-widget=\"bar-chart\""
     assert html =~ "Bar Chart Widget Example"
     assert html =~ "API"
+    assert html =~ "Inspect the bar chart feedback story"
+    assert html =~ "Meaningful Interaction Story"
+  end
+
+  test "bar chart example boots through its Phoenix LiveView app entrypoint" do
+    conn = get(build_conn(), "/")
+    body = html_response(conn, 200)
+
+    assert body =~ "data-example-directory=\"examples/bar_chart\""
+    assert body =~ "Bar Chart Widget Example"
+    assert body =~ "data-live-ui-widget=\"bar-chart\""
+    assert body =~ "jido_run inspired live_ui example"
+    assert body =~ "<meta name=\"csrf-token\""
+    assert body =~ "/vendor/phoenix/phoenix.js"
+    assert body =~ "/vendor/live_view/phoenix_live_view.js"
   end
 end
