@@ -1,75 +1,555 @@
 defmodule UnifiedExamples.Overlay.Screen do
   @moduledoc """
-  Shared-template overlay proof for the standalone example-app suite.
+  Self-contained overlay proof for the standalone example-app suite.
   """
 
-  alias UnifiedExamples.Shared.Fixtures
+  use UnifiedUi.Dsl
 
-  @dialog_snapshot Fixtures.dialog_snapshot()
-  @toast_snapshot Fixtures.toast_snapshot()
-  @overlay_snapshot Fixtures.overlay_snapshot()
+  alias UnifiedExamples.Overlay.Helpers
+  alias UnifiedExamples.Overlay.StyleProfile
+  alias UnifiedExamples.Overlay.Theme
 
-  use UnifiedExamples.Shared.Template,
-    id: :overlay_example_screen,
-    title: "Overlay Widget Example",
-    summary: "Focused overlay example using the shared suite shell",
-    widget: :overlay,
-    notes: "Overlay examples foreground one canonical layered surface inside the shared shell."
+  @example_metadata Helpers.metadata()
 
-  example_panel do
-    box :overlay_example_base_panel do
-      theme_ref(:example_suite_default)
-      tone(:surface)
-      variant(:panel)
+  @spec example_metadata() :: map()
+  def example_metadata, do: @example_metadata
 
-      text :overlay_example_base_heading do
-        value(@overlay_snapshot.base_title)
-        theme_ref(:example_suite_default)
-        tone(:surface)
-        variant(:body)
-      end
-    end
+  @spec example_interaction_demo() :: map()
+  def example_interaction_demo, do: @example_metadata.interaction_demo
 
-    box :overlay_example_dialog_content do
-      theme_ref(:example_suite_default)
-      tone(:surface)
-      variant(:panel)
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: Theme.default_theme_id()
 
-      text :overlay_example_dialog_copy do
-        value(@dialog_snapshot.copy)
-        theme_ref(:example_suite_default)
-        tone(:surface)
-        variant(:body)
-      end
-    end
+  @spec local_style_profile() :: map()
+  def local_style_profile, do: StyleProfile.default_style_profile()
 
-    dialog :overlay_example_dialog do
-      title(@dialog_snapshot.title)
-      content_ref(:overlay_example_dialog_content)
-      visible?(true)
-      theme_ref(:example_suite_default)
-      tone(:surface)
-      variant(:quiet)
-    end
+  @spec shared_style_profile() :: map()
+  def shared_style_profile, do: local_style_profile()
 
-    toast :overlay_example_toast do
-      title(@toast_snapshot.title)
-      message(@toast_snapshot.message)
-      severity(@toast_snapshot.severity)
-      placement(@toast_snapshot.placement)
-      visible?(true)
-      theme_ref(:example_suite_default)
-      tone(:surface)
-      variant(:quiet)
-    end
+  identity do
+    id(:overlay_example_screen)
+    title("Overlay Widget Example")
+    description("Focused overlay example using the local example shell")
+    authored_ref([:examples, :overlay_example_screen])
+    tags([:example, :overlay])
+  end
 
-    overlay :overlay_example_primary_overlay do
-      base_ref(:overlay_example_base_panel)
-      layer_refs([:overlay_example_dialog, :overlay_example_toast])
-      background_fill(@overlay_snapshot.background_fill)
-      theme_ref(:example_suite_default)
-      tone(:surface)
-      variant(:quiet)
+  signals do
+    namespace(:examples)
+
+    interaction do
+      id(:overlay_example_screen_interaction)
+      family(:open)
+      intent(:inspect_overlay)
+
+      source_context(
+        element_id: :overlay_example_screen_interaction_trigger,
+        scope: :screen
+      )
+
+      target_intent(action: :review_example)
+
+      payload_mapping(
+        widget: :overlay,
+        example: :overlay,
+        outcome:
+          "The review panel should explain how the overlay example turns an authored canonical interaction into a browser-visible overlay story.",
+        source: :shared_example_trigger
+      )
+
+      summary(
+        "Use the shared trigger to see how the overlay example explains open changes in layered or contextual UI."
+      )
     end
   end
+
+  themes do
+    default_theme(Theme.default_theme_id())
+
+    theme do
+      id(Theme.default_theme_id())
+      summary(Theme.summary())
+
+      palette_color do
+        id(:surface)
+        color(rgb_color(18, 18, 18))
+      end
+
+      palette_color do
+        id(:accent)
+        color(rgb_color(0, 255, 136))
+      end
+
+      palette_color do
+        id(:success)
+        color(rgb_color(0, 255, 136))
+      end
+
+      palette_color do
+        id(:warning)
+        color(rgb_color(255, 184, 0))
+      end
+
+      palette_color do
+        id(:critical)
+        color(rgb_color(235, 123, 123))
+      end
+
+      palette_color do
+        id(:muted)
+        color(rgb_color(102, 102, 102))
+      end
+
+      semantic_role do
+        id(:surface)
+        value(rgb_color(18, 18, 18))
+      end
+
+      semantic_role do
+        id(:accent)
+        value(rgb_color(0, 255, 136))
+      end
+
+      semantic_role do
+        id(:success)
+        value(rgb_color(0, 255, 136))
+      end
+
+      semantic_role do
+        id(:warning)
+        value(rgb_color(255, 184, 0))
+      end
+
+      semantic_role do
+        id(:critical)
+        value(rgb_color(235, 123, 123))
+      end
+
+      semantic_role do
+        id(:muted)
+        value(rgb_color(102, 102, 102))
+      end
+
+      semantic_role do
+        id(:foreground)
+        value(rgb_color(232, 232, 232))
+      end
+
+      token do
+        id(:shell_surface)
+
+        value(
+          style_value(
+            background: token_ref(:surface),
+            foreground: role_ref(:foreground),
+            spacing: %{padding: 2, gap: 1},
+            border: %{width: 1, style: :solid}
+          )
+        )
+      end
+
+      token do
+        id(:panel_surface)
+
+        value(
+          style_value(
+            background: token_ref(:surface),
+            foreground: role_ref(:foreground),
+            spacing: %{padding: 2, gap: 1},
+            border: %{width: 1, style: :solid}
+          )
+        )
+      end
+
+      token do
+        id(:accent_action)
+
+        value(
+          style_value(
+            background: role_ref(:accent),
+            foreground: rgb_color(10, 10, 10),
+            border_color: role_ref(:accent),
+            emphasis: %{tone: :accent}
+          )
+        )
+      end
+
+      token do
+        id(:input_surface)
+
+        value(
+          style_value(
+            background: token_ref(:surface),
+            foreground: role_ref(:foreground),
+            border_color: role_ref(:muted)
+          )
+        )
+      end
+
+      component_style do
+        id(:example_shell)
+        component(:box)
+        variant(:panel)
+
+        style(
+          style_value(
+            token_refs: [token_ref(:shell_surface)],
+            sizing: %{width: :fill},
+            alignment: %{align: :stretch}
+          )
+        )
+      end
+
+      component_style do
+        id(:example_panel)
+        component(:box)
+        variant(:panel)
+
+        style(
+          style_value(
+            token_refs: [token_ref(:panel_surface)],
+            emphasis: %{tone: :surface}
+          )
+        )
+      end
+
+      component_style do
+        id(:example_form_shell)
+        component(:form_builder)
+        variant(:panel)
+
+        style(
+          style_value(
+            token_refs: [token_ref(:panel_surface)],
+            emphasis: %{tone: :surface}
+          )
+        )
+      end
+
+      component_style do
+        id(:example_title)
+        component(:text)
+        variant(:headline)
+
+        style(
+          style_value(
+            foreground: role_ref(:accent),
+            emphasis: %{weight: :strong}
+          )
+        )
+      end
+
+      component_style do
+        id(:example_summary)
+        component(:text)
+        variant(:body)
+
+        style(style_value(foreground: role_ref(:muted)))
+      end
+
+      component_style do
+        id(:example_notes)
+        component(:text)
+        variant(:body)
+
+        style(style_value(foreground: role_ref(:muted)))
+      end
+
+      component_style do
+        id(:example_primary_button)
+        component(:button)
+        variant(:solid)
+
+        style(style_value(token_refs: [token_ref(:accent_action)]))
+      end
+
+      component_style do
+        id(:example_primary_input)
+        component(:text_input)
+        variant(:filled)
+
+        style(style_value(token_refs: [token_ref(:input_surface)]))
+      end
+    end
+  end
+
+  composition do
+    root(:overlay_example_screen_root)
+    mode(:screen)
+    summary("Self-contained example-app shell")
+
+    box :overlay_example_screen_shell do
+      theme_ref(Theme.default_theme_id())
+      style_refs([:example_shell])
+      tone(:surface)
+      variant(:panel)
+
+      text :overlay_example_screen_title do
+        value("Overlay Widget Example")
+        theme_ref(Theme.default_theme_id())
+        style_refs([:example_title])
+        tone(:accent)
+        variant(:headline)
+      end
+
+      text :overlay_example_screen_summary do
+        value("Focused overlay example using the local example shell")
+        theme_ref(Theme.default_theme_id())
+        style_refs([:example_summary])
+        tone(:muted)
+        variant(:body)
+      end
+
+      box :overlay_example_screen_panel do
+        theme_ref(Theme.default_theme_id())
+        style_refs([:example_panel])
+        tone(:surface)
+        variant(:panel)
+
+        box :overlay_example_base_panel do
+          theme_ref(Theme.default_theme_id())
+          tone(:surface)
+          variant(:panel)
+
+          text :overlay_example_base_heading do
+            value(Helpers.overlay_base_title())
+            theme_ref(Theme.default_theme_id())
+            tone(:surface)
+            variant(:body)
+          end
+        end
+
+        box :overlay_example_dialog_content do
+          theme_ref(Theme.default_theme_id())
+          tone(:surface)
+          variant(:panel)
+
+          text :overlay_example_dialog_copy do
+            value(Helpers.dialog_copy())
+            theme_ref(Theme.default_theme_id())
+            tone(:surface)
+            variant(:body)
+          end
+        end
+
+        dialog :overlay_example_dialog do
+          title(Helpers.dialog_title())
+          content_ref(:overlay_example_dialog_content)
+          visible?(true)
+          theme_ref(Theme.default_theme_id())
+          tone(:surface)
+          variant(:quiet)
+        end
+
+        toast :overlay_example_toast do
+          title(Helpers.toast_title())
+          message(Helpers.toast_message())
+          severity(Helpers.toast_severity())
+          placement(Helpers.toast_placement())
+          visible?(true)
+          theme_ref(Theme.default_theme_id())
+          tone(:surface)
+          variant(:quiet)
+        end
+
+        overlay :overlay_example_primary_overlay do
+          base_ref(:overlay_example_base_panel)
+          layer_refs([:overlay_example_dialog, :overlay_example_toast])
+          background_fill(Helpers.overlay_background_fill())
+          theme_ref(Theme.default_theme_id())
+          tone(:surface)
+          variant(:quiet)
+        end
+      end
+
+      button :overlay_example_screen_interaction_trigger do
+        label("Inspect the overlay layered story")
+        interaction_refs([:overlay_example_screen_interaction])
+        theme_ref(Theme.default_theme_id())
+        style_refs([:example_primary_button])
+        tone(:accent)
+        variant(:solid)
+      end
+
+      text :overlay_example_screen_notes_text do
+        value("Overlay examples foreground one canonical layered surface inside the local shell.")
+        theme_ref(Theme.default_theme_id())
+        style_refs([:example_notes])
+        tone(:muted)
+        variant(:body)
+      end
+    end
+  end
+end
+
+defmodule UnifiedExamples.Overlay.Helpers do
+  @moduledoc false
+
+  @default_theme_id :example_suite_default
+
+  @browser_shell_classes [
+    "example-app-shell",
+    "example-app-header",
+    "example-app-runtime",
+    "example-app-header-top",
+    "example-app-kicker",
+    "example-app-widget",
+    "example-app-title",
+    "example-app-summary",
+    "example-app-notes"
+  ]
+
+  @component_style_ids [
+    :example_shell,
+    :example_panel,
+    :example_form_shell,
+    :example_title,
+    :example_summary,
+    :example_notes,
+    :example_primary_button,
+    :example_primary_input
+  ]
+
+  @semantic_role_ids [
+    :surface,
+    :accent,
+    :success,
+    :warning,
+    :critical,
+    :muted,
+    :foreground
+  ]
+
+  @token_ids [
+    :shell_surface,
+    :panel_surface,
+    :accent_action,
+    :input_surface
+  ]
+
+  @style_profile %{
+    shell: [:example_shell],
+    panel: [:example_panel],
+    form_shell: [:example_form_shell],
+    title: [:example_title],
+    summary: [:example_summary],
+    notes: [:example_notes],
+    interaction_button: [:example_primary_button],
+    button: [:example_primary_button],
+    text_input: [:example_primary_input]
+  }
+
+  @interaction_demo %{
+    mode: :shared_trigger,
+    family: :open,
+    source: :shared_trigger,
+    widget: :overlay,
+    source_label: "Shared interaction trigger",
+    trigger_label: "Inspect the overlay layered story",
+    idle_prompt:
+      "Use the shared trigger to see how the overlay example explains open changes in layered or contextual UI.",
+    outcome:
+      "The review panel should explain how the overlay example turns an authored canonical interaction into a browser-visible overlay story.",
+    target_surface: "overlay review panel",
+    reviewer_hint:
+      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+  }
+
+  @metadata %{
+    id: :overlay_example_screen,
+    root_id: :overlay_example_screen_root,
+    title: "Overlay Widget Example",
+    summary: "Focused overlay example using the local example shell",
+    notes: "Overlay examples foreground one canonical layered surface inside the local shell.",
+    widget: :overlay,
+    theme_id: @default_theme_id,
+    interaction_demo: @interaction_demo
+  }
+
+  @dialog_title "Settings"
+  @dialog_copy "Review escalation windows and routing defaults"
+  @toast_title "Runbook synced"
+  @toast_message "Changes propagated to every region"
+  @toast_severity :success
+  @toast_placement :bottom_end
+  @overlay_base_title "Coordinator workspace"
+  @overlay_background_fill :scrim
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: @default_theme_id
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: @browser_shell_classes
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: @component_style_ids
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: @semantic_role_ids
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: @token_ids
+
+  @spec style_profile() :: map()
+  def style_profile, do: @style_profile
+
+  @spec metadata() :: map()
+  def metadata, do: @metadata
+
+  @spec dialog_title() :: String.t()
+  def dialog_title, do: @dialog_title
+
+  @spec dialog_copy() :: String.t()
+  def dialog_copy, do: @dialog_copy
+
+  @spec toast_title() :: String.t()
+  def toast_title, do: @toast_title
+
+  @spec toast_message() :: String.t()
+  def toast_message, do: @toast_message
+
+  @spec toast_severity() :: atom()
+  def toast_severity, do: @toast_severity
+
+  @spec toast_placement() :: atom()
+  def toast_placement, do: @toast_placement
+
+  @spec overlay_base_title() :: String.t()
+  def overlay_base_title, do: @overlay_base_title
+
+  @spec overlay_background_fill() :: atom()
+  def overlay_background_fill, do: @overlay_background_fill
+end
+
+defmodule UnifiedExamples.Overlay.Theme do
+  @moduledoc false
+
+  alias UnifiedExamples.Overlay.Helpers
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: Helpers.default_theme_id()
+
+  @spec summary() :: String.t()
+  def summary, do: "Local default theme for the standalone example-app suite"
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: Helpers.semantic_role_ids()
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: Helpers.token_ids()
+end
+
+defmodule UnifiedExamples.Overlay.StyleProfile do
+  @moduledoc false
+
+  alias UnifiedExamples.Overlay.Helpers
+
+  @spec default_style_profile() :: map()
+  def default_style_profile, do: Helpers.style_profile()
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: Helpers.browser_shell_classes()
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: Helpers.component_style_ids()
 end
