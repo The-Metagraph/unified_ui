@@ -9,6 +9,7 @@ defmodule UnifiedExamples.Shared do
   alias UnifiedExamples.Shared.AppReadme
   alias UnifiedExamples.Shared.ReleaseReadiness
   alias UnifiedExamples.Shared.Reporting
+  alias UnifiedExamples.Shared.SelfContainedBlueprint
   alias UnifiedExamples.Shared.Traceability
   alias UnifiedExamples.Shared.Tooling
   alias UnifiedExamples.Shared.Validation
@@ -118,6 +119,16 @@ defmodule UnifiedExamples.Shared do
   @spec maintenance_report() :: map()
   def maintenance_report do
     Maintenance.report()
+  end
+
+  @spec self_contained_blueprint_inventory() :: map()
+  def self_contained_blueprint_inventory do
+    SelfContainedBlueprint.inventory()
+  end
+
+  @spec self_contained_blueprint_baseline() :: map()
+  def self_contained_blueprint_baseline do
+    SelfContainedBlueprint.current_baseline()
   end
 
   @spec suite_report() :: map()
