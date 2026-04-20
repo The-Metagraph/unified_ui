@@ -9,8 +9,7 @@ application suite shall cover.
 - [Examples Demo Application](../examples_demo/package.spec.md)
 - [Example Apps Structure](./structure.spec.md)
 - [Example Apps DSL Template](./dsl_template.spec.md)
-- [LiveUi Native Widgets](../live_ui/native_widgets.spec.md)
-- [LiveUi IUR Renderer](../live_ui/iur_renderer.spec.md)
+- [Platform Runtimes](../platform_runtimes.spec.md)
 
 ```spec-meta
 id: repo.examples.catalog
@@ -27,7 +26,7 @@ decisions:
 ## Requirements
 
 ```spec-requirements
-- id: repo.examples.catalog.complete_live_ui_widget_coverage
+- id: repo.examples.catalog.complete_catalog_subject_coverage
   statement: The example-app suite shall include one primary example application for every widget or construct named in the family-specific catalog sections of this subject.
   priority: must
   stability: stable
@@ -38,7 +37,7 @@ decisions:
   stability: stable
 
 - id: repo.examples.catalog.common_template_continuity
-  statement: Every catalog entry shall be demonstrated through the shared example DSL template, shared default theme, and shared default style profile so reviewers can compare widgets across a consistent shell.
+  statement: Every catalog entry shall be demonstrated through the common example-shell authoring contract, the suite default theme, and the suite default style profile so reviewers can compare widgets across a consistent shell.
   priority: must
   stability: stable
 
@@ -154,7 +153,7 @@ decisions:
 
 ```spec-scenarios
 - id: repo.examples.catalog.review_family_coverage
-  given: A reviewer wants to confirm that the example suite covers every current `live_ui` widget family and display construct
+  given: A reviewer wants to confirm that the example suite covers every current widget family and display construct named in the catalog
   when: The reviewer reads the catalog
   then: The reviewer can see one example application directory for every current subject, grouped by feature family and named after the primary widget or construct
 ```
@@ -165,7 +164,7 @@ decisions:
 - kind: source_file
   target: .spec/specs/examples/catalog.spec.md
   covers:
-    - repo.examples.catalog.complete_live_ui_widget_coverage
+    - repo.examples.catalog.complete_catalog_subject_coverage
     - repo.examples.catalog.one_primary_subject_per_app
     - repo.examples.catalog.common_template_continuity
     - repo.examples.catalog.family_traceability

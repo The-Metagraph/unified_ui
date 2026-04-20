@@ -8,14 +8,13 @@ example-app suite.
 - [Example Apps Suite](./package.spec.md)
 - [Example Apps Catalog](./catalog.spec.md)
 - [Examples Demo Application](../examples_demo/package.spec.md)
-- [LiveUi Tooling](../live_ui/tooling.spec.md)
 - [Spec System](../spec_system.spec.md)
 
 ```spec-meta
 id: repo.examples.tooling
 kind: tooling
 status: active
-summary: Tooling, index, and validation surfaces for the standalone example-app suite under `examples/`.
+summary: Tooling, index, launch, and validation surfaces for the standalone example-app suite under `examples/`.
 surface:
   - examples/**
   - .spec/specs/examples/tooling.spec.md
@@ -27,7 +26,7 @@ decisions:
 
 ```spec-requirements
 - id: repo.examples.tooling.index_surface
-  statement: The example suite shall provide a top-level index under `examples/` that explains the shared support library, the common DSL template, and the per-widget example-app catalog.
+  statement: The example suite shall provide a top-level index under `examples/` that explains the common example-shell contract, the suite default theme/style baseline, the default runtime behavior, and the per-widget example-app catalog.
   priority: must
   stability: stable
 
@@ -36,8 +35,13 @@ decisions:
   priority: must
   stability: stable
 
+- id: repo.examples.tooling.runtime_selection_surface
+  statement: The suite shall provide a documented launch surface that accepts runtime selection through a command-line argument or equivalent override, and shall default to `live_ui` when no runtime is specified.
+  priority: must
+  stability: stable
+
 - id: repo.examples.tooling.shared_validation
-  statement: The suite shall provide a repeatable validation workflow that checks whether each catalog entry still uses the shared DSL template and shared default theme/style profile.
+  statement: The suite shall provide a repeatable validation workflow that checks whether each catalog entry still preserves the common example-shell contract, the suite default theme/style baseline, and the runtime-selection contract.
   priority: must
   stability: stable
 
@@ -58,7 +62,7 @@ decisions:
 - id: repo.examples.tooling.review_example_suite
   given: A maintainer wants to review the standalone example-app suite after adding or changing a widget
   when: The maintainer uses the suite index and validation workflow
-  then: The maintainer can find the widget-focused app, run it independently, and verify that it still uses the shared DSL template and shared default theme/style
+  then: The maintainer can find the widget-focused app, run it independently, and verify that it still preserves the common example-shell contract, the suite default theme/style baseline, and the default runtime behavior
 ```
 
 ## Verification
@@ -69,6 +73,7 @@ decisions:
   covers:
     - repo.examples.tooling.index_surface
     - repo.examples.tooling.independent_run_surface
+    - repo.examples.tooling.runtime_selection_surface
     - repo.examples.tooling.shared_validation
     - repo.examples.tooling.catalog_traceability
     - repo.examples.tooling.aggregate_demo_discovery

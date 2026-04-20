@@ -9,7 +9,7 @@ structure for the aggregate demo application under `examples/demo/`.
 - [Example Apps Structure](../examples/structure.spec.md)
 - [Examples Demo Application](./package.spec.md)
 - [UnifiedUi Structure](../unified-ui/structure.spec.md)
-- [LiveUi Structure](../live_ui/structure.spec.md)
+- [Platform Runtimes](../platform_runtimes.spec.md)
 
 ```spec-meta
 id: repo.examples_demo.structure
@@ -26,13 +26,13 @@ decisions:
 ## Requirements
 
 ```spec-requirements
-- id: repo.examples_demo.structure.standalone_mix_and_phoenix_layout
-  statement: `examples/demo/` shall be a standalone Mix and Phoenix LiveView application with its own `mix.exs`, `config/`, `lib/`, `priv/`, and `test/` areas so it can be run independently with `mix phx.server`.
+- id: repo.examples_demo.structure.standalone_mix_application_with_default_browser_surface
+  statement: `examples/demo/` shall be a standalone Mix application with its own `mix.exs`, `config/`, `lib/`, `priv/`, and `test/` areas so it can be run independently, including a browser-runnable launch surface under the default runtime.
   priority: must
   stability: stable
 
-- id: repo.examples_demo.structure.shared_local_dependencies
-  statement: The aggregate demo application shall depend on `examples/shared`, `packages/unified-ui`, `packages/unified_iur`, and `packages/live_ui` through local path dependencies just like the per-widget example applications.
+- id: repo.examples_demo.structure.local_package_dependencies
+  statement: The aggregate demo application shall depend on `packages/unified-ui` and `packages/unified_iur` through local path dependencies and may depend on supported runtime packages required for its launch targets, but it shall not require an `examples/shared/` path dependency.
   priority: must
   stability: stable
 
@@ -72,8 +72,8 @@ decisions:
 - kind: source_file
   target: .spec/specs/examples_demo/structure.spec.md
   covers:
-    - repo.examples_demo.structure.standalone_mix_and_phoenix_layout
-    - repo.examples_demo.structure.shared_local_dependencies
+    - repo.examples_demo.structure.standalone_mix_application_with_default_browser_surface
+    - repo.examples_demo.structure.local_package_dependencies
     - repo.examples_demo.structure.root_demo_screen
     - repo.examples_demo.structure.category_fragments
     - repo.examples_demo.structure.category_metadata_registry

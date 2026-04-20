@@ -10,7 +10,6 @@ current `examples/button/` application.
 - [Examples Demo Application Interface](./interface.spec.md)
 - [Example Apps DSL Template](../examples/dsl_template.spec.md)
 - [UnifiedUi Theming](../unified-ui/theming.spec.md)
-- [LiveUi Runtime](../live_ui/runtime.spec.md)
 
 ```spec-meta
 id: repo.examples_demo.theming
@@ -52,8 +51,8 @@ decisions:
   priority: must
   stability: stable
 
-- id: repo.examples_demo.theming.same_shared_liveview_shell
-  statement: The aggregate demo application shall reuse the same shared LiveView shell styling direction used by the current button example application, including the dark surface treatment, mono typography baseline, accent-led highlights, layered card surfaces, and reviewer-facing signal panels provided by `examples/shared/`.
+- id: repo.examples_demo.theming.same_shell_styling_direction_as_button_example
+  statement: The aggregate demo application shall reuse the same shell styling direction used by the current button example application, including the dark surface treatment, mono typography baseline, accent-led highlights, layered card surfaces, and reviewer-facing signal panels.
   priority: must
   stability: stable
 
@@ -95,7 +94,7 @@ the current button example implementation:
     - repo.examples_demo.theming.same_shell_and_panel_treatment
     - repo.examples_demo.theming.same_accent_action_treatment
     - repo.examples_demo.theming.same_input_treatment
-    - repo.examples_demo.theming.same_shared_liveview_shell
+    - repo.examples_demo.theming.same_shell_styling_direction_as_button_example
     - repo.examples_demo.theming.local_overrides_only_for_category_clarity
     - repo.examples_demo.theming.compare_demo_to_button_example
 ```

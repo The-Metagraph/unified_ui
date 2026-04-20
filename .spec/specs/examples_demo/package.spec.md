@@ -14,13 +14,12 @@ category and includes a dedicated signal-driven interaction tab.
 - [Example Apps Catalog](../examples/catalog.spec.md)
 - [Example Apps DSL Template](../examples/dsl_template.spec.md)
 - [UnifiedUi Package](../unified-ui/package.spec.md)
-- [LiveUi Package](../live_ui/package.spec.md)
 
 ```spec-meta
 id: repo.examples_demo
 kind: package
 status: active
-summary: Contract for the aggregate `examples/demo/` application that presents all control categories in one tabbed LiveView demo and includes a dedicated signal-reactivity tab.
+summary: Contract for the aggregate `examples/demo/` application that presents all control categories in one tabbed review surface and includes a dedicated signal-reactivity tab.
 surface:
   - examples/demo/**
   - .spec/specs/examples_demo/package.spec.md
@@ -41,8 +40,8 @@ decisions:
   priority: must
   stability: stable
 
-- id: repo.examples_demo.liveview_runtime_application
-  statement: The aggregate demo application shall be a standalone Phoenix LiveView application authored through `unified_ui`, compiled to canonical `UnifiedIUR`, and rendered through `live_ui`.
+- id: repo.examples_demo.runtime_selected_demo_application
+  statement: The aggregate demo application shall be authored through `unified_ui`, compiled to canonical `UnifiedIUR`, and rendered through the runtime selected for the session, with `live_ui` as the default runtime when no command-line runtime argument or equivalent override is provided.
   priority: must
   stability: stable
 
@@ -88,7 +87,7 @@ decisions:
   target: .spec/specs/examples_demo/package.spec.md
   covers:
     - repo.examples_demo.aggregate_demo_application
-    - repo.examples_demo.liveview_runtime_application
+    - repo.examples_demo.runtime_selected_demo_application
     - repo.examples_demo.category_oriented_review_surface
     - repo.examples_demo.shared_theme_and_style_continuity
     - repo.examples_demo.signal_reactivity_demonstration

@@ -10,7 +10,7 @@ presentation contract for the aggregate demo application.
 - [Examples Demo Application Theming](./theming.spec.md)
 - [Example Apps Catalog](../examples/catalog.spec.md)
 - [Example Apps DSL Template](../examples/dsl_template.spec.md)
-- [LiveUi Native Widgets](../live_ui/native_widgets.spec.md)
+- [Platform Runtimes](../platform_runtimes.spec.md)
 
 ```spec-meta
 id: repo.examples_demo.interface

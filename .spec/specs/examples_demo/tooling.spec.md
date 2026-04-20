@@ -9,7 +9,6 @@ for the aggregate demo application under `examples/demo/`.
 - [Examples Demo Application Interface](./interface.spec.md)
 - [Examples Demo Application Interaction Lab](./interaction_lab.spec.md)
 - [Example Apps Tooling](../examples/tooling.spec.md)
-- [LiveUi Tooling](../live_ui/tooling.spec.md)
 - [Spec System](../spec_system.spec.md)
 
 ```spec-meta
@@ -28,12 +27,12 @@ decisions:
 
 ```spec-requirements
 - id: repo.examples_demo.tooling.independent_launch_surface
-  statement: The aggregate demo application shall be independently runnable through `mix phx.server` and also discoverable through the shared examples launcher workflow.
+  statement: The aggregate demo application shall be independently runnable through its default browser-runnable launch surface and also discoverable through the suite launcher workflow, with runtime selection available and `live_ui` used when no runtime is specified.
   priority: must
   stability: stable
 
 - id: repo.examples_demo.tooling.index_presence
-  statement: The root examples index and shared suite tooling shall identify the aggregate demo application as the category-oriented review surface distinct from the per-widget example applications.
+  statement: The root examples index and suite tooling shall identify the aggregate demo application as the category-oriented review surface distinct from the per-widget example applications.
   priority: must
   stability: stable
 
@@ -58,8 +57,8 @@ decisions:
 ```spec-scenarios
 - id: repo.examples_demo.tooling.launch_demo_for_review
   given: A reviewer wants one browser-runnable overview of the control families and signal-reactivity stories
-  when: The reviewer uses the examples index or shared launcher tooling
-  then: The reviewer can find, launch, and validate the aggregate demo application without manually discovering its internal structure
+  when: The reviewer uses the examples index or suite launcher tooling
+  then: The reviewer can find, launch, optionally override the runtime, and validate the aggregate demo application without manually discovering its internal structure
 ```
 
 ## Verification

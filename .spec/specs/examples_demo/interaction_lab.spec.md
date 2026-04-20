@@ -11,7 +11,7 @@ application where authored controls react to each other's canonical signals.
 - [UnifiedUi Signals](../unified-ui/signals.spec.md)
 - [UnifiedIUR Interactions](../unified-iur/interactions.spec.md)
 - [Signal Transport](../signal_transport.spec.md)
-- [LiveUi Transport](../live_ui/transport.spec.md)
+- [Platform Runtimes](../platform_runtimes.spec.md)
 
 ```spec-meta
 id: repo.examples_demo.interaction_lab
@@ -29,7 +29,7 @@ decisions:
 
 ```spec-requirements
 - id: repo.examples_demo.interaction_lab.authored_signal_flow
-  statement: The interaction lab shall demonstrate only authored `unified_ui` interactions that compile into canonical `UnifiedIUR` interactions and are translated through `live_ui`, rather than ad hoc runtime-only event wiring.
+  statement: The interaction lab shall demonstrate only authored `unified_ui` interactions that compile into canonical `UnifiedIUR` interactions and are translated through the runtime selected for the demo session while preserving canonical event meaning, rather than ad hoc runtime-only event wiring.
   priority: must
   stability: stable
 
