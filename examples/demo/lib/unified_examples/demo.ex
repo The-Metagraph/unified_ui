@@ -233,6 +233,19 @@ defmodule UnifiedExamples.Demo do
     })
   end
 
+  defmodule Runtime do
+    @moduledoc false
+
+    defdelegate compile(module, opts \\ []), to: UnifiedExamples.Shared.Runtime
+    defdelegate iur(module, opts \\ []), to: UnifiedExamples.Shared.Runtime
+    defdelegate iur!(module, opts \\ []), to: UnifiedExamples.Shared.Runtime
+    defdelegate mount(module, opts \\ []), to: UnifiedExamples.Shared.Runtime
+    defdelegate component_assigns(module, opts \\ []), to: UnifiedExamples.Shared.Runtime
+    defdelegate render_html(module, opts \\ []), to: UnifiedExamples.Shared.Runtime
+    defdelegate runtime_component_id(module), to: UnifiedExamples.Shared.Runtime
+    defdelegate renderable_element(element), to: UnifiedExamples.Shared.Runtime
+  end
+
   @spec mount_live(Socket.t()) :: Socket.t()
   def mount_live(%Socket{} = socket) do
     assign_category(socket, active_category_id())

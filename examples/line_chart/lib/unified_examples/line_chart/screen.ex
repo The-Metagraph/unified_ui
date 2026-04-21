@@ -1,3 +1,161 @@
+defmodule UnifiedExamples.LineChart.Helpers do
+  @moduledoc false
+
+  @default_theme_id :example_suite_default
+
+  @browser_shell_classes [
+    "example-app-shell",
+    "example-app-header",
+    "example-app-runtime",
+    "example-app-header-top",
+    "example-app-kicker",
+    "example-app-widget",
+    "example-app-title",
+    "example-app-summary",
+    "example-app-notes"
+  ]
+
+  @component_style_ids [
+    :example_shell,
+    :example_panel,
+    :example_form_shell,
+    :example_title,
+    :example_summary,
+    :example_notes,
+    :example_primary_button,
+    :example_primary_input
+  ]
+
+  @semantic_role_ids [
+    :surface,
+    :accent,
+    :success,
+    :warning,
+    :critical,
+    :muted,
+    :foreground
+  ]
+
+  @token_ids [
+    :shell_surface,
+    :panel_surface,
+    :accent_action,
+    :input_surface
+  ]
+
+  @style_profile %{
+    shell: [:example_shell],
+    panel: [:example_panel],
+    form_shell: [:example_form_shell],
+    title: [:example_title],
+    summary: [:example_summary],
+    notes: [:example_notes],
+    interaction_button: [:example_primary_button],
+    button: [:example_primary_button],
+    text_input: [:example_primary_input]
+  }
+
+  @interaction_demo %{
+    mode: :shared_trigger,
+    family: :click,
+    source: :shared_trigger,
+    widget: :line_chart,
+    source_label: "Shared interaction trigger",
+    trigger_label: "Inspect the line chart feedback story",
+    idle_prompt:
+      "Use the shared trigger to see how the line chart example explains click changes in metric or feedback meaning.",
+    outcome:
+      "The review panel should explain how the line chart example turns an authored canonical interaction into a browser-visible feedback story.",
+    target_surface: "line chart review panel",
+    reviewer_hint:
+      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+  }
+
+  @metadata %{
+    id: :line_chart_example_screen,
+    root_id: :line_chart_example_screen_root,
+    title: "Line Chart Widget Example",
+    summary: "Focused feedback-oriented example using the local example shell",
+    notes:
+      "Line chart examples foreground one canonical time-series chart inside the local shell.",
+    widget: :line_chart,
+    theme_id: @default_theme_id,
+    interaction_demo: @interaction_demo
+  }
+
+  @line_chart_series [
+    %{x: "09:00", y: 12},
+    %{x: "10:00", y: 18},
+    %{x: "11:00", y: 15},
+    %{x: "12:00", y: 24}
+  ]
+  @line_chart_x_label "Time"
+  @line_chart_y_label "Errors"
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: @default_theme_id
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: @browser_shell_classes
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: @component_style_ids
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: @semantic_role_ids
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: @token_ids
+
+  @spec style_profile() :: map()
+  def style_profile, do: @style_profile
+
+  @spec metadata() :: map()
+  def metadata, do: @metadata
+
+  @spec line_chart_series() :: [map()]
+  def line_chart_series, do: @line_chart_series
+
+  @spec line_chart_x_label() :: String.t()
+  def line_chart_x_label, do: @line_chart_x_label
+
+  @spec line_chart_y_label() :: String.t()
+  def line_chart_y_label, do: @line_chart_y_label
+end
+
+defmodule UnifiedExamples.LineChart.Theme do
+  @moduledoc false
+
+  alias UnifiedExamples.LineChart.Helpers
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: Helpers.default_theme_id()
+
+  @spec summary() :: String.t()
+  def summary, do: "Local default theme for the standalone example-app suite"
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: Helpers.semantic_role_ids()
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: Helpers.token_ids()
+end
+
+defmodule UnifiedExamples.LineChart.StyleProfile do
+  @moduledoc false
+
+  alias UnifiedExamples.LineChart.Helpers
+
+  @spec default_style_profile() :: map()
+  def default_style_profile, do: Helpers.style_profile()
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: Helpers.browser_shell_classes()
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: Helpers.component_style_ids()
+end
+
 defmodule UnifiedExamples.LineChart.Screen do
   @moduledoc """
   Self-contained line-chart proof for the standalone example-app suite.
@@ -9,13 +167,11 @@ defmodule UnifiedExamples.LineChart.Screen do
   alias UnifiedExamples.LineChart.StyleProfile
   alias UnifiedExamples.LineChart.Theme
 
-  @example_metadata Helpers.metadata()
-
   @spec example_metadata() :: map()
-  def example_metadata, do: @example_metadata
+  def example_metadata, do: Helpers.metadata()
 
   @spec example_interaction_demo() :: map()
-  def example_interaction_demo, do: @example_metadata.interaction_demo
+  def example_interaction_demo, do: example_metadata().interaction_demo
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: Theme.default_theme_id()
@@ -326,7 +482,10 @@ defmodule UnifiedExamples.LineChart.Screen do
       end
 
       text :line_chart_example_screen_notes_text do
-        value("Line chart examples foreground one canonical time-series chart inside the local shell.")
+        value(
+          "Line chart examples foreground one canonical time-series chart inside the local shell."
+        )
+
         theme_ref(Theme.default_theme_id())
         style_refs([:example_notes])
         tone(:muted)
@@ -334,161 +493,4 @@ defmodule UnifiedExamples.LineChart.Screen do
       end
     end
   end
-end
-
-defmodule UnifiedExamples.LineChart.Helpers do
-  @moduledoc false
-
-  @default_theme_id :example_suite_default
-
-  @browser_shell_classes [
-    "example-app-shell",
-    "example-app-header",
-    "example-app-runtime",
-    "example-app-header-top",
-    "example-app-kicker",
-    "example-app-widget",
-    "example-app-title",
-    "example-app-summary",
-    "example-app-notes"
-  ]
-
-  @component_style_ids [
-    :example_shell,
-    :example_panel,
-    :example_form_shell,
-    :example_title,
-    :example_summary,
-    :example_notes,
-    :example_primary_button,
-    :example_primary_input
-  ]
-
-  @semantic_role_ids [
-    :surface,
-    :accent,
-    :success,
-    :warning,
-    :critical,
-    :muted,
-    :foreground
-  ]
-
-  @token_ids [
-    :shell_surface,
-    :panel_surface,
-    :accent_action,
-    :input_surface
-  ]
-
-  @style_profile %{
-    shell: [:example_shell],
-    panel: [:example_panel],
-    form_shell: [:example_form_shell],
-    title: [:example_title],
-    summary: [:example_summary],
-    notes: [:example_notes],
-    interaction_button: [:example_primary_button],
-    button: [:example_primary_button],
-    text_input: [:example_primary_input]
-  }
-
-  @interaction_demo %{
-    mode: :shared_trigger,
-    family: :click,
-    source: :shared_trigger,
-    widget: :line_chart,
-    source_label: "Shared interaction trigger",
-    trigger_label: "Inspect the line chart feedback story",
-    idle_prompt:
-      "Use the shared trigger to see how the line chart example explains click changes in metric or feedback meaning.",
-    outcome:
-      "The review panel should explain how the line chart example turns an authored canonical interaction into a browser-visible feedback story.",
-    target_surface: "line chart review panel",
-    reviewer_hint:
-      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
-  }
-
-  @metadata %{
-    id: :line_chart_example_screen,
-    root_id: :line_chart_example_screen_root,
-    title: "Line Chart Widget Example",
-    summary: "Focused feedback-oriented example using the local example shell",
-    notes: "Line chart examples foreground one canonical time-series chart inside the local shell.",
-    widget: :line_chart,
-    theme_id: @default_theme_id,
-    interaction_demo: @interaction_demo
-  }
-
-  @line_chart_series [
-    %{x: "09:00", y: 12},
-    %{x: "10:00", y: 18},
-    %{x: "11:00", y: 15},
-    %{x: "12:00", y: 24}
-  ]
-  @line_chart_x_label "Time"
-  @line_chart_y_label "Errors"
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: @default_theme_id
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: @browser_shell_classes
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: @component_style_ids
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: @semantic_role_ids
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: @token_ids
-
-  @spec style_profile() :: map()
-  def style_profile, do: @style_profile
-
-  @spec metadata() :: map()
-  def metadata, do: @metadata
-
-  @spec line_chart_series() :: [map()]
-  def line_chart_series, do: @line_chart_series
-
-  @spec line_chart_x_label() :: String.t()
-  def line_chart_x_label, do: @line_chart_x_label
-
-  @spec line_chart_y_label() :: String.t()
-  def line_chart_y_label, do: @line_chart_y_label
-end
-
-defmodule UnifiedExamples.LineChart.Theme do
-  @moduledoc false
-
-  alias UnifiedExamples.LineChart.Helpers
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: Helpers.default_theme_id()
-
-  @spec summary() :: String.t()
-  def summary, do: "Local default theme for the standalone example-app suite"
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: Helpers.semantic_role_ids()
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: Helpers.token_ids()
-end
-
-defmodule UnifiedExamples.LineChart.StyleProfile do
-  @moduledoc false
-
-  alias UnifiedExamples.LineChart.Helpers
-
-  @spec default_style_profile() :: map()
-  def default_style_profile, do: Helpers.style_profile()
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: Helpers.browser_shell_classes()
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: Helpers.component_style_ids()
 end

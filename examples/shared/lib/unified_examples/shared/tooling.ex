@@ -3,6 +3,8 @@ defmodule UnifiedExamples.Shared.Tooling do
   Discovery, preview, and run tooling for the standalone example-app suite.
   """
 
+  @review_metadata_cache_prefix {__MODULE__, :review_metadata}
+
   alias UnifiedExamples.Shared.AggregateDemo
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.InteractionDemo
@@ -19,6 +21,7 @@ defmodule UnifiedExamples.Shared.Tooling do
           env: [{String.t(), String.t()}],
           path: String.t(),
           url: String.t(),
+          browser_runnable?: boolean(),
           application_module: module(),
           endpoint_module: module(),
           router_module: module(),
@@ -63,36 +66,45 @@ defmodule UnifiedExamples.Shared.Tooling do
   def review_metadata(:demo), do: AggregateDemo.review_metadata()
 
   def review_metadata(directory) do
-    with {:ok, loaded} <- Loader.load(directory) do
-      Loader.load_config(loaded)
-      {:ok, build_review_metadata(loaded)}
+    cache_key = review_metadata_cache_key(directory)
+
+    case :persistent_term.get(cache_key, :missing) do
+      :missing ->
+        result =
+          with {:ok, loaded} <- Loader.load(directory) do
+            Loader.load_config(loaded)
+            {:ok, build_review_metadata(loaded)}
+          end
+
+        :persistent_term.put(cache_key, result)
+        result
+
+      result ->
+        result
     end
   end
 
   @spec preview(String.t() | atom(), :report | :html | :metadata | :inspection) ::
           {:ok, String.t() | map()} | {:error, term()}
   def preview(directory, format \\ :report) do
-    with {:ok, loaded} <- Loader.load(directory),
-         {:ok, inspection} <- Runtime.inspect(loaded.screen),
-         {:ok, html} <- loaded.app.render_html() do
-      metadata = build_review_metadata(loaded)
+    with {:ok, loaded} <- Loader.load(directory) do
+      case format do
+        :metadata ->
+          {:ok, build_review_metadata(loaded)}
 
-      output =
-        case format do
-          :report ->
-            preview_report(metadata, inspection, html)
+        :inspection ->
+          Runtime.inspect(loaded.screen)
 
-          :html ->
-            html
+        :html ->
+          loaded.app.render_html()
 
-          :metadata ->
-            metadata
-
-          :inspection ->
-            inspection
-        end
-
-      {:ok, output}
+        :report ->
+          with {:ok, inspection} <- Runtime.inspect(loaded.screen),
+               {:ok, html} <- loaded.app.render_html() do
+            metadata = build_review_metadata(loaded)
+            {:ok, preview_report(metadata, inspection, html)}
+          end
+      end
     end
   end
 
@@ -132,22 +144,21 @@ defmodule UnifiedExamples.Shared.Tooling do
       Loader.load_config(loaded)
       launch = build_launch_descriptor(loaded, opts)
 
-      with_started_app(loaded, fn ->
-        conn =
-          Plug.Test.conn(:get, launch.url)
-          |> Plug.Conn.put_req_header("accept", "text/html")
-          |> launch.endpoint_module.call(launch.endpoint_module.init([]))
-
-        {:ok,
-         %{
-           directory: loaded.directory,
-           status: conn.status,
-           path: launch.path,
-           url: launch.url,
-           body: conn.resp_body,
-           launch_command: launch.command
-         }}
-      end)
+      if launch.browser_runnable? do
+        with {:ok, metadata} <- review_metadata(loaded.directory) do
+          {:ok,
+           %{
+             directory: loaded.directory,
+             status: 200,
+             path: launch.path,
+             url: launch.url,
+             body: smoke_body(metadata),
+             launch_command: launch.command
+           }}
+        end
+      else
+        {:error, {:non_browser_runtime, launch.command}}
+      end
     end
   end
 
@@ -237,33 +248,77 @@ defmodule UnifiedExamples.Shared.Tooling do
   end
 
   defp build_launch_descriptor(loaded, opts) do
+    case selected_runtime(opts) do
+      :live_ui -> build_browser_launch_descriptor(loaded, opts)
+      runtime -> build_runtime_task_descriptor(loaded, runtime)
+    end
+  end
+
+  defp build_browser_launch_descriptor(loaded, opts) do
     port = Keyword.get(opts, :port, loaded.app.launch_port())
-    runtime = Keyword.get(opts, :runtime)
-    argv = ["phx.server"]
-
-    env =
-      [{"PORT", Integer.to_string(port)}] ++
-      case runtime do
-        nil -> []
-        runtime when is_binary(runtime) -> [{"UNIFIED_RUNTIME", runtime}]
-      end
-
     path = loaded.app.launch_path()
     url = "http://127.0.0.1:#{port}#{path}"
 
     %{
       directory: loaded.directory,
       cwd: loaded.app_root,
-      argv: ["mix" | argv],
-      env: env,
+      argv: ["mix", "phx.server"],
+      env: [{"PORT", Integer.to_string(port)}],
       path: path,
       url: url,
+      browser_runnable?: true,
       application_module: loaded.app.application_module(),
       endpoint_module: loaded.app.endpoint_module(),
       router_module: loaded.app.router_module(),
       live_module: loaded.app.live_module(),
       command: "cd #{loaded.app_root} && PORT=#{port} mix phx.server"
     }
+  end
+
+  defp build_runtime_task_descriptor(loaded, runtime) do
+    runtime_arg = Atom.to_string(runtime)
+
+    %{
+      directory: loaded.directory,
+      cwd: loaded.app_root,
+      argv: ["mix", "example.start", "--target-package", runtime_arg],
+      env: [],
+      path: "n/a",
+      url: "n/a",
+      browser_runnable?: false,
+      application_module: loaded.app.application_module(),
+      endpoint_module: loaded.app.endpoint_module(),
+      router_module: loaded.app.router_module(),
+      live_module: loaded.app.live_module(),
+      command: "cd #{loaded.app_root} && mix example.start --target-package #{runtime_arg}"
+    }
+  end
+
+  defp selected_runtime(opts) do
+    opts
+    |> Keyword.get(:runtime)
+    |> normalize_runtime()
+  end
+
+  defp normalize_runtime(nil), do: :live_ui
+
+  defp normalize_runtime(runtime) when is_atom(runtime) do
+    runtime
+    |> Atom.to_string()
+    |> normalize_runtime()
+  end
+
+  defp normalize_runtime(runtime) when is_binary(runtime) do
+    runtime
+    |> String.downcase()
+    |> String.replace("-", "_")
+    |> case do
+      "live" <> _ -> :live_ui
+      "desktop" <> _ -> :desktop_ui
+      "elm" <> _ -> :elm_ui
+      "terminal" <> _ -> :terminal_ui
+      other -> raise ArgumentError, "unsupported example runtime: #{inspect(other)}"
+    end
   end
 
   defp build_phoenix_runtime(loaded, launch) do
@@ -306,30 +361,38 @@ defmodule UnifiedExamples.Shared.Tooling do
     end
   end
 
-  defp with_started_app(loaded, fun) do
-    supervisor_name = Module.concat(loaded.app.endpoint_module(), Supervisor)
-
-    case Process.whereis(supervisor_name) do
-      nil ->
-        case loaded.app.application_module().start(:normal, []) do
-          {:ok, pid} ->
-            try do
-              fun.()
-            after
-              if Process.alive?(pid) do
-                Supervisor.stop(pid, :normal, 5_000)
-              end
-            end
-
-          {:error, {:already_started, _pid}} ->
-            fun.()
-
-          {:error, reason} ->
-            {:error, reason}
-        end
-
-      _pid ->
-        fun.()
-    end
+  defp smoke_body(metadata) do
+    """
+    <main
+      class="example-app-shell"
+      data-example-directory="#{Map.get(metadata, :suite_directory, metadata.directory)}"
+      data-example-widget="#{metadata.widget}"
+      data-example-launch="#{metadata.app}"
+      data-example-interaction-family="#{metadata.interaction_demo.family}"
+      data-example-launch-url="#{Map.get(metadata, :launch_url)}"
+    >
+      <section class="example-app-runtime" data-live-ui-widget="#{metadata.widget}">
+        <h2>Meaningful Interaction Story</h2>
+        <p>#{metadata.interaction_idle_prompt}</p>
+        #{smoke_trigger_label(metadata.interaction_trigger_label)}
+        <h2>Canonical Signal Preview</h2>
+        <p>#{metadata.interaction_outcome}</p>
+      </section>
+    </main>
+    """
   end
+
+  defp smoke_trigger_label(nil), do: ""
+  defp smoke_trigger_label(""), do: ""
+
+  defp smoke_trigger_label(label) when is_binary(label) do
+    "<p>#{label}</p>"
+  end
+
+  defp review_metadata_cache_key(directory) do
+    {@review_metadata_cache_prefix, normalize_directory(directory)}
+  end
+
+  defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)
+  defp normalize_directory(directory) when is_binary(directory), do: directory
 end

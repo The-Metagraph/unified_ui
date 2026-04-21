@@ -1,3 +1,143 @@
+defmodule UnifiedExamples.TextInput.Helpers do
+  @moduledoc false
+
+  @default_theme_id :example_suite_default
+
+  @browser_shell_classes [
+    "example-app-shell",
+    "example-app-header",
+    "example-app-runtime",
+    "example-app-header-top",
+    "example-app-kicker",
+    "example-app-widget",
+    "example-app-title",
+    "example-app-summary",
+    "example-app-notes"
+  ]
+
+  @component_style_ids [
+    :example_shell,
+    :example_panel,
+    :example_form_shell,
+    :example_title,
+    :example_summary,
+    :example_notes,
+    :example_primary_button,
+    :example_primary_input
+  ]
+
+  @semantic_role_ids [
+    :surface,
+    :accent,
+    :success,
+    :warning,
+    :critical,
+    :muted,
+    :foreground
+  ]
+
+  @token_ids [
+    :shell_surface,
+    :panel_surface,
+    :accent_action,
+    :input_surface
+  ]
+
+  @style_profile %{
+    shell: [:example_shell],
+    panel: [:example_panel],
+    form_shell: [:example_form_shell],
+    title: [:example_title],
+    summary: [:example_summary],
+    notes: [:example_notes],
+    interaction_button: [:example_primary_button],
+    button: [:example_primary_button],
+    text_input: [:example_primary_input]
+  }
+
+  @interaction_demo %{
+    mode: :custom,
+    family: :change,
+    source: :primary_widget,
+    widget: :text_input,
+    source_label: "Primary text input",
+    trigger_label: nil,
+    idle_prompt:
+      "Type into the draft field to capture the authored change signal and latest value.",
+    outcome:
+      "The text input example should mirror the live draft value and explain the emitted change signal clearly.",
+    target_surface: "text input review panel",
+    reviewer_hint:
+      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+  }
+
+  @metadata %{
+    id: :text_input_example_screen,
+    root_id: :text_input_example_screen_root,
+    title: "Text Input Widget Example",
+    summary: "Focused input-oriented example using the local example shell",
+    notes:
+      "Type in the field to inspect the canonical change signal compiled from the self-contained authored DSL.",
+    widget: :text_input,
+    theme_id: @default_theme_id,
+    interaction_demo: @interaction_demo
+  }
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: @default_theme_id
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: @browser_shell_classes
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: @component_style_ids
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: @semantic_role_ids
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: @token_ids
+
+  @spec style_profile() :: map()
+  def style_profile, do: @style_profile
+
+  @spec metadata() :: map()
+  def metadata, do: @metadata
+end
+
+defmodule UnifiedExamples.TextInput.Theme do
+  @moduledoc false
+
+  alias UnifiedExamples.TextInput.Helpers
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: Helpers.default_theme_id()
+
+  @spec summary() :: String.t()
+  def summary, do: "Local default theme for the standalone example-app suite"
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: Helpers.semantic_role_ids()
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: Helpers.token_ids()
+end
+
+defmodule UnifiedExamples.TextInput.StyleProfile do
+  @moduledoc false
+
+  alias UnifiedExamples.TextInput.Helpers
+
+  @spec default_style_profile() :: map()
+  def default_style_profile, do: Helpers.style_profile()
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: Helpers.browser_shell_classes()
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: Helpers.component_style_ids()
+end
+
 defmodule UnifiedExamples.TextInput.Screen do
   @moduledoc """
   Self-contained text_input proof for the standalone example-app suite.
@@ -9,13 +149,11 @@ defmodule UnifiedExamples.TextInput.Screen do
   alias UnifiedExamples.TextInput.StyleProfile
   alias UnifiedExamples.TextInput.Theme
 
-  @example_metadata Helpers.metadata()
-
   @spec example_metadata() :: map()
-  def example_metadata, do: @example_metadata
+  def example_metadata, do: Helpers.metadata()
 
   @spec example_interaction_demo() :: map()
-  def example_interaction_demo, do: @example_metadata.interaction_demo
+  def example_interaction_demo, do: example_metadata().interaction_demo
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: Theme.default_theme_id()
@@ -312,7 +450,10 @@ defmodule UnifiedExamples.TextInput.Screen do
       end
 
       text :text_input_example_screen_notes_text do
-        value("Type in the field to inspect the canonical change signal compiled from the self-contained authored DSL.")
+        value(
+          "Type in the field to inspect the canonical change signal compiled from the self-contained authored DSL."
+        )
+
         theme_ref(Theme.default_theme_id())
         style_refs([:example_notes])
         tone(:muted)
@@ -320,145 +461,4 @@ defmodule UnifiedExamples.TextInput.Screen do
       end
     end
   end
-end
-
-defmodule UnifiedExamples.TextInput.Helpers do
-  @moduledoc false
-
-  @default_theme_id :example_suite_default
-
-  @browser_shell_classes [
-    "example-app-shell",
-    "example-app-header",
-    "example-app-runtime",
-    "example-app-header-top",
-    "example-app-kicker",
-    "example-app-widget",
-    "example-app-title",
-    "example-app-summary",
-    "example-app-notes"
-  ]
-
-  @component_style_ids [
-    :example_shell,
-    :example_panel,
-    :example_form_shell,
-    :example_title,
-    :example_summary,
-    :example_notes,
-    :example_primary_button,
-    :example_primary_input
-  ]
-
-  @semantic_role_ids [
-    :surface,
-    :accent,
-    :success,
-    :warning,
-    :critical,
-    :muted,
-    :foreground
-  ]
-
-  @token_ids [
-    :shell_surface,
-    :panel_surface,
-    :accent_action,
-    :input_surface
-  ]
-
-  @style_profile %{
-    shell: [:example_shell],
-    panel: [:example_panel],
-    form_shell: [:example_form_shell],
-    title: [:example_title],
-    summary: [:example_summary],
-    notes: [:example_notes],
-    interaction_button: [:example_primary_button],
-    button: [:example_primary_button],
-    text_input: [:example_primary_input]
-  }
-
-  @interaction_demo %{
-    mode: :custom,
-    family: :change,
-    source: :primary_widget,
-    widget: :text_input,
-    source_label: "Primary text input",
-    trigger_label: nil,
-    idle_prompt:
-      "Type into the draft field to capture the authored change signal and latest value.",
-    outcome:
-      "The text input example should mirror the live draft value and explain the emitted change signal clearly.",
-    target_surface: "text input review panel",
-    reviewer_hint:
-      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
-  }
-
-  @metadata %{
-    id: :text_input_example_screen,
-    root_id: :text_input_example_screen_root,
-    title: "Text Input Widget Example",
-    summary: "Focused input-oriented example using the local example shell",
-    notes:
-      "Type in the field to inspect the canonical change signal compiled from the self-contained authored DSL.",
-    widget: :text_input,
-    theme_id: @default_theme_id,
-    interaction_demo: @interaction_demo
-  }
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: @default_theme_id
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: @browser_shell_classes
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: @component_style_ids
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: @semantic_role_ids
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: @token_ids
-
-  @spec style_profile() :: map()
-  def style_profile, do: @style_profile
-
-  @spec metadata() :: map()
-  def metadata, do: @metadata
-end
-
-defmodule UnifiedExamples.TextInput.Theme do
-  @moduledoc false
-
-  alias UnifiedExamples.TextInput.Helpers
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: Helpers.default_theme_id()
-
-  @spec summary() :: String.t()
-  def summary, do: "Local default theme for the standalone example-app suite"
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: Helpers.semantic_role_ids()
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: Helpers.token_ids()
-end
-
-defmodule UnifiedExamples.TextInput.StyleProfile do
-  @moduledoc false
-
-  alias UnifiedExamples.TextInput.Helpers
-
-  @spec default_style_profile() :: map()
-  def default_style_profile, do: Helpers.style_profile()
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: Helpers.browser_shell_classes()
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: Helpers.component_style_ids()
-end
 end

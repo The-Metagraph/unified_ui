@@ -20,11 +20,23 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
     :selection_to_filter,
     :toggle_to_visibility_or_enabled_state
   ]
-  @metadata_start_marker "__UNIFIED_EXAMPLES_DEMO_METADATA_START__"
-  @metadata_end_marker "__UNIFIED_EXAMPLES_DEMO_METADATA_END__"
-  @smoke_start_marker "__UNIFIED_EXAMPLES_DEMO_SMOKE_START__"
-  @smoke_end_marker "__UNIFIED_EXAMPLES_DEMO_SMOKE_END__"
   @metadata_cache_key {__MODULE__, :review_metadata}
+  @demo_source_files [
+    "lib/unified_examples/demo/widget_info.ex",
+    "lib/unified_examples/demo/signal_lab.ex",
+    "lib/unified_examples/demo/fixtures.ex",
+    "lib/unified_examples/demo/categories/data_and_feedback.ex",
+    "lib/unified_examples/demo/categories/forms_and_input.ex",
+    "lib/unified_examples/demo/categories/foundational_content.ex",
+    "lib/unified_examples/demo/categories/layout_and_display.ex",
+    "lib/unified_examples/demo/categories/navigation_and_selection.ex",
+    "lib/unified_examples/demo/categories/overlays_and_operational.ex",
+    "lib/unified_examples/demo/categories/signal_lab.ex",
+    "lib/unified_examples/demo/categories.ex",
+    "lib/unified_examples/demo/screen.ex",
+    "lib/unified_examples/demo/widget_live.ex",
+    "lib/unified_examples/demo.ex"
+  ]
   @catalog_entry %{
     directory: @demo_directory,
     widget: :demo,
@@ -110,129 +122,110 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
   end
 
   defp load_review_metadata do
-    expression = """
-    UnifiedExamples.Demo.review_metadata()
-    |> :erlang.term_to_binary()
-    |> Base.encode64()
-    |> then(&IO.puts("#{@metadata_start_marker}" <> &1 <> "#{@metadata_end_marker}"))
-    """
-
-    case System.cmd("mix", ["run", "--no-start", "-e", expression],
-           cd: @demo_root,
-           env: [{"MIX_ENV", "dev"}],
-           stderr_to_stdout: true
-         ) do
-      {encoded, 0} ->
-        with [_, payload] <-
-               Regex.run(
-                 ~r/#{@metadata_start_marker}(.*?)#{@metadata_end_marker}/s,
-                 encoded
-               ) do
-          metadata =
-            payload
-            |> Base.decode64!()
-            |> :erlang.binary_to_term()
-
-          :persistent_term.put(@metadata_cache_key, {:ok, metadata})
-          {:ok, metadata}
-        else
-          _ -> {:error, {:demo_review_metadata_unparseable, encoded}}
-        end
-
-      {output, status} ->
-        {:error, {:demo_review_metadata_failed, status, output}}
+    try do
+      ensure_demo_modules_loaded!()
+      demo_module = demo_module()
+      metadata = apply(demo_module, :review_metadata, [])
+      :persistent_term.put(@metadata_cache_key, {:ok, metadata})
+      {:ok, metadata}
+    rescue
+      error ->
+        {:error, {:demo_review_metadata_failed, Exception.message(error)}}
     end
+  end
+
+  defp ensure_demo_modules_loaded! do
+    Enum.each(@demo_source_files, fn relative_path ->
+      Code.require_file(Path.join(@demo_root, relative_path))
+    end)
   end
 
   @spec launch_descriptor(keyword()) :: map()
   def launch_descriptor(opts \\ []) do
-    port = Keyword.get(opts, :port, default_port())
-    path = "/"
-    url = "http://127.0.0.1:#{port}#{path}"
+    case normalize_runtime(Keyword.get(opts, :runtime)) do
+      :live_ui ->
+        port = Keyword.get(opts, :port, default_port())
+        path = "/"
+        url = "http://127.0.0.1:#{port}#{path}"
 
-    %{
-      directory: @demo_directory,
-      cwd: @demo_root,
-      argv: ["mix", "phx.server"],
-      env: [{"PORT", Integer.to_string(port)}],
-      path: path,
-      url: url,
-      command: "cd #{@demo_root} && PORT=#{port} mix phx.server"
-    }
+        %{
+          directory: @demo_directory,
+          cwd: @demo_root,
+          argv: ["mix", "phx.server"],
+          env: [{"PORT", Integer.to_string(port)}],
+          path: path,
+          url: url,
+          browser_runnable?: true,
+          command: "cd #{@demo_root} && PORT=#{port} mix phx.server"
+        }
+
+      runtime ->
+        runtime_arg = Atom.to_string(runtime)
+
+        %{
+          directory: @demo_directory,
+          cwd: @demo_root,
+          argv: ["mix", "example.start", "--target-package", runtime_arg],
+          env: [],
+          path: "n/a",
+          url: "n/a",
+          browser_runnable?: false,
+          command: "cd #{@demo_root} && mix example.start --target-package #{runtime_arg}"
+        }
+    end
   end
 
   @spec smoke_launch(keyword()) :: {:ok, map()} | {:error, term()}
   def smoke_launch(opts \\ []) do
+    runtime = normalize_runtime(Keyword.get(opts, :runtime))
     descriptor = launch_descriptor(opts)
-    port = Keyword.get(opts, :port, default_port())
+    _port = Keyword.get(opts, :port, default_port())
 
-    expression = """
-    launch = UnifiedExamples.Demo.launch_descriptor(port: #{port})
+    if runtime != :live_ui do
+      {:error, {:aggregate_demo_smoke_unsupported_runtime, runtime}}
+    else
+      try do
+        ensure_demo_modules_loaded!()
 
-    Application.put_env(
-      :unified_example_demo,
-      UnifiedExamples.Demo.Endpoint,
-      Keyword.put(UnifiedExamples.Demo.endpoint_config(), :server, false)
-    )
+        demo_module = demo_module()
+        live_module = demo_module.live_module()
 
-    case Application.ensure_all_started(:unified_example_demo) do
-      {:ok, _started} ->
-        try do
-          conn =
-            Plug.Test.conn(:get, launch.url)
-            |> Plug.Conn.put_req_header("accept", "text/html")
-            |> UnifiedExamples.Demo.Endpoint.call(UnifiedExamples.Demo.Endpoint.init([]))
+        with {:ok, metadata} <- review_metadata(),
+             {:ok, root_component} <- demo_module.component_assigns(),
+             {:ok, socket} <- live_module.mount(%{}, %{}, %Phoenix.LiveView.Socket{}) do
+          body =
+            %{
+              review_metadata_id: metadata.id,
+              root_component_id: root_component.id,
+              active_category: get_in(socket.assigns, [:active_category, :id]),
+              active_category_example_count:
+                socket.assigns
+                |> Map.get(:active_category_examples, [])
+                |> length()
+            }
+            |> Kernel.inspect(pretty: true)
 
-          result = %{
-            directory: "demo",
-            status: conn.status,
-            path: launch.path,
-            url: launch.url,
-            body: conn.resp_body,
-            launch_command: launch.command
-          }
-
-          result
-          |> :erlang.term_to_binary()
-          |> Base.encode64()
-          |> then(&IO.puts("#{@smoke_start_marker}" <> &1 <> "#{@smoke_end_marker}"))
-        after
-          Application.stop(:unified_example_demo)
-          Application.stop(:phoenix_live_view)
-          Application.stop(:phoenix)
-          Application.stop(:phoenix_pubsub)
-          Application.stop(:plug_cowboy)
-          Application.stop(:cowboy_telemetry)
-          Application.stop(:cowboy)
-          Application.stop(:plug)
-          Application.stop(:telemetry)
-        end
-
-      {:error, reason} ->
-        IO.puts("aggregate demo smoke launch failed: " <> inspect(reason))
-        System.halt(1)
-    end
-    """
-
-    case System.cmd("mix", ["run", "--no-start", "-e", expression],
-           cd: @demo_root,
-           env: [{"MIX_ENV", "dev"}, {"PORT", Integer.to_string(port)}],
-           stderr_to_stdout: true
-         ) do
-      {output, 0} ->
-        with [_, payload] <- Regex.run(~r/#{@smoke_start_marker}(.*?)#{@smoke_end_marker}/s, output) do
-          payload
-          |> Base.decode64!()
-          |> :erlang.binary_to_term()
-          |> then(&{:ok, &1})
+          {:ok,
+           %{
+             directory: "demo",
+             status: 200,
+             path: descriptor.path,
+             url: descriptor.url,
+             body: body,
+             launch_command: descriptor.command
+           }}
         else
-          _ -> {:error, {:aggregate_demo_smoke_unparseable, descriptor.url, output}}
+          {:error, reason} ->
+            {:error, {:aggregate_demo_smoke_failed, descriptor.url, inspect(reason)}}
         end
-
-      {output, status} ->
-        {:error, {:aggregate_demo_smoke_failed, status, descriptor.url, output}}
+      rescue
+        error ->
+          {:error, {:aggregate_demo_smoke_failed, descriptor.url, Exception.message(error)}}
+      end
     end
   end
+
+  defp demo_module, do: Module.concat([UnifiedExamples, Demo])
 
   defp default_port do
     System.get_env("PORT", "5000")
@@ -243,4 +236,25 @@ defmodule UnifiedExamples.Shared.AggregateDemo do
 
   defp normalize_directory(directory) when is_atom(directory), do: Atom.to_string(directory)
   defp normalize_directory(directory) when is_binary(directory), do: directory
+
+  defp normalize_runtime(nil), do: :live_ui
+
+  defp normalize_runtime(runtime) when is_atom(runtime) do
+    runtime
+    |> Atom.to_string()
+    |> normalize_runtime()
+  end
+
+  defp normalize_runtime(runtime) when is_binary(runtime) do
+    runtime
+    |> String.downcase()
+    |> String.replace("-", "_")
+    |> case do
+      "live" <> _ -> :live_ui
+      "desktop" <> _ -> :desktop_ui
+      "elm" <> _ -> :elm_ui
+      "terminal" <> _ -> :terminal_ui
+      other -> raise ArgumentError, "unsupported demo runtime: #{inspect(other)}"
+    end
+  end
 end

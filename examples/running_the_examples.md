@@ -3,10 +3,9 @@
 This guide is the quickest way to launch and validate the standalone example
 apps in [examples](./).
 
-The example suite is made up of standalone Phoenix LiveView apps backed by the
-shared helpers in [examples/shared](./shared).
-Use this guide when you want to run one example app directly, launch the
-aggregate demo, or use the shared maintainer tooling.
+The example suite is made up of standalone example apps that can be started
+from their own directories. Use this guide when you want to run one example app
+directly, launch the aggregate demo, or use the shared maintainer tooling.
 
 ## Quick Start
 
@@ -15,17 +14,52 @@ Run one example app directly:
 ```bash
 cd examples/button
 mix deps.get
-mix phx.server
+mix example.start
 ```
 
 Then open `http://127.0.0.1:5000/`.
+
+Run one focused example app with a different target package:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package desktop_ui
+```
+
+Run one focused example app through the `elm_ui` review path:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package elm_ui
+```
+
+This prints the `ElmUi` runtime snapshot for the compiled canonical screen to
+stdout.
+
+Run one focused example app through the `terminal_ui` review path:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package terminal_ui
+```
+
+Use `--backend-mode tty` when you want the fallback terminal backend:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package terminal_ui --backend-mode tty
+```
 
 Run the aggregate demo app:
 
 ```bash
 cd examples/demo
 mix deps.get
-mix phx.server
+mix example.start
 ```
 
 This is the best entrypoint when you want one browser shell that groups the
@@ -52,11 +86,20 @@ Print the launch command for one example without starting it:
 mix examples.launch button --dry-run
 ```
 
+Print the launch command for a different runtime target:
+
+```bash
+mix examples.launch button --runtime elm_ui --dry-run
+mix examples.launch button --runtime terminal_ui --dry-run
+```
+
 Boot one example and verify its LiveView entrypoint responds:
 
 ```bash
 mix examples.launch button --smoke-test
 ```
+
+The smoke-test workflow is only available for browser-runnable launch targets.
 
 Preview one example through the shared inspection path:
 
@@ -112,8 +155,11 @@ To use a different port:
 ```bash
 cd examples/button
 mix deps.get
-PORT=4100 mix phx.server
+mix example.start --port 4100
 ```
+
+The `elm_ui` and `terminal_ui` review paths do not expose a Phoenix URL. They
+emit structured runtime output directly to stdout instead.
 
 ## What to Look For
 

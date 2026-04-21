@@ -46,7 +46,7 @@ decisions:
   stability: stable
 
 - id: repo.examples.structure.local_package_dependencies
-  statement: Each example application shall depend on `packages/unified-ui` and `packages/unified_iur` through local path dependencies and may depend on one or more supported runtime packages required for its launch targets, but no focused example application shall require an `examples/shared/` path dependency.
+  statement: Each example application shall depend on `packages/unified-ui` and `packages/unified_iur` through local path dependencies and shall include the supported runtime-package dependencies required for its maintained launch targets, including `live_ui`, `desktop_ui`, `elm_ui`, and `terminal_ui`, but no focused example application shall require an `examples/shared/` path dependency.
   priority: must
   stability: stable
 

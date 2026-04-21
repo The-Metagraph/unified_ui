@@ -70,6 +70,27 @@ defmodule Mix.Tasks.ExamplesTasksTest do
     assert output =~ "mix phx.server"
   end
 
+  test "mix examples.launch routes non-browser runtimes through mix example.start" do
+    elm_output =
+      capture_io(fn ->
+        Mix.Tasks.Examples.Launch.run(["button", "--dry-run", "--runtime", "elm_ui"])
+      end)
+
+    terminal_output =
+      capture_io(fn ->
+        Mix.Tasks.Examples.Launch.run(["button", "--dry-run", "--runtime", "terminal_ui"])
+      end)
+
+    assert elm_output =~ "directory: button"
+    assert elm_output =~ "launch_command: cd "
+    assert elm_output =~ "mix example.start --target-package elm_ui"
+    assert elm_output =~ "url: n/a"
+
+    assert terminal_output =~ "directory: button"
+    assert terminal_output =~ "mix example.start --target-package terminal_ui"
+    assert terminal_output =~ "url: n/a"
+  end
+
   test "mix examples.launch exposes a smoke-test workflow for browser-runnable example apps" do
     output =
       capture_io(fn ->
@@ -93,5 +114,4 @@ defmodule Mix.Tasks.ExamplesTasksTest do
     assert output =~ "status: 200"
     assert output =~ "launch_command:"
   end
-
 end
