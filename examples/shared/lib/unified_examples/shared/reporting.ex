@@ -7,15 +7,15 @@ defmodule UnifiedExamples.Shared.Reporting do
   alias UnifiedExamples.Shared.Catalog
   alias UnifiedExamples.Shared.Template
   alias UnifiedExamples.Shared.Traceability
-  alias UnifiedExamples.Shared.Tooling
   alias UnifiedExamples.Shared.Validation
 
   @spec suite_report() :: map()
   def suite_report do
     validation = Validation.report()
+    metadata_results = validation.metadata.results
     families = Catalog.by_family()
-    runtime = runtime_report()
-    interaction_stories = interaction_story_report()
+    runtime = runtime_report(metadata_results)
+    interaction_stories = interaction_story_report(metadata_results)
 
     %{
       index: %{
@@ -79,15 +79,8 @@ defmodule UnifiedExamples.Shared.Reporting do
     |> Enum.join("\n")
   end
 
-  defp runtime_report do
-    launches =
-      Catalog.directories()
-      |> Enum.flat_map(fn directory ->
-        case Tooling.review_metadata(directory) do
-          {:ok, metadata} -> [{directory, metadata}]
-          {:error, _reason} -> []
-        end
-      end)
+  defp runtime_report(metadata_results) do
+    launches = successful_metadata(metadata_results)
 
     %{
       launchable_total:
@@ -104,15 +97,8 @@ defmodule UnifiedExamples.Shared.Reporting do
     }
   end
 
-  defp interaction_story_report do
-    stories =
-      Catalog.directories()
-      |> Enum.flat_map(fn directory ->
-        case Tooling.review_metadata(directory) do
-          {:ok, metadata} -> [{directory, metadata}]
-          {:error, _reason} -> []
-        end
-      end)
+  defp interaction_story_report(metadata_results) do
+    stories = successful_metadata(metadata_results)
 
     grouped =
       Enum.group_by(stories, fn {_directory, metadata} -> metadata.interaction_storytelling end)
@@ -146,5 +132,12 @@ defmodule UnifiedExamples.Shared.Reporting do
         |> Enum.sort(),
       follow_up_directories: follow_up_directories
     }
+  end
+
+  defp successful_metadata(metadata_results) do
+    Enum.flat_map(metadata_results, fn
+      {directory, {:ok, metadata}} -> [{directory, metadata}]
+      {_directory, {:error, _reason}} -> []
+    end)
   end
 end

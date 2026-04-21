@@ -55,7 +55,7 @@ decisions:
   stability: stable
 
 - id: repo.examples.runtime_selection_boundary
-  statement: Every example application shall compile authored screens through `unified_ui` into canonical `UnifiedIUR` and render through the runtime selected for the launch session, with `live_ui` as the default runtime when no command-line runtime argument or equivalent override is provided.
+  statement: Every example application shall compile authored screens through `unified_ui` into canonical `UnifiedIUR` and render through the runtime selected for the launch session, with maintained launcher targets for `live_ui`, `desktop_ui`, `elm_ui`, and `terminal_ui`, and with `live_ui` as the default runtime when no command-line runtime argument or equivalent override is provided.
   priority: must
   stability: stable
 

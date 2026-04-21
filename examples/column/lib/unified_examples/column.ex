@@ -3,7 +3,11 @@ defmodule UnifiedExamples.Column do
   Self-contained standalone example-app entrypoint for the focused example project.
   """
 
-  @directory __MODULE__ |> Module.split() |> List.last() |> Macro.underscore() |> then(&"examples/#{&1}")
+  @directory __MODULE__
+             |> Module.split()
+             |> List.last()
+             |> Macro.underscore()
+             |> then(&"examples/#{&1}")
   @app @directory |> Path.basename() |> then(&String.to_atom("unified_example_#{&1}"))
   @purpose :widget_proof
 
@@ -68,17 +72,17 @@ defmodule UnifiedExamples.Column do
 
   @spec boot(keyword()) :: {:ok, LiveUi.Runtime.State.t()} | {:error, term()}
   def boot(opts \\ []) do
-    Runtime.mount(screen_module(), runtime_opts(opts))
+    __MODULE__.Runtime.mount(screen_module(), runtime_opts(opts))
   end
 
   @spec component_assigns(keyword()) :: {:ok, map()} | {:error, term()}
   def component_assigns(opts \\ []) do
-    Runtime.component_assigns(screen_module(), runtime_opts(opts))
+    __MODULE__.Runtime.component_assigns(screen_module(), runtime_opts(opts))
   end
 
   @spec render_html(keyword()) :: {:ok, String.t()} | {:error, term()}
   def render_html(opts \\ []) do
-    Runtime.render_html(screen_module(), runtime_opts(opts))
+    __MODULE__.Runtime.render_html(screen_module(), runtime_opts(opts))
   end
 
   @spec launch_path() :: String.t()

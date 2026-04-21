@@ -1,15 +1,17 @@
 defmodule Mix.Tasks.Examples.Launch do
   use Mix.Task
 
-  @shortdoc "Launches one standalone example app through mix phx.server"
+  @shortdoc "Launches one standalone example app through its configured runtime entrypoint"
 
   @moduledoc """
-  Launches one standalone example app through `mix phx.server`.
+  Launches one standalone example app through its configured runtime entrypoint.
 
       mix examples.launch button --dry-run
       mix examples.launch button --smoke-test
       mix examples.launch overlay --port 4104
       mix examples.launch overlay --runtime desktop_ui
+      mix examples.launch overlay --runtime elm_ui
+      mix examples.launch overlay --runtime terminal_ui
   """
 
   alias UnifiedExamples.Shared.{AggregateDemo, Tooling}
@@ -72,7 +74,9 @@ defmodule Mix.Tasks.Examples.Launch do
         end
 
       _ ->
-        Mix.raise("usage: mix examples.launch DIRECTORY [--port PORT] [--runtime RUNTIME] [--dry-run] [--smoke-test]")
+        Mix.raise(
+          "usage: mix examples.launch DIRECTORY [--port PORT] [--runtime RUNTIME] [--dry-run] [--smoke-test]"
+        )
     end
   end
 

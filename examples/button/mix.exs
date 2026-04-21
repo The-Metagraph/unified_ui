@@ -37,7 +37,10 @@ defmodule UnifiedExamples.Button.MixProject do
       {:lazy_html, ">= 0.1.0", only: :test},
       {:unified_ui, path: "../../packages/unified-ui"},
       {:unified_iur, path: "../../packages/unified_iur"},
-      {:live_ui, path: "../../packages/live_ui"}
+      {:live_ui, path: "../../packages/live_ui"},
+      {:desktop_ui, path: "../../packages/desktop_ui"},
+      {:elm_ui, path: "../../packages/elm_ui"},
+      {:terminal_ui, path: "../../packages/terminal_ui"}
     ]
   end
 

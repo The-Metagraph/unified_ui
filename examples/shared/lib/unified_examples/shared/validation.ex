@@ -36,11 +36,13 @@ defmodule UnifiedExamples.Shared.Validation do
         |> Map.put(:aggregate_demo_present?, aggregate_demo_present?),
       metadata: %{
         checked: length(Catalog.directories()),
-        issues: metadata_issues
+        issues: metadata_issues,
+        results: metadata_results
       },
       aggregate_demo: %{
         checked: 1,
-        issues: aggregate_demo_issues
+        issues: aggregate_demo_issues,
+        result: aggregate_demo_result
       },
       release: release,
       valid?:
@@ -132,7 +134,8 @@ defmodule UnifiedExamples.Shared.Validation do
       "aggregate demo category count must stay aligned with the required category registry"
     )
     |> maybe_issue(
-      not is_list(Map.get(metadata, :category_registry)) or Map.get(metadata, :category_registry, []) == [],
+      not is_list(Map.get(metadata, :category_registry)) or
+        Map.get(metadata, :category_registry, []) == [],
       :missing_category_registry,
       directory,
       "aggregate demo must expose category review metadata for each tab"

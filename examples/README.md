@@ -21,30 +21,32 @@ detail.
 
 ## Layout
 
-- `shared/`: the shared support library that owns the common dependency wiring,
-  DSL template, catalog, runtime helpers, release checks, and maintainer tasks
+- `shared/`: maintainer tooling, catalog, validation, and release-readiness
+  helpers that remain useful for suite-wide review workflows
 - one standalone app directory per implemented widget-focused example
 
 Directory convention:
 
 - every example app lives in `examples/<widget_name>/`
 - every example app is a standalone Phoenix LiveView app and Mix project
-- every example app depends on `examples/shared/` plus the local package paths
-  for `unified_ui`, `unified_iur`, and `live_ui`
-- every example app reuses the shared template in
-  `UnifiedExamples.Shared.Template`
+- focused example apps are self-contained and do not depend on
+  `examples/shared/`
+- every focused example app depends on the local package paths for
+  `unified_ui`, `unified_iur`, `live_ui`, `desktop_ui`, `elm_ui`, and
+  `terminal_ui`
+- every focused example app can be started from its own directory and defaults
+  to `live_ui` when no target package is specified
 
 ## Shared Baseline
 
-The shared authoring template gives every example app the same review surface:
+The shared authoring baseline gives every example app the same review surface:
 
 - shared `UnifiedUi` DSL shell macros: `example_panel/1` and
   `example_form_panel/1`
 - shared default theme id: `:example_suite_default`
 - shared default style profile keys: `:shell`, `:panel`, `:form_shell`,
   `:title`, `:summary`, `:notes`, `:button`, and `:text_input`
-- shared runtime flow through `examples/shared/` helpers rather than
-  app-specific boot code
+- a common app-local launcher surface through `mix example.start`
 - one meaningful authored interaction story per example so reviewers can
   understand what to try in the browser and what outcome to expect without
   opening source files
@@ -71,8 +73,13 @@ demonstrating:
 - `unified_ui` owns the authored DSL template and compiler surface
 - `unified_iur` owns the canonical intermediate representation produced by that
   authored DSL
-- `live_ui` owns the runtime rendering path that mounts the resulting canonical
-  screen under the shared theme and style baseline
+- `live_ui` is the default browser runtime target for the example suite
+- `desktop_ui` is the native desktop target currently wired into the app-local
+  launcher surface
+- `elm_ui` is available through the same launcher as a review-oriented runtime
+  snapshot of the Phoenix-and-Elm server/frontend path
+- `terminal_ui` is available through the same launcher as a review-oriented
+  runtime snapshot of the terminal runtime path
 
 The shared support library exposes traceability metadata for every app so
 reviewers can see the exact package roots, package specs, general ecosystem
@@ -84,9 +91,10 @@ Run these from `examples/shared/`:
 
 - `mix examples.list`: print the current suite catalog
 - `mix examples.launch <directory> --dry-run`: print the standalone Phoenix
-  launch command for one app
+  launch command or runtime-review command for one app
 - `mix examples.launch <directory> --smoke-test`: boot one app through its
-  Phoenix endpoint and verify the LiveView entrypoint responds
+  Phoenix endpoint and verify the LiveView entrypoint responds for browser-
+  runnable launch targets
 - `mix examples.preview <directory>`: inspect one app through the shared
   preview path
 - `mix examples.run <directory>`: run one app through its own test workflow
@@ -95,26 +103,66 @@ Run these from `examples/shared/`:
 - `mix examples.report`: print the cross-family review summary
 - `mix examples.release --strict`: run the full documentation, traceability,
   validation, and release-readiness workflow
-- `mix phx.server`: run from any `examples/<widget_name>/` directory to launch
-  that example directly in the browser
+- `mix example.start`: run from any example app directory to launch that app,
+  defaulting to `live_ui` and accepting `--target-package desktop_ui`,
+  `--target-package elm_ui`, and `--target-package terminal_ui`
+- `mix phx.server`: still works directly from example app directories for the
+  default `live_ui` browser path
 
 Direct browser workflow for any example app:
 
 ```bash
 cd examples/button
 mix deps.get
-mix phx.server
+mix example.start
 ```
 
 The default mount URL is `http://127.0.0.1:5000/`, and you can override the
-port with `PORT=4100 mix phx.server`.
+port with `mix example.start --port 4100`.
+
+Native desktop workflow for any focused example app:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package desktop_ui
+```
+
+ElmUi review workflow for any focused example app:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package elm_ui
+```
+
+This prints an `ElmUi` runtime snapshot to stdout for the compiled canonical
+example instead of launching the LiveView browser shell.
+
+TerminalUi review workflow for any focused example app:
+
+```bash
+cd examples/button
+mix deps.get
+mix example.start --target-package terminal_ui
+```
+
+Use `--backend-mode tty` when you want the fallback terminal-capability path:
+
+```bash
+cd examples/button
+mix example.start --target-package terminal_ui --backend-mode tty
+```
+
+This prints a `TerminalUi` runtime snapshot to stdout for the compiled
+canonical example instead of launching a browser or SDL window.
 
 Aggregate demo workflow:
 
 ```bash
 cd examples/demo
 mix deps.get
-mix phx.server
+mix example.start
 ```
 
 Or preview the demo launch contract from the shared tooling:
@@ -122,6 +170,14 @@ Or preview the demo launch contract from the shared tooling:
 ```bash
 cd examples/shared
 mix examples.launch demo --dry-run
+```
+
+You can also preview non-browser launch commands from the shared tooling:
+
+```bash
+cd examples/shared
+mix examples.launch button --runtime elm_ui --dry-run
+mix examples.launch button --runtime terminal_ui --dry-run
 ```
 
 When you launch an example, look for two shared review surfaces in the browser:

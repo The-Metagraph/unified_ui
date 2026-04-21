@@ -56,10 +56,11 @@ Shared template contract:
 Maintainer workflows:
 
 - `mix examples.list` prints the current suite catalog
-- `mix examples.launch <directory> --dry-run` prints the exact `mix phx.server`
+- `mix examples.launch <directory> --dry-run` prints the exact app-local launch
   command for one example app
 - `mix examples.launch <directory> --smoke-test` boots the example through its
-  Phoenix endpoint and verifies the LiveView entrypoint responds
+  Phoenix endpoint and verifies the LiveView entrypoint responds for browser-
+  runnable targets
 - `mix examples.preview <directory>` prints a preview report, metadata, or HTML
 - `mix examples.run <directory>` runs the target example app through its own
   `mix test` workflow
@@ -74,10 +75,12 @@ Maintainer workflows:
 Phoenix launch helpers:
 
 - `UnifiedExamples.Shared.Tooling.launch_descriptor/2` builds the app-local
-  `mix phx.server` command and mount metadata for one example app
+  `mix phx.server` command or runtime-review command and the associated launch
+  metadata for one example app
 - `UnifiedExamples.Shared.Tooling.smoke_launch/2` boots the example through the
-  shared Phoenix runtime contract and returns the response metadata used by the
-  maintainer smoke workflow
+  shared Phoenix runtime contract when the selected launch target is browser-
+  runnable and returns the response metadata used by the maintainer smoke
+  workflow
 
 Interaction storytelling:
 

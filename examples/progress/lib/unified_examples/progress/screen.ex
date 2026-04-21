@@ -1,3 +1,164 @@
+defmodule UnifiedExamples.Progress.Helpers do
+  @moduledoc false
+
+  @default_theme_id :example_suite_default
+
+  @browser_shell_classes [
+    "example-app-shell",
+    "example-app-header",
+    "example-app-runtime",
+    "example-app-header-top",
+    "example-app-kicker",
+    "example-app-widget",
+    "example-app-title",
+    "example-app-summary",
+    "example-app-notes"
+  ]
+
+  @component_style_ids [
+    :example_shell,
+    :example_panel,
+    :example_form_shell,
+    :example_title,
+    :example_summary,
+    :example_notes,
+    :example_primary_button,
+    :example_primary_input
+  ]
+
+  @semantic_role_ids [
+    :surface,
+    :accent,
+    :success,
+    :warning,
+    :critical,
+    :muted,
+    :foreground
+  ]
+
+  @token_ids [
+    :shell_surface,
+    :panel_surface,
+    :accent_action,
+    :input_surface
+  ]
+
+  @style_profile %{
+    shell: [:example_shell],
+    panel: [:example_panel],
+    form_shell: [:example_form_shell],
+    title: [:example_title],
+    summary: [:example_summary],
+    notes: [:example_notes],
+    interaction_button: [:example_primary_button],
+    button: [:example_primary_button],
+    text_input: [:example_primary_input]
+  }
+
+  @interaction_demo %{
+    mode: :shared_trigger,
+    family: :click,
+    source: :shared_trigger,
+    widget: :progress,
+    source_label: "Shared interaction trigger",
+    trigger_label: "Inspect the progress feedback story",
+    idle_prompt:
+      "Use the shared trigger to see how the progress example explains click changes in metric or feedback meaning.",
+    outcome:
+      "The review panel should explain how the progress example turns an authored canonical interaction into a browser-visible feedback story.",
+    target_surface: "progress review panel",
+    reviewer_hint:
+      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+  }
+
+  @metadata %{
+    id: :progress_example_screen,
+    root_id: :progress_example_screen_root,
+    title: "Progress Widget Example",
+    summary: "Focused feedback-oriented example using the local example shell",
+    notes:
+      "Progress examples foreground one canonical progress indicator inside the local shell.",
+    widget: :progress,
+    theme_id: @default_theme_id,
+    interaction_demo: @interaction_demo
+  }
+
+  @progress_current 72
+  @progress_total 100
+  @progress_label "Deploy progress"
+  @progress_severity :info
+  @progress_status :running
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: @default_theme_id
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: @browser_shell_classes
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: @component_style_ids
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: @semantic_role_ids
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: @token_ids
+
+  @spec style_profile() :: map()
+  def style_profile, do: @style_profile
+
+  @spec metadata() :: map()
+  def metadata, do: @metadata
+
+  @spec progress_current() :: integer()
+  def progress_current, do: @progress_current
+
+  @spec progress_total() :: integer()
+  def progress_total, do: @progress_total
+
+  @spec progress_label() :: String.t()
+  def progress_label, do: @progress_label
+
+  @spec progress_severity() :: atom()
+  def progress_severity, do: @progress_severity
+
+  @spec progress_status() :: atom()
+  def progress_status, do: @progress_status
+end
+
+defmodule UnifiedExamples.Progress.Theme do
+  @moduledoc false
+
+  alias UnifiedExamples.Progress.Helpers
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: Helpers.default_theme_id()
+
+  @spec summary() :: String.t()
+  def summary, do: "Local default theme for the standalone example-app suite"
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: Helpers.semantic_role_ids()
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: Helpers.token_ids()
+end
+
+defmodule UnifiedExamples.Progress.StyleProfile do
+  @moduledoc false
+
+  alias UnifiedExamples.Progress.Helpers
+
+  @spec default_style_profile() :: map()
+  def default_style_profile, do: Helpers.style_profile()
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: Helpers.browser_shell_classes()
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: Helpers.component_style_ids()
+end
+
 defmodule UnifiedExamples.Progress.Screen do
   @moduledoc """
   Self-contained progress proof for the standalone example-app suite.
@@ -9,13 +170,11 @@ defmodule UnifiedExamples.Progress.Screen do
   alias UnifiedExamples.Progress.StyleProfile
   alias UnifiedExamples.Progress.Theme
 
-  @example_metadata Helpers.metadata()
-
   @spec example_metadata() :: map()
-  def example_metadata, do: @example_metadata
+  def example_metadata, do: Helpers.metadata()
 
   @spec example_interaction_demo() :: map()
-  def example_interaction_demo, do: @example_metadata.interaction_demo
+  def example_interaction_demo, do: example_metadata().interaction_demo
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: Theme.default_theme_id()
@@ -328,7 +487,10 @@ defmodule UnifiedExamples.Progress.Screen do
       end
 
       text :progress_example_screen_notes_text do
-        value("Progress examples foreground one canonical progress indicator inside the local shell.")
+        value(
+          "Progress examples foreground one canonical progress indicator inside the local shell."
+        )
+
         theme_ref(Theme.default_theme_id())
         style_refs([:example_notes])
         tone(:muted)
@@ -336,164 +498,4 @@ defmodule UnifiedExamples.Progress.Screen do
       end
     end
   end
-end
-
-defmodule UnifiedExamples.Progress.Helpers do
-  @moduledoc false
-
-  @default_theme_id :example_suite_default
-
-  @browser_shell_classes [
-    "example-app-shell",
-    "example-app-header",
-    "example-app-runtime",
-    "example-app-header-top",
-    "example-app-kicker",
-    "example-app-widget",
-    "example-app-title",
-    "example-app-summary",
-    "example-app-notes"
-  ]
-
-  @component_style_ids [
-    :example_shell,
-    :example_panel,
-    :example_form_shell,
-    :example_title,
-    :example_summary,
-    :example_notes,
-    :example_primary_button,
-    :example_primary_input
-  ]
-
-  @semantic_role_ids [
-    :surface,
-    :accent,
-    :success,
-    :warning,
-    :critical,
-    :muted,
-    :foreground
-  ]
-
-  @token_ids [
-    :shell_surface,
-    :panel_surface,
-    :accent_action,
-    :input_surface
-  ]
-
-  @style_profile %{
-    shell: [:example_shell],
-    panel: [:example_panel],
-    form_shell: [:example_form_shell],
-    title: [:example_title],
-    summary: [:example_summary],
-    notes: [:example_notes],
-    interaction_button: [:example_primary_button],
-    button: [:example_primary_button],
-    text_input: [:example_primary_input]
-  }
-
-  @interaction_demo %{
-    mode: :shared_trigger,
-    family: :click,
-    source: :shared_trigger,
-    widget: :progress,
-    source_label: "Shared interaction trigger",
-    trigger_label: "Inspect the progress feedback story",
-    idle_prompt:
-      "Use the shared trigger to see how the progress example explains click changes in metric or feedback meaning.",
-    outcome:
-      "The review panel should explain how the progress example turns an authored canonical interaction into a browser-visible feedback story.",
-    target_surface: "progress review panel",
-    reviewer_hint:
-      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
-  }
-
-  @metadata %{
-    id: :progress_example_screen,
-    root_id: :progress_example_screen_root,
-    title: "Progress Widget Example",
-    summary: "Focused feedback-oriented example using the local example shell",
-    notes: "Progress examples foreground one canonical progress indicator inside the local shell.",
-    widget: :progress,
-    theme_id: @default_theme_id,
-    interaction_demo: @interaction_demo
-  }
-
-  @progress_current 72
-  @progress_total 100
-  @progress_label "Deploy progress"
-  @progress_severity :info
-  @progress_status :running
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: @default_theme_id
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: @browser_shell_classes
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: @component_style_ids
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: @semantic_role_ids
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: @token_ids
-
-  @spec style_profile() :: map()
-  def style_profile, do: @style_profile
-
-  @spec metadata() :: map()
-  def metadata, do: @metadata
-
-  @spec progress_current() :: integer()
-  def progress_current, do: @progress_current
-
-  @spec progress_total() :: integer()
-  def progress_total, do: @progress_total
-
-  @spec progress_label() :: String.t()
-  def progress_label, do: @progress_label
-
-  @spec progress_severity() :: atom()
-  def progress_severity, do: @progress_severity
-
-  @spec progress_status() :: atom()
-  def progress_status, do: @progress_status
-end
-
-defmodule UnifiedExamples.Progress.Theme do
-  @moduledoc false
-
-  alias UnifiedExamples.Progress.Helpers
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: Helpers.default_theme_id()
-
-  @spec summary() :: String.t()
-  def summary, do: "Local default theme for the standalone example-app suite"
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: Helpers.semantic_role_ids()
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: Helpers.token_ids()
-end
-
-defmodule UnifiedExamples.Progress.StyleProfile do
-  @moduledoc false
-
-  alias UnifiedExamples.Progress.Helpers
-
-  @spec default_style_profile() :: map()
-  def default_style_profile, do: Helpers.style_profile()
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: Helpers.browser_shell_classes()
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: Helpers.component_style_ids()
 end

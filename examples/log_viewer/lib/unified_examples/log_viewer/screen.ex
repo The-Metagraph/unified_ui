@@ -1,3 +1,166 @@
+defmodule UnifiedExamples.LogViewer.Helpers do
+  @moduledoc false
+
+  @default_theme_id :example_suite_default
+
+  @browser_shell_classes [
+    "example-app-shell",
+    "example-app-header",
+    "example-app-runtime",
+    "example-app-header-top",
+    "example-app-kicker",
+    "example-app-widget",
+    "example-app-title",
+    "example-app-summary",
+    "example-app-notes"
+  ]
+
+  @component_style_ids [
+    :example_shell,
+    :example_panel,
+    :example_form_shell,
+    :example_title,
+    :example_summary,
+    :example_notes,
+    :example_primary_button,
+    :example_primary_input
+  ]
+
+  @semantic_role_ids [
+    :surface,
+    :accent,
+    :success,
+    :warning,
+    :critical,
+    :muted,
+    :foreground
+  ]
+
+  @token_ids [
+    :shell_surface,
+    :panel_surface,
+    :accent_action,
+    :input_surface
+  ]
+
+  @style_profile %{
+    shell: [:example_shell],
+    panel: [:example_panel],
+    form_shell: [:example_form_shell],
+    title: [:example_title],
+    summary: [:example_summary],
+    notes: [:example_notes],
+    interaction_button: [:example_primary_button],
+    button: [:example_primary_button],
+    text_input: [:example_primary_input]
+  }
+
+  @interaction_demo %{
+    mode: :shared_trigger,
+    family: :focus,
+    source: :shared_trigger,
+    widget: :log_viewer,
+    source_label: "Shared interaction trigger",
+    trigger_label: "Inspect the log viewer data story",
+    idle_prompt:
+      "Use the shared trigger to see how the log viewer example explains focus changes such as focus, filtering, or selection.",
+    outcome:
+      "The review panel should explain how the log viewer example turns an authored canonical interaction into a browser-visible data story reviewers can understand quickly.",
+    target_surface: "log viewer review panel",
+    reviewer_hint:
+      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
+  }
+
+  @metadata %{
+    id: :log_viewer_example_screen,
+    root_id: :log_viewer_example_screen_root,
+    title: "Log Viewer Widget Example",
+    summary: "Focused data-oriented example using the local example shell",
+    notes: "Log viewer examples foreground one canonical event stream inside the local shell.",
+    widget: :log_viewer,
+    theme_id: @default_theme_id,
+    interaction_demo: @interaction_demo
+  }
+
+  @log_entries [
+    [
+      id: "evt-001",
+      timestamp: "2026-03-15T14:00:00Z",
+      severity: :info,
+      message: "Deploy started"
+    ],
+    [
+      id: "evt-002",
+      timestamp: "2026-03-15T14:02:00Z",
+      severity: :warning,
+      message: "Queue lag detected"
+    ],
+    [
+      id: "evt-003",
+      timestamp: "2026-03-15T14:05:00Z",
+      severity: :info,
+      message: "Lag recovered"
+    ]
+  ]
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: @default_theme_id
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: @browser_shell_classes
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: @component_style_ids
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: @semantic_role_ids
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: @token_ids
+
+  @spec style_profile() :: map()
+  def style_profile, do: @style_profile
+
+  @spec metadata() :: map()
+  def metadata, do: @metadata
+
+  @spec log_entries() :: [keyword()]
+  def log_entries, do: @log_entries
+end
+
+defmodule UnifiedExamples.LogViewer.Theme do
+  @moduledoc false
+
+  alias UnifiedExamples.LogViewer.Helpers
+
+  @spec default_theme_id() :: atom()
+  def default_theme_id, do: Helpers.default_theme_id()
+
+  @spec summary() :: String.t()
+  def summary, do: "Local default theme for the standalone example-app suite"
+
+  @spec semantic_role_ids() :: [atom()]
+  def semantic_role_ids, do: Helpers.semantic_role_ids()
+
+  @spec token_ids() :: [atom()]
+  def token_ids, do: Helpers.token_ids()
+end
+
+defmodule UnifiedExamples.LogViewer.StyleProfile do
+  @moduledoc false
+
+  alias UnifiedExamples.LogViewer.Helpers
+
+  @spec default_style_profile() :: map()
+  def default_style_profile, do: Helpers.style_profile()
+
+  @spec browser_shell_classes() :: [String.t()]
+  def browser_shell_classes, do: Helpers.browser_shell_classes()
+
+  @spec component_style_ids() :: [atom()]
+  def component_style_ids, do: Helpers.component_style_ids()
+end
+
 defmodule UnifiedExamples.LogViewer.Screen do
   @moduledoc """
   Self-contained log-viewer proof for the standalone example-app suite.
@@ -9,13 +172,11 @@ defmodule UnifiedExamples.LogViewer.Screen do
   alias UnifiedExamples.LogViewer.StyleProfile
   alias UnifiedExamples.LogViewer.Theme
 
-  @example_metadata Helpers.metadata()
-
   @spec example_metadata() :: map()
-  def example_metadata, do: @example_metadata
+  def example_metadata, do: Helpers.metadata()
 
   @spec example_interaction_demo() :: map()
-  def example_interaction_demo, do: @example_metadata.interaction_demo
+  def example_interaction_demo, do: example_metadata().interaction_demo
 
   @spec default_theme_id() :: atom()
   def default_theme_id, do: Theme.default_theme_id()
@@ -334,167 +495,4 @@ defmodule UnifiedExamples.LogViewer.Screen do
       end
     end
   end
-end
-
-defmodule UnifiedExamples.LogViewer.Helpers do
-  @moduledoc false
-
-  @default_theme_id :example_suite_default
-
-  @browser_shell_classes [
-    "example-app-shell",
-    "example-app-header",
-    "example-app-runtime",
-    "example-app-header-top",
-    "example-app-kicker",
-    "example-app-widget",
-    "example-app-title",
-    "example-app-summary",
-    "example-app-notes"
-  ]
-
-  @component_style_ids [
-    :example_shell,
-    :example_panel,
-    :example_form_shell,
-    :example_title,
-    :example_summary,
-    :example_notes,
-    :example_primary_button,
-    :example_primary_input
-  ]
-
-  @semantic_role_ids [
-    :surface,
-    :accent,
-    :success,
-    :warning,
-    :critical,
-    :muted,
-    :foreground
-  ]
-
-  @token_ids [
-    :shell_surface,
-    :panel_surface,
-    :accent_action,
-    :input_surface
-  ]
-
-  @style_profile %{
-    shell: [:example_shell],
-    panel: [:example_panel],
-    form_shell: [:example_form_shell],
-    title: [:example_title],
-    summary: [:example_summary],
-    notes: [:example_notes],
-    interaction_button: [:example_primary_button],
-    button: [:example_primary_button],
-    text_input: [:example_primary_input]
-  }
-
-  @interaction_demo %{
-    mode: :shared_trigger,
-    family: :focus,
-    source: :shared_trigger,
-    widget: :log_viewer,
-    source_label: "Shared interaction trigger",
-    trigger_label: "Inspect the log viewer data story",
-    idle_prompt:
-      "Use the shared trigger to see how the log viewer example explains focus changes such as focus, filtering, or selection.",
-    outcome:
-      "The review panel should explain how the log viewer example turns an authored canonical interaction into a browser-visible data story reviewers can understand quickly.",
-    target_surface: "log viewer review panel",
-    reviewer_hint:
-      "Reviewers should be able to understand the example outcome without opening source files or browser devtools."
-  }
-
-  @metadata %{
-    id: :log_viewer_example_screen,
-    root_id: :log_viewer_example_screen_root,
-    title: "Log Viewer Widget Example",
-    summary: "Focused data-oriented example using the local example shell",
-    notes: "Log viewer examples foreground one canonical event stream inside the local shell.",
-    widget: :log_viewer,
-    theme_id: @default_theme_id,
-    interaction_demo: @interaction_demo
-  }
-
-  @log_entries [
-    [
-      id: "evt-001",
-      timestamp: "2026-03-15T14:00:00Z",
-      severity: :info,
-      message: "Deploy started"
-    ],
-    [
-      id: "evt-002",
-      timestamp: "2026-03-15T14:02:00Z",
-      severity: :warning,
-      message: "Queue lag detected"
-    ],
-    [
-      id: "evt-003",
-      timestamp: "2026-03-15T14:05:00Z",
-      severity: :info,
-      message: "Lag recovered"
-    ]
-  ]
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: @default_theme_id
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: @browser_shell_classes
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: @component_style_ids
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: @semantic_role_ids
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: @token_ids
-
-  @spec style_profile() :: map()
-  def style_profile, do: @style_profile
-
-  @spec metadata() :: map()
-  def metadata, do: @metadata
-
-  @spec log_entries() :: [keyword()]
-  def log_entries, do: @log_entries
-end
-
-defmodule UnifiedExamples.LogViewer.Theme do
-  @moduledoc false
-
-  alias UnifiedExamples.LogViewer.Helpers
-
-  @spec default_theme_id() :: atom()
-  def default_theme_id, do: Helpers.default_theme_id()
-
-  @spec summary() :: String.t()
-  def summary, do: "Local default theme for the standalone example-app suite"
-
-  @spec semantic_role_ids() :: [atom()]
-  def semantic_role_ids, do: Helpers.semantic_role_ids()
-
-  @spec token_ids() :: [atom()]
-  def token_ids, do: Helpers.token_ids()
-end
-
-defmodule UnifiedExamples.LogViewer.StyleProfile do
-  @moduledoc false
-
-  alias UnifiedExamples.LogViewer.Helpers
-
-  @spec default_style_profile() :: map()
-  def default_style_profile, do: Helpers.style_profile()
-
-  @spec browser_shell_classes() :: [String.t()]
-  def browser_shell_classes, do: Helpers.browser_shell_classes()
-
-  @spec component_style_ids() :: [atom()]
-  def component_style_ids, do: Helpers.component_style_ids()
 end
