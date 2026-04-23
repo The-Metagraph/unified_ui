@@ -12,6 +12,16 @@ defmodule UnifiedUi.DocumentationTest do
 
     assert docs[:extras] == [
              "README.md",
+             "docs/README.md",
+             "docs/user/getting-started.md",
+             "docs/user/widget-catalog.md",
+             "docs/user/layouts-layers-and-display.md",
+             "docs/user/styling-and-themes.md",
+             "docs/user/bindings-and-interactions.md",
+             "docs/developer/architecture-overview.md",
+             "docs/developer/dsl-section-model.md",
+             "docs/developer/compilation-pipeline.md",
+             "docs/developer/package-components.md",
              "guides/dsl_model.md",
              "guides/theming_and_signals.md",
              "guides/compiler_and_parity.md",

@@ -41,7 +41,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.tooling.documentation_surface
-  statement: The package shall document its authored widget categories, styling and theming model, signal interaction model, and canonical IUR compilation model as part of the package developer workflow.
+  statement: The package shall document its authored model, architecture, main components, widget categories, layout and display primitives, styling and theming model, signal interaction model, and canonical IUR compilation model through maintained user guides, developer architecture guides, and maintainer workflow guides.
   priority: must
   stability: stable
 ```
