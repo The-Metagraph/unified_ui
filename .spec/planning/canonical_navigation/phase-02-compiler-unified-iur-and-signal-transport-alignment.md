@@ -63,25 +63,25 @@ Back to index: [README](./README.md)
       [x] 2.2.2.2 Subtask - Add canonical fixtures that exercise ordinary transitions, replacement transitions, history traversal, and modal transitions.
       [x] 2.2.2.3 Subtask - Ensure serialized or review-friendly output stays stable enough for diff-oriented tooling and conformance snapshots.
 
-  [ ] 2.3 Section - Shared Signal Transport Alignment
+  [x] 2.3 Section - Shared Signal Transport Alignment
     Implement the shared transport semantics that move canonical screen
     transitions across runtime package boundaries.
 
-    [ ] 2.3.1 Task - Define canonical boundary signal shape for transitions
+    [x] 2.3.1 Task - Define canonical boundary signal shape for transitions
       Establish how canonical screen transitions are represented when they cross
       package boundaries as `Jido.Signal` values.
 
-      [ ] 2.3.1.1 Subtask - Define the event-family and payload expectations for transition actions, symbolic screen targets, modal targets, and params.
-      [ ] 2.3.1.2 Subtask - Define how targetless actions, such as `go_back`, `go_forward`, and `close_modal`, are encoded without host-specific routing assumptions.
-      [ ] 2.3.1.3 Subtask - Define how runtimes receive canonical transition data while keeping their local native signal models free to differ internally.
+      [x] 2.3.1.1 Subtask - Define the event-family and payload expectations for transition actions, symbolic screen targets, modal targets, and params.
+      [x] 2.3.1.2 Subtask - Define how targetless actions, such as `go_back`, `go_forward`, and `close_modal`, are encoded without host-specific routing assumptions.
+      [x] 2.3.1.3 Subtask - Define how runtimes receive canonical transition data while keeping their local native signal models free to differ internally.
 
-    [ ] 2.3.2 Task - Add shared transport validation and fixtures
+    [x] 2.3.2 Task - Add shared transport validation and fixtures
       Provide the shared validation and reference fixtures that runtime
       implementers can consume consistently.
 
-      [ ] 2.3.2.1 Subtask - Add validation for malformed transition payloads, leaked router syntax, and missing required canonical fields.
-      [ ] 2.3.2.2 Subtask - Add shared transport fixtures that web, desktop, and terminal runtimes can use to prove canonical transition fidelity.
-      [ ] 2.3.2.3 Subtask - Add review-oriented transport summaries that make it obvious which transition action and symbolic screen target crossed the package boundary.
+      [x] 2.3.2.1 Subtask - Add validation for malformed transition payloads, leaked router syntax, and missing required canonical fields.
+      [x] 2.3.2.2 Subtask - Add shared transport fixtures that web, desktop, and terminal runtimes can use to prove canonical transition fidelity.
+      [x] 2.3.2.3 Subtask - Add review-oriented transport summaries that make it obvious which transition action and symbolic screen target crossed the package boundary.
 
   [ ] 2.4 Section - Phase 2 Integration Tests
     Validate canonical lowering, `unified_iur` representation, and boundary

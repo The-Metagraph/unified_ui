@@ -6,7 +6,12 @@ defmodule UnifiedIUR.InteractionTest do
   alias UnifiedIUR.Interactions
 
   test "exposes canonical interaction and binding modules" do
-    assert %{interaction: Interaction, binding: Binding} = Interactions.modules()
+    assert %{
+             interaction: Interaction,
+             binding: Binding,
+             transport: UnifiedIUR.Interactions.Transport
+           } =
+             Interactions.modules()
 
     assert [:click, :change, :submit, :open, :close, :selection, :focus, :navigation, :command] ==
              Interaction.families()
