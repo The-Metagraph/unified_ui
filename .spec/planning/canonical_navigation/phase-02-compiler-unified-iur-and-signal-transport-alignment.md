@@ -43,25 +43,25 @@ Back to index: [README](./README.md)
       [x] 2.1.2.2 Subtask - Ensure local navigation-like descriptors that do not change the top-level screen remain representable without being forced into the screen-transition shape.
       [x] 2.1.2.3 Subtask - Add normalization rules that keep older generic target-intent usage reviewable while preserving the newer canonical transition contract.
 
-  [ ] 2.2 Section - UnifiedIUR Interaction Representation
+  [x] 2.2 Section - UnifiedIUR Interaction Representation
     Implement the canonical `unified_iur` representation needed for runtimes to
     consume screen-transition meaning without host-router assumptions.
 
-    [ ] 2.2.1 Task - Extend canonical interaction descriptors
+    [x] 2.2.1 Task - Extend canonical interaction descriptors
       Add the renderer-independent fields and invariants needed for canonical
       screen transitions.
 
-      [ ] 2.2.1.1 Subtask - Extend the canonical interaction model to represent transition action, symbolic screen target, modal target, params, and related metadata.
-      [ ] 2.2.1.2 Subtask - Keep canonical interaction storage renderer-independent and free from browser path syntax, host-router names, or runtime-module references.
-      [ ] 2.2.1.3 Subtask - Define how targetless navigation actions, such as `go_back` or `close_modal`, are represented without inventing fake screen ids.
+      [x] 2.2.1.1 Subtask - Extend the canonical interaction model to represent transition action, symbolic screen target, modal target, params, and related metadata.
+      [x] 2.2.1.2 Subtask - Keep canonical interaction storage renderer-independent and free from browser path syntax, host-router names, or runtime-module references.
+      [x] 2.2.1.3 Subtask - Define how targetless navigation actions, such as `go_back` or `close_modal`, are represented without inventing fake screen ids.
 
-    [ ] 2.2.2 Task - Update canonical inspection, export, and fixture support
+    [x] 2.2.2 Task - Update canonical inspection, export, and fixture support
       Make the new canonical navigation representation visible and testable
       through package tooling.
 
-      [ ] 2.2.2.1 Subtask - Update inspect and export surfaces so canonical navigation descriptors print their transition fields clearly.
-      [ ] 2.2.2.2 Subtask - Add canonical fixtures that exercise ordinary transitions, replacement transitions, history traversal, and modal transitions.
-      [ ] 2.2.2.3 Subtask - Ensure serialized or review-friendly output stays stable enough for diff-oriented tooling and conformance snapshots.
+      [x] 2.2.2.1 Subtask - Update inspect and export surfaces so canonical navigation descriptors print their transition fields clearly.
+      [x] 2.2.2.2 Subtask - Add canonical fixtures that exercise ordinary transitions, replacement transitions, history traversal, and modal transitions.
+      [x] 2.2.2.3 Subtask - Ensure serialized or review-friendly output stays stable enough for diff-oriented tooling and conformance snapshots.
 
   [ ] 2.3 Section - Shared Signal Transport Alignment
     Implement the shared transport semantics that move canonical screen

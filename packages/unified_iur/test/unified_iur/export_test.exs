@@ -15,6 +15,20 @@ defmodule UnifiedIUR.ExportTest do
     assert {:ok, snapshot_export} = Export.fixture("forms--profile_editor", :snapshot)
     assert snapshot_export =~ "kind: :form_builder"
     assert snapshot_export =~ "name: :profile"
+
+    assert {:ok, navigation_export} =
+             Export.navigation_fixture("screen_transition--settings_profile")
+
+    assert navigation_export =~ "screen_transition--settings_profile"
+    assert navigation_export =~ "action: :navigate_to"
+    assert navigation_export =~ "screen: :settings"
+
+    assert {:ok, navigation_snapshot} =
+             Export.navigation_fixture("history_transition--back", :snapshot)
+
+    assert navigation_snapshot =~ "action: :go_back"
+    assert navigation_snapshot =~ "kind: :history_transition"
+    refute navigation_snapshot =~ "screen:"
   end
 
   test "exports diagnostics and diff reports for maintainers" do
