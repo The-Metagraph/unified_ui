@@ -326,6 +326,73 @@ defmodule ElmUi.Examples do
     )
   end
 
+  @spec native_navigation_screen() :: map()
+  def native_navigation_screen do
+    Widgets.screen(
+      "home",
+      "Navigation Home",
+      [
+        Widgets.content("navigation-header", [
+          Widgets.text("navigation-title", "Navigation Home"),
+          Widgets.inline_feedback(
+            "navigation-feedback",
+            "Server-side transitions remain authoritative even when the browser keeps local route state."
+          )
+        ]),
+        Widgets.row(
+          "navigation-actions",
+          [
+            Widgets.button("settings-link", "Open Settings"),
+            Widgets.button("dialog-link", "Open Dialog")
+          ],
+          gap: :md
+        )
+      ],
+      source: :native_navigation,
+      bridge: :phoenix_elm
+    )
+  end
+
+  @spec canonical_navigation_screen() :: Element.t()
+  def canonical_navigation_screen do
+    Element.new(:layout, :column,
+      id: "home",
+      attributes: %{gap: :md},
+      children: [
+        Element.new(:widget, :content,
+          id: "navigation-header",
+          children: [
+            Element.new(:widget, :text,
+              id: "navigation-title",
+              attributes: %{content: "Navigation Home"}
+            ),
+            Element.new(:widget, :inline_feedback,
+              id: "navigation-feedback",
+              attributes: %{
+                message:
+                  "Canonical transitions stay screen-based while host routes remain external."
+              }
+            )
+          ]
+        ),
+        Element.new(:layout, :row,
+          id: "navigation-actions",
+          attributes: %{gap: :md},
+          children: [
+            Element.new(:widget, :button,
+              id: "settings-link",
+              attributes: %{label: "Open Settings"}
+            ),
+            Element.new(:widget, :button,
+              id: "dialog-link",
+              attributes: %{label: "Open Dialog"}
+            )
+          ]
+        )
+      ]
+    )
+  end
+
   @spec native_advanced_screen() :: map()
   def native_advanced_screen do
     %{
@@ -939,6 +1006,9 @@ defmodule ElmUi.Examples do
       native_transport: native_transport_screen(),
       canonical_transport: canonical_transport_screen(),
       mixed_transport: mixed_transport_comparison(),
+      native_navigation: native_navigation_screen(),
+      canonical_navigation: canonical_navigation_screen(),
+      navigation_continuity: navigation_comparison(),
       native_advanced: native_advanced_screen(),
       canonical_advanced: canonical_advanced_screen(),
       advanced_continuity: advanced_comparison(),
@@ -1109,6 +1179,51 @@ defmodule ElmUi.Examples do
     }
   end
 
+  @spec navigation_comparison() :: map()
+  def navigation_comparison do
+    route_fixture = navigation_host_route_fixture()
+
+    native = navigation_flow(:native)
+    canonical = navigation_flow(:canonical)
+
+    %{
+      native: native,
+      canonical: canonical,
+      host_route_fixture: route_fixture,
+      continuity: %{
+        same_navigation_target?:
+          native.after_navigate.screen_id == "settings" and
+            canonical.after_navigate.screen_id == "settings",
+        frontend_coordination?:
+          native.after_navigate.frontend_screen_id == native.after_navigate.screen_id and
+            canonical.after_navigate.frontend_screen_id == canonical.after_navigate.screen_id,
+        same_modal_identifier?:
+          get_in(native, [:after_modal, :navigation, :current_modal, :modal]) ==
+            get_in(canonical, [:after_modal, :navigation, :current_modal, :modal]),
+        same_replacement_target?:
+          native.after_replace.screen_id == "home" and canonical.after_replace.screen_id == "home",
+        host_route_externalized?:
+          is_nil(get_in(route_fixture, [:canonical_target, :route])) and
+            get_in(native, [:after_navigate, :authoritative_host_route, :path]) ==
+              get_in(canonical, [:after_navigate, :authoritative_host_route, :path]) and
+            get_in(native, [:after_navigate, :route_state, :path]) ==
+              get_in(route_fixture, [:host_application, :frontend_route_state, :path]),
+        server_authority_preserved?:
+          Enum.all?(
+            [
+              native.after_navigate.server_authoritative?,
+              native.after_modal.server_authoritative?,
+              native.after_replace.server_authoritative?,
+              canonical.after_navigate.server_authoritative?,
+              canonical.after_modal.server_authoritative?,
+              canonical.after_replace.server_authoritative?
+            ],
+            & &1
+          )
+      }
+    }
+  end
+
   @spec styling_comparison() :: map()
   def styling_comparison do
     {:ok, native_state} =
@@ -1144,6 +1259,220 @@ defmodule ElmUi.Examples do
   defp catalog_by_category(category) do
     catalog()
     |> Enum.filter(&(&1.category == category))
+  end
+
+  defp navigation_flow(kind) do
+    {mount_result, screen_registry} =
+      case kind do
+        :native ->
+          home_screen = native_navigation_screen()
+
+          {
+            ElmUi.Runtime.mount_native_screen(home_screen,
+              runtime_id: "native-navigation",
+              screen_registry: %{
+                home: home_screen,
+                settings: native_navigation_settings_screen()
+              },
+              host_route_resolver: &resolve_navigation_host_route/2
+            ),
+            %{home: home_screen, settings: native_navigation_settings_screen()}
+          }
+
+        :canonical ->
+          home_element = canonical_navigation_screen()
+
+          {
+            ElmUi.Runtime.mount_iur_screen(home_element,
+              runtime_id: "canonical-navigation",
+              screen_registry: %{
+                home: home_element,
+                settings: canonical_navigation_settings_screen()
+              },
+              host_route_resolver: &resolve_navigation_host_route/2
+            ),
+            %{home: home_element, settings: canonical_navigation_settings_screen()}
+          }
+      end
+
+    {:ok, runtime_state} = mount_result
+    {:ok, frontend_model} = ElmUi.Runtime.hydrate_frontend(runtime_state)
+
+    {:ok, frontend_after_navigate_dispatch, navigate_event_message} =
+      ElmUi.FrontendRuntime.dispatch_interaction(frontend_model,
+        family: :navigation,
+        intent: :open_settings_screen,
+        boundary: :boundary,
+        widget_id: "settings-link",
+        target: navigation_target(:navigate_to, screen: :settings, params: %{tab: :profile}),
+        route_state: navigation_route_state("settings", %{tab: :profile})
+      )
+
+    {:ok, state_after_navigate, navigate_ack} =
+      ElmUi.Runtime.handle_frontend_event(runtime_state, navigate_event_message)
+
+    {:ok, frontend_after_navigate} =
+      ElmUi.FrontendRuntime.apply_server_message(
+        frontend_after_navigate_dispatch,
+        navigate_ack
+      )
+
+    {:ok, frontend_after_modal_dispatch, modal_event_message} =
+      ElmUi.FrontendRuntime.dispatch_interaction(frontend_after_navigate,
+        family: :navigation,
+        intent: :open_settings_dialog,
+        boundary: :boundary,
+        widget_id: "dialog-link",
+        target:
+          navigation_target(:open_modal,
+            modal: :settings_dialog,
+            params: %{origin: :toolbar},
+            metadata: %{host_overlay: :dialog}
+          )
+      )
+
+    {:ok, state_after_modal, modal_ack} =
+      ElmUi.Runtime.handle_frontend_event(state_after_navigate, modal_event_message)
+
+    {:ok, frontend_after_modal} =
+      ElmUi.FrontendRuntime.apply_server_message(frontend_after_modal_dispatch, modal_ack)
+
+    {:ok, frontend_after_replace_dispatch, replace_event_message} =
+      ElmUi.FrontendRuntime.dispatch_interaction(frontend_after_modal,
+        family: :navigation,
+        intent: :replace_home_screen,
+        boundary: :boundary,
+        widget_id: "settings-link",
+        target: navigation_target(:replace_with, screen: :home, params: %{returning: true}),
+        route_state: navigation_route_state("home", %{returning: true})
+      )
+
+    {:ok, state_after_replace, replace_ack} =
+      ElmUi.Runtime.handle_frontend_event(state_after_modal, replace_event_message)
+
+    {:ok, frontend_after_replace} =
+      ElmUi.FrontendRuntime.apply_server_message(frontend_after_replace_dispatch, replace_ack)
+
+    %{
+      category: kind,
+      registry_size: map_size(screen_registry),
+      after_navigate:
+        navigation_snapshot(
+          state_after_navigate,
+          frontend_after_navigate,
+          navigate_ack,
+          navigation_route_state("settings", %{tab: :profile})
+        ),
+      after_modal: navigation_snapshot(state_after_modal, frontend_after_modal, modal_ack, nil),
+      after_replace:
+        navigation_snapshot(
+          state_after_replace,
+          frontend_after_replace,
+          replace_ack,
+          navigation_route_state("home", %{returning: true})
+        )
+    }
+  end
+
+  defp navigation_snapshot(state, frontend_model, ack_message, route_state) do
+    authoritative_screen = ack_message.payload.authoritative_screen
+    navigation = authoritative_screen.metadata.navigation
+
+    %{
+      screen_id: to_string(state.screen_id),
+      title: state.title,
+      source_kind: state.source_kind,
+      boundary_mode: state.boundary_mode,
+      frontend_screen_id: to_string(frontend_model.screen_id),
+      frontend_title: frontend_model.title,
+      server_authoritative?: ack_message.payload.server_authority,
+      signal_type: state.last_boundary_signal && state.last_boundary_signal.type,
+      authoritative_screen: authoritative_screen,
+      authoritative_host_route: navigation.host_route,
+      navigation: navigation,
+      route_state: route_state
+    }
+  end
+
+  defp navigation_target(action, attrs) do
+    %{navigation: attrs |> Enum.into(%{}) |> Map.put(:action, action)}
+  end
+
+  defp navigation_host_route_fixture do
+    %{
+      canonical_target: %{action: :navigate_to, screen: :settings, params: %{tab: :profile}},
+      host_application: %{
+        phoenix_route: %{path: "/workspace/settings", params: %{tab: :profile}},
+        frontend_route_state: navigation_route_state("settings", %{tab: :profile}),
+        note:
+          "Browser route matching and URL generation remain host concerns rather than canonical transition fields."
+      }
+    }
+  end
+
+  defp navigation_route_state(screen_id, params) do
+    %{
+      screen_id: screen_id,
+      path: "/workspace/#{screen_id}",
+      params: normalize_map(params)
+    }
+  end
+
+  defp resolve_navigation_host_route(descriptor, _state) do
+    screen =
+      case Map.get(descriptor, :screen) do
+        screen when is_atom(screen) -> Atom.to_string(screen)
+        screen when is_binary(screen) -> screen
+        _other -> nil
+      end
+
+    case screen do
+      screen when screen in ["home", "settings"] ->
+        {:ok,
+         %{
+           path: "/workspace/#{screen}",
+           params: normalize_map(Map.get(descriptor, :params, %{}))
+         }}
+
+      _other ->
+        {:ok, nil}
+    end
+  end
+
+  defp native_navigation_settings_screen do
+    Widgets.screen(
+      "settings",
+      "Settings",
+      [
+        Widgets.content("settings-header", [
+          Widgets.text("settings-title", "Settings"),
+          Widgets.inline_feedback(
+            "settings-feedback",
+            "The server selected this screen and the Elm frontend acknowledged it."
+          )
+        ])
+      ],
+      source: :native_navigation,
+      bridge: :phoenix_elm
+    )
+  end
+
+  defp canonical_navigation_settings_screen do
+    Element.new(:layout, :column,
+      id: "settings",
+      children: [
+        Element.new(:widget, :text,
+          id: "settings-title",
+          attributes: %{content: "Settings"}
+        ),
+        Element.new(:widget, :inline_feedback,
+          id: "settings-feedback",
+          attributes: %{
+            message: "The authoritative Phoenix runtime coordinated this frontend screen change."
+          }
+        )
+      ]
+    )
   end
 
   defp snapshot(widget_tree, frontend_tree) do
@@ -1274,6 +1603,15 @@ defmodule ElmUi.Examples do
         parity_with: [:native_advanced, :advanced_continuity]
       },
       %{
+        id: :canonical_navigation,
+        category: :canonical,
+        workflow: :navigation,
+        summary: "Canonical web navigation workspace",
+        coverage: [:canonical_renderer, :navigation, :server_authority, :route_boundary],
+        parity_group: :navigation_workspace,
+        parity_with: [:native_navigation, :navigation_continuity]
+      },
+      %{
         id: :canonical_styling,
         category: :canonical,
         workflow: :styling,
@@ -1328,6 +1666,15 @@ defmodule ElmUi.Examples do
         parity_with: [:native_transport, :canonical_transport]
       },
       %{
+        id: :navigation_continuity,
+        category: :mixed,
+        workflow: :navigation,
+        summary: "Native and canonical web navigation transition comparison",
+        coverage: [:comparison_artifact, :navigation, :server_authority, :route_boundary],
+        parity_group: :navigation_workspace,
+        parity_with: [:native_navigation, :canonical_navigation]
+      },
+      %{
         id: :native_advanced,
         category: :native,
         workflow: :advanced,
@@ -1353,6 +1700,15 @@ defmodule ElmUi.Examples do
         coverage: [:foundational_widgets, :forms, :navigation, :split_runtime],
         parity_group: :foundational_workspace,
         parity_with: [:canonical_foundational, :foundational_continuity]
+      },
+      %{
+        id: :native_navigation,
+        category: :native,
+        workflow: :navigation,
+        summary: "Direct-native web navigation workspace",
+        coverage: [:navigation, :native_runtime, :server_authority, :route_boundary],
+        parity_group: :navigation_workspace,
+        parity_with: [:canonical_navigation, :navigation_continuity]
       },
       %{
         id: :native_styling,
@@ -1383,4 +1739,7 @@ defmodule ElmUi.Examples do
       }
     ]
   end
+
+  defp normalize_map(map) when is_map(map), do: Map.new(map)
+  defp normalize_map(_other), do: %{}
 end

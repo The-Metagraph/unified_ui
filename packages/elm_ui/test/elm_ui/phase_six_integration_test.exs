@@ -6,6 +6,7 @@ defmodule ElmUi.PhaseSixIntegrationTest do
              :native_advanced,
              :native_counter,
              :native_foundational,
+             :native_navigation,
              :native_styling,
              :native_transport
            ]
@@ -13,6 +14,7 @@ defmodule ElmUi.PhaseSixIntegrationTest do
     assert Enum.sort(Enum.map(ElmUi.Examples.canonical_examples(), & &1.id)) == [
              :canonical_advanced,
              :canonical_foundational,
+             :canonical_navigation,
              :canonical_styling,
              :canonical_transport,
              :canonical_welcome
@@ -22,6 +24,7 @@ defmodule ElmUi.PhaseSixIntegrationTest do
              :advanced_continuity,
              :foundational_continuity,
              :mixed_transport,
+             :navigation_continuity,
              :styling_continuity
            ]
 

@@ -25,7 +25,8 @@ defmodule LiveUi.Examples do
 
   @mixed_examples [
     LiveUi.Examples.MixedBoundaryTransport,
-    LiveUi.Examples.StyledContinuityComparison
+    LiveUi.Examples.StyledContinuityComparison,
+    LiveUi.Examples.WebNavigationTransitionComparison
   ]
 
   @spec native_examples() :: [module()]
