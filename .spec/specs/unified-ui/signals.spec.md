@@ -21,6 +21,7 @@ surface:
   - .spec/specs/unified-ui/signals.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
 ```
 
 ## Requirements
@@ -50,6 +51,16 @@ decisions:
   statement: The authored signal surface shall not require `elm_ui`, `live_ui`, or `desktop_ui` local event names, local payload keys, or local transport envelopes in authored modules.
   priority: must
   stability: stable
+
+- id: unified_ui.signals.navigation_transition_actions
+  statement: The authored navigation interaction surface shall support canonical screen-transition actions such as `navigate_to`, `replace_with`, `go_back`, `go_forward`, `open_modal`, and `close_modal` without requiring host-router syntax.
+  priority: must
+  stability: stable
+
+- id: unified_ui.signals.navigation_symbolic_screen_targets
+  statement: When a navigation interaction changes the active top-level surface, the authoring model shall express the target as a symbolic screen identifier with optional params or metadata rather than URLs, Phoenix route helpers, runtime modules, or browser-history instructions.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -61,7 +72,7 @@ decisions:
   then: The package produces canonical signal descriptors that runtime libraries can translate without the author naming renderer-local events
 
 - id: unified_ui.signals.author_navigation_intent
-  given: A developer authors a navigation interaction such as opening a dialog, changing a tab, or invoking a command palette action
+  given: A developer authors a navigation interaction such as opening a dialog, changing a tab, or transitioning to another screen
   when: The interaction is declared in the DSL
   then: The package records canonical event meaning and payload mapping without coupling the author to one renderer runtime
 ```
@@ -77,6 +88,8 @@ decisions:
     - unified_ui.signals.standard_interaction_families
     - unified_ui.signals.validation_and_introspection
     - unified_ui.signals.no_runtime_local_event_leakage
+    - unified_ui.signals.navigation_transition_actions
+    - unified_ui.signals.navigation_symbolic_screen_targets
     - unified_ui.signals.author_form_interaction
     - unified_ui.signals.author_navigation_intent
 ```

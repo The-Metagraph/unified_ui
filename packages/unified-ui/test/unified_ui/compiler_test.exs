@@ -100,6 +100,103 @@ defmodule UnifiedUi.CompilerTest do
     end
   end
 
+  defmodule NavigationWorkspace do
+    use UnifiedUi.Dsl
+
+    identity do
+      id(:navigation_workspace)
+      title("Navigation Workspace")
+      authored_ref([:tests, :navigation_workspace])
+    end
+
+    composition do
+      root(:navigation_workspace_root)
+      mode(:screen)
+
+      tabs :dashboard_tabs do
+        items(overview: "Overview", activity: "Activity")
+        active_item(:overview)
+        interaction_refs([:navigate_activity])
+      end
+
+      button :settings_link do
+        label("Settings")
+        interaction_refs([:open_settings_screen])
+      end
+
+      button :replace_home do
+        label("Home")
+        interaction_refs([:replace_home_screen])
+      end
+
+      button :back_button do
+        label("Back")
+        interaction_refs([:go_back_history])
+      end
+
+      button :open_settings_modal_button do
+        label("Open settings modal")
+        interaction_refs([:open_settings_modal])
+      end
+    end
+
+    signals do
+      namespace(:workspace)
+
+      data_binding do
+        id(:active_tab)
+        path([:navigation, :active_tab])
+        scope([:screen])
+        default(:overview)
+      end
+
+      interaction do
+        id(:navigate_activity)
+        family(:navigation)
+        intent(:navigate_activity)
+        source_context(element_id: :dashboard_tabs)
+        target_intent(binding: :active_tab, destination: :activity)
+        payload_mapping(tab: binding_ref(:active_tab), destination: :activity)
+      end
+
+      interaction do
+        id(:open_settings_screen)
+        family(:navigation)
+        intent(:open_settings_screen)
+        source_context(element_id: :settings_link, scope: :screen)
+        target_intent(action: :navigate_to, screen: :settings, params: %{tab: :profile})
+        payload_mapping(tab: :profile)
+      end
+
+      interaction do
+        id(:replace_home_screen)
+        family(:navigation)
+        intent(:replace_home_screen)
+        source_context(element_id: :replace_home, scope: :screen)
+        target_intent(action: :replace_with, screen: :home, params: %{source: :launcher})
+        payload_mapping(source: :launcher)
+      end
+
+      interaction do
+        id(:go_back_history)
+        family(:navigation)
+        intent(:go_back_history)
+        source_context(element_id: :back_button, scope: :screen)
+        target_intent(action: :go_back, metadata: %{source: :header})
+        payload_mapping(source: :header)
+      end
+
+      interaction do
+        id(:open_settings_modal)
+        family(:navigation)
+        intent(:open_settings_modal)
+        source_context(element_id: :open_settings_modal_button, scope: :screen)
+        target_intent(action: :open_modal, modal: :settings_dialog, params: %{source: :button})
+        payload_mapping(source: :button)
+      end
+    end
+  end
+
   test "compiles authored modules into canonical result structs and root IUR output" do
     {:ok, result} = Compiler.compile(CompiledScreen)
 
@@ -280,5 +377,152 @@ defmodule UnifiedUi.CompilerTest do
                ]
              }
            }
+  end
+
+  test "lowers canonical navigation transitions into stable interaction target descriptors" do
+    {:ok, result} = Compiler.compile(NavigationWorkspace)
+    {:ok, result_again} = Compiler.compile(NavigationWorkspace)
+
+    assert result.interactions == result_again.interactions
+    assert Reference.snapshot(result.iur) == Reference.snapshot(result_again.iur)
+
+    assert result.trace.interaction_by_id[:navigate_activity] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :navigate_activity,
+             source: %{element_id: :dashboard_tabs},
+             target: %{
+               binding: %{
+                 id: :active_tab,
+                 kind: :binding_ref,
+                 name: :active_tab,
+                 path: [:navigation, :active_tab],
+                 scope: [:screen]
+               },
+               destination: :activity
+             },
+             payload: %{
+               destination: :activity,
+               tab: %{
+                 id: :active_tab,
+                 kind: :binding_ref,
+                 name: :active_tab,
+                 path: [:navigation, :active_tab],
+                 scope: [:screen]
+               }
+             },
+             metadata: %{authored_id: :navigate_activity, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:open_settings_screen] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :open_settings_screen,
+             source: %{element_id: :settings_link, scope: :screen},
+             target: %{
+               navigation: %{
+                 action: :navigate_to,
+                 kind: :screen_transition,
+                 params: %{tab: :profile},
+                 screen: :settings
+               }
+             },
+             payload: %{tab: :profile},
+             metadata: %{authored_id: :open_settings_screen, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:replace_home_screen] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :replace_home_screen,
+             source: %{element_id: :replace_home, scope: :screen},
+             target: %{
+               navigation: %{
+                 action: :replace_with,
+                 kind: :replace_transition,
+                 params: %{source: :launcher},
+                 screen: :home
+               }
+             },
+             payload: %{source: :launcher},
+             metadata: %{authored_id: :replace_home_screen, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:go_back_history] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :go_back_history,
+             source: %{element_id: :back_button, scope: :screen},
+             target: %{
+               navigation: %{
+                 action: :go_back,
+                 kind: :history_transition,
+                 metadata: %{source: :header}
+               }
+             },
+             payload: %{source: :header},
+             metadata: %{authored_id: :go_back_history, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:open_settings_modal] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :open_settings_modal,
+             source: %{element_id: :open_settings_modal_button, scope: :screen},
+             target: %{
+               navigation: %{
+                 action: :open_modal,
+                 kind: :modal_transition,
+                 modal: :settings_dialog,
+                 params: %{source: :button}
+               }
+             },
+             payload: %{source: :button},
+             metadata: %{authored_id: :open_settings_modal, binding_refs: [], summary: nil}
+           }
+
+    assert Enum.map(result.iur.attributes.interactions, &{&1.intent, &1.target}) == [
+             {:navigate_activity,
+              %{
+                binding: %{
+                  id: :active_tab,
+                  kind: :binding_ref,
+                  name: :active_tab,
+                  path: [:navigation, :active_tab],
+                  scope: [:screen]
+                },
+                destination: :activity
+              }},
+             {:open_settings_screen,
+              %{
+                navigation: %{
+                  action: :navigate_to,
+                  kind: :screen_transition,
+                  params: %{tab: :profile},
+                  screen: :settings
+                }
+              }},
+             {:replace_home_screen,
+              %{
+                navigation: %{
+                  action: :replace_with,
+                  kind: :replace_transition,
+                  params: %{source: :launcher},
+                  screen: :home
+                }
+              }},
+             {:go_back_history,
+              %{
+                navigation: %{
+                  action: :go_back,
+                  kind: :history_transition,
+                  metadata: %{source: :header}
+                }
+              }},
+             {:open_settings_modal,
+              %{
+                navigation: %{
+                  action: :open_modal,
+                  kind: :modal_transition,
+                  modal: :settings_dialog,
+                  params: %{source: :button}
+                }
+              }}
+           ]
   end
 end
