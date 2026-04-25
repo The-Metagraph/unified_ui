@@ -64,25 +64,25 @@ Back to index: [README](./README.md)
       [x] 1.2.2.2 Subtask - Expose helper surfaces that list the supported navigation actions and their required authored fields.
       [x] 1.2.2.3 Subtask - Ensure navigation descriptors remain deterministic in inspection and export output so diffs stay stable and review-friendly.
 
-  [ ] 1.3 Section - Author-Facing Examples and Guidance
+  [x] 1.3 Section - Author-Facing Examples and Guidance
     Implement maintained examples and guidance that teach developers how to use
     the new authored navigation contract correctly.
 
-    [ ] 1.3.1 Task - Add maintained navigation authoring examples
+    [x] 1.3.1 Task - Add maintained navigation authoring examples
       Provide canonical examples that demonstrate the supported authored
       navigation patterns.
 
-      [ ] 1.3.1.1 Subtask - Add an example that shows an in-screen destination change, such as a tab switch, without using screen-transition fields.
-      [ ] 1.3.1.2 Subtask - Add an example that shows a top-level screen transition using a symbolic screen id and params.
-      [ ] 1.3.1.3 Subtask - Add an example that shows modal open and close transitions as canonical navigation actions.
+      [x] 1.3.1.1 Subtask - Add an example that shows an in-screen destination change, such as a tab switch, without using screen-transition fields.
+      [x] 1.3.1.2 Subtask - Add an example that shows a top-level screen transition using a symbolic screen id and params.
+      [x] 1.3.1.3 Subtask - Add an example that shows modal open and close transitions as canonical navigation actions.
 
-    [ ] 1.3.2 Task - Update foundational navigation guidance
+    [x] 1.3.2 Task - Update foundational navigation guidance
       Document the authored mental model so developers understand what the DSL
       owns and what runtimes still own.
 
-      [ ] 1.3.2.1 Subtask - Explain that `UnifiedUi` owns screen-transition intent rather than router tables or URL semantics.
-      [ ] 1.3.2.2 Subtask - Explain the difference between `screen` targets, local destinations, and host-runtime route resolution.
-      [ ] 1.3.2.3 Subtask - Explain how authored canonical navigation remains portable across web, desktop, and terminal runtimes.
+      [x] 1.3.2.1 Subtask - Explain that `UnifiedUi` owns screen-transition intent rather than router tables or URL semantics.
+      [x] 1.3.2.2 Subtask - Explain the difference between `screen` targets, local destinations, and host-runtime route resolution.
+      [x] 1.3.2.3 Subtask - Explain how authored canonical navigation remains portable across web, desktop, and terminal runtimes.
 
   [ ] 1.4 Section - Phase 1 Integration Tests
     Validate the authored navigation surface, diagnostics, and inspection

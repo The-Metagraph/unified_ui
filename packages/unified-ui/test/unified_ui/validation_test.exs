@@ -55,10 +55,10 @@ defmodule UnifiedUi.ValidationTest do
 
     assert report.signal_surface == %{
              example_ids_with_signals: [:themed_signal_workspace],
-             families: [:change, :command, :navigation, :open, :submit],
+             families: [:change, :command, :navigation, :submit],
              canonical_only?: true,
              total_bindings: 2,
-             total_interactions: 5
+             total_interactions: 7
            }
 
     assert report.documentation_surface.complete?
