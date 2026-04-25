@@ -3,7 +3,7 @@ defmodule LiveUi.Runtime do
   Package-facing entrypoint for the server-authoritative LiveView runtime.
   """
 
-  alias LiveUi.Runtime.{BrowserBridge, CanonicalScreen, ScreenComponent, State}
+  alias LiveUi.Runtime.{BrowserBridge, CanonicalScreen, Navigation, ScreenComponent, State}
   alias Jido.Signal
   alias UnifiedIUR.Element
 
@@ -58,12 +58,12 @@ defmodule LiveUi.Runtime do
       |> Map.new()
       |> Map.put_new(:event, event)
       |> Map.put_new(:runtime_event, event)
-      |> Map.put_new(:screen, runtime_state.screen.id())
+      |> Map.put_new(:screen, State.screen_id(runtime_state))
       |> Map.put_new(:mode, runtime_state.mode)
       |> Map.put_new(:payload, payload)
 
     with {:ok, translation} <- LiveUi.Transport.translate_native(attrs),
-         {:ok, updated_state} <- State.handle_event(runtime_state, event, payload) do
+         {:ok, updated_state} <- State.handle_runtime_action(runtime_state, translation) do
       {:ok, updated_state, translation}
     end
   end
@@ -72,8 +72,7 @@ defmodule LiveUi.Runtime do
           {:ok, State.t(), map()} | {:error, term()}
   def handle_boundary_signal(%State{} = runtime_state, signal) do
     with {:ok, runtime_action} <- LiveUi.Transport.decode_boundary_signal(signal),
-         {:ok, updated_state} <-
-           State.handle_event(runtime_state, runtime_action.runtime_event, runtime_action.payload) do
+         {:ok, updated_state} <- State.handle_runtime_action(runtime_state, runtime_action) do
       {:ok, updated_state, runtime_action}
     end
   end
@@ -106,7 +105,7 @@ defmodule LiveUi.Runtime do
 
   @spec modules() :: [module()]
   def modules do
-    [State, ScreenComponent, BrowserBridge, CanonicalScreen, LiveUi.Transport.Channel]
+    [State, Navigation, ScreenComponent, BrowserBridge, CanonicalScreen, LiveUi.Transport.Channel]
   end
 
   @spec assumptions() :: map()

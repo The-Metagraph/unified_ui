@@ -43,7 +43,9 @@ defmodule LiveUi.RuntimeTest do
   test "runtime mounts a screen with server-authoritative defaults" do
     assert {:ok, runtime_state} = LiveUi.Runtime.mount(CounterScreen, assigns: %{count: 2})
 
-    assert runtime_state.assigns == %{count: 2}
+    assert runtime_state.assigns.count == 2
+    assert runtime_state.assigns.current_screen_id == :counter_screen
+    assert runtime_state.assigns.navigation_history == []
     assert runtime_state.event_routes == %{"increment" => :increment}
     assert runtime_state.bridge_hooks == [:resize_observer]
   end

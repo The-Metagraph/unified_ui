@@ -21,6 +21,7 @@ surface:
   - .spec/specs/live_ui/runtime.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
   - live_ui.runtime.widget_livecomponents
 ```
 
@@ -56,6 +57,16 @@ decisions:
   statement: Runtime state, assigns, and rendered widget structure shall preserve canonical UI meaning across updates whether the source is direct native usage or canonical IUR interpretation.
   priority: must
   stability: stable
+
+- id: live_ui.runtime.canonical_navigation_transition_mapping
+  statement: When canonical navigation interactions are emitted or consumed, the runtime shall map canonical screen-transition actions onto LiveView-appropriate screen or page transitions while preserving server-authoritative UI meaning.
+  priority: must
+  stability: stable
+
+- id: live_ui.runtime.host_route_resolution_boundary
+  statement: Phoenix router lookup, URL generation, and host-specific route matching may be used by applications, but they shall remain host or runtime concerns rather than part of the authored `UnifiedUi` contract.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -89,6 +100,8 @@ decisions:
     - live_ui.runtime.hooks_only_where_necessary
     - live_ui.runtime.native_and_iur_entrypoints_share_runtime
     - live_ui.runtime.state_and_render_continuity
+    - live_ui.runtime.canonical_navigation_transition_mapping
+    - live_ui.runtime.host_route_resolution_boundary
     - live_ui.runtime.handle_canonical_event_server_side
     - live_ui.runtime_handle_direct_native_event
     - live_ui.runtime.screen_composes_widget_components

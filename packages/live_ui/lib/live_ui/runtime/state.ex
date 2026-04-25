@@ -6,11 +6,19 @@ defmodule LiveUi.Runtime.State do
   remains subordinate to server-authoritative screen or application state.
   """
 
-  alias LiveUi.Runtime.{BrowserBridge, Error}
+  alias LiveUi.Runtime.{BrowserBridge, Error, Navigation}
   alias LiveUi.Widget.Identity
 
   @enforce_keys [:screen, :assigns, :mode, :event_routes, :bridge_hooks]
-  defstruct [:screen, :assigns, :mode, :event_routes, :bridge_hooks, widget_local_state: %{}]
+  defstruct [
+    :screen,
+    :assigns,
+    :mode,
+    :event_routes,
+    :bridge_hooks,
+    navigation: %{},
+    widget_local_state: %{}
+  ]
 
   @type mode :: :native | :canonical
 
@@ -22,6 +30,7 @@ defmodule LiveUi.Runtime.State do
           mode: mode(),
           event_routes: %{optional(String.t()) => atom()},
           bridge_hooks: [atom()],
+          navigation: Navigation.t(),
           widget_local_state: widget_local_state()
         }
 
@@ -37,8 +46,16 @@ defmodule LiveUi.Runtime.State do
          assigns: Map.merge(defaults, initial_assigns),
          mode: Keyword.get(opts, :mode, :native),
          event_routes: screen.event_routes(),
-         bridge_hooks: BrowserBridge.normalize_hooks(screen.bridge_hooks())
-       }}
+         bridge_hooks: BrowserBridge.normalize_hooks(screen.bridge_hooks()),
+         navigation:
+           Navigation.initialize(
+             screen,
+             Map.merge(defaults, initial_assigns),
+             Keyword.get(opts, :mode, :native),
+             opts
+           )
+       }
+       |> sync_navigation_assigns()}
     end
   end
 
@@ -54,10 +71,39 @@ defmodule LiveUi.Runtime.State do
     end
   end
 
+  @spec handle_runtime_action(t(), map()) :: {:ok, t()} | {:error, Error.t()}
+  def handle_runtime_action(%__MODULE__{} = state, runtime_action) when is_map(runtime_action) do
+    if Navigation.transition?(runtime_action) do
+      Navigation.apply_transition(state, runtime_action)
+    else
+      handle_event(state, runtime_action.runtime_event, runtime_action.payload)
+    end
+  end
+
+  @spec screen_id(t()) :: atom() | String.t() | nil
+  def screen_id(%__MODULE__{navigation: navigation, screen: screen}) do
+    Navigation.screen_id(navigation) || screen.id()
+  end
+
+  @spec screen_title(t()) :: String.t() | nil
+  def screen_title(%__MODULE__{navigation: navigation, screen: screen}) do
+    Navigation.screen_title(navigation) || screen.title()
+  end
+
+  @spec sync_navigation_assigns(t()) :: t()
+  def sync_navigation_assigns(%__MODULE__{} = state) do
+    navigation_assigns = Navigation.assign_overlays(state.navigation)
+
+    %{
+      state
+      | assigns: Map.merge(Navigation.strip_managed_assigns(state.assigns), navigation_assigns)
+    }
+  end
+
   defp apply_event(%__MODULE__{} = state, route, payload) do
     case state.screen.handle_event(route, payload, state.assigns) do
       {:ok, updated_assigns} when is_map(updated_assigns) ->
-        {:ok, %{state | assigns: updated_assigns}}
+        {:ok, %{state | assigns: updated_assigns} |> sync_navigation_assigns()}
 
       {:error, reason} ->
         {:error, Error.invalid_event_result(state.screen, route, {:error, reason})}

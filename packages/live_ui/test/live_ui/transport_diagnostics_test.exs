@@ -30,6 +30,20 @@ defmodule LiveUi.TransportDiagnosticsTest do
              )
   end
 
+  test "rejects leaked host-route syntax on canonical navigation targets" do
+    assert {:error, %Error{reason: :host_route_syntax}} =
+             LiveUi.Signals.from_native(
+               family: :navigation,
+               intent: :open_settings_screen,
+               screen: :profile,
+               element_id: :settings_link,
+               boundary: :boundary,
+               target: %{
+                 navigation: %{action: :navigate_to, screen: :settings, route: "/settings"}
+               }
+             )
+  end
+
   test "rejects missing canonical context and invalid families" do
     interaction = Interaction.submit(intent: :save_profile, element_id: :profile_form)
 
