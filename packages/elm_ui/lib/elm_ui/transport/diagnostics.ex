@@ -6,6 +6,7 @@ defmodule ElmUi.Transport.Diagnostics do
 
   alias Jido.Signal
   alias ElmUi.Transport.Error
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
 
   @renderer_local_event_prefixes ["phx_", "phx-", "elm:", "browser:", "dom:"]
   @renderer_local_payload_prefixes ["phx_", "elm_", "browser_", "dom_"]
@@ -24,6 +25,7 @@ defmodule ElmUi.Transport.Diagnostics do
          :ok <- validate_payload_mapping(payload, :native_local),
          :ok <- validate_runtime_event(Map.get(attrs, :runtime_event), :native_local),
          :ok <- validate_payload_keys(payload, :native_local),
+         :ok <- validate_navigation_target(Map.get(attrs, :target, %{})),
          :ok <- maybe_validate_boundary_context(attrs, boundary) do
       :ok
     end
@@ -37,11 +39,13 @@ defmodule ElmUi.Transport.Diagnostics do
     screen = extension(signal, :elm_ui_screen)
     runtime_id = extension(signal, :elm_ui_runtime_id)
     payload = signal.data || %{}
+    target = extension(signal, :elm_ui_target) || %{}
 
     with :ok <- validate_family(family, supported_families),
          :ok <- validate_payload_mapping(payload, :canonical_boundary),
          :ok <- validate_runtime_event(runtime_event, :canonical_boundary),
          :ok <- validate_payload_keys(payload, :canonical_boundary),
+         :ok <- validate_navigation_target(target),
          :ok <-
            validate_boundary_context(%{screen: screen, runtime_id: runtime_id}, signal.subject) do
       :ok
@@ -152,6 +156,22 @@ defmodule ElmUi.Transport.Diagnostics do
 
   defp validate_payload_keys(_payload, _surface), do: :ok
 
+  defp validate_navigation_target(target) do
+    target = normalize_map(target)
+    navigation = Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
+
+    leaked_keys =
+      navigation
+      |> Map.keys()
+      |> Enum.filter(&forbidden_navigation_key?/1)
+
+    if leaked_keys == [] do
+      :ok
+    else
+      {:error, Error.host_route_syntax(leaked_keys)}
+    end
+  end
+
   defp maybe_validate_boundary_context(attrs, :boundary) do
     validate_boundary_context(attrs, Map.get(attrs, :widget_id))
   end
@@ -196,6 +216,15 @@ defmodule ElmUi.Transport.Diagnostics do
   end
 
   defp renderer_local_key?(_key), do: false
+
+  defp forbidden_navigation_key?(key) when is_atom(key),
+    do: key in BoundaryTransport.forbidden_navigation_keys()
+
+  defp forbidden_navigation_key?(key) when is_binary(key) do
+    key in Enum.map(BoundaryTransport.forbidden_navigation_keys(), &Atom.to_string/1)
+  end
+
+  defp forbidden_navigation_key?(_key), do: false
 
   defp extension(signal, key) do
     Map.get(signal.extensions, key) || Map.get(signal.extensions, Atom.to_string(key))

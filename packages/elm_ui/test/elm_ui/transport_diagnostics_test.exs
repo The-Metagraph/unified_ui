@@ -32,6 +32,21 @@ defmodule ElmUi.TransportDiagnosticsTest do
              )
   end
 
+  test "rejects leaked host-route syntax on canonical navigation targets" do
+    assert {:error, %Error{reason: :host_route_syntax}} =
+             ElmUi.Signals.from_native_event(
+               family: :navigation,
+               intent: :open_settings_screen,
+               boundary: :boundary,
+               screen: "settings",
+               runtime_id: "settings-runtime",
+               widget_id: :settings_link,
+               target: %{
+                 navigation: %{action: :navigate_to, screen: :settings, route: "/settings"}
+               }
+             )
+  end
+
   test "rejects missing canonical context and invalid families" do
     assert {:error, %Error{reason: :missing_boundary_context}} =
              ElmUi.Signals.from_native_event(

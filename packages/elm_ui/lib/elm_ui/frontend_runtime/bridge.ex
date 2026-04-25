@@ -54,10 +54,11 @@ defmodule ElmUi.FrontendRuntime.Bridge do
     attrs =
       attrs
       |> Enum.into(%{})
-      |> Map.put_new(:screen, model.title)
+      |> Map.put_new(:screen, model.screen_id || model.title)
       |> Map.put_new(:runtime_id, model.runtime_id)
       |> Map.put_new(:source_kind, model.source_kind)
       |> Map.put_new(:boundary_mode, model.boundary_mode)
+      |> maybe_put_metadata(model)
 
     Transport.from_native_event(attrs)
   end
@@ -139,11 +140,61 @@ defmodule ElmUi.FrontendRuntime.Bridge do
         _ -> model.diagnostics
       end
 
-    %{
-      model
-      | local_state: local_state,
-        tree: Realization.realize(model.render_tree, local_state),
-        diagnostics: diagnostics
-    }
+    model
+    |> apply_authoritative_screen(payload)
+    |> Map.put(:local_state, local_state)
+    |> Map.put(:tree, Realization.realize(model.render_tree, local_state))
+    |> Map.put(:diagnostics, diagnostics)
   end
+
+  defp apply_authoritative_screen(%Model{} = model, payload) do
+    case Map.get(payload, :authoritative_screen) || Map.get(payload, "authoritative_screen") do
+      authoritative_screen when is_map(authoritative_screen) ->
+        authoritative_screen = Map.new(authoritative_screen)
+
+        render_tree =
+          Map.get(authoritative_screen, :tree) || Map.get(authoritative_screen, "tree")
+
+        %{
+          model
+          | screen_id:
+              Map.get(authoritative_screen, :screen_id) ||
+                Map.get(authoritative_screen, "screen_id") || model.screen_id,
+            title:
+              Map.get(authoritative_screen, :title) || Map.get(authoritative_screen, "title") ||
+                model.title,
+            source_kind:
+              Map.get(authoritative_screen, :source_kind) ||
+                Map.get(authoritative_screen, "source_kind") || model.source_kind,
+            boundary_mode:
+              Map.get(authoritative_screen, :boundary_mode) ||
+                Map.get(authoritative_screen, "boundary_mode") || model.boundary_mode,
+            render_tree: render_tree || model.render_tree,
+            metadata:
+              Map.get(authoritative_screen, :metadata) ||
+                Map.get(authoritative_screen, "metadata") || model.metadata
+        }
+
+      _other ->
+        model
+    end
+  end
+
+  defp maybe_put_metadata(attrs, model) do
+    metadata =
+      attrs
+      |> Map.get(:metadata, Map.get(attrs, "metadata", %{}))
+      |> normalize_map()
+      |> maybe_put(:route_state, Map.get(attrs, :route_state) || Map.get(attrs, "route_state"))
+      |> maybe_put(:screen_id, model.screen_id)
+
+    Map.put(attrs, :metadata, metadata)
+  end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
+
+  defp normalize_map(map) when is_map(map), do: Map.new(map)
+  defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
+  defp normalize_map(_other), do: %{}
 end

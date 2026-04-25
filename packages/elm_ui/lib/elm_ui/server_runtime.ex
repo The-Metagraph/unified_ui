@@ -8,6 +8,7 @@ defmodule ElmUi.ServerRuntime do
   alias ElmUi.ServerRuntime.{
     Error,
     EventRouter,
+    Navigation,
     RenderModel,
     State,
     StyleResolver,
@@ -19,7 +20,17 @@ defmodule ElmUi.ServerRuntime do
 
   @spec modules() :: [module()]
   def modules do
-    [__MODULE__, State, ViewState, RenderModel, StyleResolver, EventRouter, SyncBoundary, Error]
+    [
+      __MODULE__,
+      State,
+      Navigation,
+      ViewState,
+      RenderModel,
+      StyleResolver,
+      EventRouter,
+      SyncBoundary,
+      Error
+    ]
   end
 
   @spec mount_native_screen(map(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
@@ -140,6 +151,7 @@ defmodule ElmUi.ServerRuntime do
       boundary_mode: if(source_kind == :canonical, do: :canonical_boundary, else: :native_local),
       diagnostics: [],
       event_log: [],
+      navigation: Navigation.initialize(source_kind, screen, canonical_element, opts),
       metadata: metadata
     }
   end
@@ -158,4 +170,29 @@ defmodule ElmUi.ServerRuntime do
      |> State.record_event(%{mode: :boundary, family: family})
      |> State.record_boundary_signal(translation.signal)}
   end
+
+  defp apply_route(%State{} = state, %{
+         route: :navigation_transition,
+         family: family,
+         translation: translation
+       }) do
+    with {:ok, next_state} <- Navigation.apply_transition(state, translation) do
+      next_state =
+        next_state
+        |> State.record_event(%{
+          mode: if(translation.boundary == :boundary, do: :boundary, else: :local),
+          family: family
+        })
+        |> maybe_record_boundary_signal(translation)
+
+      {:ok, next_state}
+    end
+  end
+
+  defp maybe_record_boundary_signal(%State{} = state, %{signal: signal})
+       when not is_nil(signal) do
+    State.record_boundary_signal(state, signal)
+  end
+
+  defp maybe_record_boundary_signal(%State{} = state, _translation), do: state
 end

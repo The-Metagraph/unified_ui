@@ -44,7 +44,11 @@ defmodule ElmUi.ServerRuntime.SyncBoundary do
   end
 
   @spec translation_for_message(State.t(), Message.t()) :: {:ok, map()} | {:error, Error.t()}
-  def translation_for_message(%State{} = state, %{kind: :event, payload: payload})
+  def translation_for_message(%State{} = state, %{
+        kind: :event,
+        payload: payload,
+        metadata: metadata
+      })
       when is_map(payload) do
     payload =
       payload
@@ -70,6 +74,11 @@ defmodule ElmUi.ServerRuntime.SyncBoundary do
               {:ok, translation} ->
                 {:ok,
                  translation
+                 |> Map.update(
+                   :metadata,
+                   normalize_map(metadata),
+                   &Map.merge(&1, normalize_map(metadata))
+                 )
                  |> Map.put_new(:runtime_id, state.runtime_id)
                  |> Map.put_new(:screen, state.screen_id)}
 
@@ -93,7 +102,7 @@ defmodule ElmUi.ServerRuntime.SyncBoundary do
           end
 
         _local ->
-          case Transport.from_native_event(local_event_attrs(payload)) do
+          case Transport.from_native_event(local_event_attrs(payload, metadata)) do
             {:ok, translation} ->
               {:ok, translation}
 
@@ -141,7 +150,8 @@ defmodule ElmUi.ServerRuntime.SyncBoundary do
         runtime_event: translation.runtime_event,
         event_count: length(state.event_log),
         server_authority: true,
-        diagnostics: state.diagnostics
+        diagnostics: state.diagnostics,
+        authoritative_screen: ViewState.authoritative_screen_payload(state)
       },
       %{
         source_kind: state.source_kind,
@@ -158,12 +168,13 @@ defmodule ElmUi.ServerRuntime.SyncBoundary do
   defp normalize_boundary("boundary"), do: :boundary
   defp normalize_boundary(_value), do: :local
 
-  defp local_event_attrs(payload) do
+  defp local_event_attrs(payload, metadata) do
     %{
       family: fetch(payload, :family),
       intent: fetch(payload, :intent),
       boundary: :local,
       runtime_event: fetch(payload, :runtime_event),
+      metadata: normalize_map(metadata),
       payload: fetch(payload, :payload),
       target: fetch(payload, :target, %{}),
       widget_id:

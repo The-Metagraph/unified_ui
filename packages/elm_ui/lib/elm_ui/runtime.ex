@@ -13,6 +13,7 @@ defmodule ElmUi.Runtime do
     [
       ElmUi.ServerRuntime,
       ElmUi.ServerRuntime.State,
+      ElmUi.ServerRuntime.Navigation,
       ElmUi.ServerRuntime.ViewState,
       ElmUi.ServerRuntime.StyleResolver,
       ElmUi.FrontendRuntime,

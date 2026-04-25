@@ -14,6 +14,7 @@ defmodule ElmUi.Transport.Bridge do
       payload_for(translation),
       %{
         runtime_id: model.runtime_id,
+        screen_id: model.screen_id,
         source_kind: model.source_kind,
         boundary: translation.boundary
       }
