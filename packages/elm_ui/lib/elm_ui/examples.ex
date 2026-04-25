@@ -1320,14 +1320,14 @@ defmodule ElmUi.Examples do
     {:ok, frontend_after_modal_dispatch, modal_event_message} =
       ElmUi.FrontendRuntime.dispatch_interaction(frontend_after_navigate,
         family: :navigation,
-        intent: :open_settings_dialog,
+        intent: :open_settings_modal,
         boundary: :boundary,
         widget_id: "dialog-link",
         target:
           navigation_target(:open_modal,
             modal: :settings_dialog,
-            params: %{origin: :toolbar},
-            metadata: %{host_overlay: :dialog}
+            params: %{mode: :advanced},
+            metadata: %{surface: :workspace}
           )
       )
 
@@ -1343,8 +1343,12 @@ defmodule ElmUi.Examples do
         intent: :replace_home_screen,
         boundary: :boundary,
         widget_id: "settings-link",
-        target: navigation_target(:replace_with, screen: :home, params: %{returning: true}),
-        route_state: navigation_route_state("home", %{returning: true})
+        target:
+          navigation_target(:replace_with,
+            screen: :home,
+            params: %{source: :command_palette}
+          ),
+        route_state: navigation_route_state("home", %{source: :command_palette})
       )
 
     {:ok, state_after_replace, replace_ack} =
@@ -1369,7 +1373,7 @@ defmodule ElmUi.Examples do
           state_after_replace,
           frontend_after_replace,
           replace_ack,
-          navigation_route_state("home", %{returning: true})
+          navigation_route_state("home", %{source: :command_palette})
         )
     }
   end

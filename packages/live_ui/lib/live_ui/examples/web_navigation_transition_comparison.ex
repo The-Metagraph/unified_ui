@@ -88,12 +88,12 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
              "navigation:open_settings_dialog",
              %{},
              family: :navigation,
-             intent: :open_settings_dialog,
+             intent: :open_settings_modal,
              target:
                navigation_target(:open_modal,
                  modal: :settings_dialog,
-                 params: %{origin: :toolbar},
-                 metadata: %{host_overlay: :dialog}
+                 params: %{mode: :advanced},
+                 metadata: %{surface: :workspace}
                )
            ),
          {:ok, after_replace, replace_translation} <-
@@ -103,7 +103,11 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
              %{},
              family: :navigation,
              intent: :replace_home_screen,
-             target: navigation_target(:replace_with, screen: :home, params: %{returning: true})
+             target:
+               navigation_target(:replace_with,
+                 screen: :home,
+                 params: %{source: :command_palette}
+               )
            ) do
       {:ok,
        %{
