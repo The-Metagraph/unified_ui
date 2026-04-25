@@ -27,13 +27,68 @@ defmodule UnifiedUi.ToolingTest do
              mode: :canonical,
              binding_names: [:active_tab, :filters],
              interaction_ids: [
+               :close_settings_modal,
                :filters_change,
                :filters_submit,
                :navigate_activity,
                :open_commands,
-               :open_settings
+               :open_settings,
+               :open_settings_screen
              ],
-             families: [:change, :command, :navigation, :open, :submit],
+             families: [:change, :command, :navigation, :submit],
+             interaction_target_kinds: %{
+               filters_change: :generic,
+               filters_submit: :generic,
+               navigate_activity: :local_destination,
+               open_settings_screen: :screen_transition,
+               open_commands: :generic,
+               open_settings: :modal_transition,
+               close_settings_modal: :modal_transition
+             },
+             navigation_actions: [
+               :navigate_to,
+               :replace_with,
+               :go_back,
+               :go_forward,
+               :open_modal,
+               :close_modal
+             ],
+             navigation_contract: %{
+               transition_fields: [:action, :screen, :modal, :params, :metadata],
+               local_navigation_fields: [:binding, :destination],
+               actions: %{
+                 navigate_to: %{
+                   kind: :screen_transition,
+                   required_fields: [:screen],
+                   optional_fields: [:params, :metadata]
+                 },
+                 replace_with: %{
+                   kind: :replace_transition,
+                   required_fields: [:screen],
+                   optional_fields: [:params, :metadata]
+                 },
+                 go_back: %{
+                   kind: :history_transition,
+                   required_fields: [],
+                   optional_fields: [:metadata]
+                 },
+                 go_forward: %{
+                   kind: :history_transition,
+                   required_fields: [],
+                   optional_fields: [:metadata]
+                 },
+                 open_modal: %{
+                   kind: :modal_transition,
+                   required_fields: [:modal],
+                   optional_fields: [:params, :metadata]
+                 },
+                 close_modal: %{
+                   kind: :modal_transition,
+                   required_fields: [],
+                   optional_fields: [:modal, :metadata]
+                 }
+               }
+             },
              target_bindings: [:active_tab, :filters]
            }
 
@@ -101,5 +156,6 @@ defmodule UnifiedUi.ToolingTest do
     assert rendered =~ "status: ok"
     assert rendered =~ "related specs:"
     assert rendered =~ "signal families:"
+    assert rendered =~ "navigation target kinds:"
   end
 end

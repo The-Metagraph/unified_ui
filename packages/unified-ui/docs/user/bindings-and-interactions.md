@@ -106,6 +106,22 @@ The canonical interaction families currently supported are:
 - `:navigation`
 - `:command`
 
+## Canonical Navigation Model
+
+`UnifiedUi` owns portable navigation intent, not host-router configuration.
+
+- Use `binding` plus `destination` when the user stays inside the current
+  screen and only a local section, tab, or panel changes.
+- Use `action` plus `screen` when the user transitions to another top-level
+  screen.
+- Use `action` plus `modal` when the user opens or closes a modal surface.
+- Keep URL paths, Phoenix route helpers, browser-history directives, and
+  runtime module names out of `target_intent`.
+
+Runtimes still own resolution. A web runtime may map `screen: :settings` to a
+route, `desktop_ui` may map it to a registered window-local screen, and
+`terminal_ui` may map it to a screen swap or bounded history state.
+
 ## Common Patterns
 
 ### Form Change and Submit
@@ -121,7 +137,7 @@ interaction do
 end
 ```
 
-### Navigation
+### In-Screen Navigation
 
 ```elixir
 interaction do
@@ -129,21 +145,43 @@ interaction do
   family(:navigation)
   intent(:navigate_dashboard)
   source_context(element_id: :dashboard_tabs)
-  target_intent(binding: :active_tab, route: :activity)
+  target_intent(binding: :active_tab, destination: :activity)
   payload_mapping(tab: binding_ref(:active_tab), destination: :activity)
 end
 ```
 
-### Overlay Open
+### Screen Transition
+
+```elixir
+interaction do
+  id(:open_settings_screen)
+  family(:navigation)
+  intent(:open_settings_screen)
+  source_context(element_id: :settings_link, scope: :screen)
+  target_intent(action: :navigate_to, screen: :settings, params: %{tab: :profile})
+  payload_mapping(tab: :profile)
+end
+```
+
+### Modal Transitions
 
 ```elixir
 interaction do
   id(:open_settings)
-  family(:open)
-  intent(:open_settings)
-  source_context(element_id: :open_settings_button)
-  target_intent(overlay: :settings_dialog)
+  family(:navigation)
+  intent(:open_settings_modal)
+  source_context(element_id: :open_settings_button, scope: :screen)
+  target_intent(action: :open_modal, modal: :settings_dialog, params: %{source: :button})
   payload_mapping(source: :button)
+end
+
+interaction do
+  id(:close_settings_modal)
+  family(:navigation)
+  intent(:close_settings_modal)
+  source_context(element_id: :close_settings_button, scope: :screen)
+  target_intent(action: :close_modal, modal: :settings_dialog, metadata: %{reason: :done})
+  payload_mapping(reason: :done)
 end
 ```
 

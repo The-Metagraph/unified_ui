@@ -11,6 +11,33 @@ defmodule UnifiedUi.Signals do
     Signal.families()
   end
 
+  @spec navigation_actions() :: [Signal.navigation_transition_action()]
+  def navigation_actions do
+    Signal.navigation_actions()
+  end
+
+  @spec navigation_action_contracts() :: %{
+          Signal.navigation_transition_action() => Signal.navigation_action_contract()
+        }
+  def navigation_action_contracts do
+    Signal.navigation_action_contracts()
+  end
+
+  @spec navigation_transition_fields() :: [atom()]
+  def navigation_transition_fields do
+    Signal.navigation_transition_fields()
+  end
+
+  @spec local_navigation_fields() :: [atom()]
+  def local_navigation_fields do
+    Signal.local_navigation_fields()
+  end
+
+  @spec navigation_target_kind(Signal.t() | map() | keyword()) :: Signal.navigation_target_kind()
+  def navigation_target_kind(signal) do
+    Signal.navigation_target_kind(signal)
+  end
+
   @spec bindings(module()) :: [Binding.t()]
   def bindings(module) when is_atom(module) do
     module

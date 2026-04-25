@@ -286,7 +286,7 @@ defmodule UnifiedUi.Phase4IntegrationTest do
         family(:navigation)
         intent(:navigate_dashboard)
         source_context(element_id: :dashboard_tabs)
-        target_intent(binding: :active_tab, route: :activity)
+        target_intent(binding: :active_tab, destination: :activity)
         payload_mapping(tab: binding_ref(:active_tab), destination: :activity)
       end
 
@@ -479,7 +479,7 @@ defmodule UnifiedUi.Phase4IntegrationTest do
                  family: :navigation,
                  intent: :navigate_dashboard,
                  source_context: %{element_id: :dashboard_tabs},
-                 target_intent: %{binding: :active_tab, route: :activity},
+                 target_intent: %{binding: :active_tab, destination: :activity},
                  payload_mapping: %{
                    tab: %{kind: :binding_ref, id: :active_tab},
                    destination: :activity

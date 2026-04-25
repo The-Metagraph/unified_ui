@@ -5,6 +5,28 @@ defmodule UnifiedUi.Signal do
 
   alias UnifiedUi.Binding
 
+  @type navigation_transition_action ::
+          :navigate_to
+          | :replace_with
+          | :go_back
+          | :go_forward
+          | :open_modal
+          | :close_modal
+
+  @type navigation_target_kind ::
+          :screen_transition
+          | :replace_transition
+          | :history_transition
+          | :modal_transition
+          | :local_destination
+          | :generic
+
+  @type navigation_action_contract :: %{
+          kind: navigation_target_kind(),
+          required_fields: [atom()],
+          optional_fields: [atom()]
+        }
+
   @type family ::
           :click
           | :change
@@ -30,6 +52,41 @@ defmodule UnifiedUi.Signal do
         }
 
   @families [:click, :change, :submit, :open, :close, :focus, :selection, :navigation, :command]
+  @navigation_action_contracts [
+    navigate_to: %{
+      kind: :screen_transition,
+      required_fields: [:screen],
+      optional_fields: [:params, :metadata]
+    },
+    replace_with: %{
+      kind: :replace_transition,
+      required_fields: [:screen],
+      optional_fields: [:params, :metadata]
+    },
+    go_back: %{
+      kind: :history_transition,
+      required_fields: [],
+      optional_fields: [:metadata]
+    },
+    go_forward: %{
+      kind: :history_transition,
+      required_fields: [],
+      optional_fields: [:metadata]
+    },
+    open_modal: %{
+      kind: :modal_transition,
+      required_fields: [:modal],
+      optional_fields: [:params, :metadata]
+    },
+    close_modal: %{
+      kind: :modal_transition,
+      required_fields: [],
+      optional_fields: [:modal, :metadata]
+    }
+  ]
+  @navigation_actions Keyword.keys(@navigation_action_contracts)
+  @navigation_transition_fields [:action, :screen, :modal, :params, :metadata]
+  @local_navigation_fields [:binding, :destination]
 
   defstruct __identifier__: nil,
             id: nil,
@@ -45,6 +102,33 @@ defmodule UnifiedUi.Signal do
   @spec families() :: [family()]
   def families, do: @families
 
+  @spec navigation_actions() :: [navigation_transition_action()]
+  def navigation_actions, do: @navigation_actions
+
+  @spec navigation_action_contracts() :: %{
+          navigation_transition_action() => navigation_action_contract()
+        }
+  def navigation_action_contracts, do: Map.new(@navigation_action_contracts)
+
+  @spec navigation_transition_fields() :: [atom()]
+  def navigation_transition_fields, do: @navigation_transition_fields
+
+  @spec local_navigation_fields() :: [atom()]
+  def local_navigation_fields, do: @local_navigation_fields
+
+  @spec navigation_target_kind(t() | keyword() | map()) :: navigation_target_kind()
+  def navigation_target_kind(%__MODULE__{target_intent: target_intent}),
+    do: do_navigation_target_kind(target_intent)
+
+  def navigation_target_kind(signal) when is_list(signal),
+    do: signal |> Enum.into(%{}) |> navigation_target_kind()
+
+  def navigation_target_kind(%{target_intent: target_intent}),
+    do: do_navigation_target_kind(target_intent)
+
+  def navigation_target_kind(target_intent) when is_map(target_intent),
+    do: do_navigation_target_kind(target_intent)
+
   @spec new(keyword() | map() | t()) :: t()
   def new(%__MODULE__{} = signal), do: normalize(signal)
   def new(signal) when is_list(signal), do: signal |> Enum.into(%{}) |> new()
@@ -55,7 +139,7 @@ defmodule UnifiedUi.Signal do
       family: fetch(signal, :family, :click),
       intent: fetch(signal, :intent),
       source_context: signal |> fetch(:source_context, %{}) |> normalize_map(),
-      target_intent: signal |> fetch(:target_intent, %{}) |> normalize_map(),
+      target_intent: signal |> fetch(:target_intent, %{}) |> normalize_target_intent(),
       payload_mapping: signal |> fetch(:payload_mapping, %{}) |> normalize_map(),
       binding_refs: signal |> fetch(:binding_refs, []) |> normalize_binding_refs(),
       summary: fetch(signal, :summary),
@@ -86,11 +170,27 @@ defmodule UnifiedUi.Signal do
     %__MODULE__{
       signal
       | source_context: normalize_map(signal.source_context),
-        target_intent: normalize_map(signal.target_intent),
+        target_intent: normalize_target_intent(signal.target_intent),
         payload_mapping: normalize_map(signal.payload_mapping),
         binding_refs: normalize_binding_refs(signal.binding_refs),
         metadata: normalize_map(signal.metadata)
     }
+  end
+
+  defp do_navigation_target_kind(target_intent) do
+    target_intent = normalize_target_intent(target_intent)
+
+    case navigation_action_contracts()[fetch(target_intent, :action)] do
+      %{kind: kind} ->
+        kind
+
+      nil ->
+        if fetch(target_intent, :binding) != nil and fetch(target_intent, :destination) != nil do
+          :local_destination
+        else
+          :generic
+        end
+    end
   end
 
   defp normalize_binding_refs(refs) do
@@ -106,6 +206,25 @@ defmodule UnifiedUi.Signal do
       id when is_atom(id) or is_binary(id) ->
         Binding.ref(id)
     end)
+  end
+
+  defp normalize_target_intent(target_intent) do
+    target_intent
+    |> normalize_map()
+    |> normalize_nested_target_field(:params)
+    |> normalize_nested_target_field(:metadata)
+  end
+
+  defp normalize_nested_target_field(values, key) do
+    case fetch(values, key) do
+      nested when is_map(nested) or is_list(nested) ->
+        values
+        |> Map.delete(Atom.to_string(key))
+        |> Map.put(key, normalize_map(nested))
+
+      _other ->
+        values
+    end
   end
 
   defp normalize_map(nil), do: %{}
