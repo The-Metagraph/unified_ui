@@ -128,6 +128,24 @@ defmodule UnifiedUi.Reference do
     Signal.families()
   end
 
+  @spec navigation_actions() :: [Signal.navigation_transition_action()]
+  def navigation_actions do
+    Signal.navigation_actions()
+  end
+
+  @spec navigation_contract() :: %{
+          transition_fields: [atom()],
+          local_navigation_fields: [atom()],
+          actions: %{Signal.navigation_transition_action() => Signal.navigation_action_contract()}
+        }
+  def navigation_contract do
+    %{
+      transition_fields: Signal.navigation_transition_fields(),
+      local_navigation_fields: Signal.local_navigation_fields(),
+      actions: Signal.navigation_action_contracts()
+    }
+  end
+
   @spec compiled_signal_families() :: [UnifiedIUR.Interaction.family()]
   def compiled_signal_families do
     UnifiedIUR.Interaction.families()

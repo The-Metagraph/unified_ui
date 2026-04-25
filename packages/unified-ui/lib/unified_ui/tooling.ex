@@ -4,7 +4,7 @@ defmodule UnifiedUi.Tooling do
   and release review workflows.
   """
 
-  alias UnifiedUi.{Compiler, Examples, Export, Info}
+  alias UnifiedUi.{Compiler, Examples, Export, Info, Signals}
 
   @shared_specs [
     ".spec/specs/architecture.spec.md",
@@ -202,7 +202,8 @@ defmodule UnifiedUi.Tooling do
       "related examples: #{inspect(diagnostics.related_examples)}",
       "related specs: #{inspect(diagnostics.related_specs)}",
       "signal families: #{inspect(diagnostics.signal_coverage.families)}",
-      "binding names: #{inspect(diagnostics.signal_coverage.binding_names)}"
+      "binding names: #{inspect(diagnostics.signal_coverage.binding_names)}",
+      "navigation target kinds: #{inspect(diagnostics.signal_coverage.interaction_target_kinds)}"
     ]
     |> Enum.join("\n")
   end
@@ -321,6 +322,14 @@ defmodule UnifiedUi.Tooling do
         |> Enum.map(& &1.family)
         |> Enum.uniq()
         |> Enum.sort(),
+      interaction_target_kinds:
+        signal_catalog.interactions
+        |> Enum.map(fn interaction ->
+          {interaction.id, Signals.navigation_target_kind(interaction)}
+        end)
+        |> Enum.into(%{}),
+      navigation_actions: Signals.navigation_actions(),
+      navigation_contract: UnifiedUi.Reference.navigation_contract(),
       target_bindings:
         signal_catalog.interactions
         |> Enum.flat_map(fn interaction ->

@@ -185,6 +185,120 @@ defmodule UnifiedUi.ThemeSignalValidationTest do
     )
   end
 
+  test "rejects host-route leakage and malformed canonical navigation targets" do
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:host_route_navigation_screen)
+      end
+
+      composition do
+        root(:host_route_navigation_root)
+      end
+
+      signals do
+        interaction do
+          id(:navigate_activity)
+          family(:navigation)
+          intent(:navigate_activity)
+          target_intent(binding: :active_tab, route: :activity)
+        end
+      end
+      """,
+      "canonical navigation must not declare host-route key :route"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:missing_screen_target_screen)
+      end
+
+      composition do
+        root(:missing_screen_target_root)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :navigate_to)
+        end
+      end
+      """,
+      "navigation action :navigate_to requires fields [:screen]"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:invalid_modal_navigation_screen)
+      end
+
+      composition do
+        root(:invalid_modal_navigation_root)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :open_modal, modal: :settings_dialog, screen: :settings)
+        end
+      end
+      """,
+      "unsupported fields [:screen] for navigation action :open_modal"
+    )
+  end
+
+  test "rejects url-like and runtime-module navigation identifiers" do
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:url_navigation_screen)
+      end
+
+      composition do
+        root(:url_navigation_root)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :navigate_to, screen: \"/settings\")
+        end
+      end
+      """,
+      "navigation screen must be a symbolic identifier and must not use URL or path syntax"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:module_navigation_screen)
+      end
+
+      composition do
+        root(:module_navigation_root)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :navigate_to, screen: UnifiedUi.Signal)
+        end
+      end
+      """,
+      "navigation screen must be a symbolic identifier and must not reference a runtime module"
+    )
+  end
+
   defp compile_module(body) do
     module_name = "Generated#{System.unique_integer([:positive])}"
 
