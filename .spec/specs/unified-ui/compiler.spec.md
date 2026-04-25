@@ -21,6 +21,7 @@ surface:
   - .spec/specs/unified-ui/compiler.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
 ```
 
 ## Requirements
@@ -55,6 +56,11 @@ decisions:
   statement: The package shall not define platform-specific compile targets for `elm_ui`, `live_ui`, or `desktop_ui`; renderer libraries consume canonical IUR instead.
   priority: must
   stability: stable
+
+- id: unified_ui.compiler.navigation_transition_lowering
+  statement: The compiler shall lower authored screen-transition navigation intent into canonical `unified_iur` interaction descriptors that preserve transition action, symbolic screen target, modal target, and params without embedding host-router semantics.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -83,6 +89,7 @@ decisions:
     - unified_ui.compiler.runtime_independent_bindings
     - unified_ui.compiler.introspection_surface
     - unified_ui.compiler.no_renderer_output_modes
+    - unified_ui.compiler.navigation_transition_lowering
     - unified_ui.compiler.compile_screen_to_iur
     - unified_ui.compiler.inspect_compiled_artifact
 ```

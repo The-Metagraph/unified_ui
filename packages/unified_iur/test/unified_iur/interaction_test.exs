@@ -6,10 +6,21 @@ defmodule UnifiedIUR.InteractionTest do
   alias UnifiedIUR.Interactions
 
   test "exposes canonical interaction and binding modules" do
-    assert %{interaction: Interaction, binding: Binding} = Interactions.modules()
+    assert %{
+             interaction: Interaction,
+             binding: Binding,
+             transport: UnifiedIUR.Interactions.Transport
+           } =
+             Interactions.modules()
 
     assert [:click, :change, :submit, :open, :close, :selection, :focus, :navigation, :command] ==
              Interaction.families()
+
+    assert [:navigate_to, :replace_with, :go_back, :go_forward, :open_modal, :close_modal] ==
+             Interaction.navigation_actions()
+
+    assert [:screen_transition, :replace_transition, :history_transition, :modal_transition] ==
+             Interaction.navigation_kinds()
   end
 
   test "builds standard interaction descriptor families with canonical source, target, and payload metadata" do
@@ -56,6 +67,82 @@ defmodule UnifiedIUR.InteractionTest do
              payload: %{command: :open_file},
              metadata: %{transient?: true}
            } = command
+  end
+
+  test "normalizes canonical navigation transition descriptors without fake screen ids" do
+    screen_transition =
+      Interaction.navigation_transition(
+        intent: :open_settings_screen,
+        element_id: "settings-link",
+        scope: :screen,
+        action: :navigate_to,
+        screen: :settings,
+        params: %{tab: :profile}
+      )
+
+    history_transition =
+      Interaction.navigation_transition(
+        intent: :go_back_history,
+        element_id: "back-button",
+        scope: :screen,
+        action: :go_back,
+        metadata: %{source: :header}
+      )
+
+    replacement =
+      Interaction.new(%{
+        family: :navigation,
+        intent: :replace_home_screen,
+        target: %{
+          "navigation" => %{
+            "action" => "replace_with",
+            "screen" => :home,
+            "params" => %{"source" => :launcher}
+          }
+        }
+      })
+
+    assert %Interaction{
+             family: :navigation,
+             intent: :open_settings_screen,
+             source: %{element_id: "settings-link", scope: :screen},
+             target: %{
+               navigation: %{
+                 action: :navigate_to,
+                 kind: :screen_transition,
+                 params: %{tab: :profile},
+                 screen: :settings
+               }
+             }
+           } = screen_transition
+
+    assert Interaction.navigation_descriptor(screen_transition) == %{
+             action: :navigate_to,
+             kind: :screen_transition,
+             params: %{tab: :profile},
+             screen: :settings
+           }
+
+    assert %Interaction{
+             intent: :go_back_history,
+             target: %{
+               navigation: %{
+                 action: :go_back,
+                 kind: :history_transition,
+                 metadata: %{source: :header}
+               }
+             }
+           } = history_transition
+
+    refute Map.has_key?(Interaction.navigation_descriptor(history_transition), :screen)
+    refute Map.has_key?(Interaction.navigation_descriptor(history_transition), :modal)
+
+    assert Interaction.navigation_descriptor(replacement) == %{
+             action: "replace_with",
+             kind: :replace_transition,
+             params: %{"source" => :launcher},
+             screen: :home
+           }
   end
 
   test "builds bindings with source paths, dependencies, and derived-value metadata" do

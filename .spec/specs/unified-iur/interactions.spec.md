@@ -20,6 +20,7 @@ surface:
   - .spec/specs/unified-iur/interactions.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
 ```
 
 ## Requirements
@@ -49,6 +50,16 @@ decisions:
   statement: The package shall represent dynamic data references, bound values, and authored dependency relationships needed for runtime libraries to reconstruct current UI meaning from canonical IUR.
   priority: must
   stability: stable
+
+- id: unified_iur.interactions.navigation_transition_representation
+  statement: The package shall represent canonical screen-transition descriptors including transition action, symbolic screen target, modal target, and params in a renderer-independent form.
+  priority: must
+  stability: stable
+
+- id: unified_iur.interactions.no_host_router_assumptions
+  statement: Canonical navigation descriptors shall not encode browser path syntax, host-router names, or runtime-module references as the cross-runtime navigation contract.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -71,5 +82,7 @@ decisions:
     - unified_iur.interactions.renderer_independent_payload_mapping
     - unified_iur.interactions.standard_interaction_families
     - unified_iur.interactions.data_binding_representation
+    - unified_iur.interactions.navigation_transition_representation
+    - unified_iur.interactions.no_host_router_assumptions
     - unified_iur.interactions.form_submission_descriptor
 ```

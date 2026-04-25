@@ -44,6 +44,11 @@ decisions:
   statement: The package shall document its canonical construct families, metadata model, styling and theming model, interaction descriptor model, and runtime-library interoperability expectations as part of package development.
   priority: must
   stability: stable
+
+- id: unified_iur.tooling.navigation_transition_review_surfaces
+  statement: The package shall expose maintained fixtures and inspection or export workflows that make canonical navigation transition descriptors reviewable without requiring a runtime library or host router.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -65,5 +70,6 @@ decisions:
     - unified_iur.tooling.introspection_helpers
     - unified_iur.tooling.validation_workflow
     - unified_iur.tooling.documentation_surface
+    - unified_iur.tooling.navigation_transition_review_surfaces
     - unified_iur.tooling.inspect_canonical_fixture
 ```

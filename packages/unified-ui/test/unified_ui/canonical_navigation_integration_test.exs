@@ -1,7 +1,7 @@
 defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
   use ExUnit.Case, async: true
 
-  alias UnifiedUi.{Export, Signals, Tooling}
+  alias UnifiedUi.{Compiler, Export, Signals, Tooling}
 
   defmodule CanonicalNavigationScreen do
     use UnifiedUi.Dsl
@@ -375,6 +375,50 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
 
     assert guide =~ "target_intent(action: :open_modal, modal: :settings_dialog"
     refute guide =~ "target_intent(binding: :active_tab, route: :activity)"
+  end
+
+  test "compiles canonical navigation screens into stable IUR descriptors and deterministic review exports" do
+    assert {:ok, first_result} = Compiler.compile(CanonicalNavigationScreen)
+    assert {:ok, second_result} = Compiler.compile(CanonicalNavigationScreen)
+    assert {:ok, first_snapshot} = Export.module(CanonicalNavigationScreen, :snapshot)
+    assert {:ok, second_snapshot} = Export.module(CanonicalNavigationScreen, :snapshot)
+
+    assert first_result.interactions == second_result.interactions
+    assert first_snapshot == second_snapshot
+
+    targets =
+      Map.new(first_result.interactions, fn interaction ->
+        {interaction.intent, interaction.target}
+      end)
+
+    assert targets[:open_settings_screen] == %{
+             navigation: %{
+               action: :navigate_to,
+               kind: :screen_transition,
+               params: %{tab: :profile},
+               screen: :settings
+             }
+           }
+
+    assert targets[:go_back_history] == %{
+             navigation: %{
+               action: :go_back,
+               kind: :history_transition,
+               metadata: %{source: :header}
+             }
+           }
+
+    assert targets[:close_settings_modal] == %{
+             navigation: %{
+               action: :close_modal,
+               kind: :modal_transition,
+               metadata: %{reason: :done},
+               modal: :settings_dialog
+             }
+           }
+
+    refute first_snapshot =~ "route:"
+    refute first_snapshot =~ "\"/settings\""
   end
 
   defp compile_module(body) do

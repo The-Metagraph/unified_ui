@@ -48,4 +48,21 @@ defmodule UnifiedIUR.InspectTest do
            } =
              Inspect.extension_metadata()
   end
+
+  test "inspects canonical navigation fixtures and surfaces navigation summaries" do
+    assert {:ok, report} = Inspect.navigation_fixture("screen_transition--settings_profile")
+
+    assert report.fixture_id == "screen_transition--settings_profile"
+    assert report.intent == :open_settings_screen
+
+    assert report.navigation == %{
+             action: :navigate_to,
+             kind: :screen_transition,
+             params: %{tab: :profile},
+             screen: :settings
+           }
+
+    assert report.target == %{navigation: report.navigation}
+    assert "symbolic screen identifiers" in report.semantics
+  end
 end

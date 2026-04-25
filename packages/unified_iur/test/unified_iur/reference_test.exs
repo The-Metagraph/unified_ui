@@ -111,4 +111,32 @@ defmodule UnifiedIUR.ReferenceTest do
     assert [%{path: [:children, 0, :element, :id], left: "save-button", right: "deploy-button"}] =
              Reference.shape_diff(left, right)
   end
+
+  test "produces deterministic snapshots for canonical navigation interactions" do
+    interaction =
+      UnifiedIUR.Interaction.navigation_transition(
+        intent: :open_settings_screen,
+        element_id: "settings-link",
+        scope: :screen,
+        action: :navigate_to,
+        screen: :settings,
+        params: %{tab: :profile}
+      )
+
+    assert Reference.snapshot_interaction(interaction) == [
+             family: :navigation,
+             intent: :open_settings_screen,
+             source: [element_id: "settings-link", scope: :screen],
+             target: [
+               navigation: [
+                 action: :navigate_to,
+                 kind: :screen_transition,
+                 params: [tab: :profile],
+                 screen: :settings
+               ]
+             ],
+             payload: [],
+             metadata: []
+           ]
+  end
 end

@@ -1,7 +1,7 @@
 defmodule UnifiedIUR.FixturesTest do
   use ExUnit.Case, async: true
 
-  alias UnifiedIUR.{Fixtures, Interoperability}
+  alias UnifiedIUR.{Fixtures, Interaction, Interoperability}
 
   test "exposes stable fixture ids, categories, and naming conventions" do
     assert Fixtures.naming_rules() == %{
@@ -46,5 +46,38 @@ defmodule UnifiedIUR.FixturesTest do
     assert Enum.all?(report.categories, fn {_category, category_report} ->
              category_report.missing == []
            end)
+  end
+
+  test "exposes dedicated canonical navigation transition fixtures" do
+    assert Fixtures.navigation_ids() == [
+             "screen_transition--settings_profile",
+             "replace_transition--home",
+             "history_transition--back",
+             "modal_transition--settings_dialog"
+           ]
+
+    assert {:ok, history_fixture} = Fixtures.navigation_fixture("history_transition--back")
+
+    assert history_fixture.snapshot_path ==
+             "fixtures/navigation/history_transition--back.snapshot"
+
+    assert "targetless history traversal" in history_fixture.semantics
+
+    assert %Interaction{
+             family: :navigation,
+             intent: :go_back_history,
+             target: %{navigation: %{action: :go_back, kind: :history_transition}}
+           } = history_fixture.interaction
+
+    refute Map.has_key?(Interaction.navigation_descriptor(history_fixture.interaction), :screen)
+
+    assert %{
+             id: "modal_transition--settings_dialog",
+             snapshot_path: "fixtures/navigation/modal_transition--settings_dialog.snapshot"
+           } =
+             Enum.find(
+               Fixtures.navigation_catalog(),
+               &(&1.id == "modal_transition--settings_dialog")
+             )
   end
 end

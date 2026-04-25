@@ -351,12 +351,13 @@ defmodule UnifiedUi.Compiler.Pipeline do
 
   defp compile_interaction(interaction, binding_by_id) do
     interaction = Signal.new(interaction)
+    compiled_target = compile_target_intent(interaction, binding_by_id)
 
     Interaction.new(%{
       family: interaction.family,
       intent: interaction.intent,
       source: normalize_map(interaction.source_context),
-      target: compile_payload_map(interaction.target_intent, binding_by_id),
+      target: compiled_target,
       payload: compile_payload_map(interaction.payload_mapping, binding_by_id),
       metadata: %{
         summary: interaction.summary,
@@ -365,6 +366,33 @@ defmodule UnifiedUi.Compiler.Pipeline do
           Enum.map(interaction.binding_refs, &compile_binding_ref_value(&1, binding_by_id))
       }
     })
+  end
+
+  defp compile_target_intent(%Signal{} = interaction, binding_by_id) do
+    target_intent = compile_payload_map(interaction.target_intent, binding_by_id)
+
+    case {interaction.family, Signal.navigation_target_kind(interaction)} do
+      {:navigation, kind}
+      when kind in [
+             :screen_transition,
+             :replace_transition,
+             :history_transition,
+             :modal_transition
+           ] ->
+        %{
+          navigation:
+            %{}
+            |> maybe_put(:kind, kind)
+            |> maybe_put(:action, Map.get(target_intent, :action))
+            |> maybe_put(:screen, Map.get(target_intent, :screen))
+            |> maybe_put(:modal, Map.get(target_intent, :modal))
+            |> maybe_put(:params, compact_optional_map(Map.get(target_intent, :params)))
+            |> maybe_put(:metadata, compact_optional_map(Map.get(target_intent, :metadata)))
+        }
+
+      _other ->
+        target_intent
+    end
   end
 
   defp interaction_identifier(interaction) do
@@ -1352,6 +1380,9 @@ defmodule UnifiedUi.Compiler.Pipeline do
     |> Enum.reject(fn {_key, value} -> value in [nil, [], %{}] end)
     |> Map.new()
   end
+
+  defp compact_optional_map(nil), do: nil
+  defp compact_optional_map(map), do: compact_map(map)
 
   defp maybe_put(map, _key, nil), do: map
   defp maybe_put(map, key, value), do: Map.put(map, key, value)

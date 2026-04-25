@@ -9,6 +9,7 @@ status: active
 summary: Shared Jido.Signal and CloudEvents-compatible boundary contract across the DSL, IUR consumers, and runtime libraries with native signal translation.
 surface:
   - packages/unified-ui
+  - packages/unified_iur
   - packages/live_ui
   - packages/elm_ui
   - packages/desktop_ui
@@ -16,6 +17,7 @@ surface:
   - .spec/specs/signal_transport.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
   - repo.ecosystem.elm_ui_naming
 ```
 
@@ -61,6 +63,16 @@ decisions:
   statement: Renderer-specific local state and native signal mechanics may vary by library, but cross-package event meanings shall remain canonical at the signal contract boundary.
   priority: must
   stability: stable
+
+- id: ecosystem.signal_transport.navigation_transition_meaning
+  statement: Navigation interactions that cross ecosystem package boundaries shall preserve canonical screen-transition meaning, including transition action, symbolic screen target when applicable, and params, without requiring browser-route syntax or runtime-specific identifiers.
+  priority: must
+  stability: stable
+
+- id: ecosystem.signal_transport.shared_transition_validation_and_fixtures
+  statement: The ecosystem shall expose shared canonical transition fixtures, validation rules, and review summaries that runtime packages can consume consistently when transporting screen transitions across package boundaries.
+  priority: must
+  stability: stable
 ```
 
 ## Exceptions
@@ -91,4 +103,6 @@ decisions:
     - ecosystem.signal_transport.terminal_bridge
     - ecosystem.signal_transport.native_signal_models_allowed
     - ecosystem.signal_transport.local_state_not_contract
+    - ecosystem.signal_transport.navigation_transition_meaning
+    - ecosystem.signal_transport.shared_transition_validation_and_fixtures
 ```
