@@ -18,7 +18,7 @@ Back to index: [README](./README.md)
 - The shared signal transport contract continues to use `Jido.Signal` with
   CloudEvents-compatible semantics at package boundaries.
 
-[ ] 2 Phase 2 - Compiler, UnifiedIUR, and Signal Transport Alignment
+[x] 2 Phase 2 - Compiler, UnifiedIUR, and Signal Transport Alignment
   Implement the canonical lowering, interchange representation, and transport
   semantics that carry screen-transition intent from authored `UnifiedUi`
   modules to runtime libraries.
@@ -83,22 +83,22 @@ Back to index: [README](./README.md)
       [x] 2.3.2.2 Subtask - Add shared transport fixtures that web, desktop, and terminal runtimes can use to prove canonical transition fidelity.
       [x] 2.3.2.3 Subtask - Add review-oriented transport summaries that make it obvious which transition action and symbolic screen target crossed the package boundary.
 
-  [ ] 2.4 Section - Phase 2 Integration Tests
+  [x] 2.4 Section - Phase 2 Integration Tests
     Validate canonical lowering, `unified_iur` representation, and boundary
     transport behavior end to end before runtime-specific mapping begins.
 
-    [ ] 2.4.1 Task - Compiler and canonical descriptor scenarios
+    [x] 2.4.1 Task - Compiler and canonical descriptor scenarios
       Verify authored transitions compile into stable canonical descriptors that
       carry the required cross-runtime meaning.
 
-      [ ] 2.4.1.1 Subtask - Verify authored screen transitions lower into canonical interaction descriptors with action, symbolic screen target, modal target, params, and payload mapping preserved.
-      [ ] 2.4.1.2 Subtask - Verify targetless transitions compile without fake screen ids or host-router placeholders.
-      [ ] 2.4.1.3 Subtask - Verify canonical descriptor output remains deterministic across equivalent authored modules and review exports.
+      [x] 2.4.1.1 Subtask - Verify authored screen transitions lower into canonical interaction descriptors with action, symbolic screen target, modal target, params, and payload mapping preserved.
+      [x] 2.4.1.2 Subtask - Verify targetless transitions compile without fake screen ids or host-router placeholders.
+      [x] 2.4.1.3 Subtask - Verify canonical descriptor output remains deterministic across equivalent authored modules and review exports.
 
-    [ ] 2.4.2 Task - Shared transport boundary scenarios
+    [x] 2.4.2 Task - Shared transport boundary scenarios
       Verify canonical transition meaning survives the package-boundary signal
       contract without route leakage.
 
-      [ ] 2.4.2.1 Subtask - Verify `Jido.Signal` boundary fixtures preserve transition action, symbolic screen target, and params where applicable.
-      [ ] 2.4.2.2 Subtask - Verify malformed transition envelopes and leaked route syntax fail with shared validation diagnostics.
-      [ ] 2.4.2.3 Subtask - Verify runtimes can consume the shared transition fixtures without requiring browser-only fields or runtime-module identifiers.
+      [x] 2.4.2.1 Subtask - Verify `Jido.Signal` boundary fixtures preserve transition action, symbolic screen target, and params where applicable.
+      [x] 2.4.2.2 Subtask - Verify malformed transition envelopes and leaked route syntax fail with shared validation diagnostics.
+      [x] 2.4.2.3 Subtask - Verify runtimes can consume the shared transition fixtures without requiring browser-only fields or runtime-module identifiers.
