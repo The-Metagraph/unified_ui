@@ -114,8 +114,21 @@ defmodule DesktopUi.Transport.Normalize do
 
     case Enum.uniq(matches) do
       [family] -> {:ok, family}
-      [] -> {:error, Error.invalid_native_event(attrs)}
+      [] -> infer_input_family_from_family(attrs)
       _many -> {:error, Error.ambiguous_native_event(attrs)}
+    end
+  end
+
+  defp infer_input_family_from_family(attrs) do
+    case normalize_family(fetch(attrs, :family)) do
+      :command -> {:ok, :shortcut}
+      :navigation -> {:ok, :keyboard}
+      :selection -> {:ok, :pointer}
+      :click -> {:ok, :pointer}
+      :submit -> {:ok, :keyboard}
+      :change -> {:ok, :keyboard}
+      :focus -> {:ok, :focus}
+      _other -> {:error, Error.invalid_native_event(attrs)}
     end
   end
 

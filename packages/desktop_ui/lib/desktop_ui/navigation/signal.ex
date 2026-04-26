@@ -189,6 +189,52 @@ defmodule DesktopUi.Navigation.Signal do
     end
   end
 
+  def from_map(%{"type" => _type} = map) do
+    map
+    |> normalize_map_keys()
+    |> from_map()
+  end
+
+  def from_map(%{action: action} = map) when is_atom(action) or is_binary(action) do
+    descriptor = normalize_descriptor(map)
+
+    case normalize_action(action) do
+      :navigate_to ->
+        {:ok, navigate(Map.get(descriptor, :screen), Map.get(descriptor, :params, %{}))}
+
+      :replace_with ->
+        {:ok, replace(Map.get(descriptor, :screen), Map.get(descriptor, :params, %{}))}
+
+      :go_back ->
+        {:ok, go_back()}
+
+      :go_forward ->
+        {:ok, go_forward()}
+
+      :open_modal ->
+        {:ok, open_modal(Map.get(descriptor, :modal), Map.get(descriptor, :params, %{}))}
+
+      :close_modal ->
+        {:ok, close_modal()}
+
+      _other ->
+        {:error, :unknown_navigation_type}
+    end
+  end
+
+  def from_map(%{"action" => _action} = map) do
+    map
+    |> normalize_map_keys()
+    |> from_map()
+  end
+
+  def from_map(%{navigation: navigation}) when is_map(navigation), do: from_map(navigation)
+  def from_map(%{"navigation" => navigation}) when is_map(navigation), do: from_map(navigation)
+  def from_map(%{target: %{navigation: navigation}}) when is_map(navigation), do: from_map(navigation)
+
+  def from_map(%{"target" => %{"navigation" => navigation}}) when is_map(navigation),
+    do: from_map(navigation)
+
   def from_map(_), do: {:error, :invalid_signal_format}
 
   @doc """
@@ -253,6 +299,31 @@ defmodule DesktopUi.Navigation.Signal do
   end
 
   # Private helpers
+
+  defp normalize_action(action) when is_atom(action), do: action
+  defp normalize_action(action) when is_binary(action), do: String.to_atom(action)
+  defp normalize_action(_action), do: nil
+
+  defp normalize_descriptor(map) do
+    map = normalize_map_keys(map)
+
+    %{}
+    |> maybe_put(:action, normalize_action(Map.get(map, :action)))
+    |> maybe_put(:screen, Map.get(map, :screen))
+    |> maybe_put(:modal, Map.get(map, :modal))
+    |> maybe_put(:params, normalize_params(Map.get(map, :params, %{})))
+  end
+
+  defp normalize_map_keys(map) do
+    Map.new(map, fn
+      {key, value} when is_binary(key) -> {String.to_atom(key), value}
+      pair -> pair
+    end)
+  end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, _key, ""), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 
   defp normalize_params(params) when is_map(params), do: params
   defp normalize_params(params) when is_list(params), do: Map.new(params)

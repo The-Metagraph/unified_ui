@@ -142,4 +142,28 @@ defmodule DesktopUi.TransportTest do
     assert Transport.diagnostics().mapping_summary.platform_targets ==
              DesktopUi.Platform.targets()
   end
+
+  test "transport diagnostics reject leaked host-route syntax on canonical navigation targets" do
+    interaction =
+      Interaction.navigation_transition(
+        intent: :open_settings_screen,
+        action: :navigate_to,
+        screen: :settings
+      )
+
+    assert {:ok, translation} =
+             Transport.from_interaction(
+               interaction,
+               platform_target: :linux,
+               widget_id: "settings-link",
+               runtime_id: "desktop-ui:workspace",
+               screen: "workspace"
+             )
+
+    translation =
+      put_in(translation.target.navigation[:route], "/settings")
+
+    assert {:error, %DesktopUi.Transport.Error{reason: :host_route_navigation_syntax}} =
+             Transport.validate_translation(translation)
+  end
 end

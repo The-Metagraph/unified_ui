@@ -125,42 +125,75 @@ defmodule DesktopUi.Widgets.Navigation do
   def event_payload(opts) when is_list(opts), do: opts |> Enum.into(%{}) |> event_payload()
 
   def event_payload(%{navigate_to: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    params = Map.get(opts, :navigate_params, %{})
+
     %{
       family: :navigation,
+      intent: Map.get(opts, :intent, :navigate_to),
       type: :navigate_to,
       screen_id: screen_id,
-      params: Map.get(opts, :navigate_params, %{})
+      params: params,
+      target: %{navigation: %{action: :navigate_to, screen: screen_id, params: params}},
+      payload: Map.get(opts, :payload, %{})
     }
   end
 
   def event_payload(%{replace_with: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    params = Map.get(opts, :navigate_params, %{})
+
     %{
       family: :navigation,
+      intent: Map.get(opts, :intent, :replace_with),
       type: :replace_with,
       screen_id: screen_id,
-      params: Map.get(opts, :navigate_params, %{})
+      params: params,
+      target: %{navigation: %{action: :replace_with, screen: screen_id, params: params}},
+      payload: Map.get(opts, :payload, %{})
     }
   end
 
   def event_payload(%{go_back: true}) do
-    %{family: :navigation, type: :go_back}
+    %{
+      family: :navigation,
+      intent: :go_back,
+      type: :go_back,
+      target: %{navigation: %{action: :go_back}},
+      payload: %{}
+    }
   end
 
   def event_payload(%{go_forward: true}) do
-    %{family: :navigation, type: :go_forward}
+    %{
+      family: :navigation,
+      intent: :go_forward,
+      type: :go_forward,
+      target: %{navigation: %{action: :go_forward}},
+      payload: %{}
+    }
   end
 
   def event_payload(%{open_modal: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    params = Map.get(opts, :navigate_params, %{})
+
     %{
       family: :navigation,
+      intent: Map.get(opts, :intent, :open_modal),
       type: :open_modal,
       screen_id: screen_id,
-      params: Map.get(opts, :navigate_params, %{})
+      params: params,
+      target: %{navigation: %{action: :open_modal, modal: screen_id, params: params}},
+      payload: Map.get(opts, :payload, %{})
     }
   end
 
   def event_payload(%{close_modal: true}) do
-    %{family: :navigation, type: :close_modal}
+    %{
+      family: :navigation,
+      intent: :close_modal,
+      type: :close_modal,
+      target: %{navigation: %{action: :close_modal}},
+      payload: %{}
+    }
   end
 
   def event_payload(_), do: nil

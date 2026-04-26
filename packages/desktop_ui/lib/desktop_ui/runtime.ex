@@ -4,7 +4,16 @@ defmodule DesktopUi.Runtime do
   """
 
   alias DesktopUi.Renderer
-  alias DesktopUi.Runtime.{Boot, Error, EventLoop, EventRouter, Shutdown, State, StyleResolver}
+  alias DesktopUi.Runtime.{
+    Boot,
+    Error,
+    EventLoop,
+    EventRouter,
+    Navigation,
+    Shutdown,
+    State,
+    StyleResolver
+  }
   alias UnifiedIUR.Element
   alias Jido.Signal
 
@@ -22,6 +31,7 @@ defmodule DesktopUi.Runtime do
       DesktopUi.Runtime.Frame,
       DesktopUi.Runtime.Window,
       DesktopUi.Runtime.Screen,
+      Navigation,
       StyleResolver,
       DesktopUi.Runtime.State,
       DesktopUi.Runtime.Shutdown,
@@ -51,6 +61,7 @@ defmodule DesktopUi.Runtime do
       :canonical_boundary_events,
       :normalized_desktop_inputs,
       :shared_event_routing,
+      :screen_navigation,
       :event_polling_scaffold,
       :frame_coordination,
       :focus_callback_placeholders,
@@ -137,8 +148,9 @@ defmodule DesktopUi.Runtime do
       |> Map.put_new(:source_kind, runtime_state.source_kind)
 
     with {:ok, translation} <- DesktopUi.Transport.from_native_event(attrs),
-         {:ok, route_result} <- EventRouter.route(runtime_state, translation) do
-      {:ok, apply_route(runtime_state, route_result), route_result}
+         {:ok, route_result} <- EventRouter.route(runtime_state, translation),
+         {:ok, routed_state} <- apply_route(runtime_state, route_result) do
+      {:ok, routed_state, route_result}
     end
   end
 
@@ -159,20 +171,24 @@ defmodule DesktopUi.Runtime do
           {:ok, State.t(), map()} | {:error, Error.t() | term()}
   def handle_boundary_signal(%State{} = runtime_state, signal) do
     with {:ok, translation} <- DesktopUi.Transport.from_boundary_signal(signal),
-         {:ok, route_result} <- EventRouter.route(runtime_state, translation) do
-      {:ok, apply_route(runtime_state, route_result), route_result}
+         {:ok, route_result} <- EventRouter.route(runtime_state, translation),
+         {:ok, routed_state} <- apply_route(runtime_state, route_result) do
+      {:ok, routed_state, route_result}
     end
   end
 
   defp apply_route(%State{} = runtime_state, route_result) do
     translation = route_result.translation
 
-    %{
-      runtime_state
-      | focus: apply_focus(runtime_state.focus, translation, route_result.route),
-        event_loop: EventLoop.record_route(runtime_state.event_loop, route_result),
-        event_log: runtime_state.event_log ++ [event_log_entry(route_result)]
-    }
+    with {:ok, transitioned_state} <- maybe_apply_navigation(runtime_state, translation) do
+      {:ok,
+       %{
+         transitioned_state
+         | focus: apply_focus(transitioned_state.focus, translation, route_result.route),
+           event_loop: EventLoop.record_route(transitioned_state.event_loop, route_result),
+           event_log: transitioned_state.event_log ++ [event_log_entry(route_result)]
+       }}
+    end
   end
 
   defp apply_focus(nil, _translation, _route), do: nil
@@ -220,4 +236,12 @@ defmodule DesktopUi.Runtime do
 
   defp normalize_map(attrs) when is_map(attrs), do: Map.new(attrs)
   defp normalize_map(attrs) when is_list(attrs), do: Enum.into(attrs, %{})
+
+  defp maybe_apply_navigation(%State{} = runtime_state, translation) do
+    if Navigation.transition?(translation) do
+      Navigation.apply_transition(runtime_state, translation)
+    else
+      {:ok, runtime_state}
+    end
+  end
 end

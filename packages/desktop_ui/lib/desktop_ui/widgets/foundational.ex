@@ -4,6 +4,7 @@ defmodule DesktopUi.Widgets.Foundational do
   """
 
   alias DesktopUi.Widget
+  alias DesktopUi.Widgets.Navigation, as: NavigationWidget
 
   @spec kinds() :: [atom()]
   def kinds do
@@ -144,6 +145,10 @@ defmodule DesktopUi.Widgets.Foundational do
 
   @spec button(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def button(id, label, opts \\ []) do
+    click_event =
+      NavigationWidget.event_payload(opts) ||
+        event_payload(opts, :on_click, %{intent: Keyword.get(opts, :intent, :activate)})
+
     Widget.new(:button,
       id: id,
       metadata: metadata(opts, focusable: true, role: :button),
@@ -152,7 +157,7 @@ defmodule DesktopUi.Widgets.Foundational do
       styles: styles(opts),
       events:
         %{
-          click: event_payload(opts, :on_click, %{intent: Keyword.get(opts, :intent, :activate)}),
+          click: click_event,
           shortcut: shortcut_event(opts)
         }
         |> Enum.reject(fn {_key, value} -> is_nil(value) end)
@@ -182,6 +187,10 @@ defmodule DesktopUi.Widgets.Foundational do
 
   @spec link(String.t() | atom(), String.t(), String.t(), keyword()) :: Widget.t()
   def link(id, label, href, opts \\ []) do
+    click_event =
+      NavigationWidget.event_payload(opts) ||
+        event_payload(opts, :on_follow, %{intent: Keyword.get(opts, :intent, :open_link)})
+
     Widget.new(:link,
       id: id,
       metadata: metadata(opts, focusable: true, role: :link),
@@ -189,13 +198,17 @@ defmodule DesktopUi.Widgets.Foundational do
       attributes: %{label: label, href: href},
       styles: styles(opts),
       events: %{
-        click: event_payload(opts, :on_follow, %{intent: Keyword.get(opts, :intent, :open_link)})
+        click: click_event
       }
     )
   end
 
   @spec command(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def command(id, label, opts \\ []) do
+    click_event =
+      NavigationWidget.event_payload(opts) ||
+        event_payload(opts, :on_press, %{intent: Keyword.get(opts, :intent, :run_command)})
+
     Widget.new(:command,
       id: id,
       metadata:
@@ -210,8 +223,7 @@ defmodule DesktopUi.Widgets.Foundational do
       styles: styles(opts),
       events:
         %{
-          click:
-            event_payload(opts, :on_press, %{intent: Keyword.get(opts, :intent, :run_command)}),
+          click: click_event,
           shortcut: shortcut_event(opts)
         }
         |> Enum.reject(fn {_key, value} -> is_nil(value) end)

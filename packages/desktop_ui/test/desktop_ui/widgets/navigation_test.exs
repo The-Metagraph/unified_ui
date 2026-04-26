@@ -166,5 +166,31 @@ defmodule DesktopUi.Widgets.NavigationTest do
       assert widget.id == :item_list
       assert widget.metadata.role == :list
     end
+
+    test "foundational action widgets can emit canonical navigation targets" do
+      button =
+        DesktopUi.Widgets.button("open-settings", "Settings",
+          navigate_to: :settings,
+          navigate_params: %{tab: :profile}
+        )
+
+      command =
+        DesktopUi.Widgets.command("open-dialog", "Open Dialog",
+          open_modal: :settings_dialog,
+          navigate_params: %{mode: :advanced}
+        )
+
+      assert button.events.click.target.navigation == %{
+               action: :navigate_to,
+               screen: :settings,
+               params: %{tab: :profile}
+             }
+
+      assert command.events.click.target.navigation == %{
+               action: :open_modal,
+               modal: :settings_dialog,
+               params: %{mode: :advanced}
+             }
+    end
   end
 end

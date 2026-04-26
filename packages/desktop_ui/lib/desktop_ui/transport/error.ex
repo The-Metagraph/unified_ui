@@ -83,4 +83,22 @@ defmodule DesktopUi.Transport.Error do
       details: %{platform_target: inspect(target)}
     }
   end
+
+  @spec host_route_navigation_syntax([atom() | String.t()]) :: t()
+  def host_route_navigation_syntax(keys) do
+    %__MODULE__{
+      reason: :host_route_navigation_syntax,
+      message: "canonical desktop navigation targets must not contain host-route syntax",
+      details: %{keys: keys}
+    }
+  end
+
+  @spec invalid_navigation_target(term()) :: t()
+  def invalid_navigation_target(reason) do
+    %__MODULE__{
+      reason: :invalid_navigation_target,
+      message: "desktop_ui navigation targets must satisfy the canonical screen-transition contract",
+      details: %{reason: inspect(reason)}
+    }
+  end
 end

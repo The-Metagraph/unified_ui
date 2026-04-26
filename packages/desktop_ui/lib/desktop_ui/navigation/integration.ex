@@ -206,17 +206,26 @@ defmodule DesktopUi.Navigation.Integration do
     end
   end
 
+  defp signal_from_event(%{family: :navigation, target: target}) when is_map(target) do
+    Signal.from_map(target)
+  end
+
   defp signal_from_event(_event), do: {:error, :not_a_navigation_event}
 
   defp update_runtime_for_navigation(%RuntimeState{} = runtime, %State{} = nav_state) do
     # Extract current screen from navigation state
-    {_screen_id, screen_module, params} = State.current_screen(nav_state)
+    {screen_id, screen_module, params} = State.current_screen(nav_state)
 
     %RuntimeState{
       runtime
       | navigation_state: nav_state,
+        screen_id: normalize_screen_id(screen_id, runtime.screen_id),
         current_screen_module: screen_module,
         screen_params: params
     }
   end
+
+  defp normalize_screen_id(screen_id, _fallback) when is_binary(screen_id), do: screen_id
+  defp normalize_screen_id(screen_id, _fallback) when is_atom(screen_id), do: to_string(screen_id)
+  defp normalize_screen_id(_screen_id, fallback), do: fallback
 end

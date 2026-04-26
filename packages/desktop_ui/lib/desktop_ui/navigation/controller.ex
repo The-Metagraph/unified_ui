@@ -106,6 +106,14 @@ defmodule DesktopUi.Navigation.Controller do
   end
 
   @doc """
+  Returns the configured screen registry module, if any.
+  """
+  @spec registry(GenServer.server() | atom()) :: module() | nil
+  def registry(server) do
+    GenServer.call(server, :registry)
+  end
+
+  @doc """
   Stops the navigation controller.
 
   Used during runtime shutdown to clean up the navigation process.
@@ -231,6 +239,10 @@ defmodule DesktopUi.Navigation.Controller do
 
   def handle_call(:get_state, _from, state) do
     {:reply, state.nav_state, state}
+  end
+
+  def handle_call(:registry, _from, state) do
+    {:reply, state.registry, state}
   end
 
   # State transition functions

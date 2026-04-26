@@ -136,6 +136,27 @@ defmodule DesktopUi.Navigation.SignalTest do
       assert signal.type == :close_modal
     end
 
+    test "creates navigation signals from canonical transition descriptors" do
+      assert {:ok, navigate_signal} =
+               Signal.from_map(%{
+                 target: %{navigation: %{action: :navigate_to, screen: :settings, params: %{tab: :profile}}}
+               })
+
+      assert {:ok, modal_signal} =
+               Signal.from_map(%{
+                 action: :open_modal,
+                 modal: :settings_dialog,
+                 params: %{mode: :advanced}
+               })
+
+      assert navigate_signal.type == :navigate_to
+      assert navigate_signal.screen_id == :settings
+      assert navigate_signal.params == %{tab: :profile}
+      assert modal_signal.type == :open_modal
+      assert modal_signal.screen_id == :settings_dialog
+      assert modal_signal.params == %{mode: :advanced}
+    end
+
     test "returns error for unknown navigation type" do
       assert {:error, :unknown_navigation_type} = Signal.from_map(%{type: :invalid})
     end

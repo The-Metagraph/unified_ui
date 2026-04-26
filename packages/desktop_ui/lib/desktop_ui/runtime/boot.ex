@@ -13,16 +13,18 @@ defmodule DesktopUi.Runtime.Boot do
   @spec prepare_native_screen(map(), keyword()) :: {:ok, State.t()} | {:error, Error.t()}
   def prepare_native_screen(screen, opts \\ []) do
     with :ok <- validate_screen(screen),
-         {:ok, root} <- normalize_root(Map.fetch!(screen, :root)) do
-      build_state(Map.put(screen, :root, root), :native, opts)
+         {:ok, root} <- normalize_root(Map.fetch!(screen, :root)),
+         {:ok, state} <- build_state(Map.put(screen, :root, root), :native, opts) do
+      maybe_start_navigation_controller(state, screen, opts)
     end
   end
 
   @spec prepare_rendered_screen(Widget.t() | map(), keyword()) ::
           {:ok, State.t()} | {:error, Error.t()}
   def prepare_rendered_screen(rendered_root, opts \\ []) do
-    with {:ok, root} <- normalize_root(rendered_root) do
-      build_state(
+    with {:ok, root} <- normalize_root(rendered_root),
+         {:ok, state} <-
+           build_state(
         %{
           id: Keyword.get(opts, :screen_id, "canonical-screen"),
           title: Keyword.get(opts, :title, "Canonical Screen"),
@@ -30,13 +32,14 @@ defmodule DesktopUi.Runtime.Boot do
         },
         :canonical,
         opts
-      )
+      ) do
+      maybe_start_navigation_controller(state, %{id: Keyword.get(opts, :screen_id)}, opts)
     end
   end
 
   @spec start_navigation_controller(State.t(), keyword()) :: {:ok, State.t()} | {:error, term()}
   def start_navigation_controller(state, opts \\ []) do
-    registry = Keyword.get(opts, :registry)
+    registry = Keyword.get(opts, :screen_registry) || Keyword.get(opts, :registry)
     initial_screen = Keyword.get(opts, :initial_screen)
 
     cond do
@@ -45,7 +48,6 @@ defmodule DesktopUi.Runtime.Boot do
         {:ok, state}
 
       initial_screen ->
-        screen_module = elem(initial_screen, 1)
         params = elem(initial_screen, 2)
 
         case Controller.start_link(
@@ -60,7 +62,7 @@ defmodule DesktopUi.Runtime.Boot do
              %{
                state
                | navigation_controller: controller,
-                 current_screen_module: screen_module,
+                 current_screen_module: nav_state.current_module,
                  navigation_state: nav_state,
                  screen_params: params
              }}
@@ -174,5 +176,33 @@ defmodule DesktopUi.Runtime.Boot do
 
   defp normalize_root(root) do
     {:error, Error.new(:invalid_screen_root, %{root: root}, :runtime_boot)}
+  end
+
+  defp maybe_start_navigation_controller(state, screen, opts) do
+    initial_screen =
+      Keyword.get(opts, :initial_screen) ||
+        inferred_initial_screen(screen, opts, Keyword.get(opts, :screen_registry) || Keyword.get(opts, :registry))
+
+    start_navigation_controller(
+      state,
+      screen_registry: Keyword.get(opts, :screen_registry),
+      registry: Keyword.get(opts, :registry),
+      initial_screen: initial_screen
+    )
+  end
+
+  defp inferred_initial_screen(_screen, _opts, nil), do: nil
+
+  defp inferred_initial_screen(screen, opts, _registry) do
+    screen_id =
+      Keyword.get(opts, :navigation_screen_id) ||
+        Keyword.get(opts, :screen_id) ||
+        Map.get(screen, :navigation_screen_id)
+
+    if is_nil(screen_id) do
+      nil
+    else
+      {screen_id, Keyword.get(opts, :screen_module), Keyword.get(opts, :screen_params, %{})}
+    end
   end
 end
