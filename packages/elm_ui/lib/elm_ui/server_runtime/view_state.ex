@@ -21,7 +21,14 @@ defmodule ElmUi.ServerRuntime.ViewState do
         flash: nil
       },
       diagnostics: state.diagnostics,
-      metadata: state.metadata
+      metadata:
+        state.metadata
+        |> Map.put(:navigation, State.navigation_summary(state))
     }
+  end
+
+  @spec authoritative_screen_payload(State.t()) :: map()
+  def authoritative_screen_payload(%State{} = state) do
+    ElmUi.ServerRuntime.Navigation.authoritative_screen_payload(state)
   end
 end

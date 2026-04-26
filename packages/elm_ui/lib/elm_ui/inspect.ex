@@ -50,6 +50,10 @@ defmodule ElmUi.Inspect do
     preview_native(ElmUi.Examples.native_transport_screen(), %{})
   end
 
+  defp preview_surface(%{category: :native, id: :native_navigation}) do
+    preview_native(ElmUi.Examples.native_navigation_screen(), %{})
+  end
+
   defp preview_surface(%{category: :native, id: :native_advanced}) do
     preview_native(ElmUi.Examples.native_advanced_screen(), %{})
   end
@@ -73,6 +77,10 @@ defmodule ElmUi.Inspect do
     preview_canonical(ElmUi.Examples.canonical_transport_screen(), %{})
   end
 
+  defp preview_surface(%{category: :canonical, id: :canonical_navigation}) do
+    preview_canonical(ElmUi.Examples.canonical_navigation_screen(), %{})
+  end
+
   defp preview_surface(%{category: :canonical, id: :canonical_advanced}) do
     preview_canonical(ElmUi.Examples.canonical_advanced_screen(), %{})
   end
@@ -94,6 +102,10 @@ defmodule ElmUi.Inspect do
 
   defp preview_surface(%{category: :mixed, id: :mixed_transport}) do
     ElmUi.Examples.mixed_transport_comparison()
+  end
+
+  defp preview_surface(%{category: :mixed, id: :navigation_continuity}) do
+    ElmUi.Examples.navigation_comparison()
   end
 
   defp preview_surface(%{category: :mixed, id: :styling_continuity}) do

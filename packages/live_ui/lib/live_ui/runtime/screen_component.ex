@@ -144,14 +144,15 @@ defmodule LiveUi.Runtime.ScreenComponent do
          {:ok, translation} <-
            LiveUi.Signals.from_interaction(
              interaction,
-             screen: runtime_state.screen.id(),
+             screen: State.screen_id(runtime_state),
              mode: runtime_state.mode,
              boundary: :boundary,
              element_id: Map.get(params, "element_id"),
              widget: Map.get(params, "widget"),
              payload: payload
-           ) do
-      updated_runtime_state = maybe_apply_interaction_hook(runtime_state, translation)
+           ),
+         {:ok, updated_runtime_state} <- State.handle_runtime_action(runtime_state, translation) do
+      updated_runtime_state = maybe_apply_interaction_hook(updated_runtime_state, translation)
 
       {:noreply,
        socket

@@ -7,6 +7,7 @@ defmodule LiveUi.Transport.Diagnostics do
   alias Jido.Signal
   alias LiveUi.Transport.Error
   alias UnifiedIUR.Interaction
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
 
   @families LiveUi.Signals.families()
   @renderer_local_event_prefixes ["phx_", "phx-", "lv:", "hook:"]
@@ -18,7 +19,8 @@ defmodule LiveUi.Transport.Diagnostics do
          :ok <- validate_boundary_context(attrs, [:screen]),
          :ok <- validate_element_context(attrs),
          :ok <- validate_runtime_event(Map.get(attrs, :runtime_event) || Map.get(attrs, :event)),
-         :ok <- validate_payload(Map.get(attrs, :payload, %{})) do
+         :ok <- validate_payload(Map.get(attrs, :payload, %{})),
+         :ok <- validate_navigation_target(Map.get(attrs, :target, %{})) do
       :ok
     end
   end
@@ -29,7 +31,9 @@ defmodule LiveUi.Transport.Diagnostics do
          :ok <- validate_boundary_context(attrs, [:screen]),
          :ok <- validate_runtime_event(Map.get(attrs, :runtime_event)),
          :ok <- validate_payload(interaction.payload),
-         :ok <- validate_payload(Map.get(attrs, :payload, %{})) do
+         :ok <- validate_payload(Map.get(attrs, :payload, %{})),
+         :ok <- validate_navigation_target(interaction.target),
+         :ok <- validate_navigation_target(Map.get(attrs, :target, %{})) do
       :ok
     end
   end
@@ -45,6 +49,8 @@ defmodule LiveUi.Transport.Diagnostics do
       signal.extensions["live_ui_source_context"] || signal.extensions[:live_ui_source_context] ||
         %{}
 
+    target = signal.extensions["live_ui_target"] || signal.extensions[:live_ui_target] || %{}
+
     cond do
       is_nil(family) or is_nil(runtime_event) ->
         {:error, Error.invalid_boundary_signal(signal)}
@@ -53,7 +59,8 @@ defmodule LiveUi.Transport.Diagnostics do
         with :ok <- validate_family(family),
              :ok <- validate_runtime_event(runtime_event),
              :ok <- validate_signal_context(signal, normalize_map(source_context)),
-             :ok <- validate_payload(signal.data || %{}) do
+             :ok <- validate_payload(signal.data || %{}),
+             :ok <- validate_navigation_target(target) do
           :ok
         end
     end
@@ -126,11 +133,36 @@ defmodule LiveUi.Transport.Diagnostics do
 
   defp validate_payload(_payload), do: :ok
 
+  defp validate_navigation_target(target) do
+    target = normalize_map(target)
+    navigation = Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
+
+    leaked_keys =
+      navigation
+      |> Map.keys()
+      |> Enum.filter(&forbidden_navigation_key?/1)
+
+    if leaked_keys == [] do
+      :ok
+    else
+      {:error, Error.host_route_syntax(leaked_keys)}
+    end
+  end
+
   defp renderer_local_key?(key) when is_atom(key), do: renderer_local_key?(Atom.to_string(key))
 
   defp renderer_local_key?(key) when is_binary(key) do
     Enum.any?(@renderer_local_payload_prefixes, &String.starts_with?(key, &1))
   end
+
+  defp forbidden_navigation_key?(key) when is_atom(key),
+    do: key in BoundaryTransport.forbidden_navigation_keys()
+
+  defp forbidden_navigation_key?(key) when is_binary(key) do
+    key in Enum.map(BoundaryTransport.forbidden_navigation_keys(), &Atom.to_string/1)
+  end
+
+  defp forbidden_navigation_key?(_key), do: false
 
   defp normalize_map(map) when is_map(map), do: Map.new(map)
   defp normalize_map(_other), do: %{}

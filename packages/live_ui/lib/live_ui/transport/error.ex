@@ -57,6 +57,15 @@ defmodule LiveUi.Transport.Error do
     }
   end
 
+  @spec host_route_syntax([atom() | String.t()]) :: t()
+  def host_route_syntax(keys) do
+    %__MODULE__{
+      reason: :host_route_syntax,
+      message: "host-route syntax must not cross the canonical live_ui navigation contract",
+      details: %{keys: keys}
+    }
+  end
+
   @spec invalid_channel_envelope(term()) :: t()
   def invalid_channel_envelope(value) do
     %__MODULE__{

@@ -53,6 +53,11 @@ defmodule LiveUi.ExamplesTest do
 
     assert Enum.any?(catalog, &(&1.id == :boundary_transport_compare and &1.path == :mixed))
     assert Enum.any?(catalog, &(&1.id == :styled_continuity_compare and &1.path == :mixed))
+
+    assert Enum.any?(
+             catalog,
+             &(&1.id == :web_navigation_transition_compare and &1.path == :mixed)
+           )
   end
 
   test "native and canonical examples render through their intended package paths" do
@@ -103,6 +108,7 @@ defmodule LiveUi.ExamplesTest do
     assert :native_styled_profile in example_ids
     assert :canonical_styled_operations in example_ids
     assert :styled_continuity_compare in example_ids
+    assert :web_navigation_transition_compare in example_ids
   end
 
   test "example catalog provides stable preview and review metadata" do
@@ -127,6 +133,7 @@ defmodule LiveUi.ExamplesTest do
     assert Enum.any?(grouped.native, &(&1.id == :native_display))
     assert Enum.any?(grouped.canonical, &(&1.id == :canonical_display))
     assert Enum.any?(grouped.mixed, &(&1.id == :styled_continuity_compare))
+    assert Enum.any?(grouped.mixed, &(&1.id == :web_navigation_transition_compare))
   end
 
   test "styled continuity examples keep native and canonical paths aligned" do
@@ -152,5 +159,24 @@ defmodule LiveUi.ExamplesTest do
     assert "cluster-dashboard" in continuity.operations.shared_widgets
 
     assert continuity.boundary.runtime_action.runtime_event == "rename"
+  end
+
+  test "web navigation transition example keeps screen, modal, replacement, and host-route meaning aligned" do
+    assert {:ok, comparison} = LiveUi.Examples.WebNavigationTransitionComparison.compare()
+
+    assert comparison.native.after_navigate.screen_id == :settings
+    assert comparison.native.after_modal.current_modal.modal == :settings_dialog
+    assert comparison.native.after_replace.screen_id == :home
+    assert comparison.canonical.after_navigate.screen_id == :settings
+    assert comparison.canonical.after_replace.mode == :canonical
+    assert comparison.continuity.same_navigation_target?
+    assert comparison.continuity.same_modal_identifier?
+    assert comparison.continuity.same_replacement_target?
+    assert comparison.continuity.replacement_clears_modal?
+    assert comparison.continuity.host_route_externalized?
+    assert comparison.continuity.server_authoritative?
+
+    assert comparison.host_route_fixture.host_application.live_view_route.path ==
+             "/workspace/settings"
   end
 end

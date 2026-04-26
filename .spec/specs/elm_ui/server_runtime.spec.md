@@ -21,6 +21,7 @@ surface:
   - .spec/specs/elm_ui/server_runtime.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
   - repo.ecosystem.elm_ui_naming
 ```
 
@@ -51,6 +52,16 @@ decisions:
   statement: Browser-local state may exist on the frontend, but authoritative server-side UI meaning and package-boundary event translation shall remain anchored in the Phoenix runtime.
   priority: must
   stability: stable
+
+- id: elm_ui.server_runtime.canonical_navigation_transition_mapping
+  statement: When canonical navigation interactions are emitted or consumed, the server runtime shall map canonical screen-transition actions onto Phoenix-and-Elm-appropriate screen or page transitions while preserving authoritative server-side UI meaning.
+  priority: must
+  stability: stable
+
+- id: elm_ui.server_runtime.host_route_resolution_boundary
+  statement: Host router lookup, URL generation, and frontend route-matching details may be used by applications, but they shall remain host or runtime concerns rather than part of the authored `UnifiedUi` contract.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -73,5 +84,7 @@ decisions:
     - elm_ui.server_runtime.handle_boundary_events
     - elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime
     - elm_ui.server_runtime.browser_state_is_bounded
+    - elm_ui.server_runtime.canonical_navigation_transition_mapping
+    - elm_ui.server_runtime.host_route_resolution_boundary
     - elm_ui.server_runtime_handle_canonical_event
 ```

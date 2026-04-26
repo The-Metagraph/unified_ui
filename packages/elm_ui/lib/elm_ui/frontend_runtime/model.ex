@@ -6,6 +6,7 @@ defmodule ElmUi.FrontendRuntime.Model do
   @type tree :: map()
   @type t :: %__MODULE__{
           runtime_id: String.t(),
+          screen_id: String.t() | atom() | nil,
           title: String.t(),
           source_kind: :native | :canonical,
           boundary_mode: :native_local | :canonical_boundary,
@@ -17,6 +18,7 @@ defmodule ElmUi.FrontendRuntime.Model do
         }
 
   defstruct runtime_id: "",
+            screen_id: nil,
             title: "",
             source_kind: :native,
             boundary_mode: :native_local,

@@ -58,6 +58,15 @@ defmodule ElmUi.Transport.Error do
     }
   end
 
+  @spec host_route_syntax([atom() | String.t()]) :: t()
+  def host_route_syntax(keys) do
+    %__MODULE__{
+      reason: :host_route_syntax,
+      message: "host-route syntax must not cross the canonical elm_ui navigation contract",
+      details: %{keys: keys}
+    }
+  end
+
   @spec invalid_boundary_envelope(term()) :: t()
   def invalid_boundary_envelope(value) do
     %__MODULE__{

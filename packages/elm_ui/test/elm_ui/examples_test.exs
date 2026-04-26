@@ -6,6 +6,7 @@ defmodule ElmUi.ExamplesTest do
              :advanced_continuity,
              :canonical_advanced,
              :canonical_foundational,
+             :canonical_navigation,
              :canonical_styling,
              :canonical_transport,
              :canonical_welcome,
@@ -14,8 +15,10 @@ defmodule ElmUi.ExamplesTest do
              :native_advanced,
              :native_counter,
              :native_foundational,
+             :native_navigation,
              :native_styling,
              :native_transport,
+             :navigation_continuity,
              :styling_continuity
            ] =
              ElmUi.Examples.catalog()
@@ -28,6 +31,7 @@ defmodule ElmUi.ExamplesTest do
              :native_advanced,
              :native_counter,
              :native_foundational,
+             :native_navigation,
              :native_styling,
              :native_transport
            ]
@@ -35,6 +39,7 @@ defmodule ElmUi.ExamplesTest do
     assert Enum.sort(Enum.map(ElmUi.Examples.canonical_examples(), & &1.id)) == [
              :canonical_advanced,
              :canonical_foundational,
+             :canonical_navigation,
              :canonical_styling,
              :canonical_transport,
              :canonical_welcome
@@ -44,6 +49,7 @@ defmodule ElmUi.ExamplesTest do
              :advanced_continuity,
              :foundational_continuity,
              :mixed_transport,
+             :navigation_continuity,
              :styling_continuity
            ]
 
@@ -76,6 +82,7 @@ defmodule ElmUi.ExamplesTest do
              :advanced_continuity,
              :foundational_continuity,
              :mixed_transport,
+             :navigation_continuity,
              :styling_continuity
            ]
 
@@ -83,6 +90,7 @@ defmodule ElmUi.ExamplesTest do
              :native_advanced,
              :native_counter,
              :native_foundational,
+             :native_navigation,
              :native_styling,
              :native_transport
            ]
@@ -90,6 +98,7 @@ defmodule ElmUi.ExamplesTest do
     assert Enum.sort(canonical_ids) == [
              :canonical_advanced,
              :canonical_foundational,
+             :canonical_navigation,
              :canonical_styling,
              :canonical_transport,
              :canonical_welcome
@@ -172,6 +181,29 @@ defmodule ElmUi.ExamplesTest do
     assert comparison.continuity.same_intent?
     assert comparison.continuity.local_and_boundary_paths_diverge?
     assert comparison.continuity.server_authority_preserved?
+  end
+
+  test "navigation comparison keeps authoritative server transitions and frontend coordination aligned" do
+    comparison = ElmUi.Examples.navigation_comparison()
+
+    assert comparison.native.after_navigate.screen_id == "settings"
+    assert comparison.native.after_navigate.frontend_screen_id == "settings"
+    assert comparison.native.after_modal.navigation.current_modal.modal == :settings_dialog
+    assert comparison.native.after_replace.screen_id == "home"
+
+    assert comparison.canonical.after_navigate.screen_id == "settings"
+    assert comparison.canonical.after_navigate.frontend_screen_id == "settings"
+    assert comparison.canonical.after_replace.screen_id == "home"
+
+    assert comparison.continuity.same_navigation_target?
+    assert comparison.continuity.frontend_coordination?
+    assert comparison.continuity.same_modal_identifier?
+    assert comparison.continuity.same_replacement_target?
+    assert comparison.continuity.host_route_externalized?
+    assert comparison.continuity.server_authority_preserved?
+
+    assert comparison.host_route_fixture.host_application.phoenix_route.path ==
+             "/workspace/settings"
   end
 
   test "styling comparison exposes side-by-side resolved style and browser realization artifacts" do

@@ -16,6 +16,7 @@ defmodule ElmUi.RuntimeTest do
 
     assert {:ok, frontend_model} = Runtime.hydrate_frontend(runtime_state)
     assert frontend_model.runtime_id == "native-runtime"
+    assert frontend_model.screen_id == "native-counter"
     assert frontend_model.title == "Native Counter"
     assert frontend_model.boundary_mode == :native_local
   end
@@ -36,6 +37,7 @@ defmodule ElmUi.RuntimeTest do
 
     assert {:ok, frontend_model} = Runtime.hydrate_frontend(runtime_state)
     assert frontend_model.runtime_id == "canonical-runtime"
+    assert frontend_model.screen_id == :canonical_button
     assert frontend_model.source_kind == :canonical
   end
 
@@ -113,6 +115,7 @@ defmodule ElmUi.RuntimeTest do
     assert ack_message.kind == :ack
     assert ack_message.payload.server_authority
     assert ack_message.payload.family == :click
+    assert ack_message.payload.authoritative_screen.screen_id == "native-counter"
   end
 
   test "runtime handles canonical boundary envelopes through the same server runtime" do
@@ -147,6 +150,7 @@ defmodule ElmUi.RuntimeTest do
     assert next_state.last_boundary_signal.type == "elm_ui.command.run"
     assert ack_message.kind == :ack
     assert ack_message.payload.boundary == :boundary
+    assert ack_message.payload.authoritative_screen.screen_id == :ops_command_palette
   end
 
   test "frontend runtime returns deterministic hydration diagnostics" do

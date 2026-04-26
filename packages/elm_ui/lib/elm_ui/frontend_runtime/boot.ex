@@ -5,7 +5,7 @@ defmodule ElmUi.FrontendRuntime.Boot do
 
   alias ElmUi.FrontendRuntime.{Error, Message, Model, Realization}
 
-  @required_fields ~w[runtime_id title source_kind boundary_mode tree local_state diagnostics metadata]a
+  @required_fields ~w[runtime_id screen_id title source_kind boundary_mode tree local_state diagnostics metadata]a
 
   @spec hydrate(map()) :: {:ok, Model.t()} | {:error, Error.t()}
   def hydrate(payload) when is_map(payload) do
@@ -22,6 +22,7 @@ defmodule ElmUi.FrontendRuntime.Boot do
         {:ok,
          %Model{
            runtime_id: fetch(payload, :runtime_id),
+           screen_id: fetch(payload, :screen_id),
            title: fetch(payload, :title),
            source_kind: fetch(payload, :source_kind),
            boundary_mode: fetch(payload, :boundary_mode),

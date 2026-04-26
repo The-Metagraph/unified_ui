@@ -35,6 +35,7 @@ defmodule ElmUi.Transport.Signals do
       intent = fetch(attrs, :intent, family)
       payload = fetch(attrs, :payload, %{}) |> normalize_map()
       target = fetch(attrs, :target, %{}) |> normalize_map()
+      metadata = fetch(attrs, :metadata, %{}) |> normalize_map()
       runtime_event = fetch(attrs, :runtime_event, default_runtime_event(family, intent))
 
       translation = %{
@@ -44,6 +45,7 @@ defmodule ElmUi.Transport.Signals do
         runtime_event: runtime_event,
         payload: payload,
         target: target,
+        metadata: metadata,
         source_kind: normalize_source_kind(fetch(attrs, :source_kind, :native)),
         boundary_mode: normalize_boundary_mode(fetch(attrs, :boundary_mode)),
         widget_id: fetch(attrs, :widget_id),
@@ -94,6 +96,7 @@ defmodule ElmUi.Transport.Signals do
         runtime_event: runtime_event,
         payload: normalize_map(signal.data || %{}),
         target: normalize_map(fetch_extension(signal, :elm_ui_target, %{})),
+        metadata: normalize_map(fetch_extension(signal, :elm_ui_metadata, %{})),
         source_kind:
           normalize_source_kind(fetch_extension(signal, :elm_ui_source_kind, :canonical)),
         boundary_mode: :canonical_boundary,
@@ -150,6 +153,7 @@ defmodule ElmUi.Transport.Signals do
          :intent,
          :runtime_event,
          :target,
+         :metadata,
          :payload,
          :server_action,
          :frontend_update,
@@ -170,6 +174,7 @@ defmodule ElmUi.Transport.Signals do
        :family,
        :intent,
        :runtime_event,
+       :metadata,
        :payload,
        :native_event,
        :server_action,
@@ -190,6 +195,7 @@ defmodule ElmUi.Transport.Signals do
         elm_ui_intent: translation.intent,
         elm_ui_runtime_event: translation.runtime_event,
         elm_ui_target: translation.target,
+        elm_ui_metadata: translation.metadata,
         elm_ui_source_kind: translation.source_kind,
         elm_ui_runtime_id: translation.runtime_id,
         elm_ui_screen: translation.screen

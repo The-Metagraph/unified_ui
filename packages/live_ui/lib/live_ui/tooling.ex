@@ -276,7 +276,7 @@ defmodule LiveUi.Tooling do
     %{
       path: path,
       mode: runtime_state.mode,
-      screen: runtime_state.screen.id(),
+      screen: State.screen_id(runtime_state),
       event_routes: Map.keys(runtime_state.event_routes) |> Enum.sort(),
       bridge_hooks: Enum.sort(runtime_state.bridge_hooks),
       widgets: Enum.map(entries, & &1.widget) |> Enum.uniq(),

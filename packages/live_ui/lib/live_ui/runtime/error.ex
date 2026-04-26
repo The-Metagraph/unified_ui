@@ -48,6 +48,34 @@ defmodule LiveUi.Runtime.Error do
     }
   end
 
+  @spec unresolved_navigation_target(atom() | String.t() | nil, term(), term()) :: t()
+  def unresolved_navigation_target(action, screen_id, reason) do
+    %__MODULE__{
+      reason: :unresolved_navigation_target,
+      message: "canonical navigation transitions require a resolvable symbolic screen target",
+      details: %{action: action, screen_id: screen_id, reason: inspect(reason)}
+    }
+  end
+
+  @spec unsupported_navigation_context(atom() | String.t() | nil, map()) :: t()
+  def unsupported_navigation_context(action, details \\ %{}) do
+    %__MODULE__{
+      reason: :unsupported_navigation_context,
+      message:
+        "canonical navigation transition cannot be applied in the current live_ui runtime context",
+      details: Map.put(Map.new(details), :action, action)
+    }
+  end
+
+  @spec host_route_navigation_syntax([atom() | String.t()]) :: t()
+  def host_route_navigation_syntax(keys) do
+    %__MODULE__{
+      reason: :host_route_navigation_syntax,
+      message: "canonical navigation targets must not contain host-router syntax",
+      details: %{keys: keys}
+    }
+  end
+
   @spec widget_event_failed(term()) :: t()
   def widget_event_failed(reason) do
     %__MODULE__{
