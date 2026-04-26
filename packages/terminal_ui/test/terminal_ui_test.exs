@@ -112,6 +112,7 @@ defmodule TerminalUiTest do
              :advanced_capability_continuity,
              :advanced_continuity,
              :foundational_continuity,
+             :navigation_transition_review,
              :normalized_input_profiles,
              :styled_continuity_review,
              :styled_degradation_review,

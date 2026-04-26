@@ -4,6 +4,7 @@ defmodule TerminalUi.Examples do
   """
 
   alias UnifiedIUR.{Canvas, Element, Interaction, Layer, Layout}
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
   alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
 
   @spec native_foundational_screen() :: map()
@@ -583,7 +584,8 @@ defmodule TerminalUi.Examples do
       transport_flow_review: transport_flow_comparison(),
       normalized_input_profiles: normalized_input_comparison(),
       styled_continuity_review: styled_continuity_comparison(),
-      styled_degradation_review: styled_degradation_comparison()
+      styled_degradation_review: styled_degradation_comparison(),
+      navigation_transition_review: navigation_transition_review()
     }
   end
 
@@ -639,6 +641,7 @@ defmodule TerminalUi.Examples do
           :canonical_styled_review,
           :styled_continuity_review
         ],
+        navigation_review: [:navigation_transition_review],
         degradation_review: [:styled_degradation_review],
         parity_review: [:foundational_continuity, :advanced_continuity],
         capability_review: [:advanced_capability_continuity, :styled_degradation_review]
@@ -666,7 +669,8 @@ defmodule TerminalUi.Examples do
           :canonical_styled_review,
           :styled_continuity_review,
           :styled_degradation_review
-        ]
+        ],
+        navigation_transition_review: [:navigation_transition_review]
       }
     }
   end
@@ -982,6 +986,58 @@ defmodule TerminalUi.Examples do
     }
   end
 
+  @spec navigation_transition_review() :: map()
+  def navigation_transition_review do
+    fixtures = navigation_fixtures()
+
+    {:ok, raw_state} =
+      TerminalUi.Runtime.mount_native_screen(navigation_review_screen(), backend_mode: :raw)
+
+    {:ok, tty_state} =
+      TerminalUi.Runtime.mount_native_screen(navigation_review_screen(), backend_mode: :tty)
+
+    {raw_states, raw_routes} = execute_terminal_navigation_flow(raw_state, fixtures)
+    {tty_states, tty_routes} = execute_terminal_navigation_flow(tty_state, fixtures)
+
+    %{
+      id: :navigation_transition_review,
+      summary:
+        "Review canonical navigation transitions through raw and tty terminal realizations",
+      coverage: [
+        :canonical_navigation_transitions,
+        :bounded_history,
+        :modal_realization,
+        :capability_aware_navigation
+      ],
+      fixture_ids: navigation_fixture_ids(),
+      fixture_targets: navigation_fixture_targets(fixtures),
+      raw: raw_states,
+      tty: tty_states,
+      raw_routes: raw_routes,
+      tty_routes: tty_routes,
+      parity: %{
+        shared_fixture_targets_consumed?:
+          Enum.all?(raw_routes, fn {step, summary} ->
+            summary.target == tty_routes[step].target and no_host_route_syntax?(summary.target)
+          end),
+        screen_transition_meaning_preserved?:
+          raw_states.after_navigate.active_screen_id == "settings" and
+            tty_states.after_navigate.active_screen_id == "settings" and
+            raw_states.after_replace.active_screen_id == "home" and
+            tty_states.after_replace.active_screen_id == "home",
+        modal_degradation_explicit?:
+          raw_states.with_modal.current_modal.realization == :inline_overlay and
+            tty_states.with_modal.current_modal.realization == :focused_surface and
+            tty_states.with_modal.last_realization.degraded?,
+        history_semantics_preserved?:
+          raw_states.after_back.active_screen_id == "settings" and
+            tty_states.after_back.active_screen_id == "settings" and
+            raw_states.after_forward.active_screen_id == "reports" and
+            tty_states.after_forward.active_screen_id == "reports"
+      }
+    }
+  end
+
   defp runtime_summary(runtime_state) do
     %{
       source_kind: runtime_state.source_kind,
@@ -1025,6 +1081,7 @@ defmodule TerminalUi.Examples do
       family: Map.get(route_result, :family, translation.family),
       input_family: Map.get(route_result, :input_family, Map.get(translation, :input_family)),
       boundary: Map.get(route_result, :boundary, translation.boundary),
+      target: Map.get(translation, :target),
       runtime_event: Map.get(route_result, :runtime_event, translation.runtime_event),
       local_handling:
         Map.get(route_result, :local_handling, Map.get(translation, :local_handling)),
@@ -1178,6 +1235,14 @@ defmodule TerminalUi.Examples do
         capability_profiles: [:rich_terminal]
       },
       %{
+        id: :navigation_transition_review,
+        category: :mixed,
+        workflow: :navigation,
+        parity_group: :navigation_transition_review,
+        parity_with: [],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
+      },
+      %{
         id: :normalized_input_profiles,
         category: :mixed,
         workflow: :transport,
@@ -1219,4 +1284,171 @@ defmodule TerminalUi.Examples do
       }
     ]
   end
+
+  defp navigation_fixtures do
+    %{
+      navigate: BoundaryTransport.boundary_fixture!("screen_transition--settings_profile"),
+      replace: BoundaryTransport.boundary_fixture!("replace_transition--home"),
+      back: BoundaryTransport.boundary_fixture!("history_transition--back"),
+      modal: BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    }
+  end
+
+  defp navigation_fixture_ids do
+    [
+      "screen_transition--settings_profile",
+      "replace_transition--home",
+      "history_transition--back",
+      "modal_transition--settings_dialog"
+    ]
+  end
+
+  defp navigation_fixture_targets(fixtures) do
+    %{
+      navigate: fixtures.navigate.descriptor.target,
+      replace: fixtures.replace.descriptor.target,
+      back: fixtures.back.descriptor.target,
+      modal: fixtures.modal.descriptor.target,
+      close_modal: close_modal_target(),
+      reports: reports_target(),
+      forward: forward_target()
+    }
+  end
+
+  defp execute_terminal_navigation_flow(runtime_state, fixtures) do
+    {:ok, after_navigate, navigate_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        runtime_state,
+        family: :navigation,
+        intent: fixtures.navigate.interaction.intent,
+        widget_id: "settings-link",
+        target: fixtures.navigate.descriptor.target,
+        payload: fixtures.navigate.signal_data
+      )
+
+    {:ok, with_modal, modal_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        after_navigate,
+        family: :navigation,
+        intent: fixtures.modal.interaction.intent,
+        widget_id: "settings-dialog-button",
+        target: fixtures.modal.descriptor.target,
+        payload: fixtures.modal.signal_data
+      )
+
+    {:ok, after_close, close_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        with_modal,
+        family: :navigation,
+        intent: :close_settings_modal,
+        widget_id: "close-settings-dialog",
+        target: close_modal_target()
+      )
+
+    {:ok, after_reports, reports_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        after_close,
+        family: :navigation,
+        intent: :open_reports_screen,
+        widget_id: "reports-link",
+        target: reports_target()
+      )
+
+    {:ok, after_back, back_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        after_reports,
+        family: :navigation,
+        intent: fixtures.back.interaction.intent,
+        widget_id: "back-button",
+        target: fixtures.back.descriptor.target,
+        payload: fixtures.back.signal_data
+      )
+
+    {:ok, after_forward, forward_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        after_back,
+        family: :navigation,
+        intent: :go_forward,
+        widget_id: "forward-button",
+        target: forward_target()
+      )
+
+    {:ok, after_replace, replace_route} =
+      TerminalUi.Runtime.dispatch_native_event(
+        after_forward,
+        family: :navigation,
+        intent: fixtures.replace.interaction.intent,
+        widget_id: "home-link",
+        target: fixtures.replace.descriptor.target,
+        payload: fixtures.replace.signal_data
+      )
+
+    states = %{
+      mounted: TerminalUi.Runtime.navigation_summary(runtime_state),
+      after_navigate: TerminalUi.Runtime.navigation_summary(after_navigate),
+      with_modal: TerminalUi.Runtime.navigation_summary(with_modal),
+      after_close: TerminalUi.Runtime.navigation_summary(after_close),
+      after_reports: TerminalUi.Runtime.navigation_summary(after_reports),
+      after_back: TerminalUi.Runtime.navigation_summary(after_back),
+      after_forward: TerminalUi.Runtime.navigation_summary(after_forward),
+      after_replace: TerminalUi.Runtime.navigation_summary(after_replace)
+    }
+
+    routes = %{
+      navigate: route_summary(navigate_route),
+      modal: route_summary(modal_route),
+      close_modal: route_summary(close_route),
+      reports: route_summary(reports_route),
+      back: route_summary(back_route),
+      forward: route_summary(forward_route),
+      replace: route_summary(replace_route)
+    }
+
+    {states, routes}
+  end
+
+  defp navigation_review_screen do
+    %{
+      id: "terminal-navigation-review",
+      title: "Terminal Navigation Review",
+      root:
+        TerminalUi.Widgets.column("terminal-navigation-root", [
+          TerminalUi.Widgets.text("terminal-navigation-title", "Terminal Navigation Review"),
+          TerminalUi.Widgets.text(
+            "terminal-navigation-subtitle",
+            "Canonical screen transitions realized through screen replacement, modals, and bounded history"
+          ),
+          TerminalUi.Widgets.button("settings-link", "Settings", navigate_to: :settings),
+          TerminalUi.Widgets.button("reports-link", "Reports", navigate_to: :reports),
+          TerminalUi.Widgets.button("home-link", "Replace With Home", replace_with: :home),
+          TerminalUi.Widgets.button("back-button", "Back", go_back: true),
+          TerminalUi.Widgets.button("forward-button", "Forward", go_forward: true),
+          TerminalUi.Widgets.button("settings-dialog-button", "Open Settings Dialog",
+            open_modal: :settings_dialog,
+            navigate_params: %{mode: :advanced}
+          ),
+          TerminalUi.Widgets.button("close-settings-dialog", "Close Settings Dialog",
+            close_modal: true
+          )
+        ])
+    }
+  end
+
+  defp reports_target do
+    %{navigation: %{action: :navigate_to, screen: :reports, params: %{section: :daily}}}
+  end
+
+  defp forward_target do
+    %{navigation: %{action: :go_forward}}
+  end
+
+  defp close_modal_target do
+    %{navigation: %{action: :close_modal, modal: :settings_dialog}}
+  end
+
+  defp no_host_route_syntax?(%{navigation: navigation}) when is_map(navigation) do
+    not Map.has_key?(navigation, :route)
+  end
+
+  defp no_host_route_syntax?(_other), do: true
 end

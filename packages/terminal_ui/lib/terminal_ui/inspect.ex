@@ -97,6 +97,10 @@ defmodule TerminalUi.Inspect do
     TerminalUi.Examples.styled_degradation_comparison()
   end
 
+  defp preview_surface(%{category: :mixed, id: :navigation_transition_review}) do
+    TerminalUi.Examples.navigation_transition_review()
+  end
+
   defp preview_native(screen, opts) do
     {:ok, state} = TerminalUi.Runtime.mount_native_screen(screen, opts)
     TerminalUi.Inspection.runtime_snapshot(state)

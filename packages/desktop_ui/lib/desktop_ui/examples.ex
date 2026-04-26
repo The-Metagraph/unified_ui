@@ -5,6 +5,53 @@ defmodule DesktopUi.Examples do
 
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
+
+  defmodule NavigationReview do
+    defmodule HomeScreen do
+      def render(_assigns), do: %{}
+    end
+
+    defmodule SettingsScreen do
+      def render(_assigns), do: %{}
+    end
+
+    defmodule ReportsScreen do
+      def render(_assigns), do: %{}
+    end
+
+    defmodule SettingsDialogScreen do
+      def render(_assigns), do: %{}
+    end
+
+    defmodule Registry do
+      @behaviour DesktopUi.Navigation.Registry
+
+      @impl true
+      def register do
+        %{
+          home: {HomeScreen, title: "Home"},
+          settings: {SettingsScreen, title: "Settings"},
+          reports: {ReportsScreen, title: "Reports"},
+          settings_dialog: {SettingsDialogScreen, title: "Settings Dialog", modal_only?: true}
+        }
+      end
+
+      @impl true
+      def get_screen(:home), do: HomeScreen
+      def get_screen(:settings), do: SettingsScreen
+      def get_screen(:reports), do: ReportsScreen
+      def get_screen(:settings_dialog), do: SettingsDialogScreen
+      def get_screen(_), do: nil
+
+      @impl true
+      def screen_metadata(:home), do: %{title: "Home"}
+      def screen_metadata(:settings), do: %{title: "Settings"}
+      def screen_metadata(:reports), do: %{title: "Reports"}
+      def screen_metadata(:settings_dialog), do: %{title: "Settings Dialog", modal_only?: true}
+      def screen_metadata(_), do: %{}
+    end
+  end
 
   @spec native_foundational_screen() :: map()
   def native_foundational_screen do
@@ -904,7 +951,10 @@ defmodule DesktopUi.Examples do
           DesktopUi.Widgets.column("nav-layout", [
             DesktopUi.Widgets.content("nav-header", [
               DesktopUi.Widgets.label("nav-title", "Navigation Demo"),
-              DesktopUi.Widgets.text("nav-subtitle", "Demonstrates home, list, and detail screens")
+              DesktopUi.Widgets.text(
+                "nav-subtitle",
+                "Demonstrates home, list, and detail screens"
+              )
             ]),
             DesktopUi.Widgets.menu(
               "nav-menu",
@@ -1063,6 +1113,152 @@ defmodule DesktopUi.Examples do
     }
   end
 
+  @spec navigation_transition_review() :: map()
+  def navigation_transition_review do
+    fixtures = navigation_fixtures()
+    screen = navigation_review_screen()
+
+    Enum.each(navigation_review_modules(), &Code.ensure_loaded?/1)
+
+    {:ok, runtime_state} =
+      DesktopUi.Runtime.mount_native_screen(screen,
+        platform_target: :linux,
+        screen_registry: NavigationReview.Registry,
+        navigation_screen_id: :home
+      )
+
+    primary_window = runtime_state.windows.primary
+
+    {:ok, after_navigate, navigate_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        runtime_state,
+        family: :navigation,
+        intent: fixtures.navigate.interaction.intent,
+        widget_id: "settings-link",
+        target: fixtures.navigate.descriptor.target,
+        payload: fixtures.navigate.signal_data
+      )
+
+    {:ok, with_modal, modal_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        after_navigate,
+        family: :navigation,
+        intent: fixtures.modal.interaction.intent,
+        widget_id: "settings-dialog-button",
+        target: fixtures.modal.descriptor.target,
+        payload: fixtures.modal.signal_data
+      )
+
+    {:ok, after_close, close_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        with_modal,
+        family: :navigation,
+        intent: :close_settings_modal,
+        widget_id: "close-settings-dialog",
+        target: close_modal_target()
+      )
+
+    {:ok, after_reports, reports_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        after_close,
+        family: :navigation,
+        intent: :open_reports_screen,
+        widget_id: "reports-link",
+        target: reports_target()
+      )
+
+    {:ok, after_back, back_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        after_reports,
+        family: :navigation,
+        intent: fixtures.back.interaction.intent,
+        widget_id: "back-button",
+        target: fixtures.back.descriptor.target,
+        payload: fixtures.back.signal_data
+      )
+
+    {:ok, after_forward, forward_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        after_back,
+        family: :navigation,
+        intent: :go_forward,
+        widget_id: "forward-button",
+        target: forward_target()
+      )
+
+    {:ok, after_replace, replace_route} =
+      DesktopUi.Runtime.dispatch_native_event(
+        after_forward,
+        family: :navigation,
+        intent: fixtures.replace.interaction.intent,
+        widget_id: "home-link",
+        target: fixtures.replace.descriptor.target,
+        payload: fixtures.replace.signal_data
+      )
+
+    expected_targets = navigation_fixture_targets(fixtures)
+
+    route_summaries = %{
+      navigate: navigation_route_summary(navigate_route),
+      modal: navigation_route_summary(modal_route),
+      close_modal: navigation_route_summary(close_route),
+      reports: navigation_route_summary(reports_route),
+      back: navigation_route_summary(back_route),
+      forward: navigation_route_summary(forward_route),
+      replace: navigation_route_summary(replace_route)
+    }
+
+    state_summaries = %{
+      mounted: desktop_navigation_state_summary(runtime_state),
+      after_navigate: desktop_navigation_state_summary(after_navigate),
+      with_modal: desktop_navigation_state_summary(with_modal),
+      after_close: desktop_navigation_state_summary(after_close),
+      after_reports: desktop_navigation_state_summary(after_reports),
+      after_back: desktop_navigation_state_summary(after_back),
+      after_forward: desktop_navigation_state_summary(after_forward),
+      after_replace: desktop_navigation_state_summary(after_replace)
+    }
+
+    %{
+      id: :navigation_transition_review,
+      summary:
+        "Review canonical navigation transitions through the desktop screen registry and one shared window",
+      coverage: [
+        :canonical_navigation_transitions,
+        :screen_registry,
+        :history_stack,
+        :modal_stack
+      ],
+      fixture_ids: navigation_fixture_ids(),
+      fixture_targets: expected_targets,
+      routes: route_summaries,
+      states: state_summaries,
+      parity: %{
+        shared_fixture_targets_consumed?:
+          Enum.all?(route_summaries, fn {step, summary} ->
+            summary.target == expected_targets[step] and no_host_route_syntax?(summary.target)
+          end),
+        window_preserved_across_transitions?:
+          Enum.all?(state_summaries, fn {_step, summary} ->
+            summary.primary_window == primary_window
+          end),
+        registry_resolution_preserved?:
+          state_summaries.after_navigate.title == "Settings" and
+            state_summaries.after_reports.title == "Reports" and
+            state_summaries.after_replace.title == "Home",
+        history_semantics_preserved?:
+          state_summaries.after_back.screen_id == "settings" and
+            state_summaries.after_forward.screen_id == "reports" and
+            state_summaries.after_replace.screen_id == "home" and
+            state_summaries.after_replace.history_depth == 2,
+        modal_stack_preserved?:
+          state_summaries.with_modal.modal_depth == 1 and
+            state_summaries.after_close.modal_depth == 0 and
+            state_summaries.after_close.screen_id == "settings"
+      }
+    }
+  end
+
   @spec normalized_input_comparison() :: map()
   def normalized_input_comparison do
     shortcut_profiles =
@@ -1210,7 +1406,8 @@ defmodule DesktopUi.Examples do
       :advanced_continuity,
       :transport_flow_review,
       :normalized_input_profiles,
-      :styled_continuity_review
+      :styled_continuity_review,
+      :navigation_transition_review
     ]
 
   defp catalog_by_category(category) do
@@ -1378,6 +1575,24 @@ defmodule DesktopUi.Examples do
         parity_with: [:native_styled_review, :canonical_styled_review],
         coverage: [:style_continuity, :theme_alignment, :artifact_targets]
       },
+      %{
+        id: :navigation_transition_review,
+        category: :mixed,
+        workflow: :navigation_review,
+        parity_group: :navigation_transition_review,
+        parity_with: [
+          :basic_navigation,
+          :history_navigation,
+          :modal_navigation,
+          :master_detail_navigation
+        ],
+        coverage: [
+          :canonical_navigation_transitions,
+          :screen_registry,
+          :history_stack,
+          :modal_stack
+        ]
+      },
       # Navigation examples
       %{
         id: :basic_navigation,
@@ -1427,6 +1642,139 @@ defmodule DesktopUi.Examples do
   defp flatten_kinds(node, acc) do
     Enum.reduce(Map.get(node, :children, []), acc ++ [node.kind], &flatten_kinds(&1, &2))
   end
+
+  defp navigation_fixtures do
+    %{
+      navigate: BoundaryTransport.boundary_fixture!("screen_transition--settings_profile"),
+      replace: BoundaryTransport.boundary_fixture!("replace_transition--home"),
+      back: BoundaryTransport.boundary_fixture!("history_transition--back"),
+      modal: BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    }
+  end
+
+  defp navigation_fixture_ids do
+    [
+      "screen_transition--settings_profile",
+      "replace_transition--home",
+      "history_transition--back",
+      "modal_transition--settings_dialog"
+    ]
+  end
+
+  defp navigation_fixture_targets(fixtures) do
+    %{
+      navigate: fixtures.navigate.descriptor.target,
+      replace: fixtures.replace.descriptor.target,
+      back: fixtures.back.descriptor.target,
+      modal: fixtures.modal.descriptor.target,
+      close_modal: close_modal_target(),
+      reports: reports_target(),
+      forward: forward_target()
+    }
+  end
+
+  defp navigation_review_modules do
+    [
+      NavigationReview.HomeScreen,
+      NavigationReview.SettingsScreen,
+      NavigationReview.ReportsScreen,
+      NavigationReview.SettingsDialogScreen,
+      NavigationReview.Registry
+    ]
+  end
+
+  defp navigation_review_screen do
+    %{
+      id: "desktop-navigation-review",
+      title: "Desktop Navigation Review",
+      root:
+        DesktopUi.Widgets.window("desktop-navigation-window", "Desktop Navigation Review", [
+          DesktopUi.Widgets.column("desktop-navigation-layout", [
+            DesktopUi.Widgets.content("desktop-navigation-header", [
+              DesktopUi.Widgets.label("desktop-navigation-title", "Desktop Navigation Review"),
+              DesktopUi.Widgets.text(
+                "desktop-navigation-subtitle",
+                "Registered screens, history traversal, modal dialogs, and replacement transitions"
+              )
+            ]),
+            DesktopUi.Widgets.row("desktop-navigation-actions", [
+              DesktopUi.Widgets.button("settings-link", "Settings", navigate_to: :settings),
+              DesktopUi.Widgets.button("reports-link", "Reports", navigate_to: :reports),
+              DesktopUi.Widgets.button("home-link", "Replace With Home", replace_with: :home)
+            ]),
+            DesktopUi.Widgets.row("desktop-navigation-history", [
+              DesktopUi.Widgets.button("back-button", "Back", go_back: true),
+              DesktopUi.Widgets.button("forward-button", "Forward", go_forward: true)
+            ]),
+            DesktopUi.Widgets.row("desktop-navigation-modal", [
+              DesktopUi.Widgets.button("settings-dialog-button", "Open Settings Dialog",
+                open_modal: :settings_dialog,
+                navigate_params: %{mode: :advanced}
+              ),
+              DesktopUi.Widgets.button("close-settings-dialog", "Close Settings Dialog",
+                close_modal: true
+              )
+            ])
+          ])
+        ])
+    }
+  end
+
+  defp reports_target do
+    %{navigation: %{action: :navigate_to, screen: :reports, params: %{section: :daily}}}
+  end
+
+  defp forward_target do
+    %{navigation: %{action: :go_forward}}
+  end
+
+  defp close_modal_target do
+    %{navigation: %{action: :close_modal, modal: :settings_dialog}}
+  end
+
+  defp desktop_navigation_state_summary(state) do
+    current_modal =
+      case DesktopUi.Navigation.Integration.current_modal(state) do
+        {id, _module, params} -> %{modal: id, params: params}
+        nil -> nil
+      end
+
+    %{
+      runtime_id: state.runtime_id,
+      screen_id: state.screen_id,
+      title: state.title,
+      current_screen_module: state.current_screen_module,
+      screen_params: state.screen_params,
+      primary_window: state.windows.primary,
+      history_depth: length(state.navigation_state.history),
+      forward_depth: length(state.navigation_state.forward),
+      modal_depth: length(state.navigation_state.modals),
+      current_modal: current_modal
+    }
+  end
+
+  defp navigation_route_summary(route_result) do
+    translation = route_result.translation
+
+    %{
+      route: route_result.route,
+      family: route_result.family,
+      input_family: route_result.input_family,
+      boundary: route_result.boundary,
+      target: Map.get(translation, :target),
+      signal_type:
+        case Map.get(translation, :signal) do
+          nil -> nil
+          signal -> signal.type
+        end
+    }
+  end
+
+  defp no_host_route_syntax?(%{navigation: navigation}) when is_map(navigation) do
+    not Map.has_key?(navigation, :route)
+  end
+
+  defp no_host_route_syntax?(_other), do: true
 
   defp root_for_sequence(%{kind: :window, children: [child | _rest]}), do: child
   defp root_for_sequence(tree), do: tree

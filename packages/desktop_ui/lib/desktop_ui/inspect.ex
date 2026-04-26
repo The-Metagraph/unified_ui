@@ -48,7 +48,7 @@ defmodule DesktopUi.Inspect do
          shutdown: %{acknowledgement: shutdown_ack, final_state: host.state},
          resource_contracts: %{
            text: DesktopUi.Sdl3.Text.contract(),
-            images: DesktopUi.Sdl3.Images.contract()
+           images: DesktopUi.Sdl3.Images.contract()
          },
          resource_support: %{
            text: DesktopUi.Sdl3.Text.native_support(capabilities),
@@ -146,6 +146,10 @@ defmodule DesktopUi.Inspect do
 
   defp preview_surface(%{category: :mixed, id: :styled_continuity_review}) do
     DesktopUi.Examples.styled_comparison()
+  end
+
+  defp preview_surface(%{category: :mixed, id: :navigation_transition_review}) do
+    DesktopUi.Examples.navigation_transition_review()
   end
 
   defp launch_host(%{category: :native, id: :native_foundational}, opts) do

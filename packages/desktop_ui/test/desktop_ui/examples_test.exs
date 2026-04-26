@@ -61,7 +61,11 @@ defmodule DesktopUi.ExamplesTest do
              :native_foundational,
              :native_advanced_operations,
              :native_transport_review,
-             :native_styled_review
+             :native_styled_review,
+             :basic_navigation,
+             :history_navigation,
+             :modal_navigation,
+             :master_detail_navigation
            ]
 
     assert reference.examples.canonical_ids == [
@@ -76,14 +80,19 @@ defmodule DesktopUi.ExamplesTest do
              :advanced_continuity,
              :transport_flow_review,
              :normalized_input_profiles,
-             :styled_continuity_review
+             :styled_continuity_review,
+             :navigation_transition_review
            ]
 
     assert summary.examples.native_ids == [
              :native_foundational,
              :native_advanced_operations,
              :native_transport_review,
-             :native_styled_review
+             :native_styled_review,
+             :basic_navigation,
+             :history_navigation,
+             :modal_navigation,
+             :master_detail_navigation
            ]
 
     assert summary.examples.comparison_ids == [
@@ -91,7 +100,8 @@ defmodule DesktopUi.ExamplesTest do
              :advanced_continuity,
              :transport_flow_review,
              :normalized_input_profiles,
-             :styled_continuity_review
+             :styled_continuity_review,
+             :navigation_transition_review
            ]
   end
 
@@ -148,5 +158,56 @@ defmodule DesktopUi.ExamplesTest do
                entry.artifact_names.comparison ==
                  "desktop_ui.examples.styled_continuity_review.comparison"
            end)
+  end
+
+  test "navigation review exposes shared canonical fixtures through one-window desktop navigation" do
+    review = DesktopUi.Examples.navigation_transition_review()
+    metadata = DesktopUi.Examples.metadata(:navigation_transition_review)
+    matrix = DesktopUi.Examples.coverage_matrix()
+
+    assert review.id == :navigation_transition_review
+
+    assert review.fixture_ids == [
+             "screen_transition--settings_profile",
+             "replace_transition--home",
+             "history_transition--back",
+             "modal_transition--settings_dialog"
+           ]
+
+    assert review.fixture_targets.navigate ==
+             %{
+               navigation: %{
+                 action: :navigate_to,
+                 kind: :screen_transition,
+                 params: %{tab: :profile},
+                 screen: :settings
+               }
+             }
+
+    assert %{navigation: modal_target} = review.fixture_targets.modal
+    assert modal_target.action == :open_modal
+    assert modal_target.kind == :modal_transition
+    assert modal_target.modal == :settings_dialog
+    assert modal_target.params == %{mode: :advanced}
+    assert modal_target.metadata == %{surface: :workspace}
+
+    assert review.parity.shared_fixture_targets_consumed?
+    assert review.parity.window_preserved_across_transitions?
+    assert review.parity.registry_resolution_preserved?
+    assert review.parity.history_semantics_preserved?
+    assert review.parity.modal_stack_preserved?
+    assert review.states.after_navigate.screen_id == "settings"
+    assert review.states.after_reports.screen_id == "reports"
+    assert review.states.after_replace.screen_id == "home"
+
+    assert review.states.with_modal.current_modal == %{
+             modal: :settings_dialog,
+             params: %{mode: :advanced}
+           }
+
+    assert review.routes.forward.target == %{navigation: %{action: :go_forward}}
+    assert metadata.workflow == :navigation_review
+    assert metadata.parity_group == :navigation_transition_review
+    assert matrix.parity_groups.navigation_transition_review == [:navigation_transition_review]
   end
 end

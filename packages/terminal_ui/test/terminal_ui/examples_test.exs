@@ -49,6 +49,7 @@ defmodule TerminalUi.ExamplesTest do
              :native_foundational,
              :native_styled_review,
              :native_transport_review,
+             :navigation_transition_review,
              :normalized_input_profiles,
              :styled_continuity_review,
              :styled_degradation_review,
@@ -62,6 +63,7 @@ defmodule TerminalUi.ExamplesTest do
              :advanced_capability_continuity,
              :advanced_continuity,
              :foundational_continuity,
+             :navigation_transition_review,
              :normalized_input_profiles,
              :styled_continuity_review,
              :styled_degradation_review,
@@ -135,6 +137,48 @@ defmodule TerminalUi.ExamplesTest do
     assert degradation.parity.inspection_surfaces_agree?
   end
 
+  test "navigation review exposes shared canonical fixtures and explicit raw versus tty realization" do
+    review = TerminalUi.Examples.navigation_transition_review()
+
+    assert review.id == :navigation_transition_review
+
+    assert review.fixture_ids == [
+             "screen_transition--settings_profile",
+             "replace_transition--home",
+             "history_transition--back",
+             "modal_transition--settings_dialog"
+           ]
+
+    assert review.parity.shared_fixture_targets_consumed?
+    assert review.parity.screen_transition_meaning_preserved?
+    assert review.parity.modal_degradation_explicit?
+    assert review.parity.history_semantics_preserved?
+    assert review.raw.after_navigate.active_screen_id == "settings"
+    assert review.raw.after_forward.active_screen_id == "reports"
+    assert review.raw.after_replace.active_screen_id == "home"
+
+    assert review.raw.with_modal.current_modal == %{
+             modal: :settings_dialog,
+             params: %{mode: :advanced},
+             realization: :inline_overlay
+           }
+
+    assert review.tty.with_modal.current_modal == %{
+             modal: :settings_dialog,
+             params: %{mode: :advanced},
+             realization: :focused_surface
+           }
+
+    assert review.tty.with_modal.last_realization == %{
+             action: :open_modal,
+             backend_mode: :tty,
+             transition_mode: :focused_surface,
+             degraded?: true,
+             fallback: :focused_surface,
+             intent_preserved?: true
+           }
+  end
+
   test "reference and info surfaces include foundational example metadata and coverage" do
     reference = TerminalUi.reference()
     summary = TerminalUi.info()
@@ -156,6 +200,7 @@ defmodule TerminalUi.ExamplesTest do
     assert :foundational_continuity in reference.examples.comparison_ids
     assert :advanced_continuity in reference.examples.comparison_ids
     assert :advanced_capability_continuity in reference.examples.comparison_ids
+    assert :navigation_transition_review in reference.examples.comparison_ids
     assert :transport_flow_review in reference.examples.comparison_ids
     assert :normalized_input_profiles in reference.examples.comparison_ids
     assert :styled_continuity_review in reference.examples.comparison_ids
@@ -182,6 +227,7 @@ defmodule TerminalUi.ExamplesTest do
     assert :actions in summary.examples.categories
     assert :display in summary.examples.categories
     assert :transport in summary.examples.categories
+    assert :navigation_review in summary.examples.workflows
     assert :style in summary.examples.categories
     assert :advanced_review in summary.examples.workflows
     assert :transport_review in summary.examples.workflows
