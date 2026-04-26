@@ -116,6 +116,8 @@ tasks because they govern other runtime packages:
 | `unified_ui.signals.no_runtime_local_event_leakage` | `4.4.2` | - | Direct runtime-leakage rejection requirement. |
 | `unified_ui.signals.standard_interaction_families` | `4.3.1` | - | Direct standard interaction-family requirement. |
 | `unified_ui.signals.validation_and_introspection` | `4.4.2` | - | Direct signal validation and introspection requirement. |
+| `unified_ui.signals.navigation_transition_actions` | `4.3.1` | `4.5.2` | Direct canonical navigation action-vocabulary requirement. |
+| `unified_ui.signals.navigation_symbolic_screen_targets` | `4.3.2` | `4.5.2` | Direct symbolic screen-target authoring requirement. |
 ### `unified-ui/compiler.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -125,6 +127,7 @@ tasks because they govern other runtime packages:
 | `unified_ui.compiler.no_renderer_output_modes` | `5.4.2` | - | Direct renderer-independence requirement for compilation output. |
 | `unified_ui.compiler.runtime_independent_bindings` | `5.2.2` | - | Direct runtime-independent binding compilation requirement. |
 | `unified_ui.compiler.style_theme_layer_resolution` | `5.2.1` | - | Direct style, theme, and layer resolution requirement. |
+| `unified_ui.compiler.navigation_transition_lowering` | `5.1.2` | `5.2.2` | Direct canonical navigation lowering requirement. |
 ### `unified-ui/tooling.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

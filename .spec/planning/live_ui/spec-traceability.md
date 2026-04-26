@@ -90,6 +90,8 @@ tasks because they govern other runtime packages:
 | `live_ui.runtime.native_and_iur_entrypoints_share_runtime` | `1.3.1` | `2.3.2`, `3.3.1`, `4.5.2` | Direct runtime-convergence obligation. |
 | `live_ui.runtime.state_and_render_continuity` | `2.3.2` | `3.3.1`, `5.3.2`, `5.5.2` | Direct continuity obligation. |
 | `live_ui.runtime.widget_component_local_state` | `11.2` | `11.2.2` | Phase 11: Widget components may own bounded local UI lifecycle state. |
+| `live_ui.runtime.canonical_navigation_transition_mapping` | `4.1.1` | `4.2.1`, `4.5.1` | Direct canonical navigation transition-mapping obligation. |
+| `live_ui.runtime.host_route_resolution_boundary` | `4.3.1` | `4.2.1`, `4.5.2` | Direct host-route boundary obligation for canonical navigation. |
 ### `iur_renderer.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

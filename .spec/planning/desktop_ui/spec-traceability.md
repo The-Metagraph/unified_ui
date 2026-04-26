@@ -68,6 +68,7 @@ tasks because they govern other runtime packages:
 | `desktop_ui.structure.transport_translation_modules` | `1.1.2` | `4.1.1`, `4.2.1` | Direct transport-structure obligation. |
 | `desktop_ui.structure.platform_artifact_modules` | `5.3.1` | `5.3.2`, `6.3.1` | Direct artifact-module boundary obligation. |
 | `desktop_ui.structure.no_dsl_or_iur_authorship` | `1.1.2` | `6.4.2` | Direct desktop_ui boundary obligation. |
+| `desktop_ui.structure.navigation_modules` | `12.1.1` | `12.2.1`, `12.3.2` | Direct navigation-module boundary obligation. |
 ### `native_widgets.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -85,6 +86,12 @@ tasks because they govern other runtime packages:
 | `desktop_ui.runtime.window_lifecycle_and_input` | `1.2.2` | `1.5.3.1`, `4.1.2`, `4.2.2`, `5.5.2`, `10.3.1`, `10.3.2` | Direct runtime lifecycle and input obligation. |
 | `desktop_ui.runtime.interactive_visible_execution` | `10.3.1` | `10.3.2`, `10.4.1`, `10.5.1` | Direct interactive visible-window execution obligation. |
 | `desktop_ui.runtime.platform_variation_bounded` | `1.3.2` | `5.2.2`, `5.3.2` | Direct bounded-platform-variation obligation. |
+| `desktop_ui.runtime.screen_navigation_support` | `12.1.1` | `12.2.1`, `12.4.2` | Direct screen-navigation runtime obligation. |
+| `desktop_ui.runtime.navigation_controller_process` | `12.1.1` | `12.1.2` | Direct navigation-controller process obligation. |
+| `desktop_ui.runtime.screen_registry` | `12.2.1` | `12.2.2` | Direct screen-registry obligation. |
+| `desktop_ui.runtime.navigation_actions` | `12.1.2` | `12.3.1` | Direct navigation-action vocabulary obligation. |
+| `desktop_ui.runtime.navigation_event_routing` | `12.3.2` | `12.4.2` | Direct navigation event-routing obligation. |
+| `desktop_ui.runtime.modal_stack_independence` | `12.1.1` | `12.1.2`, `12.4.3` | Direct modal-stack independence obligation. |
 ### `sdl3_runtime_rendering.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

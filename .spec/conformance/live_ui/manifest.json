@@ -595,6 +595,50 @@
       ]
     },
     {
+      "requirement_id": "live_ui.runtime.canonical_navigation_transition_mapping",
+      "status": "verified",
+      "notes": "Verified by the canonical navigation runtime mapper, maintained comparison examples, and focused web-runtime navigation tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/examples/web_navigation_transition_comparison.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/canonical_navigation_web_runtime_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/live_ui/runtime_navigation_test.exs test/live_ui/canonical_navigation_web_runtime_integration_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.runtime.host_route_resolution_boundary",
+      "status": "verified",
+      "notes": "Verified by the runtime navigation boundary that keeps host route lookup outside the authored contract while still allowing host integration in focused tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/runtime/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/canonical_navigation_web_runtime_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/live_ui/runtime_navigation_test.exs test/live_ui/canonical_navigation_web_runtime_integration_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
       "requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
       "status": "verified",
       "notes": "Verified by the maintained canonical renderer entrypoint.",

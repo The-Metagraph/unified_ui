@@ -693,6 +693,32 @@
       "ownership_note": "Phase 11: Widget components may own bounded local UI lifecycle state."
     },
     {
+      "requirement_id": "live_ui.runtime.canonical_navigation_transition_mapping",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.2.1",
+        "4.5.1"
+      ],
+      "ownership_note": "Direct canonical navigation transition-mapping obligation."
+    },
+    {
+      "requirement_id": "live_ui.runtime.host_route_resolution_boundary",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "4.3.1"
+      ],
+      "supporting_plan_refs": [
+        "4.2.1",
+        "4.5.2"
+      ],
+      "ownership_note": "Direct host-route boundary obligation for canonical navigation."
+    },
+    {
       "requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
       "scope": "direct",
       "source_file": ".spec/specs/live_ui/iur_renderer.spec.md",

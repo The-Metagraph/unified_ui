@@ -9,6 +9,22 @@ defmodule LiveUi.Demo.Screen do
   alias LiveUi.Demo
   alias LiveUi.Demo.{Catalog, Style, WidgetPreview}
 
+  @widget_demo_runtime_events [
+    "click:widget_demo_button",
+    "navigation:widget_demo_link",
+    "change:widget_demo_text_input",
+    "change:widget_demo_toggle",
+    "change:widget_demo_select",
+    "click:widget_demo_menu",
+    "selection:widget_demo_tabs",
+    "selection:widget_demo_list",
+    "selection:widget_demo_table",
+    "selection:widget_demo_tree",
+    "click:widget_demo_context_menu",
+    "change:widget_demo_command_query",
+    "selection:widget_demo_command_palette"
+  ]
+
   @impl true
   def mount_defaults do
     %{
@@ -17,6 +33,14 @@ defmodule LiveUi.Demo.Screen do
       selected_example: nil
     }
   end
+
+  @impl true
+  def event_routes do
+    Map.new(@widget_demo_runtime_events, &{&1, :widget_demo_interaction})
+  end
+
+  @impl true
+  def handle_event(:widget_demo_interaction, _payload, assigns), do: {:ok, assigns}
 
   @impl true
   def render(assigns) do

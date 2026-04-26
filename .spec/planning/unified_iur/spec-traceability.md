@@ -121,6 +121,8 @@ tasks because they govern other runtime packages:
 | `unified_iur.interactions.standard_interaction_families` | `4.3.1` | - | Direct standard interaction-family requirement. |
 | `unified_iur.interactions.data_binding_representation` | `4.3.2` | - | Direct data-binding representation requirement. |
 | `unified_iur.interactions.element_binding_attachment` | `4.4.2` | `4.3.2` | Direct binding-attachment requirement. |
+| `unified_iur.interactions.navigation_transition_representation` | `4.3.1` | `4.5.2` | Direct canonical navigation transition-representation requirement. |
+| `unified_iur.interactions.no_host_router_assumptions` | `4.3.1` | `4.5.2` | Direct host-router-independence requirement for navigation descriptors. |
 ### `unified-iur/interoperability.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -136,6 +138,7 @@ tasks because they govern other runtime packages:
 | `unified_iur.tooling.introspection_helpers` | `6.2.1` | - | Direct inspection and export tooling requirement. |
 | `unified_iur.tooling.validation_workflow` | `6.3.1` | `6.3.2` | Direct validation-workflow requirement. |
 | `unified_iur.tooling.documentation_surface` | `6.4.1` | `6.4.2` | Direct documentation-surface requirement. |
+| `unified_iur.tooling.navigation_transition_review_surfaces` | `6.1.1` | `6.2.1` | Direct navigation-fixture review-surface requirement. |
 ## Upstream Canonical Input And Authoring Constraints
 These specs are referenced by the planning index because they define the
 canonical input surface and authored boundary that `unified_iur` must consume or

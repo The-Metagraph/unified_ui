@@ -624,6 +624,35 @@
       "notes": "Shares the current conformance status of unified_ui.tooling.compiler_inspection."
     },
     {
+      "requirement_id": "unified_ui.signals.navigation_transition_actions",
+      "status": "verified",
+      "notes": "Verified by the canonical navigation authoring surface and focused navigation integration coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/test/unified_ui/canonical_navigation_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/unified_ui/canonical_navigation_integration_test.exs test/unified_ui/signals_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_symbolic_screen_targets",
+      "inherits_from_requirement_id": "unified_ui.signals.navigation_transition_actions",
+      "notes": "Shares the current conformance status of unified_ui.signals.navigation_transition_actions."
+    },
+    {
       "requirement_id": "unified_ui.compiler.canonical_iur_output",
       "status": "verified",
       "notes": "Verified by the maintained compiler pipeline and package coverage tests.",
@@ -699,6 +728,30 @@
       "requirement_id": "unified_ui.compiler.style_theme_layer_resolution",
       "inherits_from_requirement_id": "unified_ui.compiler.deterministic_results",
       "notes": "Shares the current conformance status of unified_ui.compiler.deterministic_results."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.navigation_transition_lowering",
+      "status": "verified",
+      "notes": "Verified by the compiler lowering path for canonical navigation descriptors and focused navigation compilation coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/compiler/pipeline.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/test/unified_ui/canonical_navigation_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/unified_ui/canonical_navigation_integration_test.exs test/unified_ui/signals_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
     },
     {
       "requirement_id": "unified_ui.tooling.authoring_validation_workflow",

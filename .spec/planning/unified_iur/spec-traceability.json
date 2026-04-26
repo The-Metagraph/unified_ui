@@ -600,6 +600,30 @@
       "ownership_note": "Direct binding-attachment requirement."
     },
     {
+      "requirement_id": "unified_iur.interactions.navigation_transition_representation",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": [
+        "4.3.1"
+      ],
+      "supporting_plan_refs": [
+        "4.5.2"
+      ],
+      "ownership_note": "Direct canonical navigation transition-representation requirement."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.no_host_router_assumptions",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": [
+        "4.3.1"
+      ],
+      "supporting_plan_refs": [
+        "4.5.2"
+      ],
+      "ownership_note": "Direct host-router-independence requirement for navigation descriptors."
+    },
+    {
       "requirement_id": "unified_iur.interoperability.runtime_library_consumption",
       "scope": "direct",
       "source_file": ".spec/specs/unified-iur/interoperability.spec.md",
@@ -703,6 +727,18 @@
         "6.4.2"
       ],
       "ownership_note": "Direct documentation-surface requirement."
+    },
+    {
+      "requirement_id": "unified_iur.tooling.navigation_transition_review_surfaces",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/tooling.spec.md",
+      "primary_plan_refs": [
+        "6.1.1"
+      ],
+      "supporting_plan_refs": [
+        "6.2.1"
+      ],
+      "ownership_note": "Direct navigation-fixture review-surface requirement."
     }
   ]
 }

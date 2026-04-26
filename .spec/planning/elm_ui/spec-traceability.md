@@ -83,6 +83,8 @@ tasks because they govern other runtime packages:
 | `elm_ui.server_runtime.handle_boundary_events` | `4.2.1` | `4.1.1`, `4.3.1`, `4.5.1` | Direct boundary-event obligation. |
 | `elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime` | `1.2.1` | `2.3.2`, `3.3.2`, `4.5.2` | Direct runtime-convergence obligation. |
 | `elm_ui.server_runtime.browser_state_is_bounded` | `1.2.1` | `1.3.1`, `4.2.2`, `5.2.2` | Direct server-authority obligation. |
+| `elm_ui.server_runtime.canonical_navigation_transition_mapping` | `4.1.1` | `4.2.1`, `4.5.1` | Direct canonical navigation transition-mapping obligation. |
+| `elm_ui.server_runtime.host_route_resolution_boundary` | `4.3.1` | `4.2.1`, `4.5.2` | Direct host-route boundary obligation for canonical navigation. |
 ### `frontend_runtime.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

@@ -479,6 +479,19 @@
       "ownership_note": "Direct desktop_ui boundary obligation."
     },
     {
+      "requirement_id": "desktop_ui.structure.navigation_modules",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/structure.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.2.1",
+        "12.3.2"
+      ],
+      "ownership_note": "Direct navigation-module boundary obligation."
+    },
+    {
       "requirement_id": "desktop_ui.native_widgets.direct_native_surface",
       "scope": "direct",
       "source_file": ".spec/specs/desktop_ui/native_widgets.spec.md",
@@ -817,6 +830,80 @@
         "5.3.2"
       ],
       "ownership_note": "Direct bounded-platform-variation obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.screen_navigation_support",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.2.1",
+        "12.4.2"
+      ],
+      "ownership_note": "Direct screen-navigation runtime obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.navigation_controller_process",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.1.2"
+      ],
+      "ownership_note": "Direct navigation-controller process obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.screen_registry",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.2.1"
+      ],
+      "supporting_plan_refs": [
+        "12.2.2"
+      ],
+      "ownership_note": "Direct screen-registry obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.navigation_actions",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.2"
+      ],
+      "supporting_plan_refs": [
+        "12.3.1"
+      ],
+      "ownership_note": "Direct navigation-action vocabulary obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.navigation_event_routing",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.3.2"
+      ],
+      "supporting_plan_refs": [
+        "12.4.2"
+      ],
+      "ownership_note": "Direct navigation event-routing obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.modal_stack_independence",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.1.2",
+        "12.4.3"
+      ],
+      "ownership_note": "Direct modal-stack independence obligation."
     },
     {
       "requirement_id": "desktop_ui.iur_renderer.accepts_canonical_iur",

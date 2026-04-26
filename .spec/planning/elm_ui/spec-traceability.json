@@ -616,6 +616,32 @@
       "ownership_note": "Direct server-authority obligation."
     },
     {
+      "requirement_id": "elm_ui.server_runtime.canonical_navigation_transition_mapping",
+      "scope": "direct",
+      "source_file": ".spec/specs/elm_ui/server_runtime.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.2.1",
+        "4.5.1"
+      ],
+      "ownership_note": "Direct canonical navigation transition-mapping obligation."
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.host_route_resolution_boundary",
+      "scope": "direct",
+      "source_file": ".spec/specs/elm_ui/server_runtime.spec.md",
+      "primary_plan_refs": [
+        "4.3.1"
+      ],
+      "supporting_plan_refs": [
+        "4.2.1",
+        "4.5.2"
+      ],
+      "ownership_note": "Direct host-route boundary obligation for canonical navigation."
+    },
+    {
       "requirement_id": "elm_ui.frontend_runtime.elm_rendering_layer",
       "scope": "direct",
       "source_file": ".spec/specs/elm_ui/frontend_runtime.spec.md",

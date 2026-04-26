@@ -519,6 +519,46 @@
       ]
     },
     {
+      "requirement_id": "elm_ui.server_runtime.canonical_navigation_transition_mapping",
+      "status": "verified",
+      "notes": "Verified by the server-side navigation mapper and focused canonical web-runtime navigation coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/test/elm_ui/canonical_navigation_web_runtime_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/elm_ui/runtime_navigation_test.exs test/elm_ui/canonical_navigation_web_runtime_integration_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "elm_ui.server_runtime.host_route_resolution_boundary",
+      "status": "verified",
+      "notes": "Verified by the server-runtime navigation boundary that keeps host route resolution outside the authored contract while preserving host integration options.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/lib/elm_ui/server_runtime/navigation.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/elm_ui/test/elm_ui/canonical_navigation_web_runtime_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/elm_ui/runtime_navigation_test.exs test/elm_ui/canonical_navigation_web_runtime_integration_test.exs",
+          "cwd": "packages/elm_ui"
+        }
+      ]
+    },
+    {
       "requirement_id": "elm_ui.frontend_runtime.elm_rendering_layer",
       "status": "verified",
       "notes": "Verified by the restored Elm asset scaffold and frontend runtime modules.",

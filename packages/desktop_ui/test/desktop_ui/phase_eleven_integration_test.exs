@@ -8,8 +8,6 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
 
   @moduletag :phase_eleven
 
-  @iur_widget_count 45
-
   @all_iur_kinds MapSet.new([
     # Foundational (13)
     :badge, :button, :command, :content, :hero, :icon, :image, :label, :link, :separator, :spacer,
@@ -21,8 +19,8 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
     :breadcrumbs, :list, :menu, :tabs,
     # Data (7)
     :inspector, :info_list, :key_value, :markdown_viewer, :stat, :table, :tree_view,
-    # Feedback (6)
-    :alert_dialog, :dialog, :inline_feedback, :progress, :status, :toast,
+    # Feedback (7)
+    :alert_dialog, :dialog, :inline_feedback, :progress, :sparkline, :status, :toast,
     # Operational (7)
     :cluster_dashboard, :command_palette, :log_viewer, :process_monitor, :stream_widget,
     :supervision_tree_viewer, :window_command,
@@ -33,6 +31,8 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
     # Container (1)
     :window
   ])
+
+  @iur_widget_count MapSet.size(@all_iur_kinds)
 
   setup_all do
     {:ok, capabilities: ensure_visible_runner_capabilities()}
@@ -238,17 +238,17 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
   end
 
   describe "11.5 Mapper coverage and diagnostics scenarios" do
-    test "canonical mapper handles all 45 IUR widget kinds without fallback" do
+    test "canonical mapper handles the full maintained renderer kind surface without fallback" do
       supported = Renderer.supported_kinds() |> MapSet.new()
 
       # All IUR widget kinds should be supported
       missing_kinds = MapSet.difference(@all_iur_kinds, supported)
 
       assert MapSet.size(missing_kinds) == 0,
-             "Expected all 45 IUR kinds to be supported, but missing: #{inspect(MapSet.to_list(missing_kinds))}"
+             "Expected all maintained renderer kinds to be supported, but missing: #{inspect(MapSet.to_list(missing_kinds))}"
     end
 
-    test "renderer.supported_kinds returns exactly 45 kinds" do
+    test "renderer.supported_kinds returns the full maintained renderer kind surface" do
       count = length(Renderer.supported_kinds())
 
       assert count >= @iur_widget_count,

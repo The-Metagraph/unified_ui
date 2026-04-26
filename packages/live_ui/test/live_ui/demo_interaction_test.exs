@@ -20,6 +20,7 @@ defmodule LiveUi.DemoInteractionTest do
                demo_socket(runtime_state)
              )
 
+    assert updated_socket.assigns.runtime_event_error == nil
     assert updated_socket.assigns.runtime_state.assigns.widget_demo_state.button.clicks == 1
 
     html =
@@ -51,6 +52,7 @@ defmodule LiveUi.DemoInteractionTest do
                demo_socket(runtime_state)
              )
 
+    assert updated_socket.assigns.runtime_event_error == nil
     assert updated_socket.assigns.runtime_state.assigns.widget_demo_state.text_input.value ==
              "Signals"
 
@@ -81,6 +83,7 @@ defmodule LiveUi.DemoInteractionTest do
                demo_socket(runtime_state)
              )
 
+    assert updated_socket.assigns.runtime_event_error == nil
     assert updated_socket.assigns.runtime_state.assigns.widget_demo_state.tabs.active == "signals"
 
     html =

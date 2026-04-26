@@ -807,6 +807,50 @@
       ]
     },
     {
+      "requirement_id": "unified_iur.interactions.navigation_transition_representation",
+      "status": "verified",
+      "notes": "Verified by canonical navigation transition descriptor helpers, fixtures, and focused boundary integration coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interaction.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/test/unified_iur/canonical_navigation_boundary_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/unified_iur/interaction_test.exs test/unified_iur/canonical_navigation_boundary_integration_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interactions.no_host_router_assumptions",
+      "status": "verified",
+      "notes": "Verified by canonical navigation boundary validation that rejects host-router leakage and preserves portable target descriptors.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/interactions/transport.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/test/unified_iur/canonical_navigation_boundary_integration_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/unified_iur/interactions_transport_test.exs test/unified_iur/canonical_navigation_boundary_integration_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
       "requirement_id": "unified_iur.interoperability.runtime_library_consumption",
       "status": "verified",
       "notes": "Verified by the dedicated interoperability helpers and the package test suite.",
@@ -956,6 +1000,30 @@
           "kind": "command",
           "run": "grep -nE \"Construct Families|Core Model|Interoperability|Maintainer Workflows\" packages/unified_iur/README.md",
           "cwd": "."
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.tooling.navigation_transition_review_surfaces",
+      "status": "verified",
+      "notes": "Verified by maintained navigation fixtures plus inspection and tooling coverage that keep canonical transition descriptors reviewable without a runtime library.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/inspect.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/tooling.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix deps.get && mix test test/unified_iur/canonical_navigation_boundary_integration_test.exs test/unified_iur/inspect_test.exs test/unified_iur/tooling_test.exs",
+          "cwd": "packages/unified_iur"
         }
       ]
     }

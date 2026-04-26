@@ -434,6 +434,22 @@
       "ownership_note": "Direct signal validation and introspection requirement."
     },
     {
+      "requirement_id": "unified_ui.signals.navigation_transition_actions",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "supporting_plan_refs": ["4.5.2"],
+      "ownership_note": "Direct canonical navigation action-vocabulary requirement."
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_symbolic_screen_targets",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["4.3.2"],
+      "supporting_plan_refs": ["4.5.2"],
+      "ownership_note": "Direct symbolic screen-target authoring requirement."
+    },
+    {
       "requirement_id": "unified_ui.compiler.canonical_iur_output",
       "scope": "direct",
       "source_file": ".spec/specs/unified-ui/compiler.spec.md",
@@ -474,6 +490,14 @@
       "source_file": ".spec/specs/unified-ui/compiler.spec.md",
       "primary_plan_refs": ["5.2.1"],
       "ownership_note": "Direct style, theme, and layer resolution requirement."
+    },
+    {
+      "requirement_id": "unified_ui.compiler.navigation_transition_lowering",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-ui/compiler.spec.md",
+      "primary_plan_refs": ["5.1.2"],
+      "supporting_plan_refs": ["5.2.2"],
+      "ownership_note": "Direct canonical navigation lowering requirement."
     },
     {
       "requirement_id": "unified_ui.tooling.authoring_validation_workflow",
