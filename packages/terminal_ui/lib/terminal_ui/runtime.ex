@@ -12,6 +12,7 @@ defmodule TerminalUi.Runtime do
     Error,
     EventLoop,
     EventRouter,
+    Navigation,
     Realization,
     Screen,
     State,
@@ -29,6 +30,7 @@ defmodule TerminalUi.Runtime do
       Boot,
       EventLoop,
       EventRouter,
+      Navigation,
       Screen,
       Realization,
       StyleResolver,
@@ -58,6 +60,8 @@ defmodule TerminalUi.Runtime do
       :canonical_boundary_events,
       :normalized_terminal_inputs,
       :shared_event_routing,
+      :screen_navigation,
+      :capability_aware_navigation,
       :focus_traversal,
       :binding_surface,
       :deterministic_runtime_errors
@@ -77,7 +81,8 @@ defmodule TerminalUi.Runtime do
       capability_aware: true,
       keyboard_first: true,
       renderer_boot_path_present: true,
-      style_surface_shared: true
+      style_surface_shared: true,
+      navigation_shared_runtime: true
     }
   end
 
@@ -118,8 +123,9 @@ defmodule TerminalUi.Runtime do
       |> Map.put_new(:source_kind, runtime_state.source_kind)
 
     with {:ok, translation} <- Transport.from_native_event(attrs),
-         {:ok, route_result} <- EventRouter.route(runtime_state, translation) do
-      {:ok, apply_route(runtime_state, route_result), route_result}
+         {:ok, route_result} <- EventRouter.route(runtime_state, translation),
+         {:ok, routed_state} <- apply_route(runtime_state, route_result) do
+      {:ok, routed_state, route_result}
     end
   end
 
@@ -140,20 +146,24 @@ defmodule TerminalUi.Runtime do
           {:ok, State.t(), map()} | {:error, Error.t() | term()}
   def handle_boundary_signal(%State{} = runtime_state, signal) do
     with {:ok, translation} <- Transport.from_boundary_signal(signal),
-         {:ok, route_result} <- EventRouter.route(runtime_state, translation) do
-      {:ok, apply_route(runtime_state, route_result), route_result}
+         {:ok, route_result} <- EventRouter.route(runtime_state, translation),
+         {:ok, routed_state} <- apply_route(runtime_state, route_result) do
+      {:ok, routed_state, route_result}
     end
   end
 
   defp apply_route(%State{} = runtime_state, route_result) do
     translation = route_result.translation
 
-    %{
-      runtime_state
-      | focus: apply_focus(runtime_state.focus, translation, route_result.route),
-        event_loop: EventLoop.record_route(runtime_state.event_loop, route_result),
-        event_log: runtime_state.event_log ++ [event_log_entry(route_result)]
-    }
+    with {:ok, transitioned_state} <- maybe_apply_navigation(runtime_state, translation) do
+      {:ok,
+       %{
+         transitioned_state
+         | focus: apply_focus(transitioned_state.focus, translation, route_result.route),
+           event_loop: EventLoop.record_route(transitioned_state.event_loop, route_result),
+           event_log: transitioned_state.event_log ++ [event_log_entry(route_result)]
+       }}
+    end
   end
 
   defp apply_focus(nil, _translation, _route), do: nil
@@ -198,4 +208,19 @@ defmodule TerminalUi.Runtime do
 
   defp normalize_map(attrs) when is_map(attrs), do: Map.new(attrs)
   defp normalize_map(attrs) when is_list(attrs), do: Enum.into(attrs, %{})
+
+  @spec navigation_summary(State.t()) :: map()
+  def navigation_summary(%State{navigation: navigation}) do
+    Navigation.summary(navigation)
+  end
+
+  def navigation_summary(_state), do: %{}
+
+  defp maybe_apply_navigation(%State{} = runtime_state, translation) do
+    if Navigation.transition?(translation) do
+      Navigation.apply_transition(runtime_state, translation)
+    else
+      {:ok, runtime_state}
+    end
+  end
 end

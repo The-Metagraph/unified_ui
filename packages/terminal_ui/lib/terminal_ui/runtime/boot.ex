@@ -4,7 +4,7 @@ defmodule TerminalUi.Runtime.Boot do
   """
 
   alias TerminalUi.{Backend, Capabilities}
-  alias TerminalUi.Runtime.{Error, EventLoop, Realization, Screen, State}
+  alias TerminalUi.Runtime.{Error, EventLoop, Navigation, Realization, Screen, State}
   alias TerminalUi.Widget
 
   @required_screen_keys [:id, :title, :root]
@@ -72,6 +72,14 @@ defmodule TerminalUi.Runtime.Boot do
            terminal: :not_yet_attached,
            shutdown: :idle
          },
+         navigation:
+           Navigation.initialize(
+             screen_id,
+             Map.get(screen, :title),
+             backend_mode,
+             capabilities,
+             opts
+           ),
          validation_state: runtime_validation_state(realization)
        }}
     end

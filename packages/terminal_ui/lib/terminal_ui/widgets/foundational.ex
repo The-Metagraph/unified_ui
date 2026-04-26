@@ -5,6 +5,7 @@ defmodule TerminalUi.Widgets.Foundational do
 
   alias TerminalUi.Widget
   alias TerminalUi.Widgets.Builder
+  alias TerminalUi.Widgets.Navigation, as: NavigationWidget
 
   @spec kinds() :: [atom()]
   def kinds do
@@ -90,12 +91,15 @@ defmodule TerminalUi.Widgets.Foundational do
 
   @spec button(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def button(id, label, opts \\ []) do
+    keypress_event = NavigationWidget.event_payload(opts) || opts[:on_press]
+    command_event = if(is_nil(NavigationWidget.event_payload(opts)), do: opts[:on_command], else: nil)
+
     Widget.new(:button,
       id: id,
       metadata: Builder.metadata(label, Keyword.merge([focusable: true, role: :button], opts)),
       state: Builder.state(opts, %{disabled: false}),
       attributes: %{label: label},
-      events: Builder.events(keypress: opts[:on_press], command: opts[:on_command]),
+      events: Builder.events(keypress: keypress_event, command: command_event),
       styles: Builder.styles(opts)
     )
   end
@@ -115,12 +119,14 @@ defmodule TerminalUi.Widgets.Foundational do
 
   @spec link(String.t() | atom(), String.t(), String.t(), keyword()) :: Widget.t()
   def link(id, label, target, opts \\ []) do
+    activate_event = NavigationWidget.event_payload(opts) || opts[:on_follow]
+
     Widget.new(:link,
       id: id,
       metadata: Builder.metadata(label, Keyword.merge([focusable: true, role: :link], opts)),
       state: Builder.state(opts, %{disabled: false}),
       attributes: %{label: label, target: target},
-      events: Builder.events(activate: opts[:on_follow]),
+      events: Builder.events(activate: activate_event),
       styles: Builder.styles(opts)
     )
   end
@@ -128,6 +134,10 @@ defmodule TerminalUi.Widgets.Foundational do
   @spec command(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def command(id, label, opts \\ []) do
     command_name = Keyword.get(opts, :command, id)
+    command_event =
+      NavigationWidget.event_payload(opts) ||
+        opts[:on_command] ||
+        %{command: command_name, source: :terminal_ui}
 
     Widget.new(:command,
       id: id,
@@ -138,10 +148,7 @@ defmodule TerminalUi.Widgets.Foundational do
         ),
       state: Builder.state(opts, %{disabled: false}),
       attributes: %{label: label, command: command_name},
-      events:
-        Builder.events(
-          command: opts[:on_command] || %{command: command_name, source: :terminal_ui}
-        ),
+      events: Builder.events(command: command_event),
       styles: Builder.styles(opts)
     )
   end

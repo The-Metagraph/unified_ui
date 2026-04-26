@@ -66,9 +66,33 @@ defmodule TerminalUi.TransportDiagnosticsTest do
                    %{},
                    source: "/terminal_ui/native/unknown",
                    subject: "native/unknown/ops-palette",
-                   extensions: %{terminal_ui_family: :command}
-                 )
+                 extensions: %{terminal_ui_family: :command}
+               )
              })
+  end
+
+  test "transport validation rejects leaked host-route syntax on canonical navigation targets" do
+    interaction =
+      UnifiedIUR.Interaction.navigation_transition(
+        intent: :open_settings_screen,
+        action: :navigate_to,
+        screen: :settings
+      )
+
+    assert {:ok, translation} =
+             Transport.from_interaction(
+               interaction,
+               backend_mode: :raw,
+               widget_id: "settings-link",
+               runtime_id: "terminal-ui:workspace",
+               screen: "workspace"
+             )
+
+    translation =
+      put_in(translation.target.navigation[:route], "/settings")
+
+    assert {:error, %TerminalUi.Transport.Error{reason: :host_route_navigation_syntax}} =
+             Transport.validate_translation(translation)
   end
 
   test "reference and summary surfaces expose transport-focused contract summaries" do

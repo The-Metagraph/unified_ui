@@ -6,6 +6,8 @@ defmodule TerminalUi.Transport.Diagnostics do
   alias Jido.Signal
   alias TerminalUi.Transport.{Error, Normalize}
   alias TerminalUi.Transport.Signal, as: TransportSignal
+  alias UnifiedIUR.Interaction
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
 
   @payload_leak_keys [:escape_sequence, :termcode, :ansi, :backend_payload, :terminal_bytes]
   @payload_leak_prefixes ["ansi_", "term_", "escape_", "csi_"]
@@ -42,6 +44,7 @@ defmodule TerminalUi.Transport.Diagnostics do
   def validate_translation(%{} = translation) do
     with :ok <- validate_payload(Map.get(translation, :payload, %{}), :translation_payload),
          :ok <- validate_payload(Map.get(translation, :target, %{}), :translation_target),
+         :ok <- validate_navigation_target(translation),
          :ok <- maybe_validate_boundary_signal(translation) do
       if Map.get(translation, :boundary) == :boundary do
         validate_boundary_context(translation)
@@ -135,6 +138,33 @@ defmodule TerminalUi.Transport.Diagnostics do
   end
 
   defp leaked_key?(_key), do: false
+
+  defp validate_navigation_target(%{family: :navigation, target: target}) when is_map(target) do
+    descriptor = Interaction.navigation_descriptor(target)
+
+    if is_nil(descriptor) do
+      :ok
+    else
+      case BoundaryTransport.validate_boundary_descriptor(%{
+             family: :navigation,
+             intent: nil,
+             source_context: %{},
+             target: target,
+             metadata: %{}
+           }) do
+        :ok ->
+          :ok
+
+        {:error, {:forbidden_navigation_keys, keys}} ->
+          {:error, Error.host_route_navigation_syntax(keys)}
+
+        {:error, reason} ->
+          {:error, Error.invalid_navigation_target(reason)}
+      end
+    end
+  end
+
+  defp validate_navigation_target(_translation), do: :ok
 
   defp maybe_missing(fields, field, nil), do: fields ++ [field]
   defp maybe_missing(fields, field, ""), do: fields ++ [field]

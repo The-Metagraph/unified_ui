@@ -93,7 +93,20 @@ defmodule TerminalUi.Transport.Normalize do
       present?(fetch(attrs, :focus_target)) or present?(fetch(attrs, :focused)) -> {:ok, :focus}
       present?(fetch(attrs, :mouse_action)) or present?(fetch(attrs, :pointer)) -> {:ok, :mouse}
       present?(fetch(attrs, :key)) -> {:ok, :key}
-      true -> {:error, Error.invalid_native_event(attrs)}
+      true -> infer_input_family_from_family(attrs)
+    end
+  end
+
+  defp infer_input_family_from_family(attrs) do
+    case normalize_family(fetch(attrs, :family)) do
+      :command -> {:ok, :shortcut}
+      :navigation -> {:ok, :key}
+      :selection -> {:ok, :mouse}
+      :click -> {:ok, :mouse}
+      :submit -> {:ok, :key}
+      :change -> {:ok, :key}
+      :focus -> {:ok, :focus}
+      _other -> {:error, Error.invalid_native_event(attrs)}
     end
   end
 

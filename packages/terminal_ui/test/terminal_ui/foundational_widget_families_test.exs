@@ -20,6 +20,12 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
         shortcut: "ctrl-s"
       )
 
+    navigate_button =
+      TerminalUi.Widgets.button("settings-button", "Settings",
+        navigate_to: :settings,
+        navigate_params: %{tab: :profile}
+      )
+
     assert icon.kind == :icon
     assert icon.attributes.fallback_text == "[S]"
     assert image.kind == :image
@@ -33,6 +39,11 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
     assert primary.family == :action
     assert primary.metadata.command == :save_workspace
     assert primary.events.command == %{command: :save_workspace, source: :terminal_ui}
+    assert navigate_button.events.keypress.target.navigation == %{
+             action: :navigate_to,
+             screen: :settings,
+             params: %{tab: :profile}
+           }
   end
 
   test "form and navigation widgets expose binding and keyboard-oriented interaction hooks" do

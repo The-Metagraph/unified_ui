@@ -7,6 +7,7 @@ defmodule TerminalUi.RuntimeTest do
   test "runtime exposes the phase one backbone modules and capabilities" do
     assert TerminalUi.Runtime.Boot in Runtime.modules()
     assert TerminalUi.Runtime.EventLoop in Runtime.modules()
+    assert TerminalUi.Runtime.Navigation in Runtime.modules()
     assert TerminalUi.Runtime.Screen in Runtime.modules()
     assert TerminalUi.Runtime.Realization in Runtime.modules()
     assert TerminalUi.Runtime.State in Runtime.modules()
@@ -17,6 +18,8 @@ defmodule TerminalUi.RuntimeTest do
     assert :advanced_display_systems in Runtime.capabilities()
     assert :layered_runtime_behavior in Runtime.capabilities()
     assert :canonical_foundational_rendering in Runtime.capabilities()
+    assert :screen_navigation in Runtime.capabilities()
+    assert :capability_aware_navigation in Runtime.capabilities()
   end
 
   test "runtime mounts a native screen through the shared term_ui-backed backbone" do

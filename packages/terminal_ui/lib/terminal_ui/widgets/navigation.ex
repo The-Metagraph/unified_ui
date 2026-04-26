@@ -75,5 +75,80 @@ defmodule TerminalUi.Widgets.Navigation do
     )
   end
 
+  @spec event_payload(keyword() | map()) :: map() | nil
+  def event_payload(opts) when is_list(opts), do: opts |> Enum.into(%{}) |> event_payload()
+
+  def event_payload(%{navigate_to: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    params = Map.get(opts, :navigate_params, %{})
+
+    %{
+      family: :navigation,
+      intent: Map.get(opts, :intent, :navigate_to),
+      target: %{navigation: %{action: :navigate_to, screen: screen_id, params: params}},
+      payload: Map.get(opts, :payload, %{})
+    }
+  end
+
+  def event_payload(%{replace_with: screen_id} = opts) when is_atom(screen_id) or is_binary(screen_id) do
+    params = Map.get(opts, :navigate_params, %{})
+
+    %{
+      family: :navigation,
+      intent: Map.get(opts, :intent, :replace_with),
+      target: %{navigation: %{action: :replace_with, screen: screen_id, params: params}},
+      payload: Map.get(opts, :payload, %{})
+    }
+  end
+
+  def event_payload(%{go_back: true}) do
+    %{
+      family: :navigation,
+      intent: :go_back,
+      target: %{navigation: %{action: :go_back}},
+      payload: %{}
+    }
+  end
+
+  def event_payload(%{go_forward: true}) do
+    %{
+      family: :navigation,
+      intent: :go_forward,
+      target: %{navigation: %{action: :go_forward}},
+      payload: %{}
+    }
+  end
+
+  def event_payload(%{open_modal: modal_id} = opts) when is_atom(modal_id) or is_binary(modal_id) do
+    params = Map.get(opts, :navigate_params, %{})
+
+    %{
+      family: :navigation,
+      intent: Map.get(opts, :intent, :open_modal),
+      target: %{navigation: %{action: :open_modal, modal: modal_id, params: params}},
+      payload: Map.get(opts, :payload, %{})
+    }
+  end
+
+  def event_payload(%{close_modal: true} = opts) do
+    navigation =
+      %{
+        action: :close_modal
+      }
+      |> maybe_put(:modal, Map.get(opts, :modal))
+
+    %{
+      family: :navigation,
+      intent: :close_modal,
+      target: %{navigation: navigation},
+      payload: %{}
+    }
+  end
+
+  def event_payload(_opts), do: nil
+
   defp keyword_label(id, opts), do: Keyword.get(opts, :label, to_string(id))
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, _key, ""), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 end

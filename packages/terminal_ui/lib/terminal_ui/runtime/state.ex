@@ -27,6 +27,7 @@ defmodule TerminalUi.Runtime.State do
     :backend_adapter,
     :event_loop,
     :lifecycle,
+    :navigation,
     :validation_state,
     event_log: []
   ]
@@ -47,6 +48,7 @@ defmodule TerminalUi.Runtime.State do
           backend_adapter: map(),
           event_loop: map(),
           lifecycle: map(),
+          navigation: map(),
           validation_state: atom(),
           event_log: [map()]
         }
