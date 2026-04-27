@@ -28,6 +28,7 @@ surface:
 decisions:
   - repo.ecosystem.contract_model
   - live_ui.runtime.widget_livecomponents
+  - live_ui.tooling.focused_example_alignment
 ```
 
 ## Requirements
@@ -62,6 +63,11 @@ decisions:
   statement: The `live_ui` package subjects shall link back to the repository-level architecture, runtime-library, and signal transport subjects so package design remains subordinate to the root ecosystem contract.
   priority: must
   stability: stable
+
+- id: live_ui.package.focused_example_specialization
+  statement: The package review and maintainer example surface shall specialize the repository widget-focused example suite for direct native `live_ui` usage, aligning package example identities with the repository example inventory rather than maintaining a divergent package-local demo or unrelated example catalog.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -85,5 +91,6 @@ decisions:
     - live_ui.package.iur_renderer_entrypoint
     - live_ui.package.not_dsl_or_iur_owner
     - live_ui.package.traceable_to_root_specs
+    - live_ui.package.focused_example_specialization
     - live_ui.package.direct_use_and_iur_use
 ```

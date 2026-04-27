@@ -2,181 +2,59 @@ defmodule LiveUi.ExamplesTest do
   use ExUnit.Case, async: true
 
   import Phoenix.LiveViewTest
-  alias Jido.Signal
 
-  test "example catalog keeps native and canonical foundational paths paired" do
+  test "public example catalog now exposes aligned focused ids only" do
     catalog = LiveUi.Examples.catalog()
+    example_ids = Enum.map(catalog, & &1.id)
 
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :native_display and &1.comparable_to == :canonical_display)
-           )
-
-    assert Enum.any?(catalog, &(&1.id == :canonical_form and &1.comparable_to == :native_form))
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :canonical_navigation and &1.comparable_to == :native_navigation)
-           )
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :native_boundary and &1.comparable_to == :canonical_boundary)
-           )
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :canonical_boundary and &1.comparable_to == :native_boundary)
-           )
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :native_styled_profile and &1.comparable_to == :canonical_styled_profile)
-           )
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :canonical_styled_profile and &1.comparable_to == :native_styled_profile)
-           )
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :native_styled_operations and
-                 &1.comparable_to == :canonical_styled_operations)
-           )
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :canonical_styled_operations and
-                 &1.comparable_to == :native_styled_operations)
-           )
-
-    assert Enum.any?(catalog, &(&1.id == :boundary_transport_compare and &1.path == :mixed))
-    assert Enum.any?(catalog, &(&1.id == :styled_continuity_compare and &1.path == :mixed))
-
-    assert Enum.any?(
-             catalog,
-             &(&1.id == :web_navigation_transition_compare and &1.path == :mixed)
-           )
+    assert :button in example_ids
+    assert :table in example_ids
+    assert :command_palette in example_ids
+    assert :overlay in example_ids
+    refute Enum.any?(example_ids, &String.starts_with?(Atom.to_string(&1), "native_"))
+    refute Enum.any?(example_ids, &String.starts_with?(Atom.to_string(&1), "canonical_"))
+    refute Enum.any?(example_ids, &String.ends_with?(Atom.to_string(&1), "_compare"))
   end
 
-  test "native and canonical examples render through their intended package paths" do
+  test "public example lookup resolves aligned ids and rejects retired package-only ids" do
+    assert {:ok, button} = LiveUi.Examples.find(:button)
+    assert button.path == :aligned
+    assert button.module == LiveUi.Examples.Aligned.Button
+
+    assert {:ok, table} = LiveUi.Examples.find("table")
+    assert table.path == :aligned
+
+    assert :error = LiveUi.Examples.find(:native_display)
+    assert :error = LiveUi.Examples.find("canonical_form")
+    assert :error = LiveUi.Examples.find("styled_continuity_compare")
+  end
+
+  test "aligned examples keep native rendering and canonical review on the same ids" do
+    assert {:ok, button} = LiveUi.Examples.find(:button)
+    assert {:ok, button_canonical} = LiveUi.Examples.canonical_element(:button)
+
     native_html =
-      render_component(&LiveUi.Examples.NativeFormScreen.render/1, %{name: "Pascal"})
+      render_component(
+        fn assigns -> button.module.render(assigns) end,
+        button.module.mount_defaults()
+      )
 
     canonical_html =
       render_component(&LiveUi.Renderer.render/1, %{
-        element: LiveUi.Examples.CanonicalForm.element()
+        element: button_canonical
       })
 
-    assert native_html =~ "data-live-ui-widget=\"form-builder\""
-    assert canonical_html =~ "data-live-ui-widget=\"form-builder\""
-    assert canonical_html =~ "Pascal"
+    assert native_html =~ "data-live-ui-widget=\"button\""
+    assert canonical_html =~ "data-live-ui-widget=\"button\""
   end
 
-  test "transport examples keep local, native-boundary, and canonical-boundary flows visible" do
-    assert {:ok, native_local} =
-             LiveUi.Transport.translate_native(
-               LiveUi.Examples.NativeBoundaryScreen.local_event_example()
-             )
-
-    assert native_local.signal == nil
-
-    assert {:ok, native_boundary} =
-             LiveUi.Transport.translate_native(
-               LiveUi.Examples.NativeBoundaryScreen.boundary_event_example()
-             )
-
-    assert %Signal{} = native_boundary.signal
-
-    assert {:ok, canonical_boundary} = LiveUi.Examples.CanonicalBoundaryProfile.translation()
-    assert %Signal{} = canonical_boundary.signal
-
-    assert {:ok, comparison} = LiveUi.Examples.MixedBoundaryTransport.compare_paths()
-
-    assert comparison.native_local.signal == nil
-    assert comparison.native_boundary.runtime_event == "rename"
-    assert comparison.runtime_action.runtime_event == "rename"
-  end
-
-  test "tooling exposes maintained example metadata" do
+  test "tooling exposes aligned example metadata" do
     example_ids = Enum.map(LiveUi.Tooling.examples(), & &1.id)
 
-    assert :native_display in example_ids
-    assert :canonical_display in example_ids
-    assert :boundary_transport_compare in example_ids
-    assert :native_styled_profile in example_ids
-    assert :canonical_styled_operations in example_ids
-    assert :styled_continuity_compare in example_ids
-    assert :web_navigation_transition_compare in example_ids
-  end
-
-  test "example catalog provides stable preview and review metadata" do
-    assert {:ok, native_profile} = LiveUi.Examples.find(:native_styled_profile)
-    assert {:ok, styled_compare} = LiveUi.Examples.find("styled_continuity_compare")
-
-    assert native_profile.preview_id == "native:native_styled_profile"
-    assert native_profile.review_artifact == "live_ui/native/native_styled_profile"
-    assert native_profile.coverage.native?
-    refute native_profile.coverage.canonical?
-    assert native_profile.coverage.continuity?
-    assert native_profile.runtime_obligations.server_authoritative?
-
-    assert styled_compare.path == :mixed
-    assert styled_compare.coverage.native?
-    assert styled_compare.coverage.canonical?
-    assert styled_compare.coverage.transport?
-    assert styled_compare.runtime_obligations.canonical_boundary?
-
-    grouped = LiveUi.Examples.grouped_catalog()
-
-    assert Enum.any?(grouped.native, &(&1.id == :native_display))
-    assert Enum.any?(grouped.canonical, &(&1.id == :canonical_display))
-    assert Enum.any?(grouped.mixed, &(&1.id == :styled_continuity_compare))
-    assert Enum.any?(grouped.mixed, &(&1.id == :web_navigation_transition_compare))
-  end
-
-  test "styled continuity examples keep native and canonical paths aligned" do
-    assert {:ok, continuity} = LiveUi.Examples.StyledContinuityComparison.compare()
-
-    assert continuity.profile.continuity.widgets_aligned?
-    assert continuity.profile.continuity.browser_style_aligned?
-    assert continuity.profile.continuity.runtime_model_aligned?
-    assert continuity.profile.diagnostics == []
-    assert "box" in continuity.profile.shared_widgets
-    assert "text" in continuity.profile.shared_widgets
-    assert "text-input" in continuity.profile.shared_widgets
-    assert "button" in continuity.profile.shared_widgets
-
-    assert continuity.operations.continuity.widgets_aligned?
-    assert continuity.operations.continuity.browser_style_aligned?
-    assert continuity.operations.continuity.runtime_model_aligned?
-    assert continuity.operations.diagnostics == []
-    assert "overlay-surface" in continuity.operations.shared_widgets
-    assert "viewport" in continuity.operations.shared_widgets
-    assert "canvas" in continuity.operations.shared_widgets
-    assert "dialog" in continuity.operations.shared_widgets
-    assert "cluster-dashboard" in continuity.operations.shared_widgets
-
-    assert continuity.boundary.runtime_action.runtime_event == "rename"
-  end
-
-  test "web navigation transition example keeps screen, modal, replacement, and host-route meaning aligned" do
-    assert {:ok, comparison} = LiveUi.Examples.WebNavigationTransitionComparison.compare()
-
-    assert comparison.native.after_navigate.screen_id == :settings
-    assert comparison.native.after_modal.current_modal.modal == :settings_dialog
-    assert comparison.native.after_replace.screen_id == :home
-    assert comparison.canonical.after_navigate.screen_id == :settings
-    assert comparison.canonical.after_replace.mode == :canonical
-    assert comparison.continuity.same_navigation_target?
-    assert comparison.continuity.same_modal_identifier?
-    assert comparison.continuity.same_replacement_target?
-    assert comparison.continuity.replacement_clears_modal?
-    assert comparison.continuity.host_route_externalized?
-    assert comparison.continuity.server_authoritative?
-
-    assert comparison.host_route_fixture.host_application.live_view_route.path ==
-             "/workspace/settings"
+    assert :button in example_ids
+    assert :checkbox in example_ids
+    assert :table in example_ids
+    assert :command_palette in example_ids
+    refute :native_display in example_ids
   end
 end

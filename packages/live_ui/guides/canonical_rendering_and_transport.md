@@ -23,16 +23,18 @@ Boundary transport in `LiveUi` follows three related rules:
 - channel envelopes must round-trip those canonical signals without losing runtime intent
 
 The maintained boundary examples and validation report are the review baseline
-for transport changes:
+for transport changes. The canonical review path stays attached to the same
+aligned example ids that native maintainers already use:
 
-- `LiveUi.Examples.MixedBoundaryTransport`
-- `LiveUi.Examples.StyledContinuityComparison`
+- `mix live_ui.inspect button --format comparison`
+- `mix live_ui.export button --format diagnostics`
+- `mix live_ui.inspect table --format comparison`
 
 ## Review Guidance
 
 When reviewing canonical renderer or transport changes, look for:
 
-- native/canonical continuity drift in paired styled examples
+- native/canonical continuity drift on the same aligned example ids
 - missing canonical boundary signals for boundary-safe events
 - renderer-local payload leakage into translated boundary signals
 - regressions in server-authoritative runtime assumptions

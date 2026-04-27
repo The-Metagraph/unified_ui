@@ -6,10 +6,10 @@ defmodule Mix.Tasks.LiveUi.Inspect do
   @moduledoc """
   Prints inspection output for a maintained `live_ui` example.
 
-      mix live_ui.inspect native_styled_profile
-      mix live_ui.inspect native_styled_operations --format diagnostics
-      mix live_ui.inspect canonical_styled_profile --format style
-      mix live_ui.inspect canonical_styled_profile --format comparison
+      mix live_ui.inspect button
+      mix live_ui.inspect table --format diagnostics
+      mix live_ui.inspect button --format style
+      mix live_ui.inspect button --format comparison
       mix live_ui.inspect --format catalog
   """
 

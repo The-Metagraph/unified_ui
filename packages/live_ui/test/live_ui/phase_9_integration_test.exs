@@ -21,12 +21,12 @@ defmodule LiveUi.Phase9IntegrationTest do
   end
 
   test "style and artifact exports expose browser-realized output for review" do
-    assert {:ok, style_output} = LiveUi.Export.example(:native_styled_profile, :style)
+    assert {:ok, style_output} = LiveUi.Export.example(:button, :style)
     assert style_output =~ "browser_style"
     assert style_output =~ "native_browser_style_nodes"
     assert style_output =~ "realized_entry_ids"
 
-    assert {:ok, artifact_output} = LiveUi.Export.example(:native_styled_profile, :artifact)
+    assert {:ok, artifact_output} = LiveUi.Export.example(:button, :artifact)
     assert artifact_output =~ "browser_style_nodes"
     assert artifact_output =~ "html"
     assert artifact_output =~ "canonical"
@@ -47,15 +47,13 @@ defmodule LiveUi.Phase9IntegrationTest do
     assert "--live-ui-foreground" in node.css_var_keys
   end
 
-  test "demo workbench surfaces browser-style details for reviewed examples" do
-    assert {:ok, demo} = LiveUi.Demo.run(example: :canonical_styled_profile)
+  test "aligned example exports surface browser-style details for reviewed examples" do
+    assert {:ok, artifact_output} = LiveUi.Export.example(:button, :artifact)
 
-    assert demo.view == :example
-    assert demo.preview.mode == :html
-    assert demo.preview.browser_style.realized_fields != []
-    assert demo.preview.browser_style_nodes != []
-    assert demo.html =~ "Browser Style Surface"
-    assert demo.html =~ "Browser style nodes"
+    assert artifact_output =~ "browser_style_nodes"
+    assert artifact_output =~ "native"
+    assert artifact_output =~ "canonical"
+    assert artifact_output =~ "Button Canonical Review"
   end
 
   defp diagnostic_element do

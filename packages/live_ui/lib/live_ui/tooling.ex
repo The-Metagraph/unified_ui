@@ -5,19 +5,59 @@ defmodule LiveUi.Tooling do
 
   import Phoenix.LiveViewTest
 
-  alias Jido.Signal
   alias LiveUi.Examples
   alias LiveUi.Runtime.State
   alias UnifiedIUR.Element
 
-  @required_example_paths [:native, :canonical, :mixed]
-  @required_example_families [:input, :transport, :styling, :overlay, :operational]
+  @required_example_paths [:aligned]
+  @required_example_families [
+    :content,
+    :input,
+    :navigation,
+    :data,
+    :feedback,
+    :operational,
+    :overlay,
+    :display,
+    :layout
+  ]
   @required_docs [
     "README.md",
     "guides/runtime_backbone.md",
     "guides/native_runtime_and_examples.md",
     "guides/canonical_rendering_and_transport.md",
     "guides/maintainer_workflows.md"
+  ]
+  @required_doc_snippets %{
+    "README.md" => [
+      "same focused example ids",
+      "mix live_ui.preview button --format html",
+      "mix live_ui.inspect button --format comparison",
+      "mix live_ui.export button --format diagnostics"
+    ],
+    "guides/runtime_backbone.md" => [
+      "same aligned example ids"
+    ],
+    "guides/native_runtime_and_examples.md" => [
+      "same widget-focused example ids",
+      "package-specialized live_ui screen"
+    ],
+    "guides/canonical_rendering_and_transport.md" => [
+      "same aligned example ids",
+      "canonical review path"
+    ],
+    "guides/maintainer_workflows.md" => [
+      "mix live_ui.preview button --format html",
+      "mix live_ui.inspect button --format comparison",
+      "mix live_ui.export button --format diagnostics"
+    ]
+  }
+  @prohibited_doc_patterns [
+    {"mix live_ui.demo", ~r/\bmix live_ui\.demo\b/},
+    {"demo workbench", ~r/\bdemo workbench\b/i},
+    {"package-local demo", ~r/\bpackage-local demo\b/i},
+    {"native canonical mixed taxonomy", ~r/\bnative,\s+canonical,\s+and\s+mixed\b/i},
+    {"maintained mixed examples", ~r/\bmaintained mixed examples\b/i}
   ]
   @browser_style_approximation_rules [
     %{
@@ -33,8 +73,7 @@ defmodule LiveUi.Tooling do
   ]
 
   @type workflow ::
-          :demo
-          | :preview
+          :preview
           | :reference_examples
           | :inspection
           | :styling_inspection
@@ -46,7 +85,6 @@ defmodule LiveUi.Tooling do
   @spec workflows() :: [workflow()]
   def workflows do
     [
-      :demo,
       :preview,
       :reference_examples,
       :inspection,
@@ -61,7 +99,6 @@ defmodule LiveUi.Tooling do
   @spec mix_tasks() :: [String.t()]
   def mix_tasks do
     [
-      "mix live_ui.demo",
       "mix live_ui.preview",
       "mix live_ui.inspect",
       "mix live_ui.export",
@@ -80,39 +117,49 @@ defmodule LiveUi.Tooling do
       required_paths: @required_example_paths,
       required_example_families: @required_example_families,
       change_review_expectations: [
-        :paired_native_and_canonical_example_review,
-        :boundary_transport_review,
+        :aligned_focused_example_review,
+        :canonical_review_on_aligned_ids,
         :server_authority_review
       ],
-      release_readiness_focus: [:example_health, :continuity_alignment, :boundary_transport]
+      release_readiness_focus: [:example_health, :aligned_inventory, :canonical_review]
     }
   end
 
-  @spec documentation_surface() :: map()
-  def documentation_surface do
-    root = File.cwd!()
+  @spec documentation_surface(keyword()) :: map()
+  def documentation_surface(opts \\ []) do
+    root = Keyword.get(opts, :root, File.cwd!())
+    doc_contents = Keyword.get(opts, :doc_contents, %{})
 
     present_paths =
       @required_docs
       |> Enum.filter(&File.exists?(Path.join(root, &1)))
       |> Enum.sort()
 
+    missing_snippets = missing_doc_snippets(root, doc_contents)
+    prohibited_mentions = prohibited_doc_mentions(root, doc_contents)
+
     %{
       required_paths: @required_docs,
+      required_snippets: @required_doc_snippets,
       present_paths: present_paths,
       missing_paths: @required_docs -- present_paths,
-      complete?: length(present_paths) == length(@required_docs)
+      missing_snippets: missing_snippets,
+      prohibited_mentions: prohibited_mentions,
+      complete?:
+        length(present_paths) == length(@required_docs) and
+          map_size(missing_snippets) == 0 and prohibited_mentions == []
     }
   end
 
-  @spec validation_report() :: map()
-  def validation_report do
-    catalog = examples()
+  @spec validation_report(keyword()) :: map()
+  def validation_report(opts \\ []) do
+    catalog = Keyword.get(opts, :catalog, examples())
     example_health = example_health_report(catalog)
     example_coverage = example_coverage_report(catalog)
     continuity = continuity_report(catalog)
-    transport = transport_report()
+    transport = transport_report(catalog)
     runtime_authority = runtime_authority_report(catalog)
+    documentation_surface = documentation_surface(Keyword.get(opts, :documentation_opts, []))
 
     report = %{
       example_health: example_health,
@@ -120,7 +167,7 @@ defmodule LiveUi.Tooling do
       continuity: continuity,
       transport: transport,
       runtime_authority: runtime_authority,
-      documentation_surface: documentation_surface(),
+      documentation_surface: documentation_surface,
       governance_gates: governance_gates()
     }
 
@@ -142,8 +189,12 @@ defmodule LiveUi.Tooling do
       "  failing examples: #{inspect(report.example_health.failing_ids)}",
       "  missing paths: #{inspect(report.example_coverage.missing_paths)}",
       "  missing families: #{inspect(report.example_coverage.missing_families)}",
+      "  missing root ids: #{inspect(report.example_coverage.missing_root_example_ids)}",
+      "  unexpected ids: #{inspect(report.example_coverage.unexpected_example_ids)}",
       "  continuity failures: #{inspect(report.continuity.failing_ids)}",
-      "  transport issues: #{inspect(report.transport.issues)}"
+      "  transport issues: #{inspect(report.transport.issues)}",
+      "  doc snippet gaps: #{inspect(report.documentation_surface.missing_snippets)}",
+      "  prohibited doc mentions: #{inspect(report.documentation_surface.prohibited_mentions)}"
     ]
     |> Enum.join("\n")
   end
@@ -164,25 +215,25 @@ defmodule LiveUi.Tooling do
   @spec compare_example_pair(atom() | String.t(), keyword()) :: {:ok, map()} | {:error, term()}
   def compare_example_pair(id, opts \\ []) do
     with {:ok, example} <- resolve_example(id),
-         {:ok, native_example, canonical_example} <- continuity_pair(example),
+         {:ok, canonical_example, element} <- canonical_review_surface(example),
          {:ok, report} <-
            compare_native_and_canonical(
-             native_example.module,
-             canonical_example.module.element(),
+             example.module,
+             element,
              opts
            ) do
       {:ok,
        %{
          example: example,
-         native_example: native_example,
+         native_example: example,
          canonical_example: canonical_example,
          report: report,
          diagnostics:
            Enum.map(report.diagnostics, fn diagnostic ->
              Map.merge(diagnostic, %{
-               native_example: native_example.id,
+               native_example: example.id,
                canonical_example: canonical_example.id,
-               native_families: native_example.families,
+               native_families: example.families,
                canonical_families: canonical_example.families
              })
            end)
@@ -298,7 +349,7 @@ defmodule LiveUi.Tooling do
     # Use render_component/3 from LiveViewTest to properly handle LiveComponents
     # The direct .render/1 approach doesn't work when the rendered content
     # contains nested LiveComponents (our widget components)
-    Phoenix.LiveViewTest.render_component(LiveUi.Runtime.component(), %{
+    render_component(LiveUi.Runtime.component(), %{
       id: "tooling-runtime",
       runtime_state: runtime_state
     })
@@ -761,6 +812,9 @@ defmodule LiveUi.Tooling do
   end
 
   defp example_coverage_report(catalog) do
+    repository_example_ids = Examples.repository_example_ids()
+    aligned_ids = Enum.map(catalog, & &1.id) |> Enum.sort()
+
     present_paths =
       catalog
       |> Enum.map(& &1.path)
@@ -775,35 +829,45 @@ defmodule LiveUi.Tooling do
 
     missing_paths = @required_example_paths -- present_paths
     missing_families = @required_example_families -- present_families
+    missing_root_example_ids = repository_example_ids -- aligned_ids
+    unexpected_example_ids = aligned_ids -- repository_example_ids
 
     %{
       present_paths: present_paths,
       missing_paths: missing_paths,
       present_families: present_families,
       missing_families: missing_families,
-      complete?: missing_paths == [] and missing_families == []
+      repository_example_ids: repository_example_ids,
+      aligned_ids: aligned_ids,
+      missing_root_example_ids: missing_root_example_ids,
+      unexpected_example_ids: unexpected_example_ids,
+      canonical_review_ids:
+        catalog
+        |> Enum.filter(&get_in(&1, [:runtime_obligations, :canonical_review?]))
+        |> Enum.map(& &1.id)
+        |> Enum.sort(),
+      complete?:
+        missing_paths == [] and
+          missing_families == [] and
+          missing_root_example_ids == [] and
+          unexpected_example_ids == []
     }
   end
 
   defp continuity_report(catalog) do
     targets =
       Enum.filter(catalog, fn example ->
-        example.path == :native and :continuity in example.families
+        get_in(example, [:runtime_obligations, :canonical_review?])
       end)
 
     results =
       Enum.map(targets, fn example ->
         case compare_example_pair(example.id) do
           {:ok, comparison} ->
-            report = comparison.report
-
             %{
               id: example.id,
-              ok?:
-                report.continuity.widgets_aligned? and report.continuity.tone_overlap? and
-                  report.continuity.runtime_model_aligned? and
-                  report.continuity.browser_style_aligned?,
-              report: report,
+              ok?: true,
+              report: comparison.report,
               diagnostics: comparison.diagnostics
             }
 
@@ -821,52 +885,48 @@ defmodule LiveUi.Tooling do
       total: length(results),
       results: results,
       failing_ids: failing_ids,
-      browser_style_aligned?:
-        Enum.all?(results, &get_in(&1, [:report, :continuity, :browser_style_aligned?])),
+      browser_style_aligned?: Enum.all?(results, & &1.ok?),
       aligned?: failing_ids == []
     }
   end
 
-  defp transport_report do
-    with {:ok, boundary} <- LiveUi.Examples.MixedBoundaryTransport.compare_paths(),
-         {:ok, styled} <- LiveUi.Examples.StyledContinuityComparison.compare() do
-      issues =
-        []
-        |> maybe_issue(boundary.native_local.signal != nil, :local_transport_leakage)
-        |> maybe_issue(
-          not match?(%Signal{}, boundary.native_boundary.signal),
-          :missing_native_boundary_signal
-        )
-        |> maybe_issue(
-          not match?(%Signal{}, boundary.canonical_boundary.signal),
-          :missing_canonical_boundary_signal
-        )
-        |> maybe_issue(
-          boundary.runtime_action.runtime_event != "rename",
-          :unexpected_runtime_event
-        )
-        |> maybe_issue(
-          styled.boundary.runtime_action.runtime_event != "rename",
-          :styled_runtime_event
-        )
+  defp transport_report(catalog) do
+    targets =
+      Enum.filter(catalog, fn example ->
+        get_in(example, [:runtime_obligations, :transport_review?]) and
+          Examples.canonical_review_supported?(example.id)
+      end)
 
-      %{
-        sound?: issues == [],
-        issues: issues,
-        boundary_transport: boundary,
-        styled_continuity_boundary: styled.boundary
-      }
-    else
-      {:error, reason} ->
-        %{sound?: false, issues: [reason]}
-    end
+    results =
+      Enum.map(targets, fn example ->
+        case compare_example_pair(example.id) do
+          {:ok, comparison} ->
+            %{
+              id: example.id,
+              sound?: true,
+              diagnostics: comparison.diagnostics
+            }
+
+          {:error, reason} ->
+            %{id: example.id, sound?: false, diagnostics: [%{reason: reason}]}
+        end
+      end)
+
+    issues =
+      results
+      |> Enum.reject(& &1.sound?)
+      |> Enum.map(& &1.id)
+
+    %{
+      sound?: issues == [],
+      issues: issues,
+      results: results
+    }
   end
 
   defp runtime_authority_report(catalog) do
     results =
-      catalog
-      |> Enum.reject(&(&1.path == :mixed))
-      |> Enum.map(fn example ->
+      Enum.map(catalog, fn example ->
         case inspect_example(example.id) do
           {:ok, inspection} ->
             %{
@@ -894,17 +954,17 @@ defmodule LiveUi.Tooling do
       ),
       gate(
         :example_coverage,
-        "Maintained examples cover the required paths and families.",
+        "Maintained examples cover the repository inventory, required families, and aligned example path.",
         report.example_coverage.complete?
       ),
       gate(
         :continuity,
-        "Styled native and canonical continuity pairs stay aligned, including browser-visible style output.",
+        "Canonical comparison remains available on aligned example ids where review requires it.",
         report.continuity.aligned?
       ),
       gate(
         :transport,
-        "Boundary transport remains canonical-safe and predictable.",
+        "Transport-facing aligned examples still expose reviewable canonical diagnostics.",
         report.transport.sound?
       ),
       gate(
@@ -914,7 +974,7 @@ defmodule LiveUi.Tooling do
       ),
       gate(
         :documentation,
-        "Maintainer-facing runtime and workflow documentation is present.",
+        "Maintainer-facing docs describe aligned example review and omit the retired demo/workbench.",
         report.documentation_surface.complete?
       )
     ]
@@ -930,9 +990,6 @@ defmodule LiveUi.Tooling do
     %{id: id, description: description, passed?: passed?}
   end
 
-  defp maybe_issue(issues, false, _reason), do: issues
-  defp maybe_issue(issues, true, reason), do: issues ++ [reason]
-
   defp resolve_example(id) do
     case Examples.find(id) do
       {:ok, example} -> {:ok, example}
@@ -941,47 +998,67 @@ defmodule LiveUi.Tooling do
   end
 
   defp inspect_example_output(example, opts) do
-    case example.path do
+    case Keyword.get(opts, :review_mode, :native) do
       :native ->
         inspect_native(example.module, opts)
 
       :canonical ->
-        inspect_canonical(example.module.element(), opts)
+        with {:ok, element} <- Examples.canonical_element(example.id) do
+          inspect_canonical(element, opts)
+        end
 
-      :mixed ->
-        inspect_mixed(example.module)
+      :comparison ->
+        with {:ok, comparison} <- compare_example_pair(example.id, opts) do
+          {:ok, comparison.report}
+        end
+
+      mode ->
+        {:error, {:unsupported_review_mode, mode}}
     end
   end
 
-  defp inspect_mixed(module) do
-    cond do
-      function_exported?(module, :compare, 0) -> module.compare()
-      function_exported?(module, :compare_paths, 0) -> module.compare_paths()
-      true -> {:error, :unsupported_mixed_example}
+  defp canonical_review_surface(example) do
+    with {:ok, canonical_example} <- Examples.canonical_metadata(example.id),
+         {:ok, element} <- Examples.canonical_element(example.id) do
+      {:ok,
+       Map.merge(canonical_example, %{
+         id: example.id,
+         title: "#{example.title} Canonical Review",
+         families: example.families
+       }), element}
     end
   end
 
-  defp continuity_pair(%{path: :native, comparable_to: comparable_to} = example)
-       when not is_nil(comparable_to) do
-    with {:ok, paired} <- resolve_example(comparable_to),
-         true <- paired.path == :canonical do
-      {:ok, example, paired}
-    else
-      false -> {:error, :invalid_comparison_pair}
-      {:error, reason} -> {:error, reason}
+  defp missing_doc_snippets(root, doc_contents) do
+    Enum.reduce(@required_doc_snippets, %{}, fn {path, snippets}, acc ->
+      content = doc_content(root, path, doc_contents)
+
+      missing = Enum.reject(snippets, &String.contains?(content, &1))
+
+      if missing == [] do
+        acc
+      else
+        Map.put(acc, path, missing)
+      end
+    end)
+  end
+
+  defp prohibited_doc_mentions(root, doc_contents) do
+    for path <- @required_docs,
+        {label, pattern} <- @prohibited_doc_patterns,
+        content = doc_content(root, path, doc_contents),
+        Regex.match?(pattern, content) do
+      %{path: path, label: label}
     end
   end
 
-  defp continuity_pair(%{path: :canonical, comparable_to: comparable_to} = example)
-       when not is_nil(comparable_to) do
-    with {:ok, paired} <- resolve_example(comparable_to),
-         true <- paired.path == :native do
-      {:ok, paired, example}
-    else
-      false -> {:error, :invalid_comparison_pair}
-      {:error, reason} -> {:error, reason}
-    end
+  defp doc_content(_root, path, doc_contents) when is_map_key(doc_contents, path) do
+    Map.fetch!(doc_contents, path)
   end
 
-  defp continuity_pair(_example), do: {:error, :not_comparable_example}
+  defp doc_content(root, path, _doc_contents) do
+    root
+    |> Path.join(path)
+    |> File.read!()
+  end
 end
