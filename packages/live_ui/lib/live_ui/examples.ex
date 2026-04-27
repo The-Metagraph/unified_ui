@@ -3,6 +3,8 @@ defmodule LiveUi.Examples do
   Maintained baseline native and canonical examples for `live_ui`.
   """
 
+  alias LiveUi.Examples.Aligned
+
   @type example_path :: :native | :canonical | :mixed
 
   @native_examples [
@@ -56,6 +58,26 @@ defmodule LiveUi.Examples do
   @spec catalog() :: [map()]
   def catalog do
     grouped_catalog().native ++ grouped_catalog().canonical ++ grouped_catalog().mixed
+  end
+
+  @spec aligned_example_ids() :: [atom()]
+  def aligned_example_ids do
+    Aligned.ids()
+  end
+
+  @spec aligned_modules() :: [module()]
+  def aligned_modules do
+    Aligned.modules()
+  end
+
+  @spec aligned_catalog() :: [map()]
+  def aligned_catalog do
+    Aligned.catalog()
+  end
+
+  @spec find_aligned(atom() | String.t()) :: {:ok, map()} | :error
+  def find_aligned(id) when is_atom(id) or is_binary(id) do
+    Aligned.find(id)
   end
 
   @spec find(atom() | String.t()) :: {:ok, map()} | :error
