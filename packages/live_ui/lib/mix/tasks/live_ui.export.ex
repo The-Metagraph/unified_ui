@@ -6,11 +6,11 @@ defmodule Mix.Tasks.LiveUi.Export do
   @moduledoc """
   Prints a stable exported representation of a maintained `live_ui` example.
 
-      mix live_ui.export native_styled_profile
-      mix live_ui.export native_styled_profile --format artifact
-      mix live_ui.export canonical_styled_operations --format html
-      mix live_ui.export native_styled_profile --format comparison
-      mix live_ui.export native_styled_profile --format style
+      mix live_ui.export button
+      mix live_ui.export button --format artifact
+      mix live_ui.export table --format html
+      mix live_ui.export button --format comparison
+      mix live_ui.export button --format style
       mix live_ui.export --format catalog
   """
 

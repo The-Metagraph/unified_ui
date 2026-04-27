@@ -7,10 +7,10 @@ defmodule Mix.Tasks.LiveUi.Preview do
   Prints preview output for a maintained `live_ui` example.
 
       mix live_ui.preview
-      mix live_ui.preview native_styled_profile
-      mix live_ui.preview native_styled_profile --format artifact
-      mix live_ui.preview canonical_styled_operations --format html
-      mix live_ui.preview styled_continuity_compare --format report
+      mix live_ui.preview button
+      mix live_ui.preview button --format artifact
+      mix live_ui.preview table --format html
+      mix live_ui.preview command_palette --format report
   """
 
   alias LiveUi.Export

@@ -60,6 +60,8 @@ defmodule LiveUi.Examples.Aligned do
   Aligned `live_ui` maintainer examples that mirror the root `examples/` ids.
   """
 
+  alias LiveUi.Examples.Aligned.Canonical
+
   @aligned_example_ids aligned_example_ids
   @family_map %{
     alert_dialog: :overlay,
@@ -231,6 +233,27 @@ defmodule LiveUi.Examples.Aligned do
     Map.fetch!(@screen_modules, id)
   end
 
+  @spec canonical_review_supported?(atom() | String.t()) :: boolean()
+  def canonical_review_supported?(id) do
+    Canonical.supports?(id)
+  end
+
+  @spec canonical_review_ids() :: [atom()]
+  def canonical_review_ids do
+    Canonical.supported_ids()
+  end
+
+  @spec canonical_element(atom() | String.t()) ::
+          {:ok, UnifiedIUR.Element.t()} | {:error, term()}
+  def canonical_element(id) do
+    Canonical.element(id)
+  end
+
+  @spec canonical_metadata(atom() | String.t()) :: {:ok, map()} | {:error, term()}
+  def canonical_metadata(id) do
+    Canonical.metadata(id)
+  end
+
   @spec titleize(atom() | String.t()) :: String.t()
   def titleize(value) when is_atom(value) do
     value
@@ -316,9 +339,9 @@ defmodule LiveUi.Examples.Aligned.Render do
   def render(assigns, example_id, title) do
     assigns =
       assigns
-      |> assign(:example_id, example_id)
-      |> assign(:title, title)
-      |> assign(:id_base, "live-ui-aligned-#{example_id}")
+      |> Map.put(:example_id, example_id)
+      |> Map.put(:title, title)
+      |> Map.put(:id_base, "live-ui-aligned-#{example_id}")
 
     ~H"""
     <LiveUi.Widgets.ScreenShell.render id={@id_base} title={@title}>
@@ -356,7 +379,7 @@ defmodule LiveUi.Examples.Aligned.Render do
   end
 
   defp preview(%{example_id: :image} = assigns) do
-    assigns = assign(assigns, :sample_image_uri, @sample_image_uri)
+    assigns = Map.put(assigns, :sample_image_uri, @sample_image_uri)
 
     ~H"""
     <LiveUi.Widgets.Image.render
