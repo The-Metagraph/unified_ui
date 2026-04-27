@@ -125,17 +125,18 @@ defmodule LiveUi.Tooling do
     }
   end
 
-  @spec documentation_surface() :: map()
-  def documentation_surface do
-    root = File.cwd!()
+  @spec documentation_surface(keyword()) :: map()
+  def documentation_surface(opts \\ []) do
+    root = Keyword.get(opts, :root, File.cwd!())
+    doc_contents = Keyword.get(opts, :doc_contents, %{})
 
     present_paths =
       @required_docs
       |> Enum.filter(&File.exists?(Path.join(root, &1)))
       |> Enum.sort()
 
-    missing_snippets = missing_doc_snippets(root)
-    prohibited_mentions = prohibited_doc_mentions(root)
+    missing_snippets = missing_doc_snippets(root, doc_contents)
+    prohibited_mentions = prohibited_doc_mentions(root, doc_contents)
 
     %{
       required_paths: @required_docs,
@@ -150,14 +151,15 @@ defmodule LiveUi.Tooling do
     }
   end
 
-  @spec validation_report() :: map()
-  def validation_report do
-    catalog = examples()
+  @spec validation_report(keyword()) :: map()
+  def validation_report(opts \\ []) do
+    catalog = Keyword.get(opts, :catalog, examples())
     example_health = example_health_report(catalog)
     example_coverage = example_coverage_report(catalog)
     continuity = continuity_report(catalog)
     transport = transport_report(catalog)
     runtime_authority = runtime_authority_report(catalog)
+    documentation_surface = documentation_surface(Keyword.get(opts, :documentation_opts, []))
 
     report = %{
       example_health: example_health,
@@ -165,7 +167,7 @@ defmodule LiveUi.Tooling do
       continuity: continuity,
       transport: transport,
       runtime_authority: runtime_authority,
-      documentation_surface: documentation_surface(),
+      documentation_surface: documentation_surface,
       governance_gates: governance_gates()
     }
 
@@ -1027,12 +1029,9 @@ defmodule LiveUi.Tooling do
     end
   end
 
-  defp missing_doc_snippets(root) do
+  defp missing_doc_snippets(root, doc_contents) do
     Enum.reduce(@required_doc_snippets, %{}, fn {path, snippets}, acc ->
-      content =
-        root
-        |> Path.join(path)
-        |> File.read!()
+      content = doc_content(root, path, doc_contents)
 
       missing = Enum.reject(snippets, &String.contains?(content, &1))
 
@@ -1044,12 +1043,22 @@ defmodule LiveUi.Tooling do
     end)
   end
 
-  defp prohibited_doc_mentions(root) do
+  defp prohibited_doc_mentions(root, doc_contents) do
     for path <- @required_docs,
         {label, pattern} <- @prohibited_doc_patterns,
-        content = root |> Path.join(path) |> File.read!(),
+        content = doc_content(root, path, doc_contents),
         Regex.match?(pattern, content) do
       %{path: path, label: label}
     end
+  end
+
+  defp doc_content(_root, path, doc_contents) when is_map_key(doc_contents, path) do
+    Map.fetch!(doc_contents, path)
+  end
+
+  defp doc_content(root, path, _doc_contents) do
+    root
+    |> Path.join(path)
+    |> File.read!()
   end
 end

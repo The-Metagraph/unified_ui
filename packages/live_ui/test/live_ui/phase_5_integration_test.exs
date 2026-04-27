@@ -75,10 +75,8 @@ defmodule LiveUi.Phase5IntegrationTest do
     assert :styling_inspection in workflows
     assert :continuity_comparison in workflows
 
-    assert Enum.any?(
-             examples,
-             &(&1.id == :styled_continuity_compare and &1.path == :mixed)
-           )
+    assert Enum.any?(examples, &(&1.id == :button and &1.path == :aligned))
+    refute Enum.any?(examples, &(&1.id == :styled_continuity_compare))
 
     assert {:ok, report} =
              LiveUi.Tooling.compare_native_and_canonical(

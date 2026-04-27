@@ -4,13 +4,13 @@ defmodule LiveUi.Phase17IntegrationTest do
   import Phoenix.LiveViewTest
 
   alias LiveUi.{Info, Runtime, Widgets}
-  alias UnifiedIUR.Widgets.{Advanced, Data, Foundational}
+  alias UnifiedIUR.Widgets.{Data, Foundational}
 
   @moduledoc """
-  Integration tests for Phase 17 - Tooling, Demo, Validation, and Release Readiness.
+  Integration tests for Phase 17 - Tooling, Validation, and Release Readiness.
 
   These tests validate the widget-component architecture is properly exposed
-  in tooling, demos work correctly, and validation gates are in place.
+  in tooling, aligned examples work correctly, and validation gates are in place.
   """
 
   describe "17.1 - Tooling and Inspection for Widget Components" do
@@ -81,19 +81,17 @@ defmodule LiveUi.Phase17IntegrationTest do
     end
   end
 
-  describe "17.2 - Demo and Maintained Example Realignment" do
-    test "demo workbench renders widgets correctly" do
-      {:ok, demo} = LiveUi.Demo.run(example: :text)
+  describe "17.2 - Aligned Focused Examples and Demo Retirement" do
+    test "aligned examples render widgets correctly" do
+      {:ok, preview} = LiveUi.Tooling.preview_example(:text)
 
-      # Widget should be rendered with proper attributes
-      assert demo.html =~ ~s(data-live-ui-widget="text")
+      assert preview.result.html =~ ~s(data-live-ui-widget="text")
     end
 
-    test "demo exposes widget attributes for inspection" do
-      {:ok, demo} = LiveUi.Demo.run(example: :button)
+    test "aligned examples expose widget attributes for inspection" do
+      {:ok, preview} = LiveUi.Tooling.preview_example(:button)
 
-      # Widget should have identifying attributes
-      assert demo.html =~ ~s(data-live-ui-widget="button")
+      assert preview.result.html =~ ~s(data-live-ui-widget="button")
     end
 
     test "canonical examples use widget component boundaries" do
@@ -133,22 +131,19 @@ defmodule LiveUi.Phase17IntegrationTest do
       assert html =~ ~s(data-live-ui-widget-key=)
     end
 
-    test "demo catalog provides comprehensive widget coverage" do
-      catalog = LiveUi.Demo.catalog()
+    test "aligned catalog provides comprehensive widget coverage" do
+      catalog = LiveUi.Examples.catalog()
 
-      # Should have widgets from all families
-      assert catalog.total_examples > 0
-      assert is_list(catalog.categories)
-      assert catalog.path_counts
+      assert length(catalog) == length(LiveUi.Examples.repository_example_ids())
+      assert Enum.all?(catalog, &(&1.path == :aligned))
+      assert Enum.all?(catalog, &(&1.runtime_obligations.root_example_id == &1.id))
     end
 
-    test "demo maintains separate native and canonical examples" do
-      # Native path examples should work
-      {:ok, native_demo} = LiveUi.Demo.run()
-
-      assert native_demo.view == :home
-      assert native_demo.screen == LiveUi.Demo.Screen
-      assert is_binary(native_demo.html)
+    test "demo surface is retired and divergent example ids stay hidden" do
+      refute Code.ensure_loaded?(LiveUi.Demo)
+      assert :error = LiveUi.Examples.find(:native_display)
+      assert :error = LiveUi.Examples.find(:canonical_form)
+      assert :error = LiveUi.Examples.find(:styled_continuity_compare)
     end
 
     test "canonical rendering through Runtime preserves widget identity" do
