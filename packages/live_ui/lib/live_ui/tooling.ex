@@ -28,6 +28,37 @@ defmodule LiveUi.Tooling do
     "guides/canonical_rendering_and_transport.md",
     "guides/maintainer_workflows.md"
   ]
+  @required_doc_snippets %{
+    "README.md" => [
+      "same focused example ids",
+      "mix live_ui.preview button --format html",
+      "mix live_ui.inspect button --format comparison",
+      "mix live_ui.export button --format diagnostics"
+    ],
+    "guides/runtime_backbone.md" => [
+      "same aligned example ids"
+    ],
+    "guides/native_runtime_and_examples.md" => [
+      "same widget-focused example ids",
+      "package-specialized live_ui screen"
+    ],
+    "guides/canonical_rendering_and_transport.md" => [
+      "same aligned example ids",
+      "canonical review path"
+    ],
+    "guides/maintainer_workflows.md" => [
+      "mix live_ui.preview button --format html",
+      "mix live_ui.inspect button --format comparison",
+      "mix live_ui.export button --format diagnostics"
+    ]
+  }
+  @prohibited_doc_patterns [
+    {"mix live_ui.demo", ~r/\bmix live_ui\.demo\b/},
+    {"demo workbench", ~r/\bdemo workbench\b/i},
+    {"package-local demo", ~r/\bpackage-local demo\b/i},
+    {"native canonical mixed taxonomy", ~r/\bnative,\s+canonical,\s+and\s+mixed\b/i},
+    {"maintained mixed examples", ~r/\bmaintained mixed examples\b/i}
+  ]
   @browser_style_approximation_rules [
     %{
       id: :metadata_only_difference,
@@ -103,11 +134,19 @@ defmodule LiveUi.Tooling do
       |> Enum.filter(&File.exists?(Path.join(root, &1)))
       |> Enum.sort()
 
+    missing_snippets = missing_doc_snippets(root)
+    prohibited_mentions = prohibited_doc_mentions(root)
+
     %{
       required_paths: @required_docs,
+      required_snippets: @required_doc_snippets,
       present_paths: present_paths,
       missing_paths: @required_docs -- present_paths,
-      complete?: length(present_paths) == length(@required_docs)
+      missing_snippets: missing_snippets,
+      prohibited_mentions: prohibited_mentions,
+      complete?:
+        length(present_paths) == length(@required_docs) and
+          map_size(missing_snippets) == 0 and prohibited_mentions == []
     }
   end
 
@@ -148,8 +187,12 @@ defmodule LiveUi.Tooling do
       "  failing examples: #{inspect(report.example_health.failing_ids)}",
       "  missing paths: #{inspect(report.example_coverage.missing_paths)}",
       "  missing families: #{inspect(report.example_coverage.missing_families)}",
+      "  missing root ids: #{inspect(report.example_coverage.missing_root_example_ids)}",
+      "  unexpected ids: #{inspect(report.example_coverage.unexpected_example_ids)}",
       "  continuity failures: #{inspect(report.continuity.failing_ids)}",
-      "  transport issues: #{inspect(report.transport.issues)}"
+      "  transport issues: #{inspect(report.transport.issues)}",
+      "  doc snippet gaps: #{inspect(report.documentation_surface.missing_snippets)}",
+      "  prohibited doc mentions: #{inspect(report.documentation_surface.prohibited_mentions)}"
     ]
     |> Enum.join("\n")
   end
@@ -767,6 +810,9 @@ defmodule LiveUi.Tooling do
   end
 
   defp example_coverage_report(catalog) do
+    repository_example_ids = Examples.repository_example_ids()
+    aligned_ids = Enum.map(catalog, & &1.id) |> Enum.sort()
+
     present_paths =
       catalog
       |> Enum.map(& &1.path)
@@ -781,19 +827,28 @@ defmodule LiveUi.Tooling do
 
     missing_paths = @required_example_paths -- present_paths
     missing_families = @required_example_families -- present_families
+    missing_root_example_ids = repository_example_ids -- aligned_ids
+    unexpected_example_ids = aligned_ids -- repository_example_ids
 
     %{
       present_paths: present_paths,
       missing_paths: missing_paths,
       present_families: present_families,
       missing_families: missing_families,
-      aligned_ids: Enum.map(catalog, & &1.id) |> Enum.sort(),
+      repository_example_ids: repository_example_ids,
+      aligned_ids: aligned_ids,
+      missing_root_example_ids: missing_root_example_ids,
+      unexpected_example_ids: unexpected_example_ids,
       canonical_review_ids:
         catalog
         |> Enum.filter(&get_in(&1, [:runtime_obligations, :canonical_review?]))
         |> Enum.map(& &1.id)
         |> Enum.sort(),
-      complete?: missing_paths == [] and missing_families == []
+      complete?:
+        missing_paths == [] and
+          missing_families == [] and
+          missing_root_example_ids == [] and
+          unexpected_example_ids == []
     }
   end
 
@@ -897,7 +952,7 @@ defmodule LiveUi.Tooling do
       ),
       gate(
         :example_coverage,
-        "Maintained examples cover the required paths and families.",
+        "Maintained examples cover the repository inventory, required families, and aligned example path.",
         report.example_coverage.complete?
       ),
       gate(
@@ -917,7 +972,7 @@ defmodule LiveUi.Tooling do
       ),
       gate(
         :documentation,
-        "Maintainer-facing runtime and workflow documentation is present.",
+        "Maintainer-facing docs describe aligned example review and omit the retired demo/workbench.",
         report.documentation_surface.complete?
       )
     ]
@@ -969,6 +1024,32 @@ defmodule LiveUi.Tooling do
          title: "#{example.title} Canonical Review",
          families: example.families
        }), element}
+    end
+  end
+
+  defp missing_doc_snippets(root) do
+    Enum.reduce(@required_doc_snippets, %{}, fn {path, snippets}, acc ->
+      content =
+        root
+        |> Path.join(path)
+        |> File.read!()
+
+      missing = Enum.reject(snippets, &String.contains?(content, &1))
+
+      if missing == [] do
+        acc
+      else
+        Map.put(acc, path, missing)
+      end
+    end)
+  end
+
+  defp prohibited_doc_mentions(root) do
+    for path <- @required_docs,
+        {label, pattern} <- @prohibited_doc_patterns,
+        content = root |> Path.join(path) |> File.read!(),
+        Regex.match?(pattern, content) do
+      %{path: path, label: label}
     end
   end
 end

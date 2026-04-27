@@ -182,6 +182,18 @@ defmodule LiveUi.Examples.Aligned do
     Enum.map(@aligned_example_ids, &metadata/1)
   end
 
+  @spec repository_example_ids() :: [atom()]
+  def repository_example_ids do
+    root_examples_dir = Path.expand("../../../../../examples", __DIR__)
+
+    root_examples_dir
+    |> File.ls!()
+    |> Enum.filter(&File.dir?(Path.join(root_examples_dir, &1)))
+    |> Enum.reject(&(&1 in ["demo", "shared"]))
+    |> Enum.map(&String.to_atom/1)
+    |> Enum.sort()
+  end
+
   @spec metadata(atom()) :: map()
   def metadata(id) when id in @aligned_example_ids do
     family = Map.fetch!(@family_map, id)

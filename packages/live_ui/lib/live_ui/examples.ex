@@ -25,6 +25,11 @@ defmodule LiveUi.Examples do
     Aligned.catalog()
   end
 
+  @spec repository_example_ids() :: [atom()]
+  def repository_example_ids do
+    Aligned.repository_example_ids()
+  end
+
   @spec find(atom() | String.t()) :: {:ok, map()} | :error
   def find(id) when is_atom(id) or is_binary(id) do
     Aligned.find(id)

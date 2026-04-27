@@ -26,5 +26,7 @@ That shared runtime is intentionally server-authoritative:
 path, but canonical boundary translation must remain CloudEvents-compatible and
 must not leak renderer-local payload semantics into boundary signals.
 
-Use the maintained mixed examples and `mix live_ui.validate` to review these
-transport expectations when the runtime boundary changes.
+Use the same aligned example ids and `mix live_ui.validate` to review these
+transport expectations when the runtime boundary changes. Native runtime review,
+canonical review, and transport inspection are all attached to the same aligned
+example ids instead of separate package-only lanes.

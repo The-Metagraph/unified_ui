@@ -4,16 +4,7 @@ defmodule LiveUi.AlignedExamplesTest do
   import Phoenix.LiveViewTest
 
   test "aligned inventory matches the root examples directory one for one" do
-    root_examples_dir = Path.expand("../../../../examples", __DIR__)
-
-    root_ids =
-      root_examples_dir
-      |> File.ls!()
-      |> Enum.filter(&File.dir?(Path.join(root_examples_dir, &1)))
-      |> Enum.reject(&(&1 in ["demo", "shared"]))
-      |> Enum.map(&String.to_atom/1)
-      |> Enum.sort()
-
+    root_ids = LiveUi.Examples.repository_example_ids()
     aligned_ids = LiveUi.Examples.aligned_example_ids() |> Enum.sort()
 
     assert aligned_ids == root_ids

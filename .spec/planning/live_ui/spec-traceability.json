@@ -376,6 +376,20 @@
       "ownership_note": "Phase 11: Native surface is a mountable LiveComponent-oriented widget library."
     },
     {
+      "requirement_id": "live_ui.package.focused_example_specialization",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/package.spec.md",
+      "primary_plan_refs": [
+        "18.1.1"
+      ],
+      "supporting_plan_refs": [
+        "18.1.2",
+        "18.2.1",
+        "18.3.2"
+      ],
+      "ownership_note": "Phase 18: Package examples align one-for-one with the repository focused example inventory and specialize it for native live_ui review."
+    },
+    {
       "requirement_id": "live_ui.structure.mix_library_layout",
       "scope": "direct",
       "source_file": ".spec/specs/live_ui/structure.spec.md",
@@ -851,28 +865,29 @@
       "scope": "direct",
       "source_file": ".spec/specs/live_ui/tooling.spec.md",
       "primary_plan_refs": [
-        "6.1.1"
+        "18.1.1"
       ],
       "supporting_plan_refs": [
-        "2.4.1",
-        "4.4.1",
-        "5.4.1"
+        "18.1.2",
+        "18.2.1",
+        "18.4.1"
       ],
-      "ownership_note": "Direct tooling obligation."
+      "ownership_note": "Phase 18: Maintained reference examples align one-for-one with the repository focused example inventory."
     },
     {
       "requirement_id": "live_ui.tooling.preview_and_inspection",
       "scope": "direct",
       "source_file": ".spec/specs/live_ui/tooling.spec.md",
       "primary_plan_refs": [
-        "6.2.1"
+        "18.2.1"
       ],
       "supporting_plan_refs": [
         "5.3.1",
         "5.3.2",
-        "6.3.2"
+        "6.3.2",
+        "18.2.2"
       ],
-      "ownership_note": "Direct tooling obligation."
+      "ownership_note": "Phase 18: Preview and inspection workflows attach native, canonical, and transport review to the aligned focused example ids."
     },
     {
       "requirement_id": "live_ui.tooling.validation_workflow",
@@ -884,7 +899,9 @@
       "supporting_plan_refs": [
         "4.3.1",
         "5.5.1",
-        "6.5.2"
+        "6.5.2",
+        "18.3.2",
+        "18.4.2"
       ],
       "ownership_note": "Direct tooling obligation."
     },
@@ -897,9 +914,25 @@
       ],
       "supporting_plan_refs": [
         "6.4.2",
-        "6.5.2"
+        "6.5.2",
+        "18.3.1",
+        "18.4.2"
       ],
       "ownership_note": "Direct tooling obligation."
+    },
+    {
+      "requirement_id": "live_ui.tooling.no_package_local_demo_workbench",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/tooling.spec.md",
+      "primary_plan_refs": [
+        "18.2.2"
+      ],
+      "supporting_plan_refs": [
+        "18.3.1",
+        "18.3.2",
+        "18.4.2"
+      ],
+      "ownership_note": "Phase 18: Retire the package-local demo/workbench and divergent widget catalog in favor of aligned focused examples."
     },
     {
       "requirement_id": "unified_iur.widgets.input_and_navigation",

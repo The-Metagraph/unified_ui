@@ -40,6 +40,7 @@ The plan aligns to:
 15. [Phase 15 - Canonical Renderer Convergence](./phase-15-canonical-renderer-convergence.md): finish the convergence work so canonical `UnifiedIUR` rendering targets the same widget component boundaries used by direct native screens.
 16. [Phase 16 - Advanced Widget Integration Tests](./phase-16-advanced-widget-integration-tests.md): validate the complete widget-component architecture end to end across all widget families.
 17. [Phase 17 - Tooling, Demo, Validation, and Release Readiness for Widget Components](./phase-17-tooling-demo-validation-and-release-readiness-for-widget-components.md): finish the widget-component transition with demo/example upgrades, tooling visibility, validation gates, documentation, and cleanup of legacy helper-only paths.
+18. [Phase 18 - Focused Example Alignment and Demo Retirement](./phase-18-focused-example-alignment-and-demo-retirement.md): replace the package-local demo and divergent example catalog with `live_ui`-native specializations of the repository widget-focused example inventory, and move tooling, docs, and validation onto those aligned example ids.
 
 ## Shared Conventions
 - Numbering:

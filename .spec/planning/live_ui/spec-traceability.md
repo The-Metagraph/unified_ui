@@ -58,6 +58,7 @@ tasks because they govern other runtime packages:
 | `live_ui.package.not_dsl_or_iur_owner` | `1.1.2` | `6.4.2` | Direct live_ui boundary obligation. |
 | `live_ui.package.traceable_to_root_specs` | `6.4.1` | `6.4.2`, `6.3.2` | Direct live_ui documentation and governance obligation. |
 | `live_ui.package.widget_component_library_surface` | `11.1` | `11.1.1` | Phase 11: Native surface is a mountable LiveComponent-oriented widget library. |
+| `live_ui.package.focused_example_specialization` | `18.1.1` | `18.1.2`, `18.2.1`, `18.3.2` | Phase 18: Package examples align one-for-one with the repository focused example inventory and specialize it for native live_ui review. |
 ### `structure.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -110,10 +111,11 @@ tasks because they govern other runtime packages:
 ### `tooling.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
-| `live_ui.tooling.reference_examples` | `6.1.1` | `2.4.1`, `4.4.1`, `5.4.1` | Direct tooling obligation. |
-| `live_ui.tooling.preview_and_inspection` | `6.2.1` | `5.3.1`, `5.3.2`, `6.3.2` | Direct tooling obligation. |
-| `live_ui.tooling.validation_workflow` | `6.3.1` | `4.3.1`, `5.5.1`, `6.5.2` | Direct tooling obligation. |
-| `live_ui.tooling.documentation_surface` | `6.4.1` | `6.4.2`, `6.5.2` | Direct tooling obligation. |
+| `live_ui.tooling.reference_examples` | `18.1.1` | `18.1.2`, `18.2.1`, `18.4.1` | Phase 18: Maintained reference examples align one-for-one with the repository focused example inventory. |
+| `live_ui.tooling.preview_and_inspection` | `18.2.1` | `5.3.1`, `5.3.2`, `6.3.2`, `18.2.2` | Phase 18: Preview and inspection workflows attach native, canonical, and transport review to the aligned focused example ids. |
+| `live_ui.tooling.validation_workflow` | `6.3.1` | `4.3.1`, `5.5.1`, `6.5.2`, `18.3.2`, `18.4.2` | Direct tooling obligation. |
+| `live_ui.tooling.documentation_surface` | `6.4.1` | `6.4.2`, `6.5.2`, `18.3.1`, `18.4.2` | Direct tooling obligation. |
+| `live_ui.tooling.no_package_local_demo_workbench` | `18.2.2` | `18.3.1`, `18.3.2`, `18.4.2` | Phase 18: Retire the package-local demo/workbench and divergent widget catalog in favor of aligned focused examples. |
 ## Upstream Canonical Input And Authoring Constraints
 These specs are referenced by the planning index because they define the
 canonical input surface and authored boundary that `live_ui` must consume or
