@@ -20,7 +20,7 @@ Back to index: [README](./README.md)
 - Repeated collection authoring is list-oriented data binding plus a child
   template, not resource relationship traversal.
 
-[ ] 1 Phase 1 - Canonical Widget Taxonomy and UnifiedUi Authoring Surface
+[x] 1 Phase 1 - Canonical Widget Taxonomy and UnifiedUi Authoring Surface
   Establish the canonical authored surface in `unified_ui` so developers can
   declare the promoted widgets and repeated collection templates before
   renderer-specific work begins.
@@ -93,22 +93,22 @@ Back to index: [README](./README.md)
       [x] 1.3.2.2 Subtask - Document naming differences between AshUi proposals and canonical concepts when the canonical name is intentionally more portable.
       [x] 1.3.2.3 Subtask - Document which AshUi proposal details remain integration-owned rather than part of the canonical DSL.
 
-  [ ] 1.4 Section - Phase 1 Integration Tests
+  [x] 1.4 Section - Phase 1 Integration Tests
     Validate the authored taxonomy, DSL shape, diagnostics, and review output
     end to end inside `unified_ui`.
 
-    [ ] 1.4.1 Task - Authored widget acceptance and rejection scenarios
+    [x] 1.4.1 Task - Authored widget acceptance and rejection scenarios
       Verify the canonical DSL accepts portable widget declarations and rejects
       integration-package leakage.
 
-      [ ] 1.4.1.1 Subtask - Verify authored declarations for every promoted widget validate with the required canonical fields.
-      [ ] 1.4.1.2 Subtask - Verify Ash-specific, Phoenix-specific, and renderer-local fields are rejected with actionable diagnostics.
-      [ ] 1.4.1.3 Subtask - Verify host-owned form shell examples compile without importing Phoenix or AshPhoenix concepts.
+      [x] 1.4.1.1 Subtask - Verify authored declarations for every promoted widget validate with the required canonical fields.
+      [x] 1.4.1.2 Subtask - Verify Ash-specific, Phoenix-specific, and renderer-local fields are rejected with actionable diagnostics.
+      [x] 1.4.1.3 Subtask - Verify host-owned form shell examples compile without importing Phoenix or AshPhoenix concepts.
 
-    [ ] 1.4.2 Task - Repeated collection and inspection scenarios
+    [x] 1.4.2 Task - Repeated collection and inspection scenarios
       Verify repeated collection authoring and review output preserve portable
       row-scope meaning.
 
-      [ ] 1.4.2.1 Subtask - Verify repeated collection templates compile with row-scope data references, stable keys, empty states, and child widget bindings.
-      [ ] 1.4.2.2 Subtask - Verify invalid relationship-style declarations fail without being lowered into canonical output.
-      [ ] 1.4.2.3 Subtask - Verify inspection and export output remains deterministic for promoted widgets and repeated templates.
+      [x] 1.4.2.1 Subtask - Verify repeated collection templates compile with row-scope data references, stable keys, empty states, and child widget bindings.
+      [x] 1.4.2.2 Subtask - Verify invalid relationship-style declarations fail without being lowered into canonical output.
+      [x] 1.4.2.3 Subtask - Verify inspection and export output remains deterministic for promoted widgets and repeated templates.
