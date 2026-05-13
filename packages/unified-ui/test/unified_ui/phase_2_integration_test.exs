@@ -293,6 +293,23 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :sparkline,
              :bar_chart,
              :line_chart,
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :list_item_multi_column,
+             :artifact_row,
+             :sticky_header,
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :chat_composer,
              :stream_widget,
              :process_monitor,
              :supervision_tree_viewer,
@@ -300,7 +317,15 @@ defmodule UnifiedUi.Phase2IntegrationTest do
            ]
 
     assert UnifiedUi.Layout.kinds() == [:box, :row, :column, :grid, :stack]
-    assert UnifiedUi.Forms.kinds() == [:form_builder, :field_group, :field, :form_field]
+
+    assert UnifiedUi.Forms.kinds() == [
+             :form_builder,
+             :host_form_shell,
+             :field_group,
+             :field,
+             :form_field
+           ]
+
     assert UnifiedUi.Navigation.kinds() == [:menu, :tabs, :command_palette]
 
     summary = UnifiedUi.Info.composition_summary(BaselineWorkspace)

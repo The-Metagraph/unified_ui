@@ -31,6 +31,8 @@ defmodule UnifiedUi.ReferenceTest do
              :navigation,
              :feedback,
              :data,
+             :semantic_micro,
+             :workflow_document,
              :operational
            ]
 

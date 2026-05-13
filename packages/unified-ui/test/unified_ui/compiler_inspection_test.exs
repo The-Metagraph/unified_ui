@@ -204,6 +204,8 @@ defmodule UnifiedUi.CompilerInspectionTest do
                navigation: UnifiedIUR.Widgets.navigation_kinds(),
                data: UnifiedIUR.Widgets.data_view_kinds(),
                feedback: UnifiedIUR.Widgets.feedback_kinds(),
+               semantic: UnifiedUi.Widgets.semantic_kinds(),
+               workflow: UnifiedUi.Widgets.workflow_kinds(),
                advanced: UnifiedIUR.Widgets.advanced_kinds(),
                forms: UnifiedIUR.Forms.kinds(),
                container: [:box]

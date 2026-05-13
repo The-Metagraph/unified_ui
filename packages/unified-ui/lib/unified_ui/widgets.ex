@@ -3,7 +3,16 @@ defmodule UnifiedUi.Widgets do
   Package-facing reference surface for authored widget kinds supported by `UnifiedUi`.
   """
 
-  alias UnifiedUi.Dsl.Entities.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedUi.Dsl.Entities.{
+    Advanced,
+    Data,
+    Feedback,
+    Foundational,
+    Input,
+    Navigation,
+    Semantic,
+    Workflow
+  }
 
   @spec foundational_kinds() :: [atom()]
   def foundational_kinds do
@@ -30,6 +39,16 @@ defmodule UnifiedUi.Widgets do
     Feedback.kinds()
   end
 
+  @spec semantic_kinds() :: [atom()]
+  def semantic_kinds do
+    Semantic.kinds()
+  end
+
+  @spec workflow_kinds() :: [atom()]
+  def workflow_kinds do
+    Workflow.kinds()
+  end
+
   @spec advanced_kinds() :: [atom()]
   def advanced_kinds do
     Advanced.kinds()
@@ -42,6 +61,8 @@ defmodule UnifiedUi.Widgets do
       navigation_kinds() ++
       data_kinds() ++
       feedback_kinds() ++
+      semantic_kinds() ++
+      workflow_kinds() ++
       advanced_kinds()
   end
 end

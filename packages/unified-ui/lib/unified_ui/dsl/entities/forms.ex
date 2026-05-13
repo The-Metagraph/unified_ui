@@ -18,11 +18,12 @@ defmodule UnifiedUi.Dsl.Entities.Forms do
       Enum.filter(Foundational.entities(), &(&1.name in [:button, :link, :text, :spacer]))
 
     [field, form_field, field_group] = nested_entities()
+    children = [field, form_field, field_group] ++ foundational ++ navigation
 
-    form_builder =
-      form_builder_entity([field, form_field, field_group] ++ foundational ++ navigation)
+    form_builder = form_builder_entity(children)
+    host_form_shell = host_form_shell_entity(children)
 
-    [form_builder]
+    [form_builder, host_form_shell]
   end
 
   @spec nested_entities() :: [Spark.Dsl.Entity.t()]
@@ -53,6 +54,27 @@ defmodule UnifiedUi.Dsl.Entities.Forms do
         EntitySchema.widget(
           summary: [type: :string, required: false],
           submit_intent: [type: :atom, required: false]
+        )
+    }
+  end
+
+  defp host_form_shell_entity(children) do
+    %Spark.Dsl.Entity{
+      name: :host_form_shell,
+      target: Node,
+      args: [:id],
+      identifier: :id,
+      recursive_as: :children,
+      auto_set_fields: [family: :forms, kind: :host_form_shell],
+      entities: [children: children],
+      schema:
+        EntitySchema.widget(
+          owner: [type: :atom, required: false, default: :host],
+          lifecycle: [type: :atom, required: false, default: :host_owned],
+          summary: [type: :string, required: false],
+          submit_intent: [type: :atom, required: false],
+          validation_summary: [type: :string, required: false],
+          action_placement: [type: :atom, required: false, default: :footer]
         )
     }
   end
