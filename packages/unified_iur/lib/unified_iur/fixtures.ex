@@ -756,6 +756,26 @@ defmodule UnifiedIUR.Fixtures do
         empty_state: "No artifacts"
       )
 
+    host_shell =
+      Forms.host_form_shell(
+        [
+          {:fields,
+           Forms.form_field(Input.text_input(id: "portable-review-title-input", name: :title),
+             id: "portable-review-title-field",
+             label: "Review title"
+           )},
+          {:actions,
+           Foundational.button("Submit review",
+             id: "portable-review-submit",
+             action: [intent: :submit_review]
+           )}
+        ],
+        id: "portable-host-form-shell",
+        submit_intent: :submit_review,
+        validation_summary: "Host validates review metadata",
+        action_placement: :footer
+      )
+
     Layout.grid(
       [
         {:content,
@@ -855,6 +875,7 @@ defmodule UnifiedIUR.Fixtures do
            submit_intent: :send_review,
            actions: [send: "Send"]
          )},
+        {:content, host_shell},
         {:content, repeated}
       ],
       id: "portable-widget-grid",

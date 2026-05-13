@@ -10,7 +10,7 @@ are stripped of Ash, Phoenix, and renderer-local ownership.
 | Disclosure, kicker, avatar, presence, segmented controls, multi-column rows, artifact rows, sticky headers | Promoted semantic and micro-interaction widgets | Author the portable widget name and canonical fields; keep Ash resource metadata in bindings or host data |
 | Pipeline steppers, segmented progress, workflow stage lists, thin meters, slide-over panels, event callouts, redlines, syntax-highlighted code, chat composers | Promoted workflow, document, and composer widgets | Author canonical widget fields and canonical interaction intent |
 | `phoenix_form` | `host_form_shell` | The host owns Phoenix form structs, Ash changesets, validation lifecycle, and submit execution |
-| Relationship-driven row rendering | `repeated_collection` | Bind a portable collection source and use `row_value`, `row_index`, and `row_key` descriptors inside one row template |
+| Relationship-driven row rendering | `repeated_collection` | Bind a portable collection source and use `row_value`, `row_index`, `row_key`, and `row_payload` descriptors inside one row template |
 
 ## What Stays AshUi-Owned
 
@@ -28,8 +28,8 @@ Prefer canonical field names even when the original AshUi proposal used a more
 specific option. For example, an Ash artifact relationship should become a
 `repeated_collection` with `collection_source`, `item_alias`, `index_alias`,
 `key_path`, and an `artifact_row` child template. Row actions should emit
-canonical interaction intent and row payload descriptors rather than renderer
-callbacks.
+canonical interaction intent and `row_payload` descriptors rather than renderer
+callbacks or Ash relationship callbacks.
 
 Use `mix unified_ui.inspect --format portable_widgets`,
 `mix unified_ui.export --format portable_widgets`, and `mix unified_ui.validate`

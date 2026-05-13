@@ -1038,7 +1038,7 @@
     {
       "requirement_id": "unified_iur.interactions.row_scope_binding_representation",
       "status": "verified",
-      "notes": "Verified by row-scope validation for row value, row index, and row key descriptors.",
+      "notes": "Verified by row-scope validation for row value, row index, row key, and row payload descriptors.",
       "evidence": [
         {
           "kind": "path_exists",

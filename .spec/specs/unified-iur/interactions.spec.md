@@ -53,7 +53,7 @@ decisions:
   stability: stable
 
 - id: unified_iur.interactions.row_scope_binding_representation
-  statement: The package shall represent row-scope value references for repeated collection composition in a form that runtime libraries can hydrate or render without depending on Ash resource relationship semantics.
+  statement: The package shall represent row-scope value, key, index, and interaction payload references for repeated collection composition in a form that runtime libraries can hydrate or render without depending on Ash resource relationship semantics.
   priority: must
   stability: stable
 

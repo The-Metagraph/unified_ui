@@ -161,7 +161,12 @@ defmodule UnifiedUi.Examples.PortableWidgets do
               kind: :button,
               id: :artifact_review_action,
               label: "Review artifact",
-              action_intent: :review_artifact
+              action_intent: :review_artifact,
+              action_payload: %{
+                artifact_id: row_payload([:id], alias: :artifact),
+                artifact: row_payload([:record], alias: :artifact),
+                row_index: row_payload([], alias: :row)
+              }
             },
             %{
               kind: :list_item_multi_column,
@@ -205,7 +210,12 @@ defmodule UnifiedUi.Examples.PortableWidgets do
               kind: :button,
               id: :workflow_review_action,
               label: "Open workflow",
-              action_intent: :open_workflow
+              action_intent: :open_workflow,
+              action_payload: %{
+                workflow_id: row_payload([:id], alias: :workflow),
+                workflow: row_payload([:record], alias: :workflow),
+                row_index: row_payload([], alias: :workflow_row)
+              }
             }
           ])
         end

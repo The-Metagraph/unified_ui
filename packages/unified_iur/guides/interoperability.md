@@ -25,8 +25,8 @@ new construct family or attachment shape:
 - keep attachments portable
 - keep host-owned form lifecycle data outside canonical structs while retaining
   canonical submit, validation, and action-placement intent
-- keep repeated collection sources and row-scope references independent of Ash
-  relationship traversal and renderer callbacks
+- keep repeated collection sources, row-scope references, and row action
+  payloads independent of Ash relationship traversal and renderer callbacks
 - update the paired `unified_ui` parity expectation
 - update reference fixtures and validation coverage in the same change set
 

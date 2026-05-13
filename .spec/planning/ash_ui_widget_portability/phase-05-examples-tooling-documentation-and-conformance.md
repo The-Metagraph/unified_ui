@@ -84,22 +84,22 @@ Back to index: [README](./README.md)
       [x] 5.3.2.2 Subtask - Regenerate traceability markdown mirrors with `mix spec.traceability.generate <package>` rather than hand-editing generated files.
       [x] 5.3.2.3 Subtask - Update conformance manifests and compliance evidence once package implementations and tests prove the requirements.
 
-  [ ] 5.4 Section - Phase 5 Integration Tests
+  [x] 5.4 Section - Phase 5 Integration Tests
     Validate examples, tooling, documentation, traceability, and conformance
     evidence for the complete promoted widget rollout.
 
-    [ ] 5.4.1 Task - Example and tooling integration scenarios
+    [x] 5.4.1 Task - Example and tooling integration scenarios
       Verify maintained examples and tooling expose the promoted surface
       consistently across authored, canonical, and runtime layers.
 
-      [ ] 5.4.1.1 Subtask - Verify every promoted widget has at least one maintained example with authored DSL, canonical IUR, and runtime review paths.
-      [ ] 5.4.1.2 Subtask - Verify repeated collection examples preserve row-scope binding meaning and row-level interaction payloads.
-      [ ] 5.4.1.3 Subtask - Verify inspection, export, reporting, and validation tasks produce deterministic output for promoted widgets and repeated collections.
+      [x] 5.4.1.1 Subtask - Verify every promoted widget has at least one maintained example with authored DSL, canonical IUR, and runtime review paths.
+      [x] 5.4.1.2 Subtask - Verify repeated collection examples preserve row-scope binding meaning and row-level interaction payloads.
+      [x] 5.4.1.3 Subtask - Verify inspection, export, reporting, and validation tasks produce deterministic output for promoted widgets and repeated collections.
 
-    [ ] 5.4.2 Task - Documentation and conformance integration scenarios
+    [x] 5.4.2 Task - Documentation and conformance integration scenarios
       Verify durable guidance and conformance evidence match the implemented
       runtime behavior.
 
-      [ ] 5.4.2.1 Subtask - Verify documentation describes canonical, runtime, and AshUi responsibilities without contradicting the ADR.
-      [ ] 5.4.2.2 Subtask - Verify package plancheck and compliance reports pass for the promoted widget requirements once implementation evidence is in place.
-      [ ] 5.4.2.3 Subtask - Verify generated traceability mirrors, conformance manifests, examples, and runtime parity reports all describe the same promoted widget support matrix.
+      [x] 5.4.2.1 Subtask - Verify documentation describes canonical, runtime, and AshUi responsibilities without contradicting the ADR.
+      [x] 5.4.2.2 Subtask - Verify package plancheck and compliance reports pass for the promoted widget requirements once implementation evidence is in place.
+      [x] 5.4.2.3 Subtask - Verify generated traceability mirrors, conformance manifests, examples, and runtime parity reports all describe the same promoted widget support matrix.

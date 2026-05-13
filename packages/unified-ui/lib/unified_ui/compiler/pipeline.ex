@@ -1222,20 +1222,32 @@ defmodule UnifiedUi.Compiler.Pipeline do
 
     fallback =
       []
-      |> maybe_prepend(default_action_interaction(node))
+      |> maybe_prepend(default_action_interaction(node, context))
       |> maybe_prepend(default_submit_interaction(node))
 
     explicit ++ Enum.reverse(fallback)
   end
 
-  defp default_action_interaction(%Node{action_intent: nil}), do: nil
+  defp default_action_interaction(%Node{action_intent: nil}, _context), do: nil
 
-  defp default_action_interaction(node) do
-    Interaction.click(
-      intent: node.action_intent,
-      element_id: node.id,
-      phase: :authored_default
-    )
+  defp default_action_interaction(node, context) do
+    opts =
+      [
+        intent: node.action_intent,
+        element_id: node.id,
+        phase: :authored_default
+      ]
+      |> maybe_put_interaction_mapping(
+        compile_payload_map(node.action_payload, context.binding_by_id)
+      )
+
+    Interaction.click(opts)
+  end
+
+  defp maybe_put_interaction_mapping(opts, mapping) when map_size(mapping) == 0, do: opts
+
+  defp maybe_put_interaction_mapping(opts, mapping) do
+    Keyword.put(opts, :mapping, mapping)
   end
 
   defp default_submit_interaction(%Node{submit_intent: nil}), do: nil
@@ -1535,6 +1547,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
       :row_value -> IURBinding.row_value(row_alias || :item, Map.get(ref, :path, []))
       :row_index -> IURBinding.row_index(row_alias || :index)
       :row_key -> IURBinding.row_key(row_alias || :item, Map.get(ref, :path, []))
+      :row_payload -> IURBinding.row_payload(row_alias || :item, Map.get(ref, :path, []))
     end
   end
 

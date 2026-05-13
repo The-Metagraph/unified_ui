@@ -991,7 +991,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_integration_test.exs",
           "cwd": "packages/unified-ui"
         }
       ]
@@ -1011,7 +1011,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_2_integration_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_2_integration_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_integration_test.exs",
           "cwd": "packages/unified-ui"
         }
       ]
@@ -1035,7 +1035,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_integration_test.exs",
           "cwd": "packages/unified-ui"
         }
       ]
@@ -1059,7 +1059,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_integration_test.exs",
           "cwd": "packages/unified-ui"
         }
       ]
@@ -1067,7 +1067,7 @@
     {
       "requirement_id": "unified_ui.widgets.repeated_collection_composition",
       "status": "verified",
-      "notes": "Verified by repeated collection authoring, lowering, and portable widget examples.",
+      "notes": "Verified by repeated collection authoring, lowering, row action payload mapping, and portable widget examples.",
       "evidence": [
         {
           "kind": "path_exists",
@@ -1079,7 +1079,7 @@
         },
         {
           "kind": "command",
-          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_2_integration_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_2_integration_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_integration_test.exs",
           "cwd": "packages/unified-ui"
         }
       ]

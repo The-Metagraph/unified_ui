@@ -49,7 +49,8 @@ Portable attachments include:
 - bindings
 - interaction descriptors
 - interaction scopes
-- row-scope binding descriptors for repeated collection row templates
+- row-scope binding descriptors for repeated collection row templates and row
+  action payloads
 
 Reference fixtures are expected to cover all of these attachment families so
 maintainers can review canonical shape changes before runtime libraries are

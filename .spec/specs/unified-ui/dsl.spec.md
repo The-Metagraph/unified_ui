@@ -63,7 +63,7 @@ decisions:
   stability: stable
 
 - id: unified_ui.dsl.repeated_collection_templates
-  statement: The DSL shall support repeated collection templates that bind a list-oriented data source to one child widget or layout template per row while keeping row-scope value references independent of renderer and Ash resource relationship semantics.
+  statement: The DSL shall support repeated collection templates that bind a list-oriented data source to one child widget or layout template per row while keeping row-scope value, key, index, and interaction payload references independent of renderer and Ash resource relationship semantics.
   priority: must
   stability: stable
 ```

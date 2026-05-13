@@ -47,7 +47,7 @@ that are portable across the ecosystem:
   `chat_composer`
 - `host_form_shell` for host-owned form lifecycle integration
 - `repeated_collection` for list-oriented composition with portable
-  `row_value`, `row_index`, and `row_key` binding descriptors
+  `row_value`, `row_index`, `row_key`, and `row_payload` binding descriptors
 
 AshUi remains an integration consumer. Ash resources, changesets,
 AshPhoenix/Phoenix form structs, and relationship traversal rules stay in

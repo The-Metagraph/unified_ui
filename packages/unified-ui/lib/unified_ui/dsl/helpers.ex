@@ -59,4 +59,8 @@ defmodule UnifiedUi.Dsl.Helpers do
   @spec row_key(RowScope.path_segment() | [RowScope.path_segment()], keyword()) ::
           RowScope.key_ref()
   def row_key(path, opts \\ []), do: RowScope.key(path, opts)
+
+  @spec row_payload(RowScope.path_segment() | [RowScope.path_segment()], keyword()) ::
+          RowScope.payload_ref()
+  def row_payload(path, opts \\ []), do: RowScope.payload(path, opts)
 end

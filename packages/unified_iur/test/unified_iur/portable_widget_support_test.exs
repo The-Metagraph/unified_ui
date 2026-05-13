@@ -1,7 +1,7 @@
 defmodule UnifiedIUR.PortableWidgetSupportTest do
   use ExUnit.Case, async: true
 
-  alias UnifiedIUR.{Fixtures, PortableWidgetSupport}
+  alias UnifiedIUR.{Fixtures, PortableWidgetSupport, Tree}
 
   test "declares the promoted widget surface and runtime support matrix" do
     assert PortableWidgetSupport.promoted_kind_families() == %{
@@ -44,8 +44,10 @@ defmodule UnifiedIUR.PortableWidgetSupportTest do
 
   test "reports canonical repeated collection row-scope coverage without renderer-local leakage" do
     fixture = Fixtures.fixture!("portable_widgets--ash_ui_portability")
+    kinds = fixture.element |> Tree.depth_first() |> Enum.map(& &1.kind)
     report = PortableWidgetSupport.row_scope_report(fixture.element)
 
+    assert PortableWidgetSupport.promoted_kinds() -- kinds == []
     assert report.complete?
 
     assert [

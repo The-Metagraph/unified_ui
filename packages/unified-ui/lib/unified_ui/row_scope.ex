@@ -18,7 +18,12 @@ defmodule UnifiedUi.RowScope do
           required(:path) => [path_segment()],
           optional(:alias) => atom()
         }
-  @type ref_t :: value_ref() | index_ref() | key_ref()
+  @type payload_ref :: %{
+          required(:kind) => :row_payload,
+          required(:path) => [path_segment()],
+          optional(:alias) => atom()
+        }
+  @type ref_t :: value_ref() | index_ref() | key_ref() | payload_ref()
 
   @spec value(path_segment() | [path_segment()], keyword()) :: value_ref()
   def value(path, opts \\ []) do
@@ -40,9 +45,21 @@ defmodule UnifiedUi.RowScope do
     |> maybe_put_alias(opts)
   end
 
+  @spec payload(path_segment() | [path_segment()], keyword()) :: payload_ref()
+  def payload(path, opts \\ []) do
+    :row_payload
+    |> path_ref(path)
+    |> maybe_put_alias(opts)
+  end
+
   @spec reference?(term()) :: boolean()
-  def reference?(%{kind: kind}) when kind in [:row_value, :row_index, :row_key], do: true
-  def reference?(%{"kind" => kind}) when kind in [:row_value, :row_index, :row_key], do: true
+  def reference?(%{kind: kind}) when kind in [:row_value, :row_index, :row_key, :row_payload],
+    do: true
+
+  def reference?(%{"kind" => kind})
+      when kind in [:row_value, :row_index, :row_key, :row_payload],
+      do: true
+
   def reference?(_other), do: false
 
   defp path_ref(kind, path) when is_atom(path) or is_binary(path), do: %{kind: kind, path: [path]}

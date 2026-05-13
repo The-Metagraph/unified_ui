@@ -48,7 +48,8 @@ defmodule UnifiedUi.MixProject do
         "guides/dsl_model.md",
         "guides/theming_and_signals.md",
         "guides/compiler_and_parity.md",
-        "guides/maintainer_workflows.md"
+        "guides/maintainer_workflows.md",
+        "guides/ash_ui_widget_migration.md"
       ],
       source_ref: "main",
       source_url: @source_url
