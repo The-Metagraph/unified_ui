@@ -25,11 +25,46 @@ defmodule UnifiedUi.Examples.PortableWidgets do
         elevation(:raised)
       end
 
+      disclosure :release_notes do
+        label("Release notes")
+        open?(true)
+        content_label("Expanded release notes")
+      end
+
+      kicker :workflow_kicker do
+        value("Workflow")
+        icon(:sparkles)
+      end
+
+      avatar :assignee_avatar do
+        label("Pat Charbon")
+        initials("PC")
+        status(:online)
+      end
+
+      presence_dot :assignee_presence do
+        status(:online)
+        label("Assignee online")
+        pulse?(true)
+      end
+
+      segmented_button_group :view_modes do
+        items(compact: "Compact", detailed: "Detailed")
+        active_item(:compact)
+      end
+
+      list_item_multi_column :artifact_summary_card do
+        label("Build artifact")
+        columns(name: "artifact.tar", status: "ready", size: "42 KB")
+        status(:ready)
+      end
+
       artifact_row :latest_artifact do
         title("artifact.tar")
         artifact(%{id: "artifact-1", kind: :tarball})
         status(:ready)
         timestamp("2026-05-13T10:30:00Z")
+        action_intent(:review_artifact)
       end
 
       pipeline_stepper_horizontal :release_pipeline do
@@ -44,8 +79,47 @@ defmodule UnifiedUi.Examples.PortableWidgets do
         maximum(100)
       end
 
+      workflow_stage_list_vertical :release_stages do
+        stages([:plan, :build, :review, :deploy])
+        active_item(:review)
+        status(:running)
+      end
+
+      meter_thin :health_meter do
+        current(82)
+        maximum(100)
+        severity(:success)
+      end
+
+      slide_over_panel :details_panel do
+        title("Details")
+        placement(:end)
+        visible?(true)
+      end
+
+      event_callout :build_event do
+        title("Build event")
+        message("Build completed")
+        severity(:success)
+        timestamp("2026-05-13T10:35:00Z")
+      end
+
+      redline_inline :title_redline do
+        before_text("Draft")
+        after_text("Ready")
+        label("Status change")
+      end
+
+      code_block_syntax_highlighted :release_code do
+        code("IO.puts(\"ready\")")
+        language(:elixir)
+        label("Release hook")
+        wrap?(true)
+      end
+
       chat_composer :review_composer do
         placeholder("Add a review note")
+        submit_intent(:send_review)
         actions(send: "Send")
       end
 
@@ -84,12 +158,54 @@ defmodule UnifiedUi.Examples.PortableWidgets do
               status: :ready
             },
             %{
+              kind: :button,
+              id: :artifact_review_action,
+              label: "Review artifact",
+              action_intent: :review_artifact
+            },
+            %{
               kind: :list_item_multi_column,
               id: :artifact_summary,
               label: "Artifact",
               columns: row_value([:columns], alias: :artifact),
               value: row_index(alias: :row),
               status: :ready
+            }
+          ])
+        end
+      end
+
+      repeated_collection :workflow_rows do
+        collection_source(binding_ref(:workflow_rows))
+        item_alias(:workflow)
+        index_alias(:workflow_row)
+        key_path([:id])
+        empty_state("No workflow rows")
+
+        row_template :workflow_row_template do
+          gap(:sm)
+
+          template_children([
+            %{
+              kind: :list_item_multi_column,
+              id: :workflow_summary,
+              label: "Workflow",
+              columns: row_value([:columns], alias: :workflow),
+              value: row_index(alias: :workflow_row),
+              status: :running
+            },
+            %{
+              kind: :pipeline_stepper_horizontal,
+              id: :workflow_pipeline,
+              steps: [:queued, :building, :reviewing, :deployed],
+              active_item: :reviewing,
+              status: :running
+            },
+            %{
+              kind: :button,
+              id: :workflow_review_action,
+              label: "Open workflow",
+              action_intent: :open_workflow
             }
           ])
         end

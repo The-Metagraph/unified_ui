@@ -85,8 +85,12 @@ defmodule UnifiedUi.Examples do
       validation_purpose: [:docs, :coverage, :parity, :determinism],
       review_artifact: %{
         inspection: "portable_widgets.inspection",
-        snapshot: "portable_widgets.snapshot"
+        snapshot: "portable_widgets.snapshot",
+        structured_fixture: "examples/portable_widgets/review-fixtures.json"
       },
+      authored_dsl_module: "UnifiedUi.Examples.PortableWidgets",
+      canonical_fixture: "portable_widgets--ash_ui_portability",
+      runtime_coverage: [:live_ui, :elm_ui, :desktop_ui, :terminal_ui],
       summary:
         "Portable promoted widget and repeated collection coverage for AshUi-originated concepts."
     },

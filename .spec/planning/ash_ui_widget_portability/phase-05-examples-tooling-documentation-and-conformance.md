@@ -24,25 +24,25 @@ Back to index: [README](./README.md)
   documentation, traceability mappings, conformance evidence, and migration
   guidance for AshUi or other integration consumers.
 
-  [ ] 5.1 Section - Maintained Examples and Review Fixtures
+  [x] 5.1 Section - Maintained Examples and Review Fixtures
     Add example coverage that demonstrates the promoted widgets across
     authored, canonical, native, and degraded runtime paths.
 
-    [ ] 5.1.1 Task - Add focused widget examples for the promoted surface
+    [x] 5.1.1 Task - Add focused widget examples for the promoted surface
       Build maintained examples that make each promoted widget family visible
       to reviewers and downstream users.
 
-      [ ] 5.1.1.1 Subtask - Add examples for semantic micro widgets, workflow/document widgets, host-owned form shell, and chat composer flows.
-      [ ] 5.1.1.2 Subtask - Add repeated collection examples that render artifact rows, workflow rows, and row-level actions from list-oriented data.
-      [ ] 5.1.1.3 Subtask - Register examples in the root catalog with metadata for authored DSL, canonical IUR, and runtime coverage.
+      [x] 5.1.1.1 Subtask - Add examples for semantic micro widgets, workflow/document widgets, host-owned form shell, and chat composer flows.
+      [x] 5.1.1.2 Subtask - Add repeated collection examples that render artifact rows, workflow rows, and row-level actions from list-oriented data.
+      [x] 5.1.1.3 Subtask - Register examples in the root catalog with metadata for authored DSL, canonical IUR, and runtime coverage.
 
-    [ ] 5.1.2 Task - Add cross-runtime review fixtures
+    [x] 5.1.2 Task - Add cross-runtime review fixtures
       Provide review artifacts that compare canonical meaning across runtime
       realizations.
 
-      [ ] 5.1.2.1 Subtask - Add fixtures that show authored `UnifiedUi`, exported `UnifiedIUR`, and runtime outputs for the same promoted widget examples.
-      [ ] 5.1.2.2 Subtask - Add fixture coverage for terminal and other constrained-runtime degradation.
-      [ ] 5.1.2.3 Subtask - Add snapshot or structured-output tests that keep review fixtures deterministic.
+      [x] 5.1.2.1 Subtask - Add fixtures that show authored `UnifiedUi`, exported `UnifiedIUR`, and runtime outputs for the same promoted widget examples.
+      [x] 5.1.2.2 Subtask - Add fixture coverage for terminal and other constrained-runtime degradation.
+      [x] 5.1.2.3 Subtask - Add snapshot or structured-output tests that keep review fixtures deterministic.
 
   [ ] 5.2 Section - Tooling and Validation Workflows
     Extend package tooling so promoted widget support is visible and

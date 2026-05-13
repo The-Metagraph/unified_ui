@@ -53,3 +53,4 @@ inline_feedback	inline_feedback	feedback	3	box	click	target_driven	shared_trigge
 sparkline	sparkline	feedback	3	box	click	target_driven	shared_trigger	The review panel should explain how the sparkline example turns an authored canonical interaction into a browser-visible feedback story.
 bar_chart	bar_chart	feedback	3	box	click	target_driven	shared_trigger	The review panel should explain how the bar chart example turns an authored canonical interaction into a browser-visible feedback story.
 line_chart	line_chart	feedback	3	box	click	target_driven	shared_trigger	The review panel should explain how the line chart example turns an authored canonical interaction into a browser-visible feedback story.
+portable_widgets	portable_widgets	portable_widgets	5	box	selection	source_driven	cross_runtime_review	The portable widgets example ties UnifiedUi authored DSL, canonical IUR, and live_ui/elm_ui/desktop_ui/terminal_ui runtime review coverage for AshUi-originated widgets.

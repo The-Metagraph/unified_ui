@@ -1,0 +1,112 @@
+{
+  "id": "portable_widgets",
+  "description": "Deterministic review fixture for the promoted AshUi-originated widget surface.",
+  "authored": {
+    "module": "UnifiedUi.Examples.PortableWidgets",
+    "export": "portable_widgets.inspection",
+    "surface": "UnifiedUi authored DSL"
+  },
+  "canonical": {
+    "fixture": "portable_widgets--ash_ui_portability",
+    "export": "portable_widgets.snapshot",
+    "surface": "UnifiedIUR canonical IUR"
+  },
+  "root_catalog": {
+    "directory": "examples/portable_widgets",
+    "family": "portable_widgets",
+    "widget": "portable_widgets"
+  },
+  "groups": [
+    {
+      "id": "semantic_micro_widgets",
+      "widgets": [
+        "disclosure",
+        "kicker",
+        "avatar",
+        "presence_dot",
+        "segmented_button_group",
+        "list_item_multi_column",
+        "artifact_row",
+        "sticky_header"
+      ]
+    },
+    {
+      "id": "workflow_document_widgets",
+      "widgets": [
+        "pipeline_stepper_horizontal",
+        "segmented_progress_bar",
+        "workflow_stage_list_vertical",
+        "meter_thin",
+        "slide_over_panel",
+        "event_callout",
+        "redline_inline",
+        "code_block_syntax_highlighted",
+        "chat_composer"
+      ]
+    },
+    {
+      "id": "host_form_shell_and_chat",
+      "widgets": [
+        "host_form_shell",
+        "chat_composer"
+      ]
+    },
+    {
+      "id": "repeated_collections",
+      "collections": [
+        "artifact_rows",
+        "workflow_rows"
+      ],
+      "row_actions": [
+        "artifact_review_action",
+        "workflow_review_action"
+      ]
+    }
+  ],
+  "runtime_coverage": [
+    {
+      "package": "live_ui",
+      "entrypoint": "native_and_iur_renderer",
+      "support": "direct"
+    },
+    {
+      "package": "elm_ui",
+      "entrypoint": "native_and_iur_renderer",
+      "support": "direct"
+    },
+    {
+      "package": "desktop_ui",
+      "entrypoint": "native_and_iur_renderer",
+      "support": "direct"
+    },
+    {
+      "package": "terminal_ui",
+      "entrypoint": "native_and_iur_renderer",
+      "support": "degraded",
+      "degradation": [
+        "inline_disclosure",
+        "initials_text",
+        "status_text",
+        "inline_menu_selection",
+        "linearized_row",
+        "inline_header",
+        "ascii_progress",
+        "linearized_list",
+        "inline_overlay",
+        "inline_feedback",
+        "inline_diff",
+        "plain_code_block",
+        "inline_text_prompt",
+        "linearized_form",
+        "linearized_collection"
+      ]
+    }
+  ],
+  "review_outputs": {
+    "authored_inspection": "mix unified_ui.inspect portable_widgets",
+    "authored_export": "mix unified_ui.export portable_widgets",
+    "canonical_inspection": "mix unified_iur.inspect portable_widgets--ash_ui_portability",
+    "canonical_export": "mix unified_iur.export portable_widgets--ash_ui_portability",
+    "runtime_parity_matrix": ".spec/planning/ash_ui_widget_portability/runtime-parity-matrix.json"
+  }
+}

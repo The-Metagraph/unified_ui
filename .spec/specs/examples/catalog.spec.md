@@ -139,6 +139,12 @@ decisions:
 | `examples/supervision_tree_viewer/` | `supervision_tree_viewer` | operational |
 | `examples/cluster_dashboard/` | `cluster_dashboard` | operational |
 
+### Portable Promoted Widgets
+
+| Directory | Primary Subject | Family |
+| --- | --- | --- |
+| `examples/portable_widgets/` | `portable_widgets` | portable widgets |
+
 ### Overlays and Layered Constructs
 
 | Directory | Primary Subject | Family |
