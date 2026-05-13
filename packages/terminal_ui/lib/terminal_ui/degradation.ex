@@ -9,6 +9,22 @@ defmodule TerminalUi.Degradation do
   @menu_kinds [:context_menu, :command_palette]
   @canvas_kinds [:canvas, :canvas_surface, :absolute, :positioned]
   @scroll_kinds [:viewport, :scroll_region]
+  @portable_fallbacks %{
+    avatar: :initials_text,
+    presence_dot: :status_text,
+    sticky_header: :inline_header,
+    slide_over_panel: :inline_overlay,
+    redline_inline: :inline_diff,
+    code_block_syntax_highlighted: :plain_code_block,
+    segmented_progress_bar: :ascii_progress,
+    pipeline_stepper_horizontal: :ascii_progress,
+    meter_thin: :ascii_progress,
+    chat_composer: :inline_text_prompt,
+    list_item_multi_column: :linearized_row,
+    artifact_row: :linearized_row,
+    repeated_collection: :linearized_collection,
+    host_form_shell: :linearized_form
+  }
 
   @spec modules() :: [module()]
   def modules, do: [__MODULE__]
@@ -36,6 +52,7 @@ defmodule TerminalUi.Degradation do
       menu_mode: fallback_for_kind(:context_menu, snapshot),
       canvas_mode: fallback_for_kind(:canvas, snapshot),
       scroll_mode: fallback_for_kind(:viewport, snapshot),
+      promoted_widget_modes: @portable_fallbacks,
       allowed_variation: TerminalUi.Capabilities.allowed_variation(snapshot)
     }
   end
@@ -53,6 +70,9 @@ defmodule TerminalUi.Degradation do
 
       snapshot.backend_mode != :tty ->
         nil
+
+      Map.has_key?(@portable_fallbacks, widget.kind) ->
+        Map.fetch!(@portable_fallbacks, widget.kind)
 
       widget.kind in @overlay_kinds ->
         :inline_overlay

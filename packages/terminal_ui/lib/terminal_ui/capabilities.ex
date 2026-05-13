@@ -67,7 +67,17 @@ defmodule TerminalUi.Capabilities do
   def keyboard_alternatives(:raw), do: []
 
   def keyboard_alternatives(:tty),
-    do: [:inline_menu_selection, :ctrl_resize, :arrow_navigation, :inline_overlay, :paged_scroll]
+    do: [
+      :inline_menu_selection,
+      :ctrl_resize,
+      :arrow_navigation,
+      :inline_overlay,
+      :paged_scroll,
+      :inline_disclosure,
+      :linearized_collection,
+      :linearized_form,
+      :inline_text_prompt
+    ]
 
   @spec diagnostics(keyword()) :: map()
   def diagnostics(opts \\ []) do
@@ -127,6 +137,7 @@ defmodule TerminalUi.Capabilities do
     |> maybe_put(:menu, if(snapshot.backend_mode == :tty, do: :inline_menu_selection))
     |> maybe_put(:canvas, if(snapshot.backend_mode == :tty, do: :ascii_canvas))
     |> maybe_put(:scroll, if(snapshot.backend_mode == :tty, do: :paged_scroll))
+    |> maybe_put(:promoted_widgets, if(snapshot.backend_mode == :tty, do: :explicit_fallbacks))
   end
 
   defp do_allowed_variation(snapshot) do
@@ -135,7 +146,11 @@ defmodule TerminalUi.Capabilities do
         :overlay_presentation,
         :positioned_canvas_rendering,
         :context_menu_presentation,
-        :glyph_fallback
+        :glyph_fallback,
+        :syntax_highlighting_fallback,
+        :progress_visual_fallback,
+        :attachment_fallback,
+        :row_scope_linearization
       ]
     else
       []

@@ -44,25 +44,25 @@ Back to index: [README](./README.md)
       [x] 4.1.2.2 Subtask - Map row-scope bindings to desktop event routing and native selection state without leaking renderer structs into canonical values.
       [x] 4.1.2.3 Subtask - Add renderer tests using shared IUR fixtures for promoted widgets, repeated collections, and row-scope events.
 
-  [ ] 4.2 Section - TerminalUi Native and IUR Runtime Support
+  [x] 4.2 Section - TerminalUi Native and IUR Runtime Support
     Add terminal-native equivalents and explicit degradation behavior for the
     promoted surface.
 
-    [ ] 4.2.1 Task - Implement TerminalUi promoted widget equivalents and degradation policy
+    [x] 4.2.1 Task - Implement TerminalUi promoted widget equivalents and degradation policy
       Provide terminal-native widgets that preserve semantic meaning even when
       visual treatment must degrade.
 
-      [ ] 4.2.1.1 Subtask - Add terminal equivalents for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
-      [ ] 4.2.1.2 Subtask - Define degradation for avatars, presence indicators, sticky headers, slide-over panels, inline redlines, syntax highlighting, progress visuals, and composer attachments.
-      [ ] 4.2.1.3 Subtask - Add terminal capability tests for color, width, keyboard navigation, focus behavior, overlays, and no-color or narrow-viewport fallback.
+      [x] 4.2.1.1 Subtask - Add terminal equivalents for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
+      [x] 4.2.1.2 Subtask - Define degradation for avatars, presence indicators, sticky headers, slide-over panels, inline redlines, syntax highlighting, progress visuals, and composer attachments.
+      [x] 4.2.1.3 Subtask - Add terminal capability tests for color, width, keyboard navigation, focus behavior, overlays, and no-color or narrow-viewport fallback.
 
-    [ ] 4.2.2 Task - Implement TerminalUi IUR rendering and repeated collection support
+    [x] 4.2.2 Task - Implement TerminalUi IUR rendering and repeated collection support
       Make canonical promoted widgets and repeated templates render through the
       terminal IUR renderer with explicit fallback metadata.
 
-      [ ] 4.2.2.1 Subtask - Extend the terminal IUR renderer to consume every promoted canonical widget node, host-owned form shell, and repeated collection construct.
-      [ ] 4.2.2.2 Subtask - Preserve row-scope payload mapping and item identity across terminal selection, activation, and command input flows.
-      [ ] 4.2.2.3 Subtask - Add renderer tests that verify fallback output remains semantically equivalent to the shared IUR fixtures.
+      [x] 4.2.2.1 Subtask - Extend the terminal IUR renderer to consume every promoted canonical widget node, host-owned form shell, and repeated collection construct.
+      [x] 4.2.2.2 Subtask - Preserve row-scope payload mapping and item identity across terminal selection, activation, and command input flows.
+      [x] 4.2.2.3 Subtask - Add renderer tests that verify fallback output remains semantically equivalent to the shared IUR fixtures.
 
   [ ] 4.3 Section - Cross-Runtime Degradation and Parity Matrix
     Make desktop and terminal runtime differences explicit and reviewable

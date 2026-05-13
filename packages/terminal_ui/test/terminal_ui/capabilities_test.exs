@@ -48,7 +48,11 @@ defmodule TerminalUi.CapabilitiesTest do
              :ctrl_resize,
              :arrow_navigation,
              :inline_overlay,
-             :paged_scroll
+             :paged_scroll,
+             :inline_disclosure,
+             :linearized_collection,
+             :linearized_form,
+             :inline_text_prompt
            ]
 
     assert :unicode in tty_diagnostics.degraded_capabilities

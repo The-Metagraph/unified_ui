@@ -35,7 +35,8 @@ defmodule TerminalUi.NativeWidgetsTest do
              TerminalUi.Widgets.Data,
              TerminalUi.Widgets.Feedback,
              TerminalUi.Widgets.Visualization,
-             TerminalUi.Widgets.Operational
+             TerminalUi.Widgets.Operational,
+             TerminalUi.Widgets.Portable
            ]
 
     assert :action in TerminalUi.Widgets.families()

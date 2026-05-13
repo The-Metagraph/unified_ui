@@ -13,6 +13,9 @@ defmodule TerminalUi.Widget do
           | :feedback
           | :visualization
           | :operational
+          | :semantic
+          | :workflow
+          | :collection
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -63,7 +66,9 @@ defmodule TerminalUi.Widget do
         :capability_profile,
         :degradation_strategy,
         :theme,
-        :style_refs
+        :style_refs,
+        :keyboard_hint,
+        :row_scope?
       ],
       state: [
         :disabled,
@@ -121,6 +126,7 @@ defmodule TerminalUi.Widget do
         :filter,
         :paginate,
         :expand,
+        :open,
         :close
       ]
     }
@@ -221,6 +227,36 @@ defmodule TerminalUi.Widget do
              :supervision_tree_viewer
            ],
       do: :operational
+
+  def family_for(kind)
+      when kind in [
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :list_item_multi_column,
+             :artifact_row,
+             :sticky_header
+           ],
+      do: :semantic
+
+  def family_for(kind)
+      when kind in [
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :chat_composer
+           ],
+      do: :workflow
+
+  def family_for(:host_form_shell), do: :input
+  def family_for(:repeated_collection), do: :collection
 
   def family_for(_kind), do: :content
 

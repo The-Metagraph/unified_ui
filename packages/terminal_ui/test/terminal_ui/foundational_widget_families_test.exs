@@ -39,6 +39,7 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
     assert primary.family == :action
     assert primary.metadata.command == :save_workspace
     assert primary.events.command == %{command: :save_workspace, source: :terminal_ui}
+
     assert navigate_button.events.keypress.target.navigation == %{
              action: :navigate_to,
              screen: :settings,
@@ -124,7 +125,8 @@ defmodule TerminalUi.FoundationalWidgetFamiliesTest do
              TerminalUi.Widgets.Data,
              TerminalUi.Widgets.Feedback,
              TerminalUi.Widgets.Visualization,
-             TerminalUi.Widgets.Operational
+             TerminalUi.Widgets.Operational,
+             TerminalUi.Widgets.Portable
            ]
 
     assert :action in TerminalUi.Widgets.families()
