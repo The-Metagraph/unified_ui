@@ -26,6 +26,8 @@ defmodule UnifiedIUR.ExtensionTest do
     assert %{
              foundational_widgets: foundational,
              input_widgets: input,
+             semantic_widgets: semantic,
+             workflow_widgets: workflow,
              collection_constructs: collections,
              layout_constructs: layouts,
              layer_constructs: layers,
@@ -34,6 +36,8 @@ defmodule UnifiedIUR.ExtensionTest do
 
     assert :button in foundational
     assert :text_input in input
+    assert :artifact_row in semantic
+    assert :chat_composer in workflow
     assert :repeated_collection in collections
     assert :column in layouts
     assert :dialog in layers

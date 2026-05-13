@@ -49,6 +49,30 @@ defmodule UnifiedIUR.InspectTest do
              Inspect.extension_metadata()
   end
 
+  test "surfaces portable widget and repeated collection inspection summaries" do
+    assert {:ok, report} = Inspect.fixture("portable_widgets--ash_ui_portability")
+
+    assert Enum.any?(report.portable_widgets, fn widget ->
+             widget.kind == :artifact_row and widget.family == :semantic and
+               [:plain_text_code_fallback] not in widget.degradation_hints
+           end)
+
+    assert Enum.any?(report.portable_widgets, fn widget ->
+             widget.kind == :code_block_syntax_highlighted and
+               :plain_text_code_fallback in widget.degradation_hints
+           end)
+
+    assert [
+             %{
+               id: "portable-artifact-rows",
+               item_alias: :artifact,
+               index_alias: :row,
+               key_path: [:id],
+               template: %{id: "portable-artifact-row-template", kind: :row}
+             }
+           ] = report.collections
+  end
+
   test "inspects canonical navigation fixtures and surfaces navigation summaries" do
     assert {:ok, report} = Inspect.navigation_fixture("screen_transition--settings_profile")
 

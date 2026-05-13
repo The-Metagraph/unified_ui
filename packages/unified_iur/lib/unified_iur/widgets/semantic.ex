@@ -271,10 +271,14 @@ defmodule UnifiedIUR.Widgets.Semantic do
   end
 
   defp normalize_named_items(items) when is_map(items) do
-    items
-    |> Map.to_list()
-    |> Enum.sort_by(fn {key, _value} -> to_string(key) end)
-    |> normalize_named_items()
+    if match?(%UnifiedIUR.Binding{}, items) do
+      UnifiedIUR.Binding.new(items)
+    else
+      items
+      |> Map.to_list()
+      |> Enum.sort_by(fn {key, _value} -> to_string(key) end)
+      |> normalize_named_items()
+    end
   end
 
   defp normalize_named_items(items) when is_list(items) do
@@ -298,6 +302,8 @@ defmodule UnifiedIUR.Widgets.Semantic do
   defp label_from_value(value) when is_binary(value), do: value
   defp label_from_value(value) when is_atom(value), do: Atom.to_string(value)
   defp label_from_value(_value), do: nil
+
+  defp normalize_value(%UnifiedIUR.Binding{} = binding), do: UnifiedIUR.Binding.new(binding)
 
   defp normalize_value(value) when is_list(value) do
     if Keyword.keyword?(value) do

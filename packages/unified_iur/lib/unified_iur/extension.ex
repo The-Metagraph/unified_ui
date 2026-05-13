@@ -57,6 +57,8 @@ defmodule UnifiedIUR.Extension do
       navigation_widgets: Widgets.navigation_kinds(),
       data_widgets: Widgets.data_view_kinds(),
       feedback_widgets: Widgets.feedback_kinds(),
+      semantic_widgets: Widgets.semantic_kinds(),
+      workflow_widgets: Widgets.workflow_kinds(),
       advanced_widgets: Widgets.advanced_kinds(),
       form_constructs: Forms.kinds(),
       collection_constructs: Collection.kinds(),
@@ -76,6 +78,8 @@ defmodule UnifiedIUR.Extension do
         navigation: Widgets.navigation_kinds(),
         data: Widgets.data_view_kinds(),
         feedback: Widgets.feedback_kinds(),
+        semantic: Widgets.semantic_kinds(),
+        workflow: Widgets.workflow_kinds(),
         advanced: Widgets.advanced_kinds()
       },
       display_systems: %{

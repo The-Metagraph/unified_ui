@@ -16,7 +16,16 @@ defmodule UnifiedIUR.Fixtures do
     Layout
   }
 
-  alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedIUR.Widgets.{
+    Advanced,
+    Data,
+    Feedback,
+    Foundational,
+    Input,
+    Navigation,
+    Semantic,
+    Workflow
+  }
 
   @fixture_specs [
     %{
@@ -67,6 +76,24 @@ defmodule UnifiedIUR.Fixtures do
         :collection_constructs
       ],
       snapshot: "data--content_and_feedback.snapshot"
+    },
+    %{
+      id: "portable_widgets--ash_ui_portability",
+      category: :portable_widgets,
+      description:
+        "Portable semantic, workflow, document, composer, and repeated template widgets promoted from AshUi proposals.",
+      semantics: [
+        "portable semantic micro-widget coverage",
+        "portable workflow and document widget coverage",
+        "promoted widgets inside repeated collection templates"
+      ],
+      parity_obligations: [
+        :semantic_widgets,
+        :workflow_widgets,
+        :collection_constructs,
+        :layout_constructs
+      ],
+      snapshot: "portable_widgets--ash_ui_portability.snapshot"
     },
     %{
       id: "display--layered_workspace",
@@ -691,6 +718,147 @@ defmodule UnifiedIUR.Fixtures do
       ],
       id: "content-grid",
       columns: 2,
+      gap: 2
+    )
+  end
+
+  defp build_fixture("portable_widgets--ash_ui_portability") do
+    repeated =
+      Collection.repeated_collection(
+        Layout.row(
+          [
+            {:content,
+             Semantic.artifact_row(Binding.row_value(:artifact, :record), "Artifact",
+               id: "portable-artifact-template",
+               status: :ready
+             )},
+            {:content,
+             Semantic.list_item_multi_column(Binding.row_value(:artifact, :columns),
+               id: "portable-artifact-summary-template",
+               label: "Artifact summary",
+               value: Binding.row_index(:row),
+               status: :ready
+             )}
+          ],
+          id: "portable-artifact-row-template"
+        ),
+        id: "portable-artifact-rows",
+        source: [
+          name: :artifacts,
+          path: [:artifacts],
+          value: [
+            %{id: "artifact-1", record: %{id: "artifact-1"}, columns: %{name: "artifact.tar"}}
+          ]
+        ],
+        item_alias: :artifact,
+        index_alias: :row,
+        key_path: [:id],
+        empty_state: "No artifacts"
+      )
+
+    Layout.grid(
+      [
+        {:content,
+         Semantic.disclosure("Release notes",
+           id: "portable-disclosure",
+           open?: true,
+           content_label: "Expanded release notes"
+         )},
+        {:content, Semantic.kicker("Workflow", id: "portable-kicker", icon: :sparkles)},
+        {:content,
+         Semantic.avatar("Pat Charbon",
+           id: "portable-avatar",
+           initials: "PC",
+           status: :online
+         )},
+        {:content,
+         Semantic.presence_dot(:online,
+           id: "portable-presence",
+           label: "Assignee online",
+           pulse?: true
+         )},
+        {:content,
+         Semantic.segmented_button_group([compact: "Compact", detailed: "Detailed"],
+           id: "portable-segments",
+           active_item: :compact
+         )},
+        {:content,
+         Semantic.list_item_multi_column([name: "artifact.tar", status: "ready"],
+           id: "portable-list-item",
+           label: "Artifact",
+           status: :ready
+         )},
+        {:content,
+         Semantic.artifact_row(%{id: "artifact-1"}, "artifact.tar",
+           id: "portable-artifact-row",
+           status: :ready,
+           timestamp: "2026-05-13T10:30:00Z"
+         )},
+        {:content,
+         Semantic.sticky_header("Results",
+           id: "portable-sticky-header",
+           stuck?: true,
+           elevation: :raised
+         )},
+        {:content,
+         Workflow.pipeline_stepper_horizontal([:queued, :building, :deployed],
+           id: "portable-pipeline",
+           active_item: :building,
+           status: :running
+         )},
+        {:content,
+         Workflow.segmented_progress_bar([queued: 20, building: 55, deployed: 25],
+           id: "portable-progress",
+           current: 55,
+           maximum: 100
+         )},
+        {:content,
+         Workflow.workflow_stage_list_vertical([:plan, :build, :deploy],
+           id: "portable-stages",
+           active_item: :build
+         )},
+        {:content,
+         Workflow.meter_thin(82,
+           id: "portable-meter",
+           maximum: 100,
+           severity: :success
+         )},
+        {:content,
+         Workflow.slide_over_panel(
+           [{:content, Foundational.text("Details", id: "portable-panel-copy")}],
+           id: "portable-panel",
+           title: "Details",
+           placement: :end,
+           visible?: true
+         )},
+        {:content,
+         Workflow.event_callout("Build completed",
+           id: "portable-callout",
+           severity: :success,
+           timestamp: "2026-05-13T10:35:00Z"
+         )},
+        {:content,
+         Workflow.redline_inline("Draft", "Ready",
+           id: "portable-redline",
+           label: "Status change"
+         )},
+        {:content,
+         Workflow.code_block_syntax_highlighted("IO.puts(\"ready\")",
+           id: "portable-code",
+           language: :elixir,
+           wrap?: true
+         )},
+        {:content,
+         Workflow.chat_composer(
+           id: "portable-composer",
+           placeholder: "Add a review note",
+           submit_intent: :send_review,
+           actions: [send: "Send"]
+         )},
+        {:content, repeated}
+      ],
+      id: "portable-widget-grid",
+      columns: 3,
       gap: 2
     )
   end

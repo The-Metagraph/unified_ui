@@ -11,25 +11,28 @@ defmodule UnifiedUi.ValidationTest do
     assert report.parity.synchronized?
 
     assert report.example_coverage == %{
-             total_examples: 5,
+             total_examples: 6,
              categories: %{
                advanced_dashboard: 1,
                advanced_flow: 1,
                cross_cutting: 1,
                form_workflow: 1,
-               foundational: 1
+               foundational: 1,
+               portable_widgets: 1
              },
              covered_categories: [
                :advanced_dashboard,
                :advanced_flow,
                :cross_cutting,
                :form_workflow,
-               :foundational
+               :foundational,
+               :portable_widgets
              ],
              missing_categories: [],
              parity_obligations: [
                :advanced_widgets,
                :canvas_constructs,
+               :collection_constructs,
                :container_constructs,
                :data_widgets,
                :feedback_widgets,
@@ -38,7 +41,9 @@ defmodule UnifiedUi.ValidationTest do
                :input_widgets,
                :layer_constructs,
                :layout_constructs,
-               :navigation_widgets
+               :navigation_widgets,
+               :semantic_widgets,
+               :workflow_widgets
              ],
              missing_parity_obligations: [],
              validation_purposes: [

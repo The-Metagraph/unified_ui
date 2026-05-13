@@ -373,6 +373,7 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              UnifiedUi.Examples.ProfileForm,
              UnifiedUi.Examples.OverlayWorkspace,
              UnifiedUi.Examples.OperationsDashboard,
+             UnifiedUi.Examples.PortableWidgets,
              UnifiedUi.Examples.ThemedSignalWorkspace
            ]
 
@@ -381,6 +382,7 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :profile_form,
              :overlay_workspace,
              :operations_dashboard,
+             :portable_widgets,
              :themed_signal_workspace
            ]
 
@@ -389,6 +391,7 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :profile_form,
              :overlay_workspace,
              :operations_dashboard,
+             :portable_widgets,
              :themed_signal_workspace
            ]
 

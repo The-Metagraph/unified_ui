@@ -7,6 +7,7 @@ defmodule UnifiedUi.Examples do
     FoundationalScreen,
     OperationsDashboard,
     OverlayWorkspace,
+    PortableWidgets,
     ProfileForm,
     ThemedSignalWorkspace
   }
@@ -69,6 +70,25 @@ defmodule UnifiedUi.Examples do
         snapshot: "operations_dashboard.snapshot"
       },
       summary: "Operational dashboard covering data, feedback, and advanced monitoring widgets."
+    },
+    %{
+      id: :portable_widgets,
+      category: :portable_widgets,
+      scenario: :ash_ui_widget_portability,
+      module: PortableWidgets,
+      constructs: [:semantic, :workflow, :collection],
+      parity_obligations: [
+        :semantic_widgets,
+        :workflow_widgets,
+        :collection_constructs
+      ],
+      validation_purpose: [:docs, :coverage, :parity, :determinism],
+      review_artifact: %{
+        inspection: "portable_widgets.inspection",
+        snapshot: "portable_widgets.snapshot"
+      },
+      summary:
+        "Portable promoted widget and repeated collection coverage for AshUi-originated concepts."
     },
     %{
       id: :themed_signal_workspace,

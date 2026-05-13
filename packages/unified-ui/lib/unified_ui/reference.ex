@@ -74,6 +74,7 @@ defmodule UnifiedUi.Reference do
   def compiled_display_system_families do
     %{
       layout: UnifiedIUR.Layout.kinds(),
+      collection: UnifiedIUR.Collection.kinds(),
       layer: UnifiedIUR.Layer.kinds(),
       viewport: UnifiedIUR.Viewport.kinds(),
       canvas: UnifiedIUR.Canvas.kinds()

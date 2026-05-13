@@ -181,6 +181,7 @@ defmodule UnifiedUi.Phase3IntegrationTest do
              :profile_form,
              :overlay_workspace,
              :operations_dashboard,
+             :portable_widgets,
              :themed_signal_workspace
            ]
 

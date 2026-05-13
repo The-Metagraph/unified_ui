@@ -11,6 +11,7 @@ defmodule UnifiedUi.Phase6IntegrationTest do
              :profile_form,
              :overlay_workspace,
              :operations_dashboard,
+             :portable_widgets,
              :themed_signal_workspace
            ]
 
@@ -19,7 +20,8 @@ defmodule UnifiedUi.Phase6IntegrationTest do
              :advanced_flow,
              :cross_cutting,
              :form_workflow,
-             :foundational
+             :foundational,
+             :portable_widgets
            ]
 
     assert Examples.validation_purposes() == [

@@ -64,33 +64,33 @@ Back to index: [README](./README.md)
       [x] 2.2.2.2 Subtask - Define how row-scope bindings compose with existing data binding and interaction payload mapping descriptors.
       [x] 2.2.2.3 Subtask - Add diagnostics for bindings that escape row scope, reference unavailable aliases, or require renderer-local evaluation.
 
-  [ ] 2.3 Section - Compiler Lowering, Fixtures, and Review Output
+  [x] 2.3 Section - Compiler Lowering, Fixtures, and Review Output
     Lower authored declarations into canonical IUR and make the results
     testable through fixtures and tooling.
 
-    [ ] 2.3.1 Task - Lower promoted widgets and form shells from UnifiedUi to UnifiedIUR
+    [x] 2.3.1 Task - Lower promoted widgets and form shells from UnifiedUi to UnifiedIUR
       Extend the compiler pipeline so the new authored widgets produce stable
       canonical output.
 
-      [ ] 2.3.1.1 Subtask - Lower each promoted widget declaration into the matching canonical IUR node with content, style, state, and interaction meaning preserved.
-      [ ] 2.3.1.2 Subtask - Lower host-owned form shell declarations without introducing Phoenix form structs, Ash changesets, or runtime-specific lifecycle values.
-      [ ] 2.3.1.3 Subtask - Add compiler diagnostics when authored declarations cannot be represented in canonical IUR.
+      [x] 2.3.1.1 Subtask - Lower each promoted widget declaration into the matching canonical IUR node with content, style, state, and interaction meaning preserved.
+      [x] 2.3.1.2 Subtask - Lower host-owned form shell declarations without introducing Phoenix form structs, Ash changesets, or runtime-specific lifecycle values.
+      [x] 2.3.1.3 Subtask - Add compiler diagnostics when authored declarations cannot be represented in canonical IUR.
 
-    [ ] 2.3.2 Task - Lower repeated collection templates into canonical constructs
+    [x] 2.3.2 Task - Lower repeated collection templates into canonical constructs
       Extend the compiler pipeline so repeated templates become stable IUR
       constructs with preserved row-scope semantics.
 
-      [ ] 2.3.2.1 Subtask - Lower collection source, aliases, key expression, empty state, and child template into canonical repeated collection data.
-      [ ] 2.3.2.2 Subtask - Lower row-scope content, style, and interaction payload references into canonical binding descriptors.
-      [ ] 2.3.2.3 Subtask - Add canonical fixtures that cover promoted widgets inside and outside repeated collection templates.
+      [x] 2.3.2.1 Subtask - Lower collection source, aliases, key expression, empty state, and child template into canonical repeated collection data.
+      [x] 2.3.2.2 Subtask - Lower row-scope content, style, and interaction payload references into canonical binding descriptors.
+      [x] 2.3.2.3 Subtask - Add canonical fixtures that cover promoted widgets inside and outside repeated collection templates.
 
-    [ ] 2.3.3 Task - Extend canonical inspection, export, and validation tooling
+    [x] 2.3.3 Task - Extend canonical inspection, export, and validation tooling
       Make the new IUR surface visible, deterministic, and suitable for runtime
       conformance fixtures.
 
-      [ ] 2.3.3.1 Subtask - Update `unified_iur` inspection output to print promoted widget type, required semantic fields, degradation hints, and child template structure.
-      [ ] 2.3.3.2 Subtask - Update export and validation workflows to reject opaque integration-package escape hatches.
-      [ ] 2.3.3.3 Subtask - Add shared fixture files or fixture modules that every runtime can reuse to validate rendering parity.
+      [x] 2.3.3.1 Subtask - Update `unified_iur` inspection output to print promoted widget type, required semantic fields, degradation hints, and child template structure.
+      [x] 2.3.3.2 Subtask - Update export and validation workflows to reject opaque integration-package escape hatches.
+      [x] 2.3.3.3 Subtask - Add shared fixture files or fixture modules that every runtime can reuse to validate rendering parity.
 
   [ ] 2.4 Section - Phase 2 Integration Tests
     Validate compiler lowering, canonical representation, row-scope bindings,

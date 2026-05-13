@@ -25,6 +25,8 @@ defmodule UnifiedIUR.Inspect do
           styles: [map()],
           themes: [map()],
           interactions: [map()],
+          portable_widgets: [map()],
+          collections: [map()],
           diagnostics: map()
         }
 
@@ -71,6 +73,8 @@ defmodule UnifiedIUR.Inspect do
       styles: styles(element),
       themes: themes(element),
       interactions: interactions(element),
+      portable_widgets: portable_widgets(element),
+      collections: collections(element),
       diagnostics: Validate.diagnostics(element)
     }
   end
@@ -162,6 +166,56 @@ defmodule UnifiedIUR.Inspect do
     end)
   end
 
+  @spec portable_widgets(Element.t() | map() | keyword()) :: [map()]
+  def portable_widgets(input) do
+    input
+    |> Interoperability.walk()
+    |> Enum.flat_map(fn element ->
+      if portable_widget_kind?(element.kind) do
+        [
+          %{
+            id: element.id,
+            type: element.type,
+            kind: element.kind,
+            family: portable_widget_family(element.kind),
+            required_fields: required_fields(element.kind),
+            degradation_hints: degradation_hints(element.kind),
+            semantic_fields: semantic_fields(element)
+          }
+        ]
+      else
+        []
+      end
+    end)
+  end
+
+  @spec collections(Element.t() | map() | keyword()) :: [map()]
+  def collections(input) do
+    input
+    |> Interoperability.walk()
+    |> Enum.flat_map(fn
+      %Element{kind: :repeated_collection} = element ->
+        collection = Map.get(element.attributes, :collection, %{})
+        row_scope = Map.get(element.attributes, :row_scope, %{})
+
+        [
+          %{
+            id: element.id,
+            source: Map.get(collection, :source),
+            item_alias: Map.get(collection, :item_alias),
+            index_alias: Map.get(collection, :index_alias),
+            key_path: Map.get(collection, :key_path, []),
+            template: child_summary(element, :template),
+            empty_state: child_summary(element, :empty_state),
+            row_scope_bindings: Map.get(row_scope, :bindings, [])
+          }
+        ]
+
+      _element ->
+        []
+    end)
+  end
+
   @spec extension_metadata() :: map()
   def extension_metadata do
     %{
@@ -192,4 +246,59 @@ defmodule UnifiedIUR.Inspect do
   end
 
   defp indent(depth), do: String.duplicate("  ", depth)
+
+  defp portable_widget_kind?(kind) do
+    kind in UnifiedIUR.Widgets.semantic_kinds() or
+      kind in UnifiedIUR.Widgets.workflow_kinds() or kind == :host_form_shell
+  end
+
+  defp portable_widget_family(kind) do
+    cond do
+      kind in UnifiedIUR.Widgets.semantic_kinds() -> :semantic
+      kind in UnifiedIUR.Widgets.workflow_kinds() -> :workflow
+      kind == :host_form_shell -> :forms
+    end
+  end
+
+  defp required_fields(:host_form_shell), do: [[:form_shell, :owner], [:form_shell, :lifecycle]]
+  defp required_fields(:disclosure), do: [[:disclosure, :label]]
+  defp required_fields(:kicker), do: [[:kicker, :value]]
+  defp required_fields(:avatar), do: [[:avatar, :label]]
+  defp required_fields(:presence_dot), do: [[:presence, :status]]
+  defp required_fields(:segmented_button_group), do: [[:segments, :items]]
+  defp required_fields(:list_item_multi_column), do: [[:list_item, :columns]]
+  defp required_fields(:artifact_row), do: [[:artifact, :value], [:artifact, :title]]
+  defp required_fields(:sticky_header), do: [[:sticky_header, :title]]
+  defp required_fields(:pipeline_stepper_horizontal), do: [[:workflow, :steps]]
+  defp required_fields(:segmented_progress_bar), do: [[:progress, :segments]]
+  defp required_fields(:workflow_stage_list_vertical), do: [[:workflow, :stages]]
+  defp required_fields(:meter_thin), do: [[:meter, :current]]
+  defp required_fields(:slide_over_panel), do: [[:panel, :placement]]
+  defp required_fields(:event_callout), do: [[:callout, :message]]
+  defp required_fields(:redline_inline), do: [[:redline, :before_text], [:redline, :after_text]]
+  defp required_fields(:code_block_syntax_highlighted), do: [[:code_block, :code]]
+  defp required_fields(:chat_composer), do: [[:composer]]
+  defp required_fields(_kind), do: []
+
+  defp degradation_hints(:code_block_syntax_highlighted), do: [:plain_text_code_fallback]
+  defp degradation_hints(:slide_over_panel), do: [:inline_panel_fallback]
+  defp degradation_hints(:chat_composer), do: [:text_input_and_submit_fallback]
+  defp degradation_hints(:segmented_progress_bar), do: [:linear_progress_fallback]
+  defp degradation_hints(_kind), do: []
+
+  defp semantic_fields(%Element{} = element) do
+    element.attributes
+    |> Map.drop([:style, :theme, :bindings, :interactions, :interaction_scope])
+    |> Map.drop([:content, :accessibility, :state])
+  end
+
+  defp child_summary(%Element{} = element, slot) do
+    element.children
+    |> Enum.find(&(&1.slot == slot))
+    |> case do
+      nil -> nil
+      %{element: nil} -> nil
+      %{element: child} -> %{id: child.id, type: child.type, kind: child.kind}
+    end
+  end
 end

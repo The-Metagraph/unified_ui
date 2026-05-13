@@ -64,7 +64,8 @@ defmodule UnifiedUi.Tooling do
     :advanced_flow,
     :cross_cutting,
     :form_workflow,
-    :foundational
+    :foundational,
+    :portable_widgets
   ]
 
   @type inspection_result :: {:ok, map()} | {:error, map()}

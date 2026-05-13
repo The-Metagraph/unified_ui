@@ -9,6 +9,7 @@ defmodule UnifiedUi.ExamplesTest do
              UnifiedUi.Examples.ProfileForm,
              UnifiedUi.Examples.OverlayWorkspace,
              UnifiedUi.Examples.OperationsDashboard,
+             UnifiedUi.Examples.PortableWidgets,
              UnifiedUi.Examples.ThemedSignalWorkspace
            ]
 
@@ -17,6 +18,7 @@ defmodule UnifiedUi.ExamplesTest do
              :profile_form,
              :overlay_workspace,
              :operations_dashboard,
+             :portable_widgets,
              :themed_signal_workspace
            ]
 
@@ -25,7 +27,8 @@ defmodule UnifiedUi.ExamplesTest do
              :advanced_flow,
              :cross_cutting,
              :form_workflow,
-             :foundational
+             :foundational,
+             :portable_widgets
            ]
 
     assert Examples.validation_purposes() == [
@@ -68,12 +71,13 @@ defmodule UnifiedUi.ExamplesTest do
 
   test "reports aggregated example coverage for later tooling and validation" do
     assert Examples.coverage_report() == %{
-             total_examples: 5,
+             total_examples: 6,
              ids: [
                :foundational_screen,
                :profile_form,
                :overlay_workspace,
                :operations_dashboard,
+               :portable_widgets,
                :themed_signal_workspace
              ],
              categories: %{
@@ -81,11 +85,13 @@ defmodule UnifiedUi.ExamplesTest do
                advanced_flow: 1,
                cross_cutting: 1,
                form_workflow: 1,
-               foundational: 1
+               foundational: 1,
+               portable_widgets: 1
              },
              constructs: [
                :advanced,
                :canvas,
+               :collection,
                :data,
                :display,
                :feedback,
@@ -95,12 +101,15 @@ defmodule UnifiedUi.ExamplesTest do
                :layout,
                :navigation,
                :overlay,
+               :semantic,
                :signals,
-               :themes
+               :themes,
+               :workflow
              ],
              parity_obligations: [
                :advanced_widgets,
                :canvas_constructs,
+               :collection_constructs,
                :container_constructs,
                :data_widgets,
                :feedback_widgets,
@@ -109,7 +118,9 @@ defmodule UnifiedUi.ExamplesTest do
                :input_widgets,
                :layer_constructs,
                :layout_constructs,
-               :navigation_widgets
+               :navigation_widgets,
+               :semantic_widgets,
+               :workflow_widgets
              ],
              validation_purposes: [
                :coverage,
@@ -131,6 +142,7 @@ defmodule UnifiedUi.ExamplesTest do
              :profile_form,
              :overlay_workspace,
              :operations_dashboard,
+             :portable_widgets,
              :themed_signal_workspace
            ]
 
@@ -153,6 +165,25 @@ defmodule UnifiedUi.ExamplesTest do
                Enum.any?(
                  node.children,
                  &(&1.id == :release_notes and &1.kind == :markdown_viewer)
+               )
+           end)
+
+    portable_widgets =
+      Enum.find(summaries, &(&1.id == :portable_widgets))
+
+    assert portable_widgets.category == :portable_widgets
+    assert portable_widgets.constructs == [:semantic, :workflow, :collection]
+
+    assert Enum.any?(portable_widgets.composition, fn node ->
+             node.id == :portable_shell and
+               Enum.any?(node.children, &(&1.id == :latest_artifact and &1.kind == :artifact_row)) and
+               Enum.any?(
+                 node.children,
+                 &(&1.id == :release_pipeline and &1.kind == :pipeline_stepper_horizontal)
+               ) and
+               Enum.any?(
+                 node.children,
+                 &(&1.id == :artifact_rows and &1.kind == :repeated_collection)
                )
            end)
 

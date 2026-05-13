@@ -29,6 +29,13 @@ defmodule UnifiedIUR.ExportTest do
     assert navigation_snapshot =~ "action: :go_back"
     assert navigation_snapshot =~ "kind: :history_transition"
     refute navigation_snapshot =~ "screen:"
+
+    assert {:ok, portable_inspection} =
+             Export.fixture("portable_widgets--ash_ui_portability", :inspection)
+
+    assert portable_inspection =~ "portable_widgets"
+    assert portable_inspection =~ "code_block_syntax_highlighted"
+    assert portable_inspection =~ "portable-artifact-rows"
   end
 
   test "exports diagnostics and diff reports for maintainers" do

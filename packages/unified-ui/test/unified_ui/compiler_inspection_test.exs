@@ -212,6 +212,7 @@ defmodule UnifiedUi.CompilerInspectionTest do
              },
              display: %{
                layout: UnifiedIUR.Layout.kinds(),
+               collection: UnifiedIUR.Collection.kinds(),
                layer: UnifiedIUR.Layer.kinds(),
                viewport: UnifiedIUR.Viewport.kinds(),
                canvas: UnifiedIUR.Canvas.kinds()

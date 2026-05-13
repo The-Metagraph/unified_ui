@@ -7,6 +7,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
   alias Spark.Dsl.Extension
 
   alias UnifiedIUR.{
+    Collection,
     Container,
     Element,
     Forms,
@@ -447,6 +448,18 @@ defmodule UnifiedUi.Compiler.Pipeline do
             common_opts(node, attachments, [:submit_intent])
           )
 
+        :host_form_shell ->
+          Forms.host_form_shell(
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [
+              :owner,
+              :lifecycle,
+              :submit_intent,
+              :validation_summary,
+              :action_placement
+            ])
+          )
+
         :field_group ->
           Forms.field_group(
             lower_children(node, context, visited),
@@ -515,6 +528,131 @@ defmodule UnifiedUi.Compiler.Pipeline do
 
         :spacer ->
           Widgets.Foundational.spacer(common_opts(node, attachments, [:size, :grow]))
+
+        :disclosure ->
+          Widgets.Semantic.disclosure(
+            node.label || "",
+            common_opts(node, attachments, [:open?, :content_label])
+          )
+
+        :kicker ->
+          Widgets.Semantic.kicker(
+            node.value || "",
+            common_opts(node, attachments, [:icon, :role])
+          )
+
+        :avatar ->
+          Widgets.Semantic.avatar(
+            node.label || "",
+            common_opts(node, attachments, [:initials, :avatar_source, :status])
+          )
+
+        :presence_dot ->
+          Widgets.Semantic.presence_dot(
+            node.status || :unknown,
+            common_opts(node, attachments, [:label, :pulse?])
+          )
+
+        :segmented_button_group ->
+          Widgets.Semantic.segmented_button_group(
+            normalize_keyword_items(node.items || []),
+            common_opts(node, attachments, [:active_item, :selection_mode, :orientation])
+          )
+
+        :list_item_multi_column ->
+          Widgets.Semantic.list_item_multi_column(
+            compile_payload_value(node.columns || [], context.binding_by_id),
+            common_opts(node, attachments,
+              label: node.label,
+              value: compile_payload_value(node.value, context.binding_by_id),
+              status: node.status
+            )
+          )
+
+        :artifact_row ->
+          Widgets.Semantic.artifact_row(
+            compile_payload_value(node.artifact, context.binding_by_id),
+            node.title || "",
+            common_opts(node, attachments,
+              status: node.status,
+              timestamp: node.timestamp,
+              action_intent: node.action_intent
+            )
+          )
+
+        :sticky_header ->
+          Widgets.Semantic.sticky_header(
+            node.title || "",
+            common_opts(node, attachments, [:stuck?, :elevation])
+          )
+
+        :pipeline_stepper_horizontal ->
+          Widgets.Workflow.pipeline_stepper_horizontal(
+            normalize_list_or_keyword(node.steps),
+            common_opts(node, attachments, [:active_item, :status])
+          )
+
+        :segmented_progress_bar ->
+          Widgets.Workflow.segmented_progress_bar(
+            normalize_list_or_keyword(node.segments),
+            common_opts(node, attachments,
+              current: node.current,
+              maximum: node.maximum,
+              label: node.label
+            )
+          )
+
+        :workflow_stage_list_vertical ->
+          Widgets.Workflow.workflow_stage_list_vertical(
+            normalize_list_or_keyword(node.stages),
+            common_opts(node, attachments, [:active_item, :status])
+          )
+
+        :meter_thin ->
+          Widgets.Workflow.meter_thin(
+            node.current || 0,
+            common_opts(node, attachments,
+              minimum: node.minimum,
+              maximum: node.maximum,
+              label: node.label,
+              severity: node.severity
+            )
+          )
+
+        :slide_over_panel ->
+          Widgets.Workflow.slide_over_panel(
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [:title, :placement, :visible?, :modal?])
+          )
+
+        :event_callout ->
+          Widgets.Workflow.event_callout(
+            node.message || "",
+            common_opts(node, attachments, [:title, :severity, :timestamp])
+          )
+
+        :redline_inline ->
+          Widgets.Workflow.redline_inline(
+            node.before_text || "",
+            node.after_text || "",
+            common_opts(node, attachments, [:label])
+          )
+
+        :code_block_syntax_highlighted ->
+          Widgets.Workflow.code_block_syntax_highlighted(
+            node.code || "",
+            common_opts(node, attachments, [:language, :label, :wrap?])
+          )
+
+        :chat_composer ->
+          Widgets.Workflow.chat_composer(
+            common_opts(node, attachments,
+              placeholder: node.placeholder,
+              submit_intent: node.submit_intent,
+              actions: node.actions,
+              multiline?: node.multiline?
+            )
+          )
 
         :text_input ->
           Widgets.Input.text_input(
@@ -825,6 +963,9 @@ defmodule UnifiedUi.Compiler.Pipeline do
             common_opts(node, attachments, [:width, :height])
           )
 
+        :repeated_collection ->
+          lower_repeated_collection(node, context, visited, attachments)
+
         other ->
           generic_element(element_type(node.family), other, node, attachments, %{
             authored: %{
@@ -859,6 +1000,112 @@ defmodule UnifiedUi.Compiler.Pipeline do
     Enum.map(node.children, fn child ->
       Element.Child.new(:default, lower_node(child, context, visited))
     end)
+  end
+
+  defp lower_repeated_collection(node, context, visited, attachments) do
+    template =
+      case node.children do
+        [template_node | _rest] -> lower_collection_template(template_node, context, visited)
+        [] -> nil
+      end
+
+    Collection.repeated_collection(
+      template,
+      common_opts(node, attachments,
+        source: compile_collection_source(node.collection_source, context),
+        item_alias: node.item_alias,
+        index_alias: node.index_alias,
+        key_path: node.key_path,
+        empty_state: node.empty_state,
+        row_scope_bindings: [
+          IURBinding.row_key(node.item_alias || :item, node.key_path || []),
+          IURBinding.row_index(node.index_alias || :index)
+        ]
+      )
+    )
+  end
+
+  defp lower_collection_template(node, context, visited) do
+    attachments = node_attachments(node, context)
+    children = lower_template_children(node.template_children, context, visited)
+
+    case node.kind do
+      :box -> Container.box(children, common_opts(node, attachments, [:gap]))
+      :row -> Layout.row(children, common_opts(node, attachments, [:gap, :align, :justify]))
+      :column -> Layout.column(children, common_opts(node, attachments, [:gap, :align, :justify]))
+      :grid -> Layout.grid(children, common_opts(node, attachments, [:columns, :rows, :gap]))
+      :stack -> Layout.stack(children, common_opts(node, attachments, [:gap, :align]))
+      _other -> lower_node(node, context, visited)
+    end
+  end
+
+  defp lower_template_children(children, context, visited) do
+    children
+    |> List.wrap()
+    |> Enum.map(fn descriptor ->
+      Element.Child.new(:default, lower_template_descriptor(descriptor, context, visited))
+    end)
+  end
+
+  defp lower_template_descriptor(%Node{} = node, context, visited) do
+    lower_node(node, context, visited)
+  end
+
+  defp lower_template_descriptor(descriptor, context, visited) when is_map(descriptor) do
+    descriptor = normalize_map(descriptor)
+    kind = Map.fetch!(descriptor, :kind)
+
+    node =
+      Node
+      |> struct(descriptor)
+      |> Map.put(:family, Map.get(descriptor, :family, template_family_for_kind(kind)))
+      |> Map.put(:kind, kind)
+
+    lower_node(node, context, visited)
+  end
+
+  defp compile_collection_source(source, context) do
+    cond do
+      UnifiedUi.Binding.reference?(source) ->
+        ref = UnifiedUi.Binding.new(%{depends_on: [source]}).depends_on |> List.first()
+
+        case Map.get(context.binding_by_id, ref.id) do
+          nil ->
+            IURBinding.new(%{
+              name: ref.id,
+              path: [ref.id],
+              source: :binding_ref,
+              collection?: true,
+              metadata: %{binding_ref: ref.id, unresolved?: true}
+            })
+
+          binding ->
+            %{binding | collection?: true}
+        end
+
+      is_atom(source) or is_binary(source) ->
+        IURBinding.new(name: source, path: [source], source: :binding, collection?: true)
+
+      is_list(source) or is_map(source) ->
+        IURBinding.new(%{
+          name: source |> normalize_map() |> Map.get(:name),
+          path: source |> normalize_map() |> Map.get(:path, []),
+          value:
+            compile_payload_value(
+              source |> normalize_map() |> Map.get(:value),
+              context.binding_by_id
+            ),
+          source: source |> normalize_map() |> Map.get(:source, :literal),
+          collection?: true,
+          metadata:
+            source
+            |> normalize_map()
+            |> Map.take([:relationship, :resource, :ash_relationship, :ash_resource])
+        })
+
+      true ->
+        IURBinding.new(value: source, source: :literal, collection?: true)
+    end
   end
 
   defp lower_viewport(node, context, visited, attachments) do
@@ -1256,6 +1503,9 @@ defmodule UnifiedUi.Compiler.Pipeline do
 
   defp compile_payload_value(value, binding_by_id) when is_map(value) do
     cond do
+      UnifiedUi.RowScope.reference?(value) ->
+        compile_row_scope_ref(value)
+
       UnifiedUi.Binding.reference?(value) ->
         compile_binding_ref_value(value, binding_by_id)
 
@@ -1275,6 +1525,18 @@ defmodule UnifiedUi.Compiler.Pipeline do
   end
 
   defp compile_payload_value(value, _binding_by_id), do: value
+
+  defp compile_row_scope_ref(ref) do
+    ref = normalize_map(ref)
+    kind = Map.get(ref, :kind)
+    row_alias = Map.get(ref, :alias)
+
+    case kind do
+      :row_value -> IURBinding.row_value(row_alias || :item, Map.get(ref, :path, []))
+      :row_index -> IURBinding.row_index(row_alias || :index)
+      :row_key -> IURBinding.row_key(row_alias || :item, Map.get(ref, :path, []))
+    end
+  end
 
   defp compile_named_payload_value(key, value, binding_by_id)
        when key in [:binding, "binding"] and (is_atom(value) or is_binary(value)) do
@@ -1321,6 +1583,14 @@ defmodule UnifiedUi.Compiler.Pipeline do
     end)
   end
 
+  defp normalize_list_or_keyword(nil), do: []
+
+  defp normalize_list_or_keyword(items) when is_list(items) do
+    if Keyword.keyword?(items), do: normalize_keyword_items(items), else: items
+  end
+
+  defp normalize_list_or_keyword(items) when is_map(items), do: normalize_map(items)
+
   defp normalize_table_columns(columns) when is_list(columns) do
     Enum.map(columns, fn
       {id, label} -> %{id: id, label: label}
@@ -1358,6 +1628,19 @@ defmodule UnifiedUi.Compiler.Pipeline do
   defp element_type(:display), do: :layout
   defp element_type(:canvas), do: :widget
   defp element_type(_family), do: :widget
+
+  defp template_family_for_kind(kind) do
+    cond do
+      kind in UnifiedUi.Widgets.semantic_kinds() -> :semantic
+      kind in UnifiedUi.Widgets.workflow_kinds() -> :workflow
+      kind in Widgets.Foundational.kinds() -> :foundational
+      kind in Widgets.Data.kinds() -> :data
+      kind in Widgets.Feedback.kinds() -> :feedback
+      kind in Widgets.Advanced.kinds() -> :advanced
+      kind in Layout.kinds() -> :layout
+      true -> :foundational
+    end
+  end
 
   defp flatten_nodes(nodes) when is_list(nodes) do
     Enum.flat_map(nodes, fn %Node{children: children} = node ->
