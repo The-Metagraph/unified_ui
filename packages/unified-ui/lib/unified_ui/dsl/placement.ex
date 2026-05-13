@@ -60,6 +60,11 @@ defmodule UnifiedUi.Dsl.Placement do
       id: :canvas_operations_require_kind_and_position,
       description:
         "Canvas operations must declare a supported kind and positioned coordinate metadata so direct drawing remains portable."
+    },
+    %{
+      id: :repeated_collection_requires_portable_row_template,
+      description:
+        "Repeated collections must declare a portable list source, stable key path, and exactly one widget or layout child template."
     }
   ]
 

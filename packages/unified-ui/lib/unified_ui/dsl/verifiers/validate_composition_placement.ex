@@ -24,10 +24,12 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
     end
   end
 
-  defp validate_nodes(nodes, node_index) do
+  defp validate_nodes(nodes, node_index, row_scope \\ nil) do
     Enum.reduce_while(nodes, :ok, fn node, _acc ->
-      case validate_node(node, node_index) do
-        :ok -> {:cont, :ok}
+      with :ok <- validate_node_row_scope(node, row_scope),
+           :ok <- validate_node(node, node_index, row_scope) do
+        {:cont, :ok}
+      else
         {:error, _path, _message} = error -> {:halt, error}
       end
     end)
@@ -41,7 +43,58 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
     end)
   end
 
-  defp validate_node(%Node{kind: :field, id: id, children: children}, node_index) do
+  defp validate_node(
+         %Node{
+           kind: :repeated_collection,
+           id: id,
+           collection_source: collection_source,
+           item_alias: item_alias,
+           index_alias: index_alias,
+           key_path: key_path,
+           children: children
+         },
+         node_index,
+         row_scope
+       ) do
+    cond do
+      not is_nil(row_scope) ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} may not be nested inside another repeated_collection"}
+
+      invalid_collection_source?(collection_source) ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} must use a portable collection_source and must not use Ash resource relationships or renderer-local iteration callbacks"}
+
+      not valid_alias?(item_alias) ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} must declare item_alias as an atom"}
+
+      not valid_alias?(index_alias) ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} must declare index_alias as an atom"}
+
+      item_alias == index_alias ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} must use distinct item_alias and index_alias values"}
+
+      not valid_key_path?(key_path) ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} must declare a non-empty atom key_path for stable row identity"}
+
+      length(children) != 1 ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} must declare exactly one child template"}
+
+      invalid_template_child?(List.first(children)) ->
+        {:error, [:composition, :repeated_collection, id],
+         "repeated_collection #{inspect(id)} child template must be a widget or layout and may not be a layer, display, canvas, or nested collection"}
+
+      true ->
+        validate_nodes(children, node_index, %{item_alias: item_alias, index_alias: index_alias})
+    end
+  end
+
+  defp validate_node(%Node{kind: :field, id: id, children: children}, node_index, row_scope) do
     cond do
       length(children) != 1 ->
         {:error, [:composition, :field, id],
@@ -52,13 +105,14 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
          "field #{inspect(id)} may only contain input controls"}
 
       true ->
-        validate_nodes(children, node_index)
+        validate_nodes(children, node_index, row_scope)
     end
   end
 
   defp validate_node(
          %Node{kind: :dialog, id: id, content_ref: content_ref, trigger_ref: trigger_ref},
-         node_index
+         node_index,
+         _row_scope
        ) do
     with :ok <- validate_required_ref(:dialog, id, :content_ref, content_ref, node_index),
          :ok <- validate_non_overlay_target(:dialog, id, :content_ref, content_ref, node_index),
@@ -69,7 +123,8 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
 
   defp validate_node(
          %Node{kind: :context_menu, id: id, target_ref: target_ref, trigger_ref: trigger_ref},
-         node_index
+         node_index,
+         _row_scope
        ) do
     with :ok <- validate_required_ref(:context_menu, id, :target_ref, target_ref, node_index),
          :ok <- validate_optional_ref(:context_menu, id, :trigger_ref, trigger_ref, node_index) do
@@ -79,18 +134,24 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
 
   defp validate_node(
          %Node{kind: :alert_dialog, id: id, trigger_ref: trigger_ref},
-         node_index
+         node_index,
+         _row_scope
        ) do
     validate_optional_ref(:alert_dialog, id, :trigger_ref, trigger_ref, node_index)
   end
 
-  defp validate_node(%Node{kind: :toast, id: id, trigger_ref: trigger_ref}, node_index) do
+  defp validate_node(
+         %Node{kind: :toast, id: id, trigger_ref: trigger_ref},
+         node_index,
+         _row_scope
+       ) do
     validate_optional_ref(:toast, id, :trigger_ref, trigger_ref, node_index)
   end
 
   defp validate_node(
          %Node{kind: :scroll_bar, id: id, target_ref: target_ref},
-         node_index
+         node_index,
+         _row_scope
        ) do
     with :ok <- validate_required_ref(:scroll_bar, id, :target_ref, target_ref, node_index),
          :ok <-
@@ -104,7 +165,8 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
 
   defp validate_node(
          %Node{kind: :split_pane, id: id, primary_ref: primary_ref, secondary_ref: secondary_ref},
-         node_index
+         node_index,
+         _row_scope
        ) do
     cond do
       is_nil(primary_ref) or is_nil(secondary_ref) ->
@@ -137,7 +199,7 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
     end
   end
 
-  defp validate_node(%Node{kind: kind, id: id, content_ref: content_ref}, node_index)
+  defp validate_node(%Node{kind: kind, id: id, content_ref: content_ref}, node_index, _row_scope)
        when kind in [:viewport, :scroll_region] do
     with :ok <- validate_required_ref(kind, id, :content_ref, content_ref, node_index),
          :ok <- validate_non_overlay_target(kind, id, :content_ref, content_ref, node_index) do
@@ -147,7 +209,8 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
 
   defp validate_node(
          %Node{kind: :overlay, id: id, base_ref: base_ref, layer_refs: layer_refs},
-         node_index
+         node_index,
+         _row_scope
        ) do
     with :ok <- validate_required_ref(:overlay, id, :base_ref, base_ref, node_index),
          :ok <- validate_non_overlay_target(:overlay, id, :base_ref, base_ref, node_index),
@@ -158,7 +221,8 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
 
   defp validate_node(
          %Node{kind: :absolute, id: id, content_ref: content_ref, target_ref: target_ref},
-         node_index
+         node_index,
+         _row_scope
        ) do
     cond do
       content_ref == target_ref ->
@@ -177,11 +241,15 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
     end
   end
 
-  defp validate_node(%Node{kind: :canvas, id: id, operations: operations}, _node_index) do
+  defp validate_node(
+         %Node{kind: :canvas, id: id, operations: operations},
+         _node_index,
+         _row_scope
+       ) do
     validate_canvas_operations(id, operations)
   end
 
-  defp validate_node(%Node{kind: kind, id: id, children: children}, _node_index)
+  defp validate_node(%Node{kind: kind, id: id, children: children}, _node_index, _row_scope)
        when kind in @leaf_kinds do
     if children == [] do
       :ok
@@ -191,18 +259,160 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateCompositionPlacement do
     end
   end
 
-  defp validate_node(%Node{kind: kind, children: children}, node_index)
+  defp validate_node(%Node{kind: kind, children: children}, node_index, row_scope)
        when kind in @layout_kinds do
-    validate_nodes(children, node_index)
+    validate_nodes(children, node_index, row_scope)
   end
 
-  defp validate_node(%Node{kind: kind, children: children}, node_index)
+  defp validate_node(%Node{kind: kind, children: children}, node_index, row_scope)
        when kind in @container_kinds do
-    validate_nodes(children, node_index)
+    validate_nodes(children, node_index, row_scope)
   end
 
-  defp validate_node(%Node{children: children}, node_index) do
-    validate_nodes(children, node_index)
+  defp validate_node(%Node{children: children}, node_index, row_scope) do
+    validate_nodes(children, node_index, row_scope)
+  end
+
+  defp validate_node_row_scope(%Node{} = node, row_scope) do
+    node
+    |> node_own_values()
+    |> collect_row_scope_refs()
+    |> validate_row_scope_refs(node, row_scope)
+  end
+
+  defp node_own_values(%Node{} = node) do
+    node
+    |> Map.from_struct()
+    |> Map.drop([:__identifier__, :children])
+    |> Map.values()
+  end
+
+  defp validate_row_scope_refs([], _node, _row_scope), do: :ok
+
+  defp validate_row_scope_refs(_refs, %Node{kind: kind, id: id}, nil) do
+    {:error, [:composition, kind, id],
+     "#{kind} #{inspect(id)} uses row-scope references outside a repeated_collection template"}
+  end
+
+  defp validate_row_scope_refs(refs, %Node{kind: kind, id: id}, row_scope) do
+    allowed_aliases = [row_scope.item_alias, row_scope.index_alias]
+
+    Enum.reduce_while(refs, :ok, fn ref, _acc ->
+      alias_name = row_scope_alias(ref)
+
+      if is_nil(alias_name) or alias_name in allowed_aliases do
+        {:cont, :ok}
+      else
+        {:halt,
+         {:error, [:composition, kind, id],
+          "#{kind} #{inspect(id)} references unavailable row alias #{inspect(alias_name)}"}}
+      end
+    end)
+  end
+
+  defp collect_row_scope_refs(values) when is_list(values) do
+    Enum.flat_map(values, &collect_row_scope_refs/1)
+  end
+
+  defp collect_row_scope_refs(%{kind: kind} = value)
+       when kind in [:row_value, :row_index, :row_key] do
+    [value]
+  end
+
+  defp collect_row_scope_refs(%{"kind" => kind} = value)
+       when kind in [:row_value, :row_index, :row_key] do
+    [value]
+  end
+
+  defp collect_row_scope_refs(%_struct{}), do: []
+
+  defp collect_row_scope_refs(values) when is_map(values) do
+    values
+    |> Map.values()
+    |> collect_row_scope_refs()
+  end
+
+  defp collect_row_scope_refs(_other), do: []
+
+  defp row_scope_alias(ref) when is_map(ref) do
+    Map.get(ref, :alias) || Map.get(ref, "alias")
+  end
+
+  defp invalid_collection_source?(nil), do: true
+  defp invalid_collection_source?(source) when is_function(source), do: true
+
+  defp invalid_collection_source?(source) when is_atom(source) do
+    source in [:ash_resource, :ash_relationship, :relationship, :resource]
+  end
+
+  defp invalid_collection_source?(source) when is_binary(source) do
+    source
+    |> String.downcase()
+    |> String.contains?(["ash", "relationship", "resource"])
+  end
+
+  defp invalid_collection_source?(source) when is_list(source) do
+    Enum.any?(source, fn
+      {key, value} -> invalid_collection_source_key?(key) or invalid_collection_source?(value)
+      value -> invalid_collection_source?(value)
+    end)
+  end
+
+  defp invalid_collection_source?(source) when is_map(source) do
+    Enum.any?(source, fn {key, value} ->
+      invalid_collection_source_key?(key) or invalid_collection_source?(value)
+    end)
+  end
+
+  defp invalid_collection_source?(_source), do: false
+
+  defp invalid_collection_source_key?(key)
+       when key in [
+              :ash,
+              :ash_resource,
+              :ash_relationship,
+              :resource,
+              :relationship,
+              :relationships,
+              :for_each,
+              :render,
+              :render_item,
+              :callback,
+              :component
+            ],
+       do: true
+
+  defp invalid_collection_source_key?(key) when is_binary(key) do
+    String.downcase(key) in [
+      "ash",
+      "ash_resource",
+      "ash_relationship",
+      "resource",
+      "relationship",
+      "relationships",
+      "for_each",
+      "render",
+      "render_item",
+      "callback",
+      "component"
+    ]
+  end
+
+  defp invalid_collection_source_key?(_key), do: false
+
+  defp valid_alias?(alias_name), do: is_atom(alias_name) and not is_nil(alias_name)
+
+  defp valid_key_path?(key_path) do
+    is_list(key_path) and key_path != [] and Enum.all?(key_path, &is_atom/1)
+  end
+
+  defp invalid_template_child?(nil), do: true
+
+  defp invalid_template_child?(%Node{kind: :repeated_collection}), do: true
+
+  defp invalid_template_child?(%Node{family: family, children: children}) do
+    family in [:collection, :overlay, :display, :canvas] or
+      Enum.any?(children || [], &invalid_template_child?/1)
   end
 
   defp validate_required_ref(kind, id, field, ref, node_index) do

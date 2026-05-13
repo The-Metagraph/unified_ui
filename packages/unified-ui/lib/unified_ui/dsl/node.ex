@@ -13,6 +13,7 @@ defmodule UnifiedUi.Dsl.Node do
           | :feedback
           | :semantic
           | :workflow
+          | :collection
           | :advanced
           | :overlay
           | :display
@@ -76,6 +77,11 @@ defmodule UnifiedUi.Dsl.Node do
           code: String.t() | nil,
           language: atom() | nil,
           actions: keyword(),
+          collection_source: term(),
+          item_alias: atom() | nil,
+          index_alias: atom() | nil,
+          key_path: [atom()] | nil,
+          template_children: term(),
           owner: atom() | nil,
           lifecycle: atom() | nil,
           validation_summary: String.t() | nil,
@@ -224,6 +230,11 @@ defmodule UnifiedUi.Dsl.Node do
             code: nil,
             language: nil,
             actions: [],
+            collection_source: nil,
+            item_alias: nil,
+            index_alias: nil,
+            key_path: nil,
+            template_children: nil,
             owner: nil,
             lifecycle: nil,
             validation_summary: nil,
@@ -357,6 +368,11 @@ defmodule UnifiedUi.Dsl.Node do
       code: node.code,
       language: node.language,
       actions: node.actions,
+      collection_source: node.collection_source,
+      item_alias: node.item_alias,
+      index_alias: node.index_alias,
+      key_path: node.key_path,
+      template_children: node.template_children,
       owner: node.owner,
       lifecycle: node.lifecycle,
       validation_summary: node.validation_summary,

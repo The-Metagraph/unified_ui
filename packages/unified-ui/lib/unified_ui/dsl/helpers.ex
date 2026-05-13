@@ -6,6 +6,7 @@ defmodule UnifiedUi.Dsl.Helpers do
   alias UnifiedIUR.Style.Color
   alias UnifiedIUR.Token
   alias UnifiedUi.Binding
+  alias UnifiedUi.RowScope
   alias UnifiedUi.Style
 
   @spec annotation_map(keyword() | map() | nil) :: map()
@@ -47,4 +48,15 @@ defmodule UnifiedUi.Dsl.Helpers do
 
   @spec binding_ref(atom() | String.t()) :: Binding.ref_t()
   def binding_ref(id), do: Binding.ref(id)
+
+  @spec row_value(RowScope.path_segment() | [RowScope.path_segment()], keyword()) ::
+          RowScope.value_ref()
+  def row_value(path, opts \\ []), do: RowScope.value(path, opts)
+
+  @spec row_index(keyword()) :: RowScope.index_ref()
+  def row_index(opts \\ []), do: RowScope.index(opts)
+
+  @spec row_key(RowScope.path_segment() | [RowScope.path_segment()], keyword()) ::
+          RowScope.key_ref()
+  def row_key(path, opts \\ []), do: RowScope.key(path, opts)
 end

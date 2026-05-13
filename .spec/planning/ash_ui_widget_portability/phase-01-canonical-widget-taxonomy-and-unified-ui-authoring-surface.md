@@ -53,25 +53,25 @@ Back to index: [README](./README.md)
       [x] 1.1.3.2 Subtask - Define how form shell authoring composes existing canonical field, form builder, and action widgets without naming Phoenix or AshPhoenix APIs.
       [x] 1.1.3.3 Subtask - Add diagnostics for Phoenix-specific, Ash-specific, or runtime-owned form lifecycle declarations that do not belong in the canonical DSL.
 
-  [ ] 1.2 Section - Repeated Collection Authoring
+  [x] 1.2 Section - Repeated Collection Authoring
     Implement the authored repeated-collection template surface and row-scope
     binding rules.
 
-    [ ] 1.2.1 Task - Define the repeated collection DSL shape
+    [x] 1.2.1 Task - Define the repeated collection DSL shape
       Establish how authors bind list data to one child widget or layout
       template per item.
 
-      [ ] 1.2.1.1 Subtask - Define the authored fields for collection source, item alias, index alias, key expression, empty state, and child template.
-      [ ] 1.2.1.2 Subtask - Define row-scope value references for child widgets, styles, and interaction payload mappings.
-      [ ] 1.2.1.3 Subtask - Reject Ash relationship names, resource traversal assumptions, and renderer-local iteration callbacks in canonical repeated collection declarations.
+      [x] 1.2.1.1 Subtask - Define the authored fields for collection source, item alias, index alias, key expression, empty state, and child template.
+      [x] 1.2.1.2 Subtask - Define row-scope value references for child widgets, styles, and interaction payload mappings.
+      [x] 1.2.1.3 Subtask - Reject Ash relationship names, resource traversal assumptions, and renderer-local iteration callbacks in canonical repeated collection declarations.
 
-    [ ] 1.2.2 Task - Integrate repeated templates with existing composition rules
+    [x] 1.2.2 Task - Integrate repeated templates with existing composition rules
       Make repeated collection templates fit existing widget, layout, style, and
       interaction authoring rules.
 
-      [ ] 1.2.2.1 Subtask - Ensure repeated templates can contain promoted widgets, existing widgets, layouts, bindings, style variants, and theme references.
-      [ ] 1.2.2.2 Subtask - Define parent-child placement constraints for repeated templates so they cannot create invalid layer or overlay structures.
-      [ ] 1.2.2.3 Subtask - Add compile-time diagnostics for ambiguous row scope, invalid child placement, missing keys where required, and unsupported nested collection shapes.
+      [x] 1.2.2.1 Subtask - Ensure repeated templates can contain promoted widgets, existing widgets, layouts, bindings, style variants, and theme references.
+      [x] 1.2.2.2 Subtask - Define parent-child placement constraints for repeated templates so they cannot create invalid layer or overlay structures.
+      [x] 1.2.2.3 Subtask - Add compile-time diagnostics for ambiguous row scope, invalid child placement, missing keys where required, and unsupported nested collection shapes.
 
   [ ] 1.3 Section - Authoring Introspection and Guidance
     Make the new authoring surface discoverable and reviewable through

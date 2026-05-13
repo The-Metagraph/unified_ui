@@ -6,6 +6,7 @@ defmodule UnifiedUi.Dsl.Entities do
   alias UnifiedUi.Dsl.Entities.{
     Advanced,
     Canvas,
+    Collection,
     Data,
     Display,
     Feedback,
@@ -30,6 +31,7 @@ defmodule UnifiedUi.Dsl.Entities do
       :workflow_document,
       :operational
     ],
+    composition: [:repeated_collection],
     layouts: [:container, :row, :column, :grid, :stack, :split, :viewport],
     layers: [:overlay, :absolute, :modal, :toast, :menu, :canvas],
     styles: [:typography, :color, :spacing, :sizing, :alignment, :border, :visibility],
@@ -58,6 +60,7 @@ defmodule UnifiedUi.Dsl.Entities do
       Feedback.entities() ++
       Semantic.entities() ++
       Workflow.entities() ++
+      Collection.entities() ++
       Advanced.entities() ++
       Overlay.entities() ++
       Display.entities() ++

@@ -210,6 +210,7 @@ defmodule UnifiedUi.Phase3IntegrationTest do
                :layer_refs_must_target_overlay_nodes,
                :leaf_nodes_cannot_have_children,
                :overlay_content_refs_must_resolve,
+               :repeated_collection_requires_portable_row_template,
                :required_identity_and_composition_sections,
                :root_identifier_must_differ_from_module_identifier,
                :split_pane_refs_must_be_distinct,
