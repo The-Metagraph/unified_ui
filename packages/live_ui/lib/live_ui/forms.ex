@@ -5,6 +5,7 @@ defmodule LiveUi.Forms do
 
   @modules [
     LiveUi.Forms.FormBuilder,
+    LiveUi.Forms.HostFormShell,
     LiveUi.Forms.FieldGroup,
     LiveUi.Forms.Field
   ]

@@ -19,6 +19,28 @@ defmodule LiveUi.Demo.Screen do
   end
 
   @impl true
+  def event_routes do
+    %{
+      "click:widget_demo_button" => :preview_interaction,
+      "navigation:widget_demo_link" => :preview_interaction,
+      "change:widget_demo_text_input" => :preview_interaction,
+      "change:widget_demo_toggle" => :preview_interaction,
+      "change:widget_demo_select" => :preview_interaction,
+      "click:widget_demo_menu" => :preview_interaction,
+      "selection:widget_demo_tabs" => :preview_interaction,
+      "selection:widget_demo_list" => :preview_interaction,
+      "selection:widget_demo_table" => :preview_interaction,
+      "selection:widget_demo_tree" => :preview_interaction,
+      "click:widget_demo_context_menu" => :preview_interaction,
+      "change:widget_demo_command_query" => :preview_interaction,
+      "selection:widget_demo_command_palette" => :preview_interaction
+    }
+  end
+
+  @impl true
+  def handle_event(:preview_interaction, _payload, assigns), do: {:ok, assigns}
+
+  @impl true
   def render(assigns) do
     current_category =
       Catalog.normalize_category(assigns.selected_category) || Catalog.default_category()

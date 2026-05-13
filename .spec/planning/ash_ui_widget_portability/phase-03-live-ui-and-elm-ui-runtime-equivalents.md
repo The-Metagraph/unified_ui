@@ -26,25 +26,25 @@ Back to index: [README](./README.md)
   promoted widgets and repeated collection construct in `live_ui` and
   `elm_ui`.
 
-  [ ] 3.1 Section - LiveUi Native and IUR Runtime Support
+  [x] 3.1 Section - LiveUi Native and IUR Runtime Support
     Add LiveView-native widgets and canonical rendering paths for the promoted
     surface.
 
-    [ ] 3.1.1 Task - Implement LiveUi semantic and workflow widget equivalents
+    [x] 3.1.1 Task - Implement LiveUi semantic and workflow widget equivalents
       Provide direct native `live_ui` widgets for the promoted canonical
       surface while preserving LiveView ergonomics.
 
-      [ ] 3.1.1.1 Subtask - Add native LiveView components or helpers for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
-      [ ] 3.1.1.2 Subtask - Preserve accessible labels, keyboard behavior, focus management, state transitions, and event bindings using LiveView-native conventions.
-      [ ] 3.1.1.3 Subtask - Add native `live_ui` tests for component rendering, event emission, slot handling, and style-token application.
+      [x] 3.1.1.1 Subtask - Add native LiveView components or helpers for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
+      [x] 3.1.1.2 Subtask - Preserve accessible labels, keyboard behavior, focus management, state transitions, and event bindings using LiveView-native conventions.
+      [x] 3.1.1.3 Subtask - Add native `live_ui` tests for component rendering, event emission, slot handling, and style-token application.
 
-    [ ] 3.1.2 Task - Implement LiveUi IUR rendering and host form shell support
+    [x] 3.1.2 Task - Implement LiveUi IUR rendering and host form shell support
       Make canonical IUR promoted widgets render through the same runtime
       behaviors as the native surface.
 
-      [ ] 3.1.2.1 Subtask - Extend the `live_ui` IUR renderer to consume every promoted canonical widget node and repeated collection construct.
-      [ ] 3.1.2.2 Subtask - Map host-owned form shell IUR data onto LiveView form lifecycle integration without reintroducing Phoenix-specific fields into canonical data.
-      [ ] 3.1.2.3 Subtask - Add rendering tests that compare native widget output and IUR-rendered output for equivalent semantic cases.
+      [x] 3.1.2.1 Subtask - Extend the `live_ui` IUR renderer to consume every promoted canonical widget node and repeated collection construct.
+      [x] 3.1.2.2 Subtask - Map host-owned form shell IUR data onto LiveView form lifecycle integration without reintroducing Phoenix-specific fields into canonical data.
+      [x] 3.1.2.3 Subtask - Add rendering tests that compare native widget output and IUR-rendered output for equivalent semantic cases.
 
   [ ] 3.2 Section - ElmUi Native and IUR Runtime Support
     Add Phoenix-plus-Elm runtime widgets and canonical rendering paths for the

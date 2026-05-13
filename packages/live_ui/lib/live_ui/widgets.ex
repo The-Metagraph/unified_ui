@@ -10,6 +10,9 @@ defmodule LiveUi.Widgets do
           | :feedback
           | :layout
           | :overlay
+          | :semantic
+          | :workflow
+          | :collection
           | :data
           | :operational
           | :display
@@ -18,14 +21,29 @@ defmodule LiveUi.Widgets do
 
   @spec families() :: [family()]
   def families do
-    [:content, :input, :navigation, :feedback, :layout, :overlay, :data, :operational, :display]
+    [
+      :content,
+      :input,
+      :navigation,
+      :feedback,
+      :layout,
+      :overlay,
+      :semantic,
+      :workflow,
+      :collection,
+      :data,
+      :operational,
+      :display
+    ]
   end
 
   @spec modules() :: [widget_module()]
   def modules do
     foundational_modules() ++
       input_modules() ++
-      navigation_modules() ++ advanced_modules() ++ overlay_modules() ++ display_modules()
+      navigation_modules() ++
+      advanced_modules() ++
+      overlay_modules() ++ portable_modules() ++ collection_modules() ++ display_modules()
   end
 
   @spec metadata() :: [LiveUi.Component.Metadata.t()]
@@ -61,6 +79,26 @@ defmodule LiveUi.Widgets do
   @spec display_modules() :: [widget_module()]
   def display_modules do
     LiveUi.Widgets.Display.modules()
+  end
+
+  @spec portable_modules() :: [widget_module()]
+  def portable_modules do
+    LiveUi.Widgets.Portable.modules()
+  end
+
+  @spec semantic_modules() :: [widget_module()]
+  def semantic_modules do
+    LiveUi.Widgets.Portable.semantic_modules()
+  end
+
+  @spec workflow_modules() :: [widget_module()]
+  def workflow_modules do
+    LiveUi.Widgets.Portable.workflow_modules()
+  end
+
+  @spec collection_modules() :: [widget_module()]
+  def collection_modules do
+    LiveUi.Widgets.Collection.modules()
   end
 
   @spec namespace() :: module()
