@@ -86,22 +86,22 @@ Back to index: [README](./README.md)
       [x] 3.3.2.2 Subtask - Verify Elm frontend events emitted inside repeated rows cross the server bridge with the canonical row-scope payload mapping.
       [x] 3.3.2.3 Subtask - Add diagnostics for missing keys, stale row references, and unsupported row-scope bindings.
 
-  [ ] 3.4 Section - Phase 3 Integration Tests
+  [x] 3.4 Section - Phase 3 Integration Tests
     Validate the promoted web-runtime surface from direct native use through
     canonical IUR rendering and interaction handling.
 
-    [ ] 3.4.1 Task - Web runtime widget parity scenarios
+    [x] 3.4.1 Task - Web runtime widget parity scenarios
       Verify `live_ui` and `elm_ui` expose usable native widgets and matching
       canonical IUR renderer paths.
 
-      [ ] 3.4.1.1 Subtask - Verify each promoted widget renders through native `live_ui`, native `elm_ui`, and each runtime's IUR renderer.
-      [ ] 3.4.1.2 Subtask - Verify host-owned form shells submit, validate, and surface errors through runtime-owned lifecycle behavior.
-      [ ] 3.4.1.3 Subtask - Verify accessibility, focus, keyboard, and interaction behavior for slide-over panels, disclosure, segmented controls, and chat composer.
+      [x] 3.4.1.1 Subtask - Verify each promoted widget renders through native `live_ui`, native `elm_ui`, and each runtime's IUR renderer.
+      [x] 3.4.1.2 Subtask - Verify host-owned form shells submit, validate, and surface errors through runtime-owned lifecycle behavior.
+      [x] 3.4.1.3 Subtask - Verify accessibility, focus, keyboard, and interaction behavior for slide-over panels, disclosure, segmented controls, and chat composer.
 
-    [ ] 3.4.2 Task - Web repeated collection integration scenarios
+    [x] 3.4.2 Task - Web repeated collection integration scenarios
       Verify repeated collection rendering and row-scope events behave
       consistently across the two web runtimes.
 
-      [ ] 3.4.2.1 Subtask - Verify repeated collection fixtures render stable rows, empty states, nested widgets, and updates in both web runtimes.
-      [ ] 3.4.2.2 Subtask - Verify row-level interactions emit canonical payloads without runtime-local callback leakage.
-      [ ] 3.4.2.3 Subtask - Verify native and IUR-rendered versions of the same repeated collection remain reviewably equivalent.
+      [x] 3.4.2.1 Subtask - Verify repeated collection fixtures render stable rows, empty states, nested widgets, and updates in both web runtimes.
+      [x] 3.4.2.2 Subtask - Verify row-level interactions emit canonical payloads without runtime-local callback leakage.
+      [x] 3.4.2.3 Subtask - Verify native and IUR-rendered versions of the same repeated collection remain reviewably equivalent.
