@@ -6,9 +6,11 @@ defmodule UnifiedUi.Compiler.Inspection do
   alias UnifiedIUR.{Inspect, Reference}
   alias UnifiedUi.Compiler
   alias UnifiedUi.Compiler.Result
+  alias UnifiedUi.Info
 
   @type report :: %{
           module: module(),
+          authoring_surface: map(),
           summary: map(),
           listing: map(),
           render_tree: String.t(),
@@ -26,6 +28,7 @@ defmodule UnifiedUi.Compiler.Inspection do
   def result(%Result{} = result) do
     %{
       module: result.module,
+      authoring_surface: Info.authoring_surface_summary(result.module),
       summary: Result.summary(result),
       listing: Result.listing(result),
       render_tree: Inspect.render_tree(result.iur),
@@ -60,6 +63,10 @@ defmodule UnifiedUi.Compiler.Inspection do
       "mode: #{inspect(summary.mode)}",
       "default theme: #{inspect(summary.default_theme)}",
       "authored ids: #{format_list(listing.authored.authored_ids)}",
+      "authored families: #{format_list(report.authoring_surface.families)}",
+      "authored widgets: #{format_widget_contracts(report.authoring_surface.widgets)}",
+      "repeated collections: #{format_repeated_collections(report.authoring_surface.repeated_collections)}",
+      "row-scope refs: #{format_list(report.authoring_surface.row_scope_refs)}",
       "widget kinds: #{format_list(listing.compiled.widget_kinds)}",
       "layout kinds: #{format_list(listing.compiled.layout_kinds)}",
       "composite kinds: #{format_list(listing.compiled.composite_kinds)}",
@@ -105,6 +112,38 @@ defmodule UnifiedUi.Compiler.Inspection do
     items
     |> Enum.map(&inspect/1)
     |> Enum.join(", ")
+    |> then(&"[#{&1}]")
+  end
+
+  defp format_widget_contracts([]), do: "[]"
+
+  defp format_widget_contracts(widgets) do
+    widgets
+    |> Enum.map(fn widget ->
+      [
+        "#{widget.id}[#{widget.family}:#{widget.kind}]",
+        "required=#{format_list(Map.get(widget, :required_fields, []))}",
+        "slots=#{format_list(Map.get(widget, :optional_slots, []))}",
+        "state=#{format_list(Map.get(widget, :state_fields, []))}",
+        "interactions=#{format_list(Map.get(widget, :interaction_refs, []))}",
+        "bindings=#{format_list(Map.get(widget, :binding_refs, []))}"
+      ]
+      |> Enum.join(" ")
+    end)
+    |> Enum.join("; ")
+    |> then(&"[#{&1}]")
+  end
+
+  defp format_repeated_collections([]), do: "[]"
+
+  defp format_repeated_collections(collections) do
+    collections
+    |> Enum.map(fn collection ->
+      template = Map.get(collection, :child_template, %{})
+
+      "#{collection.id} source=#{inspect(collection.collection_source)} aliases=#{inspect({collection.item_alias, collection.index_alias})} key=#{inspect(collection.key_path)} template=#{inspect(Map.take(template, [:id, :family, :kind]))}"
+    end)
+    |> Enum.join("; ")
     |> then(&"[#{&1}]")
   end
 end

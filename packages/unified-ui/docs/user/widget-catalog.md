@@ -161,6 +161,103 @@ column :operations_shell do
 end
 ```
 
+## Promoted Semantic and Workflow Widgets
+
+These widgets came from AshUi-oriented proposals but are canonical only when
+authored without Ash, Phoenix, or runtime callback names.
+
+| Widget | Purpose | Key authored fields |
+| --- | --- | --- |
+| `disclosure` | Compact expand/collapse state | `label`, `open?`, `content_label` |
+| `kicker` | Small contextual label | `value`, `icon`, `role` |
+| `avatar` | Person or actor identity | `label`, `initials`, `avatar_source`, `status` |
+| `presence_dot` | Availability marker | `status`, `label`, `pulse?` |
+| `segmented_button_group` | Segment selection | `items`, `active_item`, `selection_mode`, `orientation` |
+| `list_item_multi_column` | Row summary with portable columns | `columns`, `label`, `value`, `status` |
+| `artifact_row` | Artifact-oriented row summary | `artifact`, `title`, `status`, `timestamp`, `action_intent` |
+| `sticky_header` | Header with sticky state | `title`, `stuck?`, `elevation` |
+| `pipeline_stepper_horizontal` | Pipeline progress stepper | `steps`, `active_item`, `status` |
+| `segmented_progress_bar` | Segmented progress | `segments`, `current`, `maximum` |
+| `workflow_stage_list_vertical` | Vertical workflow stage list | `stages`, `active_item`, `status` |
+| `meter_thin` | Thin meter | `current`, `minimum`, `maximum`, `severity` |
+| `slide_over_panel` | Portable side panel intent | `title`, `placement`, `visible?`, `modal?` |
+| `event_callout` | Event message | `message`, `title`, `severity`, `timestamp` |
+| `redline_inline` | Inline before/after text | `before_text`, `after_text`, `label` |
+| `code_block_syntax_highlighted` | Code block with language metadata | `code`, `language`, `wrap?` |
+| `chat_composer` | Message composer intent | `placeholder`, `submit_intent`, `actions`, `multiline?` |
+
+Example:
+
+```elixir
+artifact_row :release_artifact do
+  title("release.tar")
+  artifact(%{id: "release.tar", kind: :archive})
+  status(:ready)
+  action_intent(:open_artifact)
+end
+
+chat_composer :review_note do
+  placeholder("Add a review note")
+  submit_intent(:send_review)
+  actions(send: "Send")
+end
+```
+
+## Host-Owned Form Shells
+
+`host_form_shell` is the portable replacement for proposal names like
+`phoenix_form`. It records host lifecycle ownership and canonical submit or
+validation intent without embedding Phoenix form structs, Ash changesets, or
+AshPhoenix behavior.
+
+```elixir
+host_form_shell :profile_shell do
+  owner(:host)
+  lifecycle(:host_owned)
+  submit_intent(:save_profile)
+  validation_summary("Host validates profile changes")
+  action_placement(:footer)
+end
+```
+
+## Repeated Collections
+
+`repeated_collection` binds a portable list-oriented source to one child
+template per row. The source can be a canonical binding reference or portable
+data descriptor, but it must not be an Ash relationship traversal or
+renderer-local callback.
+
+Row templates use `row_value/2`, `row_index/1`, and `row_key/2` descriptors so
+runtime renderers can hydrate row content without changing canonical meaning.
+
+```elixir
+repeated_collection :artifact_rows do
+  collection_source(binding_ref(:artifacts))
+  item_alias(:artifact)
+  index_alias(:row)
+  key_path([:id])
+  empty_state("No artifacts")
+
+  row_template :artifact_template do
+    template_children([
+      %{
+        kind: :artifact_row,
+        id: :artifact_record,
+        title: "Artifact",
+        artifact: row_value([:record], alias: :artifact),
+        status: :ready
+      },
+      %{
+        kind: :list_item_multi_column,
+        id: :artifact_summary,
+        columns: row_value([:columns], alias: :artifact),
+        value: row_index(alias: :row)
+      }
+    ])
+  end
+end
+```
+
 ## When to Use the Package Examples
 
 If you want real end-to-end authored references instead of isolated snippets,

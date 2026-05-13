@@ -25,10 +25,32 @@ The authored composition model is organized around construct families:
 - data widgets such as table, tree view, markdown viewer, and log viewer
 - feedback widgets such as gauge and charts
 - advanced operational widgets such as stream widgets, monitors, and dashboards
+- promoted semantic and workflow widgets such as artifact rows, disclosures,
+  pipeline steppers, redlines, code blocks, and chat composers
+- repeated collection templates that bind list-oriented data to one row
+  template with portable row-scope descriptors
 - display systems such as layout containers, overlays, viewports, split panes, scroll bars, and canvas
 
 The maintained examples in `UnifiedUi.Examples` are part of the package
 contract because they demonstrate how these families are authored together.
+
+## AshUi Proposal Migration Notes
+
+AshUi-originated widget proposals map into canonical `UnifiedUi` concepts only
+when they are renderer- and integration-independent:
+
+- Ash relationship traversal maps to `repeated_collection` plus
+  `collection_source`, `item_alias`, `index_alias`, and `key_path`; Ash resource
+  relationship names stay in the host or integration package.
+- `phoenix_form` maps to `host_form_shell`; Phoenix form structs,
+  Ash changesets, and AshPhoenix lifecycle details stay runtime-owned.
+- Row content, style, and interaction payloads use `row_value/2`,
+  `row_index/1`, or `row_key/2` descriptors instead of renderer-local
+  callbacks.
+- Visual widget names are made portable where needed. For example, an
+  AshUi-specific artifact list proposal should author canonical
+  `artifact_row`, `list_item_multi_column`, or `repeated_collection` constructs
+  rather than importing AshUi-only option names.
 
 ## Identity and Placement Invariants
 
@@ -39,6 +61,8 @@ The DSL enforces authored invariants at compile time:
 - `identity.authored_ref` must end in `identity.id`
 - leaf nodes cannot contain authored children
 - overlay, viewport, canvas, and field placement rules are validated when authored modules compile
+- repeated collections must have a portable collection source, distinct row
+  aliases, a non-empty key path, and exactly one child template
 
 These constraints make the compiler output more predictable and make package
 reviews easier because malformed authored shapes fail early.

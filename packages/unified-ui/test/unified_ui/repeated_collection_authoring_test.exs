@@ -2,6 +2,7 @@ defmodule UnifiedUi.RepeatedCollectionAuthoringTest do
   use ExUnit.Case, async: true
 
   alias Spark.Dsl.Extension
+  alias UnifiedUi.{Compiler, Export, Info, Tooling}
 
   defmodule ArtifactCollectionSurface do
     use UnifiedUi.Dsl
@@ -13,6 +14,51 @@ defmodule UnifiedUi.RepeatedCollectionAuthoringTest do
 
     composition do
       root(:artifact_collection_root)
+      mode(:screen)
+
+      repeated_collection :artifact_rows do
+        collection_source(binding_ref(:artifacts))
+        item_alias(:artifact)
+        index_alias(:row)
+        key_path([:id])
+        empty_state("No artifacts")
+
+        row_template :artifact_row_template do
+          gap(:sm)
+
+          template_children([
+            %{
+              kind: :artifact_row,
+              id: :artifact_record,
+              title: "Artifact",
+              artifact: row_value([:record], alias: :artifact),
+              status: :ready
+            },
+            %{
+              kind: :list_item_multi_column,
+              id: :artifact_summary,
+              label: "Artifact",
+              columns: row_value([:columns], alias: :artifact),
+              value: row_index(alias: :row),
+              status: :ready,
+              interaction_refs: [:open_artifact]
+            }
+          ])
+        end
+      end
+    end
+  end
+
+  defmodule EquivalentArtifactCollectionSurface do
+    use UnifiedUi.Dsl
+
+    identity do
+      id(:equivalent_artifact_collection_surface)
+      authored_ref([:examples, :equivalent_artifact_collection_surface])
+    end
+
+    composition do
+      root(:equivalent_artifact_collection_root)
       mode(:screen)
 
       repeated_collection :artifact_rows do
@@ -116,6 +162,86 @@ defmodule UnifiedUi.RepeatedCollectionAuthoringTest do
                ]
              }
            ]
+  end
+
+  test "exposes repeated collection details through authoring inspection and export" do
+    authoring = Info.authoring_surface_summary(ArtifactCollectionSurface)
+
+    assert authoring.families == [:collection, :layout]
+
+    assert Enum.map(authoring.widgets, &Map.take(&1, [:id, :family, :kind, :required_fields])) ==
+             [
+               %{
+                 id: :artifact_rows,
+                 family: :collection,
+                 kind: :repeated_collection,
+                 required_fields: [:collection_source, :key_path]
+               },
+               %{id: :artifact_row_template, family: :layout, kind: :row}
+             ]
+
+    assert authoring.repeated_collections == [
+             %{
+               id: :artifact_rows,
+               collection_source: %{kind: :binding_ref, id: :artifacts},
+               item_alias: :artifact,
+               index_alias: :row,
+               key_path: [:id],
+               empty_state: "No artifacts",
+               child_template: %{
+                 id: :artifact_row_template,
+                 family: :layout,
+                 kind: :row,
+                 template_children: [
+                   %{
+                     kind: :artifact_row,
+                     id: :artifact_record,
+                     title: "Artifact",
+                     artifact: %{kind: :row_value, path: [:record], alias: :artifact},
+                     status: :ready
+                   },
+                   %{
+                     kind: :list_item_multi_column,
+                     id: :artifact_summary,
+                     label: "Artifact",
+                     columns: %{kind: :row_value, path: [:columns], alias: :artifact},
+                     value: %{kind: :row_index, alias: :row},
+                     status: :ready,
+                     interaction_refs: [:open_artifact]
+                   }
+                 ]
+               }
+             }
+           ]
+
+    assert {:ok, inspection} = Export.module(ArtifactCollectionSurface, :inspection)
+    assert inspection =~ "authored families: [:collection, :layout]"
+    assert inspection =~ "repeated collections: [artifact_rows source=%{"
+    assert inspection =~ "artifacts"
+    assert inspection =~ "aliases={:artifact, :row}"
+    assert inspection =~ "key=[:id]"
+    assert inspection =~ "row-scope refs:"
+
+    assert {:ok, exported_authoring} = Export.module(ArtifactCollectionSurface, :authoring)
+    assert exported_authoring =~ "repeated_collections"
+    assert exported_authoring =~ "row_scope_refs"
+
+    assert {:ok, report} = Tooling.inspect_module(ArtifactCollectionSurface)
+    assert report.authoring_surface.repeated_collections == authoring.repeated_collections
+    assert ".spec/specs/unified-ui/dsl.spec.md" in report.related_specs
+    assert ".spec/specs/unified-ui/widgets.spec.md" in report.related_specs
+  end
+
+  test "keeps equivalent repeated collection inspection and export output deterministic" do
+    assert Info.authoring_surface_summary(ArtifactCollectionSurface) ==
+             Info.authoring_surface_summary(EquivalentArtifactCollectionSurface)
+
+    assert Compiler.inspection(ArtifactCollectionSurface).authoring_surface ==
+             Compiler.inspection(EquivalentArtifactCollectionSurface).authoring_surface
+
+    assert {:ok, left} = Export.module(ArtifactCollectionSurface, :authoring)
+    assert {:ok, right} = Export.module(EquivalentArtifactCollectionSurface, :authoring)
+    assert left == right
   end
 
   test "rejects non-portable repeated collection sources and invalid templates" do

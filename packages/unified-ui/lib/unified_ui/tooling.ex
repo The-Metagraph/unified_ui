@@ -23,6 +23,12 @@ defmodule UnifiedUi.Tooling do
     forms: [".spec/specs/unified-ui/widgets.spec.md", ".spec/specs/unified-ui/signals.spec.md"],
     data: [".spec/specs/unified-ui/widgets.spec.md"],
     feedback: [".spec/specs/unified-ui/widgets.spec.md"],
+    semantic: [".spec/specs/unified-ui/widgets.spec.md"],
+    workflow: [".spec/specs/unified-ui/widgets.spec.md"],
+    collection: [
+      ".spec/specs/unified-ui/dsl.spec.md",
+      ".spec/specs/unified-ui/widgets.spec.md"
+    ],
     advanced: [
       ".spec/specs/unified-ui/widgets.spec.md",
       ".spec/specs/unified-ui/display_systems.spec.md"
@@ -96,12 +102,14 @@ defmodule UnifiedUi.Tooling do
       composition = Info.composition_summary(module)
       module_summary = Info.inspect_module(module)
       compiler_report = Compiler.inspection(module)
+      authoring_surface = Info.authoring_surface_summary(module)
       construct_families = composition |> collect_construct_families() |> Enum.sort()
 
       {:ok,
        %{
          module: module,
          authored: module_summary,
+         authoring_surface: authoring_surface,
          compiler: compiler_report,
          construct_families: construct_families,
          signal_coverage: signal_coverage(module_summary.signal_catalog),

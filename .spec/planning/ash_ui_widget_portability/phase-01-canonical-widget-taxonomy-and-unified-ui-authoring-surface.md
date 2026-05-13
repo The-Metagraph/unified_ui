@@ -73,25 +73,25 @@ Back to index: [README](./README.md)
       [x] 1.2.2.2 Subtask - Define parent-child placement constraints for repeated templates so they cannot create invalid layer or overlay structures.
       [x] 1.2.2.3 Subtask - Add compile-time diagnostics for ambiguous row scope, invalid child placement, missing keys where required, and unsupported nested collection shapes.
 
-  [ ] 1.3 Section - Authoring Introspection and Guidance
+  [x] 1.3 Section - Authoring Introspection and Guidance
     Make the new authoring surface discoverable and reviewable through
     `unified_ui` tooling and package guidance.
 
-    [ ] 1.3.1 Task - Extend authoring inspection and export output
+    [x] 1.3.1 Task - Extend authoring inspection and export output
       Show the promoted widgets and repeated collection templates clearly in
       existing review surfaces.
 
-      [ ] 1.3.1.1 Subtask - Extend inspection output to show canonical widget family, required fields, optional slots, state, and interaction binding summaries.
-      [ ] 1.3.1.2 Subtask - Extend export output to include repeated collection source, row-scope aliases, child template identity, and key semantics deterministically.
-      [ ] 1.3.1.3 Subtask - Add fixtures that prove equivalent authored declarations produce stable inspection and export output.
+      [x] 1.3.1.1 Subtask - Extend inspection output to show canonical widget family, required fields, optional slots, state, and interaction binding summaries.
+      [x] 1.3.1.2 Subtask - Extend export output to include repeated collection source, row-scope aliases, child template identity, and key semantics deterministically.
+      [x] 1.3.1.3 Subtask - Add fixtures that prove equivalent authored declarations produce stable inspection and export output.
 
-    [ ] 1.3.2 Task - Add initial authoring examples and migration notes
+    [x] 1.3.2 Task - Add initial authoring examples and migration notes
       Provide author-facing examples that explain how the AshUi-originated
       concepts map into canonical `UnifiedUi`.
 
-      [ ] 1.3.2.1 Subtask - Add examples for one semantic micro-widget flow, one workflow/document flow, one host-owned form shell, and one repeated collection template.
-      [ ] 1.3.2.2 Subtask - Document naming differences between AshUi proposals and canonical concepts when the canonical name is intentionally more portable.
-      [ ] 1.3.2.3 Subtask - Document which AshUi proposal details remain integration-owned rather than part of the canonical DSL.
+      [x] 1.3.2.1 Subtask - Add examples for one semantic micro-widget flow, one workflow/document flow, one host-owned form shell, and one repeated collection template.
+      [x] 1.3.2.2 Subtask - Document naming differences between AshUi proposals and canonical concepts when the canonical name is intentionally more portable.
+      [x] 1.3.2.3 Subtask - Document which AshUi proposal details remain integration-owned rather than part of the canonical DSL.
 
   [ ] 1.4 Section - Phase 1 Integration Tests
     Validate the authored taxonomy, DSL shape, diagnostics, and review output
