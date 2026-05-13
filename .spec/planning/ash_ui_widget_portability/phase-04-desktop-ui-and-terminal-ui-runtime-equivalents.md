@@ -24,25 +24,25 @@ Back to index: [README](./README.md)
   Implement desktop and terminal native equivalents, IUR renderer support, and
   explicit degradation behavior for the promoted widget surface.
 
-  [ ] 4.1 Section - DesktopUi Native and IUR Runtime Support
+  [x] 4.1 Section - DesktopUi Native and IUR Runtime Support
     Add SDL3-oriented native widgets and canonical rendering paths for the
     promoted surface.
 
-    [ ] 4.1.1 Task - Implement DesktopUi promoted widget equivalents
+    [x] 4.1.1 Task - Implement DesktopUi promoted widget equivalents
       Provide desktop-native widgets that preserve canonical semantics with
       desktop-appropriate interaction and rendering behavior.
 
-      [ ] 4.1.1.1 Subtask - Add desktop-native equivalents for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
-      [ ] 4.1.1.2 Subtask - Implement focus, keyboard, pointer, layout, z-order, overlay, and text-rendering behavior needed by the promoted widgets.
-      [ ] 4.1.1.3 Subtask - Add desktop runtime tests for widget layout, input routing, overlay stacking, state changes, and style-token application.
+      [x] 4.1.1.1 Subtask - Add desktop-native equivalents for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
+      [x] 4.1.1.2 Subtask - Implement focus, keyboard, pointer, layout, z-order, overlay, and text-rendering behavior needed by the promoted widgets.
+      [x] 4.1.1.3 Subtask - Add desktop runtime tests for widget layout, input routing, overlay stacking, state changes, and style-token application.
 
-    [ ] 4.1.2 Task - Implement DesktopUi IUR rendering and repeated collection support
+    [x] 4.1.2 Task - Implement DesktopUi IUR rendering and repeated collection support
       Make canonical promoted widgets and repeated templates render through the
       desktop IUR renderer.
 
-      [ ] 4.1.2.1 Subtask - Extend the desktop IUR renderer to consume every promoted canonical widget node, host-owned form shell, and repeated collection construct.
-      [ ] 4.1.2.2 Subtask - Map row-scope bindings to desktop event routing and native selection state without leaking renderer structs into canonical values.
-      [ ] 4.1.2.3 Subtask - Add renderer tests using shared IUR fixtures for promoted widgets, repeated collections, and row-scope events.
+      [x] 4.1.2.1 Subtask - Extend the desktop IUR renderer to consume every promoted canonical widget node, host-owned form shell, and repeated collection construct.
+      [x] 4.1.2.2 Subtask - Map row-scope bindings to desktop event routing and native selection state without leaking renderer structs into canonical values.
+      [x] 4.1.2.3 Subtask - Add renderer tests using shared IUR fixtures for promoted widgets, repeated collections, and row-scope events.
 
   [ ] 4.2 Section - TerminalUi Native and IUR Runtime Support
     Add terminal-native equivalents and explicit degradation behavior for the

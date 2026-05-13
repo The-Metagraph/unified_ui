@@ -6,6 +6,7 @@ defmodule DesktopUi.Widgets do
   alias DesktopUi.Widget
   alias DesktopUi.Widgets.{Builder, Data, Feedback, Foundational, Input, Navigation}
   alias DesktopUi.Widgets.{Operational, Visualization}
+  alias DesktopUi.Widgets.Portable
 
   @spec families() :: [Widget.family()]
   def families do
@@ -27,7 +28,8 @@ defmodule DesktopUi.Widgets do
       Data,
       Feedback,
       Visualization,
-      Operational
+      Operational,
+      Portable
     ]
   end
 
@@ -41,6 +43,7 @@ defmodule DesktopUi.Widgets do
       Feedback.kinds(),
       Visualization.kinds(),
       Operational.kinds(),
+      Portable.kinds(),
       [:column, :row, :sparkline, :stack, :status, :window]
     ]
     |> List.flatten()
@@ -71,6 +74,8 @@ defmodule DesktopUi.Widgets do
       advanced_visualization_widgets: :ready,
       advanced_operational_widgets: :ready,
       advanced_window_metadata: :ready,
+      promoted_portable_widgets: :ready,
+      repeated_collection_widgets: :ready,
       slot_contracts: :ready,
       style_contracts: :ready
     }
@@ -373,5 +378,100 @@ defmodule DesktopUi.Widgets do
   @spec window_command(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def window_command(id, label, opts \\ []) do
     Operational.window_command(id, label, opts)
+  end
+
+  @spec disclosure(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def disclosure(id, label, opts \\ []) do
+    Portable.disclosure(id, label, opts)
+  end
+
+  @spec kicker(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def kicker(id, value, opts \\ []) do
+    Portable.kicker(id, value, opts)
+  end
+
+  @spec avatar(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def avatar(id, label, opts \\ []) do
+    Portable.avatar(id, label, opts)
+  end
+
+  @spec presence_dot(String.t() | atom(), atom() | String.t(), keyword()) :: Widget.t()
+  def presence_dot(id, status, opts \\ []) do
+    Portable.presence_dot(id, status, opts)
+  end
+
+  @spec segmented_button_group(String.t() | atom(), term(), keyword()) :: Widget.t()
+  def segmented_button_group(id, items, opts \\ []) do
+    Portable.segmented_button_group(id, items, opts)
+  end
+
+  @spec list_item_multi_column(String.t() | atom(), term(), keyword()) :: Widget.t()
+  def list_item_multi_column(id, columns, opts \\ []) do
+    Portable.list_item_multi_column(id, columns, opts)
+  end
+
+  @spec artifact_row(String.t() | atom(), term(), String.t(), keyword()) :: Widget.t()
+  def artifact_row(id, artifact, title, opts \\ []) do
+    Portable.artifact_row(id, artifact, title, opts)
+  end
+
+  @spec sticky_header(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def sticky_header(id, title, opts \\ []) do
+    Portable.sticky_header(id, title, opts)
+  end
+
+  @spec pipeline_stepper_horizontal(String.t() | atom(), term(), keyword()) :: Widget.t()
+  def pipeline_stepper_horizontal(id, steps, opts \\ []) do
+    Portable.pipeline_stepper_horizontal(id, steps, opts)
+  end
+
+  @spec segmented_progress_bar(String.t() | atom(), term(), keyword()) :: Widget.t()
+  def segmented_progress_bar(id, segments, opts \\ []) do
+    Portable.segmented_progress_bar(id, segments, opts)
+  end
+
+  @spec workflow_stage_list_vertical(String.t() | atom(), term(), keyword()) :: Widget.t()
+  def workflow_stage_list_vertical(id, stages, opts \\ []) do
+    Portable.workflow_stage_list_vertical(id, stages, opts)
+  end
+
+  @spec meter_thin(String.t() | atom(), number(), keyword()) :: Widget.t()
+  def meter_thin(id, current, opts \\ []) do
+    Portable.meter_thin(id, current, opts)
+  end
+
+  @spec slide_over_panel(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def slide_over_panel(id, children \\ [], opts \\ []) do
+    Portable.slide_over_panel(id, children, opts)
+  end
+
+  @spec event_callout(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def event_callout(id, message, opts \\ []) do
+    Portable.event_callout(id, message, opts)
+  end
+
+  @spec redline_inline(String.t() | atom(), String.t(), String.t(), keyword()) :: Widget.t()
+  def redline_inline(id, before_text, after_text, opts \\ []) do
+    Portable.redline_inline(id, before_text, after_text, opts)
+  end
+
+  @spec code_block_syntax_highlighted(String.t() | atom(), String.t(), keyword()) :: Widget.t()
+  def code_block_syntax_highlighted(id, code, opts \\ []) do
+    Portable.code_block_syntax_highlighted(id, code, opts)
+  end
+
+  @spec chat_composer(String.t() | atom(), keyword()) :: Widget.t()
+  def chat_composer(id, opts \\ []) do
+    Portable.chat_composer(id, opts)
+  end
+
+  @spec host_form_shell(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def host_form_shell(id, children \\ [], opts \\ []) do
+    Portable.host_form_shell(id, children, opts)
+  end
+
+  @spec repeated_collection(String.t() | atom(), [Widget.t()], keyword()) :: Widget.t()
+  def repeated_collection(id, row_widgets, opts \\ []) do
+    Portable.repeated_collection(id, row_widgets, opts)
   end
 end

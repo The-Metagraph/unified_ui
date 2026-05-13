@@ -48,7 +48,7 @@ defmodule DesktopUi.Sdl3RenderPlanTest do
     assert plan.presentation.logical_units
     refute plan.presentation.placeholder_draw_operations
     assert plan.presentation.widget_complete_draw_operations
-    assert plan.presentation.validation_state == :render_plan_ready
+    assert plan.presentation.validation_state == :iur_renderer_complete
     assert plan.diagnostics.window_count == 2
     assert plan.diagnostics.draw_operation_count > 0
     assert plan.diagnostics.draw_kind_counts.window_chrome >= 1

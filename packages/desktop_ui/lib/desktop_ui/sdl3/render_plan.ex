@@ -301,12 +301,14 @@ defmodule DesktopUi.Sdl3.RenderPlan do
     total_gap_height = row_gap * max(trunc(row_count) - 1, 0)
 
     cell_width = max((bounds.width - total_gap_width) / columns, 32)
-    cell_height = if rows do
-      max((bounds.height - total_gap_height) / row_count, 32)
-    else
-      # Calculate based on available height divided by rows needed
-      max((bounds.height - total_gap_height) / calculated_rows, 32)
-    end
+
+    cell_height =
+      if rows do
+        max((bounds.height - total_gap_height) / row_count, 32)
+      else
+        # Calculate based on available height divided by rows needed
+        max((bounds.height - total_gap_height) / calculated_rows, 32)
+      end
 
     specs =
       Enum.with_index(children)
@@ -325,8 +327,8 @@ defmodule DesktopUi.Sdl3.RenderPlan do
           units: :logical
         }
 
-        {child, Map.get(source_index, normalize_id(child.id), source_stub(child)),
-         child_bounds, inherited_clip}
+        {child, Map.get(source_index, normalize_id(child.id), source_stub(child)), child_bounds,
+         inherited_clip}
       end)
 
     specs
@@ -543,7 +545,18 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         inset_bounds(bounds, padding + 18, 52, padding + 18, padding + 18)
 
       kind
-      when kind in [:overlay, :viewport, :scroll_region, :scroll_bar, :content, :column, :row, :split_pane, :box, :grid] ->
+      when kind in [
+             :overlay,
+             :viewport,
+             :scroll_region,
+             :scroll_bar,
+             :content,
+             :column,
+             :row,
+             :split_pane,
+             :box,
+             :grid
+           ] ->
         inset_bounds(bounds, padding + 12, padding + 12, padding + 12, padding + 12)
 
       :canvas_surface ->
@@ -647,6 +660,10 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       is_binary(node.attributes[:label]) -> node.attributes[:label]
       is_binary(node.attributes[:window_title]) -> node.attributes[:window_title]
       is_binary(node.attributes[:message]) -> node.attributes[:message]
+      is_binary(node.attributes[:title]) -> node.attributes[:title]
+      is_binary(node.attributes[:value]) -> node.attributes[:value]
+      is_binary(node.attributes[:before_text]) -> node.attributes[:before_text]
+      is_binary(node.attributes[:code]) -> node.attributes[:code]
       is_binary(node.attributes[:query]) -> node.attributes[:query]
       is_binary(node.attributes[:alt]) -> node.attributes[:alt]
       is_binary(node.attributes[:placeholder]) -> node.attributes[:placeholder]
@@ -689,6 +706,25 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:sparkline), do: :sparkline_surface
   defp draw_kind(:progress), do: :progress_block
   defp draw_kind(:inline_feedback), do: :inline_feedback_surface
+  defp draw_kind(:disclosure), do: :disclosure_control
+  defp draw_kind(:kicker), do: :kicker_label
+  defp draw_kind(:avatar), do: :avatar_glyph
+  defp draw_kind(:presence_dot), do: :presence_indicator
+  defp draw_kind(:segmented_button_group), do: :segmented_control
+  defp draw_kind(:list_item_multi_column), do: :multi_column_row
+  defp draw_kind(:artifact_row), do: :artifact_row
+  defp draw_kind(:sticky_header), do: :sticky_header
+  defp draw_kind(:pipeline_stepper_horizontal), do: :pipeline_stepper
+  defp draw_kind(:segmented_progress_bar), do: :segmented_progress
+  defp draw_kind(:workflow_stage_list_vertical), do: :workflow_stage_list
+  defp draw_kind(:meter_thin), do: :thin_meter
+  defp draw_kind(:slide_over_panel), do: :slide_over_panel
+  defp draw_kind(:event_callout), do: :event_callout
+  defp draw_kind(:redline_inline), do: :redline_inline
+  defp draw_kind(:code_block_syntax_highlighted), do: :syntax_code_block
+  defp draw_kind(:chat_composer), do: :chat_composer
+  defp draw_kind(:host_form_shell), do: :host_form_shell
+  defp draw_kind(:repeated_collection), do: :repeated_collection
   defp draw_kind(:process_monitor), do: :process_monitor_surface
   defp draw_kind(:log_viewer), do: :log_viewer_surface
   defp draw_kind(:stream_widget), do: :stream_widget_surface
@@ -736,6 +772,20 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :sparkline -> sparkline_height(node)
       node.kind == :progress -> progress_height(node)
       node.kind == :inline_feedback -> 48
+      node.kind in [:kicker, :presence_dot, :redline_inline] -> 32
+      node.kind == :avatar -> 56
+      node.kind == :disclosure -> if node.state[:open], do: 96, else: 44
+      node.kind == :segmented_button_group -> 48
+      node.kind in [:list_item_multi_column, :artifact_row] -> 56
+      node.kind == :sticky_header -> 52
+      node.kind in [:pipeline_stepper_horizontal, :segmented_progress_bar, :meter_thin] -> 48
+      node.kind == :workflow_stage_list_vertical -> 48 + item_count(node) * 28
+      node.kind == :slide_over_panel -> 260
+      node.kind == :event_callout -> 72
+      node.kind == :code_block_syntax_highlighted -> 96
+      node.kind == :chat_composer -> 92
+      node.kind == :host_form_shell -> 120
+      node.kind == :repeated_collection -> max(64, 40 + row_count(node) * 64)
       node.kind == :log_viewer -> max(152, 52 + item_count(node) * 26)
       node.kind == :stream_widget -> max(120, 52 + item_count(node) * 18)
       node.kind == :supervision_tree_viewer -> supervision_tree_height(node)
@@ -768,6 +818,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
 
   defp pick_list_height(node) do
     base = 46
+
     if node.attributes[:open] || node.attributes[:focused] do
       base + min(option_count(node), 6) * 36
     else
@@ -778,6 +829,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp tree_view_height(node) do
     base = 64
     node_count = item_count(node)
+
     if node_count > 0 do
       base + min(node_count, 8) * 28
     else
@@ -807,6 +859,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp info_list_height(node) do
     base = 32
     item_count = item_count(node)
+
     if item_count > 0 do
       base + min(item_count, 10) * 24
     else
@@ -852,6 +905,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp supervision_tree_height(node) do
     base = 80
     node_count = item_count(node)
+
     if node_count > 0 do
       base + min(node_count, 10) * 32
     else
@@ -932,6 +986,27 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       node.kind == :inline_feedback ->
         min(240, available_width)
 
+      node.kind in [
+        :disclosure,
+        :segmented_button_group,
+        :list_item_multi_column,
+        :artifact_row,
+        :sticky_header,
+        :pipeline_stepper_horizontal,
+        :segmented_progress_bar,
+        :workflow_stage_list_vertical,
+        :slide_over_panel,
+        :event_callout,
+        :code_block_syntax_highlighted,
+        :chat_composer,
+        :host_form_shell,
+        :repeated_collection
+      ] ->
+        min(360, available_width)
+
+      node.kind in [:kicker, :avatar, :presence_dot, :meter_thin, :redline_inline] ->
+        min(180, available_width)
+
       node.kind == :stream_widget ->
         min(320, available_width)
 
@@ -1009,6 +1084,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp item_count(node),
     do:
       (node.attributes[:items] || node.attributes[:options] || node.attributes[:commands] ||
+         node.attributes[:steps] || node.attributes[:stages] || node.attributes[:segments] ||
          node.attributes[:entries] || node.attributes[:processes] || node.attributes[:nodes] ||
          [])
       |> List.wrap()

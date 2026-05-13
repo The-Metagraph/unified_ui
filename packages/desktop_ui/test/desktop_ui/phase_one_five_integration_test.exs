@@ -29,7 +29,7 @@ defmodule DesktopUi.PhaseOneFiveIntegrationTest do
     assert canonical_boot.runtime.direct_native_and_canonical_share_runtime
 
     assert canonical_boot.frame_request.presentation.render_plan.presentation.validation_state ==
-             :render_plan_ready
+             :iur_renderer_complete
   end
 
   test "minimal native screens can produce native-window state and widget-complete draw plans" do

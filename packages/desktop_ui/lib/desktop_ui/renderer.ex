@@ -23,9 +23,9 @@ defmodule DesktopUi.Renderer do
   end
 
   @doc """
-  All 45 canonical IUR widget kinds supported by the desktop_ui renderer.
-  Each kind has dedicated native widget mapping, draw kind handling, and
-  SDL3 rendering implementation.
+  Canonical IUR widget kinds supported by the desktop_ui renderer.
+  Each kind has native widget mapping, draw kind handling, and SDL3 rendering
+  implementation or retained-widget fallback.
   """
   @spec supported_kinds() :: [atom()]
   def supported_kinds do
@@ -88,7 +88,30 @@ defmodule DesktopUi.Renderer do
       :canvas,
       :gauge,
       :line_chart,
+      :sparkline,
       :timeline,
+      # Promoted portable semantic widgets (8)
+      :disclosure,
+      :kicker,
+      :avatar,
+      :presence_dot,
+      :segmented_button_group,
+      :list_item_multi_column,
+      :artifact_row,
+      :sticky_header,
+      # Promoted portable workflow/document widgets (9)
+      :pipeline_stepper_horizontal,
+      :segmented_progress_bar,
+      :workflow_stage_list_vertical,
+      :meter_thin,
+      :slide_over_panel,
+      :event_callout,
+      :redline_inline,
+      :code_block_syntax_highlighted,
+      :chat_composer,
+      # Promoted form and collection constructs (2)
+      :host_form_shell,
+      :repeated_collection,
       # Layout & Structure (3)
       :column,
       :row,

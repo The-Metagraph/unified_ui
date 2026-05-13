@@ -15,6 +15,9 @@ defmodule DesktopUi.Widget do
           | :visualization
           | :operational
           | :layer
+          | :semantic
+          | :workflow
+          | :collection
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -64,7 +67,14 @@ defmodule DesktopUi.Widget do
         :overlay_lifecycle,
         :positioning_mode,
         :interaction_route,
-        :window_identity
+        :window_identity,
+        :native_surface,
+        :keyboard,
+        :pointer,
+        :z_order,
+        :host_owned?,
+        :row_scope?,
+        :text_rendering
       ],
       state: [
         :disabled,
@@ -117,6 +127,33 @@ defmodule DesktopUi.Widget do
         :subject,
         :sections,
         :message,
+        :title,
+        :content_label,
+        :initials,
+        :pulse,
+        :steps,
+        :stages,
+        :segments,
+        :active_item,
+        :minimum,
+        :maximum,
+        :owner,
+        :lifecycle,
+        :mode,
+        :action_placement,
+        :autocomplete,
+        :before_text,
+        :after_text,
+        :code,
+        :language,
+        :wrap,
+        :submit_intent,
+        :validation_summary,
+        :validation_errors,
+        :item_alias,
+        :index_alias,
+        :key_path,
+        :empty_state,
         :timeout_ms,
         :status,
         :current,
@@ -164,7 +201,9 @@ defmodule DesktopUi.Widget do
         :expand,
         :dismiss,
         :command,
-        :navigation
+        :navigation,
+        :toggle,
+        :open
       ]
     }
   end
@@ -236,8 +275,9 @@ defmodule DesktopUi.Widget do
 
   def family_for(kind) when kind in [:table, :tree_view, :inspector, :markdown_viewer], do: :data
 
-  def family_for(kind) when kind in [:gauge, :bar_chart, :line_chart, :timeline, :canvas],
-    do: :visualization
+  def family_for(kind)
+      when kind in [:gauge, :bar_chart, :line_chart, :sparkline, :timeline, :canvas],
+      do: :visualization
 
   def family_for(kind)
       when kind in [
@@ -250,6 +290,36 @@ defmodule DesktopUi.Widget do
       do: :operational
 
   def family_for(kind) when kind in [:window, :dialog], do: :window
+
+  def family_for(kind)
+      when kind in [
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :list_item_multi_column,
+             :artifact_row,
+             :sticky_header
+           ],
+      do: :semantic
+
+  def family_for(kind)
+      when kind in [
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :chat_composer
+           ],
+      do: :workflow
+
+  def family_for(:host_form_shell), do: :input
+  def family_for(:repeated_collection), do: :collection
   def family_for(kind) when kind in [:column, :row, :stack], do: :layout
   def family_for(kind) when kind in [:button, :toggle, :link, :command], do: :action
   def family_for(kind) when kind in [:text_input, :checkbox, :radio_group, :select], do: :input

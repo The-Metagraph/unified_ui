@@ -5,6 +5,7 @@ defmodule DesktopUi.Renderer.Mapper do
 
   alias DesktopUi.Renderer.Error
   alias DesktopUi.Widget
+  alias UnifiedIUR.{Binding, Interaction}
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
 
@@ -26,6 +27,14 @@ defmodule DesktopUi.Renderer.Mapper do
 
       %Child{element: nil} ->
         {:error, Error.new(:screen_empty_content, %{id: "screen"})}
+    end
+  end
+
+  def map(%Element{type: type, kind: kind} = element, _opts)
+      when type in [:composite, "composite"] and
+             kind in [:repeated_collection, "repeated_collection"] do
+    with :ok <- validate_bindings(element) do
+      map_element(element)
     end
   end
 
@@ -146,7 +155,11 @@ defmodule DesktopUi.Renderer.Mapper do
        Keyword.merge(
          base_opts(element),
          size: first_present([group_attr(element, :badge, :size), attr(element, :size)], :md),
-         variant: first_present([group_attr(element, :badge, :variant), attr(element, :variant)], :default)
+         variant:
+           first_present(
+             [group_attr(element, :badge, :variant), attr(element, :variant)],
+             :default
+           )
        )
      )}
   end
@@ -165,7 +178,8 @@ defmodule DesktopUi.Renderer.Mapper do
          subheadline:
            first_present([group_attr(element, :hero, :subheadline), attr(element, :subheadline)]),
          image: first_present([group_attr(element, :hero, :image), attr(element, :image)]),
-         actions: first_present([group_attr(element, :hero, :actions), attr(element, :actions)], [])
+         actions:
+           first_present([group_attr(element, :hero, :actions), attr(element, :actions)], [])
        )
      )}
   end
@@ -263,27 +277,40 @@ defmodule DesktopUi.Renderer.Mapper do
          min: attr(element, :min),
          max: attr(element, :max),
          step: first_present([attr(element, :step), group_attr(element, :input, :step)], 1),
-         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], ""),
+         placeholder:
+           first_present(
+             [attr(element, :placeholder), group_attr(element, :input, :placeholder)],
+             ""
+           ),
          on_change: interaction_payload(element, :change)
        )
      )}
   end
 
-  defp map_element(%Element{type: :widget, kind: kind} = element) when kind in [:slider, "slider"] do
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:slider, "slider"] do
     {:ok,
      DesktopUi.Widgets.slider(
        element.id,
-      Keyword.merge(
-        base_opts(element),
-        value: first_present([attr(element, :value), binding_value(element)], 0),
-        binding: binding_name(element),
-        min: attr(element, :min),
-        max: attr(element, :max),
-        step: first_present([attr(element, :step), group_attr(element, :input, :step)], 1),
-        show_value: first_present([attr(element, :show_value), group_attr(element, :input, :show_value)], true),
-        orientation: first_present([attr(element, :orientation), group_attr(element, :input, :orientation)], :horizontal),
-        on_change: interaction_payload(element, :change)
-      )
+       Keyword.merge(
+         base_opts(element),
+         value: first_present([attr(element, :value), binding_value(element)], 0),
+         binding: binding_name(element),
+         min: attr(element, :min),
+         max: attr(element, :max),
+         step: first_present([attr(element, :step), group_attr(element, :input, :step)], 1),
+         show_value:
+           first_present(
+             [attr(element, :show_value), group_attr(element, :input, :show_value)],
+             true
+           ),
+         orientation:
+           first_present(
+             [attr(element, :orientation), group_attr(element, :input, :orientation)],
+             :horizontal
+           ),
+         on_change: interaction_payload(element, :change)
+       )
      )}
   end
 
@@ -298,7 +325,11 @@ defmodule DesktopUi.Renderer.Mapper do
          binding: binding_name(element),
          min: attr(element, :min),
          max: attr(element, :max),
-         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], "YYYY-MM-DD"),
+         placeholder:
+           first_present(
+             [attr(element, :placeholder), group_attr(element, :input, :placeholder)],
+             "YYYY-MM-DD"
+           ),
          on_change: interaction_payload(element, :change)
        )
      )}
@@ -313,8 +344,13 @@ defmodule DesktopUi.Renderer.Mapper do
          base_opts(element),
          value: first_present([attr(element, :value), binding_value(element)]),
          binding: binding_name(element),
-         format: first_present([attr(element, :format), group_attr(element, :input, :format)], :"24h"),
-         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], "HH:MM"),
+         format:
+           first_present([attr(element, :format), group_attr(element, :input, :format)], :"24h"),
+         placeholder:
+           first_present(
+             [attr(element, :placeholder), group_attr(element, :input, :placeholder)],
+             "HH:MM"
+           ),
          on_change: interaction_payload(element, :change)
        )
      )}
@@ -330,8 +366,16 @@ defmodule DesktopUi.Renderer.Mapper do
          value: first_present([attr(element, :value), binding_value(element)]),
          binding: binding_name(element),
          accept: first_present([attr(element, :accept), group_attr(element, :input, :accept)]),
-         multiple: first_present([attr(element, :multiple), group_attr(element, :input, :multiple)], false),
-         placeholder: first_present([attr(element, :placeholder), group_attr(element, :input, :placeholder)], "Choose file..."),
+         multiple:
+           first_present(
+             [attr(element, :multiple), group_attr(element, :input, :multiple)],
+             false
+           ),
+         placeholder:
+           first_present(
+             [attr(element, :placeholder), group_attr(element, :input, :placeholder)],
+             "Choose file..."
+           ),
          on_change: interaction_payload(element, :change)
        )
      )}
@@ -347,9 +391,21 @@ defmodule DesktopUi.Renderer.Mapper do
          base_opts(element),
          selected: first_present([attr(element, :selected), binding_value(element)]),
          binding: binding_name(element),
-         searchable: first_present([attr(element, :searchable), group_attr(element, :selection, :searchable)], true),
-         multiple: first_present([attr(element, :multiple), group_attr(element, :selection, :multiple)], false),
-         placeholder: first_present([attr(element, :placeholder), group_attr(element, :selection, :placeholder)], "Select..."),
+         searchable:
+           first_present(
+             [attr(element, :searchable), group_attr(element, :selection, :searchable)],
+             true
+           ),
+         multiple:
+           first_present(
+             [attr(element, :multiple), group_attr(element, :selection, :multiple)],
+             false
+           ),
+         placeholder:
+           first_present(
+             [attr(element, :placeholder), group_attr(element, :selection, :placeholder)],
+             "Select..."
+           ),
          on_select: interaction_payload(element, :selection)
        )
      )}
@@ -423,6 +479,318 @@ defmodule DesktopUi.Renderer.Mapper do
   end
 
   defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:disclosure, "disclosure"] do
+    {:ok,
+     DesktopUi.Widgets.disclosure(
+       element.id,
+       first_present([group_attr(element, :disclosure, :label), content_text(element, nil)], ""),
+       Keyword.merge(base_opts(element),
+         open:
+           first_present([group_attr(element, :disclosure, :open?), attr(element, :open)], false),
+         content_label: group_attr(element, :disclosure, :content_label),
+         summary: group_attr(element, :disclosure, :summary),
+         on_toggle: interaction_payload(element, :open) || interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:kicker, "kicker"] do
+    {:ok,
+     DesktopUi.Widgets.kicker(
+       element.id,
+       first_present([group_attr(element, :kicker, :value), content_text(element, nil)], ""),
+       Keyword.merge(base_opts(element),
+         icon: group_attr(element, :kicker, :icon),
+         role: group_attr(element, :kicker, :role),
+         summary: group_attr(element, :kicker, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:avatar, "avatar"] do
+    {:ok,
+     DesktopUi.Widgets.avatar(
+       element.id,
+       first_present([group_attr(element, :avatar, :label), label_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         initials: group_attr(element, :avatar, :initials),
+         source: first_present([group_attr(element, :avatar, :source), attr(element, :source)]),
+         status: group_attr(element, :avatar, :status),
+         summary: group_attr(element, :avatar, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:presence_dot, "presence_dot"] do
+    {:ok,
+     DesktopUi.Widgets.presence_dot(
+       element.id,
+       first_present([group_attr(element, :presence, :status), attr(element, :status)], :unknown),
+       Keyword.merge(base_opts(element),
+         label: first_present([group_attr(element, :presence, :label), label_text(element)]),
+         pulse: group_attr(element, :presence, :pulse?),
+         summary: group_attr(element, :presence, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:segmented_button_group, "segmented_button_group"] do
+    {:ok,
+     DesktopUi.Widgets.segmented_button_group(
+       element.id,
+       first_present([group_attr(element, :segments, :items), attr(element, :items)], []),
+       Keyword.merge(base_opts(element),
+         active_item:
+           first_present([group_attr(element, :segments, :active_item), binding_value(element)]),
+         selection_mode: group_attr(element, :segments, :selection_mode),
+         orientation: group_attr(element, :segments, :orientation),
+         summary: group_attr(element, :segments, :summary),
+         on_select: interaction_payload(element, :selection),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:list_item_multi_column, "list_item_multi_column"] do
+    {:ok,
+     DesktopUi.Widgets.list_item_multi_column(
+       element.id,
+       first_present([group_attr(element, :list_item, :columns), attr(element, :columns)], []),
+       Keyword.merge(base_opts(element),
+         label: first_present([group_attr(element, :list_item, :label), label_text(element)]),
+         value: group_attr(element, :list_item, :value),
+         status: group_attr(element, :list_item, :status),
+         summary: group_attr(element, :list_item, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:artifact_row, "artifact_row"] do
+    {:ok,
+     DesktopUi.Widgets.artifact_row(
+       element.id,
+       first_present([group_attr(element, :artifact, :value), attr(element, :value)], %{}),
+       first_present([group_attr(element, :artifact, :title), content_text(element, nil)], ""),
+       Keyword.merge(base_opts(element),
+         status: group_attr(element, :artifact, :status),
+         timestamp: group_attr(element, :artifact, :timestamp),
+         summary: group_attr(element, :artifact, :summary),
+         on_click: interaction_payload(element, :click),
+         on_select: interaction_payload(element, :selection)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:sticky_header, "sticky_header"] do
+    {:ok,
+     DesktopUi.Widgets.sticky_header(
+       element.id,
+       first_present(
+         [group_attr(element, :sticky_header, :title), content_text(element, nil)],
+         ""
+       ),
+       Keyword.merge(base_opts(element),
+         stuck: group_attr(element, :sticky_header, :stuck?),
+         elevation: group_attr(element, :sticky_header, :elevation),
+         summary: group_attr(element, :sticky_header, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:pipeline_stepper_horizontal, "pipeline_stepper_horizontal"] do
+    {:ok,
+     DesktopUi.Widgets.pipeline_stepper_horizontal(
+       element.id,
+       first_present([group_attr(element, :workflow, :steps), attr(element, :steps)], []),
+       Keyword.merge(base_opts(element),
+         active_item: group_attr(element, :workflow, :active_item),
+         status: group_attr(element, :workflow, :status),
+         summary: group_attr(element, :workflow, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:segmented_progress_bar, "segmented_progress_bar"] do
+    {:ok,
+     DesktopUi.Widgets.segmented_progress_bar(
+       element.id,
+       first_present([group_attr(element, :progress, :segments), attr(element, :segments)], []),
+       Keyword.merge(base_opts(element),
+         current: group_attr(element, :progress, :current),
+         maximum: group_attr(element, :progress, :maximum),
+         label: group_attr(element, :progress, :label),
+         summary: group_attr(element, :progress, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:workflow_stage_list_vertical, "workflow_stage_list_vertical"] do
+    {:ok,
+     DesktopUi.Widgets.workflow_stage_list_vertical(
+       element.id,
+       first_present([group_attr(element, :workflow, :stages), attr(element, :stages)], []),
+       Keyword.merge(base_opts(element),
+         active_item: group_attr(element, :workflow, :active_item),
+         status: group_attr(element, :workflow, :status),
+         summary: group_attr(element, :workflow, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:meter_thin, "meter_thin"] do
+    {:ok,
+     DesktopUi.Widgets.meter_thin(
+       element.id,
+       first_present([group_attr(element, :meter, :current), attr(element, :current)], 0),
+       Keyword.merge(base_opts(element),
+         minimum: group_attr(element, :meter, :minimum),
+         maximum: group_attr(element, :meter, :maximum),
+         label: group_attr(element, :meter, :label),
+         severity: group_attr(element, :meter, :severity),
+         summary: group_attr(element, :meter, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:slide_over_panel, "slide_over_panel"] do
+    {:ok,
+     DesktopUi.Widgets.slide_over_panel(
+       element.id,
+       [],
+       Keyword.merge(base_opts(element),
+         title: first_present([group_attr(element, :panel, :title), label_text(element)]),
+         placement: group_attr(element, :panel, :placement),
+         visible: group_attr(element, :panel, :visible?),
+         modal: group_attr(element, :panel, :modal?),
+         summary: group_attr(element, :panel, :summary),
+         on_open: interaction_payload(element, :open),
+         on_close: interaction_payload(element, :close)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:event_callout, "event_callout"] do
+    {:ok,
+     DesktopUi.Widgets.event_callout(
+       element.id,
+       first_present([group_attr(element, :callout, :message), content_text(element, nil)], ""),
+       Keyword.merge(base_opts(element),
+         title: group_attr(element, :callout, :title),
+         severity: group_attr(element, :callout, :severity),
+         timestamp: group_attr(element, :callout, :timestamp),
+         summary: group_attr(element, :callout, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:redline_inline, "redline_inline"] do
+    {:ok,
+     DesktopUi.Widgets.redline_inline(
+       element.id,
+       first_present(
+         [group_attr(element, :redline, :before_text), attr(element, :before_text)],
+         ""
+       ),
+       first_present(
+         [group_attr(element, :redline, :after_text), attr(element, :after_text)],
+         ""
+       ),
+       Keyword.merge(base_opts(element),
+         label: group_attr(element, :redline, :label),
+         summary: group_attr(element, :redline, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:code_block_syntax_highlighted, "code_block_syntax_highlighted"] do
+    {:ok,
+     DesktopUi.Widgets.code_block_syntax_highlighted(
+       element.id,
+       first_present([group_attr(element, :code_block, :code), content_text(element, nil)], ""),
+       Keyword.merge(base_opts(element),
+         language: group_attr(element, :code_block, :language),
+         label: group_attr(element, :code_block, :label),
+         wrap: group_attr(element, :code_block, :wrap?),
+         summary: group_attr(element, :code_block, :summary)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
+       when kind in [:chat_composer, "chat_composer"] do
+    {:ok,
+     DesktopUi.Widgets.chat_composer(
+       element.id,
+       Keyword.merge(base_opts(element),
+         placeholder: group_attr(element, :composer, :placeholder),
+         submit_intent: group_attr(element, :composer, :submit_intent),
+         actions: group_attr(element, :composer, :actions) || [],
+         multiline: group_attr(element, :composer, :multiline?),
+         summary: group_attr(element, :composer, :summary),
+         on_submit: interaction_payload(element, :submit),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:host_form_shell, "host_form_shell"] do
+    {:ok,
+     DesktopUi.Widgets.host_form_shell(
+       element.id,
+       [],
+       Keyword.merge(base_opts(element),
+         owner: group_attr(element, :form_shell, :owner),
+         lifecycle: group_attr(element, :form_shell, :lifecycle),
+         action_placement: group_attr(element, :form_shell, :action_placement),
+         mode: group_attr(element, :form, :mode),
+         submit_intent: group_attr(element, :form, :submit_intent),
+         autocomplete: group_attr(element, :form, :autocomplete?),
+         validation_summary: group_attr(element, :validation, :summary),
+         validation_status: group_attr(element, :validation, :status),
+         validation_errors: group_attr(element, :validation, :errors),
+         on_submit: interaction_payload(element, :submit),
+         on_change: interaction_payload(element, :change)
+       )
+     )}
+  end
+
+  defp map_element(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and
+              kind in [:repeated_collection, "repeated_collection"] do
+    with {:ok, rows} <- collection_rows(element),
+         {:ok, empty_state} <- collection_empty_state(element, rows) do
+      {:ok,
+       DesktopUi.Widgets.repeated_collection(
+         element.id,
+         Enum.map(rows, & &1.widget),
+         Keyword.merge(base_opts(element),
+           item_alias: group_attr(element, :collection, :item_alias) || :item,
+           index_alias: group_attr(element, :collection, :index_alias) || :index,
+           key_path: group_attr(element, :collection, :key_path) || [],
+           row_metadata: Enum.map(rows, &Map.drop(&1, [:widget])),
+           empty_state: empty_state
+         )
+       )}
+    end
+  end
+
+  defp map_element(%Element{type: :widget, kind: kind} = element)
        when kind in [:window, "window"] do
     {:ok,
      DesktopUi.Widgets.window(
@@ -476,12 +844,25 @@ defmodule DesktopUi.Renderer.Mapper do
        Keyword.merge(
          base_opts(element),
          value: first_present([attr(element, :value), binding_value(element)]),
-         label: first_present([attr(element, :label), group_attr(element, :stat, :label), label_text(element)]),
+         label:
+           first_present([
+             attr(element, :label),
+             group_attr(element, :stat, :label),
+             label_text(element)
+           ]),
          unit: first_present([attr(element, :unit), group_attr(element, :stat, :unit)]),
          trend: first_present([attr(element, :trend), group_attr(element, :stat, :trend)]),
-         previous_value: first_present([attr(element, :previous_value), group_attr(element, :stat, :previous_value)]),
+         previous_value:
+           first_present([
+             attr(element, :previous_value),
+             group_attr(element, :stat, :previous_value)
+           ]),
          size: first_present([attr(element, :size), group_attr(element, :stat, :size)], :md),
-         variant: first_present([attr(element, :variant), group_attr(element, :stat, :variant)], :default)
+         variant:
+           first_present(
+             [attr(element, :variant), group_attr(element, :stat, :variant)],
+             :default
+           )
        )
      )}
   end
@@ -495,9 +876,14 @@ defmodule DesktopUi.Renderer.Mapper do
          base_opts(element),
          key: first_present([attr(element, :key), group_attr(element, :key_value, :key)]),
          value: first_present([attr(element, :value), binding_value(element)]),
-         align: first_present([attr(element, :align), group_attr(element, :key_value, :align)], :left),
+         align:
+           first_present([attr(element, :align), group_attr(element, :key_value, :align)], :left),
          size: first_present([attr(element, :size), group_attr(element, :key_value, :size)], :md),
-         variant: first_present([attr(element, :variant), group_attr(element, :key_value, :variant)], :default)
+         variant:
+           first_present(
+             [attr(element, :variant), group_attr(element, :key_value, :variant)],
+             :default
+           )
        )
      )}
   end
@@ -511,9 +897,21 @@ defmodule DesktopUi.Renderer.Mapper do
        Keyword.merge(
          base_opts(element),
          size: first_present([attr(element, :size), group_attr(element, :info_list, :size)], :md),
-         variant: first_present([attr(element, :variant), group_attr(element, :info_list, :variant)], :default),
-         show_icons: first_present([attr(element, :show_icons), group_attr(element, :info_list, :show_icons)], true),
-         compact: first_present([attr(element, :compact), group_attr(element, :info_list, :compact)], false)
+         variant:
+           first_present(
+             [attr(element, :variant), group_attr(element, :info_list, :variant)],
+             :default
+           ),
+         show_icons:
+           first_present(
+             [attr(element, :show_icons), group_attr(element, :info_list, :show_icons)],
+             true
+           ),
+         compact:
+           first_present(
+             [attr(element, :compact), group_attr(element, :info_list, :compact)],
+             false
+           )
        )
      )}
   end
@@ -585,12 +983,33 @@ defmodule DesktopUi.Renderer.Mapper do
        element.id,
        Keyword.merge(
          base_opts(element),
-         message: first_present([attr(element, :message), attr(element, :content), label_text(element)]),
-         severity: first_present([attr(element, :severity), group_attr(element, :feedback, :severity)], :info),
-         placement: first_present([attr(element, :placement), group_attr(element, :feedback, :placement)], :bottom),
-         dismissible: first_present([attr(element, :dismissible), group_attr(element, :feedback, :dismissible)], true),
-         auto_hide: first_present([attr(element, :auto_hide), group_attr(element, :feedback, :auto_hide)], true),
-         timeout_ms: first_present([attr(element, :timeout_ms), group_attr(element, :feedback, :timeout_ms)], 3_000),
+         message:
+           first_present([attr(element, :message), attr(element, :content), label_text(element)]),
+         severity:
+           first_present(
+             [attr(element, :severity), group_attr(element, :feedback, :severity)],
+             :info
+           ),
+         placement:
+           first_present(
+             [attr(element, :placement), group_attr(element, :feedback, :placement)],
+             :bottom
+           ),
+         dismissible:
+           first_present(
+             [attr(element, :dismissible), group_attr(element, :feedback, :dismissible)],
+             true
+           ),
+         auto_hide:
+           first_present(
+             [attr(element, :auto_hide), group_attr(element, :feedback, :auto_hide)],
+             true
+           ),
+         timeout_ms:
+           first_present(
+             [attr(element, :timeout_ms), group_attr(element, :feedback, :timeout_ms)],
+             3_000
+           ),
          on_close: interaction_payload(element, :close)
        )
      )}
@@ -604,9 +1023,15 @@ defmodule DesktopUi.Renderer.Mapper do
        label_text(element, "Status"),
        Keyword.merge(
          base_opts(element),
-         status: first_present([attr(element, :status), group_attr(element, :status, :state)], :idle),
-         severity: first_present([attr(element, :severity), group_attr(element, :status, :severity)], :info),
-         active: first_present([attr(element, :active), group_attr(element, :status, :active)], true),
+         status:
+           first_present([attr(element, :status), group_attr(element, :status, :state)], :idle),
+         severity:
+           first_present(
+             [attr(element, :severity), group_attr(element, :status, :severity)],
+             :info
+           ),
+         active:
+           first_present([attr(element, :active), group_attr(element, :status, :active)], true),
          icon: first_present([attr(element, :icon), group_attr(element, :status, :icon)])
        )
      )}
@@ -676,8 +1101,16 @@ defmodule DesktopUi.Renderer.Mapper do
          color: first_present([attr(element, :color), group_attr(element, :chart, :color)]),
          width: attr(element, :width),
          height: attr(element, :height),
-         show_area: first_present([attr(element, :show_area), group_attr(element, :chart, :show_area)], true),
-         show_dots: first_present([attr(element, :show_dots), group_attr(element, :chart, :show_dots)], false)
+         show_area:
+           first_present(
+             [attr(element, :show_area), group_attr(element, :chart, :show_area)],
+             true
+           ),
+         show_dots:
+           first_present(
+             [attr(element, :show_dots), group_attr(element, :chart, :show_dots)],
+             false
+           )
        )
      )}
   end
@@ -773,13 +1206,24 @@ defmodule DesktopUi.Renderer.Mapper do
        element.id,
        Keyword.merge(
          base_opts(element),
-         entries: first_present([attr(element, :entries), group_attr(element, :data, :entries)], []),
-         follow: first_present([attr(element, :follow), group_attr(element, :stream, :follow)], true),
+         entries:
+           first_present([attr(element, :entries), group_attr(element, :data, :entries)], []),
+         follow:
+           first_present([attr(element, :follow), group_attr(element, :stream, :follow)], true),
          filter: first_present([attr(element, :filter), group_attr(element, :stream, :filter)]),
          level: first_present([attr(element, :level), group_attr(element, :stream, :level)]),
-         line_limit: first_present([attr(element, :line_limit), group_attr(element, :stream, :line_limit)], 1000),
-         streaming: first_present([attr(element, :streaming), group_attr(element, :stream, :streaming)], true),
-         paused: first_present([attr(element, :paused), group_attr(element, :stream, :paused)], false),
+         line_limit:
+           first_present(
+             [attr(element, :line_limit), group_attr(element, :stream, :line_limit)],
+             1000
+           ),
+         streaming:
+           first_present(
+             [attr(element, :streaming), group_attr(element, :stream, :streaming)],
+             true
+           ),
+         paused:
+           first_present([attr(element, :paused), group_attr(element, :stream, :paused)], false),
          on_pause: interaction_payload(element, :pause),
          on_resume: interaction_payload(element, :resume),
          on_clear: interaction_payload(element, :clear),
@@ -795,11 +1239,20 @@ defmodule DesktopUi.Renderer.Mapper do
        element.id,
        Keyword.merge(
          base_opts(element),
-         tree: first_present([attr(element, :tree), group_attr(element, :supervision, :tree)], []),
+         tree:
+           first_present([attr(element, :tree), group_attr(element, :supervision, :tree)], []),
          query: first_present([attr(element, :query), group_attr(element, :supervision, :query)]),
-         application: first_present([attr(element, :application), group_attr(element, :supervision, :application)]),
+         application:
+           first_present([
+             attr(element, :application),
+             group_attr(element, :supervision, :application)
+           ]),
          selection_binding: binding_name(element),
-         expanded: first_present([attr(element, :expanded), group_attr(element, :supervision, :expanded)], []),
+         expanded:
+           first_present(
+             [attr(element, :expanded), group_attr(element, :supervision, :expanded)],
+             []
+           ),
          selected: first_present([attr(element, :selected), binding_value(element)]),
          on_select: interaction_payload(element, :selection),
          on_expand: interaction_payload(element, :expand),
@@ -934,7 +1387,8 @@ defmodule DesktopUi.Renderer.Mapper do
     {:ok,
      DesktopUi.Layout.box(
        element.id,
-       [],  # Children will be added via slot_children
+       # Children will be added via slot_children
+       [],
        Keyword.merge(
          base_opts(element),
          # Container attributes
@@ -965,7 +1419,8 @@ defmodule DesktopUi.Renderer.Mapper do
     {:ok,
      DesktopUi.Layout.grid(
        element.id,
-       [],  # Children will be added via slot_children
+       # Children will be added via slot_children
+       [],
        Keyword.merge(
          base_opts(element),
          # Grid dimensions
@@ -1050,6 +1505,227 @@ defmodule DesktopUi.Renderer.Mapper do
        id: element.id
      })}
   end
+
+  defp collection_rows(%Element{} = element) do
+    template = element |> children_for_slots([:template]) |> List.first()
+    source = group_attr(element, :collection, :source)
+    item_alias = group_attr(element, :collection, :item_alias) || :item
+    index_alias = group_attr(element, :collection, :index_alias) || :index
+    key_path = group_attr(element, :collection, :key_path) || []
+
+    case {template, collection_source_items(source)} do
+      {%Child{element: %Element{} = template}, items} when is_list(items) ->
+        row_entries =
+          items
+          |> Enum.with_index()
+          |> Enum.map(fn {item, index} ->
+            %{item: item, index: index, key_info: collection_row_key_info(item, key_path, index)}
+          end)
+
+        key_counts = Enum.frequencies_by(row_entries, & &1.key_info.key)
+
+        Enum.reduce_while(row_entries, {:ok, []}, fn %{
+                                                       item: item,
+                                                       index: index,
+                                                       key_info: key_info
+                                                     },
+                                                     {:ok, acc} ->
+          resolved_element =
+            resolve_row_scope(template, %{
+              item: item,
+              index: index,
+              item_alias: item_alias,
+              index_alias: index_alias,
+              key: collection_row_render_key(key_info.key, index, key_counts)
+            })
+
+          case map(resolved_element) do
+            {:ok, widget} ->
+              row = %{
+                key: key_info.key,
+                key_source: key_info.source,
+                index: index,
+                item: item,
+                diagnostics:
+                  collection_row_diagnostics(key_info, key_counts) ++
+                    unresolved_row_scope_diagnostics(resolved_element),
+                widget: widget
+              }
+
+              {:cont, {:ok, [row | acc]}}
+
+            {:error, error} ->
+              {:halt, {:error, error}}
+          end
+        end)
+        |> case do
+          {:ok, rows} -> {:ok, Enum.reverse(rows)}
+          error -> error
+        end
+
+      _other ->
+        {:ok, []}
+    end
+  end
+
+  defp collection_source_items(%Binding{value: value}) when is_list(value), do: value
+  defp collection_source_items(_source), do: []
+
+  defp collection_empty_state(_element, [_row | _rows]), do: {:ok, []}
+
+  defp collection_empty_state(%Element{} = element, []) do
+    element
+    |> children_for_slots([:empty_state])
+    |> Enum.with_index()
+    |> Enum.reduce_while({:ok, []}, fn {child, index}, {:ok, acc} ->
+      child = ensure_child_id(child, "#{element.id}-empty-state-#{index}")
+
+      case map_child(child) do
+        {:ok, widget} -> {:cont, {:ok, acc ++ [widget]}}
+        {:error, error} -> {:halt, {:error, error}}
+      end
+    end)
+  end
+
+  defp ensure_child_id(%Child{element: %Element{id: nil} = element} = child, id) do
+    %{child | element: %{element | id: id}}
+  end
+
+  defp ensure_child_id(child, _id), do: child
+
+  defp collection_row_key_info(item, key_path, index) do
+    case value_at_path(item, key_path) do
+      nil ->
+        %{key: Integer.to_string(index), source: :index_fallback, diagnostics: [:missing_key]}
+
+      value ->
+        %{key: to_string(value), source: :key_path, diagnostics: []}
+    end
+  end
+
+  defp collection_row_diagnostics(key_info, key_counts) do
+    diagnostics = key_info.diagnostics
+
+    if Map.fetch!(key_counts, key_info.key) > 1 do
+      Enum.uniq(diagnostics ++ [:duplicate_key])
+    else
+      diagnostics
+    end
+  end
+
+  defp collection_row_render_key(key, index, key_counts) do
+    if Map.fetch!(key_counts, key) > 1 do
+      "#{key}-#{index}"
+    else
+      key
+    end
+  end
+
+  defp unresolved_row_scope_diagnostics(value) do
+    case unresolved_row_scope_bindings(value) do
+      [] -> []
+      _bindings -> [:unresolved_row_scope]
+    end
+  end
+
+  defp unresolved_row_scope_bindings(%Binding{source: :row_scope} = binding), do: [binding]
+  defp unresolved_row_scope_bindings(%Binding{}), do: []
+
+  defp unresolved_row_scope_bindings(%Interaction{} = interaction) do
+    unresolved_row_scope_bindings(interaction.source) ++
+      unresolved_row_scope_bindings(interaction.target) ++
+      unresolved_row_scope_bindings(interaction.payload) ++
+      unresolved_row_scope_bindings(interaction.metadata)
+  end
+
+  defp unresolved_row_scope_bindings(%Element{} = element) do
+    unresolved_row_scope_bindings(element.attributes) ++
+      unresolved_row_scope_bindings(element.children)
+  end
+
+  defp unresolved_row_scope_bindings(%Child{} = child) do
+    unresolved_row_scope_bindings(child.element)
+  end
+
+  defp unresolved_row_scope_bindings(values) when is_list(values) do
+    Enum.flat_map(values, &unresolved_row_scope_bindings/1)
+  end
+
+  defp unresolved_row_scope_bindings(values) when is_map(values) do
+    values
+    |> Map.values()
+    |> Enum.flat_map(&unresolved_row_scope_bindings/1)
+  end
+
+  defp unresolved_row_scope_bindings(_value), do: []
+
+  defp resolve_row_scope(%Element{} = element, context) do
+    %{
+      element
+      | id: row_scoped_id(element.id, context.key),
+        attributes: resolve_row_scope(element.attributes, context),
+        children: Enum.map(element.children, &resolve_row_scope(&1, context))
+    }
+  end
+
+  defp resolve_row_scope(%Child{} = child, context) do
+    %{child | element: resolve_row_scope(child.element, context)}
+  end
+
+  defp resolve_row_scope(
+         %Binding{source: :row_scope, scope: [scope | _], path: path} = binding,
+         context
+       ) do
+    cond do
+      scope == context.item_alias ->
+        value_at_path(context.item, path)
+
+      scope == context.index_alias ->
+        context.index
+
+      true ->
+        binding
+    end
+  end
+
+  defp resolve_row_scope(%Binding{} = binding, _context), do: binding
+  defp resolve_row_scope(nil, _context), do: nil
+
+  defp resolve_row_scope(%Interaction{} = interaction, context) do
+    %{
+      interaction
+      | source: resolve_row_scope(interaction.source, context),
+        target: resolve_row_scope(interaction.target, context),
+        payload: resolve_row_scope(interaction.payload, context),
+        metadata: resolve_row_scope(interaction.metadata, context)
+    }
+  end
+
+  defp resolve_row_scope(values, context) when is_list(values) do
+    Enum.map(values, &resolve_row_scope(&1, context))
+  end
+
+  defp resolve_row_scope(values, context) when is_map(values) do
+    Map.new(values, fn {key, value} -> {key, resolve_row_scope(value, context)} end)
+  end
+
+  defp resolve_row_scope(value, _context), do: value
+
+  defp row_scoped_id(nil, key), do: "row-template-#{key}"
+  defp row_scoped_id(id, key), do: "#{id}-#{key}"
+
+  defp children_for_slots(%Element{} = element, slots) do
+    slots = Enum.map(slots, &to_string/1)
+
+    Enum.filter(element.children, fn
+      %Child{slot: slot} -> to_string(slot) in slots
+      _other -> false
+    end)
+  end
+
+  defp map_child(%Child{element: %Element{} = element}), do: map(element)
+  defp map_child(%Element{} = element), do: map(element)
+  defp map_child(_other), do: {:ok, nil}
 
   defp map_children(children) do
     children
@@ -1173,7 +1849,9 @@ defmodule DesktopUi.Renderer.Mapper do
              :click,
              :change,
              :submit,
+             :open,
              :selection,
+             :focus,
              :navigation,
              :command,
              :sort,
@@ -1247,4 +1925,51 @@ defmodule DesktopUi.Renderer.Mapper do
   defp placeholder_child(id, role) do
     Widget.new(:spacer, id: "#{id}-#{role}-placeholder")
   end
+
+  defp value_at_path(value, nil), do: value
+  defp value_at_path(value, []), do: value
+
+  defp value_at_path(value, path) do
+    Enum.reduce_while(List.wrap(path), value, fn segment, current ->
+      case fetch_path_segment(current, segment) do
+        {:ok, next} -> {:cont, next}
+        :error -> {:halt, nil}
+      end
+    end)
+  end
+
+  defp fetch_path_segment(%{} = map, segment) do
+    atom_segment = existing_atom_key(segment)
+
+    cond do
+      Map.has_key?(map, segment) ->
+        {:ok, Map.fetch!(map, segment)}
+
+      Map.has_key?(map, to_string(segment)) ->
+        {:ok, Map.fetch!(map, to_string(segment))}
+
+      is_atom(atom_segment) and Map.has_key?(map, atom_segment) ->
+        {:ok, Map.fetch!(map, atom_segment)}
+
+      true ->
+        :error
+    end
+  end
+
+  defp fetch_path_segment(list, index) when is_list(list) and is_integer(index) do
+    case Enum.fetch(list, index) do
+      {:ok, value} -> {:ok, value}
+      :error -> :error
+    end
+  end
+
+  defp fetch_path_segment(_current, _segment), do: :error
+
+  defp existing_atom_key(segment) when is_binary(segment) do
+    String.to_existing_atom(segment)
+  rescue
+    ArgumentError -> nil
+  end
+
+  defp existing_atom_key(_segment), do: nil
 end
