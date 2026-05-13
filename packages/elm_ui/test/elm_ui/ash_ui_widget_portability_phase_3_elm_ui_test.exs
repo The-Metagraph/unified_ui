@@ -104,12 +104,14 @@ defmodule ElmUi.AshUiWidgetPortabilityPhase3ElmUiTest do
     assert repeated.attributes.rows == [
              %{
                key: "artifact-1",
+               key_source: :key_path,
                index: 0,
                item: %{
                  id: "artifact-1",
                  record: %{id: "artifact-1"},
                  columns: %{name: "artifact.tar"}
-               }
+               },
+               diagnostics: []
              }
            ]
 

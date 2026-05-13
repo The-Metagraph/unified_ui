@@ -6,6 +6,7 @@ defmodule ElmUi.Renderer.Canonical do
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
   alias UnifiedIUR.Binding
+  alias UnifiedIUR.Interaction
   alias ElmUi.Renderer.Error
   alias ElmUi.Widgets
 
@@ -1817,19 +1818,30 @@ defmodule ElmUi.Renderer.Canonical do
         items
         |> Enum.with_index()
         |> Enum.reduce_while({:ok, []}, fn {item, index}, {:ok, acc} ->
-          key = collection_row_key(item, key_path, index)
+          key_info = collection_row_key_info(item, key_path, index)
 
           row_context = %{
             item: item,
             index: index,
             item_alias: item_alias,
             index_alias: index_alias,
-            key: key
+            key: key_info.key
           }
 
-          case do_render(resolve_row_scope(template, row_context)) do
+          resolved_element = resolve_row_scope(template, row_context)
+
+          case do_render(resolved_element) do
             {:ok, widget} ->
-              row = %{key: key, index: index, item: item, widget: widget}
+              row = %{
+                key: key_info.key,
+                key_source: key_info.source,
+                index: index,
+                item: item,
+                diagnostics:
+                  key_info.diagnostics ++ unresolved_row_scope_diagnostics(resolved_element),
+                widget: widget
+              }
+
               {:cont, {:ok, [row | acc]}}
 
             {:error, error} ->
@@ -1837,7 +1849,7 @@ defmodule ElmUi.Renderer.Canonical do
           end
         end)
         |> case do
-          {:ok, rows} -> {:ok, Enum.reverse(rows)}
+          {:ok, rows} -> {:ok, rows |> Enum.reverse() |> with_duplicate_key_diagnostics()}
           error -> error
         end
 
@@ -1867,12 +1879,65 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp ensure_child_id(child, _id), do: child
 
-  defp collection_row_key(item, key_path, index) do
+  defp collection_row_key_info(item, key_path, index) do
     case value_at_path(item, key_path) do
-      nil -> Integer.to_string(index)
-      value -> to_string(value)
+      nil ->
+        %{key: Integer.to_string(index), source: :index_fallback, diagnostics: [:missing_key]}
+
+      value ->
+        %{key: to_string(value), source: :key_path, diagnostics: []}
     end
   end
+
+  defp with_duplicate_key_diagnostics(rows) do
+    counts = Enum.frequencies_by(rows, & &1.key)
+
+    Enum.map(rows, fn row ->
+      if Map.fetch!(counts, row.key) > 1 do
+        Map.update!(row, :diagnostics, &Enum.uniq(&1 ++ [:duplicate_key]))
+      else
+        row
+      end
+    end)
+  end
+
+  defp unresolved_row_scope_diagnostics(value) do
+    case unresolved_row_scope_bindings(value) do
+      [] -> []
+      _bindings -> [:unresolved_row_scope]
+    end
+  end
+
+  defp unresolved_row_scope_bindings(%Binding{source: :row_scope} = binding), do: [binding]
+  defp unresolved_row_scope_bindings(%Binding{}), do: []
+
+  defp unresolved_row_scope_bindings(%Interaction{} = interaction) do
+    unresolved_row_scope_bindings(interaction.source) ++
+      unresolved_row_scope_bindings(interaction.target) ++
+      unresolved_row_scope_bindings(interaction.payload) ++
+      unresolved_row_scope_bindings(interaction.metadata)
+  end
+
+  defp unresolved_row_scope_bindings(%Element{} = element) do
+    unresolved_row_scope_bindings(element.attributes) ++
+      unresolved_row_scope_bindings(element.children)
+  end
+
+  defp unresolved_row_scope_bindings(%Child{} = child) do
+    unresolved_row_scope_bindings(child.element)
+  end
+
+  defp unresolved_row_scope_bindings(values) when is_list(values) do
+    Enum.flat_map(values, &unresolved_row_scope_bindings/1)
+  end
+
+  defp unresolved_row_scope_bindings(values) when is_map(values) do
+    values
+    |> Map.values()
+    |> Enum.flat_map(&unresolved_row_scope_bindings/1)
+  end
+
+  defp unresolved_row_scope_bindings(_value), do: []
 
   defp resolve_row_scope(%Element{} = element, context) do
     %{
@@ -1905,6 +1970,16 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp resolve_row_scope(%Binding{} = binding, _context), do: binding
   defp resolve_row_scope(nil, _context), do: nil
+
+  defp resolve_row_scope(%Interaction{} = interaction, context) do
+    %{
+      interaction
+      | source: resolve_row_scope(interaction.source, context),
+        target: resolve_row_scope(interaction.target, context),
+        payload: resolve_row_scope(interaction.payload, context),
+        metadata: resolve_row_scope(interaction.metadata, context)
+    }
+  end
 
   defp resolve_row_scope(values, context) when is_list(values) do
     Enum.map(values, &resolve_row_scope(&1, context))

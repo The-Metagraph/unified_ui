@@ -996,6 +996,8 @@ defmodule LiveUi.Renderer do
           :for={row <- @collection_rows}
           data-live-ui-collection-row={row.key}
           data-live-ui-row-index={row.index}
+          data-live-ui-row-key-source={row.key_source}
+          data-live-ui-row-diagnostics={collection_diagnostics_text(row.diagnostics)}
         >
           <.render element={row.element} event_target={@event_target} />
         </div>
@@ -1652,23 +1654,34 @@ defmodule LiveUi.Renderer do
 
     case {template, collection_source_items(source)} do
       {%Element{} = template, items} when is_list(items) ->
-        items
-        |> Enum.with_index()
-        |> Enum.map(fn {item, index} ->
-          key = collection_row_key(item, key_path, index)
+        row_entries =
+          items
+          |> Enum.with_index()
+          |> Enum.map(fn {item, index} ->
+            %{item: item, index: index, key_info: collection_row_key_info(item, key_path, index)}
+          end)
+
+        key_counts = Enum.frequencies_by(row_entries, & &1.key_info.key)
+
+        Enum.map(row_entries, fn %{item: item, index: index, key_info: key_info} ->
+          resolved_element =
+            resolve_row_scope(template, %{
+              item: item,
+              index: index,
+              item_alias: item_alias,
+              index_alias: index_alias,
+              key: collection_row_render_key(key_info.key, index, key_counts)
+            })
 
           %{
-            key: key,
+            key: key_info.key,
+            key_source: key_info.source,
             index: index,
             item: item,
-            element:
-              resolve_row_scope(template, %{
-                item: item,
-                index: index,
-                item_alias: item_alias,
-                index_alias: index_alias,
-                key: key
-              })
+            diagnostics:
+              collection_row_diagnostics(key_info, key_counts) ++
+                unresolved_row_scope_diagnostics(resolved_element),
+            element: resolved_element
           }
         end)
 
@@ -1680,12 +1693,79 @@ defmodule LiveUi.Renderer do
   defp collection_source_items(%Binding{value: value}) when is_list(value), do: value
   defp collection_source_items(_source), do: []
 
-  defp collection_row_key(item, key_path, index) do
+  defp collection_row_key_info(item, key_path, index) do
     case value_at_path(item, key_path) do
-      nil -> Integer.to_string(index)
-      value -> to_string(value)
+      nil ->
+        %{key: Integer.to_string(index), source: :index_fallback, diagnostics: [:missing_key]}
+
+      value ->
+        %{key: to_string(value), source: :key_path, diagnostics: []}
     end
   end
+
+  defp collection_row_diagnostics(key_info, key_counts) do
+    diagnostics = key_info.diagnostics
+
+    if Map.fetch!(key_counts, key_info.key) > 1 do
+      Enum.uniq(diagnostics ++ [:duplicate_key])
+    else
+      diagnostics
+    end
+  end
+
+  defp collection_row_render_key(key, index, key_counts) do
+    if Map.fetch!(key_counts, key) > 1 do
+      "#{key}-#{index}"
+    else
+      key
+    end
+  end
+
+  defp collection_diagnostics_text([]), do: nil
+
+  defp collection_diagnostics_text(diagnostics) do
+    diagnostics
+    |> Enum.map(&to_string/1)
+    |> Enum.join(" ")
+  end
+
+  defp unresolved_row_scope_diagnostics(value) do
+    case unresolved_row_scope_bindings(value) do
+      [] -> []
+      _bindings -> [:unresolved_row_scope]
+    end
+  end
+
+  defp unresolved_row_scope_bindings(%Binding{source: :row_scope} = binding), do: [binding]
+  defp unresolved_row_scope_bindings(%Binding{}), do: []
+
+  defp unresolved_row_scope_bindings(%Interaction{} = interaction) do
+    unresolved_row_scope_bindings(interaction.source) ++
+      unresolved_row_scope_bindings(interaction.target) ++
+      unresolved_row_scope_bindings(interaction.payload) ++
+      unresolved_row_scope_bindings(interaction.metadata)
+  end
+
+  defp unresolved_row_scope_bindings(%Element{} = element) do
+    unresolved_row_scope_bindings(element.attributes) ++
+      unresolved_row_scope_bindings(element.children)
+  end
+
+  defp unresolved_row_scope_bindings(%Child{} = child) do
+    unresolved_row_scope_bindings(child.element)
+  end
+
+  defp unresolved_row_scope_bindings(values) when is_list(values) do
+    Enum.flat_map(values, &unresolved_row_scope_bindings/1)
+  end
+
+  defp unresolved_row_scope_bindings(values) when is_map(values) do
+    values
+    |> Map.values()
+    |> Enum.flat_map(&unresolved_row_scope_bindings/1)
+  end
+
+  defp unresolved_row_scope_bindings(_value), do: []
 
   defp resolve_row_scope(%Element{} = element, context) do
     %{
@@ -1718,6 +1798,16 @@ defmodule LiveUi.Renderer do
 
   defp resolve_row_scope(%Binding{} = binding, _context), do: binding
   defp resolve_row_scope(nil, _context), do: nil
+
+  defp resolve_row_scope(%Interaction{} = interaction, context) do
+    %{
+      interaction
+      | source: resolve_row_scope(interaction.source, context),
+        target: resolve_row_scope(interaction.target, context),
+        payload: resolve_row_scope(interaction.payload, context),
+        metadata: resolve_row_scope(interaction.metadata, context)
+    }
+  end
 
   defp resolve_row_scope(values, context) when is_list(values) do
     Enum.map(values, &resolve_row_scope(&1, context))

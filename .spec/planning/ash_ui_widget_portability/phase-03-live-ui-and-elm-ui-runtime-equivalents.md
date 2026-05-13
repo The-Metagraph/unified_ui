@@ -66,25 +66,25 @@ Back to index: [README](./README.md)
       [x] 3.2.2.2 Subtask - Map host-owned form shell IUR data onto the ElmUi server/frontend form lifecycle without leaking canonical Phoenix or Ash assumptions.
       [x] 3.2.2.3 Subtask - Add parity tests that compare direct native descriptors and IUR-rendered descriptors for equivalent widget scenarios.
 
-  [ ] 3.3 Section - Web Runtime Repeated Collection and Interaction Semantics
+  [x] 3.3 Section - Web Runtime Repeated Collection and Interaction Semantics
     Implement repeated collection realization and row-scope interaction
     semantics consistently across both web runtimes.
 
-    [ ] 3.3.1 Task - Implement repeated collection rendering for LiveUi and ElmUi
+    [x] 3.3.1 Task - Implement repeated collection rendering for LiveUi and ElmUi
       Render canonical repeated collection constructs through native web
       runtime composition.
 
-      [ ] 3.3.1.1 Subtask - Render list data with stable item identity, row aliases, empty states, and child templates in `live_ui`.
-      [ ] 3.3.1.2 Subtask - Render list data with stable item identity, row aliases, empty states, and child templates in `elm_ui`.
-      [ ] 3.3.1.3 Subtask - Add tests for insert, update, remove, empty state, and nested promoted widget scenarios.
+      [x] 3.3.1.1 Subtask - Render list data with stable item identity, row aliases, empty states, and child templates in `live_ui`.
+      [x] 3.3.1.2 Subtask - Render list data with stable item identity, row aliases, empty states, and child templates in `elm_ui`.
+      [x] 3.3.1.3 Subtask - Add tests for insert, update, remove, empty state, and nested promoted widget scenarios.
 
-    [ ] 3.3.2 Task - Preserve row-scope interaction payloads across web runtimes
+    [x] 3.3.2 Task - Preserve row-scope interaction payloads across web runtimes
       Ensure user interactions inside repeated rows carry canonical row-scope
       meaning at the package boundary.
 
-      [ ] 3.3.2.1 Subtask - Verify LiveView events emitted inside repeated rows include the canonical row-scope payload mapping.
-      [ ] 3.3.2.2 Subtask - Verify Elm frontend events emitted inside repeated rows cross the server bridge with the canonical row-scope payload mapping.
-      [ ] 3.3.2.3 Subtask - Add diagnostics for missing keys, stale row references, and unsupported row-scope bindings.
+      [x] 3.3.2.1 Subtask - Verify LiveView events emitted inside repeated rows include the canonical row-scope payload mapping.
+      [x] 3.3.2.2 Subtask - Verify Elm frontend events emitted inside repeated rows cross the server bridge with the canonical row-scope payload mapping.
+      [x] 3.3.2.3 Subtask - Add diagnostics for missing keys, stale row references, and unsupported row-scope bindings.
 
   [ ] 3.4 Section - Phase 3 Integration Tests
     Validate the promoted web-runtime surface from direct native use through
