@@ -10,6 +10,7 @@ defmodule Mix.Tasks.UnifiedUi.Inspect do
       mix unified_ui.inspect --example themed_signal_workspace --format signals
       mix unified_ui.inspect --module UnifiedUi.Examples.OperationsDashboard
       mix unified_ui.inspect --coverage
+      mix unified_ui.inspect --format portable_widgets
   """
 
   alias UnifiedUi.Tooling
@@ -38,9 +39,13 @@ defmodule Mix.Tasks.UnifiedUi.Inspect do
             |> parse_module()
             |> inspect_module(format)
 
+          format == "portable_widgets" ->
+            Tooling.portable_widget_report()
+            |> inspect_term()
+
           true ->
             Mix.raise(
-              "usage: mix unified_ui.inspect --example ID [--format report|signals|diagnostics] | --module MODULE [--format report|signals|diagnostics] | --coverage"
+              "usage: mix unified_ui.inspect --example ID [--format report|signals|diagnostics|portable_widgets] | --module MODULE [--format report|signals|diagnostics|portable_widgets] | --coverage | --format portable_widgets"
             )
         end
 
@@ -79,6 +84,14 @@ defmodule Mix.Tasks.UnifiedUi.Inspect do
     end
   end
 
+  defp inspect_example(id, "portable_widgets") do
+    case Tooling.inspect_example(id) do
+      {:ok, report} -> inspect_term(report.portable_widget_support)
+      :error -> Mix.raise("unknown example #{inspect(id)}")
+      {:error, diagnostics} -> Tooling.render_diagnostics(diagnostics)
+    end
+  end
+
   defp inspect_example(_id, other) do
     Mix.raise("unsupported inspect format #{inspect(other)}")
   end
@@ -101,6 +114,12 @@ defmodule Mix.Tasks.UnifiedUi.Inspect do
     module
     |> Tooling.module_diagnostics()
     |> Tooling.render_diagnostics()
+  end
+
+  defp inspect_module(module, "portable_widgets") do
+    module
+    |> Tooling.portable_widget_report()
+    |> inspect_term()
   end
 
   defp inspect_module(_module, other) do

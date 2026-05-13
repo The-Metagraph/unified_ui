@@ -5,7 +5,8 @@ defmodule UnifiedIUR.Export do
 
   alias UnifiedIUR.{Fixtures, Inspect, Interaction, Normalize, Reference, Validate}
 
-  @type export_format :: :fixture | :snapshot | :diagnostics | :tree | :inspection
+  @type export_format ::
+          :fixture | :snapshot | :diagnostics | :tree | :inspection | :portable_widgets
   @type navigation_export_format :: :fixture | :snapshot | :inspection
 
   @spec fixture(String.t(), export_format()) :: {:ok, String.t()} | :error
@@ -37,6 +38,12 @@ defmodule UnifiedIUR.Export do
             :inspection ->
               fixture.element
               |> Inspect.element()
+              |> serialize_term()
+
+            :portable_widgets ->
+              fixture.element
+              |> Inspect.element()
+              |> Map.take([:fixture_id, :portable_widgets, :collections])
               |> serialize_term()
           end
 

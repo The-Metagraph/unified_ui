@@ -29,6 +29,12 @@ defmodule ElmUi.Export do
     end)
   end
 
+  @spec portable_widgets() :: String.t()
+  def portable_widgets do
+    ElmUi.Tooling.portable_widget_report()
+    |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
+  end
+
   @spec example(atom() | String.t(), atom()) :: {:ok, String.t()} | {:error, :unknown_example}
   def example(id, format \\ :report) do
     with {:ok, artifact} <- artifact(id) do

@@ -3,7 +3,7 @@ defmodule UnifiedUi.Compiler.Inspection do
   Maintainer-facing inspection helpers for compiled `UnifiedUi` artifacts.
   """
 
-  alias UnifiedIUR.{Inspect, Reference}
+  alias UnifiedIUR.{Inspect, PortableWidgetSupport, Reference}
   alias UnifiedUi.Compiler
   alias UnifiedUi.Compiler.Result
   alias UnifiedUi.Info
@@ -65,6 +65,7 @@ defmodule UnifiedUi.Compiler.Inspection do
       "authored ids: #{format_list(listing.authored.authored_ids)}",
       "authored families: #{format_list(report.authoring_surface.families)}",
       "authored widgets: #{format_widget_contracts(report.authoring_surface.widgets)}",
+      "portable widget support: #{format_portable_widget_support(listing.compiled.widget_kinds ++ listing.compiled.composite_kinds)}",
       "repeated collections: #{format_repeated_collections(report.authoring_surface.repeated_collections)}",
       "row-scope refs: #{format_list(report.authoring_surface.row_scope_refs)}",
       "widget kinds: #{format_list(listing.compiled.widget_kinds)}",
@@ -132,6 +133,15 @@ defmodule UnifiedUi.Compiler.Inspection do
     end)
     |> Enum.join("; ")
     |> then(&"[#{&1}]")
+  end
+
+  defp format_portable_widget_support(kinds) do
+    kinds = Enum.uniq(kinds)
+    expected = PortableWidgetSupport.promoted_kinds()
+    present = Enum.filter(expected, &(&1 in kinds))
+    missing = expected -- present
+
+    "present=#{format_list(present)} missing=#{format_list(missing)} runtimes=#{format_list(PortableWidgetSupport.runtime_packages())}"
   end
 
   defp format_repeated_collections([]), do: "[]"

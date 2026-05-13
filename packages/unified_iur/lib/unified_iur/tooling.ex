@@ -10,6 +10,7 @@ defmodule UnifiedIUR.Tooling do
     Inspect,
     Interoperability,
     Normalize,
+    PortableWidgetSupport,
     Reference,
     Validate
   }
@@ -64,7 +65,39 @@ defmodule UnifiedIUR.Tooling do
         :runtime_consumer_review_for_canonical_boundary_changes,
         :snapshot_diff_review_for_shape_changes
       ],
-      release_readiness_focus: [:portability, :determinism, :extension_safety]
+      release_readiness_focus: [
+        :portability,
+        :promoted_widget_support,
+        :determinism,
+        :extension_safety
+      ]
+    }
+  end
+
+  @spec portable_widget_report() :: map()
+  def portable_widget_report do
+    fixture = Fixtures.fixture!("portable_widgets--ash_ui_portability")
+    inspection = Inspect.element(fixture.element)
+    fixture_kinds = Enum.map(inspection.portable_widgets, & &1.kind) ++ [:repeated_collection]
+    row_scope = PortableWidgetSupport.row_scope_report(fixture.element)
+    runtime_reports = PortableWidgetSupport.runtime_support_matrix()
+
+    validation =
+      PortableWidgetSupport.surface_validation(
+        authored_kinds: PortableWidgetSupport.promoted_kinds(),
+        iur_kinds: fixture_kinds,
+        runtime_reports: runtime_reports,
+        row_scope_report: row_scope
+      )
+
+    %{
+      fixture_id: fixture.id,
+      expected_kinds: PortableWidgetSupport.promoted_kinds(),
+      fixture_kinds: fixture_kinds,
+      runtime_support: runtime_reports,
+      row_scope: row_scope,
+      validation: validation,
+      release_ready?: validation.complete?
     }
   end
 
@@ -114,6 +147,7 @@ defmodule UnifiedIUR.Tooling do
       fixture_validation: fixture_validation_report(fixture_results),
       fixture_coverage: coverage,
       parity: parity_report(unified_ui_catalog),
+      portable_widget_support: portable_widget_report(),
       runtime_compatibility: runtime_compatibility_report(fixture_results),
       documentation_surface: documentation_surface(),
       governance_gates: governance_gates()
@@ -141,6 +175,7 @@ defmodule UnifiedIUR.Tooling do
       "  attachment coverage complete?: #{report.release_readiness.attachment_coverage_complete?}",
       "  runtime compatible?: #{report.runtime_compatibility.compatible?}",
       "  unified_ui parity synchronized?: #{report.parity.synchronized?}",
+      "  portable widget support complete?: #{report.portable_widget_support.release_ready?}",
       "  documentation surface complete?: #{report.documentation_surface.complete?}",
       "  release ready?: #{report.release_readiness.ready?}",
       "  invalid fixtures: #{inspect(invalid_fixtures)}",
@@ -228,6 +263,11 @@ defmodule UnifiedIUR.Tooling do
         :runtime_compatibility,
         "Fixtures remain portable for runtime-library consumption.",
         report.runtime_compatibility.compatible?
+      ),
+      gate(
+        :portable_widget_support,
+        "Promoted widgets, repeated collection row scope, and runtime support matrix remain complete.",
+        report.portable_widget_support.release_ready?
       ),
       gate(
         :unified_ui_parity,

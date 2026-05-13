@@ -9,6 +9,7 @@ defmodule Mix.Tasks.ElmUi.Export do
       mix elm_ui.export native_styling
       mix elm_ui.export styling_continuity --format comparison
       mix elm_ui.export canonical_styling --format diagnostics
+      mix elm_ui.export --format portable_widgets
       mix elm_ui.export --format catalog
   """
 
@@ -28,6 +29,9 @@ defmodule Mix.Tasks.ElmUi.Export do
             sort_maps: true
           )
         )
+
+      {"portable_widgets", _} ->
+        Mix.shell().info(ElmUi.Export.portable_widgets())
 
       {chosen_format, [example_id]} ->
         export_format =
@@ -49,7 +53,7 @@ defmodule Mix.Tasks.ElmUi.Export do
 
       _ ->
         Mix.raise(
-          "usage: mix elm_ui.export [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|catalog]"
+          "usage: mix elm_ui.export [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|portable_widgets|catalog]"
         )
     end
   end

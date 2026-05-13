@@ -6,7 +6,15 @@ defmodule LiveUi.Export do
   alias LiveUi.{Examples, Tooling}
 
   @type export_format ::
-          :catalog | :metadata | :report | :html | :comparison | :diagnostics | :style | :artifact
+          :catalog
+          | :metadata
+          | :report
+          | :html
+          | :comparison
+          | :diagnostics
+          | :style
+          | :artifact
+          | :portable_widgets
 
   @spec catalog() :: String.t()
   def catalog do
@@ -21,6 +29,10 @@ defmodule LiveUi.Export do
   end
 
   defp export(_example, :catalog), do: {:ok, catalog()}
+
+  defp export(_example, :portable_widgets) do
+    {:ok, inspect_output(Tooling.portable_widget_report())}
+  end
 
   defp export(example, :metadata) do
     {:ok, inspect_output(example)}

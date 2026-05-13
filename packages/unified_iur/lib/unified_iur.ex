@@ -19,6 +19,7 @@ defmodule UnifiedIUR do
           | :interoperability
           | :extension
           | :reference
+          | :portable_widget_support
           | :tooling
 
   @module_areas %{
@@ -34,6 +35,7 @@ defmodule UnifiedIUR do
     interoperability: UnifiedIUR.Interoperability,
     extension: UnifiedIUR.Extension,
     reference: UnifiedIUR.Reference,
+    portable_widget_support: UnifiedIUR.PortableWidgetSupport,
     tooling: UnifiedIUR.Tooling
   }
 

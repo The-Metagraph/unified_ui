@@ -2,7 +2,7 @@ defmodule UnifiedUi.AshUiWidgetPortabilityPhase5ExamplesTest do
   use ExUnit.Case, async: true
 
   alias UnifiedIUR.{Binding, Reference, Tree, Validate}
-  alias UnifiedUi.{Compiler, Examples}
+  alias UnifiedUi.{Compiler, Examples, Export, Tooling}
 
   @repo_root Path.expand("../../../..", __DIR__)
 
@@ -138,6 +138,28 @@ defmodule UnifiedUi.AshUiWidgetPortabilityPhase5ExamplesTest do
 
     assert fixture["review_outputs"]["runtime_parity_matrix"] ==
              ".spec/planning/ash_ui_widget_portability/runtime-parity-matrix.json"
+  end
+
+  test "tooling, export, and validation expose promoted widget release-readiness checks" do
+    assert {:ok, inspection} = Tooling.inspect_example(:portable_widgets)
+
+    assert inspection.portable_widget_support.release_ready?
+    assert inspection.portable_widget_support.validation.missing_authoring_kinds == []
+    assert inspection.portable_widget_support.validation.missing_iur_kinds == []
+    assert inspection.portable_widget_support.validation.missing_runtime_kinds == %{}
+
+    assert {:ok, exported} = Export.example(:portable_widgets, :portable_widgets)
+    assert exported =~ "runtime_support"
+    assert exported =~ "row_scope"
+
+    validation = Tooling.validation_report()
+
+    assert validation.portable_widget_support.release_ready?
+
+    assert Enum.any?(
+             validation.release_readiness.criteria,
+             &(&1.id == :portable_widget_support and &1.passed?)
+           )
   end
 
   defp read_repo!(relative_path) do

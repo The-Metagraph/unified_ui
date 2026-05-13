@@ -44,25 +44,25 @@ Back to index: [README](./README.md)
       [x] 5.1.2.2 Subtask - Add fixture coverage for terminal and other constrained-runtime degradation.
       [x] 5.1.2.3 Subtask - Add snapshot or structured-output tests that keep review fixtures deterministic.
 
-  [ ] 5.2 Section - Tooling and Validation Workflows
+  [x] 5.2 Section - Tooling and Validation Workflows
     Extend package tooling so promoted widget support is visible and
     enforceable.
 
-    [ ] 5.2.1 Task - Extend inspection, export, and reporting tasks
+    [x] 5.2.1 Task - Extend inspection, export, and reporting tasks
       Make promoted widget and repeated collection support obvious in existing
       package tooling.
 
-      [ ] 5.2.1.1 Subtask - Extend `unified_ui`, `unified_iur`, and runtime inspection tasks to show promoted widget support, degradation status, and row-scope binding summaries.
-      [ ] 5.2.1.2 Subtask - Extend export tasks so promoted widget fixtures and repeated collection constructs are available for runtime review.
-      [ ] 5.2.1.3 Subtask - Add reporting output that identifies which runtimes have native support, IUR support, degraded support, or missing support for each promoted widget.
+      [x] 5.2.1.1 Subtask - Extend `unified_ui`, `unified_iur`, and runtime inspection tasks to show promoted widget support, degradation status, and row-scope binding summaries.
+      [x] 5.2.1.2 Subtask - Extend export tasks so promoted widget fixtures and repeated collection constructs are available for runtime review.
+      [x] 5.2.1.3 Subtask - Add reporting output that identifies which runtimes have native support, IUR support, degraded support, or missing support for each promoted widget.
 
-    [ ] 5.2.2 Task - Extend validation and release-readiness gates
+    [x] 5.2.2 Task - Extend validation and release-readiness gates
       Guard the rollout with automated checks instead of relying on examples
       alone.
 
-      [ ] 5.2.2.1 Subtask - Add validation that fails when a promoted canonical widget lacks a `UnifiedUi` authoring contract, `UnifiedIUR` representation, or required runtime renderer entry.
-      [ ] 5.2.2.2 Subtask - Add validation that fails when repeated collection row-scope bindings are dropped or rewritten into renderer-local callback shapes.
-      [ ] 5.2.2.3 Subtask - Add release-readiness checks for runtime parity matrix coverage, degradation diagnostics, and example catalog coverage.
+      [x] 5.2.2.1 Subtask - Add validation that fails when a promoted canonical widget lacks a `UnifiedUi` authoring contract, `UnifiedIUR` representation, or required runtime renderer entry.
+      [x] 5.2.2.2 Subtask - Add validation that fails when repeated collection row-scope bindings are dropped or rewritten into renderer-local callback shapes.
+      [x] 5.2.2.3 Subtask - Add release-readiness checks for runtime parity matrix coverage, degradation diagnostics, and example catalog coverage.
 
   [ ] 5.3 Section - Documentation, Traceability, and Conformance
     Update durable guidance and evidence so the promoted surface is

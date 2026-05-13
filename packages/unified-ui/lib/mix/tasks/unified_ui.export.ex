@@ -9,6 +9,7 @@ defmodule Mix.Tasks.UnifiedUi.Export do
       mix unified_ui.export --example foundational_screen
       mix unified_ui.export --example themed_signal_workspace --format snapshot
       mix unified_ui.export --module UnifiedUi.Examples.OperationsDashboard --format signals
+      mix unified_ui.export --example portable_widgets --format portable_widgets
       mix unified_ui.export --format coverage
   """
 
@@ -45,7 +46,7 @@ defmodule Mix.Tasks.UnifiedUi.Export do
 
         true ->
           Mix.raise(
-            "usage: mix unified_ui.export --example ID [--format inspection|snapshot|signals|summary|diagnostics] | --module MODULE [--format inspection|snapshot|signals|summary|diagnostics] | --format coverage"
+            "usage: mix unified_ui.export --example ID [--format inspection|snapshot|signals|summary|diagnostics|portable_widgets] | --module MODULE [--format inspection|snapshot|signals|summary|diagnostics|portable_widgets] | --format coverage"
           )
       end
 
@@ -58,6 +59,7 @@ defmodule Mix.Tasks.UnifiedUi.Export do
   defp parse_format("summary"), do: :summary
   defp parse_format("diagnostics"), do: :diagnostics
   defp parse_format("coverage"), do: :coverage
+  defp parse_format("portable_widgets"), do: :portable_widgets
 
   defp parse_format(other) do
     Mix.raise("unsupported export format #{inspect(other)}")

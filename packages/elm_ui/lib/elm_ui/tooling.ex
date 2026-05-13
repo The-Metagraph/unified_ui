@@ -64,11 +64,20 @@ defmodule ElmUi.Tooling do
     ]
   end
 
+  @spec portable_widget_report() :: map()
+  def portable_widget_report do
+    UnifiedIUR.PortableWidgetSupport.runtime_report(:elm_ui,
+      native_supported_kinds: ElmUi.Widgets.kinds(),
+      iur_supported_kinds: ElmUi.Renderer.supported_kinds()
+    )
+  end
+
   @spec validation_state() :: map()
   def validation_state do
     %{
       workflows: workflows(),
       package_areas: ElmUi.package_areas(),
+      portable_widget_support: portable_widget_report(),
       runtime_validation: ElmUi.Runtime.validation_state()
     }
   end

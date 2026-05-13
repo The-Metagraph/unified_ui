@@ -11,6 +11,7 @@ defmodule Mix.Tasks.LiveUi.Export do
       mix live_ui.export canonical_styled_operations --format html
       mix live_ui.export native_styled_profile --format comparison
       mix live_ui.export native_styled_profile --format style
+      mix live_ui.export --format portable_widgets
       mix live_ui.export --format catalog
   """
 
@@ -25,11 +26,18 @@ defmodule Mix.Tasks.LiveUi.Export do
       {"catalog", _} ->
         Mix.shell().info(Export.catalog())
 
+      {"portable_widgets", _} ->
+        Mix.shell().info(
+          LiveUi.Tooling.portable_widget_report()
+          |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
+        )
+
       {chosen_format, [example_id]} ->
         export_format =
           case chosen_format do
             "metadata" -> :metadata
             "report" -> :report
+            "portable_widgets" -> :portable_widgets
             "html" -> :html
             "comparison" -> :comparison
             "diagnostics" -> :diagnostics
@@ -48,7 +56,7 @@ defmodule Mix.Tasks.LiveUi.Export do
 
       _ ->
         Mix.raise(
-          "usage: mix live_ui.export [EXAMPLE_ID] [--format metadata|report|html|comparison|diagnostics|style|artifact|catalog]"
+          "usage: mix live_ui.export [EXAMPLE_ID] [--format metadata|report|portable_widgets|html|comparison|diagnostics|style|artifact|catalog]"
         )
     end
   end

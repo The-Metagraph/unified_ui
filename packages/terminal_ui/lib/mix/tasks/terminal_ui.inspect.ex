@@ -9,6 +9,7 @@ defmodule Mix.Tasks.TerminalUi.Inspect do
       mix terminal_ui.inspect native_styled_review
       mix terminal_ui.inspect canonical_styled_review --format diagnostics
       mix terminal_ui.inspect styled_continuity_review --format comparison
+      mix terminal_ui.inspect --format portable_widgets
       mix terminal_ui.inspect --format catalog
   """
 
@@ -27,6 +28,12 @@ defmodule Mix.Tasks.TerminalUi.Inspect do
             limit: :infinity,
             sort_maps: true
           )
+        )
+
+      {"portable_widgets", _} ->
+        Mix.shell().info(
+          TerminalUi.Tooling.portable_widget_report()
+          |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
         )
 
       {chosen_format, [example_id]} ->
@@ -49,7 +56,7 @@ defmodule Mix.Tasks.TerminalUi.Inspect do
 
       _ ->
         Mix.raise(
-          "usage: mix terminal_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|catalog]"
+          "usage: mix terminal_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|portable_widgets|catalog]"
         )
     end
   end

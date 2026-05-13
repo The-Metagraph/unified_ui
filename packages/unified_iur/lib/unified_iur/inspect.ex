@@ -10,6 +10,7 @@ defmodule UnifiedIUR.Inspect do
     Interaction,
     Interoperability,
     Normalize,
+    PortableWidgetSupport,
     Reference,
     Validate
   }
@@ -180,6 +181,7 @@ defmodule UnifiedIUR.Inspect do
             family: portable_widget_family(element.kind),
             required_fields: required_fields(element.kind),
             degradation_hints: degradation_hints(element.kind),
+            runtime_support: PortableWidgetSupport.support_for_kind(element.kind),
             semantic_fields: semantic_fields(element)
           }
         ]
@@ -207,7 +209,12 @@ defmodule UnifiedIUR.Inspect do
             key_path: Map.get(collection, :key_path, []),
             template: child_summary(element, :template),
             empty_state: child_summary(element, :empty_state),
-            row_scope_bindings: Map.get(row_scope, :bindings, [])
+            row_scope_bindings: Map.get(row_scope, :bindings, []),
+            row_scope_summary:
+              element
+              |> PortableWidgetSupport.row_scope_report()
+              |> Map.get(:collections, [])
+              |> List.first()
           }
         ]
 

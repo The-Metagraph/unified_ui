@@ -86,6 +86,11 @@ defmodule DesktopUi.Validate do
           actual_count: length(DesktopUi.Renderer.supported_kinds()),
           supported_kinds: DesktopUi.Renderer.supported_kinds()
         }
+      ),
+      check(
+        :promoted_portable_widget_support,
+        DesktopUi.Tooling.portable_widget_report().complete?,
+        %{report: DesktopUi.Tooling.portable_widget_report()}
       )
     ]
 
@@ -562,6 +567,7 @@ defmodule DesktopUi.Validate do
       "DesktopUi validation summary",
       "  example coverage passing?: #{report.example_coverage.status == :pass}",
       "  runtime behavior passing?: #{report.runtime_behavior.status == :pass}",
+      "  portable widget support passing?: #{portable_widget_status(report) == :pass}",
       "  transport validation passing?: #{report.transport_validation.status == :pass}",
       "  artifact validation passing?: #{report.artifact_validation.status == :pass}",
       "  SDL3 adapter surface passing?: #{report.sdl3_adapter_surface.status == :pass}",
@@ -589,6 +595,11 @@ defmodule DesktopUi.Validate do
         :runtime_behavior,
         "Keep shared runtime and continuity behavior reviewable and healthy.",
         :runtime_behavior
+      ),
+      gate(
+        :portable_widget_support,
+        "Keep promoted widgets and repeated collection renderer coverage explicit.",
+        :example_coverage
       ),
       gate(
         :transport_validation,
@@ -786,6 +797,15 @@ defmodule DesktopUi.Validate do
 
   defp run_execution_details({:ok, execution}), do: execution
   defp run_execution_details({:error, reason}), do: %{error: reason}
+
+  defp portable_widget_status(report) do
+    report.example_coverage.checks
+    |> Enum.find(&(&1.name == :promoted_portable_widget_support))
+    |> case do
+      %{ok?: true} -> :pass
+      _other -> :fail
+    end
+  end
 
   defp read_traceability_manifest(path) do
     with {:ok, body} <- File.read(path),

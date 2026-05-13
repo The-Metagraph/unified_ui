@@ -3,12 +3,12 @@ defmodule LiveUi.Tooling do
   Package-facing entrypoint for inspection and validation helpers.
   """
 
-  import Phoenix.LiveViewTest
+  require Phoenix.LiveViewTest
 
   alias Jido.Signal
   alias LiveUi.Examples
   alias LiveUi.Runtime.State
-  alias UnifiedIUR.Element
+  alias UnifiedIUR.{Element, PortableWidgetSupport}
 
   @required_example_paths [:native, :canonical, :mixed]
   @required_example_families [:input, :transport, :styling, :overlay, :operational]
@@ -84,7 +84,12 @@ defmodule LiveUi.Tooling do
         :boundary_transport_review,
         :server_authority_review
       ],
-      release_readiness_focus: [:example_health, :continuity_alignment, :boundary_transport]
+      release_readiness_focus: [
+        :example_health,
+        :continuity_alignment,
+        :portable_widget_support,
+        :boundary_transport
+      ]
     }
   end
 
@@ -105,6 +110,14 @@ defmodule LiveUi.Tooling do
     }
   end
 
+  @spec portable_widget_report() :: map()
+  def portable_widget_report do
+    PortableWidgetSupport.runtime_report(:live_ui,
+      native_supported_kinds: LiveUi.Renderer.supported_kinds(),
+      iur_supported_kinds: LiveUi.Renderer.supported_kinds()
+    )
+  end
+
   @spec validation_report() :: map()
   def validation_report do
     catalog = examples()
@@ -118,6 +131,7 @@ defmodule LiveUi.Tooling do
       example_health: example_health,
       example_coverage: example_coverage,
       continuity: continuity,
+      portable_widget_support: portable_widget_report(),
       transport: transport,
       runtime_authority: runtime_authority,
       documentation_surface: documentation_surface(),
@@ -135,6 +149,7 @@ defmodule LiveUi.Tooling do
       "  example coverage complete?: #{report.example_coverage.complete?}",
       "  continuity aligned?: #{report.continuity.aligned?}",
       "  browser style aligned?: #{report.continuity.browser_style_aligned?}",
+      "  portable widget support complete?: #{report.portable_widget_support.complete?}",
       "  transport sound?: #{report.transport.sound?}",
       "  server authoritative?: #{report.runtime_authority.server_authoritative?}",
       "  documentation complete?: #{report.documentation_surface.complete?}",
@@ -901,6 +916,11 @@ defmodule LiveUi.Tooling do
         :continuity,
         "Styled native and canonical continuity pairs stay aligned, including browser-visible style output.",
         report.continuity.aligned?
+      ),
+      gate(
+        :portable_widget_support,
+        "Promoted widgets and repeated collection IUR rendering remain available for LiveView review.",
+        report.portable_widget_support.complete?
       ),
       gate(
         :transport,

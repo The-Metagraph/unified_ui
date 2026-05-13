@@ -87,11 +87,20 @@ defmodule DesktopUi.Tooling do
     %{
       workflows: workflows(),
       preview_surfaces: preview_surfaces(),
+      portable_widget_support: portable_widget_report(),
       runtime_validation: DesktopUi.Runtime.validation_state(),
       host_execution_validation: DesktopUi.Sdl3.PortHost.validation_state(),
       documentation_validation: DesktopUi.Validate.documentation_surface().status,
       traceability_validation: DesktopUi.Validate.traceability_alignment().status
     }
+  end
+
+  @spec portable_widget_report() :: map()
+  def portable_widget_report do
+    UnifiedIUR.PortableWidgetSupport.runtime_report(:desktop_ui,
+      native_supported_kinds: DesktopUi.Widgets.kinds(),
+      iur_supported_kinds: DesktopUi.Renderer.supported_kinds()
+    )
   end
 
   @spec preview_example(atom() | String.t()) :: {:ok, map()} | {:error, term()}

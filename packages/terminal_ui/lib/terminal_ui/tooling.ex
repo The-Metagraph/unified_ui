@@ -60,6 +60,14 @@ defmodule TerminalUi.Tooling do
     ]
   end
 
+  @spec portable_widget_report() :: map()
+  def portable_widget_report do
+    UnifiedIUR.PortableWidgetSupport.runtime_report(:terminal_ui,
+      native_supported_kinds: TerminalUi.Widgets.kinds(),
+      iur_supported_kinds: TerminalUi.Renderer.supported_kinds()
+    )
+  end
+
   @spec preview_example(atom() | String.t()) :: {:ok, map()} | {:error, term()}
   def preview_example(id) do
     TerminalUi.Inspect.preview(id)

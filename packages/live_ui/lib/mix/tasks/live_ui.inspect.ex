@@ -10,6 +10,7 @@ defmodule Mix.Tasks.LiveUi.Inspect do
       mix live_ui.inspect native_styled_operations --format diagnostics
       mix live_ui.inspect canonical_styled_profile --format style
       mix live_ui.inspect canonical_styled_profile --format comparison
+      mix live_ui.inspect --format portable_widgets
       mix live_ui.inspect --format catalog
   """
 
@@ -23,6 +24,12 @@ defmodule Mix.Tasks.LiveUi.Inspect do
     case {format, positional} do
       {"catalog", _} ->
         Mix.shell().info(Export.catalog())
+
+      {"portable_widgets", _} ->
+        Mix.shell().info(
+          LiveUi.Tooling.portable_widget_report()
+          |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
+        )
 
       {chosen_format, [example_id]} ->
         export_format =
@@ -45,7 +52,7 @@ defmodule Mix.Tasks.LiveUi.Inspect do
 
       _ ->
         Mix.raise(
-          "usage: mix live_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|style|catalog]"
+          "usage: mix live_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|style|portable_widgets|catalog]"
         )
     end
   end

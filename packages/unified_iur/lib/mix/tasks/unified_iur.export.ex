@@ -9,6 +9,7 @@ defmodule Mix.Tasks.UnifiedIur.Export do
       mix unified_iur.export forms--profile_editor
       mix unified_iur.export forms--profile_editor --format snapshot
       mix unified_iur.export forms--profile_editor --format diagnostics
+      mix unified_iur.export portable_widgets--ash_ui_portability --format portable_widgets
   """
 
   alias UnifiedIUR.Export
@@ -25,6 +26,7 @@ defmodule Mix.Tasks.UnifiedIur.Export do
             "fixture" -> :fixture
             "snapshot" -> :snapshot
             "diagnostics" -> :diagnostics
+            "portable_widgets" -> :portable_widgets
             other -> Mix.raise("unsupported export format #{inspect(other)}")
           end
 
@@ -35,7 +37,7 @@ defmodule Mix.Tasks.UnifiedIur.Export do
 
       _ ->
         Mix.raise(
-          "usage: mix unified_iur.export FIXTURE_ID [--format fixture|snapshot|diagnostics]"
+          "usage: mix unified_iur.export FIXTURE_ID [--format fixture|snapshot|diagnostics|portable_widgets]"
         )
     end
   end

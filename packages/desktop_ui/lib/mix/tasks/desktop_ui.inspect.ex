@@ -9,6 +9,7 @@ defmodule Mix.Tasks.DesktopUi.Inspect do
       mix desktop_ui.inspect native_styled_review
       mix desktop_ui.inspect styled_continuity_review --format comparison
       mix desktop_ui.inspect native_foundational --format host
+      mix desktop_ui.inspect --format portable_widgets
       mix desktop_ui.inspect --format catalog
   """
 
@@ -27,6 +28,12 @@ defmodule Mix.Tasks.DesktopUi.Inspect do
             limit: :infinity,
             sort_maps: true
           )
+        )
+
+      {"portable_widgets", _} ->
+        Mix.shell().info(
+          DesktopUi.Tooling.portable_widget_report()
+          |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
         )
 
       {chosen_format, [example_id]} ->
@@ -50,7 +57,7 @@ defmodule Mix.Tasks.DesktopUi.Inspect do
 
       _ ->
         Mix.raise(
-          "usage: mix desktop_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|host|catalog]"
+          "usage: mix desktop_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|host|portable_widgets|catalog]"
         )
     end
   end

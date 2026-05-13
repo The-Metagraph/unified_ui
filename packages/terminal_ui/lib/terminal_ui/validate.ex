@@ -66,6 +66,11 @@ defmodule TerminalUi.Validate do
             TerminalUi.Renderer.required_canonical_kinds() --
               TerminalUi.Renderer.supported_kinds()
         }
+      ),
+      check(
+        :promoted_portable_widget_support,
+        TerminalUi.Tooling.portable_widget_report().complete?,
+        %{report: TerminalUi.Tooling.portable_widget_report()}
       )
     ]
 
@@ -282,6 +287,7 @@ defmodule TerminalUi.Validate do
       "  example coverage passing?: #{report.example_coverage.status == :pass}",
       "  renderer deterministic?: #{report.renderer_determinism.status == :pass}",
       "  runtime behavior passing?: #{report.runtime_behavior.status == :pass}",
+      "  portable widget support passing?: #{portable_widget_status(report) == :pass}",
       "  transport validation passing?: #{report.transport_validation.status == :pass}",
       "  capability behavior passing?: #{report.capability_behavior.status == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
@@ -304,6 +310,11 @@ defmodule TerminalUi.Validate do
         :renderer_and_runtime_behavior,
         "Keep renderer determinism, shared runtime behavior, and capability-aware continuity healthy.",
         :runtime_behavior
+      ),
+      gate(
+        :portable_widget_support,
+        "Keep promoted widgets and repeated collection fallback coverage explicit.",
+        :example_coverage
       ),
       gate(
         :transport_translation,
@@ -440,5 +451,14 @@ defmodule TerminalUi.Validate do
 
   defp package_root do
     Path.expand("../..", __DIR__)
+  end
+
+  defp portable_widget_status(report) do
+    report.example_coverage.checks
+    |> Enum.find(&(&1.name == :promoted_portable_widget_support))
+    |> case do
+      %{ok?: true} -> :pass
+      _other -> :fail
+    end
   end
 end

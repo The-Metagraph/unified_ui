@@ -4,6 +4,7 @@ defmodule UnifiedUi.Tooling do
   and release review workflows.
   """
 
+  alias UnifiedIUR.{PortableWidgetSupport, Tree}
   alias UnifiedUi.{Compiler, Examples, Export, Info, Signals}
 
   @shared_specs [
@@ -93,7 +94,8 @@ defmodule UnifiedUi.Tooling do
       {:ok,
        report
        |> Map.put(:example, Map.drop(example, [:module]))
-       |> Map.put(:review_artifact, example.review_artifact)}
+       |> Map.put(:review_artifact, example.review_artifact)
+       |> Map.put(:portable_widget_support, portable_widget_report(example.module))}
     end
   end
 
@@ -112,6 +114,7 @@ defmodule UnifiedUi.Tooling do
          authored: module_summary,
          authoring_surface: authoring_surface,
          compiler: compiler_report,
+         portable_widget_support: portable_widget_report(module),
          construct_families: construct_families,
          signal_coverage: signal_coverage(module_summary.signal_catalog),
          related_examples: related_examples(construct_families, module),
@@ -254,9 +257,48 @@ defmodule UnifiedUi.Tooling do
       release_readiness_focus: [
         :deterministic_compilation,
         :bilateral_parity,
+        :portable_widget_support,
         :signal_surface_clarity,
         :documentation_surface
       ]
+    }
+  end
+
+  @spec portable_widget_report(module() | nil) :: map()
+  def portable_widget_report(module \\ nil)
+
+  def portable_widget_report(nil) do
+    case Examples.example(:portable_widgets) do
+      {:ok, example} -> portable_widget_report(example.module)
+      :error -> portable_widget_report(UnifiedUi.Examples.PortableWidgets)
+    end
+  end
+
+  def portable_widget_report(module) when is_atom(module) do
+    authoring = Info.authoring_surface_summary(module)
+    iur = Compiler.compile!(module).iur
+    iur_kinds = iur |> Tree.depth_first() |> Enum.map(& &1.kind)
+    authored_kinds = Enum.map(authoring.widgets, & &1.kind)
+    row_scope = PortableWidgetSupport.row_scope_report(iur)
+    runtime_reports = PortableWidgetSupport.runtime_support_matrix()
+
+    validation =
+      PortableWidgetSupport.surface_validation(
+        authored_kinds: authored_kinds,
+        iur_kinds: iur_kinds,
+        runtime_reports: runtime_reports,
+        row_scope_report: row_scope
+      )
+
+    %{
+      module: module,
+      expected_kinds: PortableWidgetSupport.promoted_kinds(),
+      authored_kinds: authored_kinds,
+      iur_kinds: iur_kinds,
+      runtime_support: runtime_reports,
+      row_scope: row_scope,
+      validation: validation,
+      release_ready?: validation.complete?
     }
   end
 
@@ -289,6 +331,7 @@ defmodule UnifiedUi.Tooling do
       signal_surface: signal_surface,
       parity: parity_report.parity,
       example_compilation: parity_report.example_compilation,
+      portable_widget_support: portable_widget_report(),
       documentation_surface: docs,
       governance_gates: governance_gates()
     }
@@ -304,6 +347,7 @@ defmodule UnifiedUi.Tooling do
       "  example compilation deterministic?: #{report.example_compilation.deterministic?}",
       "  parity synchronized?: #{report.parity.synchronized?}",
       "  example coverage complete?: #{report.example_coverage.complete?}",
+      "  portable widget support complete?: #{report.portable_widget_support.release_ready?}",
       "  signal coverage canonical?: #{report.signal_surface.canonical_only?}",
       "  documentation surface complete?: #{report.documentation_surface.complete?}",
       "  release ready?: #{report.release_readiness.ready?}",
@@ -439,6 +483,11 @@ defmodule UnifiedUi.Tooling do
         :example_coverage,
         "Maintained examples cover the required authored categories and parity obligations.",
         report.example_coverage.complete?
+      ),
+      gate(
+        :portable_widget_support,
+        "Promoted widgets, runtime support, and repeated collection row-scope bindings are reviewable and complete.",
+        report.portable_widget_support.release_ready?
       ),
       gate(
         :canonical_signals,

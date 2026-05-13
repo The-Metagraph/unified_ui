@@ -33,7 +33,14 @@ defmodule ElmUi.Validate do
       }),
       check(:renderer_covers_canonical_kinds, missing_renderer_kinds == [], %{
         missing: missing_renderer_kinds
-      })
+      }),
+      check(
+        :promoted_portable_widget_support,
+        ElmUi.Tooling.portable_widget_report().complete?,
+        %{
+          report: ElmUi.Tooling.portable_widget_report()
+        }
+      )
     ]
 
     report(:example_coverage, checks)
@@ -126,6 +133,7 @@ defmodule ElmUi.Validate do
       "ElmUi validation summary",
       "  example coverage passing?: #{report.example_coverage.status == :pass}",
       "  runtime behavior passing?: #{report.runtime_behavior.status == :pass}",
+      "  portable widget support passing?: #{portable_widget_status(report) == :pass}",
       "  tooling surface passing?: #{report.tooling_surface.status == :pass}",
       "  documentation surface passing?: #{report.documentation_surface.status == :pass}",
       "  release ready?: #{report.release_readiness.status == :pass}",
@@ -146,6 +154,11 @@ defmodule ElmUi.Validate do
         :runtime_behavior,
         "Keep split-runtime behavior, continuity, and transport flows reviewable and healthy.",
         :runtime_behavior
+      ),
+      gate(
+        :portable_widget_support,
+        "Keep promoted widgets and repeated collection renderer coverage explicit.",
+        :example_coverage
       ),
       gate(
         :tooling_surface,
@@ -277,5 +290,14 @@ defmodule ElmUi.Validate do
 
   defp package_root do
     Path.expand("../..", __DIR__)
+  end
+
+  defp portable_widget_status(report) do
+    report.example_coverage.checks
+    |> Enum.find(&(&1.name == :promoted_portable_widget_support))
+    |> case do
+      %{ok?: true} -> :pass
+      _other -> :fail
+    end
   end
 end

@@ -7,7 +7,14 @@ defmodule UnifiedUi.Export do
   alias UnifiedUi.{Compiler, Examples, Info, Tooling}
 
   @type export_format ::
-          :inspection | :snapshot | :signals | :summary | :authoring | :diagnostics | :coverage
+          :inspection
+          | :snapshot
+          | :signals
+          | :summary
+          | :authoring
+          | :diagnostics
+          | :coverage
+          | :portable_widgets
 
   @spec example(atom(), export_format()) :: {:ok, String.t()} | :error
   def example(id, format \\ :inspection) when is_atom(id) do
@@ -39,6 +46,9 @@ defmodule UnifiedUi.Export do
 
       :coverage ->
         {:ok, Tooling.coverage_summary()}
+
+      :portable_widgets ->
+        {:ok, module |> Tooling.portable_widget_report() |> inspect_term()}
     end
   rescue
     error ->

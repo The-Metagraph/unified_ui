@@ -10,9 +10,10 @@ defmodule Mix.Tasks.UnifiedIur.Inspect do
       mix unified_iur.inspect forms--profile_editor --format tree
       mix unified_iur.inspect forms--profile_editor --format diagnostics
       mix unified_iur.inspect forms--profile_editor --format extensions
+      mix unified_iur.inspect portable_widgets--ash_ui_portability --format portable_widgets
   """
 
-  alias UnifiedIUR.{Export, Inspect}
+  alias UnifiedIUR.{Export, Inspect, Tooling}
 
   @impl Mix.Task
   def run(args) do
@@ -22,6 +23,11 @@ defmodule Mix.Tasks.UnifiedIur.Inspect do
     case {format, positional} do
       {"extensions", _} ->
         Inspect.extension_metadata()
+        |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
+        |> Mix.shell().info()
+
+      {"portable_widgets", []} ->
+        Tooling.portable_widget_report()
         |> Kernel.inspect(pretty: true, width: 100, limit: :infinity, sort_maps: true)
         |> Mix.shell().info()
 
@@ -54,6 +60,12 @@ defmodule Mix.Tasks.UnifiedIur.Inspect do
                 :error -> Mix.raise("unknown fixture #{inspect(fixture_id)}")
               end
 
+            "portable_widgets" ->
+              case Export.fixture(fixture_id, :portable_widgets) do
+                {:ok, report} -> report
+                :error -> Mix.raise("unknown fixture #{inspect(fixture_id)}")
+              end
+
             other ->
               Mix.raise("unsupported inspect format #{inspect(other)}")
           end
@@ -62,7 +74,7 @@ defmodule Mix.Tasks.UnifiedIur.Inspect do
 
       _ ->
         Mix.raise(
-          "usage: mix unified_iur.inspect FIXTURE_ID [--format report|tree|diagnostics|extensions]"
+          "usage: mix unified_iur.inspect FIXTURE_ID [--format report|tree|diagnostics|portable_widgets|extensions]"
         )
     end
   end
