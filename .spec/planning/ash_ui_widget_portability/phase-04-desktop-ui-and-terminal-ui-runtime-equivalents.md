@@ -84,22 +84,22 @@ Back to index: [README](./README.md)
       [x] 4.3.2.2 Subtask - Map the same interaction families onto terminal key and command events with explicit fallback where direct interaction is impossible.
       [x] 4.3.2.3 Subtask - Add shared interaction fixtures proving row-scope payloads and widget actions survive runtime translation.
 
-  [ ] 4.4 Section - Phase 4 Integration Tests
+  [x] 4.4 Section - Phase 4 Integration Tests
     Validate desktop and terminal runtime equivalents, IUR rendering, fallback,
     and interaction behavior end to end.
 
-    [ ] 4.4.1 Task - Desktop and terminal promoted widget scenarios
+    [x] 4.4.1 Task - Desktop and terminal promoted widget scenarios
       Verify both non-web runtimes realize the promoted canonical widgets
       through native and IUR entrypoints.
 
-      [ ] 4.4.1.1 Subtask - Verify each promoted widget renders through native `desktop_ui`, native `terminal_ui`, and each runtime's IUR renderer.
-      [ ] 4.4.1.2 Subtask - Verify desktop rich behavior and terminal fallback behavior both preserve required canonical semantics.
-      [ ] 4.4.1.3 Subtask - Verify unsupported visual treatments emit explicit degradation diagnostics rather than silently dropping meaning.
+      [x] 4.4.1.1 Subtask - Verify each promoted widget renders through native `desktop_ui`, native `terminal_ui`, and each runtime's IUR renderer.
+      [x] 4.4.1.2 Subtask - Verify desktop rich behavior and terminal fallback behavior both preserve required canonical semantics.
+      [x] 4.4.1.3 Subtask - Verify unsupported visual treatments emit explicit degradation diagnostics rather than silently dropping meaning.
 
-    [ ] 4.4.2 Task - Desktop and terminal repeated collection scenarios
+    [x] 4.4.2 Task - Desktop and terminal repeated collection scenarios
       Verify repeated collection rendering and row-scope events behave
       correctly in non-web runtimes.
 
-      [ ] 4.4.2.1 Subtask - Verify repeated collection fixtures render stable rows, empty states, nested promoted widgets, and updates in both runtimes.
-      [ ] 4.4.2.2 Subtask - Verify row-level interactions emit canonical payloads through desktop and terminal event models.
-      [ ] 4.4.2.3 Subtask - Verify the cross-runtime parity matrix matches observed renderer behavior.
+      [x] 4.4.2.1 Subtask - Verify repeated collection fixtures render stable rows, empty states, nested promoted widgets, and updates in both runtimes.
+      [x] 4.4.2.2 Subtask - Verify row-level interactions emit canonical payloads through desktop and terminal event models.
+      [x] 4.4.2.3 Subtask - Verify the cross-runtime parity matrix matches observed renderer behavior.
