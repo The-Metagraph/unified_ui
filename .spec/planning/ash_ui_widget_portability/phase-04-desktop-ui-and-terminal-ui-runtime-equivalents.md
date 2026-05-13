@@ -64,25 +64,25 @@ Back to index: [README](./README.md)
       [x] 4.2.2.2 Subtask - Preserve row-scope payload mapping and item identity across terminal selection, activation, and command input flows.
       [x] 4.2.2.3 Subtask - Add renderer tests that verify fallback output remains semantically equivalent to the shared IUR fixtures.
 
-  [ ] 4.3 Section - Cross-Runtime Degradation and Parity Matrix
+  [x] 4.3 Section - Cross-Runtime Degradation and Parity Matrix
     Make desktop and terminal runtime differences explicit and reviewable
     rather than hidden in renderer implementations.
 
-    [ ] 4.3.1 Task - Define promoted widget runtime parity expectations
+    [x] 4.3.1 Task - Define promoted widget runtime parity expectations
       Establish a cross-runtime matrix for direct support, fallback support,
       unsupported states, and required diagnostics.
 
-      [ ] 4.3.1.1 Subtask - Create a parity matrix that lists every promoted widget, required canonical semantics, desktop support status, terminal support status, and fallback behavior.
-      [ ] 4.3.1.2 Subtask - Define the minimum acceptable degradation for terminal and constrained desktop environments.
-      [ ] 4.3.1.3 Subtask - Add validation that fails when a runtime silently drops required canonical widget or row-scope meaning.
+      [x] 4.3.1.1 Subtask - Create a parity matrix that lists every promoted widget, required canonical semantics, desktop support status, terminal support status, and fallback behavior.
+      [x] 4.3.1.2 Subtask - Define the minimum acceptable degradation for terminal and constrained desktop environments.
+      [x] 4.3.1.3 Subtask - Add validation that fails when a runtime silently drops required canonical widget or row-scope meaning.
 
-    [ ] 4.3.2 Task - Align runtime interaction and row-scope behavior
+    [x] 4.3.2 Task - Align runtime interaction and row-scope behavior
       Ensure desktop and terminal interaction events preserve the same
       canonical meaning as web runtimes.
 
-      [ ] 4.3.2.1 Subtask - Map disclosure, segmented controls, slide-over panels, chat composer actions, and repeated-row interactions onto desktop native events.
-      [ ] 4.3.2.2 Subtask - Map the same interaction families onto terminal key and command events with explicit fallback where direct interaction is impossible.
-      [ ] 4.3.2.3 Subtask - Add shared interaction fixtures proving row-scope payloads and widget actions survive runtime translation.
+      [x] 4.3.2.1 Subtask - Map disclosure, segmented controls, slide-over panels, chat composer actions, and repeated-row interactions onto desktop native events.
+      [x] 4.3.2.2 Subtask - Map the same interaction families onto terminal key and command events with explicit fallback where direct interaction is impossible.
+      [x] 4.3.2.3 Subtask - Add shared interaction fixtures proving row-scope payloads and widget actions survive runtime translation.
 
   [ ] 4.4 Section - Phase 4 Integration Tests
     Validate desktop and terminal runtime equivalents, IUR rendering, fallback,

@@ -1,0 +1,162 @@
+{
+  "id": "ash_ui_widget_portability.runtime_parity_matrix",
+  "status": "active",
+  "description": "Cross-runtime support and degradation expectations for AshUi-originated promoted widgets.",
+  "row_scope": {
+    "required_semantics": [
+      "stable_key",
+      "key_source",
+      "row_index",
+      "item_identity",
+      "payload_mapping",
+      "missing_key_diagnostic",
+      "duplicate_key_diagnostic",
+      "unresolved_row_scope_diagnostic"
+    ],
+    "desktop": {
+      "support": "direct",
+      "fallback": null,
+      "row_action_events": ["click"]
+    },
+    "terminal": {
+      "support": "fallback",
+      "fallback": "linearized_collection",
+      "row_action_events": ["keypress"]
+    }
+  },
+  "widgets": [
+    {
+      "kind": "disclosure",
+      "required_semantics": ["label", "expanded_state", "toggle_interaction", "content_label"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": ["toggle"]},
+      "terminal": {"support": "fallback", "fallback": "inline_disclosure", "required_events": ["toggle"]},
+      "minimum_degradation": "Expose label, expanded state, and keyboard toggle when rendered inline."
+    },
+    {
+      "kind": "kicker",
+      "required_semantics": ["value", "role", "summary"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "direct", "fallback": null, "required_events": []},
+      "minimum_degradation": "Render the value as text with role metadata."
+    },
+    {
+      "kind": "avatar",
+      "required_semantics": ["label", "initials", "source", "status"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "initials_text", "required_events": []},
+      "minimum_degradation": "Render initials or label text and preserve status metadata."
+    },
+    {
+      "kind": "presence_dot",
+      "required_semantics": ["status", "label", "active_state"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "status_text", "required_events": []},
+      "minimum_degradation": "Render status as text when color or glyphs are unavailable."
+    },
+    {
+      "kind": "segmented_button_group",
+      "required_semantics": ["items", "active_item", "selection_mode", "selection_interaction"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": ["selection", "change"]},
+      "terminal": {"support": "fallback", "fallback": "inline_menu_selection", "required_events": ["select", "change"]},
+      "minimum_degradation": "Preserve item identity, active item, and selection event meaning through keyboard selection."
+    },
+    {
+      "kind": "list_item_multi_column",
+      "required_semantics": ["columns", "label", "value", "status"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "linearized_row", "required_events": []},
+      "minimum_degradation": "Linearize columns without dropping labels, values, or status."
+    },
+    {
+      "kind": "artifact_row",
+      "required_semantics": ["artifact_identity", "title", "status", "activation_interaction"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": ["click", "selection"]},
+      "terminal": {"support": "fallback", "fallback": "linearized_row", "required_events": ["activate", "select"]},
+      "minimum_degradation": "Preserve artifact identity and activation meaning in a linearized row."
+    },
+    {
+      "kind": "sticky_header",
+      "required_semantics": ["title", "stuck_state", "elevation"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "inline_header", "required_events": []},
+      "minimum_degradation": "Render the title as a stable inline header with stuck state metadata."
+    },
+    {
+      "kind": "pipeline_stepper_horizontal",
+      "required_semantics": ["steps", "active_item", "status", "orientation"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "ascii_progress", "required_events": []},
+      "minimum_degradation": "Preserve step order and active status when progress visuals degrade."
+    },
+    {
+      "kind": "segmented_progress_bar",
+      "required_semantics": ["segments", "current", "maximum", "label"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "ascii_progress", "required_events": []},
+      "minimum_degradation": "Expose current, maximum, and segment labels in an ASCII progress form."
+    },
+    {
+      "kind": "workflow_stage_list_vertical",
+      "required_semantics": ["stages", "active_item", "status", "orientation"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "linearized_list", "required_events": []},
+      "minimum_degradation": "Preserve stage order and active state in a linearized list."
+    },
+    {
+      "kind": "meter_thin",
+      "required_semantics": ["current", "minimum", "maximum", "severity"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "ascii_progress", "required_events": []},
+      "minimum_degradation": "Expose numeric meter bounds and severity when visual thickness is unavailable."
+    },
+    {
+      "kind": "slide_over_panel",
+      "required_semantics": ["title", "placement", "open_state", "overlay_lifecycle"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": ["open", "close"]},
+      "terminal": {"support": "fallback", "fallback": "inline_overlay", "required_events": ["open", "close"]},
+      "minimum_degradation": "Render as an inline overlay while preserving open, close, and placement metadata."
+    },
+    {
+      "kind": "event_callout",
+      "required_semantics": ["message", "title", "severity", "timestamp"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "inline_feedback", "required_events": []},
+      "minimum_degradation": "Render title, message, and severity as inline feedback."
+    },
+    {
+      "kind": "redline_inline",
+      "required_semantics": ["before_text", "after_text", "label"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "inline_diff", "required_events": []},
+      "minimum_degradation": "Preserve before and after text in a plain inline diff."
+    },
+    {
+      "kind": "code_block_syntax_highlighted",
+      "required_semantics": ["code", "language", "wrap", "label"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "plain_code_block", "required_events": []},
+      "minimum_degradation": "Preserve code and language metadata when syntax highlighting degrades."
+    },
+    {
+      "kind": "chat_composer",
+      "required_semantics": ["placeholder", "submit_intent", "actions", "multiline"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": ["submit", "change"]},
+      "terminal": {"support": "fallback", "fallback": "inline_text_prompt", "required_events": ["submit", "change"]},
+      "minimum_degradation": "Preserve submit/change meaning and expose attachment/action limits explicitly."
+    },
+    {
+      "kind": "host_form_shell",
+      "required_semantics": ["owner", "lifecycle", "validation", "submit_interaction"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": ["submit", "change"]},
+      "terminal": {"support": "fallback", "fallback": "linearized_form", "required_events": ["submit", "change"]},
+      "minimum_degradation": "Linearize fields and actions without losing host ownership or validation state."
+    },
+    {
+      "kind": "repeated_collection",
+      "required_semantics": ["source", "template", "row_scope", "empty_state", "row_identity"],
+      "desktop": {"support": "direct", "fallback": null, "required_events": []},
+      "terminal": {"support": "fallback", "fallback": "linearized_collection", "required_events": []},
+      "minimum_degradation": "Preserve stable row identity, row-scope values, diagnostics, and empty states."
+    }
+  ]
+}
