@@ -21,6 +21,7 @@ surface:
   - .spec/specs/unified-ui/dsl.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -55,20 +56,54 @@ decisions:
   statement: The DSL shall be extensible in a way that allows new canonical widgets, layouts, style attributes, and interaction descriptors to be added without changing the authored module model for existing users.
   priority: must
   stability: stable
+
+- id: unified_ui.dsl.consumer_originated_surface_promotion
+  statement: The DSL shall be able to promote generally useful consumer-originated widget and composition concepts into the canonical authored surface when those concepts are portable beyond the originating integration package.
+  priority: must
+  stability: stable
+
+- id: unified_ui.dsl.repeated_collection_templates
+  statement: The DSL shall support repeated collection templates that bind a list-oriented data source to one child widget or layout template per row while keeping row-scope value references independent of renderer and Ash resource relationship semantics.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: unified_ui.dsl.author_single_screen
-  given: A developer wants to define one canonical screen with widgets, layout, styles, and user interactions
-  when: The developer authors a `UnifiedUi` DSL module
-  then: The module can declare those concerns in one authored surface without embedding runtime-library widget calls
+  covers:
+    - unified_ui.dsl.spark_style_authoring_surface
+    - unified_ui.dsl.widgets_layouts_layers
+    - unified_ui.dsl.styling_and_theming
+    - unified_ui.dsl.interaction_binding
+    - unified_ui.dsl.compile_time_validation
+    - unified_ui.dsl.authoring_extensibility
+    - unified_ui.dsl.consumer_originated_surface_promotion
+    - unified_ui.dsl.repeated_collection_templates
+  given:
+    - A developer wants to define one canonical screen with widgets, layout, styles, and user interactions
+  when:
+    - The developer authors a `UnifiedUi` DSL module
+  then:
+    - The module can declare those concerns in one authored surface without embedding runtime-library widget calls
 
 - id: unified_ui.dsl.reject_renderer_specific_callbacks
-  given: An authored UI module uses a renderer-specific callback name or renderer-local event payload shape
-  when: The module is compiled by the package DSL
-  then: The authoring surface rejects that declaration because canonical interaction meaning must stay renderer-independent
+  covers:
+    - unified_ui.dsl.spark_style_authoring_surface
+    - unified_ui.dsl.widgets_layouts_layers
+    - unified_ui.dsl.styling_and_theming
+    - unified_ui.dsl.interaction_binding
+    - unified_ui.dsl.compile_time_validation
+    - unified_ui.dsl.authoring_extensibility
+    - unified_ui.dsl.consumer_originated_surface_promotion
+    - unified_ui.dsl.repeated_collection_templates
+  given:
+    - An authored UI module uses a renderer-specific callback name or renderer-local event payload shape
+  when:
+    - The module is compiled by the package DSL
+  then:
+    - The authoring surface rejects that declaration because canonical interaction meaning must stay renderer-independent
 ```
 
 ## Verification
@@ -83,6 +118,6 @@ decisions:
     - unified_ui.dsl.interaction_binding
     - unified_ui.dsl.compile_time_validation
     - unified_ui.dsl.authoring_extensibility
-    - unified_ui.dsl.author_single_screen
-    - unified_ui.dsl.reject_renderer_specific_callbacks
+    - unified_ui.dsl.consumer_originated_surface_promotion
+    - unified_ui.dsl.repeated_collection_templates
 ```

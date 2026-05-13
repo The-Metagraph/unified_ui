@@ -32,6 +32,28 @@ package contract.
 - `UnifiedUi.Examples`: maintained authored examples used for docs, review, and validation
 - `UnifiedUi.Tooling`: maintainer workflows for inspection, export, diagnostics, and validation
 
+## Promoted Portable Widgets
+
+`UnifiedUi` owns the canonical authored names for the AshUi-originated widgets
+that are portable across the ecosystem:
+
+- semantic and micro-interaction widgets such as `disclosure`, `kicker`,
+  `avatar`, `presence_dot`, `segmented_button_group`,
+  `list_item_multi_column`, `artifact_row`, and `sticky_header`
+- workflow, document, and composer widgets such as
+  `pipeline_stepper_horizontal`, `segmented_progress_bar`,
+  `workflow_stage_list_vertical`, `meter_thin`, `slide_over_panel`,
+  `event_callout`, `redline_inline`, `code_block_syntax_highlighted`, and
+  `chat_composer`
+- `host_form_shell` for host-owned form lifecycle integration
+- `repeated_collection` for list-oriented composition with portable
+  `row_value`, `row_index`, and `row_key` binding descriptors
+
+AshUi remains an integration consumer. Ash resources, changesets,
+AshPhoenix/Phoenix form structs, and relationship traversal rules stay in
+AshUi or the host application and are translated into these canonical authored
+constructs at the boundary.
+
 ## Maintainer Commands
 
 Run these commands from `packages/unified-ui`:
@@ -39,7 +61,9 @@ Run these commands from `packages/unified-ui`:
 ```bash
 mix test
 mix unified_ui.inspect --example foundational_screen
+mix unified_ui.inspect --format portable_widgets
 mix unified_ui.export --example themed_signal_workspace --format snapshot
+mix unified_ui.export --format portable_widgets
 mix unified_ui.validate
 ```
 
@@ -62,6 +86,7 @@ mix unified_ui.validate
 ## Maintainer Guides
 
 - [DSL Model](./guides/dsl_model.md)
+- [AshUi Widget Migration](./guides/ash_ui_widget_migration.md)
 - [Theming and Signals](./guides/theming_and_signals.md)
 - [Compiler and Parity](./guides/compiler_and_parity.md)
 - [Maintainer Workflows](./guides/maintainer_workflows.md)

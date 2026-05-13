@@ -22,6 +22,7 @@ surface:
   - .spec/specs/terminal_ui/native_widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -51,15 +52,36 @@ decisions:
   statement: The package shall provide native interaction patterns for keyboard, mouse when available, focus, shortcuts, overlays, resize, paste, and dynamic terminal content in a way that can be mapped to and from canonical boundary event meaning.
   priority: must
   stability: stable
+
+- id: terminal_ui.native_widgets.promoted_widget_equivalents
+  statement: The native `terminal_ui` surface shall provide terminal-native or explicitly degraded equivalents for the promoted AshUi-originated canonical widgets, including disclosure, semantic micro-status, segmented controls, multi-column rows, sticky headers, workflow progress, slide-over panels, event callouts, inline redline text, syntax-highlighted code blocks, chat composers, and host-owned form shells.
+  priority: must
+  stability: stable
+
+- id: terminal_ui.native_widgets.repeated_collection_realization
+  statement: The native `terminal_ui` surface and canonical renderer path shall realize repeated collection composition through terminal-appropriate lists, panels, or virtualized regions while preserving row-scope binding meaning across capability profiles.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: terminal_ui.native_widgets.build_native_terminal_flow
-  given: A terminal application wants to build a keyboard-first workflow, dialog flow, dashboard, or data-heavy screen directly with `terminal_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full native terminal experience without going through `unified_iur`
+  covers:
+    - terminal_ui.native_widgets.direct_native_surface
+    - terminal_ui.native_widgets.covers_canonical_iur_surface
+    - terminal_ui.native_widgets.capability_aware_widget_meaning
+    - terminal_ui.native_widgets.theme_and_style_surface
+    - terminal_ui.native_widgets.interaction_surface
+    - terminal_ui.native_widgets.promoted_widget_equivalents
+    - terminal_ui.native_widgets.repeated_collection_realization
+  given:
+    - A terminal application wants to build a keyboard-first workflow, dialog flow, dashboard, or data-heavy screen directly with `terminal_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full native terminal experience without going through `unified_iur`
 ```
 
 ## Verification
@@ -73,5 +95,6 @@ decisions:
     - terminal_ui.native_widgets.capability_aware_widget_meaning
     - terminal_ui.native_widgets.theme_and_style_surface
     - terminal_ui.native_widgets.interaction_surface
-    - terminal_ui.native_widgets.build_native_terminal_flow
+    - terminal_ui.native_widgets.promoted_widget_equivalents
+    - terminal_ui.native_widgets.repeated_collection_realization
 ```

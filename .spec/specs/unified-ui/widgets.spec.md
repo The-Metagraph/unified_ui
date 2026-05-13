@@ -22,6 +22,7 @@ surface:
   - .spec/specs/unified-iur/widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -47,6 +48,16 @@ decisions:
   priority: must
   stability: stable
 
+- id: unified_ui.widgets.portable_semantic_micro_widgets
+  statement: The package shall author portable semantic and micro-interaction widgets equivalent to AshUi-originated `disclosure`, `kicker`, `avatar`, `presence_dot`, `segmented_button_group`, `list_item_multi_column`, `artifact_row`, `sticky_header`, and host-owned form shell concepts without making AshUi or a specific renderer the canonical owner of those widgets.
+  priority: must
+  stability: stable
+
+- id: unified_ui.widgets.portable_workflow_document_widgets
+  statement: The package shall author portable workflow, document, and composer widgets equivalent to AshUi-originated `pipeline_stepper_horizontal`, `segmented_progress_bar`, `workflow_stage_list_vertical`, `meter_thin`, `slide_over_panel`, `event_callout`, `redline_inline`, `code_block_syntax_highlighted`, and `chat_composer` concepts as canonical DSL widgets.
+  priority: must
+  stability: stable
+
 - id: unified_ui.widgets.style_attribute_surface
   statement: The package shall author canonical styling attributes for typography, color, spacing, sizing, alignment, borders, background treatment, visibility, state variants, and theme-driven design tokens.
   priority: must
@@ -61,20 +72,53 @@ decisions:
   statement: Every canonical widget, layout, layering construct, styling attribute, and theme-level authored concept exposed by the package shall have a corresponding canonical IUR representation and shall not be package-local only.
   priority: must
   stability: stable
+
+- id: unified_ui.widgets.repeated_collection_composition
+  statement: The package shall author repeated collection composition that renders a child widget or layout template once per item in a list-oriented data binding while keeping row-scope data access renderer-independent and free of Ash resource relationship semantics.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: unified_ui.widgets.author_modal_flow
-  given: A developer needs a modal interaction flow with layered content, form inputs, button actions, and theme-aware styling
-  when: The flow is authored in `unified_ui`
-  then: The package provides canonical widgets, layer declarations, and styling declarations for the full flow without requiring runtime-library widgets
+  covers:
+    - unified_ui.widgets.foundational_visual_surface
+    - unified_ui.widgets.input_surface
+    - unified_ui.widgets.layout_and_layer_surface
+    - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.portable_semantic_micro_widgets
+    - unified_ui.widgets.portable_workflow_document_widgets
+    - unified_ui.widgets.style_attribute_surface
+    - unified_ui.widgets.canvas_surface
+    - unified_ui.widgets.iur_surface_parity
+    - unified_ui.widgets.repeated_collection_composition
+  given:
+    - A developer needs a modal interaction flow with layered content, form inputs, button actions, and theme-aware styling
+  when:
+    - The flow is authored in `unified_ui`
+  then:
+    - The package provides canonical widgets, layer declarations, and styling declarations for the full flow without requiring runtime-library widgets
 
 - id: unified_ui.widgets.author_data_experience
-  given: A developer needs to author a dashboard or data-heavy screen
-  when: The developer combines tables, lists, charts, progress or status widgets, and navigation elements
-  then: The package provides canonical authored constructs for the full experience as one coherent DSL surface
+  covers:
+    - unified_ui.widgets.foundational_visual_surface
+    - unified_ui.widgets.input_surface
+    - unified_ui.widgets.layout_and_layer_surface
+    - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.portable_semantic_micro_widgets
+    - unified_ui.widgets.portable_workflow_document_widgets
+    - unified_ui.widgets.style_attribute_surface
+    - unified_ui.widgets.canvas_surface
+    - unified_ui.widgets.iur_surface_parity
+    - unified_ui.widgets.repeated_collection_composition
+  given:
+    - A developer needs to author a dashboard or data-heavy screen
+  when:
+    - The developer combines tables, lists, charts, progress or status widgets, and navigation elements
+  then:
+    - The package provides canonical authored constructs for the full experience as one coherent DSL surface
 ```
 
 ## Verification
@@ -87,9 +131,10 @@ decisions:
     - unified_ui.widgets.input_surface
     - unified_ui.widgets.layout_and_layer_surface
     - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.portable_semantic_micro_widgets
+    - unified_ui.widgets.portable_workflow_document_widgets
     - unified_ui.widgets.style_attribute_surface
     - unified_ui.widgets.canvas_surface
     - unified_ui.widgets.iur_surface_parity
-    - unified_ui.widgets.author_modal_flow
-    - unified_ui.widgets.author_data_experience
+    - unified_ui.widgets.repeated_collection_composition
 ```

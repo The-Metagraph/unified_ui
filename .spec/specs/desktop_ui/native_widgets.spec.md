@@ -22,6 +22,7 @@ surface:
   - .spec/specs/desktop_ui/native_widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -51,15 +52,36 @@ decisions:
   statement: The package shall provide native interaction patterns for keyboard-first focus, shortcuts, richer pointer input, menus, overlays, windows, and dynamic content in a way that can be mapped to and from canonical boundary event meaning.
   priority: must
   stability: stable
+
+- id: desktop_ui.native_widgets.promoted_widget_equivalents
+  statement: The native `desktop_ui` surface shall provide desktop-native equivalents for the promoted AshUi-originated canonical widgets, including disclosure, semantic micro-status, segmented controls, multi-column rows, sticky headers, workflow progress, slide-over panels, event callouts, inline redline text, syntax-highlighted code blocks, chat composers, and host-owned form shells.
+  priority: must
+  stability: stable
+
+- id: desktop_ui.native_widgets.repeated_collection_realization
+  statement: The native `desktop_ui` surface and canonical renderer path shall realize repeated collection composition through retained desktop widget trees while preserving row-scope binding meaning and stable generated child identity.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: desktop_ui.native_widgets.build_native_desktop_flow
-  given: A desktop application wants to build a multiwindow flow, dialog workflow, or data-heavy screen directly with `desktop_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full native desktop experience without going through `unified_iur`
+  covers:
+    - desktop_ui.native_widgets.direct_native_surface
+    - desktop_ui.native_widgets.covers_canonical_iur_surface
+    - desktop_ui.native_widgets.multiplatform_widget_meaning
+    - desktop_ui.native_widgets.theme_and_style_surface
+    - desktop_ui.native_widgets.interaction_surface
+    - desktop_ui.native_widgets.promoted_widget_equivalents
+    - desktop_ui.native_widgets.repeated_collection_realization
+  given:
+    - A desktop application wants to build a multiwindow flow, dialog workflow, or data-heavy screen directly with `desktop_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full native desktop experience without going through `unified_iur`
 ```
 
 ## Verification
@@ -73,5 +95,6 @@ decisions:
     - desktop_ui.native_widgets.multiplatform_widget_meaning
     - desktop_ui.native_widgets.theme_and_style_surface
     - desktop_ui.native_widgets.interaction_surface
-    - desktop_ui.native_widgets.build_native_desktop_flow
+    - desktop_ui.native_widgets.promoted_widget_equivalents
+    - desktop_ui.native_widgets.repeated_collection_realization
 ```

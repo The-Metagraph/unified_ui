@@ -21,6 +21,7 @@ surface:
   - .spec/specs/live_ui/native_widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
   - live_ui.runtime.widget_livecomponents
 ```
 
@@ -66,20 +67,58 @@ decisions:
   statement: Native widget components may own bounded local UI lifecycle and ephemeral state where needed, provided that state remains subordinate to screen or application authority and can still be translated to canonical interaction meaning.
   priority: must
   stability: stable
+
+- id: live_ui.native_widgets.promoted_widget_equivalents
+  statement: The native `live_ui` surface shall provide LiveView-native equivalents for the promoted AshUi-originated canonical widgets, including disclosure, semantic micro-status, segmented controls, multi-column rows, sticky headers, workflow progress, slide-over panels, event callouts, inline redline text, syntax-highlighted code blocks, chat composers, and host-owned form shells.
+  priority: must
+  stability: stable
+
+- id: live_ui.native_widgets.repeated_collection_realization
+  statement: The native `live_ui` surface and canonical renderer path shall realize repeated collection composition through LiveView-native component composition or hydration while preserving row-scope binding meaning.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: live_ui.native_widgets.build_native_flow
-  given: A Phoenix application wants to build a multi-step dialog or dashboard directly with `live_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full LiveView-native experience without going through `unified_iur`
+  covers:
+    - live_ui.native_widgets.direct_native_surface
+    - live_ui.native_widgets.covers_canonical_iur_surface
+    - live_ui.native_widgets.liveview_native_composition
+    - live_ui.native_widgets.mountable_widget_components
+    - live_ui.native_widgets.helper_apis_delegate_to_components
+    - live_ui.native_widgets.theme_and_style_surface
+    - live_ui.native_widgets.interaction_surface
+    - live_ui.native_widgets.bounded_widget_state
+    - live_ui.native_widgets.promoted_widget_equivalents
+    - live_ui.native_widgets.repeated_collection_realization
+  given:
+    - A Phoenix application wants to build a multi-step dialog or dashboard directly with `live_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full LiveView-native experience without going through `unified_iur`
 
 - id: live_ui.native_widgets.mount_widget_in_screen
-  given: A Phoenix application wants to embed a `live_ui` widget inside a screen
-  when: The application mounts a button, input, overlay, or data widget
-  then: The widget is available as a real widget component boundary inside the screen rather than only as a passive HTML snippet
+  covers:
+    - live_ui.native_widgets.direct_native_surface
+    - live_ui.native_widgets.covers_canonical_iur_surface
+    - live_ui.native_widgets.liveview_native_composition
+    - live_ui.native_widgets.mountable_widget_components
+    - live_ui.native_widgets.helper_apis_delegate_to_components
+    - live_ui.native_widgets.theme_and_style_surface
+    - live_ui.native_widgets.interaction_surface
+    - live_ui.native_widgets.bounded_widget_state
+    - live_ui.native_widgets.promoted_widget_equivalents
+    - live_ui.native_widgets.repeated_collection_realization
+  given:
+    - A Phoenix application wants to embed a `live_ui` widget inside a screen
+  when:
+    - The application mounts a button, input, overlay, or data widget
+  then:
+    - The widget is available as a real widget component boundary inside the screen rather than only as a passive HTML snippet
 ```
 
 ## Verification
@@ -96,6 +135,6 @@ decisions:
     - live_ui.native_widgets.theme_and_style_surface
     - live_ui.native_widgets.interaction_surface
     - live_ui.native_widgets.bounded_widget_state
-    - live_ui.native_widgets.build_native_flow
-    - live_ui.native_widgets.mount_widget_in_screen
+    - live_ui.native_widgets.promoted_widget_equivalents
+    - live_ui.native_widgets.repeated_collection_realization
 ```

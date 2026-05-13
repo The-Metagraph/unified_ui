@@ -13,6 +13,7 @@ surface:
   - .spec/specs/dsl_iur_symbiosis.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -47,6 +48,11 @@ decisions:
   statement: Introducing or changing canonical DSL surface that affects rendering semantics shall be accompanied by the corresponding `unified_iur` representation change, and vice versa when the IUR addition is intended for canonical DSL authoring.
   priority: must
   stability: stable
+
+- id: ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion
+  statement: Generally useful widget or composition concepts first introduced by integration packages such as AshUi shall move into both the canonical `unified_ui` authored surface and the canonical `unified_iur` representation when they are intended for ecosystem-wide rendering.
+  priority: must
+  stability: stable
 ```
 
 ## Exceptions
@@ -73,4 +79,5 @@ decisions:
     - ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl
     - ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur
     - ecosystem.dsl_iur_symbiosis.bilateral_change_rule
+    - ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion
 ```

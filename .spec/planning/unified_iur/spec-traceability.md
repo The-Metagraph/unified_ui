@@ -29,6 +29,7 @@ and which upstream package specs are treated as input constraints rather than
 | `ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl` | `5.4.2` | - | Inherited symbiosis guardrail for layering and theming. |
 | `ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur` | `5.1.1` | - | Inherited compilation-target requirement for canonical IUR. |
 | `ecosystem.dsl_iur_symbiosis.bilateral_change_rule` | `5.4.2` | - | Inherited bilateral change-management requirement. |
+| `ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion` | `2.3.1` | `5.2.1`, `6.3.1` | Inherited bilateral-promotion rule for consumer-originated widgets represented in UnifiedIUR. |
 ### Referenced Root Requirements Outside `unified_iur` Ownership
 These referenced root requirements are intentionally not mapped to `unified_iur`
 tasks because they govern other runtime packages:
@@ -86,6 +87,7 @@ tasks because they govern other runtime packages:
 | `unified_iur.constructs.styling_attributes` | `4.1.1` | `4.4.1` | Direct styling-attribute construct requirement. |
 | `unified_iur.constructs.theme_and_token_representation` | `4.2.1` | `4.2.2` | Direct theme and token construct requirement. |
 | `unified_iur.constructs.canonical_surface_for_runtime_parity` | `5.2.1` | `5.4.2` | Direct canonical-surface parity requirement. |
+| `unified_iur.constructs.repeated_collection_composition` | `2.3.1` | `3.2.2`, `5.2.1`, `6.3.1` | Direct canonical representation for repeated collection composition. |
 ### `unified-iur/widgets.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -96,6 +98,9 @@ tasks because they govern other runtime packages:
 | `unified_iur.widgets.visualization` | `3.3.2` | - | Direct visualization widget requirement. |
 | `unified_iur.widgets.operational_views` | `3.4.1` | `3.4.2` | Direct operational widget requirement. |
 | `unified_iur.widgets.widget_semantics_preserved` | `2.1.2` | `5.3.2` | Direct widget-semantics preservation requirement. |
+| `unified_iur.widgets.portable_semantic_micro_widgets` | `2.1.1` | `3.1.1`, `5.2.1`, `6.1.1` | Direct canonical representation for promoted semantic and micro-interaction widgets. |
+| `unified_iur.widgets.workflow_document_widgets` | `3.1.1` | `5.2.1`, `6.1.1`, `6.3.1` | Direct canonical representation for promoted workflow, document, and composer widgets. |
+| `unified_iur.widgets.no_integration_package_widget_escape_hatches` | `5.2.1` | `5.3.1`, `6.3.1` | Direct canonical guard against AshUi-only or integration-local widget escape hatches. |
 ### `unified-iur/display_systems.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -121,6 +126,7 @@ tasks because they govern other runtime packages:
 | `unified_iur.interactions.standard_interaction_families` | `4.3.1` | - | Direct standard interaction-family requirement. |
 | `unified_iur.interactions.data_binding_representation` | `4.3.2` | - | Direct data-binding representation requirement. |
 | `unified_iur.interactions.element_binding_attachment` | `4.4.2` | `4.3.2` | Direct binding-attachment requirement. |
+| `unified_iur.interactions.row_scope_binding_representation` | `4.3.1` | `5.2.1`, `5.3.2`, `6.3.1` | Direct canonical representation for row-scope binding descriptors. |
 ### `unified-iur/interoperability.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |

@@ -20,6 +20,7 @@ surface:
   - .spec/specs/unified-iur/constructs.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -59,15 +60,32 @@ decisions:
   statement: The package shall define the canonical construct surface that runtime libraries are expected to cover fully with their own native widget, layer, and styling models.
   priority: must
   stability: stable
+
+- id: unified_iur.constructs.repeated_collection_composition
+  statement: The package shall represent repeated collection composition as a renderer-independent relationship between a list-oriented binding, a child widget or layout template, row-scope value access, and stable generated child identity expectations.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: unified_iur.constructs.capture_full_screen_structure
-  given: An authored UI contains layered navigation, forms, feedback widgets, styled content, and data-heavy sections
-  when: The authored module compiles into IUR
-  then: The resulting canonical structures can represent the full screen without collapsing unsupported constructs into runtime-specific escape hatches
+  covers:
+    - unified_iur.constructs.foundational_widgets
+    - unified_iur.constructs.input_and_form_widgets
+    - unified_iur.constructs.layout_and_layering
+    - unified_iur.constructs.navigation_feedback_and_data
+    - unified_iur.constructs.styling_attributes
+    - unified_iur.constructs.theme_and_token_representation
+    - unified_iur.constructs.canonical_surface_for_runtime_parity
+    - unified_iur.constructs.repeated_collection_composition
+  given:
+    - An authored UI contains layered navigation, forms, feedback widgets, styled content, and data-heavy sections
+  when:
+    - The authored module compiles into IUR
+  then:
+    - The resulting canonical structures can represent the full screen without collapsing unsupported constructs into runtime-specific escape hatches
 ```
 
 ## Verification
@@ -83,5 +101,5 @@ decisions:
     - unified_iur.constructs.styling_attributes
     - unified_iur.constructs.theme_and_token_representation
     - unified_iur.constructs.canonical_surface_for_runtime_parity
-    - unified_iur.constructs.capture_full_screen_structure
+    - unified_iur.constructs.repeated_collection_composition
 ```

@@ -71,6 +71,7 @@ Package-local checks:
 - `mix compile`
 - `mix test`
 - `mix desktop_ui.inspect --format catalog`
+- `mix desktop_ui.inspect --format portable_widgets`
 - `mix desktop_ui.inspect native_styled_review --format diagnostics`
 - `mix desktop_ui.build_host --dry-run`
 - `mix desktop_ui.build_host`
@@ -91,6 +92,20 @@ Workspace checks:
 
 - `mix spec.plancheck desktop_ui`
 - `mix spec.traceability.generate desktop_ui`
+
+## Promoted Widget Runtime Support
+
+`desktop_ui` provides desktop-native equivalents for promoted portable widgets
+and maps canonical IUR for those widgets into retained desktop widget trees.
+The supported surface includes semantic widgets, workflow/document widgets,
+`chat_composer`, `host_form_shell`, and `repeated_collection` rows.
+
+Host form lifecycle is integrated as desktop shell intent only. Host-owned data
+loading, validation, Ash changesets, form structs, and submit execution remain
+outside canonical IUR. Repeated collections keep row-scope value, index, and key
+descriptors so row-level actions can be rendered and routed without changing
+canonical payload meaning. Desktop degradation should be explicit in diagnostics
+when a visual treatment is unavailable on a target platform.
 
 ## SDL3 Native Execution Notes
 
@@ -153,7 +168,8 @@ Treat these as the normal release-readiness loop:
 - `mix spec.plancheck desktop_ui`
 
 That loop keeps example coverage, shared runtime behavior, transport
-translation, documentation, traceability, and artifact policy aligned before
+translation, promoted widget support, repeated collection row-scope
+preservation, documentation, traceability, and artifact policy aligned before
 the package evolves further.
 
 `desktop_ui` does not own authored `UnifiedUi` contracts or canonical

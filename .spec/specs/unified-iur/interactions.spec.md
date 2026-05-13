@@ -21,6 +21,7 @@ surface:
 decisions:
   - repo.ecosystem.contract_model
   - repo.ecosystem.canonical_navigation_boundary
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -51,6 +52,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: unified_iur.interactions.row_scope_binding_representation
+  statement: The package shall represent row-scope value references for repeated collection composition in a form that runtime libraries can hydrate or render without depending on Ash resource relationship semantics.
+  priority: must
+  stability: stable
+
 - id: unified_iur.interactions.navigation_transition_representation
   statement: The package shall represent canonical screen-transition descriptors including transition action, symbolic screen target, modal target, and params in a renderer-independent form.
   priority: must
@@ -66,9 +72,21 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.interactions.form_submission_descriptor
-  given: A canonical form contains input bindings and submit actions
-  when: The form is compiled into `unified_iur`
-  then: The form elements carry canonical interaction descriptors and data-binding references without depending on any one runtime-library event model
+  covers:
+    - unified_iur.interactions.canonical_event_descriptor_representation
+    - unified_iur.interactions.element_binding_attachment
+    - unified_iur.interactions.renderer_independent_payload_mapping
+    - unified_iur.interactions.standard_interaction_families
+    - unified_iur.interactions.data_binding_representation
+    - unified_iur.interactions.row_scope_binding_representation
+    - unified_iur.interactions.navigation_transition_representation
+    - unified_iur.interactions.no_host_router_assumptions
+  given:
+    - A canonical form contains input bindings and submit actions
+  when:
+    - The form is compiled into `unified_iur`
+  then:
+    - The form elements carry canonical interaction descriptors and data-binding references without depending on any one runtime-library event model
 ```
 
 ## Verification
@@ -82,7 +100,7 @@ decisions:
     - unified_iur.interactions.renderer_independent_payload_mapping
     - unified_iur.interactions.standard_interaction_families
     - unified_iur.interactions.data_binding_representation
+    - unified_iur.interactions.row_scope_binding_representation
     - unified_iur.interactions.navigation_transition_representation
     - unified_iur.interactions.no_host_router_assumptions
-    - unified_iur.interactions.form_submission_descriptor
 ```

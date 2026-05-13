@@ -22,7 +22,8 @@
       "ecosystem.signal_transport.dsl_event_bindings",
       "ecosystem.signal_transport.terminal_bridge",
       "ecosystem.signal_transport.native_signal_models_allowed",
-      "ecosystem.signal_transport.local_state_not_contract"
+      "ecosystem.signal_transport.local_state_not_contract",
+      "ecosystem.platform_runtimes.promoted_widget_runtime_equivalence"
     ],
     "upstream_requirement_ids": [
       "unified_iur.widgets.input_and_navigation",
@@ -56,7 +57,12 @@
       "unified_ui.signals.authoring_event_semantics",
       "unified_ui.signals.standard_interaction_families",
       "unified_ui.signals.validation_and_introspection",
-      "unified_ui.signals.no_runtime_local_event_leakage"
+      "unified_ui.signals.no_runtime_local_event_leakage",
+      "unified_iur.widgets.portable_semantic_micro_widgets",
+      "unified_iur.widgets.workflow_document_widgets",
+      "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "unified_iur.constructs.repeated_collection_composition",
+      "unified_iur.interactions.row_scope_binding_representation"
     ],
     "non_applicable_requirement_ids": [
       "ecosystem.platform_runtimes.elm_ui_runtime_split",
@@ -796,6 +802,70 @@
       "primary_plan_refs": ["4.3.1"],
       "supporting_plan_refs": ["1.2.1", "6.4.2", "6.5.2"],
       "ownership_note": "Upstream authored-signal hygiene guardrail."
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.promoted_widget_runtime_equivalence",
+      "scope": "inherited",
+      "source_file": ".spec/specs/platform_runtimes.spec.md",
+      "primary_plan_refs": ["2.3.1"],
+      "supporting_plan_refs": ["3.3.1", "5.3.1", "6.3.1"],
+      "ownership_note": "Inherited runtime-equivalence requirement for promoted portable widgets and repeated collections."
+    },
+    {
+      "requirement_id": "terminal_ui.native_widgets.promoted_widget_equivalents",
+      "scope": "direct",
+      "source_file": ".spec/specs/terminal_ui/native_widgets.spec.md",
+      "primary_plan_refs": ["3.1.1"],
+      "supporting_plan_refs": ["3.3.1", "5.3.1", "6.1.1"],
+      "ownership_note": "Direct runtime support for promoted portable widget equivalents."
+    },
+    {
+      "requirement_id": "terminal_ui.native_widgets.repeated_collection_realization",
+      "scope": "direct",
+      "source_file": ".spec/specs/terminal_ui/native_widgets.spec.md",
+      "primary_plan_refs": ["3.2.2"],
+      "supporting_plan_refs": ["3.3.1", "5.3.2", "6.2.1"],
+      "ownership_note": "Direct runtime support for repeated collection realization and row-scope preservation."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.portable_semantic_micro_widgets",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": ["3.3.1"],
+      "supporting_plan_refs": ["5.3.1", "6.2.1"],
+      "ownership_note": "Upstream canonical promoted semantic widget scope consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.workflow_document_widgets",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": ["3.3.1"],
+      "supporting_plan_refs": ["5.3.1", "6.2.1"],
+      "ownership_note": "Upstream canonical promoted workflow widget scope consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": ["3.3.1"],
+      "supporting_plan_refs": ["5.3.2", "6.3.1"],
+      "ownership_note": "Upstream canonical guard against integration-local widget escape hatches consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.repeated_collection_composition",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": ["3.3.1"],
+      "supporting_plan_refs": ["3.2.2", "5.3.2", "6.2.1"],
+      "ownership_note": "Upstream canonical repeated-collection construct consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.row_scope_binding_representation",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["4.3.1"],
+      "supporting_plan_refs": ["5.3.2", "6.2.1"],
+      "ownership_note": "Upstream canonical row-scope binding representation consumed by terminal_ui."
     }
   ]
 }

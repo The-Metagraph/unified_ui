@@ -37,7 +37,8 @@ The package includes five maintainer-facing Mix tasks:
 - `mix live_ui.demo [home|EXAMPLE_ID] [--format summary|html|report|catalog]`
 - `mix live_ui.preview [EXAMPLE_ID] [--format report|html|metadata]`
 - `mix live_ui.inspect [EXAMPLE_ID] [--format report|metadata|comparison|diagnostics|catalog]`
-- `mix live_ui.export [EXAMPLE_ID] [--format metadata|report|html|comparison|diagnostics|catalog]`
+- `mix live_ui.inspect --format portable_widgets`
+- `mix live_ui.export [EXAMPLE_ID] [--format metadata|report|html|comparison|diagnostics|portable_widgets|catalog]`
 - `mix live_ui.validate [--format summary|report] [--strict]`
 
 Use these commands to:
@@ -48,6 +49,19 @@ Use these commands to:
 - inspect how native and canonical flows map onto the same runtime
 - export review-friendly metadata, snapshots, comparisons, and diagnostics
 - validate continuity, transport, runtime authority, and documentation readiness
+
+## Promoted Widget Runtime Support
+
+`LiveUi` provides LiveView-native equivalents for the promoted portable widget
+surface and renders the same meaning when the input arrives as canonical IUR.
+This includes semantic widgets, workflow/document widgets, `chat_composer`,
+`host_form_shell`, and `repeated_collection` row templates.
+
+Host form lifecycle remains host-owned: Phoenix form structs, Ash changesets,
+validation execution, and submit persistence do not enter canonical IUR.
+`LiveUi` renders the shell and emits canonical interaction meaning back to the
+host. Repeated collection rows preserve canonical row-scope descriptors and
+hydrate row actions without rewriting them into LiveView callback names.
 
 To run the browser demo locally:
 
@@ -75,6 +89,7 @@ Use the package guides for the package contract details:
 ## Release Readiness
 
 `LiveUi` treats maintained example health, styled continuity alignment, boundary
-transport soundness, server-authoritative runtime behavior, and maintainer
+transport soundness, promoted widget support, repeated collection row-scope
+preservation, server-authoritative runtime behavior, and maintainer
 documentation as release-readiness criteria. Run `mix live_ui.validate --strict`
 before promoting runtime-boundary changes.

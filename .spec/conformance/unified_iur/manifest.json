@@ -958,6 +958,103 @@
           "cwd": "."
         }
       ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.portable_semantic_micro_widgets",
+      "status": "verified",
+      "notes": "Verified by the portable widget support matrix and canonical fixtures.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/portable_widget_support.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_iur/portable_widget_support_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.workflow_document_widgets",
+      "status": "verified",
+      "notes": "Verified by the portable widget support matrix and canonical fixtures.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/portable_widget_support.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_iur/portable_widget_support_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "status": "verified",
+      "notes": "Verified by validation/reporting support that enumerates canonical promoted widgets instead of integration-local escape hatches.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/portable_widget_support.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/fixtures.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_iur/portable_widget_support_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.constructs.repeated_collection_composition",
+      "status": "verified",
+      "notes": "Verified by portable widget row-scope reports and deterministic fixture inspection/export tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/portable_widget_support.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_iur/portable_widget_support_test.exs test/unified_iur/inspect_test.exs test/unified_iur/export_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_iur.interactions.row_scope_binding_representation",
+      "status": "verified",
+      "notes": "Verified by row-scope validation for row value, row index, and row key descriptors.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified_iur/lib/unified_iur/portable_widget_support.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_iur/portable_widget_support_test.exs test/unified_iur/inspect_test.exs test/unified_iur/export_test.exs",
+          "cwd": "packages/unified_iur"
+        }
+      ]
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion",
+      "inherits_from_requirement_id": "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "notes": "Shares UnifiedIUR conformance for canonical promotion instead of integration-local escape hatches."
     }
   ]
 }

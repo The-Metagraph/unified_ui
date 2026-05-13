@@ -13,7 +13,8 @@
       "ecosystem.dsl_iur_symbiosis.iur_covers_widget_layout_layer_theme",
       "ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl",
       "ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur",
-      "ecosystem.dsl_iur_symbiosis.bilateral_change_rule"
+      "ecosystem.dsl_iur_symbiosis.bilateral_change_rule",
+      "ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion"
     ],
     "upstream_requirement_ids": [],
     "non_applicable_requirement_ids": [
@@ -703,6 +704,88 @@
         "6.4.2"
       ],
       "ownership_note": "Direct documentation-surface requirement."
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion",
+      "scope": "inherited",
+      "source_file": ".spec/specs/dsl_iur_symbiosis.spec.md",
+      "primary_plan_refs": [
+        "2.3.1"
+      ],
+      "supporting_plan_refs": [
+        "5.2.1",
+        "6.3.1"
+      ],
+      "ownership_note": "Inherited bilateral-promotion rule for consumer-originated widgets represented in UnifiedIUR."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.portable_semantic_micro_widgets",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": [
+        "2.1.1"
+      ],
+      "supporting_plan_refs": [
+        "3.1.1",
+        "5.2.1",
+        "6.1.1"
+      ],
+      "ownership_note": "Direct canonical representation for promoted semantic and micro-interaction widgets."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.workflow_document_widgets",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": [
+        "3.1.1"
+      ],
+      "supporting_plan_refs": [
+        "5.2.1",
+        "6.1.1",
+        "6.3.1"
+      ],
+      "ownership_note": "Direct canonical representation for promoted workflow, document, and composer widgets."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/widgets.spec.md",
+      "primary_plan_refs": [
+        "5.2.1"
+      ],
+      "supporting_plan_refs": [
+        "5.3.1",
+        "6.3.1"
+      ],
+      "ownership_note": "Direct canonical guard against AshUi-only or integration-local widget escape hatches."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.repeated_collection_composition",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/constructs.spec.md",
+      "primary_plan_refs": [
+        "2.3.1"
+      ],
+      "supporting_plan_refs": [
+        "3.2.2",
+        "5.2.1",
+        "6.3.1"
+      ],
+      "ownership_note": "Direct canonical representation for repeated collection composition."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.row_scope_binding_representation",
+      "scope": "direct",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": [
+        "4.3.1"
+      ],
+      "supporting_plan_refs": [
+        "5.2.1",
+        "5.3.2",
+        "6.3.1"
+      ],
+      "ownership_note": "Direct canonical representation for row-scope binding descriptors."
     }
   ]
 }

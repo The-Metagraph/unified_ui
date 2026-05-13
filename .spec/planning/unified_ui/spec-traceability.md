@@ -30,6 +30,7 @@ and which upstream package specs are treated as input constraints rather than
 | `ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl` | `3.3.2` | - | Inherited authored-surface requirement for layers and themes. |
 | `ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur` | `5.1.1` | - | Inherited compilation-to-IUR requirement. |
 | `ecosystem.dsl_iur_symbiosis.bilateral_change_rule` | `5.4.1` | - | Inherited bilateral parity governance requirement. |
+| `ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion` | `5.4.1` | `6.3.1`, `6.4.1` | Inherited bilateral-promotion rule for consumer-originated widgets authored in UnifiedUi. |
 ### `signal_transport.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -81,6 +82,8 @@ tasks because they govern other runtime packages:
 | `unified_ui.dsl.spark_style_authoring_surface` | `1.2.1` | - | Direct Spark-style authoring requirement. |
 | `unified_ui.dsl.styling_and_theming` | `4.1.1` | - | Direct style and theme DSL requirement. |
 | `unified_ui.dsl.widgets_layouts_layers` | `1.2.2` | - | Direct widget, layout, and layer authoring-surface requirement. |
+| `unified_ui.dsl.consumer_originated_surface_promotion` | `1.2.2` | `1.3.2`, `6.4.1` | Direct DSL support for promoting portable consumer-originated widget concepts. |
+| `unified_ui.dsl.repeated_collection_templates` | `1.2.2` | `1.3.2`, `5.2.2`, `6.3.1` | Direct DSL support for repeated collection templates and row-scope descriptors. |
 ### `unified-ui/widgets.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -91,6 +94,9 @@ tasks because they govern other runtime packages:
 | `unified_ui.widgets.iur_surface_parity` | `5.4.1` | - | Direct parity requirement against canonical UnifiedIUR. |
 | `unified_ui.widgets.layout_and_layer_surface` | `2.3.1` | - | Direct layout and layer authoring requirement. |
 | `unified_ui.widgets.style_attribute_surface` | `4.2.1` | - | Direct canonical style attribute requirement. |
+| `unified_ui.widgets.portable_semantic_micro_widgets` | `3.1.1` | `5.4.1`, `6.1.1`, `6.3.1` | Direct authored widget coverage for promoted semantic and micro-interaction widgets. |
+| `unified_ui.widgets.portable_workflow_document_widgets` | `3.1.2` | `5.4.1`, `6.1.1`, `6.3.1` | Direct authored widget coverage for promoted workflow, document, and composer widgets. |
+| `unified_ui.widgets.repeated_collection_composition` | `3.4.2` | `5.2.2`, `5.4.1`, `6.3.1` | Direct authored coverage for repeated collection composition and row-scope preservation. |
 ### `unified-ui/display_systems.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -159,6 +165,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.constructs.navigation_feedback_and_data` | `3.1.1` | - | Upstream navigation, feedback, and data constraint consumed by UnifiedUi. |
 | `unified_iur.constructs.styling_attributes` | `4.2.1` | - | Upstream styling-attribute constraint consumed by UnifiedUi. |
 | `unified_iur.constructs.theme_and_token_representation` | `4.1.1` | - | Upstream theme and token constraint consumed by UnifiedUi. |
+| `unified_iur.constructs.repeated_collection_composition` | `5.4.1` | `5.2.2`, `6.3.1` | Upstream canonical repeated-collection construct consumed by UnifiedUi. |
 ### `unified-iur/display_systems.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -175,6 +182,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.interactions.element_binding_attachment` | `4.3.2` | - | Upstream binding-attachment constraint consumed by UnifiedUi. |
 | `unified_iur.interactions.renderer_independent_payload_mapping` | `4.3.2` | - | Upstream payload-mapping constraint consumed by UnifiedUi. |
 | `unified_iur.interactions.standard_interaction_families` | `4.3.1` | - | Upstream interaction-family constraint consumed by UnifiedUi. |
+| `unified_iur.interactions.row_scope_binding_representation` | `5.2.2` | `5.4.1`, `6.3.1` | Upstream row-scope binding representation consumed by UnifiedUi authoring and lowering. |
 ### `unified-iur/interoperability.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -197,6 +205,12 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.tooling.introspection_helpers` | `6.2.1` | - | Upstream inspection-helper constraint consumed by UnifiedUi. |
 | `unified_iur.tooling.reference_examples` | `6.1.1` | - | Upstream reference-example constraint consumed by UnifiedUi. |
 | `unified_iur.tooling.validation_workflow` | `6.3.1` | - | Upstream validation-workflow constraint consumed by UnifiedUi. |
+### `unified-iur/widgets.spec.md`
+| Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
+| --- | --- | --- | --- |
+| `unified_iur.widgets.portable_semantic_micro_widgets` | `5.4.1` | `6.3.1` | Upstream canonical IUR representation required by promoted semantic widget authoring. |
+| `unified_iur.widgets.workflow_document_widgets` | `5.4.1` | `6.3.1` | Upstream canonical IUR representation required by promoted workflow widget authoring. |
+| `unified_iur.widgets.no_integration_package_widget_escape_hatches` | `5.4.1` | `6.3.1` | Upstream canonical constraint preventing AshUi-only widget escape hatches. |
 ## Scenario Alignment Pattern
 The per-spec scenario clauses are covered through the integration-test sections
 at the end of every phase:

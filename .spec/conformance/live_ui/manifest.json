@@ -985,6 +985,80 @@
       "requirement_id": "unified_ui.signals.no_runtime_local_event_leakage",
       "inherits_from_requirement_id": "live_ui.transport.no_boundary_leakage",
       "notes": "Shares the current conformance status of live_ui.transport.no_boundary_leakage."
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.promoted_widget_equivalents",
+      "status": "verified",
+      "notes": "Verified by LiveUi portable widget tooling and validation coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/tooling.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/ash_ui_widget_portability_phase_5_tooling_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/ash_ui_widget_portability_phase_5_tooling_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "live_ui.native_widgets.repeated_collection_realization",
+      "status": "verified",
+      "notes": "Verified by LiveUi portable widget row-scope reporting and validation coverage.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/tooling.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/lib/live_ui/validate.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/live_ui/test/live_ui/ash_ui_widget_portability_phase_5_tooling_test.exs"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/live_ui/ash_ui_widget_portability_phase_5_tooling_test.exs",
+          "cwd": "packages/live_ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "ecosystem.platform_runtimes.promoted_widget_runtime_equivalence",
+      "inherits_from_requirement_id": "live_ui.native_widgets.promoted_widget_equivalents",
+      "notes": "Shares LiveUi native widget conformance for promoted runtime equivalents."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.portable_semantic_micro_widgets",
+      "inherits_from_requirement_id": "live_ui.native_widgets.promoted_widget_equivalents",
+      "notes": "Shares LiveUi runtime conformance for promoted semantic widgets."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.workflow_document_widgets",
+      "inherits_from_requirement_id": "live_ui.native_widgets.promoted_widget_equivalents",
+      "notes": "Shares LiveUi runtime conformance for promoted workflow/document widgets."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "inherits_from_requirement_id": "live_ui.native_widgets.promoted_widget_equivalents",
+      "notes": "Shares LiveUi runtime conformance for canonical promoted widgets instead of integration-local escape hatches."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.repeated_collection_composition",
+      "inherits_from_requirement_id": "live_ui.native_widgets.repeated_collection_realization",
+      "notes": "Shares LiveUi runtime conformance for repeated collection realization."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.row_scope_binding_representation",
+      "inherits_from_requirement_id": "live_ui.native_widgets.repeated_collection_realization",
+      "notes": "Shares LiveUi runtime conformance for row-scope binding preservation."
     }
   ]
 }

@@ -16,6 +16,9 @@ reference surfaces for:
 - canonical widget, layout, layer, form, and canvas construct families
 - styling, theming, token, binding, and interaction descriptors
 - normalization and validation of portable canonical values
+- promoted semantic, workflow, host-owned form, and repeated collection
+  constructs that originated in AshUi proposals but now belong to the canonical
+  ecosystem surface
 - interoperability helpers for runtime-library consumption
 - reference fixtures, inspection helpers, export helpers, and package validation
 
@@ -27,7 +30,9 @@ integration, Elm state management, or desktop process lifecycles.
 The package includes three maintainer-facing Mix tasks:
 
 - `mix unified_iur.inspect FIXTURE_ID --format report|tree|diagnostics|extensions`
+- `mix unified_iur.inspect --format portable_widgets`
 - `mix unified_iur.export FIXTURE_ID --format fixture|snapshot|diagnostics`
+- `mix unified_iur.export --format portable_widgets`
 - `mix unified_iur.validate --format summary|report [--strict]`
 
 These commands are built to let maintainers inspect, export, validate, and
@@ -45,6 +50,7 @@ Use the package guides for the canonical contract details:
 ## Release Readiness
 
 The package treats reference fixtures, deterministic normalization, runtime
-compatibility, and paired `unified_ui` parity as release gates rather than
+compatibility, portable widget support, repeated collection row-scope
+preservation, and paired `unified_ui` parity as release gates rather than
 optional documentation concerns. Run `mix unified_iur.validate --strict` before
 promoting changes to the canonical IUR surface.

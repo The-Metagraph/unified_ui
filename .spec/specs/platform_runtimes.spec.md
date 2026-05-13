@@ -17,6 +17,7 @@ surface:
 decisions:
   - repo.ecosystem.contract_model
   - repo.ecosystem.elm_ui_naming
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -39,6 +40,11 @@ decisions:
 
 - id: ecosystem.platform_runtimes.iur_interpretation
   statement: Each widget library shall include an IUR renderer that interprets canonical `unified_iur` input and renders it using its own native widget system, layering model, styling attributes, and native signal model.
+  priority: must
+  stability: stable
+
+- id: ecosystem.platform_runtimes.promoted_widget_runtime_equivalence
+  statement: Runtime packages shall provide native equivalents and IUR renderer support for promoted consumer-originated canonical widgets and repeated collection composition, with explicit medium-appropriate degradation where a runtime cannot realize the richer visual treatment directly.
   priority: must
   stability: stable
 
@@ -99,6 +105,7 @@ decisions:
     - ecosystem.platform_runtimes.native_surface_covers_iur
     - ecosystem.platform_runtimes.native_surface_usable_without_iur
     - ecosystem.platform_runtimes.iur_interpretation
+    - ecosystem.platform_runtimes.promoted_widget_runtime_equivalence
     - ecosystem.platform_runtimes.elm_ui_runtime_split
     - ecosystem.platform_runtimes.live_ui_runtime
     - ecosystem.platform_runtimes.desktop_ui_targets

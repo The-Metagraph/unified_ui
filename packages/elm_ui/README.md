@@ -39,7 +39,9 @@ Package-local checks:
 - `mix test`
 - `mix elm_ui.preview --format catalog`
 - `mix elm_ui.inspect native_styling`
+- `mix elm_ui.inspect --format portable_widgets`
 - `mix elm_ui.export styling_continuity --format comparison`
+- `mix elm_ui.export --format portable_widgets`
 - `mix elm_ui.validate --strict`
 
 Workspace checks:
@@ -54,6 +56,21 @@ Maintainer helper modules:
 - `ElmUi.Validate.release_readiness/1`
 - `ElmUi.Reference.package_reference/0`
 - `ElmUi.Info.package_summary/0`
+
+## Promoted Widget Runtime Support
+
+`ElmUi` provides Phoenix-and-Elm-native equivalents for the promoted portable
+widget surface and maps canonical IUR for the same widgets through the split
+server/frontend runtime boundary. Semantic widgets, workflow/document widgets,
+`chat_composer`, `host_form_shell`, and `repeated_collection` rows are exposed
+through tooling and validation.
+
+Host form lifecycle remains outside canonical IUR. The Phoenix server and host
+application keep form structs, Ash changesets, validation execution, and submit
+persistence; `ElmUi` carries canonical shell intent and frontend realization.
+Repeated collection rows preserve row-scope value, index, and key descriptors
+across the Phoenix-to-Elm boundary instead of translating them into local
+frontend callbacks.
 
 ## Guides
 

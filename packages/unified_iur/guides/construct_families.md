@@ -13,6 +13,13 @@ The canonical widget catalog is organized into these families:
 - data widgets
 - feedback widgets
 - advanced operational widgets
+- promoted semantic and micro-interaction widgets such as disclosure, kicker,
+  avatar, presence, segmented controls, multi-column rows, artifact rows,
+  sticky headers, and host-owned form shell markers
+- promoted workflow, document, and composer widgets such as pipeline steppers,
+  segmented progress, workflow stage lists, thin meters, slide-over panels,
+  event callouts, inline redlines, syntax-highlighted code blocks, and chat
+  composers
 
 Reference coverage for each family lives in `UnifiedIUR.Fixtures` and is
 validated through `mix unified_iur.validate`.
@@ -26,6 +33,9 @@ The canonical display-system surface includes:
 - layout constructs
 - layering and overlay constructs
 - canvas and chart constructs
+- repeated collection composition that connects a portable list source, one row
+  template, row index/value/key descriptors, and stable generated child
+  identity expectations
 
 These families are the renderer-independent building blocks that runtime
 libraries must map into their own native widget and display systems.
@@ -39,6 +49,7 @@ Portable attachments include:
 - bindings
 - interaction descriptors
 - interaction scopes
+- row-scope binding descriptors for repeated collection row templates
 
 Reference fixtures are expected to cover all of these attachment families so
 maintainers can review canonical shape changes before runtime libraries are

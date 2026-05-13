@@ -971,6 +971,148 @@
       "requirement_id": "unified_iur.tooling.validation_workflow",
       "inherits_from_requirement_id": "unified_ui.tooling.authoring_validation_workflow",
       "notes": "Shares the current conformance status of unified_ui.tooling.authoring_validation_workflow."
+    },
+    {
+      "requirement_id": "unified_ui.dsl.consumer_originated_surface_promotion",
+      "status": "verified",
+      "notes": "Verified by promoted semantic/workflow DSL entities and migration documentation.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/semantic.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/workflow.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/examples/portable_widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.dsl.repeated_collection_templates",
+      "status": "verified",
+      "notes": "Verified by repeated collection DSL entities, row-scope helpers, and focused lowering tests.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/collection.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/row_scope.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_2_integration_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.portable_semantic_micro_widgets",
+      "status": "verified",
+      "notes": "Verified by promoted semantic widget DSL entities and maintained portable widget examples.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/semantic.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/workflow.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/examples/portable_widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.portable_workflow_document_widgets",
+      "status": "verified",
+      "notes": "Verified by promoted workflow/document widget DSL entities and maintained portable widget examples.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/semantic.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/workflow.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/examples/portable_widgets.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "unified_ui.widgets.repeated_collection_composition",
+      "status": "verified",
+      "notes": "Verified by repeated collection authoring, lowering, and portable widget examples.",
+      "evidence": [
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/dsl/entities/collection.ex"
+        },
+        {
+          "kind": "path_exists",
+          "path": "packages/unified-ui/lib/unified_ui/row_scope.ex"
+        },
+        {
+          "kind": "command",
+          "run": "mix test test/unified_ui/ash_ui_widget_portability_phase_2_integration_test.exs test/unified_ui/ash_ui_widget_portability_phase_5_examples_test.exs",
+          "cwd": "packages/unified-ui"
+        }
+      ]
+    },
+    {
+      "requirement_id": "ecosystem.dsl_iur_symbiosis.consumer_originated_widget_promotion",
+      "inherits_from_requirement_id": "unified_ui.dsl.consumer_originated_surface_promotion",
+      "notes": "Shares UnifiedUi DSL conformance for consumer-originated widget promotion."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.portable_semantic_micro_widgets",
+      "inherits_from_requirement_id": "unified_ui.widgets.portable_semantic_micro_widgets",
+      "notes": "Shares UnifiedUi authoring conformance for the paired canonical semantic widget surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.workflow_document_widgets",
+      "inherits_from_requirement_id": "unified_ui.widgets.portable_workflow_document_widgets",
+      "notes": "Shares UnifiedUi authoring conformance for the paired canonical workflow widget surface."
+    },
+    {
+      "requirement_id": "unified_iur.widgets.no_integration_package_widget_escape_hatches",
+      "inherits_from_requirement_id": "unified_ui.widgets.iur_surface_parity",
+      "notes": "Shares UnifiedUi parity conformance for avoiding integration-local widget escape hatches."
+    },
+    {
+      "requirement_id": "unified_iur.constructs.repeated_collection_composition",
+      "inherits_from_requirement_id": "unified_ui.widgets.repeated_collection_composition",
+      "notes": "Shares UnifiedUi repeated collection conformance for paired canonical IUR constructs."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.row_scope_binding_representation",
+      "inherits_from_requirement_id": "unified_ui.widgets.repeated_collection_composition",
+      "notes": "Shares UnifiedUi repeated collection conformance for row-scope binding representation."
     }
   ]
 }

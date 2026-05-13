@@ -56,6 +56,7 @@ Package-local checks:
 - `mix test`
 - `mix docs`
 - `mix terminal_ui.inspect --format catalog`
+- `mix terminal_ui.inspect --format portable_widgets`
 - `mix terminal_ui.inspect native_styled_review --format diagnostics`
 - `mix terminal_ui.validate`
 - `mix terminal_ui.validate --format report`
@@ -64,6 +65,21 @@ Package-local checks:
 Workspace checks:
 
 - `mix spec.plancheck terminal_ui`
+
+## Promoted Widget Runtime Support
+
+`terminal_ui` provides terminal-native or explicitly degraded equivalents for
+promoted portable widgets and maps canonical IUR for those widgets through the
+same runtime model. Semantic widgets, workflow/document widgets,
+`chat_composer`, `host_form_shell`, and `repeated_collection` rows are
+inspectable through the portable widget report.
+
+Host form lifecycle stays outside canonical IUR: Ash changesets, Phoenix form
+structs, validation execution, persistence, and data loading remain host-owned.
+`terminal_ui` renders shell intent and terminal-appropriate controls while
+preserving canonical submit and row action meaning. Repeated collections use
+terminal lists, panels, or linearized fallbacks while preserving row-scope
+value, index, and key descriptors across raw and TTY capability profiles.
 
 ## Guides
 
@@ -76,6 +92,7 @@ Workspace checks:
 ## Release Readiness
 
 Treat `mix terminal_ui.validate --strict` as the package release-readiness
-gate. It keeps example coverage, renderer determinism, shared runtime behavior,
-transport translation, capability degradation, tooling, and docs aligned before
-the package evolves further.
+gate. It keeps example coverage, renderer determinism, promoted widget
+degradation, repeated collection row-scope preservation, shared runtime
+behavior, transport translation, capability degradation, tooling, and docs
+aligned before the package evolves further.

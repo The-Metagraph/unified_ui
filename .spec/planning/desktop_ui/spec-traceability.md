@@ -33,6 +33,7 @@ and which upstream package specs are treated as input constraints rather than
 | `ecosystem.platform_runtimes.iur_interpretation` | `2.3.1` | `3.3.1`, `6.2.2` | Inherited canonical-renderer obligation. |
 | `ecosystem.platform_runtimes.desktop_ui_targets` | `1.3.1` | `5.2.1`, `5.3.1`, `5.5.2` | Direct inherited desktop_ui target-platform obligation. |
 | `ecosystem.platform_runtimes.desktop_ui_native_runtime` | `2.1.1` | `1.2.1`, `2.3.2`, `5.2.1` | Direct inherited desktop_ui native-runtime obligation. |
+| `ecosystem.platform_runtimes.promoted_widget_runtime_equivalence` | `2.3.1` | `3.3.1`, `5.3.1`, `6.3.1` | Inherited runtime-equivalence requirement for promoted portable widgets and repeated collections. |
 ### `signal_transport.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -76,6 +77,8 @@ tasks because they govern other runtime packages:
 | `desktop_ui.native_widgets.multiplatform_widget_meaning` | `3.3.2` | `5.2.2`, `5.5.2` | Direct cross-target semantic continuity obligation. |
 | `desktop_ui.native_widgets.theme_and_style_surface` | `5.1.1` | `5.1.2`, `5.4.1`, `5.5.1` | Direct styling and theming obligation. |
 | `desktop_ui.native_widgets.interaction_surface` | `2.1.2` | `3.2.2`, `4.1.1`, `4.2.2`, `4.4.1` | Direct native-interaction obligation. |
+| `desktop_ui.native_widgets.promoted_widget_equivalents` | `3.1.1` | `3.3.1`, `5.3.1`, `6.1.1` | Direct runtime support for promoted portable widget equivalents. |
+| `desktop_ui.native_widgets.repeated_collection_realization` | `3.2.2` | `3.3.1`, `5.3.2`, `6.2.1` | Direct runtime support for repeated collection realization and row-scope preservation. |
 ### `runtime.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -146,6 +149,9 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.widgets.visualization` | `3.1.2` | `3.3.1`, `5.1.1` | Upstream canonical widget scope consumed by desktop_ui. |
 | `unified_iur.widgets.operational_views` | `3.1.2` | `3.3.1`, `6.1.1` | Upstream canonical widget scope consumed by desktop_ui. |
 | `unified_iur.widgets.widget_semantics_preserved` | `2.3.2` | `3.3.2`, `5.4.2`, `5.5.2` | Upstream parity constraint on renderer behavior. |
+| `unified_iur.widgets.portable_semantic_micro_widgets` | `3.3.1` | `5.3.1`, `6.2.1` | Upstream canonical promoted semantic widget scope consumed by desktop_ui. |
+| `unified_iur.widgets.workflow_document_widgets` | `3.3.1` | `5.3.1`, `6.2.1` | Upstream canonical promoted workflow widget scope consumed by desktop_ui. |
+| `unified_iur.widgets.no_integration_package_widget_escape_hatches` | `3.3.1` | `5.3.2`, `6.3.1` | Upstream canonical guard against integration-local widget escape hatches consumed by desktop_ui. |
 ### `unified-iur/display_systems.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -171,6 +177,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.interactions.renderer_independent_payload_mapping` | `4.1.1` | `4.3.1`, `4.5.1` | Upstream canonical interaction hygiene constraint. |
 | `unified_iur.interactions.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream canonical interaction scope consumed by desktop_ui. |
 | `unified_iur.interactions.data_binding_representation` | `2.1.2` | `2.2.1`, `4.2.1`, `4.5.2` | Upstream canonical data-binding input consumed by desktop_ui. |
+| `unified_iur.interactions.row_scope_binding_representation` | `4.3.1` | `5.3.2`, `6.2.1` | Upstream canonical row-scope binding representation consumed by desktop_ui. |
 ### `unified-ui/package.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -187,6 +194,10 @@ deliberate task coverage to preserve compatibility.
 | `unified_ui.signals.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream authored-signal scope consumed by desktop_ui. |
 | `unified_ui.signals.validation_and_introspection` | `6.2.1` | `4.3.1`, `6.2.2`, `6.3.2` | Upstream inspection expectations reflected in desktop_ui tooling. |
 | `unified_ui.signals.no_runtime_local_event_leakage` | `4.3.1` | `1.2.1`, `6.4.2`, `6.5.2` | Upstream authored-signal hygiene guardrail. |
+### `unified-iur/constructs.spec.md`
+| Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
+| --- | --- | --- | --- |
+| `unified_iur.constructs.repeated_collection_composition` | `3.3.1` | `3.2.2`, `5.3.2`, `6.2.1` | Upstream canonical repeated-collection construct consumed by desktop_ui. |
 ## Scenario Alignment Pattern
 The per-spec scenario clauses are covered through the integration-test sections
 at the end of every phase:

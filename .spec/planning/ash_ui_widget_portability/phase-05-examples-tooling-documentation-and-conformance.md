@@ -64,25 +64,25 @@ Back to index: [README](./README.md)
       [x] 5.2.2.2 Subtask - Add validation that fails when repeated collection row-scope bindings are dropped or rewritten into renderer-local callback shapes.
       [x] 5.2.2.3 Subtask - Add release-readiness checks for runtime parity matrix coverage, degradation diagnostics, and example catalog coverage.
 
-  [ ] 5.3 Section - Documentation, Traceability, and Conformance
+  [x] 5.3 Section - Documentation, Traceability, and Conformance
     Update durable guidance and evidence so the promoted surface is
     maintainable after implementation.
 
-    [ ] 5.3.1 Task - Update user, developer, and runtime documentation
+    [x] 5.3.1 Task - Update user, developer, and runtime documentation
       Document the promoted widget surface and the boundaries between
       canonical, runtime, and integration-package responsibilities.
 
-      [ ] 5.3.1.1 Subtask - Update `UnifiedUi` and `UnifiedIUR` documentation with canonical widget names, repeated collection authoring, row-scope bindings, and host-owned form shell semantics.
-      [ ] 5.3.1.2 Subtask - Update runtime package documentation with native usage, IUR rendering behavior, host form lifecycle integration, and degradation notes.
-      [ ] 5.3.1.3 Subtask - Add migration guidance for AshUi showing how local widget proposals map to canonical equivalents and what remains AshUi-owned.
+      [x] 5.3.1.1 Subtask - Update `UnifiedUi` and `UnifiedIUR` documentation with canonical widget names, repeated collection authoring, row-scope bindings, and host-owned form shell semantics.
+      [x] 5.3.1.2 Subtask - Update runtime package documentation with native usage, IUR rendering behavior, host form lifecycle integration, and degradation notes.
+      [x] 5.3.1.3 Subtask - Add migration guidance for AshUi showing how local widget proposals map to canonical equivalents and what remains AshUi-owned.
 
-    [ ] 5.3.2 Task - Update planning traceability and conformance manifests
+    [x] 5.3.2 Task - Update planning traceability and conformance manifests
       Make the new spec requirements visible in the package planning and
       conformance layers.
 
-      [ ] 5.3.2.1 Subtask - Update package planning JSON manifests for `unified_ui`, `unified_iur`, `live_ui`, `elm_ui`, `desktop_ui`, and `terminal_ui` so promoted widget requirements map to this rollout.
-      [ ] 5.3.2.2 Subtask - Regenerate traceability markdown mirrors with `mix spec.traceability.generate <package>` rather than hand-editing generated files.
-      [ ] 5.3.2.3 Subtask - Update conformance manifests and compliance evidence once package implementations and tests prove the requirements.
+      [x] 5.3.2.1 Subtask - Update package planning JSON manifests for `unified_ui`, `unified_iur`, `live_ui`, `elm_ui`, `desktop_ui`, and `terminal_ui` so promoted widget requirements map to this rollout.
+      [x] 5.3.2.2 Subtask - Regenerate traceability markdown mirrors with `mix spec.traceability.generate <package>` rather than hand-editing generated files.
+      [x] 5.3.2.3 Subtask - Update conformance manifests and compliance evidence once package implementations and tests prove the requirements.
 
   [ ] 5.4 Section - Phase 5 Integration Tests
     Validate examples, tooling, documentation, traceability, and conformance

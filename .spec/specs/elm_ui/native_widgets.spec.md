@@ -23,6 +23,7 @@ surface:
 decisions:
   - repo.ecosystem.contract_model
   - repo.ecosystem.elm_ui_naming
+  - repo.ecosystem.widget_portability_from_ash_ui
 ```
 
 ## Requirements
@@ -52,15 +53,36 @@ decisions:
   statement: The package shall provide native interaction patterns for forms, navigation, overlays, dynamic content, and browser-oriented behaviors in a way that can be mapped to and from canonical boundary event meaning.
   priority: must
   stability: stable
+
+- id: elm_ui.native_widgets.promoted_widget_equivalents
+  statement: The native `elm_ui` surface shall provide Phoenix-and-Elm-native equivalents for the promoted AshUi-originated canonical widgets, including disclosure, semantic micro-status, segmented controls, multi-column rows, sticky headers, workflow progress, slide-over panels, event callouts, inline redline text, syntax-highlighted code blocks, chat composers, and host-owned form shells.
+  priority: must
+  stability: stable
+
+- id: elm_ui.native_widgets.repeated_collection_realization
+  statement: The native `elm_ui` surface and canonical renderer path shall realize repeated collection composition across the Phoenix server and Elm frontend boundary while preserving row-scope binding meaning.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: elm_ui.native_widgets.build_native_web_flow
-  given: A web application wants to build a multi-step dialog, dashboard, or interactive form directly with `elm_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full Phoenix-and-Elm-native experience without going through `unified_iur`
+  covers:
+    - elm_ui.native_widgets.direct_native_surface
+    - elm_ui.native_widgets.covers_canonical_iur_surface
+    - elm_ui.native_widgets.server_client_composition
+    - elm_ui.native_widgets.theme_and_style_surface
+    - elm_ui.native_widgets.interaction_surface
+    - elm_ui.native_widgets.promoted_widget_equivalents
+    - elm_ui.native_widgets.repeated_collection_realization
+  given:
+    - A web application wants to build a multi-step dialog, dashboard, or interactive form directly with `elm_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full Phoenix-and-Elm-native experience without going through `unified_iur`
 ```
 
 ## Verification
@@ -74,5 +96,6 @@ decisions:
     - elm_ui.native_widgets.server_client_composition
     - elm_ui.native_widgets.theme_and_style_surface
     - elm_ui.native_widgets.interaction_surface
-    - elm_ui.native_widgets.build_native_web_flow
+    - elm_ui.native_widgets.promoted_widget_equivalents
+    - elm_ui.native_widgets.repeated_collection_realization
 ```
