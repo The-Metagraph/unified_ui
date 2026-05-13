@@ -5,6 +5,8 @@ defmodule UnifiedIUR.Fixtures do
 
   alias UnifiedIUR.{
     Canvas,
+    Binding,
+    Collection,
     Container,
     Extension,
     Forms,
@@ -58,7 +60,12 @@ defmodule UnifiedIUR.Fixtures do
         "status and progress semantics",
         "review-oriented content layout"
       ],
-      parity_obligations: [:data_widgets, :feedback_widgets, :layout_constructs],
+      parity_obligations: [
+        :data_widgets,
+        :feedback_widgets,
+        :layout_constructs,
+        :collection_constructs
+      ],
       snapshot: "data--content_and_feedback.snapshot"
     },
     %{
@@ -628,6 +635,41 @@ defmodule UnifiedIUR.Fixtures do
            id: "semantic-info-list",
            ordered?: true,
            empty_state: "No semantic notes"
+         )},
+        {:content,
+         Collection.repeated_collection(
+           Layout.row(
+             [
+               {:content,
+                Foundational.text("Artifact title",
+                  id: "artifact-title-template",
+                  bindings: [Binding.row_value(:artifact, :title)]
+                )},
+               {:content,
+                Foundational.badge("Artifact status",
+                  id: "artifact-status-template",
+                  bindings: [Binding.row_style_variant(:artifact, :status)]
+                )}
+             ],
+             id: "artifact-row-template"
+           ),
+           id: "artifact-rows",
+           source: [
+             name: :artifacts,
+             path: [:artifacts],
+             value: [
+               %{id: "artifact-1", title: "artifact.tar", status: :ready},
+               %{id: "artifact-2", title: "docs.zip", status: :queued}
+             ]
+           ],
+           item_alias: :artifact,
+           index_alias: :artifact_index,
+           key_path: [:id],
+           row_scope_bindings: [
+             Binding.row_key(:artifact, :id),
+             Binding.row_index(:artifact_index)
+           ],
+           empty_state: "No artifacts"
          )},
         {:content,
          Feedback.status("Healthy", id: "status-widget", severity: :success, status: :ready)},

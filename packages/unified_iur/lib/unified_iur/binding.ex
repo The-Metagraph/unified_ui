@@ -24,6 +24,14 @@ defmodule UnifiedIUR.Binding do
           optional(:source) => atom() | String.t(),
           path: [path_segment()]
         }
+  @type row_scope_target ::
+          :content
+          | :style_variant
+          | :visibility
+          | :interaction_payload
+          | :selection_state
+          | atom()
+          | String.t()
 
   defstruct name: nil,
             path: [],
@@ -42,6 +50,100 @@ defmodule UnifiedIUR.Binding do
   def new(%__MODULE__{} = binding), do: normalize(binding)
   def new(binding) when is_list(binding), do: binding |> Enum.into(%{}) |> new()
   def new(binding) when is_map(binding), do: binding |> struct_from_map() |> normalize()
+
+  @spec row_scope(atom() | String.t(), [path_segment()] | path_segment(), keyword() | map()) ::
+          t()
+  def row_scope(row_alias, path, opts \\ []) when is_atom(row_alias) or is_binary(row_alias) do
+    opts = normalize_map(opts)
+    target = fetch(opts, :target, :content)
+    binding_kind = fetch(opts, :binding_kind, target)
+
+    new(%{
+      name: fetch(opts, :name, row_alias),
+      path: path,
+      scope: [row_alias],
+      format: fetch(opts, :format),
+      source: :row_scope,
+      default: fetch(opts, :default),
+      metadata:
+        %{}
+        |> maybe_put(:row_alias, row_alias)
+        |> maybe_put(:target, target)
+        |> maybe_put(:binding_kind, binding_kind)
+    })
+  end
+
+  @spec row_value(atom() | String.t(), [path_segment()] | path_segment(), keyword() | map()) ::
+          t()
+  def row_value(row_alias, path, opts \\ []) do
+    opts
+    |> normalize_map()
+    |> Map.put(:target, :content)
+    |> Map.put(:binding_kind, :value)
+    |> then(&row_scope(row_alias, path, &1))
+  end
+
+  @spec row_style_variant(
+          atom() | String.t(),
+          [path_segment()] | path_segment(),
+          keyword() | map()
+        ) :: t()
+  def row_style_variant(row_alias, path, opts \\ []) do
+    opts
+    |> normalize_map()
+    |> Map.put(:target, :style_variant)
+    |> Map.put(:binding_kind, :style_variant)
+    |> then(&row_scope(row_alias, path, &1))
+  end
+
+  @spec row_visibility(atom() | String.t(), [path_segment()] | path_segment(), keyword() | map()) ::
+          t()
+  def row_visibility(row_alias, path, opts \\ []) do
+    opts
+    |> normalize_map()
+    |> Map.put(:target, :visibility)
+    |> Map.put(:binding_kind, :visibility)
+    |> then(&row_scope(row_alias, path, &1))
+  end
+
+  @spec row_payload(atom() | String.t(), [path_segment()] | path_segment(), keyword() | map()) ::
+          t()
+  def row_payload(row_alias, path, opts \\ []) do
+    opts
+    |> normalize_map()
+    |> Map.put(:target, :interaction_payload)
+    |> Map.put(:binding_kind, :payload)
+    |> then(&row_scope(row_alias, path, &1))
+  end
+
+  @spec row_selection(atom() | String.t(), [path_segment()] | path_segment(), keyword() | map()) ::
+          t()
+  def row_selection(row_alias, path, opts \\ []) do
+    opts
+    |> normalize_map()
+    |> Map.put(:target, :selection_state)
+    |> Map.put(:binding_kind, :selection)
+    |> then(&row_scope(row_alias, path, &1))
+  end
+
+  @spec row_index(atom() | String.t(), keyword() | map()) :: t()
+  def row_index(index_alias, opts \\ []) when is_atom(index_alias) or is_binary(index_alias) do
+    opts
+    |> normalize_map()
+    |> Map.put(:name, index_alias)
+    |> Map.put(:target, :content)
+    |> Map.put(:binding_kind, :index)
+    |> then(&row_scope(index_alias, [], &1))
+  end
+
+  @spec row_key(atom() | String.t(), [path_segment()] | path_segment(), keyword() | map()) :: t()
+  def row_key(row_alias, path, opts \\ []) do
+    opts
+    |> normalize_map()
+    |> Map.put(:target, :selection_state)
+    |> Map.put(:binding_kind, :key)
+    |> then(&row_scope(row_alias, path, &1))
+  end
 
   @spec reference([path_segment()] | path_segment(), keyword() | map()) ::
           dependency_reference()

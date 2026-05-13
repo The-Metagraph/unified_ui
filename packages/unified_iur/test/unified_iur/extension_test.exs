@@ -26,6 +26,7 @@ defmodule UnifiedIUR.ExtensionTest do
     assert %{
              foundational_widgets: foundational,
              input_widgets: input,
+             collection_constructs: collections,
              layout_constructs: layouts,
              layer_constructs: layers,
              canvas_constructs: canvas
@@ -33,13 +34,14 @@ defmodule UnifiedIUR.ExtensionTest do
 
     assert :button in foundational
     assert :text_input in input
+    assert :repeated_collection in collections
     assert :column in layouts
     assert :dialog in layers
     assert :canvas in canvas
 
     assert %{
              widgets: %{foundational: ^foundational},
-             display_systems: %{layouts: ^layouts}
+             display_systems: %{collections: ^collections, layouts: ^layouts}
            } = Extension.unified_ui_family_map()
   end
 

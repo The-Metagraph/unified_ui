@@ -91,6 +91,26 @@ defmodule UnifiedIUR.Validate do
       guidance:
         "Represent widget payloads with plain canonical values rather than callbacks, process handles, ports, or references."
     },
+    invalid_collection_source: %{
+      construct_family: :collection,
+      guidance:
+        "Represent repeated collection sources as list-oriented canonical bindings, not resource relationships or runtime callbacks."
+    },
+    missing_collection_template: %{
+      construct_family: :collection,
+      guidance:
+        "Attach exactly one canonical child template in the :template slot for repeated collection rendering."
+    },
+    duplicate_collection_key: %{
+      construct_family: :collection,
+      guidance:
+        "Use a stable key path that resolves to unique values for detectable static collection data."
+    },
+    invalid_row_scope_binding: %{
+      construct_family: :collection,
+      guidance:
+        "Keep row-scope bindings inside the repeated template and reference only the declared item or index aliases."
+    },
     runtime_local_escape_hatch: %{
       construct_family: :interoperability,
       guidance:
@@ -148,6 +168,7 @@ defmodule UnifiedIUR.Validate do
       |> Kernel.++(validate_metadata(element.metadata))
       |> Kernel.++(validate_attachments(element.attributes))
       |> Kernel.++(validate_promoted_widget(element))
+      |> Kernel.++(validate_repeated_collection(element))
       |> Kernel.++(validate_runtime_local_values(element.attributes, [:attributes]))
       |> Kernel.++(validate_children(element.children))
 
@@ -624,6 +645,299 @@ defmodule UnifiedIUR.Validate do
   end
 
   defp validate_opaque_widget_payloads(_value, _path), do: []
+
+  defp validate_repeated_collection(%Element{kind: :repeated_collection} = element) do
+    collection = Map.get(element.attributes, :collection, %{})
+    source = Map.get(collection, :source)
+    key_path = Map.get(collection, :key_path, [])
+    item_alias = Map.get(collection, :item_alias)
+    index_alias = Map.get(collection, :index_alias)
+
+    []
+    |> Kernel.++(validate_collection_source(source))
+    |> Kernel.++(validate_collection_key_path(key_path))
+    |> Kernel.++(validate_collection_template(element.children))
+    |> Kernel.++(validate_detectable_collection_keys(source, key_path))
+    |> Kernel.++(validate_row_scope_bindings(element, [item_alias, index_alias]))
+    |> Kernel.++(validate_opaque_widget_payloads(element.attributes, [:attributes]))
+  end
+
+  defp validate_repeated_collection(%Element{}), do: []
+
+  defp validate_collection_source(nil) do
+    [
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection source is required",
+        path: [:attributes, :collection, :source]
+      )
+    ]
+  end
+
+  defp validate_collection_source(%Binding{} = source) do
+    []
+    |> maybe_add(
+      not source.collection?,
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection source binding must be marked collection?: true",
+        path: [:attributes, :collection, :source],
+        details: %{source: inspect(source)}
+      )
+    )
+    |> maybe_add(
+      source.path == [] and is_nil(source.name) and is_nil(source.value),
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection source must define a binding name, path, or static value",
+        path: [:attributes, :collection, :source],
+        details: %{source: inspect(source)}
+      )
+    )
+    |> Kernel.++(validate_resource_relationship_source(source))
+  end
+
+  defp validate_collection_source(source) do
+    [
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection source must be a UnifiedIUR.Binding struct",
+        path: [:attributes, :collection, :source],
+        details: %{value: inspect(source)}
+      )
+    ]
+  end
+
+  defp validate_collection_key_path([]) do
+    [
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection key_path is required for stable child identity",
+        path: [:attributes, :collection, :key_path]
+      )
+    ]
+  end
+
+  defp validate_collection_key_path(path) when is_list(path), do: []
+
+  defp validate_collection_key_path(path) do
+    [
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection key_path must be a list of path segments",
+        path: [:attributes, :collection, :key_path],
+        details: %{value: inspect(path)}
+      )
+    ]
+  end
+
+  defp validate_collection_template(children) do
+    template_children = Enum.filter(children, &(&1.slot == :template and not is_nil(&1.element)))
+
+    cond do
+      template_children == [] ->
+        [
+          Error.new(
+            :missing_collection_template,
+            "repeated_collection requires one child template",
+            path: [:children]
+          )
+        ]
+
+      length(template_children) > 1 ->
+        [
+          Error.new(
+            :missing_collection_template,
+            "repeated_collection supports exactly one child template",
+            path: [:children],
+            details: %{template_count: length(template_children)}
+          )
+        ]
+
+      true ->
+        []
+    end
+  end
+
+  defp validate_detectable_collection_keys(%Binding{value: values}, key_path)
+       when is_list(values) and is_list(key_path) and key_path != [] do
+    keys =
+      Enum.map(values, fn item ->
+        fetch_path(normalize_collection_item(item), key_path)
+      end)
+
+    missing_key_indexes =
+      keys
+      |> Enum.with_index()
+      |> Enum.flat_map(fn
+        {nil, index} -> [index]
+        {_key, _index} -> []
+      end)
+
+    duplicate_keys =
+      keys
+      |> Enum.reject(&is_nil/1)
+      |> Enum.frequencies()
+      |> Enum.flat_map(fn
+        {_key, 1} -> []
+        {key, _count} -> [key]
+      end)
+
+    []
+    |> maybe_add(
+      missing_key_indexes != [],
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection key_path must resolve for each detectable source item",
+        path: [:attributes, :collection, :source, :value],
+        details: %{missing_key_indexes: missing_key_indexes}
+      )
+    )
+    |> maybe_add(
+      duplicate_keys != [],
+      Error.new(
+        :duplicate_collection_key,
+        "repeated_collection key_path resolved duplicate static keys",
+        path: [:attributes, :collection, :key_path],
+        details: %{duplicate_keys: duplicate_keys}
+      )
+    )
+  end
+
+  defp validate_detectable_collection_keys(_source, _key_path), do: []
+
+  defp validate_row_scope_bindings(%Element{} = collection, aliases) do
+    aliases = aliases |> Enum.reject(&is_nil/1) |> Enum.uniq()
+
+    collection
+    |> collect_row_scope_bindings()
+    |> Enum.flat_map(fn {binding, path} ->
+      row_alias = binding |> row_scope_alias() |> List.wrap() |> List.first()
+
+      []
+      |> maybe_add(
+        is_nil(row_alias),
+        Error.new(
+          :invalid_row_scope_binding,
+          "row-scope binding must declare an item or index alias in its scope",
+          path: path,
+          details: %{binding: inspect(binding)}
+        )
+      )
+      |> maybe_add(
+        not is_nil(row_alias) and row_alias not in aliases,
+        Error.new(
+          :invalid_row_scope_binding,
+          "row-scope binding references an alias that is not available in this collection",
+          path: path,
+          details: %{alias: row_alias, available_aliases: aliases}
+        )
+      )
+      |> maybe_add(
+        row_scope_requires_renderer?(binding),
+        Error.new(
+          :invalid_row_scope_binding,
+          "row-scope binding must not require renderer-local evaluation",
+          path: path,
+          details: %{binding: inspect(binding)}
+        )
+      )
+    end)
+  end
+
+  defp collect_row_scope_bindings(%Element{} = element) do
+    child_bindings =
+      element.children
+      |> Enum.with_index()
+      |> Enum.flat_map(fn {child, index} ->
+        case child.element do
+          nil ->
+            []
+
+          %Element{} = child_element ->
+            collect_row_scope_bindings(child_element, [:children, index])
+        end
+      end)
+
+    collect_row_scope_bindings(element.attributes, [:attributes]) ++ child_bindings
+  end
+
+  defp collect_row_scope_bindings(%Binding{source: :row_scope} = binding, path),
+    do: [{binding, path}]
+
+  defp collect_row_scope_bindings(%Binding{} = _binding, _path), do: []
+
+  defp collect_row_scope_bindings(%Interaction{} = interaction, path) do
+    interaction
+    |> Map.from_struct()
+    |> collect_row_scope_bindings(path)
+  end
+
+  defp collect_row_scope_bindings(%_{} = struct, path) do
+    struct
+    |> Map.from_struct()
+    |> collect_row_scope_bindings(path)
+  end
+
+  defp collect_row_scope_bindings(value, path) when is_list(value) do
+    value
+    |> Enum.with_index()
+    |> Enum.flat_map(fn {item, index} -> collect_row_scope_bindings(item, path ++ [index]) end)
+  end
+
+  defp collect_row_scope_bindings(value, path) when is_map(value) do
+    Enum.flat_map(value, fn {key, nested_value} ->
+      collect_row_scope_bindings(nested_value, path ++ [key])
+    end)
+  end
+
+  defp collect_row_scope_bindings(_value, _path), do: []
+
+  defp row_scope_alias(%Binding{scope: [row_alias | _]}), do: row_alias
+  defp row_scope_alias(%Binding{metadata: %{row_alias: row_alias}}), do: row_alias
+  defp row_scope_alias(%Binding{}), do: nil
+
+  defp row_scope_requires_renderer?(%Binding{} = binding) do
+    binding.source in [:renderer_callback, :runtime_callback] or
+      Map.has_key?(binding.metadata, :callback) or
+      Map.has_key?(binding.metadata, :renderer_callback)
+  end
+
+  defp validate_resource_relationship_source(%Binding{} = source) do
+    []
+    |> maybe_add(
+      source.source in [:ash, :ash_relationship, :resource, "ash", "ash_relationship", "resource"],
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection source must not reference Ash resources or relationships",
+        path: [:attributes, :collection, :source, :source],
+        details: %{source: source.source}
+      )
+    )
+    |> maybe_add(
+      resource_relationship_metadata?(source.metadata),
+      Error.new(
+        :invalid_collection_source,
+        "repeated_collection source metadata must not contain resource relationship references",
+        path: [:attributes, :collection, :source, :metadata],
+        details: %{metadata: source.metadata}
+      )
+    )
+  end
+
+  defp resource_relationship_metadata?(metadata) when is_map(metadata) do
+    Enum.any?([:relationship, :resource, :ash_relationship, :ash_resource], fn key ->
+      Map.has_key?(metadata, key) or Map.has_key?(metadata, Atom.to_string(key))
+    end)
+  end
+
+  defp resource_relationship_metadata?(_metadata), do: false
+
+  defp normalize_collection_item(item) when is_list(item) do
+    if Keyword.keyword?(item), do: Enum.into(item, %{}), else: item
+  end
+
+  defp normalize_collection_item(item), do: item
 
   defp validate_runtime_local_values(value, path) when is_list(value) do
     value

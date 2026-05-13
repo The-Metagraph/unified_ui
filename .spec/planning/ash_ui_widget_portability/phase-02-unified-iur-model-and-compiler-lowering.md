@@ -44,25 +44,25 @@ Back to index: [README](./README.md)
       [x] 2.1.2.2 Subtask - Preserve progress, stage, document-diff, code-language, composer-action, panel-placement, and callout-severity semantics without visual-only coupling.
       [x] 2.1.2.3 Subtask - Add canonical validation for required fields, stable ordering, valid state combinations, and unsupported opaque payloads.
 
-  [ ] 2.2 Section - Repeated Collection and Row-Scope Representation
+  [x] 2.2 Section - Repeated Collection and Row-Scope Representation
     Add canonical constructs for repeated collection composition and row-scope
     value references.
 
-    [ ] 2.2.1 Task - Implement repeated collection canonical constructs
+    [x] 2.2.1 Task - Implement repeated collection canonical constructs
       Represent list-driven child-template repetition without Ash relationship
       semantics.
 
-      [ ] 2.2.1.1 Subtask - Add a canonical construct for collection source, item alias, index alias, key expression, empty-state child, and repeated child template.
-      [ ] 2.2.1.2 Subtask - Define normalization for nested widgets, layout children, style references, and interaction bindings inside repeated templates.
-      [ ] 2.2.1.3 Subtask - Add canonical validation for invalid collection sources, missing child templates, duplicate keys where detectable, and unsupported resource relationship references.
+      [x] 2.2.1.1 Subtask - Add a canonical construct for collection source, item alias, index alias, key expression, empty-state child, and repeated child template.
+      [x] 2.2.1.2 Subtask - Define normalization for nested widgets, layout children, style references, and interaction bindings inside repeated templates.
+      [x] 2.2.1.3 Subtask - Add canonical validation for invalid collection sources, missing child templates, duplicate keys where detectable, and unsupported resource relationship references.
 
-    [ ] 2.2.2 Task - Implement row-scope binding representation
+    [x] 2.2.2 Task - Implement row-scope binding representation
       Preserve row-local value access through canonical binding descriptors
       rather than renderer callback code.
 
-      [ ] 2.2.2.1 Subtask - Add row-scope binding descriptors for child content, style variants, visibility, interaction payloads, and selection state.
-      [ ] 2.2.2.2 Subtask - Define how row-scope bindings compose with existing data binding and interaction payload mapping descriptors.
-      [ ] 2.2.2.3 Subtask - Add diagnostics for bindings that escape row scope, reference unavailable aliases, or require renderer-local evaluation.
+      [x] 2.2.2.1 Subtask - Add row-scope binding descriptors for child content, style variants, visibility, interaction payloads, and selection state.
+      [x] 2.2.2.2 Subtask - Define how row-scope bindings compose with existing data binding and interaction payload mapping descriptors.
+      [x] 2.2.2.3 Subtask - Add diagnostics for bindings that escape row scope, reference unavailable aliases, or require renderer-local evaluation.
 
   [ ] 2.3 Section - Compiler Lowering, Fixtures, and Review Output
     Lower authored declarations into canonical IUR and make the results

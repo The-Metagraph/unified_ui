@@ -4,7 +4,7 @@ defmodule UnifiedIUR.Extension do
   `UnifiedIUR` growth.
   """
 
-  alias UnifiedIUR.{Canvas, Forms, Layer, Layout, Widgets}
+  alias UnifiedIUR.{Canvas, Collection, Forms, Layer, Layout, Widgets}
 
   @container_constructs [:box]
 
@@ -59,6 +59,7 @@ defmodule UnifiedIUR.Extension do
       feedback_widgets: Widgets.feedback_kinds(),
       advanced_widgets: Widgets.advanced_kinds(),
       form_constructs: Forms.kinds(),
+      collection_constructs: Collection.kinds(),
       container_constructs: @container_constructs,
       layout_constructs: Layout.kinds(),
       layer_constructs: Layer.kinds(),
@@ -79,6 +80,7 @@ defmodule UnifiedIUR.Extension do
       },
       display_systems: %{
         forms: Forms.kinds(),
+        collections: Collection.kinds(),
         containers: @container_constructs,
         layouts: Layout.kinds(),
         layers: Layer.kinds(),
