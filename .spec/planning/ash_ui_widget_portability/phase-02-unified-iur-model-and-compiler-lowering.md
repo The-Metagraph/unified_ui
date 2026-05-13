@@ -19,7 +19,7 @@ Back to index: [README](./README.md)
 - Runtime packages will consume the same canonical fixtures created in this
   phase.
 
-[ ] 2 Phase 2 - UnifiedIUR Model and Compiler Lowering
+[x] 2 Phase 2 - UnifiedIUR Model and Compiler Lowering
   Implement the renderer-independent canonical representation and lowering
   path that carries promoted widget and repeated collection meaning from
   authored `UnifiedUi` modules into `UnifiedIUR`.
@@ -92,22 +92,22 @@ Back to index: [README](./README.md)
       [x] 2.3.3.2 Subtask - Update export and validation workflows to reject opaque integration-package escape hatches.
       [x] 2.3.3.3 Subtask - Add shared fixture files or fixture modules that every runtime can reuse to validate rendering parity.
 
-  [ ] 2.4 Section - Phase 2 Integration Tests
+  [x] 2.4 Section - Phase 2 Integration Tests
     Validate compiler lowering, canonical representation, row-scope bindings,
     and canonical tooling end to end.
 
-    [ ] 2.4.1 Task - Compiler and IUR representation scenarios
+    [x] 2.4.1 Task - Compiler and IUR representation scenarios
       Verify authored promoted widgets compile into stable canonical IUR
       without losing semantic meaning.
 
-      [ ] 2.4.1.1 Subtask - Verify every promoted widget lowers into a canonical node with expected content, state, style, and interaction fields.
-      [ ] 2.4.1.2 Subtask - Verify host-owned form shell lowering contains portable lifecycle metadata but no Phoenix, AshPhoenix, or Ash resource values.
-      [ ] 2.4.1.3 Subtask - Verify canonical output remains deterministic across equivalent authored declarations.
+      [x] 2.4.1.1 Subtask - Verify every promoted widget lowers into a canonical node with expected content, state, style, and interaction fields.
+      [x] 2.4.1.2 Subtask - Verify host-owned form shell lowering contains portable lifecycle metadata but no Phoenix, AshPhoenix, or Ash resource values.
+      [x] 2.4.1.3 Subtask - Verify canonical output remains deterministic across equivalent authored declarations.
 
-    [ ] 2.4.2 Task - Repeated collection and tooling scenarios
+    [x] 2.4.2 Task - Repeated collection and tooling scenarios
       Verify repeated collection meaning and row-scope bindings survive
       canonical lowering and review output.
 
-      [ ] 2.4.2.1 Subtask - Verify repeated collection fixtures preserve collection source, row aliases, keys, empty states, child templates, and row-scope payload mappings.
-      [ ] 2.4.2.2 Subtask - Verify invalid row-scope references and integration-package escape hatches fail validation.
-      [ ] 2.4.2.3 Subtask - Verify inspect, export, and validate workflows produce stable review output for promoted widgets and repeated templates.
+      [x] 2.4.2.1 Subtask - Verify repeated collection fixtures preserve collection source, row aliases, keys, empty states, child templates, and row-scope payload mappings.
+      [x] 2.4.2.2 Subtask - Verify invalid row-scope references and integration-package escape hatches fail validation.
+      [x] 2.4.2.3 Subtask - Verify inspect, export, and validate workflows produce stable review output for promoted widgets and repeated templates.
