@@ -5,7 +5,7 @@ defmodule ElmUi.Widgets.Forms do
 
   alias ElmUi.Widgets.{Builder, Foundational}
 
-  @kinds [:form_builder, :form, :field_group, :field, :form_field]
+  @kinds [:form_builder, :host_form_shell, :form, :field_group, :field, :form_field]
 
   @spec kinds() :: [atom()]
   def kinds, do: @kinds
@@ -49,6 +49,38 @@ defmodule ElmUi.Widgets.Forms do
       styles: Builder.styles(opts),
       events: Builder.events(opts, on_submit: :submit),
       metadata: Builder.metadata(opts, %{native_surface: :forms})
+    )
+  end
+
+  @spec host_form_shell(
+          String.t() | atom(),
+          [ElmUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: ElmUi.Widget.t()
+  def host_form_shell(id, children, opts \\ []) when is_list(children) do
+    opts = Builder.options(Map.put(Builder.options(opts), :id, id))
+
+    Builder.widget(:host_form_shell,
+      id: id,
+      attributes: %{
+        owner: Builder.option(opts, :owner, :host),
+        lifecycle: Builder.option(opts, :lifecycle, :host_owned),
+        action_placement: Builder.option(opts, :action_placement, :footer),
+        mode: Builder.option(opts, :mode, :host_owned),
+        submit_intent: Builder.option(opts, :submit_intent),
+        autocomplete: Builder.option(opts, :autocomplete, true),
+        validation_summary: Builder.option(opts, :validation_summary)
+      },
+      slot_children:
+        Builder.slot_map([
+          {:default, children},
+          {:fields, Builder.option(opts, :fields)},
+          {:actions, Builder.option(opts, :actions)}
+        ]),
+      state: Builder.state(opts, [:disabled, :loading, :focused]),
+      styles: Builder.styles(opts),
+      events: Builder.events(opts, on_submit: :submit, on_change: :change),
+      metadata: Builder.metadata(opts, %{native_surface: :forms, host_owned?: true})
     )
   end
 

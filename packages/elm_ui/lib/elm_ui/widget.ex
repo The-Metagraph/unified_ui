@@ -11,6 +11,9 @@ defmodule ElmUi.Widget do
           | :feedback
           | :input
           | :navigation
+          | :semantic
+          | :workflow
+          | :collection
           | :data
           | :document
           | :visualization
@@ -219,7 +222,39 @@ defmodule ElmUi.Widget do
       do: :input
 
   def family_for(kind) when kind in [:tabs, :menu], do: :navigation
-  def family_for(kind) when kind in [:list, :table, :tree_view, :stat, :key_value, :info_list], do: :data
+
+  def family_for(kind)
+      when kind in [
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :list_item_multi_column,
+             :artifact_row,
+             :sticky_header
+           ],
+      do: :semantic
+
+  def family_for(kind)
+      when kind in [
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :chat_composer
+           ],
+      do: :workflow
+
+  def family_for(:repeated_collection), do: :collection
+
+  def family_for(kind) when kind in [:list, :table, :tree_view, :stat, :key_value, :info_list],
+    do: :data
+
   def family_for(kind) when kind in [:markdown_viewer, :log_viewer], do: :document
   def family_for(kind) when kind in [:status, :progress, :inline_feedback], do: :feedback
 

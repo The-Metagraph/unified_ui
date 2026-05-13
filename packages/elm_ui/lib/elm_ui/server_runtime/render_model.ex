@@ -84,6 +84,24 @@ defmodule ElmUi.ServerRuntime.RenderModel do
   defp dom_tag(:pick_list), do: "select"
   defp dom_tag(:menu), do: "nav"
   defp dom_tag(:tabs), do: "div"
+  defp dom_tag(:disclosure), do: "details"
+  defp dom_tag(:kicker), do: "span"
+  defp dom_tag(:avatar), do: "figure"
+  defp dom_tag(:presence_dot), do: "span"
+  defp dom_tag(:segmented_button_group), do: "div"
+  defp dom_tag(:list_item_multi_column), do: "div"
+  defp dom_tag(:artifact_row), do: "article"
+  defp dom_tag(:sticky_header), do: "header"
+  defp dom_tag(:pipeline_stepper_horizontal), do: "ol"
+  defp dom_tag(:segmented_progress_bar), do: "div"
+  defp dom_tag(:workflow_stage_list_vertical), do: "ol"
+  defp dom_tag(:meter_thin), do: "meter"
+  defp dom_tag(:slide_over_panel), do: "aside"
+  defp dom_tag(:event_callout), do: "aside"
+  defp dom_tag(:redline_inline), do: "span"
+  defp dom_tag(:code_block_syntax_highlighted), do: "pre"
+  defp dom_tag(:chat_composer), do: "form"
+  defp dom_tag(:repeated_collection), do: "section"
   defp dom_tag(:row), do: "div"
   defp dom_tag(:column), do: "div"
   defp dom_tag(:grid), do: "div"
@@ -91,6 +109,7 @@ defmodule ElmUi.ServerRuntime.RenderModel do
   defp dom_tag(:panel), do: "section"
   defp dom_tag(:form), do: "form"
   defp dom_tag(:form_builder), do: "form"
+  defp dom_tag(:host_form_shell), do: "form"
   defp dom_tag(:field_group), do: "fieldset"
   defp dom_tag(:field), do: "div"
   defp dom_tag(:form_field), do: "div"
@@ -144,9 +163,28 @@ defmodule ElmUi.ServerRuntime.RenderModel do
   defp dom_role(:pick_list), do: "listbox"
   defp dom_role(:menu), do: "navigation"
   defp dom_role(:tabs), do: "tablist"
+  defp dom_role(:disclosure), do: "group"
+  defp dom_role(:kicker), do: "text"
+  defp dom_role(:avatar), do: "img"
+  defp dom_role(:presence_dot), do: "status"
+  defp dom_role(:segmented_button_group), do: "radiogroup"
+  defp dom_role(:list_item_multi_column), do: "listitem"
+  defp dom_role(:artifact_row), do: "listitem"
+  defp dom_role(:sticky_header), do: "banner"
+  defp dom_role(:pipeline_stepper_horizontal), do: "list"
+  defp dom_role(:segmented_progress_bar), do: "progressbar"
+  defp dom_role(:workflow_stage_list_vertical), do: "list"
+  defp dom_role(:meter_thin), do: "progressbar"
+  defp dom_role(:slide_over_panel), do: "dialog"
+  defp dom_role(:event_callout), do: "alert"
+  defp dom_role(:redline_inline), do: "text"
+  defp dom_role(:code_block_syntax_highlighted), do: "code"
+  defp dom_role(:chat_composer), do: "form"
+  defp dom_role(:repeated_collection), do: "list"
   defp dom_role(:grid), do: "grid"
   defp dom_role(:form), do: "form"
   defp dom_role(:form_builder), do: "form"
+  defp dom_role(:host_form_shell), do: "form"
   defp dom_role(:field_group), do: "group"
   defp dom_role(:field), do: "group"
   defp dom_role(:form_field), do: "group"
@@ -223,6 +261,13 @@ defmodule ElmUi.ServerRuntime.RenderModel do
       :pick_list,
       :menu,
       :tabs,
+      :disclosure,
+      :segmented_button_group,
+      :artifact_row,
+      :slide_over_panel,
+      :chat_composer,
+      :host_form_shell,
+      :repeated_collection,
       :form,
       :form_builder,
       :viewport,
@@ -260,6 +305,12 @@ defmodule ElmUi.ServerRuntime.RenderModel do
       :pick_list,
       :menu,
       :tabs,
+      :disclosure,
+      :segmented_button_group,
+      :artifact_row,
+      :slide_over_panel,
+      :chat_composer,
+      :host_form_shell,
       :form_builder,
       :viewport,
       :scroll_bar,
@@ -290,15 +341,21 @@ defmodule ElmUi.ServerRuntime.RenderModel do
       :radio_group,
       :select,
       :pick_list,
+      :chat_composer,
       :command_palette
     ]
   end
 
   defp navigable_kinds do
-    [:link, :menu, :tabs, :tree_view, :context_menu, :list]
+    [:link, :menu, :tabs, :segmented_button_group, :tree_view, :context_menu, :list]
   end
 
   defp dom_value(%Widget{kind: :progress, attributes: attributes}) do
+    Map.get(attributes, :current)
+  end
+
+  defp dom_value(%Widget{kind: kind, attributes: attributes})
+       when kind in [:segmented_progress_bar, :meter_thin] do
     Map.get(attributes, :current)
   end
 
@@ -312,6 +369,11 @@ defmodule ElmUi.ServerRuntime.RenderModel do
 
   defp dom_max(%Widget{kind: :progress, attributes: attributes}) do
     Map.get(attributes, :total)
+  end
+
+  defp dom_max(%Widget{kind: kind, attributes: attributes})
+       when kind in [:segmented_progress_bar, :meter_thin] do
+    Map.get(attributes, :maximum)
   end
 
   defp dom_max(%Widget{kind: :gauge, attributes: attributes}) do

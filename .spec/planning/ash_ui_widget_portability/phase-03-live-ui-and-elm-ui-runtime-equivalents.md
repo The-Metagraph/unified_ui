@@ -46,25 +46,25 @@ Back to index: [README](./README.md)
       [x] 3.1.2.2 Subtask - Map host-owned form shell IUR data onto LiveView form lifecycle integration without reintroducing Phoenix-specific fields into canonical data.
       [x] 3.1.2.3 Subtask - Add rendering tests that compare native widget output and IUR-rendered output for equivalent semantic cases.
 
-  [ ] 3.2 Section - ElmUi Native and IUR Runtime Support
+  [x] 3.2 Section - ElmUi Native and IUR Runtime Support
     Add Phoenix-plus-Elm runtime widgets and canonical rendering paths for the
     promoted surface.
 
-    [ ] 3.2.1 Task - Implement ElmUi semantic and workflow widget equivalents
+    [x] 3.2.1 Task - Implement ElmUi semantic and workflow widget equivalents
       Provide direct native `elm_ui` widgets across the server and frontend
       runtime split.
 
-      [ ] 3.2.1.1 Subtask - Add server-side widget descriptors and Elm frontend renderers for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
-      [ ] 3.2.1.2 Subtask - Preserve accessible labels, keyboard behavior, local frontend state, server-authoritative state, and event bridge semantics.
-      [ ] 3.2.1.3 Subtask - Add tests for server descriptors, frontend rendering, event bridge payloads, and deterministic serialization.
+      [x] 3.2.1.1 Subtask - Add server-side widget descriptors and Elm frontend renderers for semantic micro widgets, workflow/document widgets, slide-over panels, syntax-highlighted code blocks, and chat composers.
+      [x] 3.2.1.2 Subtask - Preserve accessible labels, keyboard behavior, local frontend state, server-authoritative state, and event bridge semantics.
+      [x] 3.2.1.3 Subtask - Add tests for server descriptors, frontend rendering, event bridge payloads, and deterministic serialization.
 
-    [ ] 3.2.2 Task - Implement ElmUi IUR rendering and host form shell support
+    [x] 3.2.2 Task - Implement ElmUi IUR rendering and host form shell support
       Make canonical IUR promoted widgets render through the split Phoenix and
       Elm runtime model.
 
-      [ ] 3.2.2.1 Subtask - Extend the `elm_ui` IUR renderer to consume every promoted canonical widget node and repeated collection construct.
-      [ ] 3.2.2.2 Subtask - Map host-owned form shell IUR data onto the ElmUi server/frontend form lifecycle without leaking canonical Phoenix or Ash assumptions.
-      [ ] 3.2.2.3 Subtask - Add parity tests that compare direct native descriptors and IUR-rendered descriptors for equivalent widget scenarios.
+      [x] 3.2.2.1 Subtask - Extend the `elm_ui` IUR renderer to consume every promoted canonical widget node and repeated collection construct.
+      [x] 3.2.2.2 Subtask - Map host-owned form shell IUR data onto the ElmUi server/frontend form lifecycle without leaking canonical Phoenix or Ash assumptions.
+      [x] 3.2.2.3 Subtask - Add parity tests that compare direct native descriptors and IUR-rendered descriptors for equivalent widget scenarios.
 
   [ ] 3.3 Section - Web Runtime Repeated Collection and Interaction Semantics
     Implement repeated collection realization and row-scope interaction

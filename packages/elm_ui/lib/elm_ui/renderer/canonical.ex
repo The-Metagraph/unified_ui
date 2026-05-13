@@ -5,6 +5,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Binding
   alias ElmUi.Renderer.Error
   alias ElmUi.Widgets
 
@@ -47,7 +48,8 @@ defmodule ElmUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           eyebrow: first_present([group_attr(element, :hero, :eyebrow), attr(element, :eyebrow)]),
+           eyebrow:
+             first_present([group_attr(element, :hero, :eyebrow), attr(element, :eyebrow)]),
            title: first_present([group_attr(element, :hero, :title), attr(element, :title)]),
            message:
              first_present([group_attr(element, :hero, :message), attr(element, :message)]),
@@ -473,7 +475,10 @@ defmodule ElmUi.Renderer.Canonical do
        first_present([group_attr(element, :info_list, :items), attr(element, :items)], []),
        Keyword.merge(base_opts(element),
          ordered:
-           first_present([group_attr(element, :info_list, :ordered?), attr(element, :ordered)], false),
+           first_present(
+             [group_attr(element, :info_list, :ordered?), attr(element, :ordered)],
+             false
+           ),
          empty_state:
            first_present([
              group_attr(element, :info_list, :empty_state),
@@ -773,7 +778,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:row, "row"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(layout_children(element)) do
       {:ok,
        Widgets.row(
          element.id,
@@ -790,7 +795,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:column, "column", :container, "container"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(layout_children(element)) do
       {:ok,
        Widgets.column(
          element.id,
@@ -807,7 +812,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:grid, "grid"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(layout_children(element)) do
       {:ok,
        Widgets.grid(
          element.id,
@@ -832,7 +837,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:stack, "stack"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(layout_children(element)) do
       {:ok,
        Widgets.stack(
          element.id,
@@ -851,7 +856,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:layout, "layout"] and kind in [:panel, "panel"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(layout_children(element)) do
       {:ok,
        Widgets.panel(
          element.id,
@@ -1005,7 +1010,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:composite, "composite"] and kind in [:form, "form"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(composite_children(element)) do
       {:ok,
        Widgets.form(
          element.id,
@@ -1025,7 +1030,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:composite, "composite"] and kind in [:form_builder, "form_builder"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(composite_children(element)) do
       {:ok,
        Widgets.form_builder(
          element.id,
@@ -1045,7 +1050,7 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp do_render(%Element{type: type, kind: kind} = element)
        when type in [:composite, "composite"] and kind in [:field_group, "field_group"] do
-    with {:ok, children} <- map_children(default_children(element)) do
+    with {:ok, children} <- map_children(composite_children(element)) do
       {:ok,
        Widgets.field_group(
          element.id,
@@ -1278,6 +1283,393 @@ defmodule ElmUi.Renderer.Canonical do
      )}
   end
 
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:disclosure, "disclosure"] do
+    {:ok,
+     Widgets.disclosure(
+       element.id,
+       first_present([group_attr(element, :disclosure, :label), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         open:
+           first_present([group_attr(element, :disclosure, :open?), attr(element, :open)], false),
+         content_label:
+           first_present([
+             group_attr(element, :disclosure, :content_label),
+             attr(element, :content_label)
+           ])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:kicker, "kicker"] do
+    {:ok,
+     Widgets.kicker(
+       element.id,
+       first_present([group_attr(element, :kicker, :value), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         icon: first_present([group_attr(element, :kicker, :icon), attr(element, :icon)]),
+         role:
+           first_present([group_attr(element, :kicker, :role), attr(element, :role)], :eyebrow)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:avatar, "avatar"] do
+    {:ok,
+     Widgets.avatar(
+       element.id,
+       first_present([group_attr(element, :avatar, :label), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         initials:
+           first_present([group_attr(element, :avatar, :initials), attr(element, :initials)]),
+         source: first_present([group_attr(element, :avatar, :source), attr(element, :source)]),
+         status: first_present([group_attr(element, :avatar, :status), attr(element, :status)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:presence_dot, "presence_dot"] do
+    {:ok,
+     Widgets.presence_dot(
+       element.id,
+       first_present([group_attr(element, :presence, :status), attr(element, :status)], :unknown),
+       Keyword.merge(base_opts(element),
+         label: first_present([group_attr(element, :presence, :label), attr(element, :label)]),
+         pulse:
+           first_present([group_attr(element, :presence, :pulse?), attr(element, :pulse)], false)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:segmented_button_group, "segmented_button_group"] do
+    {:ok,
+     Widgets.segmented_button_group(
+       element.id,
+       first_present([group_attr(element, :segments, :items), attr(element, :items)], []),
+       Keyword.merge(base_opts(element),
+         active_item:
+           first_present([
+             group_attr(element, :segments, :active_item),
+             attr(element, :active_item)
+           ]),
+         selection_mode:
+           first_present(
+             [group_attr(element, :segments, :selection_mode), attr(element, :selection_mode)],
+             :single
+           ),
+         orientation:
+           first_present(
+             [group_attr(element, :segments, :orientation), attr(element, :orientation)],
+             :horizontal
+           )
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:list_item_multi_column, "list_item_multi_column"] do
+    {:ok,
+     Widgets.list_item_multi_column(
+       element.id,
+       first_present([group_attr(element, :list_item, :columns), attr(element, :columns)], []),
+       Keyword.merge(base_opts(element),
+         label: first_present([group_attr(element, :list_item, :label), attr(element, :label)]),
+         value: first_present([group_attr(element, :list_item, :value), attr(element, :value)]),
+         status: first_present([group_attr(element, :list_item, :status), attr(element, :status)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:artifact_row, "artifact_row"] do
+    {:ok,
+     Widgets.artifact_row(
+       element.id,
+       first_present([group_attr(element, :artifact, :value), attr(element, :artifact)], %{}),
+       first_present([group_attr(element, :artifact, :title), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         status: first_present([group_attr(element, :artifact, :status), attr(element, :status)]),
+         timestamp:
+           first_present([group_attr(element, :artifact, :timestamp), attr(element, :timestamp)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:sticky_header, "sticky_header"] do
+    {:ok,
+     Widgets.sticky_header(
+       element.id,
+       first_present([group_attr(element, :sticky_header, :title), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         stuck:
+           first_present(
+             [group_attr(element, :sticky_header, :stuck?), attr(element, :stuck)],
+             false
+           ),
+         elevation:
+           first_present([
+             group_attr(element, :sticky_header, :elevation),
+             attr(element, :elevation)
+           ])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:pipeline_stepper_horizontal, "pipeline_stepper_horizontal"] do
+    {:ok,
+     Widgets.pipeline_stepper_horizontal(
+       element.id,
+       first_present([group_attr(element, :workflow, :steps), attr(element, :steps)], []),
+       Keyword.merge(base_opts(element),
+         active_item:
+           first_present([
+             group_attr(element, :workflow, :active_item),
+             attr(element, :active_item)
+           ]),
+         status: first_present([group_attr(element, :workflow, :status), attr(element, :status)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:segmented_progress_bar, "segmented_progress_bar"] do
+    {:ok,
+     Widgets.segmented_progress_bar(
+       element.id,
+       first_present([group_attr(element, :progress, :segments), attr(element, :segments)], []),
+       Keyword.merge(base_opts(element),
+         current:
+           first_present([group_attr(element, :progress, :current), attr(element, :current)]),
+         maximum:
+           first_present([group_attr(element, :progress, :maximum), attr(element, :maximum)], 100),
+         label: first_present([group_attr(element, :progress, :label), attr(element, :label)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:workflow_stage_list_vertical, "workflow_stage_list_vertical"] do
+    {:ok,
+     Widgets.workflow_stage_list_vertical(
+       element.id,
+       first_present([group_attr(element, :workflow, :stages), attr(element, :stages)], []),
+       Keyword.merge(base_opts(element),
+         active_item:
+           first_present([
+             group_attr(element, :workflow, :active_item),
+             attr(element, :active_item)
+           ]),
+         status: first_present([group_attr(element, :workflow, :status), attr(element, :status)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:meter_thin, "meter_thin"] do
+    {:ok,
+     Widgets.meter_thin(
+       element.id,
+       first_present([group_attr(element, :meter, :current), attr(element, :current)], 0),
+       Keyword.merge(base_opts(element),
+         minimum:
+           first_present([group_attr(element, :meter, :minimum), attr(element, :minimum)], 0),
+         maximum:
+           first_present([group_attr(element, :meter, :maximum), attr(element, :maximum)], 100),
+         label: first_present([group_attr(element, :meter, :label), attr(element, :label)]),
+         severity:
+           first_present([group_attr(element, :meter, :severity), attr(element, :severity)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:slide_over_panel, "slide_over_panel"] do
+    with {:ok, children} <- map_children(children_for_slots(element, [:default, :content])) do
+      {:ok,
+       Widgets.slide_over_panel(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           title: first_present([group_attr(element, :panel, :title), attr(element, :title)]),
+           placement:
+             first_present(
+               [group_attr(element, :panel, :placement), attr(element, :placement)],
+               :end
+             ),
+           visible:
+             first_present(
+               [group_attr(element, :panel, :visible?), attr(element, :visible)],
+               false
+             ),
+           modal:
+             first_present([group_attr(element, :panel, :modal?), attr(element, :modal)], true)
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:event_callout, "event_callout"] do
+    {:ok,
+     Widgets.event_callout(
+       element.id,
+       first_present([group_attr(element, :callout, :message), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         title: first_present([group_attr(element, :callout, :title), attr(element, :title)]),
+         severity:
+           first_present(
+             [group_attr(element, :callout, :severity), attr(element, :severity)],
+             :info
+           ),
+         timestamp:
+           first_present([group_attr(element, :callout, :timestamp), attr(element, :timestamp)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:redline_inline, "redline_inline"] do
+    {:ok,
+     Widgets.redline_inline(
+       element.id,
+       first_present(
+         [group_attr(element, :redline, :before_text), attr(element, :before_text)],
+         ""
+       ),
+       first_present(
+         [group_attr(element, :redline, :after_text), attr(element, :after_text)],
+         ""
+       ),
+       Keyword.merge(base_opts(element),
+         label: first_present([group_attr(element, :redline, :label), attr(element, :label)])
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:code_block_syntax_highlighted, "code_block_syntax_highlighted"] do
+    {:ok,
+     Widgets.code_block_syntax_highlighted(
+       element.id,
+       first_present([group_attr(element, :code_block, :code), content_text(element)], ""),
+       Keyword.merge(base_opts(element),
+         language:
+           first_present([group_attr(element, :code_block, :language), attr(element, :language)]),
+         label: first_present([group_attr(element, :code_block, :label), attr(element, :label)]),
+         wrap:
+           first_present([group_attr(element, :code_block, :wrap?), attr(element, :wrap)], false)
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in [:chat_composer, "chat_composer"] do
+    {:ok,
+     Widgets.chat_composer(
+       element.id,
+       Keyword.merge(base_opts(element),
+         placeholder:
+           first_present([
+             group_attr(element, :composer, :placeholder),
+             attr(element, :placeholder)
+           ]),
+         submit_intent:
+           first_present([
+             group_attr(element, :composer, :submit_intent),
+             attr(element, :submit_intent)
+           ]),
+         actions:
+           first_present([group_attr(element, :composer, :actions), attr(element, :actions)], []),
+         multiline:
+           first_present(
+             [group_attr(element, :composer, :multiline?), attr(element, :multiline)],
+             true
+           )
+       )
+     )}
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and kind in [:host_form_shell, "host_form_shell"] do
+    with {:ok, children} <- map_children(children_for_slots(element, [:default, :content])),
+         {:ok, fields} <- optional_slot_children(element, :fields),
+         {:ok, actions} <- optional_slot_children(element, :actions) do
+      {:ok,
+       Widgets.host_form_shell(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           owner:
+             first_present(
+               [group_attr(element, :form_shell, :owner), attr(element, :owner)],
+               :host
+             ),
+           lifecycle:
+             first_present(
+               [
+                 group_attr(element, :form_shell, :lifecycle),
+                 attr(element, :lifecycle)
+               ],
+               :host_owned
+             ),
+           action_placement:
+             first_present(
+               [
+                 group_attr(element, :form_shell, :action_placement),
+                 attr(element, :action_placement)
+               ],
+               :footer
+             ),
+           mode:
+             first_present([group_attr(element, :form, :mode), attr(element, :mode)], :host_owned),
+           submit_intent:
+             first_present([
+               group_attr(element, :form, :submit_intent),
+               attr(element, :submit_intent)
+             ]),
+           autocomplete:
+             first_present(
+               [group_attr(element, :form, :autocomplete?), attr(element, :autocomplete)],
+               true
+             ),
+           validation_summary:
+             first_present([
+               group_attr(element, :validation, :summary),
+               attr(element, :validation_summary)
+             ]),
+           fields: fields,
+           actions: actions
+         )
+       )}
+    end
+  end
+
+  defp do_render(%Element{type: type, kind: kind} = element)
+       when type in [:composite, "composite"] and
+              kind in [:repeated_collection, "repeated_collection"] do
+    with {:ok, rows} <- collection_rows(element),
+         {:ok, empty_state} <- collection_empty_state(element, rows) do
+      {:ok,
+       Widgets.repeated_collection(
+         element.id,
+         Enum.map(rows, & &1.widget),
+         Keyword.merge(base_opts(element),
+           item_alias: group_attr(element, :collection, :item_alias, :item),
+           index_alias: group_attr(element, :collection, :index_alias, :index),
+           key_path: group_attr(element, :collection, :key_path, []),
+           row_metadata: Enum.map(rows, &Map.drop(&1, [:widget])),
+           empty_state: empty_state
+         )
+       )}
+    end
+  end
+
   defp do_render(%Element{} = element) do
     {:error, Error.unsupported_kind(element, ElmUi.Renderer.supported_kinds())}
   end
@@ -1309,6 +1701,23 @@ defmodule ElmUi.Renderer.Canonical do
     element.children
     |> Enum.filter(fn
       %Child{slot: slot} -> slot in [:default, "default"]
+      %Element{} -> true
+    end)
+  end
+
+  defp layout_children(%Element{} = element) do
+    children_for_slots(element, [:default, :content])
+  end
+
+  defp composite_children(%Element{} = element) do
+    children_for_slots(element, [:default, :content, :fields, :actions])
+  end
+
+  defp children_for_slots(%Element{} = element, slots) when is_list(slots) do
+    slot_names = Enum.map(slots, &Atom.to_string/1)
+
+    Enum.filter(element.children, fn
+      %Child{slot: slot} -> slot in slots or slot in slot_names
       %Element{} -> true
     end)
   end
@@ -1395,6 +1804,142 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp render_child(%Child{element: %Element{} = element}), do: do_render(element)
   defp render_child(%Element{} = element), do: do_render(element)
+
+  defp collection_rows(%Element{} = element) do
+    template = element |> children_for_slots([:template]) |> List.first()
+    source = group_attr(element, :collection, :source)
+    item_alias = group_attr(element, :collection, :item_alias, :item)
+    index_alias = group_attr(element, :collection, :index_alias, :index)
+    key_path = group_attr(element, :collection, :key_path, [])
+
+    case {template, collection_source_items(source)} do
+      {%Child{element: %Element{} = template}, items} when is_list(items) ->
+        items
+        |> Enum.with_index()
+        |> Enum.reduce_while({:ok, []}, fn {item, index}, {:ok, acc} ->
+          key = collection_row_key(item, key_path, index)
+
+          row_context = %{
+            item: item,
+            index: index,
+            item_alias: item_alias,
+            index_alias: index_alias,
+            key: key
+          }
+
+          case do_render(resolve_row_scope(template, row_context)) do
+            {:ok, widget} ->
+              row = %{key: key, index: index, item: item, widget: widget}
+              {:cont, {:ok, [row | acc]}}
+
+            {:error, error} ->
+              {:halt, {:error, error}}
+          end
+        end)
+        |> case do
+          {:ok, rows} -> {:ok, Enum.reverse(rows)}
+          error -> error
+        end
+
+      _other ->
+        {:ok, []}
+    end
+  end
+
+  defp collection_source_items(%Binding{value: value}) when is_list(value), do: value
+  defp collection_source_items(_source), do: []
+
+  defp collection_empty_state(_element, [_row | _rows]), do: {:ok, []}
+
+  defp collection_empty_state(%Element{} = element, []) do
+    element
+    |> children_for_slots([:empty_state])
+    |> Enum.with_index()
+    |> Enum.map(fn {child, index} ->
+      ensure_child_id(child, "#{element.id}-empty-state-#{index}")
+    end)
+    |> map_children()
+  end
+
+  defp ensure_child_id(%Child{element: %Element{id: nil} = element} = child, id) do
+    %{child | element: %{element | id: id}}
+  end
+
+  defp ensure_child_id(child, _id), do: child
+
+  defp collection_row_key(item, key_path, index) do
+    case value_at_path(item, key_path) do
+      nil -> Integer.to_string(index)
+      value -> to_string(value)
+    end
+  end
+
+  defp resolve_row_scope(%Element{} = element, context) do
+    %{
+      element
+      | id: row_scoped_id(element.id, context.key),
+        attributes: resolve_row_scope(element.attributes, context),
+        children: Enum.map(element.children, &resolve_row_scope(&1, context))
+    }
+  end
+
+  defp resolve_row_scope(%Child{} = child, context) do
+    %{child | element: resolve_row_scope(child.element, context)}
+  end
+
+  defp resolve_row_scope(
+         %Binding{source: :row_scope, scope: [scope | _], path: path} = binding,
+         context
+       ) do
+    cond do
+      scope == context.item_alias ->
+        value_at_path(context.item, path)
+
+      scope == context.index_alias ->
+        context.index
+
+      true ->
+        binding
+    end
+  end
+
+  defp resolve_row_scope(%Binding{} = binding, _context), do: binding
+  defp resolve_row_scope(nil, _context), do: nil
+
+  defp resolve_row_scope(values, context) when is_list(values) do
+    Enum.map(values, &resolve_row_scope(&1, context))
+  end
+
+  defp resolve_row_scope(values, context) when is_map(values) do
+    Map.new(values, fn {key, value} -> {key, resolve_row_scope(value, context)} end)
+  end
+
+  defp resolve_row_scope(value, _context), do: value
+
+  defp row_scoped_id(nil, key), do: "row-template-#{key}"
+  defp row_scoped_id(id, key), do: "#{id}-#{key}"
+
+  defp value_at_path(value, nil), do: value
+  defp value_at_path(value, []), do: value
+
+  defp value_at_path(value, path) do
+    Enum.reduce_while(List.wrap(path), value, fn segment, current ->
+      case fetch_path_segment(current, segment) do
+        {:ok, next} -> {:cont, next}
+        :error -> {:halt, nil}
+      end
+    end)
+  end
+
+  defp fetch_path_segment(current, segment) when is_map(current) do
+    cond do
+      Map.has_key?(current, segment) -> {:ok, Map.fetch!(current, segment)}
+      Map.has_key?(current, to_string(segment)) -> {:ok, Map.fetch!(current, to_string(segment))}
+      true -> :error
+    end
+  end
+
+  defp fetch_path_segment(_current, _segment), do: :error
 
   defp sparkline_values(series) when is_list(series) do
     case List.first(series) do

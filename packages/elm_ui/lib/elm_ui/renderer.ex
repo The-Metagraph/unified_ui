@@ -32,6 +32,9 @@ defmodule ElmUi.Renderer do
       UnifiedIUR.Viewport.kinds(),
       UnifiedIUR.Widgets.Data.kinds(),
       UnifiedIUR.Widgets.Feedback.kinds(),
+      UnifiedIUR.Widgets.Semantic.kinds(),
+      UnifiedIUR.Widgets.Workflow.kinds(),
+      UnifiedIUR.Collection.kinds(),
       UnifiedIUR.Canvas.kinds(),
       UnifiedIUR.Widgets.Advanced.kinds(),
       UnifiedIUR.Layer.kinds()
