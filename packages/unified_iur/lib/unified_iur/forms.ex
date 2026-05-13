@@ -14,7 +14,7 @@ defmodule UnifiedIUR.Forms do
   @type children_input ::
           [Child.t() | Element.t() | {Child.slot(), Element.t() | nil} | map()]
 
-  @kinds [:form_builder, :field_group, :field, :form_field]
+  @kinds [:form_builder, :host_form_shell, :field_group, :field, :form_field]
 
   @spec kinds() :: [atom()]
   def kinds do
@@ -37,6 +37,37 @@ defmodule UnifiedIUR.Forms do
         |> merge_attribute(:validation, normalize_validation(opts))
         |> Attachment.merge(opts,
           component: :form_builder,
+          tone: option(opts, :tone),
+          local_style: option(opts, :style),
+          fallback_bindings: normalize_binding(opts),
+          fallback_interactions: normalize_submit_interactions(opts)
+        ),
+      children: children
+    )
+  end
+
+  @spec host_form_shell(children_input(), opts()) :: Element.t()
+  def host_form_shell(children \\ [], opts \\ []) when is_list(children) do
+    opts = normalize_opts(opts)
+
+    Element.new(:composite, :host_form_shell,
+      id: option(opts, :id),
+      metadata: normalize_metadata(opts),
+      attributes:
+        %{}
+        |> merge_attribute(:form_shell, %{
+          owner: option(opts, :owner, :host),
+          lifecycle: option(opts, :lifecycle, :host_owned),
+          action_placement: option(opts, :action_placement, :footer)
+        })
+        |> merge_attribute(:form, %{
+          mode: option(opts, :mode, :host_owned),
+          submit_intent: option(opts, :submit_intent),
+          autocomplete?: option(opts, :autocomplete?, true)
+        })
+        |> merge_attribute(:validation, normalize_validation(opts))
+        |> Attachment.merge(opts,
+          component: :host_form_shell,
           tone: option(opts, :tone),
           local_style: option(opts, :style),
           fallback_bindings: normalize_binding(opts),
@@ -172,6 +203,7 @@ defmodule UnifiedIUR.Forms do
     |> maybe_put(:errors, normalize_errors(option(opts, :errors)))
     |> maybe_put(:constraints, normalize_optional_map(option(opts, :constraints)))
     |> maybe_put(:status, option(opts, :status))
+    |> maybe_put(:summary, option(opts, :validation_summary))
   end
 
   defp normalize_submit_interactions(opts) do

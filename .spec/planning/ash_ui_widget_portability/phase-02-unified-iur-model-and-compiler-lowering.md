@@ -24,25 +24,25 @@ Back to index: [README](./README.md)
   path that carries promoted widget and repeated collection meaning from
   authored `UnifiedUi` modules into `UnifiedIUR`.
 
-  [ ] 2.1 Section - UnifiedIUR Widget Representation
+  [x] 2.1 Section - UnifiedIUR Widget Representation
     Add canonical IUR representations for the promoted widget families and
     host-owned form shell concept.
 
-    [ ] 2.1.1 Task - Implement semantic micro-widget canonical nodes
+    [x] 2.1.1 Task - Implement semantic micro-widget canonical nodes
       Represent compact semantic widgets in canonical data structures that
       runtimes can consume consistently.
 
-      [ ] 2.1.1.1 Subtask - Add canonical widget variants or node types for disclosure, kicker, avatar, presence dot, segmented button group, multi-column list item, artifact row, sticky header, and host-owned form shell.
-      [ ] 2.1.1.2 Subtask - Preserve content, slot, state, accessibility, style-token, and interaction-binding fields needed by renderers.
-      [ ] 2.1.1.3 Subtask - Add normalization rules that keep canonical values deterministic and free of runtime-native structs.
+      [x] 2.1.1.1 Subtask - Add canonical widget variants or node types for disclosure, kicker, avatar, presence dot, segmented button group, multi-column list item, artifact row, sticky header, and host-owned form shell.
+      [x] 2.1.1.2 Subtask - Preserve content, slot, state, accessibility, style-token, and interaction-binding fields needed by renderers.
+      [x] 2.1.1.3 Subtask - Add normalization rules that keep canonical values deterministic and free of runtime-native structs.
 
-    [ ] 2.1.2 Task - Implement workflow, document, and composer canonical nodes
+    [x] 2.1.2 Task - Implement workflow, document, and composer canonical nodes
       Represent richer workflow and document widgets in renderer-independent
       canonical data structures.
 
-      [ ] 2.1.2.1 Subtask - Add canonical widget variants or node types for pipeline stepper, segmented progress, workflow stage list, thin meter, slide-over panel, event callout, inline redline, syntax-highlighted code block, and chat composer.
-      [ ] 2.1.2.2 Subtask - Preserve progress, stage, document-diff, code-language, composer-action, panel-placement, and callout-severity semantics without visual-only coupling.
-      [ ] 2.1.2.3 Subtask - Add canonical validation for required fields, stable ordering, valid state combinations, and unsupported opaque payloads.
+      [x] 2.1.2.1 Subtask - Add canonical widget variants or node types for pipeline stepper, segmented progress, workflow stage list, thin meter, slide-over panel, event callout, inline redline, syntax-highlighted code block, and chat composer.
+      [x] 2.1.2.2 Subtask - Preserve progress, stage, document-diff, code-language, composer-action, panel-placement, and callout-severity semantics without visual-only coupling.
+      [x] 2.1.2.3 Subtask - Add canonical validation for required fields, stable ordering, valid state combinations, and unsupported opaque payloads.
 
   [ ] 2.2 Section - Repeated Collection and Row-Scope Representation
     Add canonical constructs for repeated collection composition and row-scope

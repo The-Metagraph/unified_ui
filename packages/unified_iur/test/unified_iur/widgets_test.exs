@@ -2,7 +2,17 @@ defmodule UnifiedIUR.WidgetsTest do
   use ExUnit.Case, async: true
 
   alias UnifiedIUR.Widgets
-  alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+
+  alias UnifiedIUR.Widgets.{
+    Advanced,
+    Data,
+    Feedback,
+    Foundational,
+    Input,
+    Navigation,
+    Semantic,
+    Workflow
+  }
 
   test "exposes the foundational widget constructor family" do
     assert %{
@@ -10,6 +20,8 @@ defmodule UnifiedIUR.WidgetsTest do
              foundational: Foundational,
              input: Input,
              navigation: Navigation,
+             semantic: Semantic,
+             workflow: Workflow,
              data: Data,
              feedback: Feedback
            } = Widgets.modules()
@@ -51,5 +63,32 @@ defmodule UnifiedIUR.WidgetsTest do
            ] == Widgets.advanced_kinds()
 
     assert Widgets.advanced_kinds() == Advanced.kinds()
+
+    assert [
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :list_item_multi_column,
+             :artifact_row,
+             :sticky_header
+           ] == Widgets.semantic_kinds()
+
+    assert Widgets.semantic_kinds() == Semantic.kinds()
+
+    assert [
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :chat_composer
+           ] == Widgets.workflow_kinds()
+
+    assert Widgets.workflow_kinds() == Workflow.kinds()
   end
 end

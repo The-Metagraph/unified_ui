@@ -509,6 +509,26 @@ defmodule UnifiedIUR.Fixtures do
       fields
       |> Enum.map(&{:fields, &1})
 
+    host_shell =
+      Forms.host_form_shell(
+        [
+          {:fields,
+           Forms.form_field(Input.text_input(id: "host-display-name-input", name: :display_name),
+             id: "host-display-name-field",
+             label: "Display name"
+           )},
+          {:actions,
+           Foundational.button("Host Save",
+             id: "host-profile-save",
+             action: [intent: :host_save_profile]
+           )}
+        ],
+        id: "profile-host-shell",
+        submit_intent: :host_save_profile,
+        validation_summary: "Host validates profile shell changes",
+        action_placement: :footer
+      )
+
     Forms.form_builder(
       [
         {:content,
@@ -518,6 +538,7 @@ defmodule UnifiedIUR.Fixtures do
            legend: "Profile",
            group_description: "Profile editor fixture"
          )},
+        {:content, host_shell},
         {:actions,
          Layout.row(
            [

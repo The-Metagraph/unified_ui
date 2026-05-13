@@ -5,11 +5,12 @@ defmodule UnifiedIUR.FormsTest do
   alias UnifiedIUR.Element
   alias UnifiedIUR.Forms
   alias UnifiedIUR.Interaction
+  alias UnifiedIUR.Validate
   alias UnifiedIUR.Widgets.Foundational
   alias UnifiedIUR.Widgets.Input
 
   test "exposes canonical form composition kinds" do
-    assert [:form_builder, :field_group, :field, :form_field] == Forms.kinds()
+    assert [:form_builder, :host_form_shell, :field_group, :field, :form_field] == Forms.kinds()
   end
 
   test "builds form builders with binding, validation, and submission attachment points" do
@@ -170,5 +171,49 @@ defmodule UnifiedIUR.FormsTest do
     assert label_child.slot == :label
     assert control_child.slot == :control
     assert help_child.slot == :help
+  end
+
+  test "builds host-owned form shell composites without runtime form lifecycle structs" do
+    shell =
+      Forms.host_form_shell(
+        [
+          {:fields,
+           Forms.form_field(
+             Input.text_input(id: "display-name-input", name: :display_name),
+             id: "display-name-field",
+             label: "Display name"
+           )},
+          {:actions, Foundational.button("Save", id: "profile-save")}
+        ],
+        id: "profile-shell",
+        owner: :host,
+        lifecycle: :host_owned,
+        submit_intent: :save_profile,
+        validation_summary: "Host validates profile changes",
+        action_placement: :footer
+      )
+
+    assert %Element{
+             id: "profile-shell",
+             type: :composite,
+             kind: :host_form_shell,
+             children: [%{slot: :fields}, %{slot: :actions}],
+             attributes: %{
+               form_shell: %{
+                 owner: :host,
+                 lifecycle: :host_owned,
+                 action_placement: :footer
+               },
+               form: %{
+                 mode: :host_owned,
+                 submit_intent: :save_profile,
+                 autocomplete?: true
+               },
+               validation: %{summary: "Host validates profile changes"},
+               interactions: [%Interaction{family: :submit, intent: :save_profile}]
+             }
+           } = shell
+
+    assert :ok = Validate.element(shell)
   end
 end

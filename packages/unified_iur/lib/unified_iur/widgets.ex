@@ -3,7 +3,16 @@ defmodule UnifiedIUR.Widgets do
   Reference surface for canonical widget constructors exposed by `UnifiedIUR`.
   """
 
-  alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedIUR.Widgets.{
+    Advanced,
+    Data,
+    Feedback,
+    Foundational,
+    Input,
+    Navigation,
+    Semantic,
+    Workflow
+  }
 
   @foundational_kinds [
     :text,
@@ -43,6 +52,27 @@ defmodule UnifiedIUR.Widgets do
     :markdown_viewer,
     :supervision_tree_viewer
   ]
+  @semantic_kinds [
+    :disclosure,
+    :kicker,
+    :avatar,
+    :presence_dot,
+    :segmented_button_group,
+    :list_item_multi_column,
+    :artifact_row,
+    :sticky_header
+  ]
+  @workflow_kinds [
+    :pipeline_stepper_horizontal,
+    :segmented_progress_bar,
+    :workflow_stage_list_vertical,
+    :meter_thin,
+    :slide_over_panel,
+    :event_callout,
+    :redline_inline,
+    :code_block_syntax_highlighted,
+    :chat_composer
+  ]
 
   @spec modules() :: %{
           advanced: module(),
@@ -50,7 +80,9 @@ defmodule UnifiedIUR.Widgets do
           feedback: module(),
           foundational: module(),
           input: module(),
-          navigation: module()
+          navigation: module(),
+          semantic: module(),
+          workflow: module()
         }
   def modules do
     %{
@@ -59,7 +91,9 @@ defmodule UnifiedIUR.Widgets do
       input: Input,
       navigation: Navigation,
       data: Data,
-      feedback: Feedback
+      feedback: Feedback,
+      semantic: Semantic,
+      workflow: Workflow
     }
   end
 
@@ -91,5 +125,15 @@ defmodule UnifiedIUR.Widgets do
   @spec advanced_kinds() :: [atom()]
   def advanced_kinds do
     @advanced_kinds
+  end
+
+  @spec semantic_kinds() :: [atom()]
+  def semantic_kinds do
+    @semantic_kinds
+  end
+
+  @spec workflow_kinds() :: [atom()]
+  def workflow_kinds do
+    @workflow_kinds
   end
 end
