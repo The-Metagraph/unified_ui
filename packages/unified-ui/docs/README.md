@@ -14,6 +14,7 @@ Start here if you want to author UI modules with `UnifiedUi`:
 3. [Layouts, Layers, and Display](user/layouts-layers-and-display.md)
 4. [Styling and Themes](user/styling-and-themes.md)
 5. [Bindings and Interactions](user/bindings-and-interactions.md)
+6. [Canonical Navigation](user/canonical-navigation.md)
 
 ## Developer Guides
 
@@ -24,6 +25,7 @@ internal package model:
 2. [DSL Section Model](developer/dsl-section-model.md)
 3. [Compilation Pipeline](developer/compilation-pipeline.md)
 4. [Package Components](developer/package-components.md)
+5. [Canonical Navigation Internals](developer/canonical-navigation.md)
 
 ## Maintainer Guides
 

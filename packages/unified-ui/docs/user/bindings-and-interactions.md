@@ -109,6 +109,7 @@ The canonical interaction families currently supported are:
 ## Canonical Navigation Model
 
 `UnifiedUi` owns portable navigation intent, not host-router configuration.
+For the full authoring guide, see [Canonical Navigation](canonical-navigation.md).
 
 - Use `binding` plus `destination` when the user stays inside the current
   screen and only a local section, tab, or panel changes.
