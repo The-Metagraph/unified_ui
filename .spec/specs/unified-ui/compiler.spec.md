@@ -22,6 +22,7 @@ surface:
 decisions:
   - repo.ecosystem.contract_model
   - repo.ecosystem.canonical_navigation_boundary
+  - repo.ecosystem.canonical_widget_component_expansion
 ```
 
 ## Requirements
@@ -66,6 +67,16 @@ decisions:
   statement: The compiler shall lower stacked modal navigation intent by preserving `open_modal` and `close_modal` actions, symbolic modal targets, params, metadata, and transition ordering in canonical IUR descriptors without synthesizing renderer-specific modal containment, focus-trap, or host-router behavior.
   priority: must
   stability: stable
+
+- id: unified_ui.compiler.widget_component_lowering
+  statement: The compiler shall lower expanded widget-component DSL declarations into canonical `UnifiedIUR.Widgets.Components` nodes with normalized defaults, child ordering, content models, state, accessibility, and canonical names rather than generic authored placeholders.
+  priority: must
+  stability: stable
+
+- id: unified_ui.compiler.widget_component_interaction_lowering
+  statement: The compiler shall lower expanded widget-component selection, row activation, step navigation, submit, change, send, panel dismiss, and inline action intents into renderer-independent `UnifiedIUR.Interaction` descriptors with portable payload mappings.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -81,6 +92,8 @@ decisions:
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
     - unified_ui.compiler.navigation_modal_stack_lowering
+    - unified_ui.compiler.widget_component_lowering
+    - unified_ui.compiler.widget_component_interaction_lowering
   given:
     - A developer authors a screen module with widgets, layout, style, theme, and interaction declarations
   when:
@@ -98,6 +111,8 @@ decisions:
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
     - unified_ui.compiler.navigation_modal_stack_lowering
+    - unified_ui.compiler.widget_component_lowering
+    - unified_ui.compiler.widget_component_interaction_lowering
   given:
     - A developer needs to understand what canonical output a DSL module produces
   when:
@@ -114,6 +129,7 @@ decisions:
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
     - unified_ui.compiler.navigation_modal_stack_lowering
+    - unified_ui.compiler.widget_component_interaction_lowering
   given:
     - A developer authors a modal flow where one modal can open another modal
   when:
@@ -136,6 +152,8 @@ decisions:
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
     - unified_ui.compiler.navigation_modal_stack_lowering
+    - unified_ui.compiler.widget_component_lowering
+    - unified_ui.compiler.widget_component_interaction_lowering
     - unified_ui.compiler.compile_screen_to_iur
     - unified_ui.compiler.inspect_compiled_artifact
     - unified_ui.compiler.compile_stacked_modal_navigation

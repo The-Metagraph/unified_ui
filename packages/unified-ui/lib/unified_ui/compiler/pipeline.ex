@@ -831,6 +831,173 @@ defmodule UnifiedUi.Compiler.Pipeline do
             common_opts(node, attachments, [:width, :height])
           )
 
+        :inline_rich_text_heading ->
+          Widgets.Components.inline_rich_text_heading(
+            node.level || :h1,
+            normalize_list(node.segments),
+            common_opts(node, attachments)
+          )
+
+        :disclosure ->
+          Widgets.Components.disclosure(
+            node.summary || "",
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [:open?])
+          )
+
+        :kicker ->
+          Widgets.Components.kicker(
+            List.wrap(node.items),
+            common_opts(node, attachments, [:separator])
+          )
+
+        :avatar ->
+          Widgets.Components.avatar(
+            common_opts(node, attachments, [
+              :initials,
+              :image_source,
+              :size,
+              :shape,
+              :accessibility_label,
+              :accessibility_description
+            ])
+          )
+
+        :presence_dot ->
+          Widgets.Components.presence_dot(
+            node.state || :quiet,
+            common_opts(node, attachments, [:size, :accessibility_label])
+          )
+
+        :segmented_button_group ->
+          Widgets.Components.segmented_button_group(
+            normalize_keyword_items(node.options),
+            common_opts(node, attachments, [:active_value, :selection_intent, :disabled?])
+          )
+
+        :runtime_form_shell ->
+          Widgets.Components.runtime_form_shell(
+            normalize_list(node.fields),
+            common_opts(node, attachments,
+              submit_label: node.submit_label,
+              submit_intent: node.submit_intent,
+              change_intent: node.change_intent,
+              validation_state: node.validation_state,
+              host_adapter_hints: normalize_annotation_hints(node.annotations)
+            )
+          )
+
+        :chat_composer ->
+          Widgets.Components.chat_composer(
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [
+              :name,
+              :value,
+              :placeholder,
+              :rows,
+              :send_label,
+              :send_intent,
+              :change_intent,
+              :disabled?
+            ])
+          )
+
+        :list_item_multi_column ->
+          Widgets.Components.list_item_multi_column(
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [
+              :row_identity,
+              :column_template,
+              :active?,
+              :link_target,
+              :action_intent
+            ])
+          )
+
+        :artifact_row ->
+          Widgets.Components.artifact_row(
+            node.title || "",
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [
+              :row_identity,
+              :active?,
+              :link_target,
+              :action_intent,
+              :meta
+            ])
+          )
+
+        :pipeline_stepper_horizontal ->
+          Widgets.Components.pipeline_stepper_horizontal(
+            normalize_list(node.steps),
+            common_opts(node, attachments, [
+              :active_index,
+              :completed_indices,
+              :navigation_intent
+            ])
+          )
+
+        :segmented_progress_bar ->
+          Widgets.Components.segmented_progress_bar(
+            normalize_list(node.segments),
+            common_opts(node, attachments, [:aggregate_progress, :label])
+          )
+
+        :workflow_stage_list_vertical ->
+          Widgets.Components.workflow_stage_list_vertical(
+            normalize_list(node.stages),
+            common_opts(node, attachments, [:active_index])
+          )
+
+        :meter_thin ->
+          Widgets.Components.meter_thin(
+            node.current || 0,
+            common_opts(node, attachments, [:minimum, :maximum, :label, :state])
+          )
+
+        :sticky_frosted_header ->
+          Widgets.Components.sticky_frosted_header(
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [:title, :leading, :trailing])
+          )
+
+        :slide_over_panel ->
+          Widgets.Components.slide_over_panel(
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [
+              :open?,
+              :size,
+              :dismiss_intent,
+              :accessibility_label,
+              :accessibility_description
+            ])
+          )
+
+        :event_callout ->
+          Widgets.Components.event_callout(
+            node.message || "",
+            lower_children(node, context, visited),
+            common_opts(node, attachments, [
+              :tone,
+              :eyebrow,
+              :title,
+              :action_intent
+            ])
+          )
+
+        :redline_inline ->
+          Widgets.Components.redline_inline(
+            normalize_list(node.segments),
+            common_opts(node, attachments, [:text_safety])
+          )
+
+        :code_block_syntax_highlighted ->
+          Widgets.Components.code_block_syntax_highlighted(
+            node.language || :plain_text,
+            normalize_list(node.tokens),
+            common_opts(node, attachments, [:text_safety])
+          )
+
         other ->
           generic_element(element_type(node.family), other, node, attachments, %{
             authored: %{
@@ -980,11 +1147,18 @@ defmodule UnifiedUi.Compiler.Pipeline do
       |> Enum.reject(&is_nil/1)
 
     fallback =
-      []
-      |> maybe_prepend(default_action_interaction(node))
-      |> maybe_prepend(default_submit_interaction(node))
+      [
+        default_action_interaction(node),
+        default_submit_interaction(node),
+        default_change_interaction(node),
+        default_selection_interaction(node),
+        default_step_navigation_interaction(node),
+        default_send_interaction(node),
+        default_dismiss_interaction(node)
+      ]
+      |> Enum.reject(&is_nil/1)
 
-    explicit ++ Enum.reverse(fallback)
+    explicit ++ fallback
   end
 
   defp default_action_interaction(%Node{action_intent: nil}), do: nil
@@ -993,6 +1167,8 @@ defmodule UnifiedUi.Compiler.Pipeline do
     Interaction.click(
       intent: node.action_intent,
       element_id: node.id,
+      value: node.row_identity,
+      mapping: default_action_mapping(node),
       phase: :authored_default
     )
   end
@@ -1003,9 +1179,77 @@ defmodule UnifiedUi.Compiler.Pipeline do
     Interaction.submit(
       intent: node.submit_intent,
       element_id: node.id,
+      mapping: default_submit_mapping(node),
       phase: :authored_default
     )
   end
+
+  defp default_change_interaction(%Node{change_intent: nil}), do: nil
+
+  defp default_change_interaction(node) do
+    Interaction.change(
+      intent: node.change_intent,
+      element_id: node.id,
+      mapping: default_change_mapping(node),
+      phase: :authored_default
+    )
+  end
+
+  defp default_selection_interaction(%Node{selection_intent: nil}), do: nil
+
+  defp default_selection_interaction(node) do
+    Interaction.selection(
+      intent: node.selection_intent,
+      element_id: node.id,
+      selection: node.active_value,
+      mapping: %{selected_value: :value},
+      phase: :authored_default
+    )
+  end
+
+  defp default_step_navigation_interaction(%Node{navigation_intent: nil}), do: nil
+
+  defp default_step_navigation_interaction(node) do
+    Interaction.navigation(
+      intent: node.navigation_intent,
+      element_id: node.id,
+      mapping: %{step_id: :id, step_index: :index},
+      phase: :authored_default
+    )
+  end
+
+  defp default_send_interaction(%Node{send_intent: nil}), do: nil
+
+  defp default_send_interaction(node) do
+    Interaction.submit(
+      intent: node.send_intent,
+      element_id: node.id,
+      mapping: %{message: :value},
+      phase: :authored_default
+    )
+  end
+
+  defp default_dismiss_interaction(%Node{dismiss_intent: nil}), do: nil
+
+  defp default_dismiss_interaction(node) do
+    Interaction.close(
+      intent: node.dismiss_intent,
+      element_id: node.id,
+      mapping: %{open?: false},
+      phase: :authored_default
+    )
+  end
+
+  defp default_action_mapping(%Node{row_identity: nil}), do: nil
+  defp default_action_mapping(%Node{kind: kind}) when kind in [:event_callout, :button], do: nil
+  defp default_action_mapping(_node), do: %{row_identity: :row_identity}
+
+  defp default_submit_mapping(%Node{kind: :runtime_form_shell}), do: %{fields: :field_values}
+  defp default_submit_mapping(_node), do: nil
+
+  defp default_change_mapping(%Node{kind: :runtime_form_shell}), do: %{fields: :field_values}
+  defp default_change_mapping(%Node{kind: :chat_composer}), do: %{message: :value}
+  defp default_change_mapping(_node), do: %{value: :value}
 
   defp compile_theme_attachment(node, context) do
     theme_id = node.theme_ref || context.default_theme
@@ -1064,6 +1308,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
       id: node.id,
       description: node.summary || node.description,
       authored_ref: node.authored_ref,
+      annotations: node.annotations,
       tags: node.tags,
       style: attachments.style,
       theme: attachments.theme,
@@ -1352,6 +1597,28 @@ defmodule UnifiedUi.Compiler.Pipeline do
     Enum.map(series, &normalize_map/1)
   end
 
+  defp normalize_annotation_hints(value) when value in [nil, []], do: nil
+
+  defp normalize_annotation_hints(value) do
+    value
+    |> normalize_keyword_tree()
+    |> compact_optional_map()
+  end
+
+  defp normalize_keyword_tree(value) when is_map(value) do
+    Map.new(value, fn {key, nested} -> {key, normalize_keyword_tree(nested)} end)
+  end
+
+  defp normalize_keyword_tree(value) when is_list(value) do
+    if Keyword.keyword?(value) do
+      Map.new(value, fn {key, nested} -> {key, normalize_keyword_tree(nested)} end)
+    else
+      Enum.map(value, &normalize_keyword_tree/1)
+    end
+  end
+
+  defp normalize_keyword_tree(value), do: value
+
   defp normalize_number_points(points) when is_list(points), do: points
   defp normalize_number_points(_other), do: []
 
@@ -1392,7 +1659,4 @@ defmodule UnifiedUi.Compiler.Pipeline do
 
   defp maybe_put(map, _key, nil), do: map
   defp maybe_put(map, key, value), do: Map.put(map, key, value)
-
-  defp maybe_prepend(list, nil), do: list
-  defp maybe_prepend(list, value), do: [value | list]
 end

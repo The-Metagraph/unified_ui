@@ -52,24 +52,24 @@ Back to index: [README](./README.md)
       [x] 2.1.3.2 Subtask - Represent sticky headers, slide-over panels, and event callouts with child placement, state, size, and tone metadata.
       [x] 2.1.3.3 Subtask - Represent redline and pre-tokenized code segments as plain text plus semantic segment or token types.
 
-  [ ] 2.2 Section - Compiler Lowering and Canonical Interaction Descriptors
+  [x] 2.2 Section - Compiler Lowering and Canonical Interaction Descriptors
     Lower UnifiedUi authored declarations into deterministic IUR nodes and
     canonical interaction descriptors.
 
-    [ ] 2.2.1 Task - Lower widget declarations into IUR
+    [x] 2.2.1 Task - Lower widget declarations into IUR
       Connect the Phase 1 authoring surface to the new IUR models.
 
-      [ ] 2.2.1.1 Subtask - Lower every expanded widget family to a canonical element type or semantic variant.
-      [ ] 2.2.1.2 Subtask - Normalize defaults such as open state, active state, progress ranges, token lists, and child ordering during compile.
-      [ ] 2.2.1.3 Subtask - Preserve canonical names in exported IUR while retaining optional alias diagnostics for authoring inputs.
+      [x] 2.2.1.1 Subtask - Lower every expanded widget family to a canonical element type or semantic variant.
+      [x] 2.2.1.2 Subtask - Normalize defaults such as open state, active state, progress ranges, token lists, and child ordering during compile.
+      [x] 2.2.1.3 Subtask - Preserve canonical names in exported IUR while retaining optional alias diagnostics for authoring inputs.
 
-    [ ] 2.2.2 Task - Lower interactions into renderer-independent descriptors
+    [x] 2.2.2 Task - Lower interactions into renderer-independent descriptors
       Ensure interactive widgets carry canonical event meaning rather than
       runtime callback names.
 
-      [ ] 2.2.2.1 Subtask - Lower selection, row activation, step navigation, submit, change, send, disclosure, panel, and inline action intent.
-      [ ] 2.2.2.2 Subtask - Preserve payload mapping for selected values, row ids, field values, composer text, and step ids.
-      [ ] 2.2.2.3 Subtask - Verify descriptors can be transported as Jido.Signal-compatible event meaning.
+      [x] 2.2.2.1 Subtask - Lower selection, row activation, step navigation, submit, change, send, disclosure, panel, and inline action intent.
+      [x] 2.2.2.2 Subtask - Preserve payload mapping for selected values, row ids, field values, composer text, and step ids.
+      [x] 2.2.2.3 Subtask - Verify descriptors can be transported as Jido.Signal-compatible event meaning.
 
   [ ] 2.3 Section - List-Repeat Metadata and Hydration
     Implement the deterministic row expansion behavior that turns repeat
