@@ -4,6 +4,7 @@ defmodule TerminalUi.Examples do
   """
 
   alias UnifiedIUR.{Canvas, Element, Interaction, Layer, Layout}
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
   alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
 
   @spec native_foundational_screen() :: map()
@@ -581,6 +582,7 @@ defmodule TerminalUi.Examples do
       advanced_continuity: advanced_comparison(),
       advanced_capability_continuity: advanced_capability_comparison(),
       transport_flow_review: transport_flow_comparison(),
+      modal_stack_navigation_review: modal_stack_navigation_review(),
       normalized_input_profiles: normalized_input_comparison(),
       styled_continuity_review: styled_continuity_comparison(),
       styled_degradation_review: styled_degradation_comparison()
@@ -632,8 +634,10 @@ defmodule TerminalUi.Examples do
           :native_transport_review,
           :canonical_transport_review,
           :transport_flow_review,
-          :normalized_input_profiles
+          :normalized_input_profiles,
+          :modal_stack_navigation_review
         ],
+        navigation_review: [:modal_stack_navigation_review],
         style_review: [
           :native_styled_review,
           :canonical_styled_review,
@@ -659,8 +663,10 @@ defmodule TerminalUi.Examples do
           :native_transport_review,
           :canonical_transport_review,
           :transport_flow_review,
-          :normalized_input_profiles
+          :normalized_input_profiles,
+          :modal_stack_navigation_review
         ],
+        navigation_runtime_review: [:modal_stack_navigation_review],
         styled_workspace_review: [
           :native_styled_review,
           :canonical_styled_review,
@@ -830,6 +836,49 @@ defmodule TerminalUi.Examples do
           native_boundary_route.family == canonical_boundary_route.family and
             native_boundary_route.translation.intent ==
               canonical_boundary_route.translation.intent
+      }
+    }
+  end
+
+  @spec modal_stack_navigation_review() :: map()
+  def modal_stack_navigation_review do
+    raw = modal_stack_navigation_profile(:raw)
+    tty = modal_stack_navigation_profile(:tty)
+
+    %{
+      id: :modal_stack_navigation_review,
+      summary:
+        "Review canonical modal stack navigation across rich and degraded terminal backends",
+      coverage: [:canonical_navigation, :modal_stack, :capability_degradation, :inspection],
+      raw: raw,
+      tty: tty,
+      parity: %{
+        same_stack_meaning?:
+          modal_ids(raw.after_second_modal) == modal_ids(tty.after_second_modal) and
+            modal_ids(raw.after_top_close) == modal_ids(tty.after_top_close),
+        targetless_close_restores_previous_modal?:
+          get_in(raw, [:after_top_close, :current_modal, :modal]) == :settings_dialog and
+            get_in(tty, [:after_top_close, :current_modal, :modal]) == :settings_dialog,
+        tty_degradation_explicit?:
+          Enum.all?(tty.after_second_modal.modals, fn modal ->
+            modal.degradation.presentation == :inline_overlay and modal.degradation.bounded?
+          end),
+        raw_overlay_preserved?:
+          Enum.all?(raw.after_second_modal.modals, fn modal ->
+            modal.degradation.presentation == :overlay and modal.degradation.bounded?
+          end),
+        no_host_route_fields?:
+          Enum.all?(
+            [
+              raw.first_route,
+              raw.second_route,
+              raw.close_top_route,
+              tty.first_route,
+              tty.second_route,
+              tty.close_top_route
+            ],
+            fn route -> not Map.has_key?(route.translation.target.navigation, :route) end
+          )
       }
     }
   end
@@ -1037,6 +1086,74 @@ defmodule TerminalUi.Examples do
     }
   end
 
+  defp modal_stack_navigation_profile(backend_mode) do
+    first_modal = BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    second_modal = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
+
+    {:ok, state} =
+      TerminalUi.Runtime.mount_native_screen(native_transport_screen(),
+        backend_mode: backend_mode
+      )
+
+    {:ok, after_first_modal, first_route} =
+      TerminalUi.Runtime.handle_boundary_signal(
+        state,
+        boundary_signal(first_modal, backend_mode)
+      )
+
+    {:ok, after_second_modal, second_route} =
+      TerminalUi.Runtime.handle_boundary_signal(
+        after_first_modal,
+        boundary_signal(second_modal, backend_mode)
+      )
+
+    {:ok, after_top_close, close_top_route} =
+      TerminalUi.Runtime.handle_boundary_signal(
+        after_second_modal,
+        boundary_signal(close_top, backend_mode)
+      )
+
+    %{
+      backend_mode: backend_mode,
+      after_first_modal: navigation_snapshot(after_first_modal),
+      after_second_modal: navigation_snapshot(after_second_modal),
+      after_top_close: navigation_snapshot(after_top_close),
+      first_route: route_summary(first_route),
+      second_route: route_summary(second_route),
+      close_top_route: route_summary(close_top_route)
+    }
+  end
+
+  defp boundary_signal(fixture, backend_mode) do
+    {:ok, translation} =
+      TerminalUi.Transport.from_interaction(
+        fixture.interaction,
+        backend_mode: backend_mode,
+        input_family: :key,
+        widget_id: fixture.interaction.source.element_id,
+        runtime_id: "terminal-ui:modal-stack-review",
+        screen: "transport-review",
+        payload: fixture.signal_data
+      )
+
+    translation.signal
+  end
+
+  defp navigation_snapshot(runtime_state) do
+    %{
+      modals: runtime_state.navigation.modals,
+      current_modal: runtime_state.navigation.current_modal,
+      last_transition: runtime_state.navigation.last_transition,
+      diagnostics: runtime_state.navigation.diagnostics,
+      inspection: TerminalUi.Inspection.runtime_snapshot(runtime_state).navigation
+    }
+  end
+
+  defp modal_ids(snapshot) do
+    Enum.map(snapshot.modals, & &1.modal)
+  end
+
   defp route_for_translation(%{boundary: :boundary}), do: :canonical_boundary
   defp route_for_translation(_translation), do: :local_runtime
 
@@ -1176,6 +1293,14 @@ defmodule TerminalUi.Examples do
         parity_group: :transport_review,
         parity_with: [:native_transport_review, :canonical_transport_review],
         capability_profiles: [:rich_terminal]
+      },
+      %{
+        id: :modal_stack_navigation_review,
+        category: :mixed,
+        workflow: :navigation,
+        parity_group: :navigation_review,
+        parity_with: [:native_transport_review, :canonical_transport_review],
+        capability_profiles: [:rich_terminal, :fallback_terminal]
       },
       %{
         id: :normalized_input_profiles,

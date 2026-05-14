@@ -8,6 +8,8 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
     navigate_fixture = BoundaryTransport.boundary_fixture!("screen_transition--settings_profile")
     replace_fixture = BoundaryTransport.boundary_fixture!("replace_transition--home")
     modal_fixture = BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    second_modal_fixture = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top_fixture = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
 
     comparison = ElmUi.Examples.navigation_comparison()
 
@@ -29,9 +31,32 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
     assert modal_summary(comparison.canonical.after_modal.navigation.current_modal) ==
              modal_summary(modal_fixture.descriptor.target.navigation)
 
+    assert modal_summary(comparison.native.after_second_modal.navigation.current_modal) ==
+             modal_summary(second_modal_fixture.descriptor.target.navigation)
+
+    assert modal_summary(comparison.canonical.after_second_modal.navigation.current_modal) ==
+             modal_summary(second_modal_fixture.descriptor.target.navigation)
+
+    assert modal_stack_summary(comparison.native.after_top_close.navigation.last_transition) ==
+             modal_stack_summary(close_top_fixture.descriptor.target.navigation)
+
+    assert modal_stack_summary(comparison.canonical.after_top_close.navigation.last_transition) ==
+             modal_stack_summary(close_top_fixture.descriptor.target.navigation)
+
+    assert Enum.map(comparison.native.after_second_modal.navigation.modals, & &1.modal) == [
+             :settings_dialog,
+             :settings_confirm_dialog
+           ]
+
+    assert comparison.native.after_top_close.navigation.current_modal.modal == :settings_dialog
+    assert comparison.canonical.after_top_close.navigation.current_modal.modal == :settings_dialog
+
     assert comparison.continuity.same_navigation_target?
     assert comparison.continuity.frontend_coordination?
     assert comparison.continuity.same_modal_identifier?
+    assert comparison.continuity.same_second_modal_identifier?
+    assert comparison.continuity.top_close_restores_previous_modal?
+    assert comparison.continuity.modal_stack_reflected?
     assert comparison.continuity.same_replacement_target?
     assert comparison.continuity.server_authority_preserved?
   end
@@ -221,6 +246,13 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
       modal: get_value(target, :modal),
       params: normalize_map(get_value(target, :params, %{})),
       metadata: normalize_map(get_value(target, :metadata, %{}))
+    }
+  end
+
+  defp modal_stack_summary(target) do
+    %{
+      action: get_value(target, :action),
+      modal_stack: normalize_map(get_value(target, :modal_stack, %{}))
     }
   end
 

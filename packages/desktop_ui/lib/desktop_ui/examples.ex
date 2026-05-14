@@ -3,6 +3,7 @@ defmodule DesktopUi.Examples do
   Maintained foundational and advanced native and canonical examples for `desktop_ui`.
   """
 
+  alias DesktopUi.Navigation.{Controller, State}
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
 
@@ -904,7 +905,10 @@ defmodule DesktopUi.Examples do
           DesktopUi.Widgets.column("nav-layout", [
             DesktopUi.Widgets.content("nav-header", [
               DesktopUi.Widgets.label("nav-title", "Navigation Demo"),
-              DesktopUi.Widgets.text("nav-subtitle", "Demonstrates home, list, and detail screens")
+              DesktopUi.Widgets.text(
+                "nav-subtitle",
+                "Demonstrates home, list, and detail screens"
+              )
             ]),
             DesktopUi.Widgets.menu(
               "nav-menu",
@@ -1010,6 +1014,51 @@ defmodule DesktopUi.Examples do
         modals: [:confirm_dialog, :settings]
       }
     }
+  end
+
+  @spec modal_stack_navigation_review() :: map()
+  def modal_stack_navigation_review do
+    {:ok, controller} =
+      Controller.start_link(initial_screen: {:main, nil, %{section: :workspace}})
+
+    try do
+      {:ok, after_navigate, _transition} =
+        Controller.navigate(controller, :detail, %{item_id: :alpha})
+
+      {:ok, after_first_modal, _transition} =
+        Controller.open_modal(controller, :confirm_dialog, %{source: :detail})
+
+      {:ok, after_second_modal, _transition} =
+        Controller.open_modal(controller, :settings, %{section: :permissions})
+
+      {:ok, after_top_close, _transition} = Controller.close_modal(controller)
+
+      {:ok, after_named_close, _transition} =
+        Controller.close_modal(controller, :confirm_dialog)
+
+      %{
+        id: :modal_stack_navigation_review,
+        summary: "Review independent desktop modal stack behavior over stable screen history",
+        coverage: [:navigation_widgets, :screen_navigation, :modal_stack, :history_stack],
+        after_navigate: navigation_snapshot(after_navigate),
+        after_first_modal: navigation_snapshot(after_first_modal),
+        after_second_modal: navigation_snapshot(after_second_modal),
+        after_top_close: navigation_snapshot(after_top_close),
+        after_named_close: navigation_snapshot(after_named_close),
+        parity: %{
+          top_close_restores_previous_modal?:
+            State.top_modal(after_top_close) == State.top_modal(after_first_modal),
+          targetless_close_pops_only_top_modal?:
+            State.modal_depth(after_second_modal) == 2 and State.modal_depth(after_top_close) == 1,
+          named_close_clears_remaining_modal?: State.modal_depth(after_named_close) == 0,
+          screen_history_preserved?:
+            after_first_modal.history == after_second_modal.history and
+              after_second_modal.history == after_top_close.history
+        }
+      }
+    after
+      Controller.stop(controller)
+    end
   end
 
   @spec master_detail_navigation_screen() :: map()
@@ -1210,7 +1259,8 @@ defmodule DesktopUi.Examples do
       :advanced_continuity,
       :transport_flow_review,
       :normalized_input_profiles,
-      :styled_continuity_review
+      :styled_continuity_review,
+      :modal_stack_navigation_review
     ]
 
   defp catalog_by_category(category) do
@@ -1399,9 +1449,17 @@ defmodule DesktopUi.Examples do
         id: :modal_navigation,
         category: :native,
         workflow: :navigation_review,
-        parity_group: nil,
-        parity_with: [],
+        parity_group: :navigation_review,
+        parity_with: [:modal_stack_navigation_review],
         coverage: [:navigation_widgets, :screen_navigation, :modal_stack]
+      },
+      %{
+        id: :modal_stack_navigation_review,
+        category: :mixed,
+        workflow: :navigation_review,
+        parity_group: :navigation_review,
+        parity_with: [:modal_navigation],
+        coverage: [:navigation_widgets, :screen_navigation, :modal_stack, :history_stack]
       },
       %{
         id: :master_detail_navigation,
@@ -1416,6 +1474,25 @@ defmodule DesktopUi.Examples do
 
   defp trim_focus_order(ids) do
     Enum.reject(ids, &(&1 == "workspace-window"))
+  end
+
+  defp navigation_snapshot(%State{} = state) do
+    %{
+      current: state.current,
+      current_params: state.current_params,
+      history: Enum.map(state.history, &screen_entry_summary/1),
+      forward: Enum.map(state.forward, &screen_entry_summary/1),
+      modals: Enum.map(state.modals, &screen_entry_summary/1),
+      top_modal: state |> State.top_modal() |> screen_entry_summary(),
+      modal_depth: State.modal_depth(state),
+      modal_open?: State.modal_open?(state)
+    }
+  end
+
+  defp screen_entry_summary(nil), do: nil
+
+  defp screen_entry_summary({screen_id, _module, params}) do
+    %{screen_id: screen_id, params: params}
   end
 
   defp body_kind_sequence(tree) do

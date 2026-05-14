@@ -5,6 +5,7 @@ defmodule ElmUi.Examples do
 
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
   alias ElmUi.Widgets
 
   @display_kinds [:viewport, :scroll_bar, :split_pane]
@@ -1200,6 +1201,19 @@ defmodule ElmUi.Examples do
         same_modal_identifier?:
           get_in(native, [:after_modal, :navigation, :current_modal, :modal]) ==
             get_in(canonical, [:after_modal, :navigation, :current_modal, :modal]),
+        same_second_modal_identifier?:
+          get_in(native, [:after_second_modal, :navigation, :current_modal, :modal]) ==
+            get_in(canonical, [:after_second_modal, :navigation, :current_modal, :modal]),
+        top_close_restores_previous_modal?:
+          get_in(native, [:after_top_close, :navigation, :current_modal, :modal]) ==
+            get_in(native, [:after_modal, :navigation, :current_modal, :modal]) and
+            get_in(canonical, [:after_top_close, :navigation, :current_modal, :modal]) ==
+              get_in(canonical, [:after_modal, :navigation, :current_modal, :modal]),
+        modal_stack_reflected?:
+          length(native.after_second_modal.navigation.modals) == 2 and
+            length(canonical.after_second_modal.navigation.modals) == 2 and
+            length(native.after_top_close.navigation.modals) == 1 and
+            length(canonical.after_top_close.navigation.modals) == 1,
         same_replacement_target?:
           native.after_replace.screen_id == "home" and canonical.after_replace.screen_id == "home",
         host_route_externalized?:
@@ -1213,9 +1227,13 @@ defmodule ElmUi.Examples do
             [
               native.after_navigate.server_authoritative?,
               native.after_modal.server_authoritative?,
+              native.after_second_modal.server_authoritative?,
+              native.after_top_close.server_authoritative?,
               native.after_replace.server_authoritative?,
               canonical.after_navigate.server_authoritative?,
               canonical.after_modal.server_authoritative?,
+              canonical.after_second_modal.server_authoritative?,
+              canonical.after_top_close.server_authoritative?,
               canonical.after_replace.server_authoritative?
             ],
             & &1
@@ -1262,6 +1280,9 @@ defmodule ElmUi.Examples do
   end
 
   defp navigation_flow(kind) do
+    second_modal_fixture = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top_fixture = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
+
     {mount_result, screen_registry} =
       case kind do
         :native ->
@@ -1337,8 +1358,44 @@ defmodule ElmUi.Examples do
     {:ok, frontend_after_modal} =
       ElmUi.FrontendRuntime.apply_server_message(frontend_after_modal_dispatch, modal_ack)
 
-    {:ok, frontend_after_replace_dispatch, replace_event_message} =
+    {:ok, frontend_after_second_modal_dispatch, second_modal_event_message} =
       ElmUi.FrontendRuntime.dispatch_interaction(frontend_after_modal,
+        family: :navigation,
+        intent: :open_settings_confirm_dialog,
+        boundary: :boundary,
+        widget_id: "dialog-link",
+        target: second_modal_fixture.descriptor.target
+      )
+
+    {:ok, state_after_second_modal, second_modal_ack} =
+      ElmUi.Runtime.handle_frontend_event(state_after_modal, second_modal_event_message)
+
+    {:ok, frontend_after_second_modal} =
+      ElmUi.FrontendRuntime.apply_server_message(
+        frontend_after_second_modal_dispatch,
+        second_modal_ack
+      )
+
+    {:ok, frontend_after_top_close_dispatch, close_top_event_message} =
+      ElmUi.FrontendRuntime.dispatch_interaction(frontend_after_second_modal,
+        family: :navigation,
+        intent: :close_top_modal,
+        boundary: :boundary,
+        widget_id: "dialog-link",
+        target: close_top_fixture.descriptor.target
+      )
+
+    {:ok, state_after_top_close, close_top_ack} =
+      ElmUi.Runtime.handle_frontend_event(state_after_second_modal, close_top_event_message)
+
+    {:ok, frontend_after_top_close} =
+      ElmUi.FrontendRuntime.apply_server_message(
+        frontend_after_top_close_dispatch,
+        close_top_ack
+      )
+
+    {:ok, frontend_after_replace_dispatch, replace_event_message} =
+      ElmUi.FrontendRuntime.dispatch_interaction(frontend_after_top_close,
         family: :navigation,
         intent: :replace_home_screen,
         boundary: :boundary,
@@ -1352,7 +1409,7 @@ defmodule ElmUi.Examples do
       )
 
     {:ok, state_after_replace, replace_ack} =
-      ElmUi.Runtime.handle_frontend_event(state_after_modal, replace_event_message)
+      ElmUi.Runtime.handle_frontend_event(state_after_top_close, replace_event_message)
 
     {:ok, frontend_after_replace} =
       ElmUi.FrontendRuntime.apply_server_message(frontend_after_replace_dispatch, replace_ack)
@@ -1368,6 +1425,15 @@ defmodule ElmUi.Examples do
           navigation_route_state("settings", %{tab: :profile})
         ),
       after_modal: navigation_snapshot(state_after_modal, frontend_after_modal, modal_ack, nil),
+      after_second_modal:
+        navigation_snapshot(
+          state_after_second_modal,
+          frontend_after_second_modal,
+          second_modal_ack,
+          nil
+        ),
+      after_top_close:
+        navigation_snapshot(state_after_top_close, frontend_after_top_close, close_top_ack, nil),
       after_replace:
         navigation_snapshot(
           state_after_replace,

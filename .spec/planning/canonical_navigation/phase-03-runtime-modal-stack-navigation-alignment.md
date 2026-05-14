@@ -91,25 +91,25 @@ Back to index: [README](./README.md)
       [x] 3.3.2.2 Subtask - Implement `open_modal`, targetless `close_modal`, and targeted `close_modal` using terminal-appropriate panels, inline overlays, or bounded section transitions.
       [x] 3.3.2.3 Subtask - Add diagnostics and inspection output that show degradation decisions while preserving canonical stack meaning.
 
-  [ ] 3.4 Section - Examples, Documentation, and Traceability
+  [x] 3.4 Section - Examples, Documentation, and Traceability
     Update maintainer-facing examples and planning evidence so the new modal
     stack behavior can be reviewed package by package.
 
-    [ ] 3.4.1 Task - Add focused runtime examples for stacked modal navigation
+    [x] 3.4.1 Task - Add focused runtime examples for stacked modal navigation
       Provide small examples that prove each runtime maps the same canonical
       stack semantics into its own host model.
 
-      [ ] 3.4.1.1 Subtask - Add or update focused examples for `live_ui` and `elm_ui` that open a second modal, close the topmost modal, and expose server-authoritative modal stack state.
-      [ ] 3.4.1.2 Subtask - Add or update focused examples for `desktop_ui` that demonstrate independent modal stack behavior over a stable screen history.
-      [ ] 3.4.1.3 Subtask - Add or update focused examples for `terminal_ui` that demonstrate modal stack semantics with explicit terminal degradation output.
+      [x] 3.4.1.1 Subtask - Add or update focused examples for `live_ui` and `elm_ui` that open a second modal, close the topmost modal, and expose server-authoritative modal stack state.
+      [x] 3.4.1.2 Subtask - Add or update focused examples for `desktop_ui` that demonstrate independent modal stack behavior over a stable screen history.
+      [x] 3.4.1.3 Subtask - Add or update focused examples for `terminal_ui` that demonstrate modal stack semantics with explicit terminal degradation output.
 
-    [ ] 3.4.2 Task - Update documentation and traceability surfaces
+    [x] 3.4.2 Task - Update documentation and traceability surfaces
       Keep package plans, generated mirrors, and documentation aligned with the
       new modal stack requirements.
 
-      [ ] 3.4.2.1 Subtask - Update runtime package documentation to describe stack-based modal navigation without adding authored DSL router semantics.
-      [ ] 3.4.2.2 Subtask - Update package planning traceability for the new modal stack requirements where package-local manifests are maintained.
-      [ ] 3.4.2.3 Subtask - Regenerate generated traceability mirrors through the owning Mix tasks rather than hand-editing generated review output.
+      [x] 3.4.2.1 Subtask - Update runtime package documentation to describe stack-based modal navigation without adding authored DSL router semantics.
+      [x] 3.4.2.2 Subtask - Update package planning traceability for the new modal stack requirements where package-local manifests are maintained.
+      [x] 3.4.2.3 Subtask - Regenerate generated traceability mirrors through the owning Mix tasks rather than hand-editing generated review output.
 
   [ ] 3.5 Section - Phase 3 Integration Tests
     Validate that each runtime consumes canonical modal stack transitions

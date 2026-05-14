@@ -22,7 +22,8 @@
       "ecosystem.signal_transport.dsl_event_bindings",
       "ecosystem.signal_transport.terminal_bridge",
       "ecosystem.signal_transport.native_signal_models_allowed",
-      "ecosystem.signal_transport.local_state_not_contract"
+      "ecosystem.signal_transport.local_state_not_contract",
+      "ecosystem.signal_transport.modal_stack_transition_meaning"
     ],
     "upstream_requirement_ids": [
       "unified_iur.widgets.input_and_navigation",
@@ -48,6 +49,7 @@
       "unified_iur.interactions.standard_interaction_families",
       "unified_iur.interactions.data_binding_representation",
       "unified_iur.interactions.navigation_transition_representation",
+      "unified_iur.interactions.modal_stack_transition_semantics",
       "unified_iur.interactions.no_host_router_assumptions",
       "unified_ui.package.library_identity",
       "unified_ui.package.dsl_boundary_only",
@@ -60,7 +62,8 @@
       "unified_ui.signals.validation_and_introspection",
       "unified_ui.signals.no_runtime_local_event_leakage",
       "unified_ui.signals.navigation_transition_actions",
-      "unified_ui.signals.navigation_symbolic_screen_targets"
+      "unified_ui.signals.navigation_symbolic_screen_targets",
+      "unified_ui.signals.navigation_modal_stack_semantics"
     ],
     "non_applicable_requirement_ids": [
       "ecosystem.platform_runtimes.elm_ui_runtime_split",
@@ -208,6 +211,14 @@
       "primary_plan_refs": ["1.2.1"],
       "supporting_plan_refs": ["4.2.2", "5.3.2"],
       "ownership_note": "Inherited boundary-contract guardrail for local terminal runtime state."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.modal_stack_transition_meaning",
+      "scope": "inherited",
+      "source_file": ".spec/specs/signal_transport.spec.md",
+      "primary_plan_refs": ["7.3.2"],
+      "supporting_plan_refs": ["7.4.1", "7.4.2", "7.5.1"],
+      "ownership_note": "Inherited canonical modal stack transition meaning consumed by terminal_ui."
     },
     {
       "requirement_id": "terminal_ui.package.library_identity",
@@ -392,6 +403,14 @@
       "primary_plan_refs": ["7.2.2"],
       "supporting_plan_refs": ["7.1.1", "7.3.1", "7.3.2", "7.4.1", "7.5.1"],
       "ownership_note": "Direct canonical navigation runtime obligation."
+    },
+    {
+      "requirement_id": "terminal_ui.runtime.modal_stack_navigation_degradation",
+      "scope": "direct",
+      "source_file": ".spec/specs/terminal_ui/runtime.spec.md",
+      "primary_plan_refs": ["7.3.2"],
+      "supporting_plan_refs": ["7.1.1", "7.4.2", "7.5.1"],
+      "ownership_note": "Direct terminal modal stack degradation obligation."
     },
     {
       "requirement_id": "terminal_ui.runtime.no_url_routing_assumption",
@@ -746,6 +765,14 @@
       "ownership_note": "Upstream canonical navigation descriptor input consumed by terminal_ui."
     },
     {
+      "requirement_id": "unified_iur.interactions.modal_stack_transition_semantics",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["7.3.2"],
+      "supporting_plan_refs": ["7.4.1", "7.4.2", "7.5.1"],
+      "ownership_note": "Upstream canonical modal stack descriptor semantics consumed by terminal_ui."
+    },
+    {
       "requirement_id": "unified_iur.interactions.no_host_router_assumptions",
       "scope": "upstream_constraint",
       "source_file": ".spec/specs/unified-iur/interactions.spec.md",
@@ -848,6 +875,14 @@
       "primary_plan_refs": ["7.2.1"],
       "supporting_plan_refs": ["7.4.1", "7.5.2"],
       "ownership_note": "Upstream symbolic-target guardrail consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_modal_stack_semantics",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["7.3.2"],
+      "supporting_plan_refs": ["7.4.1", "7.4.2", "7.5.1"],
+      "ownership_note": "Upstream authored modal stack signal semantics consumed by terminal_ui."
     }
   ]
 }

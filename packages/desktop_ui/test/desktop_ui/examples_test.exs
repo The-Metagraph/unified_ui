@@ -61,7 +61,11 @@ defmodule DesktopUi.ExamplesTest do
              :native_foundational,
              :native_advanced_operations,
              :native_transport_review,
-             :native_styled_review
+             :native_styled_review,
+             :basic_navigation,
+             :history_navigation,
+             :modal_navigation,
+             :master_detail_navigation
            ]
 
     assert reference.examples.canonical_ids == [
@@ -76,14 +80,19 @@ defmodule DesktopUi.ExamplesTest do
              :advanced_continuity,
              :transport_flow_review,
              :normalized_input_profiles,
-             :styled_continuity_review
+             :styled_continuity_review,
+             :modal_stack_navigation_review
            ]
 
     assert summary.examples.native_ids == [
              :native_foundational,
              :native_advanced_operations,
              :native_transport_review,
-             :native_styled_review
+             :native_styled_review,
+             :basic_navigation,
+             :history_navigation,
+             :modal_navigation,
+             :master_detail_navigation
            ]
 
     assert summary.examples.comparison_ids == [
@@ -91,8 +100,40 @@ defmodule DesktopUi.ExamplesTest do
              :advanced_continuity,
              :transport_flow_review,
              :normalized_input_profiles,
-             :styled_continuity_review
+             :styled_continuity_review,
+             :modal_stack_navigation_review
            ]
+  end
+
+  test "navigation examples expose focused modal stack behavior over stable history" do
+    modal_example = DesktopUi.Examples.modal_navigation_screen()
+    review = DesktopUi.Examples.modal_stack_navigation_review()
+
+    assert modal_example.metadata.example_id == :modal_navigation
+    assert :modal_stack in modal_example.metadata.coverage
+
+    assert review.id == :modal_stack_navigation_review
+    assert review.after_second_modal.modal_depth == 2
+
+    assert Enum.map(review.after_second_modal.modals, & &1.screen_id) == [
+             :settings,
+             :confirm_dialog
+           ]
+
+    assert review.after_top_close.top_modal.screen_id == :confirm_dialog
+    assert review.after_named_close.modal_depth == 0
+    assert review.parity.top_close_restores_previous_modal?
+    assert review.parity.targetless_close_pops_only_top_modal?
+    assert review.parity.named_close_clears_remaining_modal?
+    assert review.parity.screen_history_preserved?
+
+    assert DesktopUi.Examples.metadata(:modal_stack_navigation_review).workflow ==
+             :navigation_review
+
+    assert :modal_stack_navigation_review in Enum.map(
+             DesktopUi.Examples.mixed_examples(),
+             & &1.id
+           )
   end
 
   test "transport examples expose local routing, boundary translation, and normalized profiles" do

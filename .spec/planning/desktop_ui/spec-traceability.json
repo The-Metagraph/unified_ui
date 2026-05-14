@@ -22,7 +22,8 @@
       "ecosystem.signal_transport.dsl_event_bindings",
       "ecosystem.signal_transport.desktop_translation",
       "ecosystem.signal_transport.native_signal_models_allowed",
-      "ecosystem.signal_transport.local_state_not_contract"
+      "ecosystem.signal_transport.local_state_not_contract",
+      "ecosystem.signal_transport.modal_stack_transition_meaning"
     ],
     "upstream_requirement_ids": [
       "unified_iur.widgets.input_and_navigation",
@@ -47,6 +48,7 @@
       "unified_iur.interactions.renderer_independent_payload_mapping",
       "unified_iur.interactions.standard_interaction_families",
       "unified_iur.interactions.data_binding_representation",
+      "unified_iur.interactions.modal_stack_transition_semantics",
       "unified_ui.package.library_identity",
       "unified_ui.package.dsl_boundary_only",
       "unified_ui.package.canonical_iur_dependency",
@@ -56,7 +58,8 @@
       "unified_ui.signals.authoring_event_semantics",
       "unified_ui.signals.standard_interaction_families",
       "unified_ui.signals.validation_and_introspection",
-      "unified_ui.signals.no_runtime_local_event_leakage"
+      "unified_ui.signals.no_runtime_local_event_leakage",
+      "unified_ui.signals.navigation_modal_stack_semantics"
     ],
     "non_applicable_requirement_ids": [
       "ecosystem.platform_runtimes.elm_ui_runtime_split",
@@ -303,6 +306,20 @@
       "ownership_note": "Inherited boundary-contract guardrail for local desktop runtime state."
     },
     {
+      "requirement_id": "ecosystem.signal_transport.modal_stack_transition_meaning",
+      "scope": "inherited",
+      "source_file": ".spec/specs/signal_transport.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.5.1",
+        "12.1.2",
+        "12.6.3"
+      ],
+      "ownership_note": "Inherited canonical modal stack transition meaning consumed by desktop_ui."
+    },
+    {
       "requirement_id": "desktop_ui.package.library_identity",
       "scope": "direct",
       "source_file": ".spec/specs/desktop_ui/package.spec.md",
@@ -477,6 +494,20 @@
         "6.4.2"
       ],
       "ownership_note": "Direct desktop_ui boundary obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.structure.navigation_modules",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/structure.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.2.1",
+        "12.3.1",
+        "12.3.2"
+      ],
+      "ownership_note": "Direct navigation module boundary obligation."
     },
     {
       "requirement_id": "desktop_ui.native_widgets.direct_native_surface",
@@ -817,6 +848,99 @@
         "5.3.2"
       ],
       "ownership_note": "Direct bounded-platform-variation obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.screen_navigation_support",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.5.1",
+        "12.6.1"
+      ],
+      "ownership_note": "Direct screen navigation runtime obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.navigation_controller_process",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.1"
+      ],
+      "supporting_plan_refs": [
+        "12.1.2",
+        "12.6.1"
+      ],
+      "ownership_note": "Direct navigation controller process obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.screen_registry",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.2.1"
+      ],
+      "supporting_plan_refs": [
+        "12.2.2",
+        "12.6.2"
+      ],
+      "ownership_note": "Direct screen registry obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.navigation_actions",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.3.1"
+      ],
+      "supporting_plan_refs": [
+        "12.1.2",
+        "12.6.3"
+      ],
+      "ownership_note": "Direct navigation action surface obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.navigation_event_routing",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.3.2"
+      ],
+      "supporting_plan_refs": [
+        "12.3.3",
+        "12.6.3"
+      ],
+      "ownership_note": "Direct navigation event routing obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.modal_stack_independence",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.2"
+      ],
+      "supporting_plan_refs": [
+        "12.4.3",
+        "12.6.1",
+        "12.6.5"
+      ],
+      "ownership_note": "Direct independent modal stack obligation."
+    },
+    {
+      "requirement_id": "desktop_ui.runtime.stacked_modal_navigation",
+      "scope": "direct",
+      "source_file": ".spec/specs/desktop_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "12.1.2"
+      ],
+      "supporting_plan_refs": [
+        "12.5.1",
+        "12.6.1",
+        "12.6.5"
+      ],
+      "ownership_note": "Direct stacked modal navigation obligation."
     },
     {
       "requirement_id": "desktop_ui.iur_renderer.accepts_canonical_iur",
@@ -1384,6 +1508,20 @@
       "ownership_note": "Upstream canonical data-binding input consumed by desktop_ui."
     },
     {
+      "requirement_id": "unified_iur.interactions.modal_stack_transition_semantics",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.5.1",
+        "12.1.2",
+        "12.6.3"
+      ],
+      "ownership_note": "Upstream canonical modal stack descriptor semantics consumed by desktop_ui."
+    },
+    {
       "requirement_id": "unified_ui.package.library_identity",
       "scope": "upstream_constraint",
       "source_file": ".spec/specs/unified-ui/package.spec.md",
@@ -1511,6 +1649,20 @@
         "6.5.2"
       ],
       "ownership_note": "Upstream authored-signal hygiene guardrail."
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_modal_stack_semantics",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.5.1",
+        "12.1.2",
+        "12.6.3"
+      ],
+      "ownership_note": "Upstream authored modal stack signal semantics consumed by desktop_ui."
     }
   ]
 }

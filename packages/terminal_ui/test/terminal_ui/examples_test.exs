@@ -45,6 +45,7 @@ defmodule TerminalUi.ExamplesTest do
              :canonical_styled_review,
              :canonical_transport_review,
              :foundational_continuity,
+             :modal_stack_navigation_review,
              :native_advanced_operations,
              :native_foundational,
              :native_styled_review,
@@ -62,6 +63,7 @@ defmodule TerminalUi.ExamplesTest do
              :advanced_capability_continuity,
              :advanced_continuity,
              :foundational_continuity,
+             :modal_stack_navigation_review,
              :normalized_input_profiles,
              :styled_continuity_review,
              :styled_degradation_review,
@@ -90,6 +92,7 @@ defmodule TerminalUi.ExamplesTest do
     advanced = TerminalUi.Examples.advanced_comparison()
     capability = TerminalUi.Examples.advanced_capability_comparison()
     transport = TerminalUi.Examples.transport_flow_comparison()
+    modal_stack = TerminalUi.Examples.modal_stack_navigation_review()
     normalized = TerminalUi.Examples.normalized_input_comparison()
     styled = TerminalUi.Examples.styled_continuity_comparison()
     degradation = TerminalUi.Examples.styled_degradation_comparison()
@@ -117,6 +120,25 @@ defmodule TerminalUi.ExamplesTest do
     assert transport.parity.local_route_stays_local?
     assert transport.parity.boundary_routes_emit_signals?
     assert transport.parity.runtime_event_meaning_preserved?
+
+    assert modal_stack.id == :modal_stack_navigation_review
+
+    assert Enum.map(modal_stack.raw.after_second_modal.modals, & &1.modal) == [
+             :settings_dialog,
+             :settings_confirm_dialog
+           ]
+
+    assert modal_stack.tty.after_second_modal.current_modal.modal == :settings_confirm_dialog
+    assert modal_stack.raw.after_top_close.current_modal.modal == :settings_dialog
+
+    assert modal_stack.tty.after_second_modal.inspection.current_modal.modal ==
+             :settings_confirm_dialog
+
+    assert modal_stack.parity.same_stack_meaning?
+    assert modal_stack.parity.targetless_close_restores_previous_modal?
+    assert modal_stack.parity.tty_degradation_explicit?
+    assert modal_stack.parity.raw_overlay_preserved?
+    assert modal_stack.parity.no_host_route_fields?
 
     assert normalized.id == :normalized_input_profiles
     assert normalized.parity.shortcut_family_match?
@@ -157,12 +179,14 @@ defmodule TerminalUi.ExamplesTest do
     assert :advanced_continuity in reference.examples.comparison_ids
     assert :advanced_capability_continuity in reference.examples.comparison_ids
     assert :transport_flow_review in reference.examples.comparison_ids
+    assert :modal_stack_navigation_review in reference.examples.comparison_ids
     assert :normalized_input_profiles in reference.examples.comparison_ids
     assert :styled_continuity_review in reference.examples.comparison_ids
     assert :styled_degradation_review in reference.examples.comparison_ids
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :forms)
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :layering)
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :transport)
+    assert Map.has_key?(reference.examples.coverage_matrix.workflows, :navigation_review)
     assert Map.has_key?(reference.examples.coverage_matrix.categories, :style)
 
     assert summary.examples.native_ids == [

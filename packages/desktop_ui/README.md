@@ -55,6 +55,12 @@ The package ships paired maintained examples for:
 - advanced layered and multiwindow flows
 - transport and normalized-input review
 - styled review and style continuity
+- screen navigation, including independent modal stack review
+
+Desktop modal navigation is managed by `DesktopUi.Navigation.Controller`, not by
+host routes. Opening a modal pushes onto the modal stack, targetless close pops
+the top modal, and targeted close removes a matching symbolic modal while
+preserving the main screen history and forward stacks.
 
 Use the example helpers directly:
 

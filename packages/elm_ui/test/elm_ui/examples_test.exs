@@ -189,15 +189,33 @@ defmodule ElmUi.ExamplesTest do
     assert comparison.native.after_navigate.screen_id == "settings"
     assert comparison.native.after_navigate.frontend_screen_id == "settings"
     assert comparison.native.after_modal.navigation.current_modal.modal == :settings_dialog
+
+    assert comparison.native.after_second_modal.navigation.current_modal.modal ==
+             :settings_confirm_dialog
+
+    assert Enum.map(comparison.native.after_second_modal.navigation.modals, & &1.modal) == [
+             :settings_dialog,
+             :settings_confirm_dialog
+           ]
+
+    assert comparison.native.after_top_close.navigation.current_modal.modal == :settings_dialog
     assert comparison.native.after_replace.screen_id == "home"
 
     assert comparison.canonical.after_navigate.screen_id == "settings"
     assert comparison.canonical.after_navigate.frontend_screen_id == "settings"
+
+    assert comparison.canonical.after_second_modal.navigation.current_modal.modal ==
+             :settings_confirm_dialog
+
+    assert comparison.canonical.after_top_close.navigation.current_modal.modal == :settings_dialog
     assert comparison.canonical.after_replace.screen_id == "home"
 
     assert comparison.continuity.same_navigation_target?
     assert comparison.continuity.frontend_coordination?
     assert comparison.continuity.same_modal_identifier?
+    assert comparison.continuity.same_second_modal_identifier?
+    assert comparison.continuity.top_close_restores_previous_modal?
+    assert comparison.continuity.modal_stack_reflected?
     assert comparison.continuity.same_replacement_target?
     assert comparison.continuity.host_route_externalized?
     assert comparison.continuity.server_authority_preserved?
