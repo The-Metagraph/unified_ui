@@ -315,7 +315,8 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :slide_over_panel,
              :event_callout,
              :redline_inline,
-             :code_block_syntax_highlighted
+             :code_block_syntax_highlighted,
+             :list_repeat
            ]
 
     assert UnifiedUi.Layout.kinds() == [:box, :row, :column, :grid, :stack]

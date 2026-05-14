@@ -135,7 +135,8 @@ defmodule UnifiedUi.Dsl.Placement do
     :artifact_row,
     :sticky_frosted_header,
     :slide_over_panel,
-    :event_callout
+    :event_callout,
+    :list_repeat
   ]
 
   @spec section_boundaries() :: %{atom() => [atom()]}

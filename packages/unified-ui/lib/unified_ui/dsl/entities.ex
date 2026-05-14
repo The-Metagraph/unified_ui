@@ -31,7 +31,8 @@ defmodule UnifiedUi.Dsl.Entities do
       :row_and_artifact,
       :workflow_progress_and_status,
       :layer_shell_and_callout,
-      :redline_and_code
+      :redline_and_code,
+      :composition_behavior
     ],
     layouts: [:container, :row, :column, :grid, :stack, :split, :viewport],
     layers: [:overlay, :absolute, :modal, :toast, :menu, :canvas],

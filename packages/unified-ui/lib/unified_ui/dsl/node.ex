@@ -21,6 +21,7 @@ defmodule UnifiedUi.Dsl.Node do
           | :workflow_progress_and_status
           | :layer_shell_and_callout
           | :redline_and_code
+          | :composition_behavior
 
   @type t :: %__MODULE__{
           __identifier__: atom() | nil,
@@ -178,6 +179,11 @@ defmodule UnifiedUi.Dsl.Node do
           language: atom() | String.t() | nil,
           tokens: list() | nil,
           text_safety: atom() | nil,
+          repeat_binding: atom() | nil,
+          row_scope: atom() | nil,
+          row_fields: list() | nil,
+          template_identity: atom() | nil,
+          identity_strategy: atom() | nil,
           children: [t()]
         }
 
@@ -336,6 +342,11 @@ defmodule UnifiedUi.Dsl.Node do
             language: nil,
             tokens: nil,
             text_safety: nil,
+            repeat_binding: nil,
+            row_scope: nil,
+            row_fields: nil,
+            template_identity: nil,
+            identity_strategy: nil,
             children: []
 
   @spec summary(t()) :: map()
@@ -427,6 +438,11 @@ defmodule UnifiedUi.Dsl.Node do
       language: node.language,
       tokens: node.tokens,
       text_safety: node.text_safety,
+      repeat_binding: node.repeat_binding,
+      row_scope: node.row_scope,
+      row_fields: node.row_fields,
+      template_identity: node.template_identity,
+      identity_strategy: node.identity_strategy,
       current: node.current,
       minimum: node.minimum,
       maximum: node.maximum,

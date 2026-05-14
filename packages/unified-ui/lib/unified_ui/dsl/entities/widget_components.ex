@@ -11,6 +11,7 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
   @workflow_family :workflow_progress_and_status
   @layer_family :layer_shell_and_callout
   @redline_code_family :redline_and_code
+  @composition_behavior_family :composition_behavior
 
   @spec entities() :: [Spark.Dsl.Entity.t()]
   def entities do
@@ -19,7 +20,8 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
       row_artifact_entities() ++
       workflow_entities() ++
       layer_callout_entities() ++
-      redline_code_entities()
+      redline_code_entities() ++
+      composition_behavior_entities()
   end
 
   @spec content_identity_entities() :: [Spark.Dsl.Entity.t()]
@@ -205,6 +207,11 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
     ]
   end
 
+  @spec composition_behavior_entities() :: [Spark.Dsl.Entity.t()]
+  def composition_behavior_entities do
+    [list_repeat_entity()]
+  end
+
   @spec content_identity_kinds() :: [atom()]
   def content_identity_kinds do
     Enum.map(content_identity_entities(), & &1.name)
@@ -235,6 +242,11 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
     Enum.map(redline_code_entities(), & &1.name)
   end
 
+  @spec composition_behavior_kinds() :: [atom()]
+  def composition_behavior_kinds do
+    Enum.map(composition_behavior_entities(), & &1.name)
+  end
+
   @spec kinds() :: [atom()]
   def kinds do
     content_identity_kinds() ++
@@ -242,7 +254,8 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
       row_artifact_kinds() ++
       workflow_kinds() ++
       layer_callout_kinds() ++
-      redline_code_kinds()
+      redline_code_kinds() ++
+      composition_behavior_kinds()
   end
 
   defp leaf(name, family, extra_schema) do
@@ -306,6 +319,81 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
           change_intent: [type: :atom, required: false],
           summary: [type: :string, required: false]
         )
+    }
+  end
+
+  defp list_repeat_entity do
+    %Spark.Dsl.Entity{
+      name: :list_repeat,
+      target: Node,
+      args: [:id],
+      identifier: :id,
+      recursive_as: :children,
+      auto_set_fields: [family: @composition_behavior_family, kind: :list_repeat],
+      entities: [
+        children: [
+          template_container(
+            :list_item_multi_column_template,
+            :list_item_multi_column,
+            @row_artifact_family,
+            row_identity: [type: :any, required: true],
+            column_template: [type: :any, required: true],
+            active?: [type: :boolean, required: false, default: false],
+            link_target: [type: :string, required: false],
+            action_intent: [type: :atom, required: false],
+            summary: [type: :string, required: false]
+          ),
+          template_container(
+            :artifact_row_template,
+            :artifact_row,
+            @row_artifact_family,
+            title: [type: :string, required: true],
+            meta: [type: :any, required: false],
+            row_identity: [type: :any, required: true],
+            active?: [type: :boolean, required: false, default: false],
+            link_target: [type: :string, required: false],
+            action_intent: [type: :atom, required: false],
+            summary: [type: :string, required: false]
+          ),
+          template_container(
+            :event_callout_template,
+            :event_callout,
+            @layer_family,
+            tone: [type: :atom, required: false, default: :info],
+            eyebrow: [type: :string, required: false],
+            title: [type: :string, required: false],
+            message: [type: :string, required: true],
+            action_intent: [type: :atom, required: false],
+            summary: [type: :string, required: false]
+          )
+        ]
+      ],
+      schema:
+        EntitySchema.widget(
+          repeat_binding: [type: :atom, required: true],
+          row_scope: [type: :atom, required: false, default: :row],
+          row_fields: [type: :any, required: false, default: []],
+          template_identity: [type: :atom, required: false],
+          identity_strategy: [
+            type: {:in, [:row_identity, :index, :stable_hash]},
+            required: false,
+            default: :row_identity
+          ],
+          summary: [type: :string, required: false]
+        )
+    }
+  end
+
+  defp template_container(name, kind, family, extra_schema) do
+    %Spark.Dsl.Entity{
+      name: name,
+      target: Node,
+      args: [:id],
+      identifier: :id,
+      recursive_as: :children,
+      auto_set_fields: [family: family, kind: kind],
+      entities: [children: Foundational.entities()],
+      schema: EntitySchema.widget(extra_schema)
     }
   end
 end

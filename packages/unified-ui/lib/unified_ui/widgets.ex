@@ -67,6 +67,11 @@ defmodule UnifiedUi.Widgets do
     WidgetComponentEntities.redline_code_kinds()
   end
 
+  @spec composition_behavior_component_kinds() :: [atom()]
+  def composition_behavior_component_kinds do
+    WidgetComponentEntities.composition_behavior_kinds()
+  end
+
   @spec component_catalog() :: [WidgetComponents.component()]
   def component_catalog do
     WidgetComponents.catalog()
@@ -100,6 +105,7 @@ defmodule UnifiedUi.Widgets do
       row_artifact_component_kinds() ++
       workflow_component_kinds() ++
       layer_callout_component_kinds() ++
-      redline_code_component_kinds()
+      redline_code_component_kinds() ++
+      composition_behavior_component_kinds()
   end
 end

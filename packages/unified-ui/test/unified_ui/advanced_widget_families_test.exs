@@ -180,7 +180,8 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :slide_over_panel,
              :event_callout,
              :redline_inline,
-             :code_block_syntax_highlighted
+             :code_block_syntax_highlighted,
+             :list_repeat
            ]
   end
 

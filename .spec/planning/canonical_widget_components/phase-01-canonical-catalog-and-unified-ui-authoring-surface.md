@@ -124,24 +124,24 @@ Back to index: [README](./README.md)
       [x] 1.4.3.2 Subtask - Author `slide_over_panel` as a non-modal layer with open state, size, label, and children.
       [x] 1.4.3.3 Subtask - Author `event_callout`, `redline_inline`, and `code_block_syntax_highlighted` with tone, segment, token, and text-safety metadata.
 
-  [ ] 1.5 Section - List-Repeat Composition Authoring
+  [x] 1.5 Section - List-Repeat Composition Authoring
     Add the list-repeat behavior introduced by AshUi PR 98 as a canonical DSL
     composition primitive.
 
-    [ ] 1.5.1 Task - Define repeat composition syntax and validation
+    [x] 1.5.1 Task - Define repeat composition syntax and validation
       Establish how authors attach a child template to rows from a list
       binding.
 
-      [ ] 1.5.1.1 Subtask - Define the authored repeat directive shape and how it references a list binding.
-      [ ] 1.5.1.2 Subtask - Validate that repeat can only target list-like bindings and compatible child templates.
-      [ ] 1.5.1.3 Subtask - Validate row-scope binding references and reject unsupported deep or host-specific row access until explicitly supported.
+      [x] 1.5.1.1 Subtask - Define the authored repeat directive shape and how it references a list binding.
+      [x] 1.5.1.2 Subtask - Validate that repeat can only target list-like bindings and compatible child templates.
+      [x] 1.5.1.3 Subtask - Validate row-scope binding references and reject unsupported deep or host-specific row access until explicitly supported.
 
-    [ ] 1.5.2 Task - Expose repeat inspection and diagnostics
+    [x] 1.5.2 Task - Expose repeat inspection and diagnostics
       Make repeated composition visible and debuggable before runtime rendering.
 
-      [ ] 1.5.2.1 Subtask - Add inspection output for repeat binding id, row scope, template identity, and generated identity strategy.
-      [ ] 1.5.2.2 Subtask - Add diagnostics for missing list bindings, malformed row fields, and repeat use on single-child composition.
-      [ ] 1.5.2.3 Subtask - Add authoring examples that show repeated artifact rows and repeated event callouts.
+      [x] 1.5.2.1 Subtask - Add inspection output for repeat binding id, row scope, template identity, and generated identity strategy.
+      [x] 1.5.2.2 Subtask - Add diagnostics for missing list bindings, malformed row fields, and repeat use on single-child composition.
+      [x] 1.5.2.3 Subtask - Add authoring examples that show repeated artifact rows and repeated event callouts.
 
   [ ] 1.6 Section - Phase 1 Integration Tests
     Validate the authored DSL surface, alias policy, diagnostics, and repeat

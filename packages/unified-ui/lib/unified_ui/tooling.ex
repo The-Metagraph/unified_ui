@@ -53,6 +53,11 @@ defmodule UnifiedUi.Tooling do
       ".spec/specs/unified-ui/widgets.spec.md",
       ".spec/specs/unified-ui/widget_components.spec.md"
     ],
+    composition_behavior: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md",
+      ".spec/specs/unified-ui/signals.spec.md"
+    ],
     layout: [".spec/specs/unified-ui/display_systems.spec.md"],
     display: [".spec/specs/unified-ui/display_systems.spec.md"],
     overlay: [".spec/specs/unified-ui/display_systems.spec.md"],

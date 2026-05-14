@@ -4,6 +4,7 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
   use Spark.Dsl.Verifier
 
   alias Spark.Dsl.Verifier
+  alias UnifiedUi.Binding
   alias UnifiedUi.Dsl.Node
 
   @heading_segment_types [:text, :emphasis]
@@ -13,16 +14,22 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
   def verify(dsl) do
     module = Verifier.get_persisted(dsl, :module)
 
+    bindings =
+      dsl
+      |> Verifier.get_entities([:signals])
+      |> Enum.filter(&match?(%Binding{}, &1))
+      |> Map.new(&{&1.id, &1})
+
     dsl
     |> Verifier.get_entities([:composition])
     |> Enum.filter(&match?(%Node{}, &1))
     |> flatten_nodes()
-    |> validate_nodes(module)
+    |> validate_nodes(module, bindings)
   end
 
-  defp validate_nodes(nodes, module) do
+  defp validate_nodes(nodes, module, bindings) do
     Enum.reduce_while(nodes, :ok, fn node, :ok ->
-      case validate_node(node) do
+      case validate_node_with_context(node, bindings) do
         :ok ->
           {:cont, :ok}
 
@@ -30,6 +37,12 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
           {:halt, {:error, %Spark.Error.DslError{module: module, path: path, message: message}}}
       end
     end)
+  end
+
+  defp validate_node_with_context(node, bindings) do
+    with :ok <- validate_node(node) do
+      validate_repeat_binding(node, bindings)
+    end
   end
 
   @doc false
@@ -216,7 +229,61 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
     end
   end
 
+  def validate_node(%Node{
+        kind: :list_repeat,
+        id: id,
+        repeat_binding: repeat_binding,
+        row_scope: row_scope,
+        row_fields: row_fields,
+        children: children
+      }) do
+    cond do
+      not is_atom(repeat_binding) ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} repeat_binding must reference a declared collection data_binding"}
+
+      not is_atom(row_scope) ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} row_scope must be an atom"}
+
+      not valid_row_fields?(row_fields) ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} row_fields must be shallow atom or string field names without host-specific path syntax"}
+
+      length(children) != 1 ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} must declare exactly one child template"}
+
+      not valid_repeat_template?(List.first(children)) ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} child template must be an artifact, row, or event-callout component"}
+
+      true ->
+        :ok
+    end
+  end
+
   def validate_node(_node), do: :ok
+
+  defp validate_repeat_binding(
+         %Node{kind: :list_repeat, id: id, repeat_binding: repeat_binding},
+         bindings
+       ) do
+    cond do
+      not Map.has_key?(bindings, repeat_binding) ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} repeat_binding #{inspect(repeat_binding)} must reference a declared data_binding"}
+
+      not Map.fetch!(bindings, repeat_binding).collection? ->
+        {:error, [:composition, :list_repeat, id],
+         "list_repeat #{inspect(id)} repeat_binding #{inspect(repeat_binding)} must reference a collection data_binding"}
+
+      true ->
+        :ok
+    end
+  end
+
+  defp validate_repeat_binding(_node, _bindings), do: :ok
 
   defp valid_heading_segments?(segments) when is_list(segments) and segments != [] do
     Enum.all?(segments, &valid_heading_segment?/1)
@@ -330,6 +397,27 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
   end
 
   defp valid_code_tokens?(_tokens), do: false
+
+  defp valid_row_fields?(fields) when is_list(fields) do
+    Enum.all?(fields, fn
+      field when is_atom(field) ->
+        true
+
+      field when is_binary(field) ->
+        field != "" and not String.contains?(field, [".", "[", "]", "->", "::"])
+
+      _other ->
+        false
+    end)
+  end
+
+  defp valid_row_fields?(_fields), do: false
+
+  defp valid_repeat_template?(%Node{kind: kind}) do
+    kind in [:artifact_row, :list_item_multi_column, :event_callout]
+  end
+
+  defp valid_repeat_template?(_node), do: false
 
   defp valid_index?(index, items) when is_integer(index) and is_list(items) do
     index >= 0 and index < length(items)
