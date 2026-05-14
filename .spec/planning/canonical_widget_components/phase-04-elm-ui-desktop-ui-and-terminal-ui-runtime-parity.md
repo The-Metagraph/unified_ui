@@ -26,24 +26,24 @@ Back to index: [README](./README.md)
   ElmUi, DesktopUi, and TerminalUi with runtime-appropriate interaction and
   degradation behavior.
 
-  [ ] 4.1 Section - Shared Runtime Parity Fixtures
+  [x] 4.1 Section - Shared Runtime Parity Fixtures
     Establish shared fixture coverage and expected behavior summaries before
     implementing runtime-specific widgets.
 
-    [ ] 4.1.1 Task - Create runtime parity fixture suite
+    [x] 4.1.1 Task - Create runtime parity fixture suite
       Provide common inputs that every runtime package can render and validate.
 
-      [ ] 4.1.1.1 Subtask - Add fixture groups for content, identity, form, control, row, progress, layer, callout, redline, code, composer, and repeated rows.
-      [ ] 4.1.1.2 Subtask - Add expected semantic summaries for state, labels, interactions, and child structure.
-      [ ] 4.1.1.3 Subtask - Add malicious text fixtures for redline and code output safety across host runtimes.
+      [x] 4.1.1.1 Subtask - Add fixture groups for content, identity, form, control, row, progress, layer, callout, redline, code, composer, and repeated rows.
+      [x] 4.1.1.2 Subtask - Add expected semantic summaries for state, labels, interactions, and child structure.
+      [x] 4.1.1.3 Subtask - Add malicious text fixtures for redline and code output safety across host runtimes.
 
-    [ ] 4.1.2 Task - Define runtime parity acceptance criteria
+    [x] 4.1.2 Task - Define runtime parity acceptance criteria
       Make clear when a runtime has native support, degraded support, or a
       missing implementation.
 
-      [ ] 4.1.2.1 Subtask - Define full, degraded, and unsupported statuses for every expanded widget family.
-      [ ] 4.1.2.2 Subtask - Define minimum interaction and accessibility behavior required even under degraded rendering.
-      [ ] 4.1.2.3 Subtask - Add parity reports that compare runtime coverage against the canonical fixture set.
+      [x] 4.1.2.1 Subtask - Define full, degraded, and unsupported statuses for every expanded widget family.
+      [x] 4.1.2.2 Subtask - Define minimum interaction and accessibility behavior required even under degraded rendering.
+      [x] 4.1.2.3 Subtask - Add parity reports that compare runtime coverage against the canonical fixture set.
 
   [ ] 4.2 Section - ElmUi Runtime Support
     Implement the expanded catalog in the Phoenix-and-Elm runtime split while

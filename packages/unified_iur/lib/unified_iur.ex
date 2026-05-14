@@ -20,6 +20,7 @@ defmodule UnifiedIUR do
           | :extension
           | :reference
           | :tooling
+          | :runtime_parity
 
   @module_areas %{
     display: UnifiedIUR.Display,
@@ -34,7 +35,8 @@ defmodule UnifiedIUR do
     interoperability: UnifiedIUR.Interoperability,
     extension: UnifiedIUR.Extension,
     reference: UnifiedIUR.Reference,
-    tooling: UnifiedIUR.Tooling
+    tooling: UnifiedIUR.Tooling,
+    runtime_parity: UnifiedIUR.RuntimeParity
   }
 
   @spec module_areas() :: %{module_area() => module()}
