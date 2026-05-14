@@ -15,6 +15,7 @@ defmodule DesktopUi.Widget do
           | :visualization
           | :operational
           | :layer
+          | :component
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -64,7 +65,9 @@ defmodule DesktopUi.Widget do
         :overlay_lifecycle,
         :positioning_mode,
         :interaction_route,
-        :window_identity
+        :window_identity,
+        :component_family,
+        :component_kind
       ],
       state: [
         :disabled,
@@ -80,7 +83,10 @@ defmodule DesktopUi.Widget do
         :progress,
         :severity,
         :streaming,
-        :paused
+        :paused,
+        :disabled?,
+        :active?,
+        :open?
       ],
       bindings: [
         :value,
@@ -130,7 +136,10 @@ defmodule DesktopUi.Widget do
         :processes,
         :summary,
         :query,
-        :entries
+        :entries,
+        :component,
+        :accessibility,
+        :text_safety
       ],
       styles: [
         :fg,
@@ -164,7 +173,13 @@ defmodule DesktopUi.Widget do
         :expand,
         :dismiss,
         :command,
-        :navigation
+        :navigation,
+        :send,
+        :row_activation,
+        :step_navigation,
+        :inline_action,
+        :disclosure,
+        :panel
       ]
     }
   end
@@ -255,6 +270,32 @@ defmodule DesktopUi.Widget do
   def family_for(kind) when kind in [:text_input, :checkbox, :radio_group, :select], do: :input
   def family_for(kind) when kind in [:menu, :tabs, :breadcrumbs, :list], do: :navigation
   def family_for(kind) when kind in [:status], do: :feedback
+
+  def family_for(kind)
+      when kind in [
+             :inline_rich_text_heading,
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :runtime_form_shell,
+             :chat_composer,
+             :list_item_multi_column,
+             :artifact_row,
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :sticky_frosted_header,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :list_repeat
+           ],
+      do: :component
+
   def family_for(_kind), do: :content
 
   defp normalize_map(nil), do: %{}

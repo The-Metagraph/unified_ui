@@ -8,31 +8,97 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
 
   @moduletag :phase_eleven
 
-  @iur_widget_count 45
+  @iur_widget_count 77
 
   @all_iur_kinds MapSet.new([
-    # Foundational (13)
-    :badge, :button, :command, :content, :hero, :icon, :image, :label, :link, :separator, :spacer,
-    :text, :toggle,
-    # Input (10)
-    :checkbox, :date_input, :file_input, :numeric_input, :pick_list, :radio_group, :select, :slider,
-    :text_input, :time_input,
-    # Navigation (4)
-    :breadcrumbs, :list, :menu, :tabs,
-    # Data (7)
-    :inspector, :info_list, :key_value, :markdown_viewer, :stat, :table, :tree_view,
-    # Feedback (6)
-    :alert_dialog, :dialog, :inline_feedback, :progress, :status, :toast,
-    # Operational (7)
-    :cluster_dashboard, :command_palette, :log_viewer, :process_monitor, :stream_widget,
-    :supervision_tree_viewer, :window_command,
-    # Visualization (5)
-    :bar_chart, :canvas, :gauge, :line_chart, :timeline,
-    # Layout & Structure (3)
-    :column, :row, :stack,
-    # Container (1)
-    :window
-  ])
+                   # Foundational (13)
+                   :badge,
+                   :button,
+                   :command,
+                   :content,
+                   :hero,
+                   :icon,
+                   :image,
+                   :label,
+                   :link,
+                   :separator,
+                   :spacer,
+                   :text,
+                   :toggle,
+                   # Input (10)
+                   :checkbox,
+                   :date_input,
+                   :file_input,
+                   :numeric_input,
+                   :pick_list,
+                   :radio_group,
+                   :select,
+                   :slider,
+                   :text_input,
+                   :time_input,
+                   # Navigation (4)
+                   :breadcrumbs,
+                   :list,
+                   :menu,
+                   :tabs,
+                   # Data (7)
+                   :inspector,
+                   :info_list,
+                   :key_value,
+                   :markdown_viewer,
+                   :stat,
+                   :table,
+                   :tree_view,
+                   # Feedback (6)
+                   :alert_dialog,
+                   :dialog,
+                   :inline_feedback,
+                   :progress,
+                   :sparkline,
+                   :status,
+                   :toast,
+                   # Operational (7)
+                   :cluster_dashboard,
+                   :command_palette,
+                   :log_viewer,
+                   :process_monitor,
+                   :stream_widget,
+                   :supervision_tree_viewer,
+                   :window_command,
+                   # Visualization (5)
+                   :bar_chart,
+                   :canvas,
+                   :gauge,
+                   :line_chart,
+                   :timeline,
+                   # Layout & Structure (3)
+                   :column,
+                   :row,
+                   :stack,
+                   # Container (1)
+                   :window,
+                   # Canonical widget components (20)
+                   :inline_rich_text_heading,
+                   :disclosure,
+                   :kicker,
+                   :avatar,
+                   :presence_dot,
+                   :segmented_button_group,
+                   :runtime_form_shell,
+                   :chat_composer,
+                   :list_item_multi_column,
+                   :artifact_row,
+                   :pipeline_stepper_horizontal,
+                   :segmented_progress_bar,
+                   :workflow_stage_list_vertical,
+                   :meter_thin,
+                   :sticky_frosted_header,
+                   :slide_over_panel,
+                   :event_callout,
+                   :redline_inline,
+                   :code_block_syntax_highlighted,
+                   :list_repeat
+                 ])
 
   setup_all do
     {:ok, capabilities: ensure_visible_runner_capabilities()}
@@ -79,7 +145,9 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
 
   describe "11.2 Form input completeness scenarios" do
     test "numeric_input, toggle, radio_group, select, pick_list render with proper structure" do
-      numeric_widget = DesktopUi.Widgets.numeric_input("test-numeric", value: 42, min: 0, max: 100)
+      numeric_widget =
+        DesktopUi.Widgets.numeric_input("test-numeric", value: 42, min: 0, max: 100)
+
       assert numeric_widget.kind == :numeric_input
       assert numeric_widget.state.value == 42
       assert numeric_widget.attributes.min == 0
@@ -141,7 +209,13 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
       supported = Renderer.supported_kinds() |> MapSet.new()
 
       input_kinds = [
-        :numeric_input, :slider, :date_input, :time_input, :file_input, :pick_list, :radio_group,
+        :numeric_input,
+        :slider,
+        :date_input,
+        :time_input,
+        :file_input,
+        :pick_list,
+        :radio_group,
         :select
       ]
 
@@ -248,7 +322,7 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
              "Expected all 45 IUR kinds to be supported, but missing: #{inspect(MapSet.to_list(missing_kinds))}"
     end
 
-    test "renderer.supported_kinds returns exactly 45 kinds" do
+    test "renderer.supported_kinds returns the complete expanded kind set" do
       count = length(Renderer.supported_kinds())
 
       assert count >= @iur_widget_count,
@@ -282,7 +356,7 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
 
       assert plan.presentation.iur_widget_coverage == :complete
       assert plan.presentation.supported_iur_kinds >= @iur_widget_count
-      assert plan.presentation.validation_state == :iur_renderer_complete
+      assert plan.presentation.validation_state == :render_plan_ready
     end
 
     test "validation passes with full IUR widget coverage" do
@@ -317,7 +391,9 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
             DesktopUi.Widgets.column("phase11-content", [
               # Foundational
               DesktopUi.Widgets.badge("p11-badge", "Complete", variant: :success),
-              DesktopUi.Widgets.hero("p11-hero", "Phase 11", subheadline: "IUR Widget Completeness"),
+              DesktopUi.Widgets.hero("p11-hero", "Phase 11",
+                subheadline: "IUR Widget Completeness"
+              ),
               DesktopUi.Widgets.separator("p11-sep"),
               # Input
               DesktopUi.Widgets.numeric_input("p11-numeric", value: 50, min: 0, max: 100),

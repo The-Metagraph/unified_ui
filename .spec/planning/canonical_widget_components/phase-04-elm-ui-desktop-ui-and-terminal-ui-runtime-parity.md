@@ -64,24 +64,24 @@ Back to index: [README](./README.md)
       [x] 4.2.2.2 Subtask - Translate canonical interactions into ElmUi message and Phoenix boundary events.
       [x] 4.2.2.3 Subtask - Verify repeated rows render as deterministic frontend children.
 
-  [ ] 4.3 Section - DesktopUi Runtime Support
+  [x] 4.3 Section - DesktopUi Runtime Support
     Implement desktop-native equivalents and IUR mappings with pointer,
     keyboard, and platform behavior appropriate for SDL3-oriented rendering.
 
-    [ ] 4.3.1 Task - Implement DesktopUi native widget models
+    [x] 4.3.1 Task - Implement DesktopUi native widget models
       Add desktop-native structures for the expanded widget catalog.
 
-      [ ] 4.3.1.1 Subtask - Add native widget structs and style hooks for content, identity, controls, rows, progress, layers, callouts, redline, code, and composer surfaces.
-      [ ] 4.3.1.2 Subtask - Add keyboard and pointer handling for selection, row activation, step navigation, disclosure, slide-over, form, and composer widgets.
-      [ ] 4.3.1.3 Subtask - Add safe text layout and token rendering for redline and code widgets.
+      [x] 4.3.1.1 Subtask - Add native widget structs and style hooks for content, identity, controls, rows, progress, layers, callouts, redline, code, and composer surfaces.
+      [x] 4.3.1.2 Subtask - Add keyboard and pointer handling for selection, row activation, step navigation, disclosure, slide-over, form, and composer widgets.
+      [x] 4.3.1.3 Subtask - Add safe text layout and token rendering for redline and code widgets.
 
-    [ ] 4.3.2 Task - Implement DesktopUi IUR renderer mappings
+    [x] 4.3.2 Task - Implement DesktopUi IUR renderer mappings
       Map canonical IUR into DesktopUi native widgets and desktop signal
       translation.
 
-      [ ] 4.3.2.1 Subtask - Add renderer mappings for every expanded widget family.
-      [ ] 4.3.2.2 Subtask - Translate canonical interactions into desktop input and signal behavior.
-      [ ] 4.3.2.3 Subtask - Verify repeated rows produce stable widget identity across desktop rerenders.
+      [x] 4.3.2.1 Subtask - Add renderer mappings for every expanded widget family.
+      [x] 4.3.2.2 Subtask - Translate canonical interactions into desktop input and signal behavior.
+      [x] 4.3.2.3 Subtask - Verify repeated rows produce stable widget identity across desktop rerenders.
 
   [ ] 4.4 Section - TerminalUi Runtime Support and Degradation
     Implement terminal-native equivalents and explicit fallback behavior for

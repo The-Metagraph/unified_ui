@@ -90,7 +90,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
            widget_complete_draw_operations: true,
            iur_widget_coverage: :complete,
            supported_iur_kinds: length(DesktopUi.Renderer.supported_kinds()),
-           validation_state: :iur_renderer_complete
+           validation_state: :render_plan_ready
          },
          diagnostics: %{
            window_count: length(windows),
@@ -301,12 +301,14 @@ defmodule DesktopUi.Sdl3.RenderPlan do
     total_gap_height = row_gap * max(trunc(row_count) - 1, 0)
 
     cell_width = max((bounds.width - total_gap_width) / columns, 32)
-    cell_height = if rows do
-      max((bounds.height - total_gap_height) / row_count, 32)
-    else
-      # Calculate based on available height divided by rows needed
-      max((bounds.height - total_gap_height) / calculated_rows, 32)
-    end
+
+    cell_height =
+      if rows do
+        max((bounds.height - total_gap_height) / row_count, 32)
+      else
+        # Calculate based on available height divided by rows needed
+        max((bounds.height - total_gap_height) / calculated_rows, 32)
+      end
 
     specs =
       Enum.with_index(children)
@@ -325,8 +327,8 @@ defmodule DesktopUi.Sdl3.RenderPlan do
           units: :logical
         }
 
-        {child, Map.get(source_index, normalize_id(child.id), source_stub(child)),
-         child_bounds, inherited_clip}
+        {child, Map.get(source_index, normalize_id(child.id), source_stub(child)), child_bounds,
+         inherited_clip}
       end)
 
     specs
@@ -543,7 +545,18 @@ defmodule DesktopUi.Sdl3.RenderPlan do
         inset_bounds(bounds, padding + 18, 52, padding + 18, padding + 18)
 
       kind
-      when kind in [:overlay, :viewport, :scroll_region, :scroll_bar, :content, :column, :row, :split_pane, :box, :grid] ->
+      when kind in [
+             :overlay,
+             :viewport,
+             :scroll_region,
+             :scroll_bar,
+             :content,
+             :column,
+             :row,
+             :split_pane,
+             :box,
+             :grid
+           ] ->
         inset_bounds(bounds, padding + 12, padding + 12, padding + 12, padding + 12)
 
       :canvas_surface ->
@@ -612,6 +625,12 @@ defmodule DesktopUi.Sdl3.RenderPlan do
           name: node.attributes[:icon]
         }
 
+      kind when kind in [:redline_inline, :code_block_syntax_highlighted] ->
+        %{
+          kind: :plain_text_tokens,
+          text_safety: get_in(node.attributes, [:text_safety, :content])
+        }
+
       _other ->
         %{}
     end
@@ -632,6 +651,8 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       navigation_intent: event_intent(Map.get(events, :navigation)),
       window_identity: Map.get(source.metadata, :window_identity),
       overlay_role: Map.get(source.metadata, :overlay_role),
+      component_family: Map.get(source.metadata, :component_family),
+      component_kind: Map.get(source.metadata, :component_kind),
       selection_mode:
         Map.get(source.metadata, :selection_mode, Map.get(source.attributes, :selection_mode))
     }
@@ -643,14 +664,71 @@ defmodule DesktopUi.Sdl3.RenderPlan do
 
   defp draw_content(node) do
     cond do
-      is_binary(node.attributes[:content]) -> node.attributes[:content]
-      is_binary(node.attributes[:label]) -> node.attributes[:label]
-      is_binary(node.attributes[:window_title]) -> node.attributes[:window_title]
-      is_binary(node.attributes[:message]) -> node.attributes[:message]
-      is_binary(node.attributes[:query]) -> node.attributes[:query]
-      is_binary(node.attributes[:alt]) -> node.attributes[:alt]
-      is_binary(node.attributes[:placeholder]) -> node.attributes[:placeholder]
-      true -> to_string(node.kind)
+      is_binary(node.attributes[:content]) ->
+        node.attributes[:content]
+
+      is_binary(node.attributes[:label]) ->
+        node.attributes[:label]
+
+      is_binary(node.attributes[:window_title]) ->
+        node.attributes[:window_title]
+
+      is_binary(node.attributes[:message]) ->
+        node.attributes[:message]
+
+      is_binary(node.attributes[:query]) ->
+        node.attributes[:query]
+
+      is_binary(node.attributes[:alt]) ->
+        node.attributes[:alt]
+
+      is_binary(node.attributes[:placeholder]) ->
+        node.attributes[:placeholder]
+
+      is_binary(get_in(node.attributes, [:disclosure, :summary])) ->
+        get_in(node.attributes, [:disclosure, :summary])
+
+      is_binary(get_in(node.attributes, [:identity, :initials])) ->
+        get_in(node.attributes, [:identity, :initials])
+
+      is_binary(get_in(node.attributes, [:form, :submit_label])) ->
+        get_in(node.attributes, [:form, :submit_label])
+
+      is_binary(get_in(node.attributes, [:composer, :value])) ->
+        get_in(node.attributes, [:composer, :value])
+
+      is_binary(get_in(node.attributes, [:artifact, :title])) ->
+        get_in(node.attributes, [:artifact, :title])
+
+      is_binary(get_in(node.attributes, [:shell, :title])) ->
+        get_in(node.attributes, [:shell, :title])
+
+      is_binary(get_in(node.attributes, [:panel, :label])) ->
+        get_in(node.attributes, [:panel, :label])
+
+      is_binary(get_in(node.attributes, [:callout, :message])) ->
+        get_in(node.attributes, [:callout, :message])
+
+      node.kind == :inline_rich_text_heading ->
+        joined_text_segments(get_in(node.attributes, [:heading, :segments]))
+
+      node.kind == :kicker ->
+        node.attributes |> get_in([:kicker, :items]) |> List.wrap() |> Enum.join(" ")
+
+      node.kind == :presence_dot ->
+        node.attributes |> get_in([:presence, :state]) |> to_string()
+
+      node.kind == :redline_inline ->
+        joined_text_segments(get_in(node.attributes, [:redline, :segments]))
+
+      node.kind == :code_block_syntax_highlighted ->
+        joined_text_segments(get_in(node.attributes, [:code, :tokens]))
+
+      node.kind == :list_repeat ->
+        "rows: #{get_in(node.attributes, [:repeat, :row_count]) || length(node.children)}"
+
+      true ->
+        to_string(node.kind)
     end
   end
 
@@ -703,10 +781,48 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp draw_kind(:context_menu), do: :context_menu_surface
   defp draw_kind(:canvas_surface), do: :canvas_surface
   defp draw_kind(:absolute), do: :positioned_fragment
+  defp draw_kind(:inline_rich_text_heading), do: :rich_heading_text
+  defp draw_kind(:disclosure), do: :disclosure_surface
+  defp draw_kind(:kicker), do: :kicker_text
+  defp draw_kind(:avatar), do: :avatar_surface
+  defp draw_kind(:presence_dot), do: :presence_indicator
+  defp draw_kind(:segmented_button_group), do: :segmented_control
+  defp draw_kind(:runtime_form_shell), do: :runtime_form_surface
+  defp draw_kind(:chat_composer), do: :composer_control
+  defp draw_kind(:list_item_multi_column), do: :multi_column_row
+  defp draw_kind(:artifact_row), do: :artifact_row
+  defp draw_kind(:pipeline_stepper_horizontal), do: :pipeline_stepper
+  defp draw_kind(:segmented_progress_bar), do: :segmented_progress
+  defp draw_kind(:workflow_stage_list_vertical), do: :workflow_stage_list
+  defp draw_kind(:meter_thin), do: :thin_meter
+  defp draw_kind(:sticky_frosted_header), do: :sticky_header_surface
+  defp draw_kind(:slide_over_panel), do: :slide_over_panel_surface
+  defp draw_kind(:event_callout), do: :event_callout_surface
+  defp draw_kind(:redline_inline), do: :redline_text
+  defp draw_kind(:code_block_syntax_highlighted), do: :code_block_text
+  defp draw_kind(:list_repeat), do: :repeat_surface
   defp draw_kind(_kind), do: :container_surface
 
   defp preferred_height(node) do
     cond do
+      node.kind == :inline_rich_text_heading -> 44
+      node.kind == :disclosure -> if(node.state[:open] || node.state[:open?], do: 96, else: 42)
+      node.kind == :kicker -> 24
+      node.kind in [:avatar, :presence_dot] -> 40
+      node.kind == :segmented_button_group -> 44
+      node.kind == :runtime_form_shell -> 72 + field_count(node) * 48
+      node.kind == :chat_composer -> 84
+      node.kind in [:list_item_multi_column, :artifact_row] -> 56
+      node.kind == :pipeline_stepper_horizontal -> 64
+      node.kind == :segmented_progress_bar -> 20
+      node.kind == :workflow_stage_list_vertical -> 36 + stage_count(node) * 32
+      node.kind == :meter_thin -> 12
+      node.kind == :sticky_frosted_header -> 58
+      node.kind == :slide_over_panel -> 300
+      node.kind == :event_callout -> 72
+      node.kind == :redline_inline -> 28
+      node.kind == :code_block_syntax_highlighted -> max(64, 32 + token_count(node) * 18)
+      node.kind == :list_repeat -> 32 + max(length(node.children), row_count(node)) * 56
       node.kind in [:text, :label] -> 28
       node.kind == :badge -> badge_height(node)
       node.kind == :hero -> 180
@@ -768,6 +884,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
 
   defp pick_list_height(node) do
     base = 46
+
     if node.attributes[:open] || node.attributes[:focused] do
       base + min(option_count(node), 6) * 36
     else
@@ -778,6 +895,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp tree_view_height(node) do
     base = 64
     node_count = item_count(node)
+
     if node_count > 0 do
       base + min(node_count, 8) * 28
     else
@@ -807,6 +925,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp info_list_height(node) do
     base = 32
     item_count = item_count(node)
+
     if item_count > 0 do
       base + min(item_count, 10) * 24
     else
@@ -852,6 +971,7 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp supervision_tree_height(node) do
     base = 80
     node_count = item_count(node)
+
     if node_count > 0 do
       base + min(node_count, 10) * 32
     else
@@ -925,6 +1045,34 @@ defmodule DesktopUi.Sdl3.RenderPlan do
 
       node.kind == :status ->
         min(120, available_width)
+
+      node.kind == :inline_rich_text_heading ->
+        min(520, available_width)
+
+      node.kind in [
+        :disclosure,
+        :runtime_form_shell,
+        :chat_composer,
+        :slide_over_panel,
+        :event_callout,
+        :code_block_syntax_highlighted,
+        :list_repeat
+      ] ->
+        min(520, available_width)
+
+      node.kind in [:list_item_multi_column, :artifact_row] ->
+        min(460, available_width)
+
+      node.kind in [
+        :pipeline_stepper_horizontal,
+        :workflow_stage_list_vertical,
+        :segmented_progress_bar,
+        :meter_thin
+      ] ->
+        min(360, available_width)
+
+      node.kind in [:kicker, :avatar, :presence_dot, :redline_inline] ->
+        min(max(String.length(draw_content(node)) * 12, 72), available_width)
 
       node.kind == :progress ->
         min(160, available_width)
@@ -1014,6 +1162,22 @@ defmodule DesktopUi.Sdl3.RenderPlan do
       |> List.wrap()
       |> length()
 
+  defp field_count(node),
+    do: node.attributes |> get_in([:form, :fields]) |> List.wrap() |> length()
+
+  defp stage_count(node) do
+    stages = get_in(node.attributes, [:workflow, :stages])
+    steps = get_in(node.attributes, [:workflow, :steps])
+    length(List.wrap(stages || steps || []))
+  end
+
+  defp token_count(node) do
+    tokens =
+      get_in(node.attributes, [:code, :tokens]) || get_in(node.attributes, [:redline, :segments])
+
+    length(List.wrap(tokens))
+  end
+
   defp row_count(node),
     do:
       (node.attributes[:rows] || node.attributes[:entries] || node.attributes[:processes] || [])
@@ -1069,11 +1233,30 @@ defmodule DesktopUi.Sdl3.RenderPlan do
   defp truthy?(value), do: value not in [false, nil, :idle, :closed]
 
   defp numeric_value(node) do
-    node.attributes[:value] || node.state[:value] || node.state[:progress] || 0
+    node.attributes[:value] || node.state[:value] || node.state[:progress] ||
+      get_in(node.attributes, [:meter, :current]) ||
+      get_in(node.attributes, [:progress, :aggregate, :current]) || 0
   end
 
   defp max_value(node) do
-    node.attributes[:max] || node.attributes[:total] || 100
+    node.attributes[:max] || node.attributes[:total] ||
+      get_in(node.attributes, [:meter, :maximum]) ||
+      get_in(node.attributes, [:progress, :aggregate, :maximum]) || 100
+  end
+
+  defp joined_text_segments(nil), do: ""
+
+  defp joined_text_segments(segments) do
+    segments
+    |> List.wrap()
+    |> Enum.map(fn
+      %{text: text} -> text
+      %{"text" => text} -> text
+      %{value: value} -> value
+      %{"value" => value} -> value
+      segment -> to_string(segment)
+    end)
+    |> Enum.join("")
   end
 
   defp logical_bounds(index) do
