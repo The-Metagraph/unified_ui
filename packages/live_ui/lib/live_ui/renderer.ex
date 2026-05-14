@@ -18,62 +18,63 @@ defmodule LiveUi.Renderer do
 
   @spec supported_kinds() :: [atom()]
   def supported_kinds do
-    [
-      :alert_dialog,
-      :bar_chart,
-      :box,
-      :button,
-      :canvas,
-      :checkbox,
-      :cluster_dashboard,
-      :column,
-      :command_palette,
-      :content,
-      :context_menu,
-      :date_input,
-      :dialog,
-      :field,
-      :field_group,
-      :file_input,
-      :form_builder,
-      :gauge,
-      :grid,
-      :icon,
-      :image,
-      :inline_feedback,
-      :label,
-      :line_chart,
-      :link,
-      :list,
-      :log_viewer,
-      :markdown_viewer,
-      :menu,
-      :numeric_input,
-      :overlay,
-      :pick_list,
-      :process_monitor,
-      :progress,
-      :radio_group,
-      :row,
-      :scroll_bar,
-      :select,
-      :separator,
-      :sparkline,
-      :spacer,
-      :split_pane,
-      :status,
-      :stream_widget,
-      :supervision_tree_viewer,
-      :table,
-      :tabs,
-      :text,
-      :text_input,
-      :time_input,
-      :toast,
-      :toggle,
-      :tree_view,
-      :viewport
-    ]
+    ([
+       :alert_dialog,
+       :bar_chart,
+       :box,
+       :button,
+       :canvas,
+       :checkbox,
+       :cluster_dashboard,
+       :column,
+       :command_palette,
+       :content,
+       :context_menu,
+       :date_input,
+       :dialog,
+       :field,
+       :field_group,
+       :file_input,
+       :form_builder,
+       :gauge,
+       :grid,
+       :icon,
+       :image,
+       :inline_feedback,
+       :label,
+       :line_chart,
+       :link,
+       :list,
+       :log_viewer,
+       :markdown_viewer,
+       :menu,
+       :numeric_input,
+       :overlay,
+       :pick_list,
+       :process_monitor,
+       :progress,
+       :radio_group,
+       :row,
+       :scroll_bar,
+       :select,
+       :separator,
+       :sparkline,
+       :spacer,
+       :split_pane,
+       :status,
+       :stream_widget,
+       :supervision_tree_viewer,
+       :table,
+       :tabs,
+       :text,
+       :text_input,
+       :time_input,
+       :toast,
+       :toggle,
+       :tree_view,
+       :viewport
+     ] ++ UnifiedIUR.Widgets.component_kinds())
+    |> Enum.uniq()
   end
 
   attr(:element, :any, required: true)
@@ -584,7 +585,10 @@ defmodule LiveUi.Renderer do
         :input_attrs,
         direct_change_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
       )
-      |> assign(:palette_items, command_palette_items(assigns.element, Map.get(assigns, :event_target)))
+      |> assign(
+        :palette_items,
+        command_palette_items(assigns.element, Map.get(assigns, :event_target))
+      )
 
     ~H"""
     <LiveUi.Widgets.CommandPalette.component
@@ -1062,6 +1066,420 @@ defmodule LiveUi.Renderer do
     """
   end
 
+  def render(%{element: %Element{kind: :inline_rich_text_heading}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.InlineRichTextHeading.component
+      id={element_id(@element, "inline-rich-text-heading")}
+      level={string_value(get_in(@element.attributes, [:heading, :level]), "h2")}
+      segments={get_in(@element.attributes, [:heading, :segments]) || []}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :disclosure}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
+    ~H"""
+    <LiveUi.Widgets.Components.Disclosure.component
+      id={element_id(@element, "disclosure")}
+      summary={string_value(get_in(@element.attributes, [:disclosure, :summary]), "")}
+      open={boolean_default(get_in(@element.attributes, [:disclosure, :open?]), false)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.Disclosure.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :kicker}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.Kicker.component
+      id={element_id(@element, "kicker")}
+      items={get_in(@element.attributes, [:kicker, :items]) || []}
+      separator={string_value(get_in(@element.attributes, [:kicker, :separator]), "/")}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :avatar}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.Avatar.component
+      id={element_id(@element, "avatar")}
+      initials={string_optional(get_in(@element.attributes, [:identity, :initials]))}
+      image_source={string_optional(get_in(@element.attributes, [:identity, :image_source]))}
+      size={string_value(get_in(@element.attributes, [:identity, :size]), "medium")}
+      shape={string_value(get_in(@element.attributes, [:identity, :shape]), "round")}
+      label={component_accessibility_label(@element)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :presence_dot}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.PresenceDot.component
+      id={element_id(@element, "presence-dot")}
+      presence={string_value(get_in(@element.attributes, [:presence, :state]), "offline")}
+      size={string_value(get_in(@element.attributes, [:presence, :size]), "medium")}
+      label={component_accessibility_label(@element)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :segmented_button_group}} = assigns) do
+    assigns =
+      assigns
+      |> assign(:options, segmented_options(assigns.element, Map.get(assigns, :event_target)))
+      |> assign(:style_attrs, style_rest(assigns.element))
+
+    ~H"""
+    <LiveUi.Widgets.Components.SegmentedButtonGroup.component
+      id={element_id(@element, "segmented-button-group")}
+      options={@options}
+      active_value={get_in(@element.attributes, [:selection, :active_value])}
+      disabled={state_boolean(@element, :disabled?)}
+      label={component_accessibility_label(@element)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      option_attrs={@style_attrs}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :runtime_form_shell}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :form_attrs,
+        form_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.RuntimeFormShell.component
+      id={element_id(@element, "runtime-form-shell")}
+      fields={get_in(@element.attributes, [:form, :fields]) || []}
+      submit_label={string_value(get_in(@element.attributes, [:form, :submit_label]), "Submit")}
+      validation_state={string_optional(get_in(@element.attributes, [:form, :validation_state]))}
+      host_adapter_hints={get_in(@element.attributes, [:form, :host_adapter_hints]) || %{}}
+      form_attrs={@form_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.RuntimeFormShell.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :chat_composer}} = assigns) do
+    assigns =
+      assigns
+      |> assign(
+        :input_attrs,
+        direct_change_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+      |> assign(
+        :send_attrs,
+        direct_submit_click_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.ChatComposer.component
+      id={element_id(@element, "chat-composer")}
+      name={string_value(get_in(@element.attributes, [:composer, :name]), "message")}
+      value={string_value(get_in(@element.attributes, [:composer, :value]), "")}
+      placeholder={string_optional(get_in(@element.attributes, [:composer, :placeholder]))}
+      rows={integer_value(get_in(@element.attributes, [:composer, :rows]), 3)}
+      send_label={string_value(get_in(@element.attributes, [:composer, :send_label]), "Send")}
+      disabled={state_boolean(@element, :disabled?)}
+      input_attrs={@input_attrs}
+      send_attrs={@send_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <:tools :for={child <- child_elements(@element)}>
+        <.render element={child} event_target={@event_target} />
+      </:tools>
+    </LiveUi.Widgets.Components.ChatComposer.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :list_item_multi_column}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :row_attrs,
+        row_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.ListItemMultiColumn.component
+      id={element_id(@element, "list-item-multi-column")}
+      row_identity={get_in(@element.attributes, [:row, :row_identity])}
+      columns={get_in(@element.attributes, [:row, :column_template]) || []}
+      active={boolean_default(get_in(@element.attributes, [:row, :active?]), false)}
+      link_target={string_optional(get_in(@element.attributes, [:row, :link_target]))}
+      row_attrs={@row_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.ListItemMultiColumn.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :artifact_row}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :row_attrs,
+        row_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.ArtifactRow.component
+      id={element_id(@element, "artifact-row")}
+      title={string_value(get_in(@element.attributes, [:artifact, :title]), "")}
+      meta={get_in(@element.attributes, [:artifact, :meta]) || %{}}
+      row_identity={get_in(@element.attributes, [:artifact, :row_identity])}
+      active={boolean_default(get_in(@element.attributes, [:artifact, :active?]), false)}
+      link_target={string_optional(get_in(@element.attributes, [:artifact, :link_target]))}
+      row_attrs={@row_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.ArtifactRow.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :pipeline_stepper_horizontal}} = assigns) do
+    assigns =
+      assign(assigns, :steps, step_items(assigns.element, Map.get(assigns, :event_target)))
+
+    ~H"""
+    <LiveUi.Widgets.Components.PipelineStepperHorizontal.component
+      id={element_id(@element, "pipeline-stepper-horizontal")}
+      steps={@steps}
+      active_index={integer_value(get_in(@element.attributes, [:workflow, :active_index]), 0)}
+      completed_indices={get_in(@element.attributes, [:workflow, :completed_indices]) || []}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :segmented_progress_bar}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.SegmentedProgressBar.component
+      id={element_id(@element, "segmented-progress-bar")}
+      segments={get_in(@element.attributes, [:progress, :segments]) || []}
+      aggregate_progress={get_in(@element.attributes, [:progress, :aggregate]) || %{}}
+      label={string_optional(get_in(@element.attributes, [:progress, :label]))}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :workflow_stage_list_vertical}} = assigns) do
+    assigns =
+      assign(assigns, :stages, stage_items(assigns.element, Map.get(assigns, :event_target)))
+
+    ~H"""
+    <LiveUi.Widgets.Components.WorkflowStageListVertical.component
+      id={element_id(@element, "workflow-stage-list-vertical")}
+      stages={@stages}
+      active_index={integer_value(get_in(@element.attributes, [:workflow, :active_index]), 0)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :meter_thin}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.MeterThin.component
+      id={element_id(@element, "meter-thin")}
+      current={float_value(get_in(@element.attributes, [:meter, :current]), 0.0)}
+      minimum={float_value(get_in(@element.attributes, [:meter, :minimum]), 0.0)}
+      maximum={float_value(get_in(@element.attributes, [:meter, :maximum]), 100.0)}
+      label={string_optional(get_in(@element.attributes, [:meter, :label]))}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :sticky_frosted_header}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
+    ~H"""
+    <LiveUi.Widgets.Components.StickyFrostedHeader.component
+      id={element_id(@element, "sticky-frosted-header")}
+      title={string_optional(get_in(@element.attributes, [:shell, :title]))}
+      leading={get_in(@element.attributes, [:shell, :leading]) || []}
+      trailing={get_in(@element.attributes, [:shell, :trailing]) || []}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.StickyFrostedHeader.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :slide_over_panel}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :style_attrs,
+        merge_global_attrs(
+          style_rest(assigns.element),
+          close_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+        )
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.SlideOverPanel.component
+      id={element_id(@element, "slide-over-panel")}
+      open={boolean_default(get_in(@element.attributes, [:panel, :open?]), false)}
+      size={string_value(get_in(@element.attributes, [:panel, :size]), "medium")}
+      label={string_optional(get_in(@element.attributes, [:panel, :label]) || component_accessibility_label(@element))}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.SlideOverPanel.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :event_callout}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :action_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.EventCallout.component
+      id={element_id(@element, "event-callout")}
+      eyebrow={string_optional(get_in(@element.attributes, [:callout, :eyebrow]))}
+      title={string_optional(get_in(@element.attributes, [:callout, :title]))}
+      message={string_value(get_in(@element.attributes, [:callout, :message]), "")}
+      callout_tone={string_value(get_in(@element.attributes, [:callout, :tone]), "info")}
+      action_label={callout_action_label(@element)}
+      action_attrs={@action_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.EventCallout.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :redline_inline}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.RedlineInline.component
+      id={element_id(@element, "redline-inline")}
+      segments={get_in(@element.attributes, [:redline, :segments]) || []}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :code_block_syntax_highlighted}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.CodeBlockSyntaxHighlighted.component
+      id={element_id(@element, "code-block-syntax-highlighted")}
+      language={string_value(get_in(@element.attributes, [:code, :language]), "text")}
+      tokens={get_in(@element.attributes, [:code, :tokens]) || []}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :list_repeat}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.ListRepeat.component
+      id={element_id(@element, "list-repeat")}
+      repeat={get_in(@element.attributes, [:repeat]) || %{}}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.ListRepeat.component>
+    """
+  end
+
   def render(assigns) do
     ~H"""
     <div id={element_id(@element, "unsupported")} data-live-ui-widget="unsupported" data-live-ui-kind={to_string(@element.kind)}>
@@ -1225,7 +1643,8 @@ defmodule LiveUi.Renderer do
         |> List.wrap()
         |> Enum.map(&normalize_navigation_item(&1, element, event_target))
 
-      _ -> []
+      _ ->
+        []
     end
   end
 
@@ -1248,6 +1667,47 @@ defmodule LiveUi.Renderer do
       [series | _] -> Map.get(series, :values) || Map.get(series, "values") || []
       _ -> []
     end
+  end
+
+  defp segmented_options(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :selection, :options])
+    |> List.wrap()
+    |> Enum.map(fn option ->
+      option = Map.new(option)
+      value = fetch(option, :value)
+
+      option
+      |> maybe_put_item_attrs(selection_item_attrs(element, event_target, value))
+    end)
+  end
+
+  defp step_items(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :workflow, :steps])
+    |> List.wrap()
+    |> Enum.with_index()
+    |> Enum.map(fn {step, index} ->
+      step = Map.new(step)
+      step_id = fetch(step, :id, index)
+
+      step
+      |> maybe_put_item_attrs(step_item_attrs(element, event_target, step_id, index))
+    end)
+  end
+
+  defp stage_items(%Element{} = element, event_target) do
+    element
+    |> get_in([Access.key(:attributes), :workflow, :stages])
+    |> List.wrap()
+    |> Enum.with_index()
+    |> Enum.map(fn {stage, index} ->
+      stage = Map.new(stage)
+      stage_id = fetch(stage, :id, index)
+
+      stage
+      |> maybe_put_item_attrs(step_item_attrs(element, event_target, stage_id, index))
+    end)
   end
 
   defp theme_variant(%Element{} = element), do: element |> style_profile() |> Map.get(:variant)
@@ -1308,6 +1768,12 @@ defmodule LiveUi.Renderer do
     )
     |> maybe_attr(:"aria-live", accessibility[:live] || accessibility["live"])
     |> maybe_attr(:"aria-atomic", boolean_attr(accessibility[:atomic] || accessibility["atomic"]))
+  end
+
+  defp component_accessibility_label(%Element{} = element) do
+    element.attributes
+    |> Map.get(:accessibility, %{})
+    |> fetch(:label)
   end
 
   defp content_text(%Element{} = element) do
@@ -1439,6 +1905,19 @@ defmodule LiveUi.Renderer do
   defp maybe_attr(attrs, _key, ""), do: attrs
   defp maybe_attr(attrs, key, value), do: [{key, value} | attrs]
 
+  defp fetch(source, key, default \\ nil)
+  defp fetch(nil, _key, default), do: default
+
+  defp fetch(source, key, default) when is_list(source) do
+    source
+    |> Map.new()
+    |> fetch(key, default)
+  end
+
+  defp fetch(source, key, default) when is_map(source) do
+    Map.get(source, key, Map.get(source, Atom.to_string(key), default))
+  end
+
   defp primary_action_interaction(%Element{} = element) do
     primary_interaction(element, :click) ||
       primary_interaction(element, :navigation) ||
@@ -1468,6 +1947,74 @@ defmodule LiveUi.Renderer do
         %{}
     end
   end
+
+  defp selection_item_attrs(%Element{} = element, event_target, item_id) do
+    element
+    |> collection_item_attrs(event_target, item_id)
+    |> maybe_put_encoded_attr(:"phx-value-selected_value", item_id)
+  end
+
+  defp step_item_attrs(%Element{} = element, event_target, step_id, step_index) do
+    element
+    |> collection_item_attrs(event_target, step_id)
+    |> maybe_put_encoded_attr(:"phx-value-step_id", step_id)
+    |> maybe_put_encoded_attr(:"phx-value-step_index", step_index)
+  end
+
+  defp row_interaction_attrs(%Element{} = element, event_target) do
+    element
+    |> interaction_event_attrs(event_target)
+    |> normalize_global_attrs()
+    |> maybe_put_encoded_attr(:"phx-value-row_identity", component_row_identity(element))
+  end
+
+  defp component_row_identity(%Element{kind: :artifact_row} = element) do
+    get_in(element.attributes, [:artifact, :row_identity])
+  end
+
+  defp component_row_identity(%Element{} = element) do
+    get_in(element.attributes, [:row, :row_identity])
+  end
+
+  defp direct_submit_click_attrs(%Element{} = element, event_target) do
+    case {primary_submit_interaction(element), event_target} do
+      {%Interaction{} = interaction, target} when not is_nil(target) ->
+        %{
+          :"phx-click" => "canonical_submit_interaction",
+          :"phx-target" => target,
+          :"phx-value-submit-interaction" => encode_interaction(interaction),
+          :"phx-value-widget" => Atom.to_string(element.kind),
+          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+        }
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp close_interaction_attrs(%Element{} = element, event_target) do
+    case {primary_interaction(element, :close), event_target} do
+      {%Interaction{} = interaction, target} when not is_nil(target) ->
+        %{
+          :"phx-click" => "canonical_interaction",
+          :"phx-target" => target,
+          :"phx-value-interaction" => encode_interaction(interaction),
+          :"phx-value-widget" => Atom.to_string(element.kind),
+          :"phx-value-element_id" => element_id(element, Atom.to_string(element.kind))
+        }
+
+      _other ->
+        %{}
+    end
+  end
+
+  defp callout_action_label(%Element{} = element) do
+    get_in(element.attributes, [:callout, :action_label]) ||
+      if(primary_action_interaction(element), do: "Action")
+  end
+
+  defp maybe_put_encoded_attr(attrs, _key, nil), do: attrs
+  defp maybe_put_encoded_attr(attrs, key, value), do: Map.put(attrs, key, to_string(value))
 
   defp normalize_navigation_item(item, source_element, event_target) do
     item = Map.new(item)

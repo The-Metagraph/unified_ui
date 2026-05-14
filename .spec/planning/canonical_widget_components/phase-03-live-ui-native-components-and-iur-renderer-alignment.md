@@ -82,23 +82,23 @@ Back to index: [README](./README.md)
       [x] 3.3.2.2 Subtask - Implement slide-over panel as non-modal contextual layer with open state and size.
       [x] 3.3.2.3 Subtask - Implement event callout, redline inline, and pre-tokenized code block with safe text escaping.
 
-  [ ] 3.4 Section - LiveUi IUR Renderer Convergence
+  [x] 3.4 Section - LiveUi IUR Renderer Convergence
     Connect UnifiedIUR input for the expanded catalog to the same LiveUi native
     components used directly.
 
-    [ ] 3.4.1 Task - Add renderer dispatch for expanded widgets
+    [x] 3.4.1 Task - Add renderer dispatch for expanded widgets
       Map each canonical IUR widget type into native LiveUi components.
 
-      [ ] 3.4.1.1 Subtask - Add renderer clauses for every expanded widget family.
-      [ ] 3.4.1.2 Subtask - Map IUR props, children, accessibility metadata, and interaction descriptors into component assigns.
-      [ ] 3.4.1.3 Subtask - Ensure unknown or unsupported values produce diagnostics rather than silent fallback markup.
+      [x] 3.4.1.1 Subtask - Add renderer clauses for every expanded widget family.
+      [x] 3.4.1.2 Subtask - Map IUR props, children, accessibility metadata, and interaction descriptors into component assigns.
+      [x] 3.4.1.3 Subtask - Ensure unknown or unsupported values produce diagnostics rather than silent fallback markup.
 
-    [ ] 3.4.2 Task - Map canonical interactions into LiveView behavior
+    [x] 3.4.2 Task - Map canonical interactions into LiveView behavior
       Preserve event meaning while translating into LiveView event mechanics.
 
-      [ ] 3.4.2.1 Subtask - Translate selection, submit, change, send, row activation, step navigation, and inline actions into LiveUi signal handling.
-      [ ] 3.4.2.2 Subtask - Preserve canonical payload mapping for selected values, row ids, fields, composer text, and step ids.
-      [ ] 3.4.2.3 Subtask - Keep disclosure and slide-over local state bounded and subordinate to screen authority.
+      [x] 3.4.2.1 Subtask - Translate selection, submit, change, send, row activation, step navigation, and inline actions into LiveUi signal handling.
+      [x] 3.4.2.2 Subtask - Preserve canonical payload mapping for selected values, row ids, fields, composer text, and step ids.
+      [x] 3.4.2.3 Subtask - Keep disclosure and slide-over local state bounded and subordinate to screen authority.
 
   [ ] 3.5 Section - Phase 3 Integration Tests
     Validate LiveUi native component usage and IUR-rendered usage converge on
