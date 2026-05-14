@@ -22,7 +22,7 @@ Back to index: [README](./README.md)
 - In-screen destination changes may remain authored as local navigation intent
   without being treated as host-style route changes.
 
-[ ] 1 Phase 1 - UnifiedUi Authored Navigation Surface and Descriptor Backbone
+[x] 1 Phase 1 - UnifiedUi Authored Navigation Surface and Descriptor Backbone
   Implement the authored screen-transition model inside `unified_ui` so
   developers can declare cross-runtime navigation intent without leaking host
   routing syntax into the DSL.
@@ -91,24 +91,24 @@ Back to index: [README](./README.md)
       [x] 1.3.2.3 Subtask - Explain how authored canonical navigation remains portable across web, desktop, and terminal runtimes.
       [x] 1.3.2.4 Subtask - Explain that stacked modal flows are ordered modal transitions and that focus trapping, backdrop treatment, and terminal degradation remain runtime concerns.
 
-  [ ] 1.4 Section - Phase 1 Integration Tests
+  [x] 1.4 Section - Phase 1 Integration Tests
     Validate the authored navigation surface, diagnostics, and inspection
     output end to end inside `unified_ui`.
 
-    [ ] 1.4.1 Task - Authored descriptor and validation scenarios
+    [x] 1.4.1 Task - Authored descriptor and validation scenarios
       Verify `unified_ui` accepts valid canonical transitions and rejects
       host-specific navigation leakage deterministically.
 
-      [ ] 1.4.1.1 Subtask - Verify authored `navigate_to`, `replace_with`, `go_back`, `go_forward`, `open_modal`, and `close_modal` descriptors validate successfully with the expected field requirements.
-      [ ] 1.4.1.2 Subtask - Verify screen-transition descriptors reject URLs, route helpers, browser-history directives, and runtime-module identifiers.
-      [ ] 1.4.1.3 Subtask - Verify invalid action and target combinations fail with actionable diagnostics that distinguish malformed screen transitions from local destination changes.
-      [ ] 1.4.1.4 Subtask - Verify stacked modal descriptors accept repeated `open_modal` transitions and targetless top-modal `close_modal` without requiring modal nesting metadata.
+      [x] 1.4.1.1 Subtask - Verify authored `navigate_to`, `replace_with`, `go_back`, `go_forward`, `open_modal`, and `close_modal` descriptors validate successfully with the expected field requirements.
+      [x] 1.4.1.2 Subtask - Verify screen-transition descriptors reject URLs, route helpers, browser-history directives, and runtime-module identifiers.
+      [x] 1.4.1.3 Subtask - Verify invalid action and target combinations fail with actionable diagnostics that distinguish malformed screen transitions from local destination changes.
+      [x] 1.4.1.4 Subtask - Verify stacked modal descriptors accept repeated `open_modal` transitions and targetless top-modal `close_modal` without requiring modal nesting metadata.
 
-    [ ] 1.4.2 Task - Inspection and example scenarios
+    [x] 1.4.2 Task - Inspection and example scenarios
       Verify maintained examples and tooling reflect canonical navigation
       intent clearly before runtime mapping begins.
 
-      [ ] 1.4.2.1 Subtask - Verify inspection and export helpers report navigation action, symbolic screen target, params, and modal target fields deterministically.
-      [ ] 1.4.2.2 Subtask - Verify the maintained examples cover in-screen destination changes, top-level screen transitions, and modal transitions.
-      [ ] 1.4.2.3 Subtask - Verify foundational guidance stays aligned with the actual authored navigation surface and does not describe host-router semantics as part of the DSL.
-      [ ] 1.4.2.4 Subtask - Verify the stacked-modal example and inspection output make topmost close behavior visible without renderer-local stack identifiers.
+      [x] 1.4.2.1 Subtask - Verify inspection and export helpers report navigation action, symbolic screen target, params, and modal target fields deterministically.
+      [x] 1.4.2.2 Subtask - Verify the maintained examples cover in-screen destination changes, top-level screen transitions, and modal transitions.
+      [x] 1.4.2.3 Subtask - Verify foundational guidance stays aligned with the actual authored navigation surface and does not describe host-router semantics as part of the DSL.
+      [x] 1.4.2.4 Subtask - Verify the stacked-modal example and inspection output make topmost close behavior visible without renderer-local stack identifiers.

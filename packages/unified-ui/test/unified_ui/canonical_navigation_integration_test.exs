@@ -357,6 +357,29 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert_compile_dsl_error(
       """
       identity do
+        id(:route_helper_navigation_screen)
+      end
+
+      composition do
+        root(:route_helper_navigation_root)
+        mode(:screen)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :navigate_to, screen: :settings, route_helper: :settings_path)
+        end
+      end
+      """,
+      "canonical navigation must not declare host-route key :route_helper"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
         id(:unsupported_navigation_action_screen)
       end
 
@@ -569,6 +592,36 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert guide =~ "target_intent(action: :close_modal, metadata: %{reason: :cancel})"
     assert guide =~ "Focus trapping, backdrop behavior, and terminal degradation are runtime"
     refute guide =~ "target_intent(binding: :active_tab, route: :activity)"
+  end
+
+  test "maintained stacked-modal example compiles into portable navigation descriptors" do
+    assert {:ok, result} = Compiler.compile(UnifiedUi.Examples.ThemedSignalWorkspace)
+    assert {:ok, snapshot} = Export.example(:themed_signal_workspace, :snapshot)
+
+    targets =
+      Map.new(result.interactions, fn interaction ->
+        {interaction.intent, interaction.target}
+      end)
+
+    assert targets[:open_settings_confirmation_modal] == %{
+             navigation: %{
+               action: :open_modal,
+               kind: :modal_transition,
+               modal: :settings_confirm_dialog,
+               params: %{from: :settings_dialog}
+             }
+           }
+
+    assert targets[:close_top_modal] == %{
+             navigation: %{
+               action: :close_modal,
+               kind: :modal_transition,
+               metadata: %{reason: :cancel}
+             }
+           }
+
+    refute snapshot =~ "route_helper"
+    refute snapshot =~ "stack_id"
   end
 
   test "compiles canonical navigation screens into stable IUR descriptors and deterministic review exports" do
