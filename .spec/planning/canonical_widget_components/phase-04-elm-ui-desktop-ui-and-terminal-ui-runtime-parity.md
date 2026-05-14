@@ -19,9 +19,9 @@ Back to index: [README](./README.md)
 - Runtime renderers consume the shared UnifiedIUR fixtures created in Phase 2.
 - TerminalUi preserves meaning through explicit degradation where visual effects
   cannot be represented directly.
-- All work in this phase is not done.
+- All work in this phase is done.
 
-[ ] 4 Phase 4 - ElmUi, DesktopUi, and TerminalUi Runtime Parity
+[x] 4 Phase 4 - ElmUi, DesktopUi, and TerminalUi Runtime Parity
   Implement native and IUR-rendered equivalents for the expanded catalog in
   ElmUi, DesktopUi, and TerminalUi with runtime-appropriate interaction and
   degradation behavior.
@@ -103,20 +103,20 @@ Back to index: [README](./README.md)
       [x] 4.4.2.2 Subtask - Define degradation for frost, slide animation, dense multi-column rows, color-rich progress, avatars, and syntax colors.
       [x] 4.4.2.3 Subtask - Add inspectable degradation summaries for runtime parity reports.
 
-  [ ] 4.5 Section - Phase 4 Integration Tests
+  [x] 4.5 Section - Phase 4 Integration Tests
     Validate runtime parity across ElmUi, DesktopUi, and TerminalUi using the
     shared canonical fixtures and runtime-specific behavior checks.
 
-    [ ] 4.5.1 Task - Runtime fixture parity scenarios
+    [x] 4.5.1 Task - Runtime fixture parity scenarios
       Verify every runtime consumes the shared expanded catalog fixtures.
 
-      [ ] 4.5.1.1 Subtask - Verify ElmUi renders and updates fixture widgets through server and frontend runtime paths.
-      [ ] 4.5.1.2 Subtask - Verify DesktopUi renders fixture widgets with deterministic native widget identity and event translation.
-      [ ] 4.5.1.3 Subtask - Verify TerminalUi renders or degrades fixture widgets with explicit capability summaries.
+      [x] 4.5.1.1 Subtask - Verify ElmUi renders and updates fixture widgets through server and frontend runtime paths.
+      [x] 4.5.1.2 Subtask - Verify DesktopUi renders fixture widgets with deterministic native widget identity and event translation.
+      [x] 4.5.1.3 Subtask - Verify TerminalUi renders or degrades fixture widgets with explicit capability summaries.
 
-    [ ] 4.5.2 Task - Cross-runtime behavior scenarios
+    [x] 4.5.2 Task - Cross-runtime behavior scenarios
       Verify canonical meaning remains stable across runtime differences.
 
-      [ ] 4.5.2.1 Subtask - Compare selection, submit, change, send, row activation, and step navigation signal meaning across runtimes.
-      [ ] 4.5.2.2 Subtask - Compare repeated row identity and row-scoped values across runtimes.
-      [ ] 4.5.2.3 Subtask - Compare redline and code safety fixtures across runtimes.
+      [x] 4.5.2.1 Subtask - Compare selection, submit, change, send, row activation, and step navigation signal meaning across runtimes.
+      [x] 4.5.2.2 Subtask - Compare repeated row identity and row-scoped values across runtimes.
+      [x] 4.5.2.3 Subtask - Compare redline and code safety fixtures across runtimes.
