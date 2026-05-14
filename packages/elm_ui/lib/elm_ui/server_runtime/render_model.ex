@@ -123,6 +123,26 @@ defmodule ElmUi.ServerRuntime.RenderModel do
   defp dom_tag(:cluster_dashboard), do: "section"
   defp dom_tag(:command_palette), do: "section"
   defp dom_tag(:supervision_tree_viewer), do: "section"
+  defp dom_tag(:inline_rich_text_heading), do: "hgroup"
+  defp dom_tag(:disclosure), do: "details"
+  defp dom_tag(:kicker), do: "p"
+  defp dom_tag(:avatar), do: "span"
+  defp dom_tag(:presence_dot), do: "span"
+  defp dom_tag(:segmented_button_group), do: "div"
+  defp dom_tag(:runtime_form_shell), do: "form"
+  defp dom_tag(:chat_composer), do: "form"
+  defp dom_tag(:list_item_multi_column), do: "article"
+  defp dom_tag(:artifact_row), do: "article"
+  defp dom_tag(:pipeline_stepper_horizontal), do: "nav"
+  defp dom_tag(:segmented_progress_bar), do: "div"
+  defp dom_tag(:workflow_stage_list_vertical), do: "ol"
+  defp dom_tag(:meter_thin), do: "meter"
+  defp dom_tag(:sticky_frosted_header), do: "header"
+  defp dom_tag(:slide_over_panel), do: "aside"
+  defp dom_tag(:event_callout), do: "aside"
+  defp dom_tag(:redline_inline), do: "span"
+  defp dom_tag(:code_block_syntax_highlighted), do: "pre"
+  defp dom_tag(:list_repeat), do: "div"
   defp dom_tag(_kind), do: "div"
 
   defp dom_role(:text), do: "text"
@@ -180,6 +200,26 @@ defmodule ElmUi.ServerRuntime.RenderModel do
   defp dom_role(:cluster_dashboard), do: "region"
   defp dom_role(:command_palette), do: "combobox"
   defp dom_role(:supervision_tree_viewer), do: "tree"
+  defp dom_role(:inline_rich_text_heading), do: "heading"
+  defp dom_role(:disclosure), do: "group"
+  defp dom_role(:kicker), do: "note"
+  defp dom_role(:avatar), do: "img"
+  defp dom_role(:presence_dot), do: "status"
+  defp dom_role(:segmented_button_group), do: "radiogroup"
+  defp dom_role(:runtime_form_shell), do: "form"
+  defp dom_role(:chat_composer), do: "form"
+  defp dom_role(:list_item_multi_column), do: "listitem"
+  defp dom_role(:artifact_row), do: "listitem"
+  defp dom_role(:pipeline_stepper_horizontal), do: "navigation"
+  defp dom_role(:segmented_progress_bar), do: "progressbar"
+  defp dom_role(:workflow_stage_list_vertical), do: "list"
+  defp dom_role(:meter_thin), do: "meter"
+  defp dom_role(:sticky_frosted_header), do: "banner"
+  defp dom_role(:slide_over_panel), do: "complementary"
+  defp dom_role(:event_callout), do: "status"
+  defp dom_role(:redline_inline), do: "text"
+  defp dom_role(:code_block_syntax_highlighted), do: "code"
+  defp dom_role(:list_repeat), do: "list"
   defp dom_role(_kind), do: "presentation"
 
   defp dom_attributes(%Widget{} = widget) do
@@ -196,12 +236,17 @@ defmodule ElmUi.ServerRuntime.RenderModel do
     |> maybe_put(:orientation, Map.get(widget.attributes, :orientation))
     |> maybe_put(:active_item, Map.get(widget.attributes, :active_item))
     |> maybe_put(:legend, Map.get(widget.attributes, :legend))
-    |> maybe_put(:open, Map.get(widget.state, :open))
+    |> maybe_put(:open, Map.get(widget.state, :open) || Map.get(widget.state, :open?))
     |> maybe_put(:modal, Map.get(widget.attributes, :modal))
     |> maybe_put(:title, Map.get(widget.attributes, :title))
     |> maybe_put(:placement, Map.get(widget.attributes, :placement))
     |> maybe_put(:viewport_ref, Map.get(widget.attributes, :viewport_ref))
     |> maybe_put(:ratio, Map.get(widget.attributes, :ratio))
+    |> maybe_put(:component_family, get_in(widget.attributes, [:component, :family]))
+    |> maybe_put(:aria_label, get_in(widget.attributes, [:accessibility, :label]))
+    |> maybe_put(:aria_description, get_in(widget.attributes, [:accessibility, :description]))
+    |> maybe_put(:text_safety, get_in(widget.attributes, [:text_safety, :content]))
+    |> maybe_put(:plain_text_output, plain_text_output?(widget))
     |> maybe_put(:value, dom_value(widget))
     |> maybe_put(:max, dom_max(widget))
   end
@@ -239,7 +284,18 @@ defmodule ElmUi.ServerRuntime.RenderModel do
       :stream_widget,
       :process_monitor,
       :command_palette,
-      :supervision_tree_viewer
+      :supervision_tree_viewer,
+      :disclosure,
+      :segmented_button_group,
+      :runtime_form_shell,
+      :chat_composer,
+      :list_item_multi_column,
+      :artifact_row,
+      :pipeline_stepper_horizontal,
+      :workflow_stage_list_vertical,
+      :slide_over_panel,
+      :event_callout,
+      :list_repeat
     ]
   end
 
@@ -273,7 +329,17 @@ defmodule ElmUi.ServerRuntime.RenderModel do
       :stream_widget,
       :process_monitor,
       :command_palette,
-      :supervision_tree_viewer
+      :supervision_tree_viewer,
+      :disclosure,
+      :segmented_button_group,
+      :runtime_form_shell,
+      :chat_composer,
+      :list_item_multi_column,
+      :artifact_row,
+      :pipeline_stepper_horizontal,
+      :workflow_stage_list_vertical,
+      :slide_over_panel,
+      :event_callout
     ]
   end
 
@@ -290,12 +356,36 @@ defmodule ElmUi.ServerRuntime.RenderModel do
       :radio_group,
       :select,
       :pick_list,
-      :command_palette
+      :command_palette,
+      :segmented_button_group,
+      :runtime_form_shell,
+      :chat_composer
     ]
   end
 
   defp navigable_kinds do
-    [:link, :menu, :tabs, :tree_view, :context_menu, :list]
+    [
+      :link,
+      :menu,
+      :tabs,
+      :tree_view,
+      :context_menu,
+      :list,
+      :disclosure,
+      :list_item_multi_column,
+      :artifact_row,
+      :pipeline_stepper_horizontal,
+      :workflow_stage_list_vertical,
+      :list_repeat
+    ]
+  end
+
+  defp dom_value(%Widget{kind: :meter_thin, attributes: attributes}) do
+    get_in(attributes, [:meter, :current])
+  end
+
+  defp dom_value(%Widget{kind: :segmented_progress_bar, attributes: attributes}) do
+    get_in(attributes, [:progress, :aggregate, :current])
   end
 
   defp dom_value(%Widget{kind: :progress, attributes: attributes}) do
@@ -318,9 +408,24 @@ defmodule ElmUi.ServerRuntime.RenderModel do
     Map.get(attributes, :max)
   end
 
+  defp dom_max(%Widget{kind: :meter_thin, attributes: attributes}) do
+    get_in(attributes, [:meter, :maximum])
+  end
+
+  defp dom_max(%Widget{kind: :segmented_progress_bar, attributes: attributes}) do
+    get_in(attributes, [:progress, :aggregate, :maximum])
+  end
+
   defp dom_max(%Widget{}) do
     nil
   end
+
+  defp plain_text_output?(%Widget{kind: kind, attributes: attributes})
+       when kind in [:redline_inline, :code_block_syntax_highlighted] do
+    get_in(attributes, [:text_safety, :content]) == :plain_text
+  end
+
+  defp plain_text_output?(%Widget{}), do: nil
 
   defp maybe_put(map, _key, nil), do: map
   defp maybe_put(map, key, value), do: Map.put(map, key, value)

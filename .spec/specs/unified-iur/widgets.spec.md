@@ -7,6 +7,7 @@ This subject defines the canonical widget families that `unified_iur` shall be a
 - [Architecture](../architecture.spec.md)
 - [DSL and IUR Symbiosis](../dsl_iur_symbiosis.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
+- [UnifiedIUR Widget Components](./widget_components.spec.md)
 
 ```spec-meta
 id: unified_iur.widgets
@@ -15,10 +16,12 @@ status: proposed
 summary: Canonical widget families representable in `unified_iur`.
 surface:
   - packages/unified_iur
+  - packages/unified_iur/lib/unified_iur/widgets/components.ex
   - .spec/specs/unified-iur/widgets.spec.md
   - .spec/specs/unified-ui/widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_widget_component_expansion
 ```
 
 ## Requirements
@@ -44,6 +47,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: unified_iur.widgets.expanded_widget_component_catalog
+  statement: `unified_iur` shall expose expanded canonical widget-component constructors through `UnifiedIUR.Widgets.Components` and shall be able to represent the expanded catalog and list-repeat composition behavior defined by `unified_iur.widget_components` without reducing those constructs to AshUi-specific or renderer-specific placeholders.
+  priority: must
+  stability: stable
+
 - id: unified_iur.widgets.visualization
   statement: `unified_iur` shall be able to represent `gauge`, `sparkline`, `bar_chart`, `line_chart`, and `canvas` as canonical interchange widgets or drawing surfaces.
   priority: must
@@ -64,12 +72,19 @@ decisions:
 
 ```spec-verification
 - kind: source_file
+  target: packages/unified_iur/lib/unified_iur/widgets/components.ex
+  covers:
+    - unified_iur.widgets.expanded_widget_component_catalog
+    - unified_iur.widgets.widget_semantics_preserved
+
+- kind: source_file
   target: .spec/specs/unified-iur/widgets.spec.md
   covers:
     - unified_iur.widgets.input_and_navigation
     - unified_iur.widgets.overlay_and_feedback
     - unified_iur.widgets.data_and_document_views
     - unified_iur.widgets.semantic_surface
+    - unified_iur.widgets.expanded_widget_component_catalog
     - unified_iur.widgets.visualization
     - unified_iur.widgets.operational_views
     - unified_iur.widgets.widget_semantics_preserved

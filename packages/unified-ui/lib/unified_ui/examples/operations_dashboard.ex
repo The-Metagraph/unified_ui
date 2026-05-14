@@ -85,5 +85,20 @@ defmodule UnifiedUi.Examples.OperationsDashboard do
         metrics(%{healthy: 1, degraded: 1})
       end
     end
+
+    inline_rich_text_heading :operations_heading do
+      level(:h2)
+      segments([%{type: :text, value: "Operations workflow"}])
+    end
+
+    segmented_progress_bar :deployment_health do
+      segments([
+        %{label: "Healthy", weight: 8, state: :success},
+        %{label: "Degraded", weight: 1, state: :warning}
+      ])
+
+      aggregate_progress(%{current: 8, maximum: 9})
+      label("Deployment health")
+    end
   end
 end

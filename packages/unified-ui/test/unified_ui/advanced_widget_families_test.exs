@@ -161,7 +161,27 @@ defmodule UnifiedUi.AdvancedWidgetFamiliesTest do
              :stream_widget,
              :process_monitor,
              :supervision_tree_viewer,
-             :cluster_dashboard
+             :cluster_dashboard,
+             :inline_rich_text_heading,
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :runtime_form_shell,
+             :chat_composer,
+             :list_item_multi_column,
+             :artifact_row,
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :sticky_frosted_header,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :list_repeat
            ]
   end
 

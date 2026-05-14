@@ -17,6 +17,7 @@ surface:
 decisions:
   - repo.ecosystem.contract_model
   - repo.ecosystem.elm_ui_naming
+  - repo.ecosystem.canonical_widget_component_expansion
 ```
 
 ## Requirements
@@ -29,6 +30,11 @@ decisions:
 
 - id: ecosystem.platform_runtimes.native_surface_covers_iur
   statement: Each widget library shall contain native widgets, layering constructs, and styling attributes sufficient to represent every canonical `unified_iur` widget, layout, layering, and styling construct required for ecosystem rendering.
+  priority: must
+  stability: stable
+
+- id: ecosystem.platform_runtimes.expanded_widget_component_parity
+  statement: Each widget library shall provide native component equivalents and IUR renderer mappings for the expanded canonical widget-component catalog and list-repeat composition behavior, with explicit degradation where the runtime cannot realize a web-like visual affordance directly.
   priority: must
   stability: stable
 
@@ -97,6 +103,7 @@ decisions:
   covers:
     - ecosystem.platform_runtimes.widget_libraries_independent
     - ecosystem.platform_runtimes.native_surface_covers_iur
+    - ecosystem.platform_runtimes.expanded_widget_component_parity
     - ecosystem.platform_runtimes.native_surface_usable_without_iur
     - ecosystem.platform_runtimes.iur_interpretation
     - ecosystem.platform_runtimes.elm_ui_runtime_split

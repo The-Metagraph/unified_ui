@@ -15,6 +15,7 @@ defmodule ElmUi.Widget do
           | :document
           | :visualization
           | :operational
+          | :component
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -45,7 +46,7 @@ defmodule ElmUi.Widget do
   @spec contract() :: map()
   def contract do
     %{
-      metadata: [:label, :description, :role, :variant, :native_surface],
+      metadata: [:label, :description, :role, :variant, :native_surface, :component_family],
       state: [
         :disabled,
         :selected,
@@ -58,7 +59,10 @@ defmodule ElmUi.Widget do
         :streaming,
         :paused,
         :open,
-        :scrolled
+        :scrolled,
+        :disabled?,
+        :active?,
+        :open?
       ],
       slots: [
         :default,
@@ -94,7 +98,13 @@ defmodule ElmUi.Widget do
         :scroll,
         :resize,
         :open,
-        :dismiss
+        :dismiss,
+        :send,
+        :row_activation,
+        :step_navigation,
+        :inline_action,
+        :disclosure,
+        :panel
       ]
     }
   end
@@ -219,7 +229,10 @@ defmodule ElmUi.Widget do
       do: :input
 
   def family_for(kind) when kind in [:tabs, :menu], do: :navigation
-  def family_for(kind) when kind in [:list, :table, :tree_view, :stat, :key_value, :info_list], do: :data
+
+  def family_for(kind) when kind in [:list, :table, :tree_view, :stat, :key_value, :info_list],
+    do: :data
+
   def family_for(kind) when kind in [:markdown_viewer, :log_viewer], do: :document
   def family_for(kind) when kind in [:status, :progress, :inline_feedback], do: :feedback
 
@@ -236,6 +249,31 @@ defmodule ElmUi.Widget do
              :supervision_tree_viewer
            ],
       do: :operational
+
+  def family_for(kind)
+      when kind in [
+             :inline_rich_text_heading,
+             :disclosure,
+             :kicker,
+             :avatar,
+             :presence_dot,
+             :segmented_button_group,
+             :runtime_form_shell,
+             :chat_composer,
+             :list_item_multi_column,
+             :artifact_row,
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :sticky_frosted_header,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted,
+             :list_repeat
+           ],
+      do: :component
 
   def family_for(_kind), do: :content
 

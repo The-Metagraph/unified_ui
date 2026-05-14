@@ -14,7 +14,7 @@ defmodule UnifiedIUR.Fixtures do
     Layout
   }
 
-  alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedIUR.Widgets.{Advanced, Components, Data, Feedback, Foundational, Input, Navigation}
 
   @fixture_specs [
     %{
@@ -86,6 +86,19 @@ defmodule UnifiedIUR.Fixtures do
       ],
       parity_obligations: [:advanced_widgets, :canvas_constructs, :feedback_widgets],
       snapshot: "advanced--operations_center.snapshot"
+    },
+    %{
+      id: "components--accessibility_and_safety",
+      category: :components,
+      description:
+        "Expanded widget components with accessibility names, state semantics, and plain-text safety fixtures.",
+      semantics: [
+        "expanded widget component catalog coverage",
+        "redline and code plain-text safety",
+        "accessibility labels and progress state"
+      ],
+      parity_obligations: [:component_widgets, :accessibility_semantics, :text_safety],
+      snapshot: "components--accessibility_and_safety.snapshot"
     }
   ]
 
@@ -880,6 +893,171 @@ defmodule UnifiedIUR.Fixtures do
       columns: 2,
       gap: 2,
       theme: :workspace
+    )
+  end
+
+  defp build_fixture("components--accessibility_and_safety") do
+    template =
+      Components.artifact_row("Repeated artifact", [], id: "repeat-template", row_identity: :id)
+
+    Layout.column(
+      [
+        {:content,
+         Components.inline_rich_text_heading(
+           :h2,
+           [
+             %{
+               type: :text,
+               value: "Unsafe-looking text is still text: <script>alert(1)</script>"
+             },
+             %{type: :emphasis, value: " portable"}
+           ],
+           id: "component-heading",
+           accessibility_label: "Component safety heading"
+         )},
+        {:content,
+         Components.disclosure(
+           "Advanced component details",
+           [Foundational.text("Disclosure body", id: "disclosure-body")],
+           id: "component-disclosure",
+           open?: true
+         )},
+        {:content,
+         Components.kicker(["Spec", "Runtime", "Safety"],
+           id: "component-kicker",
+           separator: "/"
+         )},
+        {:content,
+         Components.avatar(
+           id: "component-avatar",
+           initials: "PC",
+           accessibility_label: "Pascal Charbonneau"
+         )},
+        {:content,
+         Components.presence_dot(:active, id: "component-presence", accessibility_label: "Active")},
+        {:content,
+         Components.segmented_button_group(
+           [
+             %{value: :all, label: "All"},
+             %{value: :active, label: "Active"}
+           ],
+           id: "component-segmented",
+           active_value: :all,
+           selection_intent: :select_status
+         )},
+        {:content,
+         Components.runtime_form_shell(
+           [%{name: :email, type: :email, label: "Email"}],
+           id: "component-form",
+           submit_label: "Save",
+           submit_intent: :save,
+           change_intent: :validate,
+           validation_state: :valid
+         )},
+        {:content,
+         Components.chat_composer(
+           [Foundational.button("Attach", id: "composer-attach")],
+           id: "component-composer",
+           value: "Draft",
+           send_intent: :send_message,
+           change_intent: :change_message
+         )},
+        {:content,
+         Components.list_item_multi_column(
+           [Foundational.text("Row title", id: "row-title")],
+           id: "component-row",
+           row_identity: "row-1",
+           column_template: [%{id: :title, label: "Title"}],
+           active?: true,
+           action_intent: :open_row
+         )},
+        {:content,
+         Components.artifact_row(
+           "Artifact",
+           [Foundational.button("Open", id: "artifact-open")],
+           id: "component-artifact",
+           row_identity: "artifact-1",
+           meta: %{status: :accepted}
+         )},
+        {:content,
+         Components.pipeline_stepper_horizontal(
+           [
+             %{id: :draft, label: "Draft", state: :done},
+             %{id: :review, label: "Review", state: :active}
+           ],
+           id: "component-stepper",
+           active_index: 1,
+           completed_indices: [0],
+           navigation_intent: :select_step
+         )},
+        {:content,
+         Components.segmented_progress_bar(
+           [%{label: "Passing", weight: 8, state: :success}],
+           id: "component-progress",
+           aggregate_progress: %{current: 8, maximum: 9},
+           label: "Scenario health"
+         )},
+        {:content,
+         Components.workflow_stage_list_vertical(
+           [%{id: :authored, label: "Authored", state: :done}],
+           id: "component-stages"
+         )},
+        {:content, Components.meter_thin(82.5, id: "component-meter", label: "Coverage")},
+        {:content,
+         Components.sticky_frosted_header(
+           [Foundational.button("Save", id: "header-save")],
+           id: "component-header",
+           title: "Workspace",
+           leading: [:back]
+         )},
+        {:content,
+         Components.slide_over_panel(
+           [Foundational.text("Panel body", id: "panel-body")],
+           id: "component-panel",
+           accessibility_label: "Details panel",
+           open?: true,
+           size: :wide,
+           dismiss_intent: :close_panel
+         )},
+        {:content,
+         Components.event_callout(
+           "Deployment paused",
+           [Foundational.button("Inspect", id: "callout-inspect")],
+           id: "component-callout",
+           tone: :warning,
+           action_intent: :inspect_event
+         )},
+        {:content,
+         Components.redline_inline(
+           [
+             %{state: :keep, text: "Keep "},
+             %{state: :delete, text: "<b>old</b>"},
+             %{state: :insert, text: "<script>new()</script>"}
+           ],
+           id: "component-redline"
+         )},
+        {:content,
+         Components.code_block_syntax_highlighted(
+           :elixir,
+           [
+             %{type: :keyword, text: "defmodule"},
+             %{type: :text, text: " <Unsafe>"}
+           ],
+           id: "component-code"
+         )},
+        {:content,
+         Components.list_repeat(template,
+           id: "component-repeat",
+           repeat_binding: :artifact_rows,
+           row_scope: :artifact,
+           row_fields: [:id],
+           template_identity: :repeat_template,
+           hydrated?: true,
+           row_count: 0,
+           children: []
+         )}
+      ],
+      id: "component-safety-fixture"
     )
   end
 

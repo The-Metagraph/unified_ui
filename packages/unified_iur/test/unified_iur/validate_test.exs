@@ -2,6 +2,7 @@ defmodule UnifiedIUR.ValidateTest do
   use ExUnit.Case, async: true
 
   alias UnifiedIUR.{Binding, Element, Interaction, Style, Validate}
+  alias UnifiedIUR.Widgets.Components
 
   defmodule LiveUi.NativeButton do
     defstruct [:id]
@@ -52,5 +53,40 @@ defmodule UnifiedIUR.ValidateTest do
 
     assert {:error, [error]} = Validate.element(element)
     assert error.code == :runtime_local_escape_hatch
+  end
+
+  test "validates redline and code component text safety shapes without rejecting plain text markup" do
+    safe_redline =
+      Components.redline_inline([
+        %{state: :insert, text: "<script>alert(1)</script>"}
+      ])
+
+    invalid_redline =
+      Components.redline_inline([
+        %{state: :markup, text: "<b>unsafe state</b>"}
+      ])
+
+    invalid_code =
+      Components.code_block_syntax_highlighted(:elixir, [
+        %{type: :html, text: "<strong>bad token type</strong>"}
+      ])
+
+    assert :ok = Validate.element(safe_redline)
+    assert {:error, [redline_error]} = Validate.element(invalid_redline)
+    assert redline_error.code == :invalid_text_segment
+
+    assert {:error, [code_error]} = Validate.element(invalid_code)
+    assert code_error.code == :invalid_code_token
+  end
+
+  test "validates required component accessible names and progress ranges" do
+    missing_panel_name = Components.slide_over_panel([], id: "panel")
+    invalid_meter = Components.meter_thin(120, minimum: 0, maximum: 100)
+
+    assert {:error, [panel_error]} = Validate.element(missing_panel_name)
+    assert panel_error.code == :missing_accessible_name
+
+    assert {:error, [meter_error]} = Validate.element(invalid_meter)
+    assert meter_error.code == :invalid_progress_value
   end
 end

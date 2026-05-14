@@ -4,7 +4,7 @@ defmodule UnifiedUi.Tooling do
   and release review workflows.
   """
 
-  alias UnifiedUi.{Compiler, Examples, Export, Info, Signals}
+  alias UnifiedUi.{Compiler, Examples, Export, Info, Signals, WidgetComponents}
 
   @shared_specs [
     ".spec/specs/architecture.spec.md",
@@ -26,6 +26,37 @@ defmodule UnifiedUi.Tooling do
     advanced: [
       ".spec/specs/unified-ui/widgets.spec.md",
       ".spec/specs/unified-ui/display_systems.spec.md"
+    ],
+    content_identity_and_disclosure: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    form_control_and_composer: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/signals.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    row_and_artifact: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/signals.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    workflow_progress_and_status: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    layer_shell_and_callout: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    redline_and_code: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    composition_behavior: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md",
+      ".spec/specs/unified-ui/signals.spec.md"
     ],
     layout: [".spec/specs/unified-ui/display_systems.spec.md"],
     display: [".spec/specs/unified-ui/display_systems.spec.md"],
@@ -78,6 +109,22 @@ defmodule UnifiedUi.Tooling do
   @spec coverage_summary() :: String.t()
   def coverage_summary do
     coverage_report()
+    |> inspect_term()
+  end
+
+  @spec widget_component_catalog() :: map()
+  def widget_component_catalog do
+    %{
+      families: WidgetComponents.component_families(),
+      components: WidgetComponents.catalog(),
+      aliases: WidgetComponents.aliases(),
+      source_mapping: WidgetComponents.source_mapping()
+    }
+  end
+
+  @spec widget_component_catalog_summary() :: String.t()
+  def widget_component_catalog_summary do
+    widget_component_catalog()
     |> inspect_term()
   end
 

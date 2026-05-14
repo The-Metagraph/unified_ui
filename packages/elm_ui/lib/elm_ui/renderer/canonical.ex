@@ -8,6 +8,9 @@ defmodule ElmUi.Renderer.Canonical do
   alias ElmUi.Renderer.Error
   alias ElmUi.Widgets
 
+  @component_kinds UnifiedIUR.Widgets.Components.kinds()
+  @component_kind_values @component_kinds ++ Enum.map(@component_kinds, &Atom.to_string/1)
+
   @spec render(Element.t(), keyword()) :: {:ok, ElmUi.Widget.t()} | {:error, Error.t()}
   def render(%Element{} = element, _opts \\ []) do
     do_render(element)
@@ -47,7 +50,8 @@ defmodule ElmUi.Renderer.Canonical do
          element.id,
          children,
          Keyword.merge(base_opts(element),
-           eyebrow: first_present([group_attr(element, :hero, :eyebrow), attr(element, :eyebrow)]),
+           eyebrow:
+             first_present([group_attr(element, :hero, :eyebrow), attr(element, :eyebrow)]),
            title: first_present([group_attr(element, :hero, :title), attr(element, :title)]),
            message:
              first_present([group_attr(element, :hero, :message), attr(element, :message)]),
@@ -473,7 +477,10 @@ defmodule ElmUi.Renderer.Canonical do
        first_present([group_attr(element, :info_list, :items), attr(element, :items)], []),
        Keyword.merge(base_opts(element),
          ordered:
-           first_present([group_attr(element, :info_list, :ordered?), attr(element, :ordered)], false),
+           first_present(
+             [group_attr(element, :info_list, :ordered?), attr(element, :ordered)],
+             false
+           ),
          empty_state:
            first_present([
              group_attr(element, :info_list, :empty_state),
@@ -1278,6 +1285,22 @@ defmodule ElmUi.Renderer.Canonical do
      )}
   end
 
+  defp do_render(%Element{type: :widget, kind: kind} = element)
+       when kind in @component_kind_values do
+    with {:ok, slot_children} <- map_slot_children(element.children) do
+      kind = component_kind(kind)
+
+      {:ok,
+       ElmUi.Widgets.Components.from_iur(
+         kind,
+         element.id,
+         normalize_component_attributes(kind, element.attributes),
+         slot_children,
+         base_opts(element)
+       )}
+    end
+  end
+
   defp do_render(%Element{} = element) do
     {:error, Error.unsupported_kind(element, ElmUi.Renderer.supported_kinds())}
   end
@@ -1325,6 +1348,18 @@ defmodule ElmUi.Renderer.Canonical do
       {:ok, widgets} -> {:ok, Enum.reverse(widgets)}
       error -> error
     end
+  end
+
+  defp map_slot_children(children) do
+    children
+    |> Enum.reduce_while({:ok, %{}}, fn child, {:ok, acc} ->
+      slot = child_slot_name(child)
+
+      case render_child(child) do
+        {:ok, widget} -> {:cont, {:ok, Map.update(acc, slot, [widget], &(&1 ++ [widget]))}}
+        {:error, error} -> {:halt, {:error, error}}
+      end
+    end)
   end
 
   defp required_slot_child(%Element{} = element, slot) do
@@ -1395,6 +1430,36 @@ defmodule ElmUi.Renderer.Canonical do
 
   defp render_child(%Child{element: %Element{} = element}), do: do_render(element)
   defp render_child(%Element{} = element), do: do_render(element)
+
+  defp child_slot_name(%Child{slot: slot}), do: normalize_key(slot)
+  defp child_slot_name(%Element{}), do: :default
+
+  defp component_kind(kind) when is_atom(kind), do: kind
+  defp component_kind(kind) when is_binary(kind), do: String.to_atom(kind)
+
+  defp normalize_component_attributes(kind, attributes) when is_map(attributes) do
+    kind = component_kind(kind)
+
+    attributes
+    |> normalize_nested_map()
+    |> Map.put_new(:component, %{
+      family: ElmUi.Widgets.Components.family_for_kind(kind),
+      kind: kind
+    })
+  end
+
+  defp normalize_nested_map(%_{} = struct),
+    do: struct |> Map.from_struct() |> normalize_nested_map()
+
+  defp normalize_nested_map(map) when is_map(map) do
+    Map.new(map, fn {key, value} -> {normalize_key(key), normalize_nested_map(value)} end)
+  end
+
+  defp normalize_nested_map(list) when is_list(list) do
+    Enum.map(list, &normalize_nested_map/1)
+  end
+
+  defp normalize_nested_map(value), do: value
 
   defp sparkline_values(series) when is_list(series) do
     case List.first(series) do

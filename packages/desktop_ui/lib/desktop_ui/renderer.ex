@@ -23,9 +23,8 @@ defmodule DesktopUi.Renderer do
   end
 
   @doc """
-  All 45 canonical IUR widget kinds supported by the desktop_ui renderer.
-  Each kind has dedicated native widget mapping, draw kind handling, and
-  SDL3 rendering implementation.
+  Canonical IUR widget kinds supported by the desktop_ui renderer.
+  Each kind maps into the native widget model and SDL3 render plan semantics.
   """
   @spec supported_kinds() :: [atom()]
   def supported_kinds do
@@ -73,6 +72,7 @@ defmodule DesktopUi.Renderer do
       :dialog,
       :inline_feedback,
       :progress,
+      :sparkline,
       :status,
       :toast,
       # Operational (7)
@@ -96,6 +96,9 @@ defmodule DesktopUi.Renderer do
       # Container (1)
       :window
     ]
+    |> Kernel.++(UnifiedIUR.Widgets.Components.kinds())
+    |> Enum.uniq()
+    |> Enum.sort()
   end
 
   @spec validation_state() :: atom()

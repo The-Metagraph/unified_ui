@@ -7,11 +7,19 @@ defmodule UnifiedIUR.FixturesTest do
     assert Fixtures.naming_rules() == %{
              fixture_id_pattern: "category--scenario",
              snapshot_suffix: ".snapshot",
-             categories: [:foundational, :forms, :data, :display, :advanced]
+             categories: [:foundational, :forms, :data, :display, :advanced, :components]
            }
 
     assert Enum.all?(Fixtures.ids(), &Fixtures.valid_id?/1)
-    assert Enum.sort(Fixtures.categories()) == [:advanced, :data, :display, :forms, :foundational]
+
+    assert Enum.sort(Fixtures.categories()) == [
+             :advanced,
+             :components,
+             :data,
+             :display,
+             :forms,
+             :foundational
+           ]
   end
 
   test "loads fixture catalog entries with semantics, parity obligations, and canonical elements" do
@@ -35,8 +43,11 @@ defmodule UnifiedIUR.FixturesTest do
 
     assert report.complete?
     assert "advanced--operations_center" in report.fixture_ids
+    assert "components--accessibility_and_safety" in report.fixture_ids
     assert :dialog in report.covered_kinds
     assert :canvas in report.covered_kinds
+    assert :redline_inline in report.covered_kinds
+    assert :list_repeat in report.covered_kinds
     assert :text_input in report.covered_kinds
     assert report.attachment_families.style_semantics.covered?
     assert report.attachment_families.theme_semantics.covered?

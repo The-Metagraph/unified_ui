@@ -4,7 +4,7 @@ defmodule DesktopUi.Widgets do
   """
 
   alias DesktopUi.Widget
-  alias DesktopUi.Widgets.{Builder, Data, Feedback, Foundational, Input, Navigation}
+  alias DesktopUi.Widgets.{Builder, Components, Data, Feedback, Foundational, Input, Navigation}
   alias DesktopUi.Widgets.{Operational, Visualization}
 
   @spec families() :: [Widget.family()]
@@ -27,7 +27,8 @@ defmodule DesktopUi.Widgets do
       Data,
       Feedback,
       Visualization,
-      Operational
+      Operational,
+      Components
     ]
   end
 
@@ -41,6 +42,7 @@ defmodule DesktopUi.Widgets do
       Feedback.kinds(),
       Visualization.kinds(),
       Operational.kinds(),
+      Components.kinds(),
       [:column, :row, :sparkline, :stack, :status, :window]
     ]
     |> List.flatten()
@@ -72,7 +74,8 @@ defmodule DesktopUi.Widgets do
       advanced_operational_widgets: :ready,
       advanced_window_metadata: :ready,
       slot_contracts: :ready,
-      style_contracts: :ready
+      style_contracts: :ready,
+      widget_components: :ready
     }
   end
 
@@ -373,5 +376,128 @@ defmodule DesktopUi.Widgets do
   @spec window_command(String.t() | atom(), String.t(), keyword()) :: Widget.t()
   def window_command(id, label, opts \\ []) do
     Operational.window_command(id, label, opts)
+  end
+
+  @spec inline_rich_text_heading(String.t() | atom(), atom(), [map() | keyword()], keyword()) ::
+          Widget.t()
+  def inline_rich_text_heading(id, level, segments, opts \\ []) do
+    Components.inline_rich_text_heading(id, level, segments, opts)
+  end
+
+  @spec disclosure(String.t() | atom(), String.t(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def disclosure(id, summary, children \\ [], opts \\ []) do
+    Components.disclosure(id, summary, children, opts)
+  end
+
+  @spec kicker(String.t() | atom(), [String.t()], keyword()) :: Widget.t()
+  def kicker(id, items, opts \\ []) do
+    Components.kicker(id, items, opts)
+  end
+
+  @spec avatar(String.t() | atom(), keyword()) :: Widget.t()
+  def avatar(id, opts \\ []) do
+    Components.avatar(id, opts)
+  end
+
+  @spec presence_dot(String.t() | atom(), atom(), keyword()) :: Widget.t()
+  def presence_dot(id, state, opts \\ []) do
+    Components.presence_dot(id, state, opts)
+  end
+
+  @spec segmented_button_group(String.t() | atom(), [map() | keyword()], keyword()) ::
+          Widget.t()
+  def segmented_button_group(id, options, opts \\ []) do
+    Components.segmented_button_group(id, options, opts)
+  end
+
+  @spec runtime_form_shell(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def runtime_form_shell(id, fields, opts \\ []) do
+    Components.runtime_form_shell(id, fields, opts)
+  end
+
+  @spec chat_composer(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def chat_composer(id, children \\ [], opts \\ []) do
+    Components.chat_composer(id, children, opts)
+  end
+
+  @spec list_item_multi_column(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def list_item_multi_column(id, children \\ [], opts \\ []) do
+    Components.list_item_multi_column(id, children, opts)
+  end
+
+  @spec artifact_row(String.t() | atom(), String.t(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def artifact_row(id, title, children \\ [], opts \\ []) do
+    Components.artifact_row(id, title, children, opts)
+  end
+
+  @spec pipeline_stepper_horizontal(String.t() | atom(), [map() | keyword()], keyword()) ::
+          Widget.t()
+  def pipeline_stepper_horizontal(id, steps, opts \\ []) do
+    Components.pipeline_stepper_horizontal(id, steps, opts)
+  end
+
+  @spec segmented_progress_bar(String.t() | atom(), [map() | keyword()], keyword()) ::
+          Widget.t()
+  def segmented_progress_bar(id, segments, opts \\ []) do
+    Components.segmented_progress_bar(id, segments, opts)
+  end
+
+  @spec workflow_stage_list_vertical(String.t() | atom(), [map() | keyword()], keyword()) ::
+          Widget.t()
+  def workflow_stage_list_vertical(id, stages, opts \\ []) do
+    Components.workflow_stage_list_vertical(id, stages, opts)
+  end
+
+  @spec meter_thin(String.t() | atom(), number(), keyword()) :: Widget.t()
+  def meter_thin(id, current, opts \\ []) do
+    Components.meter_thin(id, current, opts)
+  end
+
+  @spec sticky_frosted_header(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def sticky_frosted_header(id, children \\ [], opts \\ []) do
+    Components.sticky_frosted_header(id, children, opts)
+  end
+
+  @spec slide_over_panel(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def slide_over_panel(id, children \\ [], opts \\ []) do
+    Components.slide_over_panel(id, children, opts)
+  end
+
+  @spec event_callout(
+          String.t() | atom(),
+          String.t(),
+          [Widget.t() | map() | keyword()],
+          keyword()
+        ) ::
+          Widget.t()
+  def event_callout(id, message, children \\ [], opts \\ []) do
+    Components.event_callout(id, message, children, opts)
+  end
+
+  @spec redline_inline(String.t() | atom(), [map() | keyword()], keyword()) :: Widget.t()
+  def redline_inline(id, segments, opts \\ []) do
+    Components.redline_inline(id, segments, opts)
+  end
+
+  @spec code_block_syntax_highlighted(
+          String.t() | atom(),
+          atom() | String.t(),
+          [map() | keyword()],
+          keyword()
+        ) :: Widget.t()
+  def code_block_syntax_highlighted(id, language, tokens, opts \\ []) do
+    Components.code_block_syntax_highlighted(id, language, tokens, opts)
+  end
+
+  @spec list_repeat(String.t() | atom(), [Widget.t() | map() | keyword()], keyword()) ::
+          Widget.t()
+  def list_repeat(id, children \\ [], opts \\ []) do
+    Components.list_repeat(id, children, opts)
   end
 end

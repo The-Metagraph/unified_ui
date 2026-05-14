@@ -7,6 +7,20 @@ defmodule TerminalUi.Renderer.Mapper do
   alias UnifiedIUR.{Binding, Element, Interaction}
   alias UnifiedIUR.Element.Child
 
+  @component_kinds UnifiedIUR.Widgets.Components.kinds()
+  @component_kind_values @component_kinds ++ Enum.map(@component_kinds, &Atom.to_string/1)
+  @component_event_keys %{
+    click: :activate,
+    selection: :select,
+    submit: :submit,
+    change: :change,
+    navigation: :navigation,
+    command: :command,
+    close: :close,
+    open: :expand,
+    focus: :focus
+  }
+
   @spec map(Element.t(), keyword()) :: {:ok, TerminalUi.Widget.t()} | {:error, Error.t()}
   def map(element, opts \\ [])
 
@@ -17,6 +31,26 @@ defmodule TerminalUi.Renderer.Mapper do
   def map(%Element{} = element, _opts) do
     with :ok <- validate_attachments(element) do
       do_map(element)
+    end
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in @component_kind_values do
+    kind = component_kind(kind)
+    attributes = normalize_component_attributes(kind, element.attributes)
+
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       TerminalUi.Widgets.Components.from_iur(
+         kind,
+         element.id,
+         attributes,
+         Keyword.merge(base_opts(element),
+           state: Map.get(attributes, :state, %{}),
+           events: component_events(element),
+           children: children
+         )
+       )}
     end
   end
 
@@ -80,6 +114,31 @@ defmodule TerminalUi.Renderer.Mapper do
        content_text(element, "Button"),
        Keyword.merge(base_opts(element), on_press: interaction_payload(element, :click))
      )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element) when kind in [:badge, "badge"] do
+    {:ok,
+     TerminalUi.Widgets.label(
+       element.id,
+       content_text(element, "Badge"),
+       Keyword.merge(base_opts(element),
+         role: :badge,
+         variant: first_present([group_attr(element, :style, :variant), attr(element, :variant)])
+       )
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element) when kind in [:hero, "hero"] do
+    with {:ok, children} <- map_children(default_children(element)) do
+      {:ok,
+       TerminalUi.Widgets.container(
+         element.id,
+         children,
+         Keyword.merge(base_opts(element),
+           label: first_present([group_attr(element, :hero, :title), label_text(element, nil)])
+         )
+       )}
+    end
   end
 
   defp do_map(%Element{type: :widget, kind: kind} = element) when kind in [:link, "link"] do
@@ -394,6 +453,53 @@ defmodule TerminalUi.Renderer.Mapper do
          on_paginate: interaction_payload(element, :navigation)
        )
      )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element) when kind in [:stat, "stat"] do
+    stat = group_attr(element, :stat, :value)
+    title = group_attr(element, :stat, :title)
+    message = group_attr(element, :stat, :message)
+
+    {:ok,
+     TerminalUi.Widgets.status(
+       element.id,
+       [title, stat, message]
+       |> Enum.reject(&is_nil/1)
+       |> Enum.map(&to_string/1)
+       |> Enum.join(" "),
+       base_opts(element)
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:key_value, "key_value"] do
+    label =
+      first_present([group_attr(element, :key_value, :label), label_text(element, nil)], "Key")
+
+    value = group_attr(element, :key_value, :value)
+
+    {:ok,
+     TerminalUi.Widgets.label(
+       element.id,
+       "#{label}: #{value}",
+       Keyword.merge(base_opts(element), role: :key_value)
+     )}
+  end
+
+  defp do_map(%Element{type: :widget, kind: kind} = element)
+       when kind in [:info_list, "info_list"] do
+    items =
+      element
+      |> group_attr(:info_list, :items)
+      |> List.wrap()
+      |> Enum.map(fn item ->
+        item = normalize_nested_map(item)
+        label = map_get(item, :label, map_get(item, :key, "Item"))
+        value = map_get(item, :value)
+        %{id: map_get(item, :id, label), label: "#{label}: #{value}", value: value}
+      end)
+
+    {:ok, TerminalUi.Widgets.list(element.id, items, base_opts(element))}
   end
 
   defp do_map(%Element{type: :widget, kind: kind} = element)
@@ -868,7 +974,8 @@ defmodule TerminalUi.Renderer.Mapper do
   end
 
   defp do_map(%Element{type: type, kind: kind} = element)
-       when type in [:composite, "composite"] and kind in [:field, "field"] do
+       when type in [:composite, "composite"] and
+              kind in [:field, "field", :form_field, "form_field"] do
     with {:ok, control} <- map_required_child(element, [:control]),
          {:ok, label} <- map_optional_child(element, [:label]),
          {:ok, help} <- map_optional_child(element, [:help]) do
@@ -1210,6 +1317,65 @@ defmodule TerminalUi.Renderer.Mapper do
         |> maybe_put(:selection, Map.get(interaction.payload, :selection))
     end
   end
+
+  defp component_events(%Element{} = element) do
+    element
+    |> attr(:interactions)
+    |> List.wrap()
+    |> Enum.map(&normalize_nested_map/1)
+    |> Enum.reduce(%{}, fn interaction, acc ->
+      case map_get(interaction, :family) || map_get(interaction, :kind) do
+        nil ->
+          acc
+
+        family ->
+          family = normalize_key(family)
+          event_key = Map.get(@component_event_keys, family, family)
+
+          payload =
+            interaction
+            |> Map.delete(:family)
+            |> Map.delete(:kind)
+
+          Map.put(acc, event_key, payload)
+      end
+    end)
+  end
+
+  defp component_kind(kind) when is_atom(kind), do: kind
+  defp component_kind(kind) when is_binary(kind), do: String.to_atom(kind)
+
+  defp normalize_component_attributes(kind, attributes) do
+    kind = component_kind(kind)
+
+    attributes
+    |> normalize_nested_map()
+    |> Map.put_new(:component, %{
+      family: TerminalUi.Widgets.Components.family_for_kind(kind),
+      kind: kind
+    })
+  end
+
+  defp normalize_nested_map(%_{} = struct),
+    do: struct |> Map.from_struct() |> normalize_nested_map()
+
+  defp normalize_nested_map(map) when is_map(map) do
+    Map.new(map, fn {key, value} -> {normalize_key(key), normalize_nested_map(value)} end)
+  end
+
+  defp normalize_nested_map(list) when is_list(list), do: Enum.map(list, &normalize_nested_map/1)
+  defp normalize_nested_map(value), do: value
+
+  defp map_get(map, key, default \\ nil) when is_map(map) do
+    cond do
+      Map.has_key?(map, key) -> Map.get(map, key)
+      Map.has_key?(map, Atom.to_string(key)) -> Map.get(map, Atom.to_string(key))
+      true -> default
+    end
+  end
+
+  defp normalize_key(key) when is_binary(key), do: String.to_atom(key)
+  defp normalize_key(key), do: key
 
   defp content_text(element, default) do
     first_present(

@@ -10,6 +10,7 @@ This subject defines the canonical authored surface categories that the
 - [UnifiedUi Package](./package.spec.md)
 - [UnifiedUi DSL](./dsl.spec.md)
 - [UnifiedUi Compiler](./compiler.spec.md)
+- [UnifiedUi Widget Components](./widget_components.spec.md)
 
 ```spec-meta
 id: unified_ui.widgets
@@ -22,6 +23,7 @@ surface:
   - .spec/specs/unified-iur/widgets.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_widget_component_expansion
 ```
 
 ## Requirements
@@ -44,6 +46,11 @@ decisions:
 
 - id: unified_ui.widgets.feedback_navigation_data_surface
   statement: The package shall author canonical navigation, feedback, and data-display constructs including `dialog`, `alert_dialog`, `toast`, `table`, `tree_view`, `stat`, `key_value`, `info_list`, `markdown_viewer`, `log_viewer`, `scroll_bar`, `gauge`, `sparkline`, `bar_chart`, `line_chart`, `stream_widget`, `process_monitor`, `supervision_tree_viewer`, and `cluster_dashboard`.
+  priority: must
+  stability: stable
+
+- id: unified_ui.widgets.expanded_widget_component_surface
+  statement: The package shall author the expanded canonical widget-component catalog and list-repeat composition behavior defined by `unified_ui.widget_components` so AshUi PR 79-98 equivalents are available through the canonical DSL.
   priority: must
   stability: stable
 
@@ -72,6 +79,7 @@ decisions:
     - unified_ui.widgets.input_surface
     - unified_ui.widgets.layout_and_layer_surface
     - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.expanded_widget_component_surface
     - unified_ui.widgets.style_attribute_surface
     - unified_ui.widgets.canvas_surface
     - unified_ui.widgets.iur_surface_parity
@@ -88,6 +96,7 @@ decisions:
     - unified_ui.widgets.input_surface
     - unified_ui.widgets.layout_and_layer_surface
     - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.expanded_widget_component_surface
     - unified_ui.widgets.style_attribute_surface
     - unified_ui.widgets.canvas_surface
     - unified_ui.widgets.iur_surface_parity
@@ -109,6 +118,7 @@ decisions:
     - unified_ui.widgets.input_surface
     - unified_ui.widgets.layout_and_layer_surface
     - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.expanded_widget_component_surface
     - unified_ui.widgets.style_attribute_surface
     - unified_ui.widgets.canvas_surface
     - unified_ui.widgets.iur_surface_parity

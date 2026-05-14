@@ -11,7 +11,19 @@ defmodule LiveUi.Component do
 
   @type assigns_contract :: [atom()]
   @type style_hook :: :tone | :variant | :state
-  @type event_surface :: :click | :navigate | :submit | :change | :selection | :command
+  @type event_surface ::
+          :click
+          | :navigate
+          | :submit
+          | :change
+          | :selection
+          | :command
+          | :send
+          | :disclosure
+          | :panel
+          | :row_activation
+          | :step_navigation
+          | :inline_action
 
   @callback metadata() :: Metadata.t()
   @callback render(map()) :: Phoenix.LiveView.Rendered.t()
@@ -122,6 +134,7 @@ defmodule LiveUi.Component do
     path = Map.get(assigns, :path, [])
 
     widget_mode = runtime_mode(runtime_state)
+
     widget_identity =
       widget_identity(module, widget_assigns,
         mode: widget_mode,
@@ -183,6 +196,7 @@ defmodule LiveUi.Component do
       {:layout, :separator},
       {:layout, :spacer}
     ]
+
     structural = {family, name} in structural_primitives
 
     quote bind_quoted: [

@@ -30,6 +30,7 @@ defmodule UnifiedUi.ValidationTest do
              parity_obligations: [
                :advanced_widgets,
                :canvas_constructs,
+               :component_widgets,
                :container_constructs,
                :data_widgets,
                :feedback_widgets,

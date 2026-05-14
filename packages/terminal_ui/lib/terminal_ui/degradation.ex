@@ -9,6 +9,17 @@ defmodule TerminalUi.Degradation do
   @menu_kinds [:context_menu, :command_palette]
   @canvas_kinds [:canvas, :canvas_surface, :absolute, :positioned]
   @scroll_kinds [:viewport, :scroll_region]
+  @component_degradations %{
+    avatar: :initials_avatar,
+    presence_dot: :text_presence,
+    list_item_multi_column: :stacked_row,
+    segmented_progress_bar: :ascii_progress,
+    sticky_frosted_header: :plain_header,
+    slide_over_panel: :inline_panel,
+    event_callout: :inline_callout,
+    redline_inline: :plain_redline_tokens,
+    code_block_syntax_highlighted: :plain_code_tokens
+  }
 
   @spec modules() :: [module()]
   def modules, do: [__MODULE__]
@@ -36,6 +47,7 @@ defmodule TerminalUi.Degradation do
       menu_mode: fallback_for_kind(:context_menu, snapshot),
       canvas_mode: fallback_for_kind(:canvas, snapshot),
       scroll_mode: fallback_for_kind(:viewport, snapshot),
+      component_modes: component_summary(snapshot),
       allowed_variation: TerminalUi.Capabilities.allowed_variation(snapshot)
     }
   end
@@ -66,8 +78,22 @@ defmodule TerminalUi.Degradation do
       widget.kind in @scroll_kinds ->
         :paged_scroll
 
+      widget.family == :component ->
+        Map.get(@component_degradations, widget.kind)
+
       true ->
         nil
+    end
+  end
+
+  @spec component_summary(map() | keyword()) :: map()
+  def component_summary(snapshot_or_opts \\ []) do
+    snapshot = normalize_snapshot(snapshot_or_opts)
+
+    if snapshot.backend_mode == :tty do
+      @component_degradations
+    else
+      %{}
     end
   end
 
@@ -80,6 +106,7 @@ defmodule TerminalUi.Degradation do
       responsibilities: responsibilities(),
       profile: snapshot.degradation_profile,
       plan: plan(snapshot),
+      component_degradations: component_summary(snapshot),
       bounded_semantics: %{
         shared_runtime: true,
         transport_shared: true,
