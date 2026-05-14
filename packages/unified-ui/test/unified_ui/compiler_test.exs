@@ -134,9 +134,29 @@ defmodule UnifiedUi.CompilerTest do
         interaction_refs([:go_back_history])
       end
 
+      button :forward_button do
+        label("Forward")
+        interaction_refs([:go_forward_history])
+      end
+
       button :open_settings_modal_button do
         label("Open settings modal")
         interaction_refs([:open_settings_modal])
+      end
+
+      button :open_confirm_modal_button do
+        label("Open confirm modal")
+        interaction_refs([:open_confirm_modal])
+      end
+
+      button :close_top_modal_button do
+        label("Close top modal")
+        interaction_refs([:close_top_modal])
+      end
+
+      button :close_settings_modal_button do
+        label("Close settings modal")
+        interaction_refs([:close_settings_modal])
       end
     end
 
@@ -187,12 +207,54 @@ defmodule UnifiedUi.CompilerTest do
       end
 
       interaction do
+        id(:go_forward_history)
+        family(:navigation)
+        intent(:go_forward_history)
+        source_context(element_id: :forward_button, scope: :screen)
+        target_intent(action: :go_forward, metadata: %{source: :header})
+        payload_mapping(source: :header)
+      end
+
+      interaction do
         id(:open_settings_modal)
         family(:navigation)
         intent(:open_settings_modal)
         source_context(element_id: :open_settings_modal_button, scope: :screen)
         target_intent(action: :open_modal, modal: :settings_dialog, params: %{source: :button})
         payload_mapping(source: :button)
+      end
+
+      interaction do
+        id(:open_confirm_modal)
+        family(:navigation)
+        intent(:open_confirm_modal)
+        source_context(element_id: :open_confirm_modal_button, scope: :modal)
+
+        target_intent(
+          action: :open_modal,
+          modal: :confirm_dialog,
+          params: %{from: :settings_dialog}
+        )
+
+        payload_mapping(source: :settings_dialog)
+      end
+
+      interaction do
+        id(:close_top_modal)
+        family(:navigation)
+        intent(:close_top_modal)
+        source_context(element_id: :close_top_modal_button, scope: :modal)
+        target_intent(action: :close_modal, metadata: %{reason: :dismiss})
+        payload_mapping(reason: :dismiss)
+      end
+
+      interaction do
+        id(:close_settings_modal)
+        family(:navigation)
+        intent(:close_settings_modal)
+        source_context(element_id: :close_settings_modal_button, scope: :modal)
+        target_intent(action: :close_modal, modal: :settings_dialog, metadata: %{reason: :done})
+        payload_mapping(reason: :done)
       end
     end
   end
@@ -460,6 +522,21 @@ defmodule UnifiedUi.CompilerTest do
              metadata: %{authored_id: :go_back_history, binding_refs: [], summary: nil}
            }
 
+    assert result.trace.interaction_by_id[:go_forward_history] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :go_forward_history,
+             source: %{element_id: :forward_button, scope: :screen},
+             target: %{
+               navigation: %{
+                 action: :go_forward,
+                 kind: :history_transition,
+                 metadata: %{source: :header}
+               }
+             },
+             payload: %{source: :header},
+             metadata: %{authored_id: :go_forward_history, binding_refs: [], summary: nil}
+           }
+
     assert result.trace.interaction_by_id[:open_settings_modal] == %UnifiedIUR.Interaction{
              family: :navigation,
              intent: :open_settings_modal,
@@ -474,6 +551,53 @@ defmodule UnifiedUi.CompilerTest do
              },
              payload: %{source: :button},
              metadata: %{authored_id: :open_settings_modal, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:open_confirm_modal] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :open_confirm_modal,
+             source: %{element_id: :open_confirm_modal_button, scope: :modal},
+             target: %{
+               navigation: %{
+                 action: :open_modal,
+                 kind: :modal_transition,
+                 modal: :confirm_dialog,
+                 params: %{from: :settings_dialog}
+               }
+             },
+             payload: %{source: :settings_dialog},
+             metadata: %{authored_id: :open_confirm_modal, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:close_top_modal] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :close_top_modal,
+             source: %{element_id: :close_top_modal_button, scope: :modal},
+             target: %{
+               navigation: %{
+                 action: :close_modal,
+                 kind: :modal_transition,
+                 metadata: %{reason: :dismiss}
+               }
+             },
+             payload: %{reason: :dismiss},
+             metadata: %{authored_id: :close_top_modal, binding_refs: [], summary: nil}
+           }
+
+    assert result.trace.interaction_by_id[:close_settings_modal] == %UnifiedIUR.Interaction{
+             family: :navigation,
+             intent: :close_settings_modal,
+             source: %{element_id: :close_settings_modal_button, scope: :modal},
+             target: %{
+               navigation: %{
+                 action: :close_modal,
+                 kind: :modal_transition,
+                 metadata: %{reason: :done},
+                 modal: :settings_dialog
+               }
+             },
+             payload: %{reason: :done},
+             metadata: %{authored_id: :close_settings_modal, binding_refs: [], summary: nil}
            }
 
     assert Enum.map(result.iur.attributes.interactions, &{&1.intent, &1.target}) == [
@@ -514,6 +638,14 @@ defmodule UnifiedUi.CompilerTest do
                   metadata: %{source: :header}
                 }
               }},
+             {:go_forward_history,
+              %{
+                navigation: %{
+                  action: :go_forward,
+                  kind: :history_transition,
+                  metadata: %{source: :header}
+                }
+              }},
              {:open_settings_modal,
               %{
                 navigation: %{
@@ -521,6 +653,32 @@ defmodule UnifiedUi.CompilerTest do
                   kind: :modal_transition,
                   modal: :settings_dialog,
                   params: %{source: :button}
+                }
+              }},
+             {:open_confirm_modal,
+              %{
+                navigation: %{
+                  action: :open_modal,
+                  kind: :modal_transition,
+                  modal: :confirm_dialog,
+                  params: %{from: :settings_dialog}
+                }
+              }},
+             {:close_top_modal,
+              %{
+                navigation: %{
+                  action: :close_modal,
+                  kind: :modal_transition,
+                  metadata: %{reason: :dismiss}
+                }
+              }},
+             {:close_settings_modal,
+              %{
+                navigation: %{
+                  action: :close_modal,
+                  kind: :modal_transition,
+                  metadata: %{reason: :done},
+                  modal: :settings_dialog
                 }
               }}
            ]

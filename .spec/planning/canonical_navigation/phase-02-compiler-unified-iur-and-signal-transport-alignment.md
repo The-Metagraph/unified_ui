@@ -26,26 +26,26 @@ Back to index: [README](./README.md)
   semantics that carry screen-transition intent from authored `UnifiedUi`
   modules to runtime libraries.
 
-  [ ] 2.1 Section - UnifiedUi Compiler Navigation Lowering
+  [x] 2.1 Section - UnifiedUi Compiler Navigation Lowering
     Implement compiler support that lowers authored navigation transitions into
     stable canonical descriptors.
 
-    [ ] 2.1.1 Task - Lower authored navigation into canonical descriptors
+    [x] 2.1.1 Task - Lower authored navigation into canonical descriptors
       Extend the compiler pipeline so authored screen transitions become
       portable canonical interaction data.
 
-      [ ] 2.1.1.1 Subtask - Lower navigation actions, symbolic screen targets, modal targets, params, and source-context fields into canonical interaction descriptors.
-      [ ] 2.1.1.2 Subtask - Preserve payload mapping and binding references for navigation transitions without introducing renderer-local callback logic.
-      [ ] 2.1.1.3 Subtask - Ensure canonical lowering stays deterministic across equivalent authored modules so navigation diffs remain review-friendly.
-      [ ] 2.1.1.4 Subtask - Preserve modal stack transition ordering, targetless top-modal `close_modal`, targeted symbolic modal close, params, and metadata without adding renderer-local modal hierarchy.
+      [x] 2.1.1.1 Subtask - Lower navigation actions, symbolic screen targets, modal targets, params, and source-context fields into canonical interaction descriptors.
+      [x] 2.1.1.2 Subtask - Preserve payload mapping and binding references for navigation transitions without introducing renderer-local callback logic.
+      [x] 2.1.1.3 Subtask - Ensure canonical lowering stays deterministic across equivalent authored modules so navigation diffs remain review-friendly.
+      [x] 2.1.1.4 Subtask - Preserve modal stack transition ordering, targetless top-modal `close_modal`, targeted symbolic modal close, params, and metadata without adding renderer-local modal hierarchy.
 
-    [ ] 2.1.2 Task - Preserve compatibility for non-transition interactions
+    [x] 2.1.2 Task - Preserve compatibility for non-transition interactions
       Keep existing canonical interaction lowering intact while introducing the
       new screen-transition model.
 
-      [ ] 2.1.2.1 Subtask - Ensure non-navigation interaction families continue to compile without depending on the new transition fields.
-      [ ] 2.1.2.2 Subtask - Ensure local navigation-like descriptors that do not change the top-level screen remain representable without being forced into the screen-transition shape.
-      [ ] 2.1.2.3 Subtask - Add normalization rules that keep older generic target-intent usage reviewable while preserving the newer canonical transition contract.
+      [x] 2.1.2.1 Subtask - Ensure non-navigation interaction families continue to compile without depending on the new transition fields.
+      [x] 2.1.2.2 Subtask - Ensure local navigation-like descriptors that do not change the top-level screen remain representable without being forced into the screen-transition shape.
+      [x] 2.1.2.3 Subtask - Add normalization rules that keep older generic target-intent usage reviewable while preserving the newer canonical transition contract.
 
   [ ] 2.2 Section - UnifiedIUR Interaction Representation
     Implement the canonical `unified_iur` representation needed for runtimes to
