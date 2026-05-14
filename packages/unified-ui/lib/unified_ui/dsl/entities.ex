@@ -14,7 +14,8 @@ defmodule UnifiedUi.Dsl.Entities do
     Input,
     Layout,
     Navigation,
-    Overlay
+    Overlay,
+    WidgetComponents
   }
 
   @construct_families %{
@@ -24,7 +25,8 @@ defmodule UnifiedUi.Dsl.Entities do
       :navigation,
       :feedback,
       :data,
-      :operational
+      :operational,
+      :content_identity_and_disclosure
     ],
     layouts: [:container, :row, :column, :grid, :stack, :split, :viewport],
     layers: [:overlay, :absolute, :modal, :toast, :menu, :canvas],
@@ -49,6 +51,7 @@ defmodule UnifiedUi.Dsl.Entities do
       Input.entities() ++
       Navigation.entities() ++
       Forms.top_level_entities() ++
+      WidgetComponents.entities() ++
       Layout.entities() ++
       Data.entities() ++
       Feedback.entities() ++

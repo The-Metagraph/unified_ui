@@ -47,26 +47,26 @@ Back to index: [README](./README.md)
       [x] 1.1.2.2 Subtask - Decide which AshUi names can be accepted as authoring aliases without making AshUi part of the contract.
       [x] 1.1.2.3 Subtask - Add validation diagnostics that identify deprecated or host-specific aliases and point authors to canonical names.
 
-  [ ] 1.2 Section - Content, Identity, and Disclosure Authoring
+  [x] 1.2 Section - Content, Identity, and Disclosure Authoring
     Add authored DSL support for the passive and identity-oriented components
     whose behavior is mostly content, state, accessibility, and child
     composition.
 
-    [ ] 1.2.1 Task - Implement rich heading and kicker authoring
+    [x] 1.2.1 Task - Implement rich heading and kicker authoring
       Support editorial heading and eyebrow-label patterns with deterministic
       content models.
 
-      [ ] 1.2.1.1 Subtask - Author `inline_rich_text_heading` with heading level and inline `text` or `emphasis` segment validation.
-      [ ] 1.2.1.2 Subtask - Author `kicker` with ordered items and separator behavior.
-      [ ] 1.2.1.3 Subtask - Reject invalid heading levels, malformed segments, and non-string kicker items with actionable diagnostics.
+      [x] 1.2.1.1 Subtask - Author `inline_rich_text_heading` with heading level and inline `text` or `emphasis` segment validation.
+      [x] 1.2.1.2 Subtask - Author `kicker` with ordered items and separator behavior.
+      [x] 1.2.1.3 Subtask - Reject invalid heading levels, malformed segments, and non-string kicker items with actionable diagnostics.
 
-    [ ] 1.2.2 Task - Implement avatar, presence, and disclosure authoring
+    [x] 1.2.2 Task - Implement avatar, presence, and disclosure authoring
       Support identity display, small status signals, and native progressive
       disclosure in the authored catalog.
 
-      [ ] 1.2.2.1 Subtask - Author `avatar` with initials, optional image source, shape, size, variant, and accessible label.
-      [ ] 1.2.2.2 Subtask - Author `presence_dot` with state, size, and optional accessible label.
-      [ ] 1.2.2.3 Subtask - Author `disclosure` with summary text, initial open state, and child body content.
+      [x] 1.2.2.1 Subtask - Author `avatar` with initials, optional image source, shape, size, variant, and accessible label.
+      [x] 1.2.2.2 Subtask - Author `presence_dot` with state, size, and optional accessible label.
+      [x] 1.2.2.3 Subtask - Author `disclosure` with summary text, initial open state, and child body content.
 
   [ ] 1.3 Section - Form, Control, and Composer Authoring
     Add authored DSL support for controls that carry canonical interaction

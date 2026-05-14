@@ -27,6 +27,10 @@ defmodule UnifiedUi.Tooling do
       ".spec/specs/unified-ui/widgets.spec.md",
       ".spec/specs/unified-ui/display_systems.spec.md"
     ],
+    content_identity_and_disclosure: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
     layout: [".spec/specs/unified-ui/display_systems.spec.md"],
     display: [".spec/specs/unified-ui/display_systems.spec.md"],
     overlay: [".spec/specs/unified-ui/display_systems.spec.md"],

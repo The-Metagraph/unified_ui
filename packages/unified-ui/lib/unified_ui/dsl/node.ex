@@ -15,6 +15,7 @@ defmodule UnifiedUi.Dsl.Node do
           | :overlay
           | :display
           | :canvas
+          | :content_identity_and_disclosure
 
   @type t :: %__MODULE__{
           __identifier__: atom() | nil,
@@ -140,6 +141,14 @@ defmodule UnifiedUi.Dsl.Node do
           divider_size: integer() | nil,
           divider_style: atom() | nil,
           operations: list() | nil,
+          level: atom() | nil,
+          segments: list() | nil,
+          separator: String.t() | nil,
+          initials: String.t() | nil,
+          image_source: String.t() | nil,
+          shape: atom() | nil,
+          state: atom() | nil,
+          open?: boolean() | nil,
           children: [t()]
         }
 
@@ -266,6 +275,14 @@ defmodule UnifiedUi.Dsl.Node do
             divider_size: nil,
             divider_style: nil,
             operations: nil,
+            level: nil,
+            segments: nil,
+            separator: nil,
+            initials: nil,
+            image_source: nil,
+            shape: nil,
+            state: nil,
+            open?: nil,
             children: []
 
   @spec summary(t()) :: map()
@@ -320,6 +337,14 @@ defmodule UnifiedUi.Dsl.Node do
       secondary_ref: node.secondary_ref,
       ratio: node.ratio,
       operations: node.operations,
+      level: node.level,
+      segments: node.segments,
+      separator: node.separator,
+      initials: node.initials,
+      image_source: node.image_source,
+      shape: node.shape,
+      state: node.state,
+      open?: node.open?,
       current: node.current,
       minimum: node.minimum,
       maximum: node.maximum,
