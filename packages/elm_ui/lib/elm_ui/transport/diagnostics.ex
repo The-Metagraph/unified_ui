@@ -160,10 +160,7 @@ defmodule ElmUi.Transport.Diagnostics do
     target = normalize_map(target)
     navigation = Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
 
-    leaked_keys =
-      navigation
-      |> Map.keys()
-      |> Enum.filter(&forbidden_navigation_key?/1)
+    leaked_keys = forbidden_navigation_keys(normalize_map(navigation))
 
     if leaked_keys == [] do
       :ok
@@ -216,6 +213,17 @@ defmodule ElmUi.Transport.Diagnostics do
   end
 
   defp renderer_local_key?(_key), do: false
+
+  defp forbidden_navigation_keys(navigation) do
+    modal_stack =
+      navigation
+      |> Map.get(:modal_stack, Map.get(navigation, "modal_stack", %{}))
+      |> normalize_map()
+
+    (Map.keys(navigation) ++ Map.keys(modal_stack))
+    |> Enum.filter(&forbidden_navigation_key?/1)
+    |> Enum.uniq()
+  end
 
   defp forbidden_navigation_key?(key) when is_atom(key),
     do: key in BoundaryTransport.forbidden_navigation_keys()

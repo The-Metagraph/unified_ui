@@ -143,6 +143,75 @@ defmodule LiveUi.RuntimeNavigationTest do
            ]
   end
 
+  test "canonical modal stack fixtures preserve stack behavior without mutating history" do
+    home_element =
+      Element.new(:widget, :text, id: :workspace_home, attributes: %{content: "Workspace Home"})
+
+    first_modal = BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    second_modal = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
+    close_named = BoundaryTransport.boundary_fixture!("modal_stack--close_named_settings")
+
+    assert {:ok, runtime_state} =
+             LiveUi.Runtime.mount_iur(home_element, screen_id: :workspace_home)
+
+    assert {:ok, with_first_modal, _runtime_action} =
+             LiveUi.Runtime.handle_boundary_signal(
+               runtime_state,
+               boundary_signal(first_modal, :workspace_home)
+             )
+
+    assert {:ok, with_second_modal, _runtime_action} =
+             LiveUi.Runtime.handle_boundary_signal(
+               with_first_modal,
+               boundary_signal(second_modal, :workspace_home)
+             )
+
+    assert with_second_modal.assigns.navigation_history == []
+
+    assert with_second_modal.assigns.navigation_modal_stack == [
+             %{
+               modal: :settings_dialog,
+               params: %{mode: :advanced},
+               metadata: %{surface: :workspace}
+             },
+             %{
+               modal: :settings_confirm_dialog,
+               params: %{from: :settings_dialog},
+               metadata: %{previous_modal: :settings_dialog}
+             }
+           ]
+
+    assert with_second_modal.assigns.current_modal.modal == :settings_confirm_dialog
+    assert with_second_modal.navigation.last_transition.modal_stack.stack_effect == :push_modal
+
+    assert {:ok, after_named_close, _runtime_action} =
+             LiveUi.Runtime.handle_boundary_signal(
+               with_second_modal,
+               boundary_signal(close_named, :workspace_home)
+             )
+
+    assert after_named_close.assigns.navigation_modal_stack == [
+             %{
+               modal: :settings_confirm_dialog,
+               params: %{from: :settings_dialog},
+               metadata: %{previous_modal: :settings_dialog}
+             }
+           ]
+
+    assert after_named_close.assigns.current_modal.modal == :settings_confirm_dialog
+
+    assert {:ok, after_top_close, _runtime_action} =
+             LiveUi.Runtime.handle_boundary_signal(
+               after_named_close,
+               boundary_signal(close_top, :workspace_home)
+             )
+
+    assert after_top_close.assigns.navigation_modal_stack == []
+    assert after_top_close.assigns.current_modal == nil
+    assert after_top_close.assigns.navigation_history == []
+  end
+
   test "navigation failures surface deterministic diagnostics" do
     assert {:ok, runtime_state} = LiveUi.Runtime.mount(HomeScreen)
 
@@ -167,5 +236,45 @@ defmodule LiveUi.RuntimeNavigationTest do
                  navigation: %{action: :navigate_to, screen: :settings, route: "/settings"}
                }
              )
+  end
+
+  test "modal stack runtime-local identifiers are rejected" do
+    assert {:ok, runtime_state} = LiveUi.Runtime.mount(HomeScreen)
+
+    assert {:error, %LiveUi.Runtime.Error{reason: :host_route_navigation_syntax} = error} =
+             LiveUi.Runtime.dispatch_native_event(
+               runtime_state,
+               "navigation:open_runtime_stack",
+               %{},
+               family: :navigation,
+               intent: :open_settings_modal,
+               target: %{
+                 navigation: %{
+                   action: :open_modal,
+                   modal: :settings_dialog,
+                   modal_stack: %{
+                     operation: :push,
+                     target: :symbolic_modal,
+                     stack_effect: :push_modal,
+                     stack_id: "runtime-stack"
+                   }
+                 }
+               }
+             )
+
+    assert error.details.keys == [:stack_id]
+  end
+
+  defp boundary_signal(fixture, screen) do
+    assert {:ok, translation} =
+             LiveUi.Signals.from_interaction(
+               fixture.interaction,
+               screen: screen,
+               mode: :screen,
+               boundary: :boundary,
+               payload: fixture.signal_data
+             )
+
+    translation.signal
   end
 end

@@ -49,26 +49,26 @@ Back to index: [README](./README.md)
       [x] 3.1.2.2 Subtask - Extend fixture summaries to show modal stack action, symbolic modal target, params, metadata, and whether a close is topmost or targeted.
       [x] 3.1.2.3 Subtask - Keep fixture serialization deterministic so stacked modal review output remains diff-friendly.
 
-  [ ] 3.2 Section - Web Runtime Modal Stack Handling
+  [x] 3.2 Section - Web Runtime Modal Stack Handling
     Align the web runtimes with the shared canonical modal stack contract while
     preserving each runtime's existing server-authoritative model.
 
-    [ ] 3.2.1 Task - Implement LiveUi server-authoritative modal stack handling
+    [x] 3.2.1 Task - Implement LiveUi server-authoritative modal stack handling
       Ensure `live_ui` resolves canonical modal transitions through server
       state and exposes the current modal stack predictably to rendering and
       inspection surfaces.
 
-      [ ] 3.2.1.1 Subtask - Verify or implement `open_modal` appends symbolic modal entries with params and metadata to the server-authoritative modal stack.
-      [ ] 3.2.1.2 Subtask - Verify or implement targetless `close_modal` closes the topmost modal and targeted `close_modal` closes the matching open modal without mutating screen history.
-      [ ] 3.2.1.3 Subtask - Expose current modal and modal stack summaries through assigns, inspection, and runtime navigation summaries without leaking Phoenix route details.
+      [x] 3.2.1.1 Subtask - Verify or implement `open_modal` appends symbolic modal entries with params and metadata to the server-authoritative modal stack.
+      [x] 3.2.1.2 Subtask - Verify or implement targetless `close_modal` closes the topmost modal and targeted `close_modal` closes the matching open modal without mutating screen history.
+      [x] 3.2.1.3 Subtask - Expose current modal and modal stack summaries through assigns, inspection, and runtime navigation summaries without leaking Phoenix route details.
 
-    [ ] 3.2.2 Task - Implement ElmUi server and frontend modal stack reflection
+    [x] 3.2.2 Task - Implement ElmUi server and frontend modal stack reflection
       Ensure `elm_ui` keeps the Phoenix server runtime authoritative while the
       frontend runtime reflects the resulting modal stack state.
 
-      [ ] 3.2.2.1 Subtask - Verify or implement server-side modal stack push and close semantics for canonical `open_modal` and `close_modal` transitions.
-      [ ] 3.2.2.2 Subtask - Update authoritative screen payloads and frontend acknowledgements so current modal and modal stack state are reflected after each transition.
-      [ ] 3.2.2.3 Subtask - Add diagnostics for missing modal targets, invalid targeted close, and frontend/server modal stack divergence.
+      [x] 3.2.2.1 Subtask - Verify or implement server-side modal stack push and close semantics for canonical `open_modal` and `close_modal` transitions.
+      [x] 3.2.2.2 Subtask - Update authoritative screen payloads and frontend acknowledgements so current modal and modal stack state are reflected after each transition.
+      [x] 3.2.2.3 Subtask - Add diagnostics for missing modal targets, invalid targeted close, and frontend/server modal stack divergence.
 
   [ ] 3.3 Section - Desktop and Terminal Runtime Modal Stack Handling
     Align desktop and terminal runtimes with the shared stack contract while

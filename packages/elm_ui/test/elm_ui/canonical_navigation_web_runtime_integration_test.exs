@@ -36,6 +36,62 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
     assert comparison.continuity.server_authority_preserved?
   end
 
+  test "server-authoritative modal stack fixtures are reflected in frontend acknowledgements" do
+    home_element =
+      Element.new(:widget, :text, id: "home", attributes: %{content: "Home"})
+
+    first_modal = BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    second_modal = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
+    close_named = BoundaryTransport.boundary_fixture!("modal_stack--close_named_settings")
+
+    assert {:ok, runtime_state} =
+             ElmUi.Runtime.mount_iur_screen(home_element, runtime_id: "elm-ui-modal-stack")
+
+    assert {:ok, with_first_modal, _ack} = apply_fixture(runtime_state, first_modal)
+    assert {:ok, with_second_modal, ack} = apply_fixture(with_first_modal, second_modal)
+
+    navigation = ElmUi.ServerRuntime.State.navigation_summary(with_second_modal)
+
+    assert navigation.history == []
+
+    assert navigation.modals == [
+             %{
+               modal: :settings_dialog,
+               params: %{mode: :advanced},
+               metadata: %{surface: :workspace}
+             },
+             %{
+               modal: :settings_confirm_dialog,
+               params: %{from: :settings_dialog},
+               metadata: %{previous_modal: :settings_dialog}
+             }
+           ]
+
+    assert navigation.current_modal.modal == :settings_confirm_dialog
+    assert navigation.last_transition.modal_stack.stack_effect == :push_modal
+
+    assert ack.payload.authoritative_screen.metadata.navigation.current_modal.modal ==
+             :settings_confirm_dialog
+
+    assert ack.payload.authoritative_screen.metadata.navigation.modals == navigation.modals
+
+    assert {:ok, after_named_close, _ack} = apply_fixture(with_second_modal, close_named)
+
+    assert ElmUi.ServerRuntime.State.navigation_summary(after_named_close).modals == [
+             %{
+               modal: :settings_confirm_dialog,
+               params: %{from: :settings_dialog},
+               metadata: %{previous_modal: :settings_dialog}
+             }
+           ]
+
+    assert {:ok, after_top_close, _ack} = apply_fixture(after_named_close, close_top)
+
+    assert ElmUi.ServerRuntime.State.navigation_summary(after_top_close).modals == []
+    assert ElmUi.ServerRuntime.State.navigation_summary(after_top_close).current_modal == nil
+  end
+
   test "canonical elm_ui navigation keeps host-route state outside the transition contract" do
     comparison = ElmUi.Examples.navigation_comparison()
 
@@ -110,6 +166,48 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
            end)
   end
 
+  test "modal stack diagnostics reject invalid targeted close and runtime-local stack ids" do
+    home_element =
+      Element.new(:widget, :text, id: "home", attributes: %{content: "Home"})
+
+    close_named = BoundaryTransport.boundary_fixture!("modal_stack--close_named_settings")
+
+    assert {:ok, runtime_state} =
+             ElmUi.Runtime.mount_iur_screen(home_element, runtime_id: "elm-ui-modal-stack-errors")
+
+    assert {:ok, close_translation} = translation_for_fixture(runtime_state, close_named)
+
+    assert {:error, %ElmUi.ServerRuntime.Error{reason: :unsupported_navigation_context} = error} =
+             ElmUi.ServerRuntime.handle_event(runtime_state, close_translation)
+
+    assert error.details.modal == :settings_dialog
+
+    assert {:error, %ElmUi.Transport.Error{reason: :host_route_syntax} = transport_error} =
+             ElmUi.Transport.from_native_event(
+               family: :navigation,
+               intent: :open_settings_modal,
+               widget_id: "settings-link",
+               screen: runtime_state.screen_id,
+               runtime_id: runtime_state.runtime_id,
+               source_kind: :canonical,
+               boundary_mode: :canonical_boundary,
+               target: %{
+                 navigation: %{
+                   action: :open_modal,
+                   modal: :settings_dialog,
+                   modal_stack: %{
+                     operation: :push,
+                     target: :symbolic_modal,
+                     stack_effect: :push_modal,
+                     stack_id: "runtime-stack"
+                   }
+                 }
+               }
+             )
+
+    assert transport_error.details.keys == [:stack_id]
+  end
+
   defp transition_summary(target) do
     %{
       action: get_value(target, :action),
@@ -132,4 +230,26 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
 
   defp normalize_map(map) when is_map(map), do: Map.new(map)
   defp normalize_map(_other), do: %{}
+
+  defp apply_fixture(runtime_state, fixture) do
+    with {:ok, translation} <- translation_for_fixture(runtime_state, fixture),
+         {:ok, next_state} <- ElmUi.ServerRuntime.handle_event(runtime_state, translation) do
+      {:ok, next_state,
+       ElmUi.ServerRuntime.SyncBoundary.acknowledgement_envelope(next_state, translation)}
+    end
+  end
+
+  defp translation_for_fixture(runtime_state, fixture) do
+    ElmUi.Transport.from_native_event(
+      family: :navigation,
+      intent: fixture.interaction.intent,
+      widget_id: fixture.interaction.source.element_id,
+      screen: runtime_state.screen_id,
+      runtime_id: runtime_state.runtime_id,
+      source_kind: :canonical,
+      boundary_mode: :canonical_boundary,
+      target: fixture.descriptor.target,
+      payload: fixture.signal_data
+    )
+  end
 end

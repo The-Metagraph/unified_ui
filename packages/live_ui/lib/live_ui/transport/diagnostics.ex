@@ -137,10 +137,7 @@ defmodule LiveUi.Transport.Diagnostics do
     target = normalize_map(target)
     navigation = Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
 
-    leaked_keys =
-      navigation
-      |> Map.keys()
-      |> Enum.filter(&forbidden_navigation_key?/1)
+    leaked_keys = forbidden_navigation_keys(navigation)
 
     if leaked_keys == [] do
       :ok
@@ -153,6 +150,17 @@ defmodule LiveUi.Transport.Diagnostics do
 
   defp renderer_local_key?(key) when is_binary(key) do
     Enum.any?(@renderer_local_payload_prefixes, &String.starts_with?(key, &1))
+  end
+
+  defp forbidden_navigation_keys(navigation) do
+    modal_stack =
+      navigation
+      |> Map.get(:modal_stack, Map.get(navigation, "modal_stack", %{}))
+      |> normalize_map()
+
+    (Map.keys(navigation) ++ Map.keys(modal_stack))
+    |> Enum.filter(&forbidden_navigation_key?/1)
+    |> Enum.uniq()
   end
 
   defp forbidden_navigation_key?(key) when is_atom(key),

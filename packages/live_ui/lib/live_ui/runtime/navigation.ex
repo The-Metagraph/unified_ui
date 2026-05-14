@@ -560,7 +560,9 @@ defmodule LiveUi.Runtime.Navigation do
       action: Map.get(descriptor, :action),
       screen: Map.get(descriptor, :screen),
       modal: Map.get(descriptor, :modal),
-      params: normalize_map(Map.get(descriptor, :params, %{}))
+      params: normalize_map(Map.get(descriptor, :params, %{})),
+      metadata: normalize_map(Map.get(descriptor, :metadata, %{})),
+      modal_stack: normalize_map(Map.get(descriptor, :modal_stack, %{}))
     }
   end
 
@@ -592,11 +594,7 @@ defmodule LiveUi.Runtime.Navigation do
     target = normalize_map(Map.get(runtime_action, :target, %{}))
     navigation = normalize_map(raw_navigation_descriptor(target) || %{})
 
-    leaked_keys =
-      navigation
-      |> Map.keys()
-      |> Enum.filter(&forbidden_navigation_key?/1)
-      |> Enum.uniq()
+    leaked_keys = forbidden_navigation_keys(navigation)
 
     if leaked_keys == [] do
       :ok
@@ -610,6 +608,17 @@ defmodule LiveUi.Runtime.Navigation do
   end
 
   defp raw_navigation_descriptor(_other), do: nil
+
+  defp forbidden_navigation_keys(navigation) do
+    modal_stack =
+      navigation
+      |> Map.get(:modal_stack, Map.get(navigation, "modal_stack", %{}))
+      |> normalize_map()
+
+    (Map.keys(navigation) ++ Map.keys(modal_stack))
+    |> Enum.filter(&forbidden_navigation_key?/1)
+    |> Enum.uniq()
+  end
 
   defp lookup_registry(registry, screen_id) when is_map(registry) do
     case Enum.find(registry, fn {key, _value} -> key_matches?(key, screen_id) end) do
