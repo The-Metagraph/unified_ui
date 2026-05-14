@@ -7,7 +7,7 @@ affects:
   - desktop_ui.structure
 ---
 
-<!-- covers: desktop_ui.runtime.screen_navigation_support desktop_ui.runtime.navigation_controller_process desktop_ui.runtime.screen_registry desktop_ui.runtime.navigation_actions desktop_ui.runtime.navigation_event_routing desktop_ui.runtime.modal_stack_independence desktop_ui.structure.navigation_modules -->
+<!-- covers: desktop_ui.runtime.screen_navigation_support desktop_ui.runtime.navigation_controller_process desktop_ui.runtime.screen_registry desktop_ui.runtime.navigation_actions desktop_ui.runtime.navigation_event_routing desktop_ui.runtime.modal_stack_independence desktop_ui.runtime.stacked_modal_navigation desktop_ui.structure.navigation_modules -->
 
 # Screen Navigation for DesktopUi
 
@@ -24,7 +24,7 @@ affects:
 3. **Navigation Actions** - `navigate/2`, `replace/2`, `go_back/0`, `go_forward/0`, `open_modal/2`, `close_modal/0`
 4. **Navigation Events** - Widgets emit navigation signals (`:navigate_to`, `:replace_with`) that route to the controller
 5. **History Stack** - Navigation history supports back/forward semantics like web browsers
-6. **Modal Stack** - Separate stack for dialogs/overlays that don't affect main navigation history
+6. **Modal Stack** - Separate push/pop stack for dialogs/overlays that don't affect main navigation history; opening another modal pushes onto the stack, and targetless close pops the topmost modal
 7. **Runtime Integration** - `DesktopUi.Runtime` handles navigation actions by swapping screen state while preserving window state
 
 ### Navigation State Structure
@@ -70,6 +70,9 @@ Navigation.go_back()
 
 # Open modal (independent stack)
 Navigation.open_modal(:confirm_dialog, %{action: :delete})
+
+# Close topmost modal
+Navigation.close_modal()
 ```
 
 ### Widget Integration

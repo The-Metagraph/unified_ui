@@ -58,6 +58,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: terminal_ui.runtime.modal_stack_navigation_degradation
+  statement: For canonical modal transitions, the terminal runtime shall preserve stack semantics for `open_modal` and targetless top-modal `close_modal` even when visual realization degrades stacked modals into terminal-appropriate panels, inline overlays, or bounded screen sections.
+  priority: must
+  stability: stable
+
 - id: terminal_ui.runtime.no_url_routing_assumption
   statement: The terminal runtime shall not require browser-style path syntax, host-router names, or URL-matching semantics as the canonical navigation contract; symbolic screen identifiers and terminal-local transition policies remain the authoritative runtime boundary.
   priority: must
@@ -88,6 +93,18 @@ decisions:
     - `terminal_ui` resolves the transition
   then:
     - The runtime updates terminal screen state through symbolic screen resolution and bounded terminal transition policies without introducing browser-route semantics
+
+- id: terminal_ui.runtime_handle_stacked_modal_navigation
+  covers:
+    - terminal_ui.runtime.canonical_navigation_transition_support
+    - terminal_ui.runtime.modal_stack_navigation_degradation
+    - terminal_ui.runtime.no_url_routing_assumption
+  given:
+    - A terminal screen has one canonical modal transition active
+  when:
+    - Another modal is opened and then targetless close is resolved
+  then:
+    - The runtime preserves topmost modal stack meaning and returns to the previous modal or underlying screen using terminal-appropriate visual degradation when needed
 ```
 
 ## Verification
@@ -102,7 +119,9 @@ decisions:
     - terminal_ui.runtime.terminal_lifecycle_and_input
     - terminal_ui.runtime.capability_variation_bounded
     - terminal_ui.runtime.canonical_navigation_transition_support
+    - terminal_ui.runtime.modal_stack_navigation_degradation
     - terminal_ui.runtime.no_url_routing_assumption
     - terminal_ui.runtime_run_same_screen_on_multiple_capability_profiles
     - terminal_ui.runtime_handle_canonical_navigation_transition
+    - terminal_ui.runtime_handle_stacked_modal_navigation
 ```

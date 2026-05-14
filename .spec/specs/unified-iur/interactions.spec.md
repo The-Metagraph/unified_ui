@@ -60,6 +60,11 @@ decisions:
   statement: Canonical navigation descriptors shall not encode browser path syntax, host-router names, or runtime-module references as the cross-runtime navigation contract.
   priority: must
   stability: stable
+
+- id: unified_iur.interactions.modal_stack_transition_semantics
+  statement: Canonical navigation descriptors shall represent nested modal flows as ordered modal stack transitions; `open_modal` adds a symbolic modal target to the active modal stack, targetless `close_modal` removes the topmost modal, and targeted `close_modal` identifies a named open modal without requiring modal definitions to be structurally nested.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -74,12 +79,29 @@ decisions:
     - unified_iur.interactions.data_binding_representation
     - unified_iur.interactions.navigation_transition_representation
     - unified_iur.interactions.no_host_router_assumptions
+    - unified_iur.interactions.modal_stack_transition_semantics
   given:
     - A canonical form contains input bindings and submit actions
   when:
     - The form is compiled into `unified_iur`
   then:
     - The form elements carry canonical interaction descriptors and data-binding references without depending on any one runtime-library event model
+
+- id: unified_iur.interactions.stacked_modal_transition_descriptor
+  covers:
+    - unified_iur.interactions.canonical_event_descriptor_representation
+    - unified_iur.interactions.element_binding_attachment
+    - unified_iur.interactions.renderer_independent_payload_mapping
+    - unified_iur.interactions.standard_interaction_families
+    - unified_iur.interactions.navigation_transition_representation
+    - unified_iur.interactions.no_host_router_assumptions
+    - unified_iur.interactions.modal_stack_transition_semantics
+  given:
+    - Canonical interactions describe opening one modal from another modal
+  when:
+    - The interactions are represented in IUR
+  then:
+    - The descriptors preserve ordered modal stack actions and symbolic modal targets without embedding renderer-local containment or routing data
 ```
 
 ## Verification
@@ -95,5 +117,7 @@ decisions:
     - unified_iur.interactions.data_binding_representation
     - unified_iur.interactions.navigation_transition_representation
     - unified_iur.interactions.no_host_router_assumptions
+    - unified_iur.interactions.modal_stack_transition_semantics
     - unified_iur.interactions.form_submission_descriptor
+    - unified_iur.interactions.stacked_modal_transition_descriptor
 ```

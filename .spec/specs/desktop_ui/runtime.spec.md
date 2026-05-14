@@ -87,6 +87,11 @@ decisions:
   statement: Modal dialogs shall be managed on a separate stack from main navigation history, allowing overlays to open and close without affecting back/forward navigation state.
   priority: must
   stability: stable
+
+- id: desktop_ui.runtime.stacked_modal_navigation
+  statement: Modal navigation shall support stack push/pop semantics in which opening another modal pushes onto the modal stack, targetless close pops the topmost modal, and closing the topmost modal reactivates the previous modal or underlying screen without mutating main history or forward stacks.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -218,6 +223,28 @@ decisions:
   then:
     - The modal appears on top of the current screen, and closing it returns to the same screen without affecting the navigation history stack
 
+- id: desktop_ui.runtime_stacked_modal_navigation
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+    - desktop_ui.runtime.stacked_modal_navigation
+  given:
+    - A desktop window has one modal open over the current screen
+  when:
+    - Another modal is opened and then targetless close is triggered
+  then:
+    - The second modal becomes the active top modal, closing it restores the previous modal, and main back/forward navigation state is unchanged
+
 - id: desktop_ui.runtime_window_persists_across_screen_transitions
   covers:
     - desktop_ui.runtime.sdl3_foundation
@@ -258,12 +285,14 @@ decisions:
     - desktop_ui.runtime.navigation_actions
     - desktop_ui.runtime.navigation_event_routing
     - desktop_ui.runtime.modal_stack_independence
+    - desktop_ui.runtime.stacked_modal_navigation
     - desktop_ui.runtime_run_same_screen_on_multiple_targets
     - desktop_ui.runtime_interact_with_visible_native_window
     - desktop_ui.runtime_navigate_between_screens
     - desktop_ui.runtime_back_navigation
     - desktop_ui.runtime_replace_current_screen
     - desktop_ui.runtime_modal_dialog_independent_history
+    - desktop_ui.runtime_stacked_modal_navigation
     - desktop_ui.runtime_window_persists_across_screen_transitions
 
 - kind: source_file
@@ -275,4 +304,5 @@ decisions:
     - desktop_ui.runtime.navigation_actions
     - desktop_ui.runtime.navigation_event_routing
     - desktop_ui.runtime.modal_stack_independence
+    - desktop_ui.runtime.stacked_modal_navigation
 ```

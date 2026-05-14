@@ -61,6 +61,11 @@ decisions:
   statement: The compiler shall lower authored screen-transition navigation intent into canonical `unified_iur` interaction descriptors that preserve transition action, symbolic screen target, modal target, and params without embedding host-router semantics.
   priority: must
   stability: stable
+
+- id: unified_ui.compiler.navigation_modal_stack_lowering
+  statement: The compiler shall lower stacked modal navigation intent by preserving `open_modal` and `close_modal` actions, symbolic modal targets, params, metadata, and transition ordering in canonical IUR descriptors without synthesizing renderer-specific modal containment, focus-trap, or host-router behavior.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -75,6 +80,7 @@ decisions:
     - unified_ui.compiler.introspection_surface
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
+    - unified_ui.compiler.navigation_modal_stack_lowering
   given:
     - A developer authors a screen module with widgets, layout, style, theme, and interaction declarations
   when:
@@ -91,12 +97,29 @@ decisions:
     - unified_ui.compiler.introspection_surface
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
+    - unified_ui.compiler.navigation_modal_stack_lowering
   given:
     - A developer needs to understand what canonical output a DSL module produces
   when:
     - The developer uses compiler or introspection helpers
   then:
     - The package can report the compiled canonical structure without requiring a runtime library to render it
+
+- id: unified_ui.compiler.compile_stacked_modal_navigation
+  covers:
+    - unified_ui.compiler.canonical_iur_output
+    - unified_ui.compiler.deterministic_results
+    - unified_ui.compiler.runtime_independent_bindings
+    - unified_ui.compiler.introspection_surface
+    - unified_ui.compiler.no_renderer_output_modes
+    - unified_ui.compiler.navigation_transition_lowering
+    - unified_ui.compiler.navigation_modal_stack_lowering
+  given:
+    - A developer authors a modal flow where one modal can open another modal
+  when:
+    - The package compiler emits canonical interaction descriptors
+  then:
+    - The compiled output preserves ordered modal stack transitions without encoding renderer-local modal hierarchy or router details
 ```
 
 ## Verification
@@ -112,6 +135,8 @@ decisions:
     - unified_ui.compiler.introspection_surface
     - unified_ui.compiler.no_renderer_output_modes
     - unified_ui.compiler.navigation_transition_lowering
+    - unified_ui.compiler.navigation_modal_stack_lowering
     - unified_ui.compiler.compile_screen_to_iur
     - unified_ui.compiler.inspect_compiled_artifact
+    - unified_ui.compiler.compile_stacked_modal_navigation
 ```

@@ -40,10 +40,15 @@ surface.
 3. Canonical transition targets are symbolic screen identifiers plus optional
    params and metadata rather than URLs, host-router names, or runtime-module
    references.
-4. Local navigation-like interactions such as tab changes or other in-screen
+4. Modal navigation is stack-based transition intent rather than structural
+   modal containment. `open_modal` pushes a symbolic modal target onto the
+   current modal stack, and targetless `close_modal` closes the topmost modal.
+   Runtime libraries may realize or degrade stacked modals through their own
+   host models while preserving that stack meaning.
+5. Local navigation-like interactions such as tab changes or other in-screen
    destination changes may remain canonical interaction descriptors without
    being forced into browser-route semantics.
-5. Runtime libraries translate canonical navigation intent into their own host
+6. Runtime libraries translate canonical navigation intent into their own host
    models:
    - `live_ui` and `elm_ui` may resolve canonical screen transitions through
      host page or route integration

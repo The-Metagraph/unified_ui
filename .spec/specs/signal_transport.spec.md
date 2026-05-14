@@ -73,6 +73,11 @@ decisions:
   statement: The ecosystem shall expose shared canonical transition fixtures, validation rules, and review summaries that runtime packages can consume consistently when transporting screen transitions across package boundaries.
   priority: must
   stability: stable
+
+- id: ecosystem.signal_transport.modal_stack_transition_meaning
+  statement: Modal navigation interactions that cross ecosystem package boundaries shall preserve stack transition meaning, including `open_modal` push behavior, targetless top-modal close behavior, symbolic modal target when applicable, params, and metadata, without requiring runtime-local stack identifiers or structural modal containment.
+  priority: must
+  stability: stable
 ```
 
 ## Exceptions
@@ -105,4 +110,5 @@ decisions:
     - ecosystem.signal_transport.local_state_not_contract
     - ecosystem.signal_transport.navigation_transition_meaning
     - ecosystem.signal_transport.shared_transition_validation_and_fixtures
+    - ecosystem.signal_transport.modal_stack_transition_meaning
 ```

@@ -58,6 +58,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: elm_ui.server_runtime.modal_stack_navigation_state
+  statement: For canonical modal transitions, the server runtime shall maintain authoritative modal stack state in which `open_modal` appends a symbolic modal entry, targetless `close_modal` closes the topmost modal, targeted `close_modal` closes a matching open modal, and the frontend runtime reflects the resulting current modal.
+  priority: must
+  stability: stable
+
 - id: elm_ui.server_runtime.host_route_resolution_boundary
   statement: Host router lookup, URL generation, and frontend route-matching details may be used by applications, but they shall remain host or runtime concerns rather than part of the authored `UnifiedUi` contract.
   priority: must
@@ -82,6 +87,23 @@ decisions:
     - The interaction crosses the ecosystem package boundary
   then:
     - The Phoenix runtime resolves canonical event meaning and updates the authoritative UI representation that the frontend runtime reflects
+
+- id: elm_ui.server_runtime_handle_stacked_modal_navigation
+  covers:
+    - elm_ui.server_runtime.authoritative_server_representation
+    - elm_ui.server_runtime.coordinate_frontend_rendering
+    - elm_ui.server_runtime.handle_boundary_events
+    - elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime
+    - elm_ui.server_runtime.browser_state_is_bounded
+    - elm_ui.server_runtime.canonical_navigation_transition_mapping
+    - elm_ui.server_runtime.modal_stack_navigation_state
+    - elm_ui.server_runtime.host_route_resolution_boundary
+  given:
+    - An `elm_ui` screen has one canonical modal open
+  when:
+    - Another canonical `open_modal` transition is resolved and then a targetless `close_modal` transition is resolved
+  then:
+    - The server records the second modal as current, closing it restores the previous modal as current, and the frontend receives the updated authoritative modal stack state
 ```
 
 ## Verification
@@ -96,6 +118,8 @@ decisions:
     - elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime
     - elm_ui.server_runtime.browser_state_is_bounded
     - elm_ui.server_runtime.canonical_navigation_transition_mapping
+    - elm_ui.server_runtime.modal_stack_navigation_state
     - elm_ui.server_runtime.host_route_resolution_boundary
     - elm_ui.server_runtime_handle_canonical_event
+    - elm_ui.server_runtime_handle_stacked_modal_navigation
 ```

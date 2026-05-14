@@ -61,6 +61,11 @@ decisions:
   statement: When a navigation interaction changes the active top-level surface, the authoring model shall express the target as a symbolic screen identifier with optional params or metadata rather than URLs, Phoenix route helpers, runtime modules, or browser-history instructions.
   priority: must
   stability: stable
+
+- id: unified_ui.signals.navigation_modal_stack_semantics
+  statement: The authored navigation interaction surface shall model nested modal flows as stack transitions; `open_modal` pushes a symbolic modal target onto the current modal stack, and `close_modal` closes the topmost modal by default or a named open modal when a modal target is supplied, without requiring modal definitions to be structurally contained inside one another.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -91,12 +96,30 @@ decisions:
     - unified_ui.signals.no_runtime_local_event_leakage
     - unified_ui.signals.navigation_transition_actions
     - unified_ui.signals.navigation_symbolic_screen_targets
+    - unified_ui.signals.navigation_modal_stack_semantics
   given:
     - A developer authors a navigation interaction such as opening a dialog, changing a tab, or transitioning to another screen
   when:
     - The interaction is declared in the DSL
   then:
     - The package records canonical event meaning and payload mapping without coupling the author to one renderer runtime
+
+- id: unified_ui.signals.author_stacked_modal_navigation_intent
+  covers:
+    - unified_ui.signals.canonical_descriptor_shape
+    - unified_ui.signals.authoring_event_semantics
+    - unified_ui.signals.standard_interaction_families
+    - unified_ui.signals.validation_and_introspection
+    - unified_ui.signals.no_runtime_local_event_leakage
+    - unified_ui.signals.navigation_transition_actions
+    - unified_ui.signals.navigation_symbolic_screen_targets
+    - unified_ui.signals.navigation_modal_stack_semantics
+  given:
+    - A developer authors a modal flow where one modal can open another modal
+  when:
+    - The interactions are declared as consecutive `open_modal` and `close_modal` navigation actions
+  then:
+    - The package records stack-based modal transition meaning, including topmost close behavior, without requiring nested modal structural containment
 ```
 
 ## Verification
@@ -112,6 +135,8 @@ decisions:
     - unified_ui.signals.no_runtime_local_event_leakage
     - unified_ui.signals.navigation_transition_actions
     - unified_ui.signals.navigation_symbolic_screen_targets
+    - unified_ui.signals.navigation_modal_stack_semantics
     - unified_ui.signals.author_form_interaction
     - unified_ui.signals.author_navigation_intent
+    - unified_ui.signals.author_stacked_modal_navigation_intent
 ```

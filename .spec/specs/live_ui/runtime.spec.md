@@ -63,6 +63,11 @@ decisions:
   priority: must
   stability: stable
 
+- id: live_ui.runtime.modal_stack_navigation_state
+  statement: For canonical modal transitions, the runtime shall maintain server-authoritative modal stack state in which `open_modal` appends a symbolic modal entry, targetless `close_modal` closes the topmost modal, targeted `close_modal` closes a matching open modal, and only the topmost modal is active for modal-specific handling.
+  priority: must
+  stability: stable
+
 - id: live_ui.runtime.host_route_resolution_boundary
   statement: Phoenix router lookup, URL generation, and host-specific route matching may be used by applications, but they shall remain host or runtime concerns rather than part of the authored `UnifiedUi` contract.
   priority: must
@@ -122,6 +127,22 @@ decisions:
     - The screen renders buttons, inputs, overlays, or data widgets
   then:
     - The screen composes mountable widget component boundaries inside the shared runtime instead of bypassing them with ad hoc HTML fragments
+
+- id: live_ui.runtime_handle_stacked_modal_navigation
+  covers:
+    - live_ui.runtime.server_authoritative_model
+    - live_ui.runtime.widget_component_local_state
+    - live_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - live_ui.runtime.state_and_render_continuity
+    - live_ui.runtime.canonical_navigation_transition_mapping
+    - live_ui.runtime.modal_stack_navigation_state
+    - live_ui.runtime.host_route_resolution_boundary
+  given:
+    - A `live_ui` screen has one canonical modal open
+  when:
+    - Another canonical `open_modal` transition is resolved and then a targetless `close_modal` transition is resolved
+  then:
+    - The second modal becomes the current modal, closing it restores the previous modal as current, and the screen navigation history is unchanged
 ```
 
 ## Verification
@@ -137,8 +158,10 @@ decisions:
     - live_ui.runtime.native_and_iur_entrypoints_share_runtime
     - live_ui.runtime.state_and_render_continuity
     - live_ui.runtime.canonical_navigation_transition_mapping
+    - live_ui.runtime.modal_stack_navigation_state
     - live_ui.runtime.host_route_resolution_boundary
     - live_ui.runtime.handle_canonical_event_server_side
     - live_ui.runtime_handle_direct_native_event
     - live_ui.runtime.screen_composes_widget_components
+    - live_ui.runtime_handle_stacked_modal_navigation
 ```
