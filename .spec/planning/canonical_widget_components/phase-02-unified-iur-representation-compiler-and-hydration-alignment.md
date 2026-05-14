@@ -91,25 +91,25 @@ Back to index: [README](./README.md)
       [x] 2.3.2.2 Subtask - Project row-scope binding values into child props or binding states.
       [x] 2.3.2.3 Subtask - Preserve child interactions and accessibility metadata for each repeated row.
 
-  [ ] 2.4 Section - Safety, Accessibility, and Validation Fixtures
+  [x] 2.4 Section - Safety, Accessibility, and Validation Fixtures
     Provide shared fixtures and validation rules that prove the IUR contract
     carries safety and accessibility meaning.
 
-    [ ] 2.4.1 Task - Add text-safety and token validation
+    [x] 2.4.1 Task - Add text-safety and token validation
       Ensure IUR accepts semantic text metadata without treating user-provided
       text as trusted markup.
 
-      [ ] 2.4.1.1 Subtask - Validate redline segment kinds and states.
-      [ ] 2.4.1.2 Subtask - Validate supported code token types while allowing plain text fallback tokens.
-      [ ] 2.4.1.3 Subtask - Add malicious-content fixtures for renderers to escape in host output.
+      [x] 2.4.1.1 Subtask - Validate redline segment kinds and states.
+      [x] 2.4.1.2 Subtask - Validate supported code token types while allowing plain text fallback tokens.
+      [x] 2.4.1.3 Subtask - Add malicious-content fixtures for renderers to escape in host output.
 
-    [ ] 2.4.2 Task - Add accessibility and state fixtures
+    [x] 2.4.2 Task - Add accessibility and state fixtures
       Give runtime packages a shared target for roles, labels, progress state,
       active state, and open state.
 
-      [ ] 2.4.2.1 Subtask - Add fixtures for headings, labels, button pressed state, progress values, disclosure state, and panel labels.
-      [ ] 2.4.2.2 Subtask - Add fixture summaries that runtimes can use in parity tests.
-      [ ] 2.4.2.3 Subtask - Add validation that required accessible names are present where the canonical contract requires them.
+      [x] 2.4.2.1 Subtask - Add fixtures for headings, labels, button pressed state, progress values, disclosure state, and panel labels.
+      [x] 2.4.2.2 Subtask - Add fixture summaries that runtimes can use in parity tests.
+      [x] 2.4.2.3 Subtask - Add validation that required accessible names are present where the canonical contract requires them.
 
   [ ] 2.5 Section - Phase 2 Integration Tests
     Validate compiler lowering, IUR representation, repeat expansion, and

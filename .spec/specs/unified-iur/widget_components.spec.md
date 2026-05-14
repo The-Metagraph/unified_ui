@@ -18,6 +18,8 @@ status: active
 summary: Canonical IUR contract for expanded widget components and list-repeat composition behavior derived from AshUi PRs 79 through 98.
 surface:
   - packages/unified_iur
+  - packages/unified_iur/lib/unified_iur/fixtures.ex
+  - packages/unified_iur/lib/unified_iur/validate.ex
   - packages/unified_iur/lib/unified_iur/widgets/components.ex
   - .spec/specs/unified-iur/widget_components.spec.md
   - .spec/specs/unified-ui/widget_components.spec.md
