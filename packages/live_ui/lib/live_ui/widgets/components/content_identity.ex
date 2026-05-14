@@ -147,8 +147,9 @@ defmodule LiveUi.Widgets.Components.Avatar do
   @impl true
   def render(assigns) do
     assigns =
-      assign(
-        assigns,
+      assigns
+      |> assign(:resolved_label, assigns.label || assigns.initials || "Avatar")
+      |> assign(
         :component_attrs,
         Support.component_attrs(assigns, :avatar, :content_identity, %{
           "data-live-ui-avatar-size" => assigns.size,
@@ -157,7 +158,7 @@ defmodule LiveUi.Widgets.Components.Avatar do
       )
 
     ~H"""
-    <span id={@id} role="img" aria-label={@label} class={@class} {@component_attrs}>
+    <span id={@id} role="img" aria-label={@resolved_label} class={@class} {@component_attrs}>
       <img :if={@image_source} src={@image_source} alt="" />
       <span :if={!@image_source} data-live-ui-avatar-fallback="initials"><%= @initials %></span>
     </span>
@@ -185,8 +186,9 @@ defmodule LiveUi.Widgets.Components.PresenceDot do
   @impl true
   def render(assigns) do
     assigns =
-      assign(
-        assigns,
+      assigns
+      |> assign(:resolved_label, assigns.label || "Presence #{Support.text(assigns.presence)}")
+      |> assign(
         :component_attrs,
         Support.component_attrs(assigns, :presence_dot, :content_identity, %{
           "data-live-ui-presence" => assigns.presence,
@@ -198,7 +200,7 @@ defmodule LiveUi.Widgets.Components.PresenceDot do
     <span
       id={@id}
       role="status"
-      aria-label={@label || "Presence #{Support.text(@presence)}"}
+      aria-label={@resolved_label}
       class={@class}
       {@component_attrs}
     >

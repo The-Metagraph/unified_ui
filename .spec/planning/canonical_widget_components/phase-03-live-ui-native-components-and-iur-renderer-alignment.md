@@ -44,24 +44,24 @@ Back to index: [README](./README.md)
       [x] 3.1.2.2 Subtask - Avoid literal color, font, or spacing values in component output where theme tokens should apply.
       [x] 3.1.2.3 Subtask - Add component metadata used by tooling and focused examples.
 
-  [ ] 3.2 Section - Content, Identity, Form, Control, and Composer Components
+  [x] 3.2 Section - Content, Identity, Form, Control, and Composer Components
     Implement LiveUi-native components for the widgets that are central to
     content, identity, form, and messaging surfaces.
 
-    [ ] 3.2.1 Task - Implement content, identity, and disclosure components
+    [x] 3.2.1 Task - Implement content, identity, and disclosure components
       Realize the passive and stateful content widgets through LiveView-native
       markup and component boundaries.
 
-      [ ] 3.2.1.1 Subtask - Implement inline rich heading and kicker components with safe text segment rendering.
-      [ ] 3.2.1.2 Subtask - Implement avatar and presence dot components with accessible labels and theme variants.
-      [ ] 3.2.1.3 Subtask - Implement disclosure with native open-state rendering and child body composition.
+      [x] 3.2.1.1 Subtask - Implement inline rich heading and kicker components with safe text segment rendering.
+      [x] 3.2.1.2 Subtask - Implement avatar and presence dot components with accessible labels and theme variants.
+      [x] 3.2.1.3 Subtask - Implement disclosure with native open-state rendering and child body composition.
 
-    [ ] 3.2.2 Task - Implement form, segmented control, and composer components
+    [x] 3.2.2 Task - Implement form, segmented control, and composer components
       Realize interactive controls while preserving canonical signal meaning.
 
-      [ ] 3.2.2.1 Subtask - Implement segmented button group with pressed state and canonical selection event translation.
-      [ ] 3.2.2.2 Subtask - Implement runtime-owned form shell with LiveView and AshPhoenix integration hooks that remain LiveUi-local.
-      [ ] 3.2.2.3 Subtask - Implement chat composer with textarea, tool area, disabled state, send event, and change event handling.
+      [x] 3.2.2.1 Subtask - Implement segmented button group with pressed state and canonical selection event translation.
+      [x] 3.2.2.2 Subtask - Implement runtime-owned form shell with LiveView and AshPhoenix integration hooks that remain LiveUi-local.
+      [x] 3.2.2.3 Subtask - Implement chat composer with textarea, tool area, disabled state, send event, and change event handling.
 
   [ ] 3.3 Section - Row, Workflow, Layer, Callout, Redline, and Code Components
     Implement the operational and document-workflow components used by list,

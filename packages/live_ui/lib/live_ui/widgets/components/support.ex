@@ -74,6 +74,14 @@ defmodule LiveUi.Widgets.Components.Support do
 
   def disabled?(value), do: fetch(value, :disabled?, fetch(value, :disabled, false))
 
+  def attrs(source) do
+    case fetch(source, :attrs, %{}) do
+      attrs when is_map(attrs) -> attrs
+      attrs when is_list(attrs) -> Map.new(attrs)
+      _other -> %{}
+    end
+  end
+
   def label(value, default \\ "") do
     fetch(value, :label, fetch(value, :title, fetch(value, :value, default)))
     |> text(default)

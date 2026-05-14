@@ -8,7 +8,7 @@ defmodule LiveUi.Widgets.Components.SegmentedButtonGroup do
   use LiveUi.Component,
     family: :components,
     name: :segmented_button_group,
-    assigns: [:options, :active_value, :disabled, :label],
+    assigns: [:options, :active_value, :disabled, :label, :option_attrs],
     events: [:selection]
 
   LiveUi.Component.common_attrs()
@@ -16,6 +16,7 @@ defmodule LiveUi.Widgets.Components.SegmentedButtonGroup do
   attr(:active_value, :any, default: nil)
   attr(:disabled, :boolean, default: false)
   attr(:label, :string, default: nil)
+  attr(:option_attrs, :map, default: %{})
 
   @impl true
   def render(assigns) do
@@ -34,8 +35,9 @@ defmodule LiveUi.Widgets.Components.SegmentedButtonGroup do
         :for={option <- @options}
         type="button"
         disabled={@disabled || Support.disabled?(option)}
-        aria-pressed={Support.selected?(option, @active_value)}
+        aria-pressed={if Support.selected?(option, @active_value), do: "true", else: "false"}
         data-live-ui-segment-value={Support.text(Support.fetch(option, :value))}
+        {Map.merge(@option_attrs, Support.attrs(option))}
       ><%= Support.label(option) %></button>
     </div>
     """
@@ -53,7 +55,7 @@ defmodule LiveUi.Widgets.Components.RuntimeFormShell do
     family: :components,
     name: :runtime_form_shell,
     slots: [:inner_block],
-    assigns: [:fields, :submit_label, :validation_state, :host_adapter_hints],
+    assigns: [:fields, :submit_label, :validation_state, :host_adapter_hints, :form_attrs],
     events: [:submit, :change]
 
   LiveUi.Component.common_attrs()
@@ -61,6 +63,7 @@ defmodule LiveUi.Widgets.Components.RuntimeFormShell do
   attr(:submit_label, :string, default: "Submit")
   attr(:validation_state, :string, default: nil)
   attr(:host_adapter_hints, :map, default: %{})
+  attr(:form_attrs, :map, default: %{})
   slot(:inner_block)
 
   @impl true
@@ -76,13 +79,14 @@ defmodule LiveUi.Widgets.Components.RuntimeFormShell do
       )
 
     ~H"""
-    <form id={@id} class={@class} {@component_attrs}>
+    <form id={@id} class={@class} {@component_attrs} {@form_attrs}>
       <label :for={field <- @fields} data-live-ui-form-field={Support.text(Support.fetch(field, :name))}>
         <span><%= Support.label(field, Support.text(Support.fetch(field, :name))) %></span>
         <input
           name={Support.text(Support.fetch(field, :name))}
           type={Support.text(Support.fetch(field, :type, "text"))}
           value={Support.text(Support.fetch(field, :value))}
+          {Support.attrs(field)}
         />
       </label>
       <%= render_slot(@inner_block) %>
@@ -109,7 +113,17 @@ defmodule LiveUi.Widgets.Components.ChatComposer do
     family: :components,
     name: :chat_composer,
     slots: [:tools],
-    assigns: [:name, :value, :placeholder, :rows, :send_label, :disabled],
+    assigns: [
+      :name,
+      :value,
+      :placeholder,
+      :rows,
+      :send_label,
+      :disabled,
+      :form_attrs,
+      :input_attrs,
+      :send_attrs
+    ],
     events: [:send, :change]
 
   LiveUi.Component.common_attrs()
@@ -119,6 +133,9 @@ defmodule LiveUi.Widgets.Components.ChatComposer do
   attr(:rows, :integer, default: 3)
   attr(:send_label, :string, default: "Send")
   attr(:disabled, :boolean, default: false)
+  attr(:form_attrs, :map, default: %{})
+  attr(:input_attrs, :map, default: %{})
+  attr(:send_attrs, :map, default: %{})
   slot(:tools)
 
   @impl true
@@ -133,10 +150,10 @@ defmodule LiveUi.Widgets.Components.ChatComposer do
       )
 
     ~H"""
-    <form id={@id} class={@class} {@component_attrs}>
-      <textarea name={@name} rows={@rows} placeholder={@placeholder} disabled={@disabled}><%= @value %></textarea>
+    <form id={@id} class={@class} {@component_attrs} {@form_attrs}>
+      <textarea name={@name} rows={@rows} placeholder={@placeholder} disabled={@disabled} {@input_attrs}><%= @value %></textarea>
       <div :if={@tools != []} data-live-ui-composer-slot="tools"><%= render_slot(@tools) %></div>
-      <button type="submit" disabled={@disabled}><%= @send_label %></button>
+      <button type="submit" disabled={@disabled} {@send_attrs}><%= @send_label %></button>
     </form>
     """
   end

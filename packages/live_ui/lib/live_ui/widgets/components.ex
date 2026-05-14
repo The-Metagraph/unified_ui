@@ -106,7 +106,7 @@ defmodule LiveUi.Widgets.Components do
     segmented_button_group: %{
       module: LiveUi.Widgets.Components.SegmentedButtonGroup,
       family: :form_control,
-      assigns: [:options, :active_value, :disabled, :label],
+      assigns: [:options, :active_value, :disabled, :label, :option_attrs],
       slots: [],
       events: [:selection],
       local_state_keys: []
@@ -114,7 +114,7 @@ defmodule LiveUi.Widgets.Components do
     runtime_form_shell: %{
       module: LiveUi.Widgets.Components.RuntimeFormShell,
       family: :form_control,
-      assigns: [:fields, :submit_label, :validation_state, :host_adapter_hints],
+      assigns: [:fields, :submit_label, :validation_state, :host_adapter_hints, :form_attrs],
       slots: [:inner_block],
       events: [:submit, :change],
       local_state_keys: []
@@ -122,7 +122,17 @@ defmodule LiveUi.Widgets.Components do
     chat_composer: %{
       module: LiveUi.Widgets.Components.ChatComposer,
       family: :form_control,
-      assigns: [:name, :value, :placeholder, :rows, :send_label, :disabled],
+      assigns: [
+        :name,
+        :value,
+        :placeholder,
+        :rows,
+        :send_label,
+        :disabled,
+        :form_attrs,
+        :input_attrs,
+        :send_attrs
+      ],
       slots: [:tools],
       events: [:send, :change],
       local_state_keys: []
