@@ -304,7 +304,18 @@ defmodule UnifiedUi.Phase2IntegrationTest do
              :presence_dot,
              :segmented_button_group,
              :runtime_form_shell,
-             :chat_composer
+             :chat_composer,
+             :list_item_multi_column,
+             :artifact_row,
+             :pipeline_stepper_horizontal,
+             :segmented_progress_bar,
+             :workflow_stage_list_vertical,
+             :meter_thin,
+             :sticky_frosted_header,
+             :slide_over_panel,
+             :event_callout,
+             :redline_inline,
+             :code_block_syntax_highlighted
            ]
 
     assert UnifiedUi.Layout.kinds() == [:box, :row, :column, :grid, :stack]

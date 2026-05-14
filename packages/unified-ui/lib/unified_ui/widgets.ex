@@ -47,6 +47,26 @@ defmodule UnifiedUi.Widgets do
     WidgetComponentEntities.form_control_kinds()
   end
 
+  @spec row_artifact_component_kinds() :: [atom()]
+  def row_artifact_component_kinds do
+    WidgetComponentEntities.row_artifact_kinds()
+  end
+
+  @spec workflow_component_kinds() :: [atom()]
+  def workflow_component_kinds do
+    WidgetComponentEntities.workflow_kinds()
+  end
+
+  @spec layer_callout_component_kinds() :: [atom()]
+  def layer_callout_component_kinds do
+    WidgetComponentEntities.layer_callout_kinds()
+  end
+
+  @spec redline_code_component_kinds() :: [atom()]
+  def redline_code_component_kinds do
+    WidgetComponentEntities.redline_code_kinds()
+  end
+
   @spec component_catalog() :: [WidgetComponents.component()]
   def component_catalog do
     WidgetComponents.catalog()
@@ -76,6 +96,10 @@ defmodule UnifiedUi.Widgets do
       feedback_kinds() ++
       advanced_kinds() ++
       content_identity_component_kinds() ++
-      form_control_component_kinds()
+      form_control_component_kinds() ++
+      row_artifact_component_kinds() ++
+      workflow_component_kinds() ++
+      layer_callout_component_kinds() ++
+      redline_code_component_kinds()
   end
 end

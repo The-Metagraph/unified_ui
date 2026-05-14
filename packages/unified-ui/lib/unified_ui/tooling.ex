@@ -36,6 +36,23 @@ defmodule UnifiedUi.Tooling do
       ".spec/specs/unified-ui/signals.spec.md",
       ".spec/specs/unified-ui/widget_components.spec.md"
     ],
+    row_and_artifact: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/signals.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    workflow_progress_and_status: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    layer_shell_and_callout: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
+    redline_and_code: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
     layout: [".spec/specs/unified-ui/display_systems.spec.md"],
     display: [".spec/specs/unified-ui/display_systems.spec.md"],
     overlay: [".spec/specs/unified-ui/display_systems.spec.md"],

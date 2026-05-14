@@ -96,33 +96,33 @@ Back to index: [README](./README.md)
       [x] 1.3.3.2 Subtask - Author optional tool-area and status children with deterministic ordering.
       [x] 1.3.3.3 Subtask - Validate that send and change interactions preserve canonical event meaning.
 
-  [ ] 1.4 Section - Rows, Workflow, Layer, Callout, Redline, and Code Authoring
+  [x] 1.4 Section - Rows, Workflow, Layer, Callout, Redline, and Code Authoring
     Add authored DSL support for the remaining visual and operational widget
     families in the PR set.
 
-    [ ] 1.4.1 Task - Implement row and artifact authoring
+    [x] 1.4.1 Task - Implement row and artifact authoring
       Support selectable or linkable row primitives for list and artifact
       surfaces.
 
-      [ ] 1.4.1.1 Subtask - Author `list_item_multi_column` with row identity, column template, active state, optional link target, and child cells.
-      [ ] 1.4.1.2 Subtask - Author `artifact_row` with title, meta, row identity, active state, optional link target, and trailing children.
-      [ ] 1.4.1.3 Subtask - Lower row activation into canonical interaction descriptors.
+      [x] 1.4.1.1 Subtask - Author `list_item_multi_column` with row identity, column template, active state, optional link target, and child cells.
+      [x] 1.4.1.2 Subtask - Author `artifact_row` with title, meta, row identity, active state, optional link target, and trailing children.
+      [x] 1.4.1.3 Subtask - Lower row activation into canonical interaction descriptors.
 
-    [ ] 1.4.2 Task - Implement workflow and progress authoring
+    [x] 1.4.2 Task - Implement workflow and progress authoring
       Support the stage, progress, and meter widgets needed by process and
       workflow screens.
 
-      [ ] 1.4.2.1 Subtask - Author `pipeline_stepper_horizontal` with ordered steps, active index, completed state, labels, and optional navigation intent.
-      [ ] 1.4.2.2 Subtask - Author `segmented_progress_bar` with segment weights, states, labels, and aggregate progress metadata.
-      [ ] 1.4.2.3 Subtask - Author `workflow_stage_list_vertical` and `meter_thin` with normalized values, labels, and state semantics.
+      [x] 1.4.2.1 Subtask - Author `pipeline_stepper_horizontal` with ordered steps, active index, completed state, labels, and optional navigation intent.
+      [x] 1.4.2.2 Subtask - Author `segmented_progress_bar` with segment weights, states, labels, and aggregate progress metadata.
+      [x] 1.4.2.3 Subtask - Author `workflow_stage_list_vertical` and `meter_thin` with normalized values, labels, and state semantics.
 
-    [ ] 1.4.3 Task - Implement layer, shell, callout, redline, and code authoring
+    [x] 1.4.3 Task - Implement layer, shell, callout, redline, and code authoring
       Support shell and content-specialized widgets with portable structure and
       safety rules.
 
-      [ ] 1.4.3.1 Subtask - Author `sticky_frosted_header` with leading, title, and trailing positional children.
-      [ ] 1.4.3.2 Subtask - Author `slide_over_panel` as a non-modal layer with open state, size, label, and children.
-      [ ] 1.4.3.3 Subtask - Author `event_callout`, `redline_inline`, and `code_block_syntax_highlighted` with tone, segment, token, and text-safety metadata.
+      [x] 1.4.3.1 Subtask - Author `sticky_frosted_header` with leading, title, and trailing positional children.
+      [x] 1.4.3.2 Subtask - Author `slide_over_panel` as a non-modal layer with open state, size, label, and children.
+      [x] 1.4.3.3 Subtask - Author `event_callout`, `redline_inline`, and `code_block_syntax_highlighted` with tone, segment, token, and text-safety metadata.
 
   [ ] 1.5 Section - List-Repeat Composition Authoring
     Add the list-repeat behavior introduced by AshUi PR 98 as a canonical DSL

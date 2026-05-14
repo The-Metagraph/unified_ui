@@ -7,10 +7,19 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
 
   @content_identity_family :content_identity_and_disclosure
   @form_control_family :form_control_and_composer
+  @row_artifact_family :row_and_artifact
+  @workflow_family :workflow_progress_and_status
+  @layer_family :layer_shell_and_callout
+  @redline_code_family :redline_and_code
 
   @spec entities() :: [Spark.Dsl.Entity.t()]
   def entities do
-    content_identity_entities() ++ form_control_entities()
+    content_identity_entities() ++
+      form_control_entities() ++
+      row_artifact_entities() ++
+      workflow_entities() ++
+      layer_callout_entities() ++
+      redline_code_entities()
   end
 
   @spec content_identity_entities() :: [Spark.Dsl.Entity.t()]
@@ -75,6 +84,127 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
     ]
   end
 
+  @spec row_artifact_entities() :: [Spark.Dsl.Entity.t()]
+  def row_artifact_entities do
+    [
+      container(
+        :list_item_multi_column,
+        @row_artifact_family,
+        row_identity: [type: :any, required: true],
+        column_template: [type: :any, required: true],
+        active?: [type: :boolean, required: false, default: false],
+        link_target: [type: :string, required: false],
+        action_intent: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      ),
+      container(
+        :artifact_row,
+        @row_artifact_family,
+        title: [type: :string, required: true],
+        meta: [type: :any, required: false],
+        row_identity: [type: :any, required: true],
+        active?: [type: :boolean, required: false, default: false],
+        link_target: [type: :string, required: false],
+        action_intent: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      )
+    ]
+  end
+
+  @spec workflow_entities() :: [Spark.Dsl.Entity.t()]
+  def workflow_entities do
+    [
+      leaf(
+        :pipeline_stepper_horizontal,
+        @workflow_family,
+        steps: [type: :any, required: true],
+        active_index: [type: :integer, required: false, default: 0],
+        completed_indices: [type: :any, required: false, default: []],
+        navigation_intent: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      ),
+      leaf(
+        :segmented_progress_bar,
+        @workflow_family,
+        segments: [type: :any, required: true],
+        aggregate_progress: [type: :any, required: false],
+        label: [type: :string, required: false],
+        summary: [type: :string, required: false]
+      ),
+      leaf(
+        :workflow_stage_list_vertical,
+        @workflow_family,
+        stages: [type: :any, required: true],
+        active_index: [type: :integer, required: false, default: 0],
+        summary: [type: :string, required: false]
+      ),
+      leaf(
+        :meter_thin,
+        @workflow_family,
+        current: [type: :any, required: true],
+        minimum: [type: :any, required: false, default: 0],
+        maximum: [type: :any, required: false, default: 100],
+        label: [type: :string, required: false],
+        state: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      )
+    ]
+  end
+
+  @spec layer_callout_entities() :: [Spark.Dsl.Entity.t()]
+  def layer_callout_entities do
+    [
+      container(
+        :sticky_frosted_header,
+        @layer_family,
+        title: [type: :string, required: true],
+        leading: [type: :any, required: false, default: []],
+        trailing: [type: :any, required: false, default: []],
+        summary: [type: :string, required: false]
+      ),
+      container(
+        :slide_over_panel,
+        @layer_family,
+        open?: [type: :boolean, required: false, default: false],
+        size: [type: {:in, [:small, :medium, :large, :wide]}, required: false, default: :medium],
+        modal?: [type: :boolean, required: false, default: false],
+        dismiss_intent: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      ),
+      container(
+        :event_callout,
+        @layer_family,
+        tone: [type: :atom, required: false, default: :info],
+        eyebrow: [type: :string, required: false],
+        title: [type: :string, required: false],
+        message: [type: :string, required: true],
+        action_intent: [type: :atom, required: false],
+        summary: [type: :string, required: false]
+      )
+    ]
+  end
+
+  @spec redline_code_entities() :: [Spark.Dsl.Entity.t()]
+  def redline_code_entities do
+    [
+      leaf(
+        :redline_inline,
+        @redline_code_family,
+        segments: [type: :any, required: true],
+        text_safety: [type: :atom, required: false, default: :plain_text],
+        summary: [type: :string, required: false]
+      ),
+      leaf(
+        :code_block_syntax_highlighted,
+        @redline_code_family,
+        language: [type: :any, required: true],
+        tokens: [type: :any, required: true],
+        text_safety: [type: :atom, required: false, default: :plain_text],
+        summary: [type: :string, required: false]
+      )
+    ]
+  end
+
   @spec content_identity_kinds() :: [atom()]
   def content_identity_kinds do
     Enum.map(content_identity_entities(), & &1.name)
@@ -85,9 +215,34 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
     Enum.map(form_control_entities(), & &1.name)
   end
 
+  @spec row_artifact_kinds() :: [atom()]
+  def row_artifact_kinds do
+    Enum.map(row_artifact_entities(), & &1.name)
+  end
+
+  @spec workflow_kinds() :: [atom()]
+  def workflow_kinds do
+    Enum.map(workflow_entities(), & &1.name)
+  end
+
+  @spec layer_callout_kinds() :: [atom()]
+  def layer_callout_kinds do
+    Enum.map(layer_callout_entities(), & &1.name)
+  end
+
+  @spec redline_code_kinds() :: [atom()]
+  def redline_code_kinds do
+    Enum.map(redline_code_entities(), & &1.name)
+  end
+
   @spec kinds() :: [atom()]
   def kinds do
-    content_identity_kinds() ++ form_control_kinds()
+    content_identity_kinds() ++
+      form_control_kinds() ++
+      row_artifact_kinds() ++
+      workflow_kinds() ++
+      layer_callout_kinds() ++
+      redline_code_kinds()
   end
 
   defp leaf(name, family, extra_schema) do
@@ -97,6 +252,19 @@ defmodule UnifiedUi.Dsl.Entities.WidgetComponents do
       args: [:id],
       identifier: :id,
       auto_set_fields: [family: family, kind: name],
+      schema: EntitySchema.widget(extra_schema)
+    }
+  end
+
+  defp container(name, family, extra_schema) do
+    %Spark.Dsl.Entity{
+      name: name,
+      target: Node,
+      args: [:id],
+      identifier: :id,
+      recursive_as: :children,
+      auto_set_fields: [family: family, kind: name],
+      entities: [children: Foundational.entities()],
       schema: EntitySchema.widget(extra_schema)
     }
   end

@@ -33,7 +33,11 @@ defmodule UnifiedUi.ReferenceTest do
              :data,
              :operational,
              :content_identity_and_disclosure,
-             :form_control_and_composer
+             :form_control_and_composer,
+             :row_and_artifact,
+             :workflow_progress_and_status,
+             :layer_shell_and_callout,
+             :redline_and_code
            ]
 
     assert UnifiedUi.Reference.construct_families().signals == [

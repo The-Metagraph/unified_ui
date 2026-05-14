@@ -17,6 +17,10 @@ defmodule UnifiedUi.Dsl.Node do
           | :canvas
           | :content_identity_and_disclosure
           | :form_control_and_composer
+          | :row_and_artifact
+          | :workflow_progress_and_status
+          | :layer_shell_and_callout
+          | :redline_and_code
 
   @type t :: %__MODULE__{
           __identifier__: atom() | nil,
@@ -158,6 +162,22 @@ defmodule UnifiedUi.Dsl.Node do
           validation_state: atom() | nil,
           send_label: String.t() | nil,
           send_intent: atom() | nil,
+          row_identity: term(),
+          column_template: list() | nil,
+          active?: boolean() | nil,
+          link_target: String.t() | nil,
+          meta: term(),
+          steps: list() | nil,
+          active_index: integer() | nil,
+          completed_indices: list() | nil,
+          navigation_intent: atom() | nil,
+          aggregate_progress: map() | nil,
+          stages: list() | nil,
+          leading: list() | nil,
+          trailing: list() | nil,
+          language: atom() | String.t() | nil,
+          tokens: list() | nil,
+          text_safety: atom() | nil,
           children: [t()]
         }
 
@@ -300,6 +320,22 @@ defmodule UnifiedUi.Dsl.Node do
             validation_state: nil,
             send_label: nil,
             send_intent: nil,
+            row_identity: nil,
+            column_template: nil,
+            active?: nil,
+            link_target: nil,
+            meta: nil,
+            steps: nil,
+            active_index: nil,
+            completed_indices: nil,
+            navigation_intent: nil,
+            aggregate_progress: nil,
+            stages: nil,
+            leading: nil,
+            trailing: nil,
+            language: nil,
+            tokens: nil,
+            text_safety: nil,
             children: []
 
   @spec summary(t()) :: map()
@@ -325,6 +361,7 @@ defmodule UnifiedUi.Dsl.Node do
         end,
       interaction_refs: node.interaction_refs,
       binding_refs: node.binding_refs,
+      action_intent: summary_action_intent(node),
       submit_intent: summary_submit_intent(node),
       role: node.role,
       presentation: node.presentation,
@@ -340,6 +377,8 @@ defmodule UnifiedUi.Dsl.Node do
       content_ref: node.content_ref,
       target_ref: node.target_ref,
       trigger_ref: node.trigger_ref,
+      modal?: summary_modal(node),
+      dismiss_intent: summary_dismiss_intent(node),
       placement: node.placement,
       base_ref: node.base_ref,
       layer_refs: node.layer_refs,
@@ -372,6 +411,22 @@ defmodule UnifiedUi.Dsl.Node do
       validation_state: node.validation_state,
       send_label: node.send_label,
       send_intent: node.send_intent,
+      row_identity: node.row_identity,
+      column_template: node.column_template,
+      active?: node.active?,
+      link_target: node.link_target,
+      meta: node.meta,
+      steps: node.steps,
+      active_index: node.active_index,
+      completed_indices: node.completed_indices,
+      navigation_intent: node.navigation_intent,
+      aggregate_progress: node.aggregate_progress,
+      stages: node.stages,
+      leading: node.leading,
+      trailing: node.trailing,
+      language: node.language,
+      tokens: node.tokens,
+      text_safety: node.text_safety,
       current: node.current,
       minimum: node.minimum,
       maximum: node.maximum,
@@ -394,4 +449,23 @@ defmodule UnifiedUi.Dsl.Node do
   end
 
   defp summary_submit_intent(_node), do: nil
+
+  defp summary_action_intent(%__MODULE__{kind: kind, action_intent: action_intent})
+       when kind in [:list_item_multi_column, :artifact_row, :event_callout] do
+    action_intent
+  end
+
+  defp summary_action_intent(_node), do: nil
+
+  defp summary_modal(%__MODULE__{kind: :slide_over_panel, modal?: modal?}), do: modal?
+  defp summary_modal(_node), do: nil
+
+  defp summary_dismiss_intent(%__MODULE__{
+         kind: :slide_over_panel,
+         dismiss_intent: dismiss_intent
+       }) do
+    dismiss_intent
+  end
+
+  defp summary_dismiss_intent(_node), do: nil
 end
