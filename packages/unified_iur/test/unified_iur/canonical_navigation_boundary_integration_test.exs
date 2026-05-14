@@ -44,7 +44,11 @@ defmodule UnifiedIUR.CanonicalNavigationBoundaryIntegrationTest do
                  screen: :settings,
                  modal: nil,
                  params?: true,
-                 targetless?: false
+                 targetless?: false,
+                 modal_stack?: false,
+                 modal_stack_operation: nil,
+                 modal_stack_target: nil,
+                 modal_stack_effect: nil
                }
              },
              summary: %{
@@ -54,7 +58,11 @@ defmodule UnifiedIUR.CanonicalNavigationBoundaryIntegrationTest do
                screen: :settings,
                modal: nil,
                params?: true,
-               targetless?: false
+               targetless?: false,
+               modal_stack?: false,
+               modal_stack_operation: nil,
+               modal_stack_target: nil,
+               modal_stack_effect: nil
              }
            }
   end

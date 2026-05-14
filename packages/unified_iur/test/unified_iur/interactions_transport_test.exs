@@ -25,7 +25,11 @@ defmodule UnifiedIUR.InteractionsTransportTest do
              screen: :settings,
              modal: nil,
              params?: true,
-             targetless?: false
+             targetless?: false,
+             modal_stack?: false,
+             modal_stack_operation: nil,
+             modal_stack_target: nil,
+             modal_stack_effect: nil
            }
 
     assert fixture.extensions == %{
@@ -50,6 +54,48 @@ defmodule UnifiedIUR.InteractionsTransportTest do
            }
 
     assert :ok = Transport.validate_boundary_extensions(fixture.extensions)
+  end
+
+  test "summarizes and validates modal stack boundary semantics" do
+    open_fixture = Transport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top_fixture = Transport.boundary_fixture!("modal_stack--close_top")
+    close_named_fixture = Transport.boundary_fixture!("modal_stack--close_named_settings")
+
+    assert open_fixture.summary == %{
+             family: :navigation,
+             intent: :open_confirm_modal,
+             action: :open_modal,
+             screen: nil,
+             modal: :settings_confirm_dialog,
+             params?: true,
+             targetless?: false,
+             modal_stack?: true,
+             modal_stack_operation: :push,
+             modal_stack_target: :symbolic_modal,
+             modal_stack_effect: :push_modal
+           }
+
+    assert close_top_fixture.summary == %{
+             family: :navigation,
+             intent: :close_top_modal,
+             action: :close_modal,
+             screen: nil,
+             modal: nil,
+             params?: false,
+             targetless?: true,
+             modal_stack?: true,
+             modal_stack_operation: :close,
+             modal_stack_target: :topmost_modal,
+             modal_stack_effect: :close_topmost_or_named_modal
+           }
+
+    assert close_named_fixture.summary.modal == :settings_dialog
+    refute close_named_fixture.summary.targetless?
+    assert close_named_fixture.summary.modal_stack_effect == :close_topmost_or_named_modal
+
+    assert :ok = Transport.validate_boundary_fixture(open_fixture)
+    assert :ok = Transport.validate_boundary_fixture(close_top_fixture)
+    assert :ok = Transport.validate_boundary_fixture(close_named_fixture)
   end
 
   test "rejects leaked router syntax and missing required canonical fields" do
@@ -81,8 +127,37 @@ defmodule UnifiedIUR.InteractionsTransportTest do
                  screen: nil,
                  modal: nil,
                  params?: false,
-                 targetless?: true
+                 targetless?: true,
+                 modal_stack?: false,
+                 modal_stack_operation: nil,
+                 modal_stack_target: nil,
+                 modal_stack_effect: nil
                }
+             })
+  end
+
+  test "rejects runtime-local modal stack identifiers crossing the boundary" do
+    assert {:error, {:forbidden_navigation_keys, [:stack_id]}} =
+             Transport.validate_boundary_extensions(%{
+               unified_iur_boundary: %{
+                 family: :navigation,
+                 intent: :open_confirm_modal,
+                 source_context: %{element_id: "confirm-settings-button"},
+                 target: %{
+                   navigation: %{
+                     action: :open_modal,
+                     modal: :settings_confirm_dialog,
+                     modal_stack: %{
+                       operation: :push,
+                       target: :symbolic_modal,
+                       stack_effect: :push_modal,
+                       stack_id: "runtime-stack-1"
+                     }
+                   }
+                 },
+                 metadata: %{}
+               },
+               unified_iur_boundary_summary: %{}
              })
   end
 end

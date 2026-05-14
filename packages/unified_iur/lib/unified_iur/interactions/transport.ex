@@ -17,7 +17,12 @@ defmodule UnifiedIUR.Interactions.Transport do
     :helper,
     :module,
     :runtime_module,
-    :live_action
+    :live_action,
+    :stack_id,
+    :modal_stack_id,
+    :runtime_stack,
+    :runtime_stack_id,
+    :stack_ref
   ]
   @navigation_actions Interaction.navigation_actions()
 
@@ -36,7 +41,11 @@ defmodule UnifiedIUR.Interactions.Transport do
           screen: atom() | String.t() | nil,
           modal: atom() | String.t() | nil,
           params?: boolean(),
-          targetless?: boolean()
+          targetless?: boolean(),
+          modal_stack?: boolean(),
+          modal_stack_operation: atom() | String.t() | nil,
+          modal_stack_target: atom() | String.t() | nil,
+          modal_stack_effect: atom() | String.t() | nil
         }
 
   @spec extension_key() :: atom()
@@ -119,6 +128,7 @@ defmodule UnifiedIUR.Interactions.Transport do
   def summarize_boundary_descriptor(descriptor) do
     descriptor = normalize_descriptor(descriptor)
     navigation = Interaction.navigation_descriptor(descriptor.target) || %{}
+    modal_stack = navigation |> fetch_value(:modal_stack, %{}) |> normalize_map()
 
     %{
       family: :navigation,
@@ -127,7 +137,11 @@ defmodule UnifiedIUR.Interactions.Transport do
       screen: Map.get(navigation, :screen),
       modal: Map.get(navigation, :modal),
       params?: navigation_params?(navigation),
-      targetless?: targetless_navigation?(navigation)
+      targetless?: targetless_navigation?(navigation),
+      modal_stack?: modal_stack != %{},
+      modal_stack_operation: fetch_value(modal_stack, :operation),
+      modal_stack_target: fetch_value(modal_stack, :target),
+      modal_stack_effect: fetch_value(modal_stack, :stack_effect)
     }
   end
 
@@ -223,7 +237,9 @@ defmodule UnifiedIUR.Interactions.Transport do
     with :ok <- validate_action(action),
          :ok <- validate_action_targets(action, descriptor),
          :ok <- validate_optional_map(Map.get(descriptor, :params), :params),
-         :ok <- validate_optional_map(Map.get(descriptor, :metadata), :metadata) do
+         :ok <- validate_optional_map(Map.get(descriptor, :metadata), :metadata),
+         :ok <- validate_optional_map(Map.get(descriptor, :modal_stack), :modal_stack),
+         :ok <- validate_modal_stack_descriptor(action, Map.get(descriptor, :modal_stack)) do
       :ok
     end
   end
@@ -291,6 +307,116 @@ defmodule UnifiedIUR.Interactions.Transport do
   defp validate_optional_map(value, _field) when is_map(value), do: :ok
   defp validate_optional_map(value, field), do: {:error, {:invalid_field, field, value}}
 
+  defp validate_modal_stack_descriptor(_action, nil), do: :ok
+
+  defp validate_modal_stack_descriptor(action, modal_stack) when is_map(modal_stack) do
+    modal_stack = normalize_map(modal_stack)
+
+    with :ok <- validate_forbidden_navigation_keys(modal_stack),
+         :ok <- validate_modal_stack_operation(action, modal_stack),
+         :ok <- validate_modal_stack_target(action, modal_stack),
+         :ok <- validate_modal_stack_effect(action, modal_stack),
+         :ok <- validate_modal_stack_boolean_fields(modal_stack),
+         :ok <- validate_modal_stack_containment(modal_stack) do
+      :ok
+    end
+  end
+
+  defp validate_modal_stack_operation(action, modal_stack)
+       when action in [:open_modal, "open_modal"] do
+    validate_modal_stack_value(
+      :operation,
+      fetch_value(modal_stack, :operation),
+      [:push, "push"],
+      action
+    )
+  end
+
+  defp validate_modal_stack_operation(action, modal_stack)
+       when action in [:close_modal, "close_modal"] do
+    validate_modal_stack_value(
+      :operation,
+      fetch_value(modal_stack, :operation),
+      [:close, "close"],
+      action
+    )
+  end
+
+  defp validate_modal_stack_operation(action, _modal_stack),
+    do: {:error, {:unexpected_modal_stack, action}}
+
+  defp validate_modal_stack_target(action, modal_stack)
+       when action in [:open_modal, "open_modal"] do
+    validate_modal_stack_value(
+      :target,
+      fetch_value(modal_stack, :target),
+      [:symbolic_modal, "symbolic_modal"],
+      action
+    )
+  end
+
+  defp validate_modal_stack_target(action, modal_stack)
+       when action in [:close_modal, "close_modal"] do
+    validate_modal_stack_value(
+      :target,
+      fetch_value(modal_stack, :target),
+      [:topmost_modal, "topmost_modal", :symbolic_modal, "symbolic_modal"],
+      action
+    )
+  end
+
+  defp validate_modal_stack_target(_action, _modal_stack), do: :ok
+
+  defp validate_modal_stack_effect(action, modal_stack)
+       when action in [:open_modal, "open_modal"] do
+    validate_modal_stack_value(
+      :stack_effect,
+      fetch_value(modal_stack, :stack_effect),
+      [:push_modal, "push_modal"],
+      action
+    )
+  end
+
+  defp validate_modal_stack_effect(action, modal_stack)
+       when action in [:close_modal, "close_modal"] do
+    validate_modal_stack_value(
+      :stack_effect,
+      fetch_value(modal_stack, :stack_effect),
+      [:close_topmost_or_named_modal, "close_topmost_or_named_modal"],
+      action
+    )
+  end
+
+  defp validate_modal_stack_effect(_action, _modal_stack), do: :ok
+
+  defp validate_modal_stack_value(_field, nil, _allowed, _action), do: :ok
+
+  defp validate_modal_stack_value(field, value, allowed, action) do
+    if value in allowed do
+      :ok
+    else
+      {:error, {:invalid_modal_stack_value, action, field, value}}
+    end
+  end
+
+  defp validate_modal_stack_boolean_fields(modal_stack) do
+    [:target_required?, :named_target_allowed?, :containment_required?]
+    |> Enum.reduce_while(:ok, fn field, :ok ->
+      case fetch_value(modal_stack, field, :not_present) do
+        :not_present -> {:cont, :ok}
+        value when is_boolean(value) -> {:cont, :ok}
+        value -> {:halt, {:error, {:invalid_field, field, value}}}
+      end
+    end)
+  end
+
+  defp validate_modal_stack_containment(modal_stack) do
+    case fetch_value(modal_stack, :containment_required?) do
+      true -> {:error, {:invalid_modal_stack_containment, true}}
+      _other -> :ok
+    end
+  end
+
   defp validate_summary(nil, descriptor) do
     {:error, {:missing_boundary_summary, summarize_boundary_descriptor(descriptor)}}
   end
@@ -332,13 +458,17 @@ defmodule UnifiedIUR.Interactions.Transport do
 
   defp navigation_params?(navigation) do
     navigation
-    |> Map.get(:params, %{})
+    |> fetch_value(:params, %{})
     |> normalize_map()
     |> Kernel.!=(%{})
   end
 
   defp targetless_navigation?(navigation) do
-    is_nil(Map.get(navigation, :screen)) and is_nil(Map.get(navigation, :modal))
+    is_nil(fetch_value(navigation, :screen)) and is_nil(fetch_value(navigation, :modal))
+  end
+
+  defp fetch_value(map, key, default \\ nil) when is_map(map) do
+    Map.get(map, key, Map.get(map, Atom.to_string(key), default))
   end
 
   defp forbidden_navigation_key?(key) when is_atom(key),
