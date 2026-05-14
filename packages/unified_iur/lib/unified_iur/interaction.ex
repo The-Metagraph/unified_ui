@@ -28,13 +28,24 @@ defmodule UnifiedIUR.Interaction do
           | :history_transition
           | :modal_transition
 
+  @type modal_stack_semantics :: %{
+          optional(:operation) => :push | :close | atom() | String.t(),
+          optional(:target) => :symbolic_modal | :topmost_modal | atom() | String.t(),
+          optional(:target_required?) => boolean(),
+          optional(:named_target_allowed?) => boolean(),
+          optional(:containment_required?) => boolean(),
+          optional(:stack_effect) =>
+            :push_modal | :close_topmost_or_named_modal | atom() | String.t()
+        }
+
   @type navigation_descriptor :: %{
           optional(:kind) => navigation_kind(),
           optional(:action) => navigation_action() | atom() | String.t(),
           optional(:screen) => atom() | String.t(),
           optional(:modal) => atom() | String.t(),
           optional(:params) => map(),
-          optional(:metadata) => map()
+          optional(:metadata) => map(),
+          optional(:modal_stack) => modal_stack_semantics()
         }
 
   @type t :: %__MODULE__{
@@ -244,6 +255,7 @@ defmodule UnifiedIUR.Interaction do
     |> maybe_put(:modal, fetch(descriptor, :modal))
     |> maybe_put(:params, normalize_optional_non_empty_map(fetch(descriptor, :params)))
     |> maybe_put(:metadata, normalize_optional_non_empty_map(fetch(descriptor, :metadata)))
+    |> maybe_put(:modal_stack, normalize_optional_non_empty_map(fetch(descriptor, :modal_stack)))
   end
 
   defp infer_navigation_kind(:navigate_to), do: :screen_transition

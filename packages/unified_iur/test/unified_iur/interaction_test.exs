@@ -143,6 +143,35 @@ defmodule UnifiedIUR.InteractionTest do
              params: %{"source" => :launcher},
              screen: :home
            }
+
+    modal_push =
+      Interaction.navigation_transition(
+        intent: :open_confirm_modal,
+        action: :open_modal,
+        modal: :settings_confirm_dialog,
+        modal_stack: [
+          operation: :push,
+          target: :symbolic_modal,
+          target_required?: true,
+          named_target_allowed?: true,
+          containment_required?: false,
+          stack_effect: :push_modal
+        ]
+      )
+
+    assert Interaction.navigation_descriptor(modal_push) == %{
+             action: :open_modal,
+             kind: :modal_transition,
+             modal: :settings_confirm_dialog,
+             modal_stack: %{
+               operation: :push,
+               target: :symbolic_modal,
+               target_required?: true,
+               named_target_allowed?: true,
+               containment_required?: false,
+               stack_effect: :push_modal
+             }
+           }
   end
 
   test "builds bindings with source paths, dependencies, and derived-value metadata" do

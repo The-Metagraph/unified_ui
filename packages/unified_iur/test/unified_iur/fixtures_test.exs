@@ -53,7 +53,10 @@ defmodule UnifiedIUR.FixturesTest do
              "screen_transition--settings_profile",
              "replace_transition--home",
              "history_transition--back",
-             "modal_transition--settings_dialog"
+             "modal_transition--settings_dialog",
+             "modal_stack--open_confirm_dialog",
+             "modal_stack--close_top",
+             "modal_stack--close_named_settings"
            ]
 
     assert {:ok, history_fixture} = Fixtures.navigation_fixture("history_transition--back")
@@ -70,6 +73,22 @@ defmodule UnifiedIUR.FixturesTest do
            } = history_fixture.interaction
 
     refute Map.has_key?(Interaction.navigation_descriptor(history_fixture.interaction), :screen)
+
+    assert {:ok, stacked_close} = Fixtures.navigation_fixture("modal_stack--close_top")
+
+    assert Interaction.navigation_descriptor(stacked_close.interaction) == %{
+             action: :close_modal,
+             kind: :modal_transition,
+             metadata: %{reason: :cancel},
+             modal_stack: %{
+               operation: :close,
+               target: :topmost_modal,
+               target_required?: false,
+               named_target_allowed?: true,
+               containment_required?: false,
+               stack_effect: :close_topmost_or_named_modal
+             }
+           }
 
     assert %{
              id: "modal_transition--settings_dialog",

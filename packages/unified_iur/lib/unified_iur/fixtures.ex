@@ -132,6 +132,39 @@ defmodule UnifiedIUR.Fixtures do
         "portable params and metadata"
       ],
       snapshot: "fixtures/navigation/modal_transition--settings_dialog.snapshot"
+    },
+    %{
+      id: "modal_stack--open_confirm_dialog",
+      description:
+        "Canonical stacked modal push opening a second symbolic modal from an existing modal flow.",
+      semantics: [
+        "modal stack push transition",
+        "second symbolic modal target",
+        "no renderer-local modal containment"
+      ],
+      snapshot: "fixtures/navigation/modal_stack--open_confirm_dialog.snapshot"
+    },
+    %{
+      id: "modal_stack--close_top",
+      description:
+        "Canonical targetless modal close that removes the topmost modal without a stack id.",
+      semantics: [
+        "targetless top-modal close",
+        "modal stack pop transition",
+        "no renderer-local stack identifiers"
+      ],
+      snapshot: "fixtures/navigation/modal_stack--close_top.snapshot"
+    },
+    %{
+      id: "modal_stack--close_named_settings",
+      description:
+        "Canonical named modal close using a symbolic modal target without structural nesting.",
+      semantics: [
+        "symbolic named modal close",
+        "modal stack close transition",
+        "no renderer-local modal hierarchy"
+      ],
+      snapshot: "fixtures/navigation/modal_stack--close_named_settings.snapshot"
     }
   ]
 
@@ -337,8 +370,70 @@ defmodule UnifiedIUR.Fixtures do
       modal: :settings_dialog,
       params: %{mode: :advanced},
       metadata: %{surface: :workspace},
+      modal_stack: modal_stack_push(),
       mapping: %{surface: :workspace}
     )
+  end
+
+  defp build_navigation_fixture("modal_stack--open_confirm_dialog") do
+    Interaction.navigation_transition(
+      intent: :open_confirm_modal,
+      element_id: "confirm-settings-button",
+      scope: :modal,
+      action: :open_modal,
+      modal: :settings_confirm_dialog,
+      params: %{from: :settings_dialog},
+      metadata: %{previous_modal: :settings_dialog},
+      modal_stack: modal_stack_push(),
+      mapping: %{source: :settings_dialog}
+    )
+  end
+
+  defp build_navigation_fixture("modal_stack--close_top") do
+    Interaction.navigation_transition(
+      intent: :close_top_modal,
+      element_id: "close-top-modal-button",
+      scope: :modal,
+      action: :close_modal,
+      metadata: %{reason: :cancel},
+      modal_stack: modal_stack_close(),
+      mapping: %{reason: :cancel}
+    )
+  end
+
+  defp build_navigation_fixture("modal_stack--close_named_settings") do
+    Interaction.navigation_transition(
+      intent: :close_settings_modal,
+      element_id: "close-settings-modal-button",
+      scope: :modal,
+      action: :close_modal,
+      modal: :settings_dialog,
+      metadata: %{reason: :done},
+      modal_stack: modal_stack_close(),
+      mapping: %{reason: :done}
+    )
+  end
+
+  defp modal_stack_push do
+    %{
+      operation: :push,
+      target: :symbolic_modal,
+      target_required?: true,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :push_modal
+    }
+  end
+
+  defp modal_stack_close do
+    %{
+      operation: :close,
+      target: :topmost_modal,
+      target_required?: false,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :close_topmost_or_named_modal
+    }
   end
 
   defp build_fixture("foundational--workspace_chrome") do

@@ -8,7 +8,10 @@ defmodule UnifiedIUR.InteractionsTransportTest do
              "screen_transition--settings_profile",
              "replace_transition--home",
              "history_transition--back",
-             "modal_transition--settings_dialog"
+             "modal_transition--settings_dialog",
+             "modal_stack--open_confirm_dialog",
+             "modal_stack--close_top",
+             "modal_stack--close_named_settings"
            ]
 
     assert {:ok, fixture} = Transport.boundary_fixture("screen_transition--settings_profile")
