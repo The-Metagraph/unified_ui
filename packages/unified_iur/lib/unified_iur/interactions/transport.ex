@@ -40,12 +40,15 @@ defmodule UnifiedIUR.Interactions.Transport do
           action: atom() | String.t() | nil,
           screen: atom() | String.t() | nil,
           modal: atom() | String.t() | nil,
+          params: map(),
+          metadata: map(),
           params?: boolean(),
           targetless?: boolean(),
           modal_stack?: boolean(),
           modal_stack_operation: atom() | String.t() | nil,
           modal_stack_target: atom() | String.t() | nil,
-          modal_stack_effect: atom() | String.t() | nil
+          modal_stack_effect: atom() | String.t() | nil,
+          modal_stack_close: :topmost | :targeted | nil
         }
 
   @spec extension_key() :: atom()
@@ -129,6 +132,8 @@ defmodule UnifiedIUR.Interactions.Transport do
     descriptor = normalize_descriptor(descriptor)
     navigation = Interaction.navigation_descriptor(descriptor.target) || %{}
     modal_stack = navigation |> fetch_value(:modal_stack, %{}) |> normalize_map()
+    params = navigation |> fetch_value(:params, %{}) |> normalize_map()
+    metadata = navigation |> fetch_value(:metadata, %{}) |> normalize_map()
 
     %{
       family: :navigation,
@@ -136,12 +141,15 @@ defmodule UnifiedIUR.Interactions.Transport do
       action: Map.get(navigation, :action),
       screen: Map.get(navigation, :screen),
       modal: Map.get(navigation, :modal),
-      params?: navigation_params?(navigation),
+      params: params,
+      metadata: metadata,
+      params?: params != %{},
       targetless?: targetless_navigation?(navigation),
       modal_stack?: modal_stack != %{},
       modal_stack_operation: fetch_value(modal_stack, :operation),
       modal_stack_target: fetch_value(modal_stack, :target),
-      modal_stack_effect: fetch_value(modal_stack, :stack_effect)
+      modal_stack_effect: fetch_value(modal_stack, :stack_effect),
+      modal_stack_close: modal_stack_close(navigation)
     }
   end
 
@@ -456,15 +464,18 @@ defmodule UnifiedIUR.Interactions.Transport do
     Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
   end
 
-  defp navigation_params?(navigation) do
-    navigation
-    |> fetch_value(:params, %{})
-    |> normalize_map()
-    |> Kernel.!=(%{})
-  end
-
   defp targetless_navigation?(navigation) do
     is_nil(fetch_value(navigation, :screen)) and is_nil(fetch_value(navigation, :modal))
+  end
+
+  defp modal_stack_close(navigation) do
+    case fetch_value(navigation, :action) do
+      action when action in [:close_modal, "close_modal"] ->
+        if targetless_navigation?(navigation), do: :topmost, else: :targeted
+
+      _other ->
+        nil
+    end
   end
 
   defp fetch_value(map, key, default \\ nil) when is_map(map) do

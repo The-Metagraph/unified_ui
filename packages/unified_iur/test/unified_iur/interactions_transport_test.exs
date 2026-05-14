@@ -24,12 +24,15 @@ defmodule UnifiedIUR.InteractionsTransportTest do
              action: :navigate_to,
              screen: :settings,
              modal: nil,
+             params: %{tab: :profile},
+             metadata: %{},
              params?: true,
              targetless?: false,
              modal_stack?: false,
              modal_stack_operation: nil,
              modal_stack_target: nil,
-             modal_stack_effect: nil
+             modal_stack_effect: nil,
+             modal_stack_close: nil
            }
 
     assert fixture.extensions == %{
@@ -67,12 +70,15 @@ defmodule UnifiedIUR.InteractionsTransportTest do
              action: :open_modal,
              screen: nil,
              modal: :settings_confirm_dialog,
+             params: %{from: :settings_dialog},
+             metadata: %{previous_modal: :settings_dialog},
              params?: true,
              targetless?: false,
              modal_stack?: true,
              modal_stack_operation: :push,
              modal_stack_target: :symbolic_modal,
-             modal_stack_effect: :push_modal
+             modal_stack_effect: :push_modal,
+             modal_stack_close: nil
            }
 
     assert close_top_fixture.summary == %{
@@ -81,16 +87,20 @@ defmodule UnifiedIUR.InteractionsTransportTest do
              action: :close_modal,
              screen: nil,
              modal: nil,
+             params: %{},
+             metadata: %{reason: :cancel},
              params?: false,
              targetless?: true,
              modal_stack?: true,
              modal_stack_operation: :close,
              modal_stack_target: :topmost_modal,
-             modal_stack_effect: :close_topmost_or_named_modal
+             modal_stack_effect: :close_topmost_or_named_modal,
+             modal_stack_close: :topmost
            }
 
     assert close_named_fixture.summary.modal == :settings_dialog
     refute close_named_fixture.summary.targetless?
+    assert close_named_fixture.summary.modal_stack_close == :targeted
     assert close_named_fixture.summary.modal_stack_effect == :close_topmost_or_named_modal
 
     assert :ok = Transport.validate_boundary_fixture(open_fixture)
@@ -126,12 +136,15 @@ defmodule UnifiedIUR.InteractionsTransportTest do
                  action: :navigate_to,
                  screen: nil,
                  modal: nil,
+                 params: %{},
+                 metadata: %{},
                  params?: false,
                  targetless?: true,
                  modal_stack?: false,
                  modal_stack_operation: nil,
                  modal_stack_target: nil,
-                 modal_stack_effect: nil
+                 modal_stack_effect: nil,
+                 modal_stack_close: nil
                }
              })
   end
@@ -152,6 +165,31 @@ defmodule UnifiedIUR.InteractionsTransportTest do
                        target: :symbolic_modal,
                        stack_effect: :push_modal,
                        stack_id: "runtime-stack-1"
+                     }
+                   }
+                 },
+                 metadata: %{}
+               },
+               unified_iur_boundary_summary: %{}
+             })
+  end
+
+  test "rejects structural modal containment in shared stack descriptors" do
+    assert {:error, {:invalid_modal_stack_containment, true}} =
+             Transport.validate_boundary_extensions(%{
+               unified_iur_boundary: %{
+                 family: :navigation,
+                 intent: :open_confirm_modal,
+                 source_context: %{element_id: "confirm-settings-button"},
+                 target: %{
+                   navigation: %{
+                     action: :open_modal,
+                     modal: :settings_confirm_dialog,
+                     modal_stack: %{
+                       operation: :push,
+                       target: :symbolic_modal,
+                       stack_effect: :push_modal,
+                       containment_required?: true
                      }
                    }
                  },

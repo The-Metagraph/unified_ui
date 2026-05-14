@@ -29,25 +29,25 @@ Back to index: [README](./README.md)
   portable while allowing each runtime to realize the experience through its
   native host model.
 
-  [ ] 3.1 Section - Shared Modal Stack Fixtures and Boundary Expectations
+  [x] 3.1 Section - Shared Modal Stack Fixtures and Boundary Expectations
     Extend shared canonical fixtures, validation, and review output so every
     runtime can consume the same stacked modal transition scenarios.
 
-    [ ] 3.1.1 Task - Add shared modal stack transition fixtures
+    [x] 3.1.1 Task - Add shared modal stack transition fixtures
       Define the canonical fixture set that represents the new stack
       requirements without making any runtime the source of truth.
 
-      [ ] 3.1.1.1 Subtask - Add an `open_modal` fixture for a first symbolic modal target with params and metadata.
-      [ ] 3.1.1.2 Subtask - Add a second `open_modal` fixture that represents opening another modal while one is already active.
-      [ ] 3.1.1.3 Subtask - Add targetless and targeted `close_modal` fixtures that prove topmost close and named-modal close semantics stay portable.
+      [x] 3.1.1.1 Subtask - Add an `open_modal` fixture for a first symbolic modal target with params and metadata.
+      [x] 3.1.1.2 Subtask - Add a second `open_modal` fixture that represents opening another modal while one is already active.
+      [x] 3.1.1.3 Subtask - Add targetless and targeted `close_modal` fixtures that prove topmost close and named-modal close semantics stay portable.
 
-    [ ] 3.1.2 Task - Add shared validation and inspection for modal stacks
+    [x] 3.1.2 Task - Add shared validation and inspection for modal stacks
       Make modal stack behavior visible and deterministic before runtime
       package-specific handling begins.
 
-      [ ] 3.1.2.1 Subtask - Extend shared fixture validation so modal stack descriptors reject host-router fields, runtime-local stack ids, and structural modal containment assumptions.
-      [ ] 3.1.2.2 Subtask - Extend fixture summaries to show modal stack action, symbolic modal target, params, metadata, and whether a close is topmost or targeted.
-      [ ] 3.1.2.3 Subtask - Keep fixture serialization deterministic so stacked modal review output remains diff-friendly.
+      [x] 3.1.2.1 Subtask - Extend shared fixture validation so modal stack descriptors reject host-router fields, runtime-local stack ids, and structural modal containment assumptions.
+      [x] 3.1.2.2 Subtask - Extend fixture summaries to show modal stack action, symbolic modal target, params, metadata, and whether a close is topmost or targeted.
+      [x] 3.1.2.3 Subtask - Keep fixture serialization deterministic so stacked modal review output remains diff-friendly.
 
   [ ] 3.2 Section - Web Runtime Modal Stack Handling
     Align the web runtimes with the shared canonical modal stack contract while

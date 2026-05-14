@@ -43,12 +43,15 @@ defmodule UnifiedIUR.CanonicalNavigationBoundaryIntegrationTest do
                  action: :navigate_to,
                  screen: :settings,
                  modal: nil,
+                 params: %{tab: :profile},
+                 metadata: %{},
                  params?: true,
                  targetless?: false,
                  modal_stack?: false,
                  modal_stack_operation: nil,
                  modal_stack_target: nil,
-                 modal_stack_effect: nil
+                 modal_stack_effect: nil,
+                 modal_stack_close: nil
                }
              },
              summary: %{
@@ -57,12 +60,15 @@ defmodule UnifiedIUR.CanonicalNavigationBoundaryIntegrationTest do
                action: :navigate_to,
                screen: :settings,
                modal: nil,
+               params: %{tab: :profile},
+               metadata: %{},
                params?: true,
                targetless?: false,
                modal_stack?: false,
                modal_stack_operation: nil,
                modal_stack_target: nil,
-               modal_stack_effect: nil
+               modal_stack_effect: nil,
+               modal_stack_close: nil
              }
            }
   end
