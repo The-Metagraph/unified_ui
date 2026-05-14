@@ -27,26 +27,26 @@ Back to index: [README](./README.md)
   developers can declare cross-runtime navigation intent without leaking host
   routing syntax into the DSL.
 
-  [ ] 1.1 Section - Authored Navigation Action Vocabulary
+  [x] 1.1 Section - Authored Navigation Action Vocabulary
     Implement the canonical navigation vocabulary and target-intent shape that
     developers use when declaring top-level screen transitions.
 
-    [ ] 1.1.1 Task - Define the canonical authored transition fields
+    [x] 1.1.1 Task - Define the canonical authored transition fields
       Establish the authored descriptor fields and allowed action set for
       top-level screen-transition intent.
 
-      [ ] 1.1.1.1 Subtask - Define how `action`, `screen`, `params`, `metadata`, and modal-oriented target fields appear in authored `target_intent` values.
-      [ ] 1.1.1.2 Subtask - Define which actions require a symbolic `screen` target and which actions, such as `go_back` or `close_modal`, are targetless.
-      [ ] 1.1.1.3 Subtask - Define how modal transitions and replacement transitions are distinguished from ordinary history-push transitions.
-      [ ] 1.1.1.4 Subtask - Define modal stack authoring rules for `open_modal` push behavior, targetless top-modal `close_modal`, optional named modal close, and the absence of required structural modal containment.
+      [x] 1.1.1.1 Subtask - Define how `action`, `screen`, `params`, `metadata`, and modal-oriented target fields appear in authored `target_intent` values.
+      [x] 1.1.1.2 Subtask - Define which actions require a symbolic `screen` target and which actions, such as `go_back` or `close_modal`, are targetless.
+      [x] 1.1.1.3 Subtask - Define how modal transitions and replacement transitions are distinguished from ordinary history-push transitions.
+      [x] 1.1.1.4 Subtask - Define modal stack authoring rules for `open_modal` push behavior, targetless top-modal `close_modal`, optional named modal close, and the absence of required structural modal containment.
 
-    [ ] 1.1.2 Task - Distinguish screen transitions from in-screen navigation
+    [x] 1.1.2 Task - Distinguish screen transitions from in-screen navigation
       Keep local destination changes available without conflating them with
       cross-screen transition semantics.
 
-      [ ] 1.1.2.1 Subtask - Define the authored distinction between in-screen destination updates, such as tab or section changes, and top-level screen transitions.
-      [ ] 1.1.2.2 Subtask - Ensure canonical navigation examples demonstrate both local destination changes and top-level screen transitions without blurring their semantics.
-      [ ] 1.1.2.3 Subtask - Define how existing generic interaction descriptors continue to work when no top-level screen transition is intended.
+      [x] 1.1.2.1 Subtask - Define the authored distinction between in-screen destination updates, such as tab or section changes, and top-level screen transitions.
+      [x] 1.1.2.2 Subtask - Ensure canonical navigation examples demonstrate both local destination changes and top-level screen transitions without blurring their semantics.
+      [x] 1.1.2.3 Subtask - Define how existing generic interaction descriptors continue to work when no top-level screen transition is intended.
 
   [ ] 1.2 Section - Validation, Diagnostics, and Introspection
     Implement the validation and inspection surfaces that keep the authored

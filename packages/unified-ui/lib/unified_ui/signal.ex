@@ -27,6 +27,15 @@ defmodule UnifiedUi.Signal do
           optional_fields: [atom()]
         }
 
+  @type modal_stack_semantics :: %{
+          operation: :push | :close,
+          target: :symbolic_modal | :topmost_modal,
+          target_required?: boolean(),
+          named_target_allowed?: boolean(),
+          containment_required?: false,
+          stack_effect: :push_modal | :close_topmost_or_named_modal
+        }
+
   @type family ::
           :click
           | :change
@@ -87,6 +96,24 @@ defmodule UnifiedUi.Signal do
   @navigation_actions Keyword.keys(@navigation_action_contracts)
   @navigation_transition_fields [:action, :screen, :modal, :params, :metadata]
   @local_navigation_fields [:binding, :destination]
+  @navigation_modal_stack_semantics [
+    open_modal: %{
+      operation: :push,
+      target: :symbolic_modal,
+      target_required?: true,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :push_modal
+    },
+    close_modal: %{
+      operation: :close,
+      target: :topmost_modal,
+      target_required?: false,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :close_topmost_or_named_modal
+    }
+  ]
 
   defstruct __identifier__: nil,
             id: nil,
@@ -115,6 +142,11 @@ defmodule UnifiedUi.Signal do
 
   @spec local_navigation_fields() :: [atom()]
   def local_navigation_fields, do: @local_navigation_fields
+
+  @spec navigation_modal_stack_semantics() :: %{
+          navigation_transition_action() => modal_stack_semantics()
+        }
+  def navigation_modal_stack_semantics, do: Map.new(@navigation_modal_stack_semantics)
 
   @spec navigation_target_kind(t() | keyword() | map()) :: navigation_target_kind()
   def navigation_target_kind(%__MODULE__{target_intent: target_intent}),

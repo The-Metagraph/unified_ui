@@ -33,6 +33,13 @@ defmodule UnifiedUi.Signals do
     Signal.local_navigation_fields()
   end
 
+  @spec navigation_modal_stack_semantics() :: %{
+          Signal.navigation_transition_action() => Signal.modal_stack_semantics()
+        }
+  def navigation_modal_stack_semantics do
+    Signal.navigation_modal_stack_semantics()
+  end
+
   @spec navigation_target_kind(Signal.t() | map() | keyword()) :: Signal.navigation_target_kind()
   def navigation_target_kind(signal) do
     Signal.navigation_target_kind(signal)
