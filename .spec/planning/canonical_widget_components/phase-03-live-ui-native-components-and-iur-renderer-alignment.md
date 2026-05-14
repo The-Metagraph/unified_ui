@@ -24,25 +24,25 @@ Back to index: [README](./README.md)
   Implement the expanded widget-component catalog in LiveUi and make the
   canonical renderer map IUR input into those same native components.
 
-  [ ] 3.1 Section - LiveUi Component Module Backbone
+  [x] 3.1 Section - LiveUi Component Module Backbone
     Establish shared module layout, assigns contracts, and renderer dispatch
     conventions for the expanded catalog.
 
-    [ ] 3.1.1 Task - Define component modules and assigns contracts
+    [x] 3.1.1 Task - Define component modules and assigns contracts
       Create the component boundaries and shared assign validation needed for
       consistent implementation.
 
-      [ ] 3.1.1.1 Subtask - Add component modules or grouped modules for content, identity, controls, rows, progress, layers, callouts, redline, code, and composer widgets.
-      [ ] 3.1.1.2 Subtask - Define assign contracts for canonical props, children, interaction descriptors, and accessibility metadata.
-      [ ] 3.1.1.3 Subtask - Ensure helper APIs delegate to component boundaries rather than creating parallel render implementations.
+      [x] 3.1.1.1 Subtask - Add component modules or grouped modules for content, identity, controls, rows, progress, layers, callouts, redline, code, and composer widgets.
+      [x] 3.1.1.2 Subtask - Define assign contracts for canonical props, children, interaction descriptors, and accessibility metadata.
+      [x] 3.1.1.3 Subtask - Ensure helper APIs delegate to component boundaries rather than creating parallel render implementations.
 
-    [ ] 3.1.2 Task - Define shared rendering and style hooks
+    [x] 3.1.2 Task - Define shared rendering and style hooks
       Keep styling token-driven and reusable across native and IUR-rendered
       LiveUi paths.
 
-      [ ] 3.1.2.1 Subtask - Define common class, token, state, and size hooks for the expanded catalog.
-      [ ] 3.1.2.2 Subtask - Avoid literal color, font, or spacing values in component output where theme tokens should apply.
-      [ ] 3.1.2.3 Subtask - Add component metadata used by tooling and focused examples.
+      [x] 3.1.2.1 Subtask - Define common class, token, state, and size hooks for the expanded catalog.
+      [x] 3.1.2.2 Subtask - Avoid literal color, font, or spacing values in component output where theme tokens should apply.
+      [x] 3.1.2.3 Subtask - Add component metadata used by tooling and focused examples.
 
   [ ] 3.2 Section - Content, Identity, Form, Control, and Composer Components
     Implement LiveUi-native components for the widgets that are central to
