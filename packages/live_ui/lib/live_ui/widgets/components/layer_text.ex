@@ -78,7 +78,13 @@ defmodule LiveUi.Widgets.Components.SlideOverPanel do
       )
 
     ~H"""
-    <aside id={@id} aria-label={@label} aria-hidden={!@open} class={@class} {@component_attrs}>
+    <aside
+      id={@id}
+      aria-label={@label}
+      aria-hidden={if @open, do: "false", else: "true"}
+      class={@class}
+      {@component_attrs}
+    >
       <%= render_slot(@inner_block) %>
     </aside>
     """
@@ -96,7 +102,7 @@ defmodule LiveUi.Widgets.Components.EventCallout do
     family: :components,
     name: :event_callout,
     slots: [:inner_block, :actions],
-    assigns: [:message, :eyebrow, :title, :callout_tone],
+    assigns: [:message, :eyebrow, :title, :callout_tone, :action_label, :action_attrs],
     events: [:inline_action]
 
   LiveUi.Component.common_attrs()
@@ -104,6 +110,8 @@ defmodule LiveUi.Widgets.Components.EventCallout do
   attr(:eyebrow, :string, default: nil)
   attr(:title, :string, default: nil)
   attr(:callout_tone, :string, default: "info")
+  attr(:action_label, :string, default: nil)
+  attr(:action_attrs, :map, default: %{})
   slot(:inner_block)
   slot(:actions)
 
@@ -124,6 +132,7 @@ defmodule LiveUi.Widgets.Components.EventCallout do
       <h3 :if={@title}><%= @title %></h3>
       <p><%= @message %></p>
       <div data-live-ui-callout-body=""><%= render_slot(@inner_block) %></div>
+      <button :if={@action_label} type="button" {@action_attrs}><%= @action_label %></button>
       <footer :if={@actions != []}><%= render_slot(@actions) %></footer>
     </aside>
     """

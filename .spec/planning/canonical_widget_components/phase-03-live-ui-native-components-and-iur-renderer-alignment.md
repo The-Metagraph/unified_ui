@@ -63,24 +63,24 @@ Back to index: [README](./README.md)
       [x] 3.2.2.2 Subtask - Implement runtime-owned form shell with LiveView and AshPhoenix integration hooks that remain LiveUi-local.
       [x] 3.2.2.3 Subtask - Implement chat composer with textarea, tool area, disabled state, send event, and change event handling.
 
-  [ ] 3.3 Section - Row, Workflow, Layer, Callout, Redline, and Code Components
+  [x] 3.3 Section - Row, Workflow, Layer, Callout, Redline, and Code Components
     Implement the operational and document-workflow components used by list,
     process, overlay, and text-review surfaces.
 
-    [ ] 3.3.1 Task - Implement row and workflow components
+    [x] 3.3.1 Task - Implement row and workflow components
       Build components for selectable rows, artifact summaries, workflow
       steppers, segmented progress, stage lists, and thin meters.
 
-      [ ] 3.3.1.1 Subtask - Implement multi-column list row and artifact row with button and link variants.
-      [ ] 3.3.1.2 Subtask - Implement horizontal stepper and vertical stage list with active, done, and pending state.
-      [ ] 3.3.1.3 Subtask - Implement segmented progress and thin meter with normalized values and accessible progress metadata.
+      [x] 3.3.1.1 Subtask - Implement multi-column list row and artifact row with button and link variants.
+      [x] 3.3.1.2 Subtask - Implement horizontal stepper and vertical stage list with active, done, and pending state.
+      [x] 3.3.1.3 Subtask - Implement segmented progress and thin meter with normalized values and accessible progress metadata.
 
-    [ ] 3.3.2 Task - Implement layer, callout, redline, and code components
+    [x] 3.3.2 Task - Implement layer, callout, redline, and code components
       Build components for shell surfaces and specialized text display.
 
-      [ ] 3.3.2.1 Subtask - Implement sticky frosted header with fallback styling and positional children.
-      [ ] 3.3.2.2 Subtask - Implement slide-over panel as non-modal contextual layer with open state and size.
-      [ ] 3.3.2.3 Subtask - Implement event callout, redline inline, and pre-tokenized code block with safe text escaping.
+      [x] 3.3.2.1 Subtask - Implement sticky frosted header with fallback styling and positional children.
+      [x] 3.3.2.2 Subtask - Implement slide-over panel as non-modal contextual layer with open state and size.
+      [x] 3.3.2.3 Subtask - Implement event callout, redline inline, and pre-tokenized code block with safe text escaping.
 
   [ ] 3.4 Section - LiveUi IUR Renderer Convergence
     Connect UnifiedIUR input for the expanded catalog to the same LiveUi native

@@ -9,7 +9,7 @@ defmodule LiveUi.Widgets.Components.ListItemMultiColumn do
     family: :components,
     name: :list_item_multi_column,
     slots: [:inner_block, :actions],
-    assigns: [:row_identity, :columns, :active, :link_target],
+    assigns: [:row_identity, :columns, :active, :link_target, :row_attrs],
     events: [:row_activation]
 
   LiveUi.Component.common_attrs()
@@ -17,6 +17,7 @@ defmodule LiveUi.Widgets.Components.ListItemMultiColumn do
   attr(:columns, :list, default: [])
   attr(:active, :boolean, default: false)
   attr(:link_target, :string, default: nil)
+  attr(:row_attrs, :map, default: %{})
   slot(:inner_block)
   slot(:actions)
 
@@ -33,10 +34,14 @@ defmodule LiveUi.Widgets.Components.ListItemMultiColumn do
       )
 
     ~H"""
-    <article id={@id} class={@class} {@component_attrs}>
+    <article id={@id} class={@class} {@component_attrs} {@row_attrs}>
       <a :if={@link_target} href={@link_target} data-live-ui-row-link=""><%= @link_target %></a>
       <div data-live-ui-row-columns="">
-        <span :for={column <- @columns} data-live-ui-row-column={Support.id_value(column, "column")}>
+        <span
+          :for={column <- @columns}
+          data-live-ui-row-column={Support.id_value(column, "column")}
+          {Support.attrs(column)}
+        >
           <%= Support.label(column) %>
         </span>
         <%= render_slot(@inner_block) %>
@@ -58,7 +63,7 @@ defmodule LiveUi.Widgets.Components.ArtifactRow do
     family: :components,
     name: :artifact_row,
     slots: [:inner_block, :actions],
-    assigns: [:title, :meta, :row_identity, :active, :link_target],
+    assigns: [:title, :meta, :row_identity, :active, :link_target, :link_label, :row_attrs],
     events: [:row_activation]
 
   LiveUi.Component.common_attrs()
@@ -67,6 +72,8 @@ defmodule LiveUi.Widgets.Components.ArtifactRow do
   attr(:row_identity, :any, default: nil)
   attr(:active, :boolean, default: false)
   attr(:link_target, :string, default: nil)
+  attr(:link_label, :string, default: "Open")
+  attr(:row_attrs, :map, default: %{})
   slot(:inner_block)
   slot(:actions)
 
@@ -83,8 +90,9 @@ defmodule LiveUi.Widgets.Components.ArtifactRow do
       )
 
     ~H"""
-    <article id={@id} class={@class} {@component_attrs}>
+    <article id={@id} class={@class} {@component_attrs} {@row_attrs}>
       <h3><%= @title %></h3>
+      <a :if={@link_target} href={@link_target} data-live-ui-artifact-link=""><%= @link_label %></a>
       <dl :if={map_size(@meta) > 0}>
         <%= for {key, value} <- Enum.sort_by(@meta, fn {key, _value} -> to_string(key) end) do %>
           <dt><%= key %></dt>
@@ -108,13 +116,14 @@ defmodule LiveUi.Widgets.Components.PipelineStepperHorizontal do
   use LiveUi.Component,
     family: :components,
     name: :pipeline_stepper_horizontal,
-    assigns: [:steps, :active_index, :completed_indices],
+    assigns: [:steps, :active_index, :completed_indices, :step_attrs],
     events: [:step_navigation]
 
   LiveUi.Component.common_attrs()
   attr(:steps, :list, default: [])
   attr(:active_index, :integer, default: 0)
   attr(:completed_indices, :list, default: [])
+  attr(:step_attrs, :map, default: %{})
 
   @impl true
   def render(assigns) do
@@ -132,7 +141,11 @@ defmodule LiveUi.Widgets.Components.PipelineStepperHorizontal do
         aria-current={if index == @active_index, do: "step", else: nil}
         data-live-ui-step-state={step_state(step, index, @active_index, @completed_indices)}
       >
-        <button type="button" disabled={Support.disabled?(step)}><%= Support.label(step) %></button>
+        <button
+          type="button"
+          disabled={Support.disabled?(step)}
+          {Map.merge(@step_attrs, Support.attrs(step))}
+        ><%= Support.label(step) %></button>
       </li>
     </ol>
     """
@@ -208,12 +221,13 @@ defmodule LiveUi.Widgets.Components.WorkflowStageListVertical do
   use LiveUi.Component,
     family: :components,
     name: :workflow_stage_list_vertical,
-    assigns: [:stages, :active_index],
+    assigns: [:stages, :active_index, :stage_attrs],
     events: [:step_navigation]
 
   LiveUi.Component.common_attrs()
   attr(:stages, :list, default: [])
   attr(:active_index, :integer, default: 0)
+  attr(:stage_attrs, :map, default: %{})
 
   @impl true
   def render(assigns) do
@@ -230,6 +244,7 @@ defmodule LiveUi.Widgets.Components.WorkflowStageListVertical do
         :for={{stage, index} <- Enum.with_index(@stages)}
         aria-current={if index == @active_index, do: "step", else: nil}
         data-live-ui-stage-state={Support.atom_name(Support.fetch(stage, :state, if(index == @active_index, do: :active, else: :pending)))}
+        {Map.merge(@stage_attrs, Support.attrs(stage))}
       >
         <span><%= Support.label(stage) %></span>
       </li>

@@ -140,7 +140,7 @@ defmodule LiveUi.Widgets.Components do
     list_item_multi_column: %{
       module: LiveUi.Widgets.Components.ListItemMultiColumn,
       family: :row_artifact,
-      assigns: [:row_identity, :columns, :active, :link_target],
+      assigns: [:row_identity, :columns, :active, :link_target, :row_attrs],
       slots: [:inner_block, :actions],
       events: [:row_activation],
       local_state_keys: []
@@ -148,7 +148,7 @@ defmodule LiveUi.Widgets.Components do
     artifact_row: %{
       module: LiveUi.Widgets.Components.ArtifactRow,
       family: :row_artifact,
-      assigns: [:title, :meta, :row_identity, :active, :link_target],
+      assigns: [:title, :meta, :row_identity, :active, :link_target, :link_label, :row_attrs],
       slots: [:inner_block, :actions],
       events: [:row_activation],
       local_state_keys: []
@@ -156,7 +156,7 @@ defmodule LiveUi.Widgets.Components do
     pipeline_stepper_horizontal: %{
       module: LiveUi.Widgets.Components.PipelineStepperHorizontal,
       family: :workflow_progress,
-      assigns: [:steps, :active_index, :completed_indices],
+      assigns: [:steps, :active_index, :completed_indices, :step_attrs],
       slots: [],
       events: [:step_navigation],
       local_state_keys: []
@@ -172,7 +172,7 @@ defmodule LiveUi.Widgets.Components do
     workflow_stage_list_vertical: %{
       module: LiveUi.Widgets.Components.WorkflowStageListVertical,
       family: :workflow_progress,
-      assigns: [:stages, :active_index],
+      assigns: [:stages, :active_index, :stage_attrs],
       slots: [],
       events: [:step_navigation],
       local_state_keys: []
@@ -204,7 +204,7 @@ defmodule LiveUi.Widgets.Components do
     event_callout: %{
       module: LiveUi.Widgets.Components.EventCallout,
       family: :layer_callout,
-      assigns: [:message, :eyebrow, :title, :callout_tone],
+      assigns: [:message, :eyebrow, :title, :callout_tone, :action_label, :action_attrs],
       slots: [:inner_block, :actions],
       events: [:inline_action],
       local_state_keys: []
