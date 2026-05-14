@@ -4,6 +4,7 @@ defmodule UnifiedUi.Widgets do
   """
 
   alias UnifiedUi.Dsl.Entities.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedUi.WidgetComponents
 
   @spec foundational_kinds() :: [atom()]
   def foundational_kinds do
@@ -33,6 +34,26 @@ defmodule UnifiedUi.Widgets do
   @spec advanced_kinds() :: [atom()]
   def advanced_kinds do
     Advanced.kinds()
+  end
+
+  @spec component_catalog() :: [WidgetComponents.component()]
+  def component_catalog do
+    WidgetComponents.catalog()
+  end
+
+  @spec component_families() :: %{WidgetComponents.family() => [atom()]}
+  def component_families do
+    WidgetComponents.component_families()
+  end
+
+  @spec component_kinds() :: [atom()]
+  def component_kinds do
+    WidgetComponents.kinds()
+  end
+
+  @spec component_aliases() :: %{atom() => atom()}
+  def component_aliases do
+    WidgetComponents.aliases()
   end
 
   @spec kinds() :: [atom()]

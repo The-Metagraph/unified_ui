@@ -7,6 +7,7 @@ defmodule UnifiedUi.Reference do
   alias UnifiedUi.Examples
   alias UnifiedUi.Signal
   alias UnifiedUi.Theme
+  alias UnifiedUi.WidgetComponents
 
   @spec supported_sections() :: [atom()]
   def supported_sections do
@@ -66,6 +67,26 @@ defmodule UnifiedUi.Reference do
       forms: UnifiedIUR.Forms.kinds(),
       container: [:box]
     }
+  end
+
+  @spec widget_component_families() :: %{WidgetComponents.family() => [atom()]}
+  def widget_component_families do
+    WidgetComponents.component_families()
+  end
+
+  @spec widget_component_catalog() :: [WidgetComponents.component()]
+  def widget_component_catalog do
+    WidgetComponents.catalog()
+  end
+
+  @spec widget_component_source_mapping() :: %{pos_integer() => map()}
+  def widget_component_source_mapping do
+    WidgetComponents.source_mapping()
+  end
+
+  @spec widget_component_aliases() :: %{atom() => atom()}
+  def widget_component_aliases do
+    WidgetComponents.aliases()
   end
 
   @spec compiled_display_system_families() :: %{atom() => [atom()]}

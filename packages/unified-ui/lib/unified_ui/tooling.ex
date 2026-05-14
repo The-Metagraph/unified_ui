@@ -4,7 +4,7 @@ defmodule UnifiedUi.Tooling do
   and release review workflows.
   """
 
-  alias UnifiedUi.{Compiler, Examples, Export, Info, Signals}
+  alias UnifiedUi.{Compiler, Examples, Export, Info, Signals, WidgetComponents}
 
   @shared_specs [
     ".spec/specs/architecture.spec.md",
@@ -78,6 +78,22 @@ defmodule UnifiedUi.Tooling do
   @spec coverage_summary() :: String.t()
   def coverage_summary do
     coverage_report()
+    |> inspect_term()
+  end
+
+  @spec widget_component_catalog() :: map()
+  def widget_component_catalog do
+    %{
+      families: WidgetComponents.component_families(),
+      components: WidgetComponents.catalog(),
+      aliases: WidgetComponents.aliases(),
+      source_mapping: WidgetComponents.source_mapping()
+    }
+  end
+
+  @spec widget_component_catalog_summary() :: String.t()
+  def widget_component_catalog_summary do
+    widget_component_catalog()
     |> inspect_term()
   end
 
