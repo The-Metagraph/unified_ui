@@ -388,6 +388,12 @@ defmodule UnifiedUi.Compiler.Pipeline do
             |> maybe_put(:modal, Map.get(target_intent, :modal))
             |> maybe_put(:params, compact_optional_map(Map.get(target_intent, :params)))
             |> maybe_put(:metadata, compact_optional_map(Map.get(target_intent, :metadata)))
+            |> maybe_put(
+              :modal_stack,
+              compact_optional_map(
+                Signal.navigation_modal_stack_semantics()[Map.get(target_intent, :action)]
+              )
+            )
         }
 
       _other ->

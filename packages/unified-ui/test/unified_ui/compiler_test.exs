@@ -545,6 +545,7 @@ defmodule UnifiedUi.CompilerTest do
                navigation: %{
                  action: :open_modal,
                  kind: :modal_transition,
+                 modal_stack: modal_stack_push(),
                  modal: :settings_dialog,
                  params: %{source: :button}
                }
@@ -561,6 +562,7 @@ defmodule UnifiedUi.CompilerTest do
                navigation: %{
                  action: :open_modal,
                  kind: :modal_transition,
+                 modal_stack: modal_stack_push(),
                  modal: :confirm_dialog,
                  params: %{from: :settings_dialog}
                }
@@ -577,6 +579,7 @@ defmodule UnifiedUi.CompilerTest do
                navigation: %{
                  action: :close_modal,
                  kind: :modal_transition,
+                 modal_stack: modal_stack_close(),
                  metadata: %{reason: :dismiss}
                }
              },
@@ -592,6 +595,7 @@ defmodule UnifiedUi.CompilerTest do
                navigation: %{
                  action: :close_modal,
                  kind: :modal_transition,
+                 modal_stack: modal_stack_close(),
                  metadata: %{reason: :done},
                  modal: :settings_dialog
                }
@@ -651,6 +655,7 @@ defmodule UnifiedUi.CompilerTest do
                 navigation: %{
                   action: :open_modal,
                   kind: :modal_transition,
+                  modal_stack: modal_stack_push(),
                   modal: :settings_dialog,
                   params: %{source: :button}
                 }
@@ -660,6 +665,7 @@ defmodule UnifiedUi.CompilerTest do
                 navigation: %{
                   action: :open_modal,
                   kind: :modal_transition,
+                  modal_stack: modal_stack_push(),
                   modal: :confirm_dialog,
                   params: %{from: :settings_dialog}
                 }
@@ -669,6 +675,7 @@ defmodule UnifiedUi.CompilerTest do
                 navigation: %{
                   action: :close_modal,
                   kind: :modal_transition,
+                  modal_stack: modal_stack_close(),
                   metadata: %{reason: :dismiss}
                 }
               }},
@@ -677,10 +684,33 @@ defmodule UnifiedUi.CompilerTest do
                 navigation: %{
                   action: :close_modal,
                   kind: :modal_transition,
+                  modal_stack: modal_stack_close(),
                   metadata: %{reason: :done},
                   modal: :settings_dialog
                 }
               }}
            ]
+  end
+
+  defp modal_stack_push do
+    %{
+      operation: :push,
+      target: :symbolic_modal,
+      target_required?: true,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :push_modal
+    }
+  end
+
+  defp modal_stack_close do
+    %{
+      operation: :close,
+      target: :topmost_modal,
+      target_required?: false,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :close_topmost_or_named_modal
+    }
   end
 end

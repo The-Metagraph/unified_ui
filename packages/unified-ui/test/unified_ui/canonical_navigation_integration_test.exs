@@ -1,6 +1,7 @@
 defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
   alias UnifiedUi.{Compiler, Export, Signals, Tooling}
 
   defmodule CanonicalNavigationScreen do
@@ -607,6 +608,7 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
              navigation: %{
                action: :open_modal,
                kind: :modal_transition,
+               modal_stack: modal_stack_push(),
                modal: :settings_confirm_dialog,
                params: %{from: :settings_dialog}
              }
@@ -616,9 +618,27 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
              navigation: %{
                action: :close_modal,
                kind: :modal_transition,
+               modal_stack: modal_stack_close(),
                metadata: %{reason: :cancel}
              }
            }
+
+    open_interaction =
+      Enum.find(result.interactions, &(&1.intent == :open_settings_confirmation_modal))
+
+    close_interaction = Enum.find(result.interactions, &(&1.intent == :close_top_modal))
+
+    open_extensions = BoundaryTransport.boundary_extensions(open_interaction)
+    close_extensions = BoundaryTransport.boundary_extensions(close_interaction)
+
+    assert :ok = BoundaryTransport.validate_boundary_extensions(open_extensions)
+    assert :ok = BoundaryTransport.validate_boundary_extensions(close_extensions)
+    assert open_extensions.unified_iur_boundary_summary.modal_stack_effect == :push_modal
+
+    assert close_extensions.unified_iur_boundary_summary.modal_stack_effect ==
+             :close_topmost_or_named_modal
+
+    assert close_extensions.unified_iur_boundary_summary.targetless?
 
     refute snapshot =~ "route_helper"
     refute snapshot =~ "stack_id"
@@ -659,6 +679,7 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
              navigation: %{
                action: :close_modal,
                kind: :modal_transition,
+               modal_stack: modal_stack_close(),
                metadata: %{reason: :done},
                modal: :settings_dialog
              }
@@ -666,6 +687,28 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
 
     refute first_snapshot =~ "route:"
     refute first_snapshot =~ "\"/settings\""
+  end
+
+  defp modal_stack_push do
+    %{
+      operation: :push,
+      target: :symbolic_modal,
+      target_required?: true,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :push_modal
+    }
+  end
+
+  defp modal_stack_close do
+    %{
+      operation: :close,
+      target: :topmost_modal,
+      target_required?: false,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :close_topmost_or_named_modal
+    }
   end
 
   defp compile_module(body) do
