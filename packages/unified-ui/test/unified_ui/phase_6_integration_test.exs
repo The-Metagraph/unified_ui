@@ -51,9 +51,11 @@ defmodule UnifiedUi.Phase6IntegrationTest do
     assert diff.changes.widget_kinds.added == [
              :cluster_dashboard,
              :gauge,
+             :inline_rich_text_heading,
              :log_viewer,
              :markdown_viewer,
              :process_monitor,
+             :segmented_progress_bar,
              :sparkline,
              :stream_widget,
              :table,

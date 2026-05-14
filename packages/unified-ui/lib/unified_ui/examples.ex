@@ -56,11 +56,12 @@ defmodule UnifiedUi.Examples do
       category: :advanced_dashboard,
       scenario: :operational_visibility,
       module: OperationsDashboard,
-      constructs: [:data, :feedback, :advanced],
+      constructs: [:data, :feedback, :advanced, :components],
       parity_obligations: [
         :data_widgets,
         :feedback_widgets,
         :advanced_widgets,
+        :component_widgets,
         :layout_constructs
       ],
       validation_purpose: [:docs, :coverage, :parity],

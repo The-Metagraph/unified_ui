@@ -18,9 +18,9 @@ Back to index: [README](./README.md)
   host markup.
 - Repeat may be represented as metadata before hydration, but runtimes should
   receive deterministic concrete child nodes.
-- All work in this phase is not done.
+- All work in this phase is done.
 
-[ ] 2 Phase 2 - UnifiedIUR Representation, Compiler, and Hydration Alignment
+[x] 2 Phase 2 - UnifiedIUR Representation, Compiler, and Hydration Alignment
   Add canonical IUR representation and compiler lowering for the expanded
   widget-component catalog and list-repeat composition behavior.
 
@@ -111,21 +111,21 @@ Back to index: [README](./README.md)
       [x] 2.4.2.2 Subtask - Add fixture summaries that runtimes can use in parity tests.
       [x] 2.4.2.3 Subtask - Add validation that required accessible names are present where the canonical contract requires them.
 
-  [ ] 2.5 Section - Phase 2 Integration Tests
+  [x] 2.5 Section - Phase 2 Integration Tests
     Validate compiler lowering, IUR representation, repeat expansion, and
     shared fixtures end to end.
 
-    [ ] 2.5.1 Task - Compiler and IUR snapshot scenarios
+    [x] 2.5.1 Task - Compiler and IUR snapshot scenarios
       Verify the expanded authored catalog compiles into deterministic IUR.
 
-      [ ] 2.5.1.1 Subtask - Snapshot representative IUR for every expanded widget family.
-      [ ] 2.5.1.2 Subtask - Verify interaction descriptors are runtime-independent and preserve expected payload mappings.
-      [ ] 2.5.1.3 Subtask - Verify exported IUR contains canonical names and normalized defaults.
+      [x] 2.5.1.1 Subtask - Snapshot representative IUR for every expanded widget family.
+      [x] 2.5.1.2 Subtask - Verify interaction descriptors are runtime-independent and preserve expected payload mappings.
+      [x] 2.5.1.3 Subtask - Verify exported IUR contains canonical names and normalized defaults.
 
-    [ ] 2.5.2 Task - Repeat hydration scenarios
+    [x] 2.5.2 Task - Repeat hydration scenarios
       Verify list-repeat metadata and row expansion preserve identity and row
       data.
 
-      [ ] 2.5.2.1 Subtask - Verify repeat metadata appears before hydration.
-      [ ] 2.5.2.2 Subtask - Verify hydrated children have stable ids, row values, and preserved interactions.
-      [ ] 2.5.2.3 Subtask - Verify empty lists produce deterministic empty child output without renderer errors.
+      [x] 2.5.2.1 Subtask - Verify repeat metadata appears before hydration.
+      [x] 2.5.2.2 Subtask - Verify hydrated children have stable ids, row values, and preserved interactions.
+      [x] 2.5.2.3 Subtask - Verify empty lists produce deterministic empty child output without renderer errors.

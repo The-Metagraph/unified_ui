@@ -12,6 +12,7 @@ defmodule UnifiedUi.ParityTest do
              data_widgets: Reference.compiled_widget_families().data,
              feedback_widgets: Reference.compiled_widget_families().feedback,
              advanced_widgets: Reference.compiled_widget_families().advanced,
+             component_widgets: Reference.compiled_widget_families().components,
              form_constructs: Reference.compiled_widget_families().forms,
              container_constructs: Reference.compiled_widget_families().container,
              layout_constructs: Reference.compiled_display_system_families().layout,

@@ -64,6 +64,7 @@ defmodule UnifiedUi.Reference do
       data: UnifiedIUR.Widgets.data_view_kinds(),
       feedback: UnifiedIUR.Widgets.feedback_kinds(),
       advanced: UnifiedIUR.Widgets.advanced_kinds(),
+      components: UnifiedIUR.Widgets.component_kinds(),
       forms: UnifiedIUR.Forms.kinds(),
       container: [:box]
     }
