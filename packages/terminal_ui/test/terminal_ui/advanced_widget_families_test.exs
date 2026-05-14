@@ -92,7 +92,8 @@ defmodule TerminalUi.AdvancedWidgetFamiliesTest do
              TerminalUi.Widgets.Data,
              TerminalUi.Widgets.Feedback,
              TerminalUi.Widgets.Visualization,
-             TerminalUi.Widgets.Operational
+             TerminalUi.Widgets.Operational,
+             TerminalUi.Widgets.Components
            ]
 
     assert :data in TerminalUi.Widgets.families()

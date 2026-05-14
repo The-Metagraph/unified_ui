@@ -3,6 +3,29 @@ defmodule TerminalUi.Widget do
   Native renderer-facing widget representation for `terminal_ui`.
   """
 
+  @component_kinds [
+    :inline_rich_text_heading,
+    :disclosure,
+    :kicker,
+    :avatar,
+    :presence_dot,
+    :segmented_button_group,
+    :runtime_form_shell,
+    :chat_composer,
+    :list_item_multi_column,
+    :artifact_row,
+    :pipeline_stepper_horizontal,
+    :segmented_progress_bar,
+    :workflow_stage_list_vertical,
+    :meter_thin,
+    :sticky_frosted_header,
+    :slide_over_panel,
+    :event_callout,
+    :redline_inline,
+    :code_block_syntax_highlighted,
+    :list_repeat
+  ]
+
   @type family ::
           :content
           | :action
@@ -13,6 +36,7 @@ defmodule TerminalUi.Widget do
           | :feedback
           | :visualization
           | :operational
+          | :component
 
   @type t :: %__MODULE__{
           id: String.t() | atom() | nil,
@@ -63,7 +87,11 @@ defmodule TerminalUi.Widget do
         :capability_profile,
         :degradation_strategy,
         :theme,
-        :style_refs
+        :style_refs,
+        :component_family,
+        :component_kind,
+        :interaction_route,
+        :text_safety
       ],
       state: [
         :disabled,
@@ -121,7 +149,13 @@ defmodule TerminalUi.Widget do
         :filter,
         :paginate,
         :expand,
-        :close
+        :close,
+        :send,
+        :row_activation,
+        :step_navigation,
+        :inline_action,
+        :disclosure,
+        :panel
       ]
     }
   end
@@ -221,6 +255,8 @@ defmodule TerminalUi.Widget do
              :supervision_tree_viewer
            ],
       do: :operational
+
+  def family_for(kind) when kind in @component_kinds, do: :component
 
   def family_for(_kind), do: :content
 

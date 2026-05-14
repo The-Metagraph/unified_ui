@@ -94,7 +94,12 @@ defmodule TerminalUi.Capabilities do
       required_categories: [:backend, :color, :unicode, :resize, :terminal],
       optional_categories: [:mouse, :paste, :layering, :positioning, :canvas],
       degradation_profiles: profiles(),
-      bounded_variation: [:overlay_presentation, :positioned_canvas_rendering, :glyph_fallback]
+      bounded_variation: [
+        :overlay_presentation,
+        :positioned_canvas_rendering,
+        :glyph_fallback,
+        :component_visual_fallback
+      ]
     }
   end
 
@@ -135,7 +140,8 @@ defmodule TerminalUi.Capabilities do
         :overlay_presentation,
         :positioned_canvas_rendering,
         :context_menu_presentation,
-        :glyph_fallback
+        :glyph_fallback,
+        :component_visual_fallback
       ]
     else
       []

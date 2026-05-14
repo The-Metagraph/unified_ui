@@ -83,25 +83,25 @@ Back to index: [README](./README.md)
       [x] 4.3.2.2 Subtask - Translate canonical interactions into desktop input and signal behavior.
       [x] 4.3.2.3 Subtask - Verify repeated rows produce stable widget identity across desktop rerenders.
 
-  [ ] 4.4 Section - TerminalUi Runtime Support and Degradation
+  [x] 4.4 Section - TerminalUi Runtime Support and Degradation
     Implement terminal-native equivalents and explicit fallback behavior for
     visual affordances that terminals cannot always render directly.
 
-    [ ] 4.4.1 Task - Implement TerminalUi native widget models
+    [x] 4.4.1 Task - Implement TerminalUi native widget models
       Add terminal widgets and capability-aware rendering for the expanded
       catalog.
 
-      [ ] 4.4.1.1 Subtask - Add terminal-native models for content, identity, controls, rows, progress, layers, callouts, redline, code, and composer widgets.
-      [ ] 4.4.1.2 Subtask - Add keyboard-first behavior for selection, row activation, step navigation, disclosure, slide-over, form, and composer widgets.
-      [ ] 4.4.1.3 Subtask - Add terminal-safe redline and code rendering with color-depth and ASCII fallbacks.
+      [x] 4.4.1.1 Subtask - Add terminal-native models for content, identity, controls, rows, progress, layers, callouts, redline, code, and composer widgets.
+      [x] 4.4.1.2 Subtask - Add keyboard-first behavior for selection, row activation, step navigation, disclosure, slide-over, form, and composer widgets.
+      [x] 4.4.1.3 Subtask - Add terminal-safe redline and code rendering with color-depth and ASCII fallbacks.
 
-    [ ] 4.4.2 Task - Implement TerminalUi IUR mappings and degradation reports
+    [x] 4.4.2 Task - Implement TerminalUi IUR mappings and degradation reports
       Map canonical IUR into terminal widgets and expose any degraded behavior
       clearly.
 
-      [ ] 4.4.2.1 Subtask - Add renderer mappings for every expanded widget family.
-      [ ] 4.4.2.2 Subtask - Define degradation for frost, slide animation, dense multi-column rows, color-rich progress, avatars, and syntax colors.
-      [ ] 4.4.2.3 Subtask - Add inspectable degradation summaries for runtime parity reports.
+      [x] 4.4.2.1 Subtask - Add renderer mappings for every expanded widget family.
+      [x] 4.4.2.2 Subtask - Define degradation for frost, slide animation, dense multi-column rows, color-rich progress, avatars, and syntax colors.
+      [x] 4.4.2.3 Subtask - Add inspectable degradation summaries for runtime parity reports.
 
   [ ] 4.5 Section - Phase 4 Integration Tests
     Validate runtime parity across ElmUi, DesktopUi, and TerminalUi using the

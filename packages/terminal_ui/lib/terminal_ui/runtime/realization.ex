@@ -181,13 +181,87 @@ defmodule TerminalUi.Runtime.Realization do
     |> Enum.map(fn current ->
       %{
         widget_id: current.id,
-        content:
-          current.attributes[:content] || current.attributes[:label] || current.label ||
-            to_string(current.kind),
+        content: cell_content(current),
         kind: current.kind,
         family: current.family
       }
     end)
+  end
+
+  defp cell_content(node) do
+    cond do
+      is_binary(node.attributes[:content]) ->
+        node.attributes[:content]
+
+      is_binary(node.attributes[:label]) ->
+        node.attributes[:label]
+
+      is_binary(node.attributes[:message]) ->
+        node.attributes[:message]
+
+      is_binary(get_in(node.attributes, [:disclosure, :summary])) ->
+        get_in(node.attributes, [:disclosure, :summary])
+
+      is_binary(get_in(node.attributes, [:identity, :initials])) ->
+        get_in(node.attributes, [:identity, :initials])
+
+      is_binary(get_in(node.attributes, [:form, :submit_label])) ->
+        get_in(node.attributes, [:form, :submit_label])
+
+      is_binary(get_in(node.attributes, [:composer, :value])) ->
+        get_in(node.attributes, [:composer, :value])
+
+      is_binary(get_in(node.attributes, [:artifact, :title])) ->
+        get_in(node.attributes, [:artifact, :title])
+
+      is_binary(get_in(node.attributes, [:shell, :title])) ->
+        get_in(node.attributes, [:shell, :title])
+
+      is_binary(get_in(node.attributes, [:panel, :label])) ->
+        get_in(node.attributes, [:panel, :label])
+
+      is_binary(get_in(node.attributes, [:callout, :message])) ->
+        get_in(node.attributes, [:callout, :message])
+
+      node.kind == :inline_rich_text_heading ->
+        joined_text_segments(get_in(node.attributes, [:heading, :segments]))
+
+      node.kind == :kicker ->
+        node.attributes |> get_in([:kicker, :items]) |> List.wrap() |> Enum.join(" ")
+
+      node.kind == :presence_dot ->
+        node.attributes |> get_in([:presence, :state]) |> to_string()
+
+      node.kind == :redline_inline ->
+        joined_text_segments(get_in(node.attributes, [:redline, :segments]))
+
+      node.kind == :code_block_syntax_highlighted ->
+        joined_text_segments(get_in(node.attributes, [:code, :tokens]))
+
+      node.kind == :list_repeat ->
+        "rows: #{get_in(node.attributes, [:repeat, :row_count]) || length(node.children)}"
+
+      is_binary(node.label) ->
+        node.label
+
+      true ->
+        to_string(node.kind)
+    end
+  end
+
+  defp joined_text_segments(nil), do: ""
+
+  defp joined_text_segments(segments) do
+    segments
+    |> List.wrap()
+    |> Enum.map(fn
+      %{text: text} -> text
+      %{"text" => text} -> text
+      %{value: value} -> value
+      %{"value" => value} -> value
+      segment -> to_string(segment)
+    end)
+    |> Enum.join("")
   end
 
   defp validation_state_for(tree) do

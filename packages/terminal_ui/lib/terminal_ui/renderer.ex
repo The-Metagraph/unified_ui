@@ -34,6 +34,7 @@ defmodule TerminalUi.Renderer do
       UnifiedIUR.Widgets.Feedback.kinds(),
       UnifiedIUR.Canvas.kinds(),
       UnifiedIUR.Widgets.Advanced.kinds(),
+      UnifiedIUR.Widgets.Components.kinds(),
       UnifiedIUR.Layer.kinds()
     ]
     |> List.flatten()
@@ -46,6 +47,7 @@ defmodule TerminalUi.Renderer do
     [
       :absolute,
       :alert_dialog,
+      :badge,
       :bar_chart,
       :box,
       :button,
@@ -62,11 +64,15 @@ defmodule TerminalUi.Renderer do
       :field_group,
       :file_input,
       :form_builder,
+      :form_field,
       :gauge,
       :grid,
+      :hero,
       :icon,
       :image,
+      :info_list,
       :inline_feedback,
+      :key_value,
       :label,
       :line_chart,
       :link,
@@ -90,6 +96,7 @@ defmodule TerminalUi.Renderer do
       :spacer,
       :split_pane,
       :stack,
+      :stat,
       :status,
       :stream_widget,
       :supervision_tree_viewer,
@@ -103,6 +110,7 @@ defmodule TerminalUi.Renderer do
       :tree_view,
       :viewport
     ]
+    |> Kernel.++(UnifiedIUR.Widgets.Components.kinds())
     |> Enum.uniq()
     |> Enum.sort()
   end
