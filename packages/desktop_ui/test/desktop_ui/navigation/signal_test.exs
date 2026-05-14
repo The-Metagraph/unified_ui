@@ -1,6 +1,7 @@
 defmodule DesktopUi.Navigation.SignalTest do
   use ExUnit.Case
   alias DesktopUi.Navigation.Signal
+  alias DesktopUi.Navigation.State
 
   @moduletag :navigation
 
@@ -93,6 +94,14 @@ defmodule DesktopUi.Navigation.SignalTest do
       assert signal.screen_id == nil
       assert signal.params == %{}
     end
+
+    test "creates a targeted close_modal signal" do
+      signal = Signal.close_modal(:settings_dialog)
+
+      assert signal.type == :close_modal
+      assert signal.screen_id == :settings_dialog
+      assert signal.params == %{}
+    end
   end
 
   describe "from_map/1" do
@@ -124,7 +133,11 @@ defmodule DesktopUi.Navigation.SignalTest do
 
     test "creates open_modal signal from map" do
       assert {:ok, signal} =
-               Signal.from_map(%{type: :open_modal, screen_id: :confirm, params: %{message: "OK"}})
+               Signal.from_map(%{
+                 type: :open_modal,
+                 screen_id: :confirm,
+                 params: %{message: "OK"}
+               })
 
       assert signal.type == :open_modal
       assert signal.screen_id == :confirm
@@ -254,6 +267,19 @@ defmodule DesktopUi.Navigation.SignalTest do
       result = Signal.execute(signal, controller)
 
       assert {:ok, _state, {:transition, :modal_closed}} = result
+    end
+
+    test "executes targeted close_modal signal", %{controller: controller} do
+      Signal.open_modal(:confirm_dialog) |> Signal.execute(controller)
+      Signal.open_modal(:modal2) |> Signal.execute(controller)
+
+      signal = Signal.close_modal(:confirm_dialog)
+      result = Signal.execute(signal, controller)
+
+      assert {:ok, state, {:transition, :modal_closed}} = result
+
+      assert State.top_modal(state) ==
+               {:modal2, DesktopUi.Navigation.Controller.MockScreen.Modal2, %{}}
     end
   end
 end

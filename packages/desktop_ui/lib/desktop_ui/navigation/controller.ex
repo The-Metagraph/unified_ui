@@ -21,7 +21,9 @@ defmodule DesktopUi.Navigation.Controller do
         ]
 
   @type transition_result ::
-          {:ok, State.t(), {:transition, :navigated | :replaced | :back | :forward | :modal_opened | :modal_closed}}
+          {:ok, State.t(),
+           {:transition,
+            :navigated | :replaced | :back | :forward | :modal_opened | :modal_closed}}
           | {:error, term()}
 
   # Client API
@@ -82,9 +84,9 @@ defmodule DesktopUi.Navigation.Controller do
   @doc """
   Closes the top modal screen.
   """
-  @spec close_modal(GenServer.server() | atom()) :: transition_result()
-  def close_modal(server) do
-    GenServer.call(server, :close_modal)
+  @spec close_modal(GenServer.server() | atom(), atom() | nil) :: transition_result()
+  def close_modal(server, screen_id \\ nil) do
+    GenServer.call(server, {:close_modal, screen_id})
   end
 
   @doc """
@@ -219,12 +221,15 @@ defmodule DesktopUi.Navigation.Controller do
     end
   end
 
-  def handle_call(:close_modal, _from, state) do
-    case pop_modal(state.nav_state) do
+  def handle_call({:close_modal, screen_id}, _from, state) do
+    case pop_modal(state.nav_state, screen_id) do
       {:ok, new_nav} ->
         {:reply, {:ok, new_nav, {:transition, :modal_closed}}, %{state | nav_state: new_nav}}
 
       {:error, :no_modal} = error ->
+        {:reply, error, state}
+
+      {:error, {:unknown_modal, _screen_id}} = error ->
         {:reply, error, state}
     end
   end
@@ -266,7 +271,13 @@ defmodule DesktopUi.Navigation.Controller do
     {:error, :empty_history}
   end
 
-  defp go_back_in(%State{history: [prev | history_rest], current: curr, current_module: curr_mod, current_params: curr_params, forward: fwd}) do
+  defp go_back_in(%State{
+         history: [prev | history_rest],
+         current: curr,
+         current_module: curr_mod,
+         current_params: curr_params,
+         forward: fwd
+       }) do
     new_nav = %State{
       current: elem(prev, 0),
       current_module: elem(prev, 1),
@@ -283,7 +294,13 @@ defmodule DesktopUi.Navigation.Controller do
     {:error, :empty_forward}
   end
 
-  defp go_forward_in(%State{forward: [next | fwd_rest], current: curr, current_module: curr_mod, current_params: curr_params, history: hist}) do
+  defp go_forward_in(%State{
+         forward: [next | fwd_rest],
+         current: curr,
+         current_module: curr_mod,
+         current_params: curr_params,
+         history: hist
+       }) do
     new_nav = %State{
       current: elem(next, 0),
       current_module: elem(next, 1),
@@ -301,19 +318,48 @@ defmodule DesktopUi.Navigation.Controller do
     %State{nav | modals: [modal_entry | nav.modals], modal_open?: true}
   end
 
-  defp pop_modal(%State{modals: []}) do
+  defp pop_modal(%State{modals: []}, _screen_id) do
     {:error, :no_modal}
   end
 
-  defp pop_modal(%State{modals: [_]} = nav) do
+  defp pop_modal(%State{} = nav, nil) do
+    pop_top_modal(nav)
+  end
+
+  defp pop_modal(%State{} = nav, screen_id) do
+    case remove_modal(nav.modals, screen_id) do
+      {:ok, modals} ->
+        {:ok, %{nav | modals: modals, modal_open?: modals != []}}
+
+      :error ->
+        {:error, {:unknown_modal, screen_id}}
+    end
+  end
+
+  defp pop_top_modal(%State{modals: [_]} = nav) do
     # Last modal closed - preserve current screen fields
     {:ok, %{nav | modals: [], modal_open?: false}}
   end
 
-  defp pop_modal(%State{modals: [_ | rest]} = nav) do
+  defp pop_top_modal(%State{modals: [_ | rest]} = nav) do
     # More modals remain
     {:ok, %{nav | modals: rest, modal_open?: true}}
   end
+
+  defp remove_modal(modals, screen_id) do
+    {kept, removed?} =
+      Enum.reduce(modals, {[], false}, fn modal = {id, _module, _params}, {acc, removed?} ->
+        if not removed? and key_matches?(id, screen_id) do
+          {acc, true}
+        else
+          {[modal | acc], removed?}
+        end
+      end)
+
+    if removed?, do: {:ok, Enum.reverse(kept)}, else: :error
+  end
+
+  defp key_matches?(key, value), do: key == value or to_string(key) == to_string(value)
 
   # Screen resolution
 

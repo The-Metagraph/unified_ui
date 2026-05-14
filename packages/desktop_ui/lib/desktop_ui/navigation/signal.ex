@@ -29,17 +29,17 @@ defmodule DesktopUi.Navigation.Signal do
   @type screen_id :: atom() | String.t()
   @type params :: map()
   @type navigation_signal :: %{
-    __struct__: __MODULE__,
-    type: atom(),
-    screen_id: screen_id() | nil,
-    params: params()
-  }
+          __struct__: __MODULE__,
+          type: atom(),
+          screen_id: screen_id() | nil,
+          params: params()
+        }
 
   @type t :: %__MODULE__{
-    type: atom(),
-    screen_id: screen_id() | nil,
-    params: params()
-  }
+          type: atom(),
+          screen_id: screen_id() | nil,
+          params: params()
+        }
 
   defstruct [:type, :screen_id, :params]
 
@@ -134,7 +134,8 @@ defmodule DesktopUi.Navigation.Signal do
   end
 
   @doc """
-  Creates a close_modal signal for closing the top modal dialog.
+  Creates a close_modal signal for closing the top modal dialog or a named
+  modal.
 
   ## Examples
 
@@ -142,11 +143,11 @@ defmodule DesktopUi.Navigation.Signal do
       %Navigation.Signal{type: :close_modal, screen_id: nil, params: %{}}
 
   """
-  @spec close_modal() :: t()
-  def close_modal do
+  @spec close_modal(screen_id() | nil) :: t()
+  def close_modal(screen_id \\ nil) do
     %__MODULE__{
       type: :close_modal,
-      screen_id: nil,
+      screen_id: screen_id,
       params: %{}
     }
   end
@@ -248,8 +249,8 @@ defmodule DesktopUi.Navigation.Signal do
     DesktopUi.Navigation.Controller.open_modal(controller, screen_id, params)
   end
 
-  def execute(%__MODULE__{type: :close_modal}, controller) do
-    DesktopUi.Navigation.Controller.close_modal(controller)
+  def execute(%__MODULE__{type: :close_modal, screen_id: screen_id}, controller) do
+    DesktopUi.Navigation.Controller.close_modal(controller, screen_id)
   end
 
   # Private helpers

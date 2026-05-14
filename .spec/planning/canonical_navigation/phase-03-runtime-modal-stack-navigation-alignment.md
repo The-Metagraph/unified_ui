@@ -70,26 +70,26 @@ Back to index: [README](./README.md)
       [x] 3.2.2.2 Subtask - Update authoritative screen payloads and frontend acknowledgements so current modal and modal stack state are reflected after each transition.
       [x] 3.2.2.3 Subtask - Add diagnostics for missing modal targets, invalid targeted close, and frontend/server modal stack divergence.
 
-  [ ] 3.3 Section - Desktop and Terminal Runtime Modal Stack Handling
+  [x] 3.3 Section - Desktop and Terminal Runtime Modal Stack Handling
     Align desktop and terminal runtimes with the shared stack contract while
     respecting their native presentation and capability constraints.
 
-    [ ] 3.3.1 Task - Implement DesktopUi modal stack navigation behavior
+    [x] 3.3.1 Task - Implement DesktopUi modal stack navigation behavior
       Keep desktop modal navigation as an independent stack managed by the
       navigation controller and rendered through desktop-native overlay
       behavior.
 
-      [ ] 3.3.1.1 Subtask - Verify or implement controller state transitions where each `open_modal` pushes and targetless `close_modal` pops the top modal while preserving history and forward stacks.
-      [ ] 3.3.1.2 Subtask - Verify or implement current/top modal helpers, modal depth reporting, and targeted close diagnostics for named symbolic modal targets.
-      [ ] 3.3.1.3 Subtask - Align modal overlay rendering, focus behavior, and navigation events with the controller stack without requiring canonical structural containment.
+      [x] 3.3.1.1 Subtask - Verify or implement controller state transitions where each `open_modal` pushes and targetless `close_modal` pops the top modal while preserving history and forward stacks.
+      [x] 3.3.1.2 Subtask - Verify or implement current/top modal helpers, modal depth reporting, and targeted close diagnostics for named symbolic modal targets.
+      [x] 3.3.1.3 Subtask - Align modal overlay rendering, focus behavior, and navigation events with the controller stack without requiring canonical structural containment.
 
-    [ ] 3.3.2 Task - Implement TerminalUi modal stack degradation behavior
+    [x] 3.3.2 Task - Implement TerminalUi modal stack degradation behavior
       Preserve canonical modal stack meaning in terminal runtime state even
       when visual presentation must degrade for terminal capabilities.
 
-      [ ] 3.3.2.1 Subtask - Add terminal runtime navigation state for modal stack entries, current modal, transition summaries, and bounded fallback metadata.
-      [ ] 3.3.2.2 Subtask - Implement `open_modal`, targetless `close_modal`, and targeted `close_modal` using terminal-appropriate panels, inline overlays, or bounded section transitions.
-      [ ] 3.3.2.3 Subtask - Add diagnostics and inspection output that show degradation decisions while preserving canonical stack meaning.
+      [x] 3.3.2.1 Subtask - Add terminal runtime navigation state for modal stack entries, current modal, transition summaries, and bounded fallback metadata.
+      [x] 3.3.2.2 Subtask - Implement `open_modal`, targetless `close_modal`, and targeted `close_modal` using terminal-appropriate panels, inline overlays, or bounded section transitions.
+      [x] 3.3.2.3 Subtask - Add diagnostics and inspection output that show degradation decisions while preserving canonical stack meaning.
 
   [ ] 3.4 Section - Examples, Documentation, and Traceability
     Update maintainer-facing examples and planning evidence so the new modal

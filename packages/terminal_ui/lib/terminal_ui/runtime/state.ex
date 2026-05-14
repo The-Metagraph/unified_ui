@@ -28,6 +28,12 @@ defmodule TerminalUi.Runtime.State do
     :event_loop,
     :lifecycle,
     :validation_state,
+    navigation: %{
+      modals: [],
+      current_modal: nil,
+      last_transition: nil,
+      diagnostics: []
+    },
     event_log: []
   ]
 
@@ -48,6 +54,7 @@ defmodule TerminalUi.Runtime.State do
           event_loop: map(),
           lifecycle: map(),
           validation_state: atom(),
+          navigation: map(),
           event_log: [map()]
         }
 end

@@ -21,9 +21,7 @@ defmodule DesktopUi.Navigation.ControllerTest do
 
     test "starts with initial screen" do
       {:ok, pid} =
-        Controller.start_link(
-          initial_screen: {:home, nil, %{foo: "bar"}}
-        )
+        Controller.start_link(initial_screen: {:home, nil, %{foo: "bar"}})
 
       state = Controller.get_state(pid)
 
@@ -80,9 +78,7 @@ defmodule DesktopUi.Navigation.ControllerTest do
   describe "replace/3" do
     setup do
       {:ok, pid} =
-        Controller.start_link(
-          initial_screen: {:home, nil, %{foo: "bar"}}
-        )
+        Controller.start_link(initial_screen: {:home, nil, %{foo: "bar"}})
 
       %{pid: pid}
     end
@@ -115,7 +111,9 @@ defmodule DesktopUi.Navigation.ControllerTest do
       assert state.current == :home
       assert state.current_module == DesktopUi.Navigation.Controller.MockScreen.Home
       assert state.history == []
-      assert [{:detail, DesktopUi.Navigation.Controller.MockScreen.Detail, %{id: 1}}] = state.forward
+
+      assert [{:detail, DesktopUi.Navigation.Controller.MockScreen.Detail, %{id: 1}}] =
+               state.forward
     end
 
     test "returns error when history is empty", %{pid: pid} do
@@ -170,7 +168,11 @@ defmodule DesktopUi.Navigation.ControllerTest do
       assert state.current == :home
       assert state.current_module == DesktopUi.Navigation.Controller.MockScreen.Home
       assert state.modal_open?
-      assert [{:confirm_dialog, DesktopUi.Navigation.Controller.MockScreen.ConfirmDialog, %{action: :delete}}] = state.modals
+
+      assert [
+               {:confirm_dialog, DesktopUi.Navigation.Controller.MockScreen.ConfirmDialog,
+                %{action: :delete}}
+             ] = state.modals
     end
 
     test "stacks multiple modals", %{pid: pid} do
@@ -183,6 +185,10 @@ defmodule DesktopUi.Navigation.ControllerTest do
       assert state.modal_open?
       assert length(state.modals) == 2
       assert {:modal2, DesktopUi.Navigation.Controller.MockScreen.Modal2, %{}} = hd(state.modals)
+      assert State.modal_depth(state) == 2
+
+      assert State.top_modal(state) ==
+               {:modal2, DesktopUi.Navigation.Controller.MockScreen.Modal2, %{}}
     end
   end
 
@@ -210,6 +216,25 @@ defmodule DesktopUi.Navigation.ControllerTest do
       {:ok, _, {:transition, :modal_closed}} = Controller.close_modal(pid)
       # Try to close again
       assert {:error, :no_modal} = Controller.close_modal(pid)
+    end
+
+    test "closes a named modal without changing screen history", %{pid: pid} do
+      {:ok, _, {:transition, :modal_opened}} =
+        Controller.open_modal(pid, :modal2, %{step: 2})
+
+      {:ok, state, {:transition, :modal_closed}} =
+        Controller.close_modal(pid, :confirm_dialog)
+
+      assert state.current == :home
+      assert state.history == []
+      assert state.modal_open?
+
+      assert state.modals == [
+               {:modal2, DesktopUi.Navigation.Controller.MockScreen.Modal2, %{step: 2}}
+             ]
+
+      assert {:error, {:unknown_modal, :confirm_dialog}} =
+               Controller.close_modal(pid, :confirm_dialog)
     end
   end
 

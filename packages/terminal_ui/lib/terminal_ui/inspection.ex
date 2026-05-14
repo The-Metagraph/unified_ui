@@ -66,6 +66,7 @@ defmodule TerminalUi.Inspection do
         plan: TerminalUi.Degradation.plan(state.capabilities),
         active: degradation_nodes(nodes)
       },
+      navigation: state.navigation,
       event_loop: TerminalUi.Runtime.EventLoop.diagnostics(state.event_loop)
     }
   end
