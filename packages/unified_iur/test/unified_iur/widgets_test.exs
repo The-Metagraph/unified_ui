@@ -2,11 +2,12 @@ defmodule UnifiedIUR.WidgetsTest do
   use ExUnit.Case, async: true
 
   alias UnifiedIUR.Widgets
-  alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
+  alias UnifiedIUR.Widgets.{Advanced, Components, Data, Feedback, Foundational, Input, Navigation}
 
   test "exposes the foundational widget constructor family" do
     assert %{
              advanced: Advanced,
+             components: Components,
              foundational: Foundational,
              input: Input,
              navigation: Navigation,
@@ -51,5 +52,6 @@ defmodule UnifiedIUR.WidgetsTest do
            ] == Widgets.advanced_kinds()
 
     assert Widgets.advanced_kinds() == Advanced.kinds()
+    assert Widgets.component_kinds() == Components.kinds()
   end
 end

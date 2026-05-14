@@ -24,33 +24,33 @@ Back to index: [README](./README.md)
   Add canonical IUR representation and compiler lowering for the expanded
   widget-component catalog and list-repeat composition behavior.
 
-  [ ] 2.1 Section - UnifiedIUR Node Models and Content Contracts
+  [x] 2.1 Section - UnifiedIUR Node Models and Content Contracts
     Define the canonical element shapes, properties, children, and metadata for
     every widget family in the expanded catalog.
 
-    [ ] 2.1.1 Task - Implement content, identity, and disclosure IUR models
+    [x] 2.1.1 Task - Implement content, identity, and disclosure IUR models
       Represent passive content and identity widgets without losing
       accessibility or state meaning.
 
-      [ ] 2.1.1.1 Subtask - Represent inline rich heading levels and inline `text` or `emphasis` segments.
-      [ ] 2.1.1.2 Subtask - Represent kicker item order, separator behavior, avatar identity fields, and presence state.
-      [ ] 2.1.1.3 Subtask - Represent disclosure summary, initial open state, and child body content.
+      [x] 2.1.1.1 Subtask - Represent inline rich heading levels and inline `text` or `emphasis` segments.
+      [x] 2.1.1.2 Subtask - Represent kicker item order, separator behavior, avatar identity fields, and presence state.
+      [x] 2.1.1.3 Subtask - Represent disclosure summary, initial open state, and child body content.
 
-    [ ] 2.1.2 Task - Implement form, control, row, and composer IUR models
+    [x] 2.1.2 Task - Implement form, control, row, and composer IUR models
       Represent interactive controls while keeping interaction descriptors
       renderer-independent.
 
-      [ ] 2.1.2.1 Subtask - Represent segmented control options, active state, disabled state, and selection intent.
-      [ ] 2.1.2.2 Subtask - Represent runtime-owned form fields, submit/change intent, labels, validation metadata, and host adapter hints.
-      [ ] 2.1.2.3 Subtask - Represent list rows, artifact rows, and chat composer children, row identity, active state, and event metadata.
+      [x] 2.1.2.1 Subtask - Represent segmented control options, active state, disabled state, and selection intent.
+      [x] 2.1.2.2 Subtask - Represent runtime-owned form fields, submit/change intent, labels, validation metadata, and host adapter hints.
+      [x] 2.1.2.3 Subtask - Represent list rows, artifact rows, and chat composer children, row identity, active state, and event metadata.
 
-    [ ] 2.1.3 Task - Implement progress, layer, callout, redline, and code IUR models
+    [x] 2.1.3 Task - Implement progress, layer, callout, redline, and code IUR models
       Represent the operational and text-specialized widgets with enough
       structure for renderer parity.
 
-      [ ] 2.1.3.1 Subtask - Represent steppers, segmented progress, vertical stages, and thin meters with normalized values and labels.
-      [ ] 2.1.3.2 Subtask - Represent sticky headers, slide-over panels, and event callouts with child placement, state, size, and tone metadata.
-      [ ] 2.1.3.3 Subtask - Represent redline and pre-tokenized code segments as plain text plus semantic segment or token types.
+      [x] 2.1.3.1 Subtask - Represent steppers, segmented progress, vertical stages, and thin meters with normalized values and labels.
+      [x] 2.1.3.2 Subtask - Represent sticky headers, slide-over panels, and event callouts with child placement, state, size, and tone metadata.
+      [x] 2.1.3.3 Subtask - Represent redline and pre-tokenized code segments as plain text plus semantic segment or token types.
 
   [ ] 2.2 Section - Compiler Lowering and Canonical Interaction Descriptors
     Lower UnifiedUi authored declarations into deterministic IUR nodes and

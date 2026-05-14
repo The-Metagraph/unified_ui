@@ -16,6 +16,7 @@ status: proposed
 summary: Canonical widget families representable in `unified_iur`.
 surface:
   - packages/unified_iur
+  - packages/unified_iur/lib/unified_iur/widgets/components.ex
   - .spec/specs/unified-iur/widgets.spec.md
   - .spec/specs/unified-ui/widgets.spec.md
 decisions:
@@ -47,7 +48,7 @@ decisions:
   stability: stable
 
 - id: unified_iur.widgets.expanded_widget_component_catalog
-  statement: `unified_iur` shall be able to represent the expanded canonical widget-component catalog and list-repeat composition behavior defined by `unified_iur.widget_components` without reducing those constructs to AshUi-specific or renderer-specific placeholders.
+  statement: `unified_iur` shall expose expanded canonical widget-component constructors through `UnifiedIUR.Widgets.Components` and shall be able to represent the expanded catalog and list-repeat composition behavior defined by `unified_iur.widget_components` without reducing those constructs to AshUi-specific or renderer-specific placeholders.
   priority: must
   stability: stable
 
@@ -70,6 +71,12 @@ decisions:
 ## Verification
 
 ```spec-verification
+- kind: source_file
+  target: packages/unified_iur/lib/unified_iur/widgets/components.ex
+  covers:
+    - unified_iur.widgets.expanded_widget_component_catalog
+    - unified_iur.widgets.widget_semantics_preserved
+
 - kind: source_file
   target: .spec/specs/unified-iur/widgets.spec.md
   covers:

@@ -18,6 +18,7 @@ status: active
 summary: Canonical IUR contract for expanded widget components and list-repeat composition behavior derived from AshUi PRs 79 through 98.
 surface:
   - packages/unified_iur
+  - packages/unified_iur/lib/unified_iur/widgets/components.ex
   - .spec/specs/unified-iur/widget_components.spec.md
   - .spec/specs/unified-ui/widget_components.spec.md
 decisions:
@@ -29,7 +30,7 @@ decisions:
 
 ```spec-requirements
 - id: unified_iur.widget_components.canonical_node_types
-  statement: UnifiedIUR shall represent canonical node types or equivalent semantic variants for the expanded widget catalog, including rich headings, disclosure, runtime-owned forms, kicker labels, avatars, presence indicators, segmented controls, row primitives, progress and stage displays, shell surfaces, callouts, redlines, code blocks, chat composers, and repeated child composition.
+  statement: UnifiedIUR shall expose canonical node types or equivalent semantic variants for the expanded widget catalog through `UnifiedIUR.Widgets.Components`, including rich headings, disclosure, runtime-owned forms, kicker labels, avatars, presence indicators, segmented controls, row primitives, progress and stage displays, shell surfaces, callouts, redlines, code blocks, chat composers, and repeated child composition.
   priority: must
   stability: stable
 
@@ -98,6 +99,16 @@ decisions:
 ## Verification
 
 ```spec-verification
+- kind: source_file
+  target: packages/unified_iur/lib/unified_iur/widgets/components.ex
+  covers:
+    - unified_iur.widget_components.canonical_node_types
+    - unified_iur.widget_components.content_models
+    - unified_iur.widget_components.interaction_descriptors
+    - unified_iur.widget_components.accessibility_and_state_metadata
+    - unified_iur.widget_components.text_safety_contract
+    - unified_iur.widget_components.runtime_mapping_completeness
+
 - kind: source_file
   target: .spec/specs/unified-iur/widget_components.spec.md
   covers:

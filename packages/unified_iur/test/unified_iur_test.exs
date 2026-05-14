@@ -41,6 +41,7 @@ defmodule UnifiedIURTest do
            } = UnifiedIUR.Display.modules()
 
     assert %{
+             components: UnifiedIUR.Widgets.Components,
              foundational: UnifiedIUR.Widgets.Foundational,
              input: UnifiedIUR.Widgets.Input
            } = UnifiedIUR.Widgets.modules()
