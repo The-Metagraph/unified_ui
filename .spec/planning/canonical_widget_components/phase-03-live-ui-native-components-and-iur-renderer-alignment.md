@@ -18,9 +18,9 @@ Back to index: [README](./README.md)
   bounded widget state.
 - Canonical IUR rendering targets the same native components used by direct
   LiveUi usage.
-- All work in this phase is not done.
+- All work in this phase is done.
 
-[ ] 3 Phase 3 - LiveUi Native Components and IUR Renderer Alignment
+[x] 3 Phase 3 - LiveUi Native Components and IUR Renderer Alignment
   Implement the expanded widget-component catalog in LiveUi and make the
   canonical renderer map IUR input into those same native components.
 
@@ -100,22 +100,22 @@ Back to index: [README](./README.md)
       [x] 3.4.2.2 Subtask - Preserve canonical payload mapping for selected values, row ids, fields, composer text, and step ids.
       [x] 3.4.2.3 Subtask - Keep disclosure and slide-over local state bounded and subordinate to screen authority.
 
-  [ ] 3.5 Section - Phase 3 Integration Tests
+  [x] 3.5 Section - Phase 3 Integration Tests
     Validate LiveUi native component usage and IUR-rendered usage converge on
     the same behavior and safety guarantees.
 
-    [ ] 3.5.1 Task - Native component scenarios
+    [x] 3.5.1 Task - Native component scenarios
       Verify direct LiveUi usage covers representative widgets from every
       expanded family.
 
-      [ ] 3.5.1.1 Subtask - Verify each component renders required content, state, accessibility metadata, and children.
-      [ ] 3.5.1.2 Subtask - Verify interactive components emit the expected canonical signal meaning.
-      [ ] 3.5.1.3 Subtask - Verify redline and code components escape malicious text fixtures.
+      [x] 3.5.1.1 Subtask - Verify each component renders required content, state, accessibility metadata, and children.
+      [x] 3.5.1.2 Subtask - Verify interactive components emit the expected canonical signal meaning.
+      [x] 3.5.1.3 Subtask - Verify redline and code components escape malicious text fixtures.
 
-    [ ] 3.5.2 Task - IUR renderer scenarios
+    [x] 3.5.2 Task - IUR renderer scenarios
       Verify canonical IUR renders through native LiveUi components rather than
       renderer-only markup.
 
-      [ ] 3.5.2.1 Subtask - Verify IUR fixtures for every expanded family render through component boundaries.
-      [ ] 3.5.2.2 Subtask - Verify repeated row IUR renders deterministic repeated child components.
-      [ ] 3.5.2.3 Subtask - Verify renderer and native component outputs preserve the same semantic state and event meaning.
+      [x] 3.5.2.1 Subtask - Verify IUR fixtures for every expanded family render through component boundaries.
+      [x] 3.5.2.2 Subtask - Verify repeated row IUR renders deterministic repeated child components.
+      [x] 3.5.2.3 Subtask - Verify renderer and native component outputs preserve the same semantic state and event meaning.
