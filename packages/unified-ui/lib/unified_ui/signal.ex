@@ -36,6 +36,8 @@ defmodule UnifiedUi.Signal do
           stack_effect: :push_modal | :close_topmost_or_named_modal
         }
 
+  @type navigation_descriptor :: map()
+
   @type family ::
           :click
           | :change
@@ -161,6 +163,23 @@ defmodule UnifiedUi.Signal do
   def navigation_target_kind(target_intent) when is_map(target_intent),
     do: do_navigation_target_kind(target_intent)
 
+  @spec navigation_descriptor(t() | keyword() | map()) :: navigation_descriptor()
+  def navigation_descriptor(signal) do
+    signal = new(signal)
+    target_intent = signal.target_intent
+    action = fetch(target_intent, :action)
+
+    %{id: signal.id, kind: navigation_target_kind(signal)}
+    |> maybe_put(:action, action)
+    |> maybe_put(:screen, fetch(target_intent, :screen))
+    |> maybe_put(:modal, fetch(target_intent, :modal))
+    |> maybe_put(:params, fetch(target_intent, :params))
+    |> maybe_put(:metadata, fetch(target_intent, :metadata))
+    |> maybe_put(:binding, fetch(target_intent, :binding))
+    |> maybe_put(:destination, fetch(target_intent, :destination))
+    |> maybe_put(:modal_stack, navigation_modal_stack_semantics()[action])
+  end
+
   @spec new(keyword() | map() | t()) :: t()
   def new(%__MODULE__{} = signal), do: normalize(signal)
   def new(signal) when is_list(signal), do: signal |> Enum.into(%{}) |> new()
@@ -266,4 +285,8 @@ defmodule UnifiedUi.Signal do
   defp fetch(source, key, default \\ nil) do
     Map.get(source, key, Map.get(source, Atom.to_string(key), default))
   end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, _key, value) when value in [%{}, []], do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 end

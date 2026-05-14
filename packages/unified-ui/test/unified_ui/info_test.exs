@@ -103,7 +103,8 @@ defmodule UnifiedUi.InfoTest do
                  :command
                ],
                bindings: [],
-               interactions: []
+               interactions: [],
+               navigation_descriptors: []
              },
              validation_state: :phase_1_valid
            }

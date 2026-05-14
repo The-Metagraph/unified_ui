@@ -45,6 +45,51 @@ defmodule UnifiedUi.ToolingTest do
                open_settings: :modal_transition,
                close_settings_modal: :modal_transition
              },
+             navigation_descriptors: [
+               %{
+                 id: :close_settings_modal,
+                 kind: :modal_transition,
+                 action: :close_modal,
+                 modal: :settings_dialog,
+                 metadata: %{reason: :done},
+                 modal_stack: %{
+                   operation: :close,
+                   target: :topmost_modal,
+                   target_required?: false,
+                   named_target_allowed?: true,
+                   containment_required?: false,
+                   stack_effect: :close_topmost_or_named_modal
+                 }
+               },
+               %{
+                 id: :navigate_activity,
+                 kind: :local_destination,
+                 binding: :active_tab,
+                 destination: :activity
+               },
+               %{
+                 id: :open_settings,
+                 kind: :modal_transition,
+                 action: :open_modal,
+                 modal: :settings_dialog,
+                 params: %{source: :button},
+                 modal_stack: %{
+                   operation: :push,
+                   target: :symbolic_modal,
+                   target_required?: true,
+                   named_target_allowed?: true,
+                   containment_required?: false,
+                   stack_effect: :push_modal
+                 }
+               },
+               %{
+                 id: :open_settings_screen,
+                 kind: :screen_transition,
+                 action: :navigate_to,
+                 screen: :settings,
+                 params: %{tab: :profile}
+               }
+             ],
              navigation_actions: [
                :navigate_to,
                :replace_with,
@@ -175,5 +220,6 @@ defmodule UnifiedUi.ToolingTest do
     assert rendered =~ "related specs:"
     assert rendered =~ "signal families:"
     assert rendered =~ "navigation target kinds:"
+    assert rendered =~ "navigation descriptors:"
   end
 end

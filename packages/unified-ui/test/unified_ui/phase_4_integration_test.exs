@@ -501,6 +501,14 @@ defmodule UnifiedUi.Phase4IntegrationTest do
                  target_intent: %{command: :workspace_commands},
                  payload_mapping: %{source: :keyboard_shortcut}
                }
+             ],
+             navigation_descriptors: [
+               %{
+                 id: :navigate_activity,
+                 kind: :local_destination,
+                 binding: :active_tab,
+                 destination: :activity
+               }
              ]
            }
 

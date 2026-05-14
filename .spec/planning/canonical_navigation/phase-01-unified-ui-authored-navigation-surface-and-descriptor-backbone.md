@@ -48,26 +48,26 @@ Back to index: [README](./README.md)
       [x] 1.1.2.2 Subtask - Ensure canonical navigation examples demonstrate both local destination changes and top-level screen transitions without blurring their semantics.
       [x] 1.1.2.3 Subtask - Define how existing generic interaction descriptors continue to work when no top-level screen transition is intended.
 
-  [ ] 1.2 Section - Validation, Diagnostics, and Introspection
+  [x] 1.2 Section - Validation, Diagnostics, and Introspection
     Implement the validation and inspection surfaces that keep the authored
     navigation contract explicit, deterministic, and reviewable.
 
-    [ ] 1.2.1 Task - Validate authored screen-transition intent
+    [x] 1.2.1 Task - Validate authored screen-transition intent
       Reject malformed or host-specific navigation declarations at authoring
       time.
 
-      [ ] 1.2.1.1 Subtask - Reject URLs, Phoenix route helpers, browser-history instructions, and runtime-module identifiers in canonical screen-transition declarations.
-      [ ] 1.2.1.2 Subtask - Reject malformed action names, missing required screen targets, and invalid modal-target combinations.
-      [ ] 1.2.1.3 Subtask - Emit actionable diagnostics that explain whether the author attempted a top-level screen transition, a local destination change, or an unsupported host-specific route declaration.
-      [ ] 1.2.1.4 Subtask - Validate modal stack descriptors so targetless `close_modal` is accepted as top-modal close, targeted `close_modal` remains symbolic, and stack behavior never requires runtime-local stack identifiers.
+      [x] 1.2.1.1 Subtask - Reject URLs, Phoenix route helpers, browser-history instructions, and runtime-module identifiers in canonical screen-transition declarations.
+      [x] 1.2.1.2 Subtask - Reject malformed action names, missing required screen targets, and invalid modal-target combinations.
+      [x] 1.2.1.3 Subtask - Emit actionable diagnostics that explain whether the author attempted a top-level screen transition, a local destination change, or an unsupported host-specific route declaration.
+      [x] 1.2.1.4 Subtask - Validate modal stack descriptors so targetless `close_modal` is accepted as top-modal close, targeted `close_modal` remains symbolic, and stack behavior never requires runtime-local stack identifiers.
 
-    [ ] 1.2.2 Task - Expose navigation inspection helpers
+    [x] 1.2.2 Task - Expose navigation inspection helpers
       Make authored navigation intent visible through package tooling before a
       runtime is involved.
 
-      [ ] 1.2.2.1 Subtask - Update inspection helpers to show canonical navigation actions, symbolic screen targets, params, and modal-oriented targets.
-      [ ] 1.2.2.2 Subtask - Expose helper surfaces that list the supported navigation actions and their required authored fields.
-      [ ] 1.2.2.3 Subtask - Ensure navigation descriptors remain deterministic in inspection and export output so diffs stay stable and review-friendly.
+      [x] 1.2.2.1 Subtask - Update inspection helpers to show canonical navigation actions, symbolic screen targets, params, and modal-oriented targets.
+      [x] 1.2.2.2 Subtask - Expose helper surfaces that list the supported navigation actions and their required authored fields.
+      [x] 1.2.2.3 Subtask - Ensure navigation descriptors remain deterministic in inspection and export output so diffs stay stable and review-friendly.
 
   [ ] 1.3 Section - Author-Facing Examples and Guidance
     Implement maintained examples and guidance that teach developers how to use
