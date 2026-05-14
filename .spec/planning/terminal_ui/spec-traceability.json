@@ -47,6 +47,8 @@
       "unified_iur.interactions.renderer_independent_payload_mapping",
       "unified_iur.interactions.standard_interaction_families",
       "unified_iur.interactions.data_binding_representation",
+      "unified_iur.interactions.navigation_transition_representation",
+      "unified_iur.interactions.no_host_router_assumptions",
       "unified_ui.package.library_identity",
       "unified_ui.package.dsl_boundary_only",
       "unified_ui.package.canonical_iur_dependency",
@@ -56,7 +58,9 @@
       "unified_ui.signals.authoring_event_semantics",
       "unified_ui.signals.standard_interaction_families",
       "unified_ui.signals.validation_and_introspection",
-      "unified_ui.signals.no_runtime_local_event_leakage"
+      "unified_ui.signals.no_runtime_local_event_leakage",
+      "unified_ui.signals.navigation_transition_actions",
+      "unified_ui.signals.navigation_symbolic_screen_targets"
     ],
     "non_applicable_requirement_ids": [
       "ecosystem.platform_runtimes.elm_ui_runtime_split",
@@ -380,6 +384,22 @@
       "primary_plan_refs": ["1.3.2"],
       "supporting_plan_refs": ["5.2.2", "5.3.2"],
       "ownership_note": "Direct bounded-capability-variation obligation."
+    },
+    {
+      "requirement_id": "terminal_ui.runtime.canonical_navigation_transition_support",
+      "scope": "direct",
+      "source_file": ".spec/specs/terminal_ui/runtime.spec.md",
+      "primary_plan_refs": ["7.2.2"],
+      "supporting_plan_refs": ["7.1.1", "7.3.1", "7.3.2", "7.4.1", "7.5.1"],
+      "ownership_note": "Direct canonical navigation runtime obligation."
+    },
+    {
+      "requirement_id": "terminal_ui.runtime.no_url_routing_assumption",
+      "scope": "direct",
+      "source_file": ".spec/specs/terminal_ui/runtime.spec.md",
+      "primary_plan_refs": ["7.2.1"],
+      "supporting_plan_refs": ["7.4.1", "7.4.2", "7.5.2"],
+      "ownership_note": "Direct no-host-route canonical navigation guardrail."
     },
     {
       "requirement_id": "terminal_ui.capabilities.detect_terminal_capabilities",
@@ -718,6 +738,22 @@
       "ownership_note": "Upstream canonical data-binding input consumed by terminal_ui."
     },
     {
+      "requirement_id": "unified_iur.interactions.navigation_transition_representation",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["7.2.2"],
+      "supporting_plan_refs": ["7.3.1", "7.3.2", "7.4.1", "7.5.1"],
+      "ownership_note": "Upstream canonical navigation descriptor input consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_iur.interactions.no_host_router_assumptions",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": ["7.2.1"],
+      "supporting_plan_refs": ["7.4.2", "7.5.2"],
+      "ownership_note": "Upstream canonical navigation hygiene guardrail."
+    },
+    {
       "requirement_id": "unified_ui.package.library_identity",
       "scope": "upstream_constraint",
       "source_file": ".spec/specs/unified-ui/package.spec.md",
@@ -796,6 +832,22 @@
       "primary_plan_refs": ["4.3.1"],
       "supporting_plan_refs": ["1.2.1", "6.4.2", "6.5.2"],
       "ownership_note": "Upstream authored-signal hygiene guardrail."
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_transition_actions",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["7.2.2"],
+      "supporting_plan_refs": ["7.3.1", "7.3.2", "7.4.1", "7.5.1"],
+      "ownership_note": "Upstream authored navigation actions consumed by terminal_ui."
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_symbolic_screen_targets",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": ["7.2.1"],
+      "supporting_plan_refs": ["7.4.1", "7.5.2"],
+      "ownership_note": "Upstream symbolic-target guardrail consumed by terminal_ui."
     }
   ]
 }

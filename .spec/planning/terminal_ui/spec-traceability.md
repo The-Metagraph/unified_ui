@@ -86,6 +86,8 @@ tasks because they govern other runtime packages:
 | `terminal_ui.runtime.native_and_iur_entrypoints_share_runtime` | `1.2.1` | `2.3.2`, `3.3.2`, `4.5.2` | Direct runtime-convergence obligation. |
 | `terminal_ui.runtime.terminal_lifecycle_and_input` | `1.2.2` | `4.1.2`, `4.2.2`, `5.5.2` | Direct runtime lifecycle and input obligation. |
 | `terminal_ui.runtime.capability_variation_bounded` | `1.3.2` | `5.2.2`, `5.3.2` | Direct bounded-capability-variation obligation. |
+| `terminal_ui.runtime.canonical_navigation_transition_support` | `7.2.2` | `7.1.1`, `7.3.1`, `7.3.2`, `7.4.1`, `7.5.1` | Direct canonical navigation runtime obligation. |
+| `terminal_ui.runtime.no_url_routing_assumption` | `7.2.1` | `7.4.1`, `7.4.2`, `7.5.2` | Direct no-host-route canonical navigation guardrail. |
 ### `capabilities.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -157,6 +159,8 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.interactions.renderer_independent_payload_mapping` | `4.1.1` | `4.3.1`, `4.5.1` | Upstream canonical interaction hygiene constraint. |
 | `unified_iur.interactions.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream canonical interaction scope consumed by terminal_ui. |
 | `unified_iur.interactions.data_binding_representation` | `2.1.2` | `2.2.1`, `4.2.1`, `4.5.2` | Upstream canonical data-binding input consumed by terminal_ui. |
+| `unified_iur.interactions.navigation_transition_representation` | `7.2.2` | `7.3.1`, `7.3.2`, `7.4.1`, `7.5.1` | Upstream canonical navigation descriptor input consumed by terminal_ui. |
+| `unified_iur.interactions.no_host_router_assumptions` | `7.2.1` | `7.4.2`, `7.5.2` | Upstream canonical navigation hygiene guardrail. |
 ### `unified-ui/package.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -173,6 +177,8 @@ deliberate task coverage to preserve compatibility.
 | `unified_ui.signals.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream authored-signal scope consumed by terminal_ui. |
 | `unified_ui.signals.validation_and_introspection` | `6.2.1` | `4.3.1`, `6.2.2`, `6.3.2` | Upstream inspection expectations reflected in terminal_ui tooling. |
 | `unified_ui.signals.no_runtime_local_event_leakage` | `4.3.1` | `1.2.1`, `6.4.2`, `6.5.2` | Upstream authored-signal hygiene guardrail. |
+| `unified_ui.signals.navigation_transition_actions` | `7.2.2` | `7.3.1`, `7.3.2`, `7.4.1`, `7.5.1` | Upstream authored navigation actions consumed by terminal_ui. |
+| `unified_ui.signals.navigation_symbolic_screen_targets` | `7.2.1` | `7.4.1`, `7.5.2` | Upstream symbolic-target guardrail consumed by terminal_ui. |
 ## Scenario Alignment Pattern
 The per-spec scenario clauses are covered through the integration-test sections
 at the end of every phase:

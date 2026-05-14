@@ -30,6 +30,7 @@ The plan aligns to:
 4. [Phase 4 - Canonical Boundary Transport and Terminal Event Translation](./phase-04-canonical-boundary-transport-and-terminal-event-translation.md): implement canonical `Jido.Signal` and CloudEvents-compatible boundary translation for native terminal and IUR-rendered flows.
 5. [Phase 5 - Native Styling, Capability Degradation, and Runtime Inspection](./phase-05-native-styling-capability-degradation-and-runtime-inspection.md): implement native theming and styling, explicit capability and degradation policies, and runtime continuity inspection across richer and limited terminal environments.
 6. [Phase 6 - Examples, Tooling, Documentation, and Release Readiness](./phase-06-examples-tooling-documentation-and-release-readiness.md): implement maintained reference examples, preview and inspection tooling, documentation, release-readiness gates, and package evolution workflows.
+7. [Phase 7 - Canonical Navigation Runtime Support](./phase-07-canonical-navigation-runtime-support.md): implement canonical screen-transition handling inside the shared terminal runtime, including symbolic screen resolution, bounded history and modal semantics, and transport-to-runtime integration without browser-route assumptions.
 
 ## Supporting Docs
 - [Spec Traceability Manifest](./spec-traceability.json): authoritative machine-readable mapping from applicable requirements into this plan.

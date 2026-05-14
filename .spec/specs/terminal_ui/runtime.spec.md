@@ -22,6 +22,7 @@ surface:
   - .spec/specs/terminal_ui/runtime.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.canonical_navigation_boundary
 ```
 
 ## Requirements
@@ -51,15 +52,42 @@ decisions:
   statement: Terminal-specific capability differences may vary by backend, terminal emulator, or operating system, but those variations shall remain bounded behind the shared `terminal_ui` runtime model.
   priority: must
   stability: stable
+
+- id: terminal_ui.runtime.canonical_navigation_transition_support
+  statement: When canonical navigation interactions are emitted or consumed, the runtime shall map canonical screen-transition actions onto terminal-appropriate screen replacement, bounded history transitions, modal transitions, or section/screen swaps while preserving one shared terminal runtime model.
+  priority: must
+  stability: stable
+
+- id: terminal_ui.runtime.no_url_routing_assumption
+  statement: The terminal runtime shall not require browser-style path syntax, host-router names, or URL-matching semantics as the canonical navigation contract; symbolic screen identifiers and terminal-local transition policies remain the authoritative runtime boundary.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: terminal_ui.runtime_run_same_screen_on_multiple_capability_profiles
-  given: The same native or canonical-IUR-driven screen is launched in richer raw-mode and TTY-compatible terminal environments
-  when: `terminal_ui` runs the screen
-  then: The package preserves one runtime model and one canonical UI meaning while allowing bounded capability-driven degradation underneath
+  covers:
+    - terminal_ui.runtime.shared_runtime_across_backends
+    - terminal_ui.runtime.capability_variation_bounded
+  given:
+    - The same native or canonical-IUR-driven screen is launched in richer raw-mode and TTY-compatible terminal environments
+  when:
+    - `terminal_ui` runs the screen
+  then:
+    - The package preserves one runtime model and one canonical UI meaning while allowing bounded capability-driven degradation underneath
+
+- id: terminal_ui.runtime_handle_canonical_navigation_transition
+  covers:
+    - terminal_ui.runtime.canonical_navigation_transition_support
+    - terminal_ui.runtime.no_url_routing_assumption
+  given:
+    - A native or canonical terminal screen emits a canonical navigation transition such as screen replacement, history traversal, or modal open/close
+  when:
+    - `terminal_ui` resolves the transition
+  then:
+    - The runtime updates terminal screen state through symbolic screen resolution and bounded terminal transition policies without introducing browser-route semantics
 ```
 
 ## Verification
@@ -73,5 +101,8 @@ decisions:
     - terminal_ui.runtime.native_and_iur_entrypoints_share_runtime
     - terminal_ui.runtime.terminal_lifecycle_and_input
     - terminal_ui.runtime.capability_variation_bounded
+    - terminal_ui.runtime.canonical_navigation_transition_support
+    - terminal_ui.runtime.no_url_routing_assumption
     - terminal_ui.runtime_run_same_screen_on_multiple_capability_profiles
+    - terminal_ui.runtime_handle_canonical_navigation_transition
 ```
