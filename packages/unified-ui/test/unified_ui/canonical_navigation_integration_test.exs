@@ -521,6 +521,12 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
 
     assert report.signal_coverage.interaction_target_kinds[:open_settings] == :modal_transition
 
+    assert report.signal_coverage.interaction_target_kinds[:open_settings_confirmation] ==
+             :modal_transition
+
+    assert report.signal_coverage.interaction_target_kinds[:close_top_modal] ==
+             :modal_transition
+
     assert report.signal_coverage.interaction_target_kinds[:close_settings_modal] ==
              :modal_transition
 
@@ -528,13 +534,20 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
            |> Map.fetch!(:modal_stack)
            |> Map.fetch!(:stack_effect) == :push_modal
 
+    assert Enum.find(report.signal_coverage.navigation_descriptors, &(&1.id == :close_top_modal))
+           |> Map.fetch!(:modal_stack)
+           |> Map.fetch!(:target) == :topmost_modal
+
     assert example_signals =~ "open_settings_screen"
     assert example_signals =~ "screen: :settings"
     assert example_signals =~ "navigate_activity"
     assert example_signals =~ "destination: :activity"
     assert example_signals =~ "open_settings"
+    assert example_signals =~ "open_settings_confirmation"
+    assert example_signals =~ "close_top_modal"
     assert example_signals =~ "close_settings_modal"
     assert example_signals =~ "modal: :settings_dialog"
+    assert example_signals =~ "modal: :settings_confirm_dialog"
   end
 
   test "keeps the user guidance aligned with canonical screen-transition authoring" do
@@ -546,12 +559,15 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert guide =~ "Use `binding` plus `destination`"
     assert guide =~ "Use `action` plus `screen`"
     assert guide =~ "Use `action` plus `modal`"
+    assert guide =~ "targetless `close_modal` closes the"
     assert guide =~ "target_intent(binding: :active_tab, destination: :activity)"
 
     assert guide =~
              "target_intent(action: :navigate_to, screen: :settings, params: %{tab: :profile})"
 
     assert guide =~ "target_intent(action: :open_modal, modal: :settings_dialog"
+    assert guide =~ "target_intent(action: :close_modal, metadata: %{reason: :cancel})"
+    assert guide =~ "Focus trapping, backdrop behavior, and terminal degradation are runtime"
     refute guide =~ "target_intent(binding: :active_tab, route: :activity)"
   end
 

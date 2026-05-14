@@ -28,21 +28,25 @@ defmodule UnifiedUi.ToolingTest do
              binding_names: [:active_tab, :filters],
              interaction_ids: [
                :close_settings_modal,
+               :close_top_modal,
                :filters_change,
                :filters_submit,
                :navigate_activity,
                :open_commands,
                :open_settings,
+               :open_settings_confirmation,
                :open_settings_screen
              ],
              families: [:change, :command, :navigation, :submit],
              interaction_target_kinds: %{
+               close_top_modal: :modal_transition,
                filters_change: :generic,
                filters_submit: :generic,
                navigate_activity: :local_destination,
                open_settings_screen: :screen_transition,
                open_commands: :generic,
                open_settings: :modal_transition,
+               open_settings_confirmation: :modal_transition,
                close_settings_modal: :modal_transition
              },
              navigation_descriptors: [
@@ -52,6 +56,20 @@ defmodule UnifiedUi.ToolingTest do
                  action: :close_modal,
                  modal: :settings_dialog,
                  metadata: %{reason: :done},
+                 modal_stack: %{
+                   operation: :close,
+                   target: :topmost_modal,
+                   target_required?: false,
+                   named_target_allowed?: true,
+                   containment_required?: false,
+                   stack_effect: :close_topmost_or_named_modal
+                 }
+               },
+               %{
+                 id: :close_top_modal,
+                 kind: :modal_transition,
+                 action: :close_modal,
+                 metadata: %{reason: :cancel},
                  modal_stack: %{
                    operation: :close,
                    target: :topmost_modal,
@@ -73,6 +91,21 @@ defmodule UnifiedUi.ToolingTest do
                  action: :open_modal,
                  modal: :settings_dialog,
                  params: %{source: :button},
+                 modal_stack: %{
+                   operation: :push,
+                   target: :symbolic_modal,
+                   target_required?: true,
+                   named_target_allowed?: true,
+                   containment_required?: false,
+                   stack_effect: :push_modal
+                 }
+               },
+               %{
+                 id: :open_settings_confirmation,
+                 kind: :modal_transition,
+                 action: :open_modal,
+                 modal: :settings_confirm_dialog,
+                 params: %{from: :settings_dialog},
                  modal_stack: %{
                    operation: :push,
                    target: :symbolic_modal,

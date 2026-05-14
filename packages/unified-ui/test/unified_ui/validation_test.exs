@@ -58,7 +58,7 @@ defmodule UnifiedUi.ValidationTest do
              families: [:change, :command, :navigation, :submit],
              canonical_only?: true,
              total_bindings: 2,
-             total_interactions: 7
+             total_interactions: 9
            }
 
     assert report.documentation_surface.complete?

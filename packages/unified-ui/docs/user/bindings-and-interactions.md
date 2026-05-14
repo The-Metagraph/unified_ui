@@ -115,6 +115,9 @@ The canonical interaction families currently supported are:
 - Use `action` plus `screen` when the user transitions to another top-level
   screen.
 - Use `action` plus `modal` when the user opens or closes a modal surface.
+- Treat stacked modal flows as ordered modal transitions: each `open_modal`
+  pushes a symbolic modal target, and targetless `close_modal` closes the
+  topmost modal.
 - Keep URL paths, Phoenix route helpers, browser-history directives, and
   runtime module names out of `target_intent`.
 
@@ -184,6 +187,41 @@ interaction do
   payload_mapping(reason: :done)
 end
 ```
+
+### Stacked Modal Transitions
+
+Stacked modals do not require nested modal definitions. Author the second modal
+as another `open_modal` transition, then use targetless `close_modal` when the
+current top modal should close.
+
+```elixir
+interaction do
+  id(:open_settings_confirmation)
+  family(:navigation)
+  intent(:open_settings_confirmation_modal)
+  source_context(element_id: :open_confirm_settings_button, scope: :modal)
+
+  target_intent(
+    action: :open_modal,
+    modal: :settings_confirm_dialog,
+    params: %{from: :settings_dialog}
+  )
+
+  payload_mapping(source: :settings_dialog)
+end
+
+interaction do
+  id(:close_top_modal)
+  family(:navigation)
+  intent(:close_top_modal)
+  source_context(element_id: :close_top_modal_button, scope: :modal)
+  target_intent(action: :close_modal, metadata: %{reason: :cancel})
+  payload_mapping(reason: :cancel)
+end
+```
+
+Focus trapping, backdrop behavior, and terminal degradation are runtime
+responsibilities. The authored DSL only preserves the portable stack intent.
 
 ## Canonical, Not Renderer-Local
 
