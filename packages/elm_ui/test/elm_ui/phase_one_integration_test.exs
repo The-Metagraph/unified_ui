@@ -72,7 +72,8 @@ defmodule ElmUi.PhaseOneIntegrationTest do
              :description,
              :role,
              :variant,
-             :native_surface
+             :native_surface,
+             :component_family
            ]
 
     assert info.bridge.boundaries == [:hydration_envelope, :event_envelope, :acknowledgement]

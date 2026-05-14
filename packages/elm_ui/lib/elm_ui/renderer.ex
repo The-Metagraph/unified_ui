@@ -34,7 +34,8 @@ defmodule ElmUi.Renderer do
       UnifiedIUR.Widgets.Feedback.kinds(),
       UnifiedIUR.Canvas.kinds(),
       UnifiedIUR.Widgets.Advanced.kinds(),
-      UnifiedIUR.Layer.kinds()
+      UnifiedIUR.Layer.kinds(),
+      UnifiedIUR.Widgets.Components.kinds()
     ]
     |> List.flatten()
     |> Enum.uniq()

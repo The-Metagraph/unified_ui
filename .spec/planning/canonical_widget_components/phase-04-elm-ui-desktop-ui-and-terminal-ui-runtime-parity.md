@@ -45,24 +45,24 @@ Back to index: [README](./README.md)
       [x] 4.1.2.2 Subtask - Define minimum interaction and accessibility behavior required even under degraded rendering.
       [x] 4.1.2.3 Subtask - Add parity reports that compare runtime coverage against the canonical fixture set.
 
-  [ ] 4.2 Section - ElmUi Runtime Support
+  [x] 4.2 Section - ElmUi Runtime Support
     Implement the expanded catalog in the Phoenix-and-Elm runtime split while
     preserving canonical IUR and signal meaning.
 
-    [ ] 4.2.1 Task - Implement ElmUi native widget models
+    [x] 4.2.1 Task - Implement ElmUi native widget models
       Add server-side and Elm frontend representations for the expanded widget
       catalog.
 
-      [ ] 4.2.1.1 Subtask - Add server-side widget records and validation for expanded catalog props, children, and interactions.
-      [ ] 4.2.1.2 Subtask - Add Elm frontend rendering and update messages for interactive widgets.
-      [ ] 4.2.1.3 Subtask - Add safe text output for redline and code token content.
+      [x] 4.2.1.1 Subtask - Add server-side widget records and validation for expanded catalog props, children, and interactions.
+      [x] 4.2.1.2 Subtask - Add Elm frontend rendering and update messages for interactive widgets.
+      [x] 4.2.1.3 Subtask - Add safe text output for redline and code token content.
 
-    [ ] 4.2.2 Task - Implement ElmUi IUR renderer mappings
+    [x] 4.2.2 Task - Implement ElmUi IUR renderer mappings
       Map canonical IUR into ElmUi's native server and frontend runtime model.
 
-      [ ] 4.2.2.1 Subtask - Add renderer mappings for every expanded widget family.
-      [ ] 4.2.2.2 Subtask - Translate canonical interactions into ElmUi message and Phoenix boundary events.
-      [ ] 4.2.2.3 Subtask - Verify repeated rows render as deterministic frontend children.
+      [x] 4.2.2.1 Subtask - Add renderer mappings for every expanded widget family.
+      [x] 4.2.2.2 Subtask - Translate canonical interactions into ElmUi message and Phoenix boundary events.
+      [x] 4.2.2.3 Subtask - Verify repeated rows render as deterministic frontend children.
 
   [ ] 4.3 Section - DesktopUi Runtime Support
     Implement desktop-native equivalents and IUR mappings with pointer,
