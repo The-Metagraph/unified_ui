@@ -18,9 +18,9 @@ Back to index: [README](./README.md)
   output.
 - List-repeat behavior is composition behavior, not a widget renderer escape
   hatch.
-- All work in this phase is not done.
+- All work in this phase is done.
 
-[ ] 1 Phase 1 - Canonical Catalog and UnifiedUi Authoring Surface
+[x] 1 Phase 1 - Canonical Catalog and UnifiedUi Authoring Surface
   Define the portable catalog and authored DSL surface for the PR 79-98 widget
   additions so UnifiedUi can express the new components and list-repeat
   behavior without depending on AshUi or runtime package APIs.
@@ -143,22 +143,22 @@ Back to index: [README](./README.md)
       [x] 1.5.2.2 Subtask - Add diagnostics for missing list bindings, malformed row fields, and repeat use on single-child composition.
       [x] 1.5.2.3 Subtask - Add authoring examples that show repeated artifact rows and repeated event callouts.
 
-  [ ] 1.6 Section - Phase 1 Integration Tests
+  [x] 1.6 Section - Phase 1 Integration Tests
     Validate the authored DSL surface, alias policy, diagnostics, and repeat
     authoring before compiler and IUR work begins.
 
-    [ ] 1.6.1 Task - Catalog authoring scenarios
+    [x] 1.6.1 Task - Catalog authoring scenarios
       Verify representative components from each family compile through the
       authored DSL validation layer.
 
-      [ ] 1.6.1.1 Subtask - Verify content, identity, row, workflow, layer, form, composer, redline, and code widgets are accepted with valid authored fields.
-      [ ] 1.6.1.2 Subtask - Verify malformed fields are rejected with diagnostics that name the canonical widget and field.
-      [ ] 1.6.1.3 Subtask - Verify host-specific aliases, if accepted, are reported as aliases rather than canonical names.
+      [x] 1.6.1.1 Subtask - Verify content, identity, row, workflow, layer, form, composer, redline, and code widgets are accepted with valid authored fields.
+      [x] 1.6.1.2 Subtask - Verify malformed fields are rejected with diagnostics that name the canonical widget and field.
+      [x] 1.6.1.3 Subtask - Verify host-specific aliases, if accepted, are reported as aliases rather than canonical names.
 
-    [ ] 1.6.2 Task - Repeat authoring scenarios
+    [x] 1.6.2 Task - Repeat authoring scenarios
       Verify list-repeat authoring validates data shape and exposes useful
       inspection output.
 
-      [ ] 1.6.2.1 Subtask - Verify a repeated artifact-row template over a list binding validates successfully.
-      [ ] 1.6.2.2 Subtask - Verify repeat rejects non-list bindings and missing row-scope fields.
-      [ ] 1.6.2.3 Subtask - Verify inspection output shows repeat metadata deterministically.
+      [x] 1.6.2.1 Subtask - Verify a repeated artifact-row template over a list binding validates successfully.
+      [x] 1.6.2.2 Subtask - Verify repeat rejects non-list bindings and missing row-scope fields.
+      [x] 1.6.2.3 Subtask - Verify inspection output shows repeat metadata deterministically.
