@@ -51,6 +51,39 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
     end
   end
 
+  def validate_node(%Node{kind: :segmented_button_group, id: id, options: options}) do
+    if valid_options?(options) do
+      :ok
+    else
+      {:error, [:composition, :segmented_button_group, id],
+       "segmented_button_group #{inspect(id)} options must be a non-empty list of {value, label} tuples or maps with value and label"}
+    end
+  end
+
+  def validate_node(%Node{kind: :runtime_form_shell, id: id, fields: fields}) do
+    if valid_form_fields?(fields) do
+      :ok
+    else
+      {:error, [:composition, :runtime_form_shell, id],
+       "runtime_form_shell #{inspect(id)} fields must be a non-empty list of maps with name and type"}
+    end
+  end
+
+  def validate_node(%Node{kind: :chat_composer, id: id, rows: rows, send_intent: send_intent}) do
+    cond do
+      not is_atom(send_intent) ->
+        {:error, [:composition, :chat_composer, id],
+         "chat_composer #{inspect(id)} send_intent must be an atom"}
+
+      not is_integer(rows) or rows < 1 ->
+        {:error, [:composition, :chat_composer, id],
+         "chat_composer #{inspect(id)} rows must be a positive integer"}
+
+      true ->
+        :ok
+    end
+  end
+
   def validate_node(_node), do: :ok
 
   defp valid_heading_segments?(segments) when is_list(segments) and segments != [] do
@@ -65,6 +98,50 @@ defmodule UnifiedUi.Dsl.Verifiers.ValidateWidgetComponents do
   end
 
   defp valid_heading_segment?(_segment), do: false
+
+  defp valid_options?(options) when is_list(options) and options != [] do
+    Enum.all?(options, fn
+      {value, label} ->
+        valid_scalar?(value) and is_binary(label)
+
+      option when is_map(option) or is_list(option) ->
+        option = normalize_map(option)
+        valid_scalar?(Map.get(option, :value)) and is_binary(Map.get(option, :label))
+
+      _other ->
+        false
+    end)
+  end
+
+  defp valid_options?(_options), do: false
+
+  defp valid_form_fields?(fields) when is_list(fields) and fields != [] do
+    Enum.all?(fields, fn
+      field when is_map(field) or is_list(field) ->
+        field = normalize_map(field)
+
+        valid_scalar?(Map.get(field, :name)) and valid_scalar?(Map.get(field, :type)) and
+          valid_field_attributes?(Map.get(field, :attributes))
+
+      _other ->
+        false
+    end)
+  end
+
+  defp valid_form_fields?(_fields), do: false
+
+  defp valid_field_attributes?(nil), do: true
+  defp valid_field_attributes?(attributes) when is_map(attributes), do: true
+
+  defp valid_field_attributes?(attributes) when is_list(attributes) do
+    Keyword.keyword?(attributes)
+  end
+
+  defp valid_field_attributes?(_attributes), do: false
+
+  defp valid_scalar?(nil), do: false
+  defp valid_scalar?(value) when is_atom(value) or is_binary(value) or is_number(value), do: true
+  defp valid_scalar?(_value), do: false
 
   defp normalize_map(segment) when is_map(segment) do
     Map.new(segment, fn

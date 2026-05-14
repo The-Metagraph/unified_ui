@@ -26,7 +26,8 @@ defmodule UnifiedUi.Dsl.Entities do
       :feedback,
       :data,
       :operational,
-      :content_identity_and_disclosure
+      :content_identity_and_disclosure,
+      :form_control_and_composer
     ],
     layouts: [:container, :row, :column, :grid, :stack, :split, :viewport],
     layers: [:overlay, :absolute, :modal, :toast, :menu, :canvas],

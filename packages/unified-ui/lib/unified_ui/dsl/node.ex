@@ -16,6 +16,7 @@ defmodule UnifiedUi.Dsl.Node do
           | :display
           | :canvas
           | :content_identity_and_disclosure
+          | :form_control_and_composer
 
   @type t :: %__MODULE__{
           __identifier__: atom() | nil,
@@ -149,6 +150,14 @@ defmodule UnifiedUi.Dsl.Node do
           shape: atom() | nil,
           state: atom() | nil,
           open?: boolean() | nil,
+          active_value: term(),
+          selection_intent: atom() | nil,
+          fields: list() | nil,
+          submit_label: String.t() | nil,
+          change_intent: atom() | nil,
+          validation_state: atom() | nil,
+          send_label: String.t() | nil,
+          send_intent: atom() | nil,
           children: [t()]
         }
 
@@ -283,6 +292,14 @@ defmodule UnifiedUi.Dsl.Node do
             shape: nil,
             state: nil,
             open?: nil,
+            active_value: nil,
+            selection_intent: nil,
+            fields: nil,
+            submit_label: nil,
+            change_intent: nil,
+            validation_state: nil,
+            send_label: nil,
+            send_intent: nil,
             children: []
 
   @spec summary(t()) :: map()
@@ -291,6 +308,7 @@ defmodule UnifiedUi.Dsl.Node do
       id: node.id,
       family: node.family,
       kind: node.kind,
+      annotations: node.annotations,
       value: node.value,
       label: node.label,
       target: node.target,
@@ -307,6 +325,7 @@ defmodule UnifiedUi.Dsl.Node do
         end,
       interaction_refs: node.interaction_refs,
       binding_refs: node.binding_refs,
+      submit_intent: summary_submit_intent(node),
       role: node.role,
       presentation: node.presentation,
       summary: node.summary,
@@ -345,6 +364,14 @@ defmodule UnifiedUi.Dsl.Node do
       shape: node.shape,
       state: node.state,
       open?: node.open?,
+      active_value: node.active_value,
+      selection_intent: node.selection_intent,
+      fields: node.fields,
+      submit_label: node.submit_label,
+      change_intent: node.change_intent,
+      validation_state: node.validation_state,
+      send_label: node.send_label,
+      send_intent: node.send_intent,
       current: node.current,
       minimum: node.minimum,
       maximum: node.maximum,
@@ -361,4 +388,10 @@ defmodule UnifiedUi.Dsl.Node do
     |> Enum.reject(fn {_key, value} -> value in [nil, []] end)
     |> Enum.into(%{})
   end
+
+  defp summary_submit_intent(%__MODULE__{kind: :runtime_form_shell, submit_intent: submit_intent}) do
+    submit_intent
+  end
+
+  defp summary_submit_intent(_node), do: nil
 end

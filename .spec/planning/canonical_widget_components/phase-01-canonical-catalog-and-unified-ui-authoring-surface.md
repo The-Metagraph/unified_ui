@@ -68,33 +68,33 @@ Back to index: [README](./README.md)
       [x] 1.2.2.2 Subtask - Author `presence_dot` with state, size, and optional accessible label.
       [x] 1.2.2.3 Subtask - Author `disclosure` with summary text, initial open state, and child body content.
 
-  [ ] 1.3 Section - Form, Control, and Composer Authoring
+  [x] 1.3 Section - Form, Control, and Composer Authoring
     Add authored DSL support for controls that carry canonical interaction
     meaning while leaving host-specific form lifecycle ownership to runtimes.
 
-    [ ] 1.3.1 Task - Implement segmented button group authoring
+    [x] 1.3.1 Task - Implement segmented button group authoring
       Support single-selection segmented controls with option identity and
       canonical selection intent.
 
-      [ ] 1.3.1.1 Subtask - Author options with value and label fields.
-      [ ] 1.3.1.2 Subtask - Author active option state and optional disabled state.
-      [ ] 1.3.1.3 Subtask - Lower selection intent into canonical interaction descriptors rather than renderer-local event names.
+      [x] 1.3.1.1 Subtask - Author options with value and label fields.
+      [x] 1.3.1.2 Subtask - Author active option state and optional disabled state.
+      [x] 1.3.1.3 Subtask - Lower selection intent into canonical interaction descriptors rather than renderer-local event names.
 
-    [ ] 1.3.2 Task - Implement runtime-owned form shell authoring
+    [x] 1.3.2 Task - Implement runtime-owned form shell authoring
       Represent the `phoenix_form` PR meaning portably without making Phoenix
       the ecosystem contract.
 
-      [ ] 1.3.2.1 Subtask - Author form fields, submit label, submit intent, change intent, validation state, and field attributes.
-      [ ] 1.3.2.2 Subtask - Document that runtime-owned form state is owned by the host runtime or application, not by canonical IUR.
-      [ ] 1.3.2.3 Subtask - Add LiveUi-facing metadata hooks for Phoenix or AshPhoenix integration without leaking them into the canonical contract.
+      [x] 1.3.2.1 Subtask - Author form fields, submit label, submit intent, change intent, validation state, and field attributes.
+      [x] 1.3.2.2 Subtask - Document that runtime-owned form state is owned by the host runtime or application, not by canonical IUR.
+      [x] 1.3.2.3 Subtask - Add LiveUi-facing metadata hooks for Phoenix or AshPhoenix integration without leaking them into the canonical contract.
 
-    [ ] 1.3.3 Task - Implement chat composer authoring
+    [x] 1.3.3 Task - Implement chat composer authoring
       Support multi-line composer authoring with text input, tool children, and
       canonical send and change events.
 
-      [ ] 1.3.3.1 Subtask - Author text value, placeholder, rows, disabled state, send label, and send intent.
-      [ ] 1.3.3.2 Subtask - Author optional tool-area and status children with deterministic ordering.
-      [ ] 1.3.3.3 Subtask - Validate that send and change interactions preserve canonical event meaning.
+      [x] 1.3.3.1 Subtask - Author text value, placeholder, rows, disabled state, send label, and send intent.
+      [x] 1.3.3.2 Subtask - Author optional tool-area and status children with deterministic ordering.
+      [x] 1.3.3.3 Subtask - Validate that send and change interactions preserve canonical event meaning.
 
   [ ] 1.4 Section - Rows, Workflow, Layer, Callout, Redline, and Code Authoring
     Add authored DSL support for the remaining visual and operational widget

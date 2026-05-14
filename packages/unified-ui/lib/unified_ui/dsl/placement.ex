@@ -88,7 +88,9 @@ defmodule UnifiedUi.Dsl.Placement do
     :inline_rich_text_heading,
     :kicker,
     :avatar,
-    :presence_dot
+    :presence_dot,
+    :segmented_button_group,
+    :runtime_form_shell
   ]
 
   @advanced_leaf_kinds [
@@ -117,7 +119,7 @@ defmodule UnifiedUi.Dsl.Placement do
   ]
 
   @layout_kinds [:box, :row, :column, :grid, :stack]
-  @container_kinds [:content, :form_builder, :field_group, :disclosure]
+  @container_kinds [:content, :form_builder, :field_group, :disclosure, :chat_composer]
 
   @spec section_boundaries() :: %{atom() => [atom()]}
   def section_boundaries do

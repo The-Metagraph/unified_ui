@@ -31,6 +31,11 @@ defmodule UnifiedUi.Tooling do
       ".spec/specs/unified-ui/widgets.spec.md",
       ".spec/specs/unified-ui/widget_components.spec.md"
     ],
+    form_control_and_composer: [
+      ".spec/specs/unified-ui/widgets.spec.md",
+      ".spec/specs/unified-ui/signals.spec.md",
+      ".spec/specs/unified-ui/widget_components.spec.md"
+    ],
     layout: [".spec/specs/unified-ui/display_systems.spec.md"],
     display: [".spec/specs/unified-ui/display_systems.spec.md"],
     overlay: [".spec/specs/unified-ui/display_systems.spec.md"],

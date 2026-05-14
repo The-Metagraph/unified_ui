@@ -32,7 +32,8 @@ defmodule UnifiedUi.ReferenceTest do
              :feedback,
              :data,
              :operational,
-             :content_identity_and_disclosure
+             :content_identity_and_disclosure,
+             :form_control_and_composer
            ]
 
     assert UnifiedUi.Reference.construct_families().signals == [

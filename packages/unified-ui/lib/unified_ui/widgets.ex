@@ -42,6 +42,11 @@ defmodule UnifiedUi.Widgets do
     WidgetComponentEntities.content_identity_kinds()
   end
 
+  @spec form_control_component_kinds() :: [atom()]
+  def form_control_component_kinds do
+    WidgetComponentEntities.form_control_kinds()
+  end
+
   @spec component_catalog() :: [WidgetComponents.component()]
   def component_catalog do
     WidgetComponents.catalog()
@@ -70,6 +75,7 @@ defmodule UnifiedUi.Widgets do
       data_kinds() ++
       feedback_kinds() ++
       advanced_kinds() ++
-      content_identity_component_kinds()
+      content_identity_component_kinds() ++
+      form_control_component_kinds()
   end
 end
