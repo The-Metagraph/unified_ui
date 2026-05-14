@@ -4,11 +4,10 @@ Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
 - `examples/catalog.tsv`
-- `examples/shared`
-- `UnifiedExamples.Shared.Template`
-- `UnifiedExamples.Shared.App`
-- `UnifiedExamples.Shared.Tooling`
-- `UnifiedExamples.Shared.Validation`
+- `examples/<widget_name>`
+- App-local example template modules
+- App-local example runtime modules
+- App-local validation
 - `UnifiedUi` DSL signal and binding sections
 - `UnifiedIUR.Interaction`
 - `LiveUi.Renderer`

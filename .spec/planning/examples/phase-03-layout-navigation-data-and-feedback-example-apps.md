@@ -3,7 +3,7 @@
 Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
-- `examples/shared`
+- `examples/<widget_name>`
 - `UnifiedUi.Dsl`
 - `UnifiedIUR.Layout`
 - `UnifiedIUR.Widgets.Navigation`
@@ -14,7 +14,7 @@ Back to index: [README](./README.md)
 ## Relevant Assumptions / Defaults
 - Foundational example apps already establish the standalone app shape and the shared suite shell.
 - Layout, navigation, data, and feedback examples still use one primary subject per app, even when surrounding scaffolding is needed to make the subject understandable.
-- The suite index and shared metadata are updated continuously as new example apps are added.
+- The suite index, catalog, and app-local metadata are updated continuously as new example apps are added.
 
 [x] 3 Phase 3 - Layout, Navigation, Data, and Feedback Example Apps
   Implement the example applications for layout, navigation, data, and feedback constructs while preserving the shared shell, shared theme, and one-primary-subject-per-app rule.

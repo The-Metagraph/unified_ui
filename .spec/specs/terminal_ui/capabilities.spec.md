@@ -58,9 +58,18 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.capabilities_render_same_intent_on_rich_and_limited_terminals
-  given: The same direct-native or canonical screen is rendered in a rich terminal and a limited terminal
-  when: `terminal_ui` realizes the screen
-  then: The package detects the capability difference, applies explicit degradation or interaction alternatives, and preserves the same core screen intent
+  covers:
+    - terminal_ui.capabilities.detect_terminal_capabilities
+    - terminal_ui.capabilities.backend_selection_and_fallback
+    - terminal_ui.capabilities.visual_degradation_policy
+    - terminal_ui.capabilities.interaction_alternatives_for_limited_backends
+    - terminal_ui.capabilities.capability_reporting_surface
+  given:
+    - The same direct-native or canonical screen is rendered in a rich terminal and a limited terminal
+  when:
+    - `terminal_ui` realizes the screen
+  then:
+    - The package detects the capability difference, applies explicit degradation or interaction alternatives, and preserves the same core screen intent
 ```
 
 ## Verification

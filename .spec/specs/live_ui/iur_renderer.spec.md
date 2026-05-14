@@ -62,9 +62,19 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.iur_renderer.render_canonical_screen
-  given: A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
-  when: `live_ui` renders that screen
-  then: The package maps the canonical structure into native widget component boundaries while preserving canonical visual and interaction meaning
+  covers:
+    - live_ui.iur_renderer.accepts_canonical_iur
+    - live_ui.iur_renderer.full_construct_coverage
+    - live_ui.iur_renderer.deterministic_mapping
+    - live_ui.iur_renderer.meaning_preservation
+    - live_ui.iur_renderer.native_widget_reuse
+    - live_ui.iur_renderer.targets_widget_component_boundaries
+  given:
+    - A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
+  when:
+    - `live_ui` renders that screen
+  then:
+    - The package maps the canonical structure into native widget component boundaries while preserving canonical visual and interaction meaning
 ```
 
 ## Verification

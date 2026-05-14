@@ -27,15 +27,6 @@ The image example should make the media block feel intentional and show how pass
 The browser should keep both the `Meaningful Interaction Story` panel and the
 `Canonical Signal Preview` panel visible while you review the example.
 
-## Aggregate Demo
-
-Review this widget from the aggregate overview in `examples/demo/`.
-
-This example appears in the aggregate demo categories:
-Foundational Content
-
 ## Validate
 
 `mix test`
-
-Shared suite support lives in `../shared`.

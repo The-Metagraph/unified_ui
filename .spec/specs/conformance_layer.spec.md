@@ -58,48 +58,9 @@ decisions:
   target: .spec/specs/conformance_layer.spec.md
   covers:
     - repo.conformance.separate_from_governance
-    - repo.conformance.requirement_id_join
-    - repo.conformance.generated_traceability_mirrors
-
-- kind: source_file
-  target: .spec/conformance/README.md
-  covers:
     - repo.conformance.package_manifests
-    - repo.conformance.separate_from_governance
-    - repo.conformance.ci_enforcement_metadata
-    - repo.conformance.generated_traceability_mirrors
-
-- kind: source_file
-  target: .spec/planning/elm_ui/spec-traceability.json
-  covers:
     - repo.conformance.plan_coverage_manifests
-
-- kind: source_file
-  target: .spec/planning/elm_ui/spec-traceability.md
-  covers:
-    - repo.conformance.generated_traceability_mirrors
-
-- kind: source_file
-  target: .spec/planning/live_ui/spec-traceability.json
-  covers:
-    - repo.conformance.plan_coverage_manifests
-
-- kind: source_file
-  target: .spec/planning/live_ui/spec-traceability.md
-  covers:
-    - repo.conformance.generated_traceability_mirrors
-
-- kind: source_file
-  target: .spec/conformance/elm_ui/manifest.json
-  covers:
-    - repo.conformance.package_manifests
     - repo.conformance.requirement_id_join
     - repo.conformance.ci_enforcement_metadata
-
-- kind: source_file
-  target: .spec/conformance/live_ui/manifest.json
-  covers:
-    - repo.conformance.package_manifests
-    - repo.conformance.requirement_id_join
-    - repo.conformance.ci_enforcement_metadata
+    - repo.conformance.generated_traceability_mirrors
 ```

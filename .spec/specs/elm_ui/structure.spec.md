@@ -62,9 +62,19 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.structure.add_native_widget_without_architecture_drift
-  given: A maintainer adds a new native `elm_ui` widget and its canonical IUR mapping
-  when: The package evolves
-  then: The change lands in native widget, IUR renderer, frontend, server, and transport layers without collapsing those concerns into one undifferentiated module boundary
+  covers:
+    - elm_ui.structure.mix_and_frontend_layout
+    - elm_ui.structure.server_frontend_boundary
+    - elm_ui.structure.native_widget_module_boundary
+    - elm_ui.structure.transport_translation_modules
+    - elm_ui.structure.frontend_bridge_modules
+    - elm_ui.structure.no_dsl_or_iur_authorship
+  given:
+    - A maintainer adds a new native `elm_ui` widget and its canonical IUR mapping
+  when:
+    - The package evolves
+  then:
+    - The change lands in native widget, IUR renderer, frontend, server, and transport layers without collapsing those concerns into one undifferentiated module boundary
 ```
 
 ## Verification

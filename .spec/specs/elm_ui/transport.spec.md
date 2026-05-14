@@ -58,14 +58,32 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.transport.translate_boundary_form_event
-  given: A form submit, click, or navigation interaction on an `elm_ui` screen must cross the ecosystem package boundary
-  when: The package emits or consumes that event
-  then: It translates between native Phoenix-and-Elm interaction behavior and canonical `Jido.Signal` meaning without exposing renderer-local event details
+  covers:
+    - elm_ui.transport.canonical_boundary_events
+    - elm_ui.transport.native_web_event_model
+    - elm_ui.transport.server_frontend_bridge
+    - elm_ui.transport.no_boundary_leakage
+    - elm_ui.transport.direct_native_usage_allowed
+  given:
+    - A form submit, click, or navigation interaction on an `elm_ui` screen must cross the ecosystem package boundary
+  when:
+    - The package emits or consumes that event
+  then:
+    - It translates between native Phoenix-and-Elm interaction behavior and canonical `Jido.Signal` meaning without exposing renderer-local event details
 
 - id: elm_ui.transport_keep_native_events_local
-  given: A direct native `elm_ui` interaction remains inside the package runtime
-  when: The interaction does not cross an ecosystem boundary
-  then: The package may handle it through native runtime mechanics while retaining the ability to translate the same interaction family canonically when needed
+  covers:
+    - elm_ui.transport.canonical_boundary_events
+    - elm_ui.transport.native_web_event_model
+    - elm_ui.transport.server_frontend_bridge
+    - elm_ui.transport.no_boundary_leakage
+    - elm_ui.transport.direct_native_usage_allowed
+  given:
+    - A direct native `elm_ui` interaction remains inside the package runtime
+  when:
+    - The interaction does not cross an ecosystem boundary
+  then:
+    - The package may handle it through native runtime mechanics while retaining the ability to translate the same interaction family canonically when needed
 ```
 
 ## Verification

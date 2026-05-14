@@ -67,14 +67,36 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.compiler.compile_screen_to_iur
-  given: A developer authors a screen module with widgets, layout, style, theme, and interaction declarations
-  when: The package compiler runs
-  then: The result is canonical `unified_iur` plus canonical signal descriptors, not a renderer-specific widget tree
+  covers:
+    - unified_ui.compiler.canonical_iur_output
+    - unified_ui.compiler.deterministic_results
+    - unified_ui.compiler.style_theme_layer_resolution
+    - unified_ui.compiler.runtime_independent_bindings
+    - unified_ui.compiler.introspection_surface
+    - unified_ui.compiler.no_renderer_output_modes
+    - unified_ui.compiler.navigation_transition_lowering
+  given:
+    - A developer authors a screen module with widgets, layout, style, theme, and interaction declarations
+  when:
+    - The package compiler runs
+  then:
+    - The result is canonical `unified_iur` plus canonical signal descriptors, not a renderer-specific widget tree
 
 - id: unified_ui.compiler.inspect_compiled_artifact
-  given: A developer needs to understand what canonical output a DSL module produces
-  when: The developer uses compiler or introspection helpers
-  then: The package can report the compiled canonical structure without requiring a runtime library to render it
+  covers:
+    - unified_ui.compiler.canonical_iur_output
+    - unified_ui.compiler.deterministic_results
+    - unified_ui.compiler.style_theme_layer_resolution
+    - unified_ui.compiler.runtime_independent_bindings
+    - unified_ui.compiler.introspection_surface
+    - unified_ui.compiler.no_renderer_output_modes
+    - unified_ui.compiler.navigation_transition_lowering
+  given:
+    - A developer needs to understand what canonical output a DSL module produces
+  when:
+    - The developer uses compiler or introspection helpers
+  then:
+    - The package can report the compiled canonical structure without requiring a runtime library to render it
 ```
 
 ## Verification

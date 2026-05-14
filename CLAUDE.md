@@ -72,17 +72,12 @@ mix live_ui.validate --strict
 ### Examples suite
 
 ```bash
-cd examples/shared
-mix examples.list              # List catalog
-mix examples.launch button --dry-run
-mix examples.launch button --smoke-test
-mix examples.preview button
-mix examples.validate --strict
-mix examples.report
-
-# Run individual example directly
 cd examples/button
-mix phx.server                 # Serves at http://127.0.0.1:5000
+mix example.start              # Serves at http://127.0.0.1:5000
+mix example.start --target-package desktop_ui
+mix example.start --target-package elm_ui
+mix example.start --target-package terminal_ui
+mix test
 ```
 
 ## Spec Led Development
@@ -113,7 +108,6 @@ The `.spec/` workspace contains authored subject specs, governance contracts, an
 - `packages/desktop_ui/` - Desktop-native runtime library
 - `packages/terminal_ui/` - Terminal UI runtime library
 - `examples/` - Standalone Phoenix LiveView example apps demonstrating each widget/construct
-- `examples/shared/` - Shared support library with catalog, runtime helpers, and maintainer tasks
 
 ## Key Architecture Decisions
 

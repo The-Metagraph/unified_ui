@@ -69,9 +69,18 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.package.shared_exchange_boundary
-  given: `unified_ui` compiles canonical UI intent and a runtime library needs to render that intent
-  when: The two packages exchange UI state
-  then: They meet at canonical `unified_iur` structures rather than at runtime-library widgets or authored DSL modules
+  covers:
+    - unified_iur.package.library_identity
+    - unified_iur.package.exchange_boundary
+    - unified_iur.package.renderer_independent_surface
+    - unified_iur.package.direct_runtime_consumption
+    - unified_iur.package.traceable_to_root_specs
+  given:
+    - `unified_ui` compiles canonical UI intent and a runtime library needs to render that intent
+  when:
+    - The two packages exchange UI state
+  then:
+    - They meet at canonical `unified_iur` structures rather than at runtime-library widgets or authored DSL modules
 ```
 
 ## Verification

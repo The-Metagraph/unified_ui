@@ -2,6 +2,8 @@
 
 Repo-level orientation for agents working in this repository root.
 
+<!-- covers: repo.package.root_agent_guide -->
+
 For rules specific to the Spec Led workspace, also read `.spec/AGENTS.md`.
 
 ## First Read
@@ -160,10 +162,10 @@ preserved at the ecosystem boundary.
 
 ## Examples and Review Apps
 
-- `examples/shared/` contains shared support code, catalog data, and maintainer
-  tooling
 - `examples/<widget_name>/` contains standalone example apps
-- `examples/demo/` contains the aggregate demo application
+- `examples/catalog.tsv` is the machine-readable example catalog manifest
+- Each example app is self-contained; there is no shared example support
+  package or aggregate demo application
 
 Common example path:
 
@@ -198,8 +200,8 @@ Package-local commands:
   `mix unified_iur.export`, `mix unified_iur.validate`
 - `packages/live_ui`: `mix live_ui.demo`, `mix live_ui.preview`,
   `mix live_ui.inspect`, `mix live_ui.export`, `mix live_ui.validate`
-- `examples/shared`: `mix examples.*` tasks for listing, launching, previewing,
-  validating, and reporting on example apps
+- `examples/<widget_name>`: `mix example.start`,
+  `mix example.start --target-package desktop_ui|elm_ui|terminal_ui`, `mix test`
 
 ## Practical Working Notes
 

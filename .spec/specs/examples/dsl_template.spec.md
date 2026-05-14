@@ -77,9 +77,17 @@ The suite-wide authoring baseline is expected to provide these defaults:
 
 ```spec-scenarios
 - id: repo.examples.dsl_template.reuse_common_shell
-  given: Two different example applications demonstrate different widgets such as `text_input` and `cluster_dashboard`
-  when: Both examples follow the common example authoring contract
-  then: Both examples share the same default shell, default theme, and default style profile while differing only in the focused widget content and any necessary widget-specific inputs
+  covers:
+    - repo.examples.dsl_template.common_unified_ui_authoring_contract
+    - repo.examples.dsl_template.common_shell
+    - repo.examples.dsl_template.default_theme_identity
+    - repo.examples.dsl_template.default_style_profile
+  given:
+    - Two different example applications demonstrate different widgets such as `text_input` and `cluster_dashboard`
+  when:
+    - Both examples follow the common example authoring contract
+  then:
+    - Both examples share the same default shell, default theme, and default style profile while differing only in the focused widget content and any necessary widget-specific inputs
 ```
 
 ## Verification

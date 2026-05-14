@@ -94,34 +94,130 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.sdl3_runtime_rendering.present_high_dpi_screen
-  given: A native or canonical `desktop_ui` screen is shown on displays with different pixel densities
-  when: The runtime lays out and presents the screen through SDL3
-  then: The package preserves one logical layout model while resolving to different physical pixel densities underneath
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  given:
+    - A native or canonical `desktop_ui` screen is shown on displays with different pixel densities
+  when:
+    - The runtime lays out and presents the screen through SDL3
+  then:
+    - The package preserves one logical layout model while resolving to different physical pixel densities underneath
 
 - id: desktop_ui.sdl3_runtime_rendering.coordinate_multiwindow_layers
-  given: A desktop flow uses multiple top-level windows together with overlays, popovers, or context menus
-  when: `desktop_ui` realizes that flow natively
-  then: Top-level windows map to native SDL3 windows while transient layered surfaces remain bounded within their owning window unless another subject explicitly says otherwise
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  given:
+    - A desktop flow uses multiple top-level windows together with overlays, popovers, or context menus
+  when:
+    - `desktop_ui` realizes that flow natively
+  then:
+    - Top-level windows map to native SDL3 windows while transient layered surfaces remain bounded within their owning window unless another subject explicitly says otherwise
 
 - id: desktop_ui.sdl3_runtime_rendering.evolve_render_backend_without_semantic_drift
-  given: Maintainers later explore an SDL3 GPU-backed rendering path
-  when: The package evolves its internal rendering backend
-  then: The change preserves retained widget semantics, canonical rendering meaning, native interaction behavior, and transport boundaries already defined for `desktop_ui`
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  given:
+    - Maintainers later explore an SDL3 GPU-backed rendering path
+  when:
+    - The package evolves its internal rendering backend
+  then:
+    - The change preserves retained widget semantics, canonical rendering meaning, native interaction behavior, and transport boundaries already defined for `desktop_ui`
 
 - id: desktop_ui.sdl3_runtime_rendering.bootstrap_adapter_before_full_drawing
-  given: Maintainers introduce the first SDL3-native implementation seam before every widget can draw completely
-  when: The package adds lifecycle, window, render-plan, event, and resource adapter modules
-  then: The package exposes one coherent native adapter boundary without overstating renderer completeness or changing retained widget semantics
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  given:
+    - Maintainers introduce the first SDL3-native implementation seam before every widget can draw completely
+  when:
+    - The package adds lifecycle, window, render-plan, event, and resource adapter modules
+  then:
+    - The package exposes one coherent native adapter boundary without overstating renderer completeness or changing retained widget semantics
 
 - id: desktop_ui.sdl3_runtime_rendering.render_maintained_examples_with_real_widget_drawing
-  given: Maintained foundational, advanced, transport, and styled examples are run through the compiled visible-window path
-  when: The SDL3 host presents native windows through SDL_Renderer
-  then: The host renders widget-complete geometry, text, imagery, and style states for those maintained example surfaces instead of only drawing placeholder frame shells
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  given:
+    - Maintained foundational, advanced, transport, and styled examples are run through the compiled visible-window path
+  when:
+    - The SDL3 host presents native windows through SDL_Renderer
+  then:
+    - The host renders widget-complete geometry, text, imagery, and style states for those maintained example surfaces instead of only drawing placeholder frame shells
 
 - id: desktop_ui.sdl3_runtime_rendering.realize_native_text_and_image_resources
-  given: The compiled visible-window runtime receives text and image resources while SDL3 companion libraries are present
-  when: The host prepares and renders those resources
-  then: Text and image content are realized through the native SDL3-backed pipeline and diagnostics report whether native or fallback handling was used
+  covers:
+    - desktop_ui.sdl3_runtime_rendering.callback_lifecycle
+    - desktop_ui.sdl3_runtime_rendering.sdl_renderer_first_backend
+    - desktop_ui.sdl3_runtime_rendering.gpu_backend_reserved_evolution
+    - desktop_ui.sdl3_runtime_rendering.logical_units_and_dpi_scaling
+    - desktop_ui.sdl3_runtime_rendering.retained_widget_pipeline
+    - desktop_ui.sdl3_runtime_rendering.adapter_seam_before_full_renderer
+    - desktop_ui.sdl3_runtime_rendering.widget_complete_visible_realization
+    - desktop_ui.sdl3_runtime_rendering.native_window_mapping
+    - desktop_ui.sdl3_runtime_rendering.in_window_layering
+    - desktop_ui.sdl3_runtime_rendering.text_and_image_companions
+    - desktop_ui.sdl3_runtime_rendering.native_resource_realization
+    - desktop_ui.sdl3_runtime_rendering.desktop_input_contract
+  given:
+    - The compiled visible-window runtime receives text and image resources while SDL3 companion libraries are present
+  when:
+    - The host prepares and renders those resources
+  then:
+    - Text and image content are realized through the native SDL3-backed pipeline and diagnostics report whether native or fallback handling was used
 ```
 
 ## Verification

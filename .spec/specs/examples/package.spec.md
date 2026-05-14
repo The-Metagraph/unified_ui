@@ -12,13 +12,12 @@ contract and runtime-selectable rendering.
 - [Signal Transport](../signal_transport.spec.md)
 - [UnifiedUi Package](../unified-ui/package.spec.md)
 - [UnifiedIUR Package](../unified-iur/package.spec.md)
-- [Examples Demo Application](../examples_demo/package.spec.md)
 
 ```spec-meta
 id: repo.examples
 kind: package
 status: active
-summary: Repository-level contract for standalone example applications under `examples/` that preserve one common example-shell and styling contract while allowing runtime selection.
+summary: Repository-level contract for focused standalone example applications under `examples/` that preserve one common example-shell and styling contract while allowing runtime selection.
 surface:
   - examples/**
   - .spec/specs/examples/package.spec.md
@@ -26,7 +25,6 @@ surface:
   - .spec/specs/examples/dsl_template.spec.md
   - .spec/specs/examples/catalog.spec.md
   - .spec/specs/examples/tooling.spec.md
-  - .spec/specs/examples_demo/package.spec.md
 decisions:
   - repo.ecosystem.contract_model
 ```
@@ -40,17 +38,12 @@ decisions:
   stability: stable
 
 - id: repo.examples.self_contained_app_contract
-  statement: The example suite shall not require a repository-owned shared support library under `examples/shared/`; focused and aggregate example applications shall own their own authored modules, runtime entrypoints, theme definitions, and example-shell helpers locally.
+  statement: The example suite shall not require a repository-owned shared support library under `examples/shared/` or an aggregate demo application under `examples/demo/`; each focused example application shall own its authored modules, runtime entrypoints, theme definitions, and example-shell helpers locally.
   priority: must
   stability: stable
 
 - id: repo.examples.per_widget_app_contract
   statement: The example suite shall include one example application subdirectory for each widget or display construct named in the example catalog, with each application focusing on one primary widget or construct while preserving the common example-shell, theme, and style contract.
-  priority: must
-  stability: stable
-
-- id: repo.examples.aggregate_demo_application
-  statement: The example suite shall also include one aggregate demo application under `examples/demo/` that groups controls by category and provides a dedicated signal-reactivity tab alongside the per-widget example applications.
   priority: must
   stability: stable
 
@@ -74,9 +67,15 @@ decisions:
 
 ```spec-scenarios
 - id: repo.examples.find_widget_example
-  given: A maintainer or reviewer wants to see how one widget or display construct is meant to look in a standalone example app
-  when: The maintainer opens the example suite catalog
-  then: The maintainer can find one dedicated example application subdirectory for that widget or construct, and that application preserves the common example shell plus the suite default theme and style baseline
+  covers:
+    - repo.examples.per_widget_app_contract
+    - repo.examples.shared_default_theme_and_style
+  given:
+    - A maintainer or reviewer wants to see how one widget or display construct is meant to look in a standalone example app
+  when:
+    - The maintainer opens the example suite catalog
+  then:
+    - The maintainer can find one dedicated example application subdirectory for that widget or construct, and that application preserves the common example shell plus the suite default theme and style baseline
 ```
 
 ## Verification
@@ -88,7 +87,6 @@ decisions:
     - repo.examples.root_examples_directory
     - repo.examples.self_contained_app_contract
     - repo.examples.per_widget_app_contract
-    - repo.examples.aggregate_demo_application
     - repo.examples.runtime_selection_boundary
     - repo.examples.shared_default_theme_and_style
     - repo.examples.traceable_to_root_contract

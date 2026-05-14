@@ -65,9 +65,20 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.constructs.capture_full_screen_structure
-  given: An authored UI contains layered navigation, forms, feedback widgets, styled content, and data-heavy sections
-  when: The authored module compiles into IUR
-  then: The resulting canonical structures can represent the full screen without collapsing unsupported constructs into runtime-specific escape hatches
+  covers:
+    - unified_iur.constructs.foundational_widgets
+    - unified_iur.constructs.input_and_form_widgets
+    - unified_iur.constructs.layout_and_layering
+    - unified_iur.constructs.navigation_feedback_and_data
+    - unified_iur.constructs.styling_attributes
+    - unified_iur.constructs.theme_and_token_representation
+    - unified_iur.constructs.canonical_surface_for_runtime_parity
+  given:
+    - An authored UI contains layered navigation, forms, feedback widgets, styled content, and data-heavy sections
+  when:
+    - The authored module compiles into IUR
+  then:
+    - The resulting canonical structures can represent the full screen without collapsing unsupported constructs into runtime-specific escape hatches
 ```
 
 ## Verification

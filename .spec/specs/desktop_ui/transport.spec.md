@@ -56,14 +56,32 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.transport.translate_boundary_input
-  given: A click, keyboard shortcut, or focus change on a `desktop_ui` screen must cross the ecosystem package boundary
-  when: The package emits or consumes that event
-  then: It translates between native desktop interaction behavior and canonical `Jido.Signal` meaning without exposing renderer-local or platform-local event details
+  covers:
+    - desktop_ui.transport.canonical_boundary_events
+    - desktop_ui.transport.native_desktop_event_model
+    - desktop_ui.transport.platform_input_normalization
+    - desktop_ui.transport.no_boundary_leakage
+    - desktop_ui.transport.direct_native_usage_allowed
+  given:
+    - A click, keyboard shortcut, or focus change on a `desktop_ui` screen must cross the ecosystem package boundary
+  when:
+    - The package emits or consumes that event
+  then:
+    - It translates between native desktop interaction behavior and canonical `Jido.Signal` meaning without exposing renderer-local or platform-local event details
 
 - id: desktop_ui.transport_keep_native_events_local
-  given: A direct native `desktop_ui` interaction remains inside the package runtime
-  when: The interaction does not cross an ecosystem boundary
-  then: The package may handle it through native desktop runtime mechanics while retaining the ability to translate the same interaction family canonically when needed
+  covers:
+    - desktop_ui.transport.canonical_boundary_events
+    - desktop_ui.transport.native_desktop_event_model
+    - desktop_ui.transport.platform_input_normalization
+    - desktop_ui.transport.no_boundary_leakage
+    - desktop_ui.transport.direct_native_usage_allowed
+  given:
+    - A direct native `desktop_ui` interaction remains inside the package runtime
+  when:
+    - The interaction does not cross an ecosystem boundary
+  then:
+    - The package may handle it through native desktop runtime mechanics while retaining the ability to translate the same interaction family canonically when needed
 ```
 
 ## Verification

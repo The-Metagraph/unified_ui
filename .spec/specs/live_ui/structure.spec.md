@@ -77,14 +77,40 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.structure.add_native_widget_without_architecture_drift
-  given: A maintainer adds a new native `live_ui` widget and its canonical IUR mapping
-  when: The package evolves
-  then: The change lands in native widget, IUR renderer, and transport layers without collapsing those concerns into one undifferentiated module boundary
+  covers:
+    - live_ui.structure.mix_library_layout
+    - live_ui.structure.native_widget_module_boundary
+    - live_ui.structure.liveview_runtime_modules
+    - live_ui.structure.widget_livecomponent_modules
+    - live_ui.structure.screen_and_renderer_target_widget_boundaries
+    - live_ui.structure.helper_wrappers_remain_thin
+    - live_ui.structure.hooks_are_isolated
+    - live_ui.structure.transport_translation_modules
+    - live_ui.structure.no_dsl_or_iur_authorship
+  given:
+    - A maintainer adds a new native `live_ui` widget and its canonical IUR mapping
+  when:
+    - The package evolves
+  then:
+    - The change lands in native widget, IUR renderer, and transport layers without collapsing those concerns into one undifferentiated module boundary
 
 - id: live_ui.structure.add_widget_component_without_bypassing_boundary
-  given: A maintainer adds a new `live_ui` widget
-  when: The package evolves
-  then: The maintainer adds or updates an explicit widget component module and routes native and canonical entry points through that same boundary
+  covers:
+    - live_ui.structure.mix_library_layout
+    - live_ui.structure.native_widget_module_boundary
+    - live_ui.structure.liveview_runtime_modules
+    - live_ui.structure.widget_livecomponent_modules
+    - live_ui.structure.screen_and_renderer_target_widget_boundaries
+    - live_ui.structure.helper_wrappers_remain_thin
+    - live_ui.structure.hooks_are_isolated
+    - live_ui.structure.transport_translation_modules
+    - live_ui.structure.no_dsl_or_iur_authorship
+  given:
+    - A maintainer adds a new `live_ui` widget
+  when:
+    - The package evolves
+  then:
+    - The maintainer adds or updates an explicit widget component module and routes native and canonical entry points through that same boundary
 ```
 
 ## Verification

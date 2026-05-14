@@ -3,7 +3,7 @@
 Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
-- `examples/shared`
+- `examples/<widget_name>`
 - `UnifiedUi.Dsl`
 - `UnifiedUi.Compiler`
 - `UnifiedIUR.Widgets.Foundational`
@@ -12,7 +12,7 @@ Back to index: [README](./README.md)
 - `LiveUi.Renderer`
 
 ## Relevant Assumptions / Defaults
-- The shared support library, shared DSL template, and baseline example-app structure already exist from Phase 1.
+- The common template contract and baseline self-contained example-app structure already exist from Phase 1.
 - Each example app still focuses on one primary widget or construct, even when supporting form scaffolding is required around it.
 - The shared default theme and style profile remain the baseline for all example apps in this phase.
 

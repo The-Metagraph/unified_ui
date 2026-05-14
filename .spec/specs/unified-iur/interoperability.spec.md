@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.interoperability.one_iur_many_runtimes
-  given: The same canonical screen is rendered by `elm_ui`, `live_ui`, and `desktop_ui`
-  when: Each runtime library loads canonical IUR
-  then: Each library can realize the same authored meaning through its own native surface without requiring a renderer-specific canonical representation
+  covers:
+    - unified_iur.interoperability.runtime_library_consumption
+    - unified_iur.interoperability.deterministic_shape
+    - unified_iur.interoperability.portable_data_model
+    - unified_iur.interoperability.no_runtime_local_escape_hatches
+    - unified_iur.interoperability.extension_strategy
+  given:
+    - The same canonical screen is rendered by `elm_ui`, `live_ui`, and `desktop_ui`
+  when:
+    - Each runtime library loads canonical IUR
+  then:
+    - Each library can realize the same authored meaning through its own native surface without requiring a renderer-specific canonical representation
 ```
 
 ## Verification

@@ -72,14 +72,38 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.native_widgets.build_native_flow
-  given: A Phoenix application wants to build a multi-step dialog or dashboard directly with `live_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full LiveView-native experience without going through `unified_iur`
+  covers:
+    - live_ui.native_widgets.direct_native_surface
+    - live_ui.native_widgets.covers_canonical_iur_surface
+    - live_ui.native_widgets.liveview_native_composition
+    - live_ui.native_widgets.mountable_widget_components
+    - live_ui.native_widgets.helper_apis_delegate_to_components
+    - live_ui.native_widgets.theme_and_style_surface
+    - live_ui.native_widgets.interaction_surface
+    - live_ui.native_widgets.bounded_widget_state
+  given:
+    - A Phoenix application wants to build a multi-step dialog or dashboard directly with `live_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full LiveView-native experience without going through `unified_iur`
 
 - id: live_ui.native_widgets.mount_widget_in_screen
-  given: A Phoenix application wants to embed a `live_ui` widget inside a screen
-  when: The application mounts a button, input, overlay, or data widget
-  then: The widget is available as a real widget component boundary inside the screen rather than only as a passive HTML snippet
+  covers:
+    - live_ui.native_widgets.direct_native_surface
+    - live_ui.native_widgets.covers_canonical_iur_surface
+    - live_ui.native_widgets.liveview_native_composition
+    - live_ui.native_widgets.mountable_widget_components
+    - live_ui.native_widgets.helper_apis_delegate_to_components
+    - live_ui.native_widgets.theme_and_style_surface
+    - live_ui.native_widgets.interaction_surface
+    - live_ui.native_widgets.bounded_widget_state
+  given:
+    - A Phoenix application wants to embed a `live_ui` widget inside a screen
+  when:
+    - The application mounts a button, input, overlay, or data widget
+  then:
+    - The widget is available as a real widget component boundary inside the screen rather than only as a passive HTML snippet
 ```
 
 ## Verification

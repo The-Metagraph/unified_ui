@@ -52,9 +52,17 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.tooling_compare_native_and_iur_paths
-  given: A maintainer adds a new widget family or styling attribute to `elm_ui`
-  when: The maintainer runs package tooling or reference workflows
-  then: The maintainer can compare direct native rendering and canonical IUR rendering for the same feature area inside the package
+  covers:
+    - elm_ui.tooling.reference_examples
+    - elm_ui.tooling.preview_and_inspection
+    - elm_ui.tooling.validation_workflow
+    - elm_ui.tooling.documentation_surface
+  given:
+    - A maintainer adds a new widget family or styling attribute to `elm_ui`
+  when:
+    - The maintainer runs package tooling or reference workflows
+  then:
+    - The maintainer can compare direct native rendering and canonical IUR rendering for the same feature area inside the package
 ```
 
 ## Verification

@@ -56,9 +56,18 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.platform_artifacts.build_distinct_platform_outputs
-  given: A maintainer prepares a desktop release for Windows, macOS, and Linux
-  when: The maintainer builds platform artifacts
-  then: The package may use different compilation and packaging flows for each target while preserving one shared runtime and canonical rendering contract
+  covers:
+    - desktop_ui.platform_artifacts.first_class_targets
+    - desktop_ui.platform_artifacts.platform_specific_flows_allowed
+    - desktop_ui.platform_artifacts.artifact_types_may_differ
+    - desktop_ui.platform_artifacts.shared_runtime_semantics
+    - desktop_ui.platform_artifacts.packaging_not_runtime_logic
+  given:
+    - A maintainer prepares a desktop release for Windows, macOS, and Linux
+  when:
+    - The maintainer builds platform artifacts
+  then:
+    - The package may use different compilation and packaging flows for each target while preserving one shared runtime and canonical rendering contract
 ```
 
 ## Verification

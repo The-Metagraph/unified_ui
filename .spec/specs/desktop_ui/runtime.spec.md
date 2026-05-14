@@ -93,39 +93,151 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.runtime_run_same_screen_on_multiple_targets
-  given: The same native or canonical-IUR-driven screen is launched on Windows, macOS, and Linux
-  when: `desktop_ui` runs the screen
-  then: The package preserves one runtime model and one canonical UI meaning while allowing target-specific integration details underneath
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - The same native or canonical-IUR-driven screen is launched on Windows, macOS, and Linux
+  when:
+    - `desktop_ui` runs the screen
+  then:
+    - The package preserves one runtime model and one canonical UI meaning while allowing target-specific integration details underneath
 
 - id: desktop_ui.runtime_interact_with_visible_native_window
-  given: A maintainer runs a compiled visible-window `desktop_ui` example and interacts with focusable controls, pointers, scrolling regions, and secondary windows
-  when: Input events flow through the runtime
-  then: The runtime preserves the same binding, command, transport, and window-management semantics expected by native and canonical package flows
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - A maintainer runs a compiled visible-window `desktop_ui` example and interacts with focusable controls, pointers, scrolling regions, and secondary windows
+  when:
+    - Input events flow through the runtime
+  then:
+    - The runtime preserves the same binding, command, transport, and window-management semantics expected by native and canonical package flows
 
 - id: desktop_ui.runtime_navigate_between_screens
-  given: A desktop_ui application with multiple registered screens
-  when: A widget emits a `:navigate_to` signal for a registered screen
-  then: The navigation controller updates the current screen, pushes the previous screen onto the history stack, and the runtime renders the new screen within the same window
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - A desktop_ui application with multiple registered screens
+  when:
+    - A widget emits a `:navigate_to` signal for a registered screen
+  then:
+    - The navigation controller updates the current screen, pushes the previous screen onto the history stack, and the runtime renders the new screen within the same window
 
 - id: desktop_ui.runtime_back_navigation
-  given: A user has navigated through multiple screens (home → list → detail)
-  when: The user triggers `:go_back` navigation
-  then: The navigation controller pops from the history stack to return to the previous screen, and the forward stack stores the detail screen for potential forward navigation
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - A user has navigated through multiple screens (home → list → detail)
+  when:
+    - The user triggers `:go_back` navigation
+  then:
+    - The navigation controller pops from the history stack to return to the previous screen, and the forward stack stores the detail screen for potential forward navigation
 
 - id: desktop_ui.runtime_replace_current_screen
-  given: A user is viewing a screen and an error occurs or an auth redirect is needed
-  when: The navigation controller receives a `:replace` action
-  then: The current screen is replaced without adding to the history stack, preventing back navigation to the replaced screen
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - A user is viewing a screen and an error occurs or an auth redirect is needed
+  when:
+    - The navigation controller receives a `:replace` action
+  then:
+    - The current screen is replaced without adding to the history stack, preventing back navigation to the replaced screen
 
 - id: desktop_ui.runtime_modal_dialog_independent_history
-  given: A user is viewing a screen with navigation history
-  when: A modal dialog is opened via `:open_modal` and then closed
-  then: The modal appears on top of the current screen, and closing it returns to the same screen without affecting the navigation history stack
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - A user is viewing a screen with navigation history
+  when:
+    - A modal dialog is opened via `:open_modal` and then closed
+  then:
+    - The modal appears on top of the current screen, and closing it returns to the same screen without affecting the navigation history stack
 
 - id: desktop_ui.runtime_window_persists_across_screen_transitions
-  given: A window is open displaying a screen
-  when: Navigation occurs to a different screen
-  then: The window remains open with the same position, size, and platform state; only the screen content changes
+  covers:
+    - desktop_ui.runtime.sdl3_foundation
+    - desktop_ui.runtime.shared_runtime_across_targets
+    - desktop_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - desktop_ui.runtime.window_lifecycle_and_input
+    - desktop_ui.runtime.interactive_visible_execution
+    - desktop_ui.runtime.platform_variation_bounded
+    - desktop_ui.runtime.screen_navigation_support
+    - desktop_ui.runtime.navigation_controller_process
+    - desktop_ui.runtime.screen_registry
+    - desktop_ui.runtime.navigation_actions
+    - desktop_ui.runtime.navigation_event_routing
+    - desktop_ui.runtime.modal_stack_independence
+  given:
+    - A window is open displaying a screen
+  when:
+    - Navigation occurs to a different screen
+  then:
+    - The window remains open with the same position, size, and platform state; only the screen content changes
 ```
 
 ## Verification

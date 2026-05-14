@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.iur_renderer.render_canonical_screen
-  given: A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
-  when: `elm_ui` renders that screen
-  then: The package maps the canonical structure into native web widgets across Phoenix and Elm while preserving canonical visual and interaction meaning
+  covers:
+    - elm_ui.iur_renderer.accepts_canonical_iur
+    - elm_ui.iur_renderer.full_construct_coverage
+    - elm_ui.iur_renderer.deterministic_mapping
+    - elm_ui.iur_renderer.meaning_preservation
+    - elm_ui.iur_renderer.native_widget_reuse
+  given:
+    - A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
+  when:
+    - `elm_ui` renders that screen
+  then:
+    - The package maps the canonical structure into native web widgets across Phoenix and Elm while preserving canonical visual and interaction meaning
 ```
 
 ## Verification

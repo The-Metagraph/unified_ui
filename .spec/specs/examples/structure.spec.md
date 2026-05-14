@@ -7,7 +7,6 @@ standalone example applications under `examples/`.
 
 - [Repository Package](../package.spec.md)
 - [Example Apps Suite](./package.spec.md)
-- [Examples Demo Application](../examples_demo/package.spec.md)
 - [UnifiedUi Structure](../unified-ui/structure.spec.md)
 
 ```spec-meta
@@ -26,17 +25,12 @@ decisions:
 
 ```spec-requirements
 - id: repo.examples.structure.self_contained_examples
-  statement: Focused and aggregate example applications shall keep their authored modules, runtime entrypoints, theme definitions, and example-shell helpers within their own project directories and shall not require an `examples/shared/` path dependency.
+  statement: Focused example applications shall keep their authored modules, runtime entrypoints, theme definitions, and example-shell helpers within their own project directories and shall not require an `examples/shared/` path dependency or an aggregate `examples/demo/` application.
   priority: must
   stability: stable
 
 - id: repo.examples.structure.example_app_directory
   statement: Each focused per-widget or per-construct example application shall live in its own subdirectory at `examples/<widget_name>/`, where `<widget_name>` matches the primary widget or construct name in snake_case.
-  priority: must
-  stability: stable
-
-- id: repo.examples.structure.aggregate_demo_directory
-  statement: The aggregate category-oriented demo application shall live at `examples/demo/` as a first-class member of the example suite rather than being embedded inside another support package or a package directory.
   priority: must
   stability: stable
 
@@ -65,9 +59,16 @@ decisions:
 
 ```spec-scenarios
 - id: repo.examples.structure.add_new_widget_app
-  given: The ecosystem adds a new widget or display construct to the current example surface
-  when: A maintainer extends the example suite
-  then: The maintainer adds one new standalone Mix project under `examples/<widget_name>/`, wires the required package path dependencies, and adds any supported runtime-package dependencies needed for its launch surface
+  covers:
+    - repo.examples.structure.example_app_directory
+    - repo.examples.structure.example_app_is_mix_project
+    - repo.examples.structure.local_package_dependencies
+  given:
+    - The ecosystem adds a new widget or display construct to the current example surface
+  when:
+    - A maintainer extends the example suite
+  then:
+    - The maintainer adds one new standalone Mix project under `examples/<widget_name>/`, wires the required package path dependencies, and adds any supported runtime-package dependencies needed for its launch surface
 ```
 
 ## Verification
@@ -78,7 +79,6 @@ decisions:
   covers:
     - repo.examples.structure.self_contained_examples
     - repo.examples.structure.example_app_directory
-    - repo.examples.structure.aggregate_demo_directory
     - repo.examples.structure.example_app_is_mix_project
     - repo.examples.structure.local_package_dependencies
     - repo.examples.structure.example_screen_entrypoint

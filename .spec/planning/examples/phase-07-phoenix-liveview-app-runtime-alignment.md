@@ -3,10 +3,10 @@
 Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
-- `examples/shared`
-- `UnifiedExamples.Shared.Template`
-- `UnifiedExamples.Shared.Runtime`
-- `UnifiedExamples.Shared.Tooling`
+- `examples/<widget_name>`
+- App-local example template modules
+- App-local example runtime modules
+- App-local launch tooling
 - `LiveUi.Runtime`
 - `LiveUi.Component`
 - `Phoenix.Endpoint`
@@ -17,7 +17,7 @@ Back to index: [README](./README.md)
 ## Relevant Assumptions / Defaults
 - The example suite already demonstrates the authored `UnifiedUi` DSL to canonical `UnifiedIUR` to `live_ui` rendering path, but the per-app runtime shape must now be upgraded to real Phoenix LiveView applications.
 - Every example app should keep the shared template, shared default theme, and shared default style profile even after it gains its own Phoenix endpoint and browser-facing runtime.
-- The goal of this phase is not to replace the shared suite tooling, but to make that tooling operate against real LiveView apps that can also be launched independently with `mix phx.server`.
+- The goal of this phase is to make every focused example a real LiveView app that can be launched independently with an app-local command.
 
 [x] 7 Phase 7 - Phoenix LiveView App Runtime Alignment
   Retrofit the existing example suite so every example directory becomes a real Phoenix LiveView app with its own endpoint, router, LiveView entrypoint, and browser launch workflow while preserving the shared authored DSL template and shared styling contract.
@@ -39,11 +39,11 @@ Back to index: [README](./README.md)
       [x] 7.1.2.2 Subtask - Define the assigns contract that passes shared template output and runtime metadata into the LiveView entrypoint.
       [x] 7.1.2.3 Subtask - Add checks that verify every example app exposes a predictable URL and page shell.
 
-  [x] 7.2 Section - Shared Phoenix Support and Runtime Reuse
-    Extend the shared examples support library so the suite can generate and validate Phoenix app behavior without duplicating the same runtime boilerplate in every example.
+  [x] 7.2 Section - Phoenix Support and Runtime Reuse
+    Define the reusable app-local Phoenix patterns so the suite can validate Phoenix app behavior without requiring a repository-owned shared support package.
 
     [x] 7.2.1 Task - Add shared helpers for Phoenix app generation and mounting
-      Provide reusable helpers that reduce duplication across app-local Phoenix modules while keeping each example independently runnable.
+      Provide reusable app-local helper patterns that reduce boilerplate while keeping each example independently runnable.
 
       [x] 7.2.1.1 Subtask - Add shared helpers for building app-local endpoints, routers, layouts, and LiveView mount modules.
       [x] 7.2.1.2 Subtask - Reuse the existing authored DSL template and canonical runtime helpers inside the new Phoenix entrypoint path.
@@ -80,7 +80,7 @@ Back to index: [README](./README.md)
       Update suite and per-app documentation so the primary way to run an example is explicit and consistent.
 
       [x] 7.4.1.1 Subtask - Update the root `examples/README.md` with browser launch instructions for standalone example apps.
-      [x] 7.4.1.2 Subtask - Update `examples/shared/README.md` and maintenance guides to describe the new Phoenix runtime expectations.
+      [x] 7.4.1.2 Subtask - Update `examples/running_the_examples.md` and maintenance guides to describe the new Phoenix runtime expectations.
       [x] 7.4.1.3 Subtask - Update per-app readmes so each example advertises its own `mix phx.server` launch path.
 
     [x] 7.4.2 Task - Add repeatable maintainer launch and smoke-test workflows

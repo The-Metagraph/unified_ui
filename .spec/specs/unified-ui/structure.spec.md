@@ -60,9 +60,19 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.structure.separated_authoring_and_runtime_boundaries
-  given: A maintainer is adding new authored widgets or compiler passes to `unified_ui`
-  when: The maintainer updates package modules
-  then: The change lands in DSL, compiler, or signal modules rather than introducing renderer-runtime code into the package
+  covers:
+    - unified_ui.structure.mix_package_layout
+    - unified_ui.structure.dsl_modules
+    - unified_ui.structure.compiler_modules
+    - unified_ui.structure.signal_modules
+    - unified_ui.structure.introspection_and_reference
+    - unified_ui.structure.no_required_long_lived_runtime
+  given:
+    - A maintainer is adding new authored widgets or compiler passes to `unified_ui`
+  when:
+    - The maintainer updates package modules
+  then:
+    - The change lands in DSL, compiler, or signal modules rather than introducing renderer-runtime code into the package
 ```
 
 ## Verification

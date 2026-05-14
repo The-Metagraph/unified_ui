@@ -8,6 +8,7 @@ kind: package
 status: active
 summary: Repository-level specification for the unified monorepo and its centralized spec workspace.
 surface:
+  - AGENTS.md
   - mix.exs
   - packages/*
   - .spec/**
@@ -20,6 +21,11 @@ decisions:
 ```spec-requirements
 - id: repo.package.root_spec_workspace
   statement: The repository shall keep a single canonical .spec/ workspace at the repository root for repository-wide governance and package-level intent.
+  priority: must
+  stability: stable
+
+- id: repo.package.root_agent_guide
+  statement: The repository shall keep a root AGENTS.md that orients agents to repository structure, canonical specs, package boundaries, and common commands.
   priority: must
   stability: stable
 
@@ -43,4 +49,9 @@ decisions:
     - repo.package.root_spec_workspace
     - repo.package.packages_layout
     - repo.package.governance_scope
+
+- kind: source_file
+  target: AGENTS.md
+  covers:
+    - repo.package.root_agent_guide
 ```

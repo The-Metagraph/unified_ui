@@ -3,7 +3,7 @@
 Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
-- `examples/shared`
+- `examples/<widget_name>`
 - `UnifiedUi.Dsl`
 - `UnifiedIUR.Layer`
 - `UnifiedIUR.Viewport`

@@ -58,9 +58,18 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.native_widgets.build_native_web_flow
-  given: A web application wants to build a multi-step dialog, dashboard, or interactive form directly with `elm_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full Phoenix-and-Elm-native experience without going through `unified_iur`
+  covers:
+    - elm_ui.native_widgets.direct_native_surface
+    - elm_ui.native_widgets.covers_canonical_iur_surface
+    - elm_ui.native_widgets.server_client_composition
+    - elm_ui.native_widgets.theme_and_style_surface
+    - elm_ui.native_widgets.interaction_surface
+  given:
+    - A web application wants to build a multi-step dialog, dashboard, or interactive form directly with `elm_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full Phoenix-and-Elm-native experience without going through `unified_iur`
 ```
 
 ## Verification

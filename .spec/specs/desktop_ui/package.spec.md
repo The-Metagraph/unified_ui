@@ -69,9 +69,19 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.package.direct_use_and_iur_use
-  given: A developer wants to use `desktop_ui` directly in a desktop application or render canonical `unified_iur`
-  when: The developer integrates the package
-  then: The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
+  covers:
+    - desktop_ui.package.library_identity
+    - desktop_ui.package.native_runtime_library
+    - desktop_ui.package.iur_renderer_entrypoint
+    - desktop_ui.package.multiplatform_scope
+    - desktop_ui.package.not_dsl_or_iur_owner
+    - desktop_ui.package.traceable_to_root_specs
+  given:
+    - A developer wants to use `desktop_ui` directly in a desktop application or render canonical `unified_iur`
+  when:
+    - The developer integrates the package
+  then:
+    - The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
 ```
 
 ## Verification

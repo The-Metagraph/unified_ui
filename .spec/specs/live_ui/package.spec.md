@@ -74,9 +74,20 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.package.direct_use_and_iur_use
-  given: A developer wants to use `live_ui` directly in a Phoenix LiveView application or render canonical `unified_iur`
-  when: The developer integrates the package
-  then: The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
+  covers:
+    - live_ui.package.library_identity
+    - live_ui.package.native_runtime_library
+    - live_ui.package.widget_component_library_surface
+    - live_ui.package.iur_renderer_entrypoint
+    - live_ui.package.not_dsl_or_iur_owner
+    - live_ui.package.traceable_to_root_specs
+    - live_ui.package.focused_example_specialization
+  given:
+    - A developer wants to use `live_ui` directly in a Phoenix LiveView application or render canonical `unified_iur`
+  when:
+    - The developer integrates the package
+  then:
+    - The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
 ```
 
 ## Verification

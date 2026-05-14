@@ -55,9 +55,18 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.tooling.inspect_canonical_fixture
-  given: A maintainer adds a new canonical widget or layering construct to `unified_iur`
-  when: The maintainer runs package tooling or helper workflows
-  then: The maintainer can inspect canonical fixtures and structure output without relying on a renderer runtime
+  covers:
+    - unified_iur.tooling.reference_examples
+    - unified_iur.tooling.introspection_helpers
+    - unified_iur.tooling.validation_workflow
+    - unified_iur.tooling.documentation_surface
+    - unified_iur.tooling.navigation_transition_review_surfaces
+  given:
+    - A maintainer adds a new canonical widget or layering construct to `unified_iur`
+  when:
+    - The maintainer runs package tooling or helper workflows
+  then:
+    - The maintainer can inspect canonical fixtures and structure output without relying on a renderer runtime
 ```
 
 ## Verification

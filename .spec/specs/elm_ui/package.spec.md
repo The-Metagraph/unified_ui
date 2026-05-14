@@ -69,9 +69,19 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.package.direct_use_and_iur_use
-  given: A developer wants to use `elm_ui` directly in a Phoenix-and-Elm application or render canonical `unified_iur`
-  when: The developer integrates the package
-  then: The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
+  covers:
+    - elm_ui.package.library_identity
+    - elm_ui.package.native_runtime_library
+    - elm_ui.package.iur_renderer_entrypoint
+    - elm_ui.package.phoenix_elm_split
+    - elm_ui.package.not_dsl_or_iur_owner
+    - elm_ui.package.traceable_to_root_specs
+  given:
+    - A developer wants to use `elm_ui` directly in a Phoenix-and-Elm application or render canonical `unified_iur`
+  when:
+    - The developer integrates the package
+  then:
+    - The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
 ```
 
 ## Verification

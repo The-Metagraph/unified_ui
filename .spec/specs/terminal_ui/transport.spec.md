@@ -57,14 +57,32 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.transport.translate_boundary_input
-  given: A keyboard shortcut, paste action, mouse gesture, or resize event on a `terminal_ui` screen must cross the ecosystem package boundary
-  when: The package emits or consumes that event
-  then: It translates between native terminal interaction behavior and canonical `Jido.Signal` meaning without exposing backend-local details
+  covers:
+    - terminal_ui.transport.canonical_boundary_events
+    - terminal_ui.transport.native_terminal_event_model
+    - terminal_ui.transport.backend_input_normalization
+    - terminal_ui.transport.no_boundary_leakage
+    - terminal_ui.transport.direct_native_usage_allowed
+  given:
+    - A keyboard shortcut, paste action, mouse gesture, or resize event on a `terminal_ui` screen must cross the ecosystem package boundary
+  when:
+    - The package emits or consumes that event
+  then:
+    - It translates between native terminal interaction behavior and canonical `Jido.Signal` meaning without exposing backend-local details
 
 - id: terminal_ui.transport_keep_native_events_local
-  given: A direct native `terminal_ui` interaction remains inside the package runtime
-  when: The interaction does not cross an ecosystem boundary
-  then: The package may handle it through native terminal runtime mechanics while retaining the ability to translate the same interaction family canonically when needed
+  covers:
+    - terminal_ui.transport.canonical_boundary_events
+    - terminal_ui.transport.native_terminal_event_model
+    - terminal_ui.transport.backend_input_normalization
+    - terminal_ui.transport.no_boundary_leakage
+    - terminal_ui.transport.direct_native_usage_allowed
+  given:
+    - A direct native `terminal_ui` interaction remains inside the package runtime
+  when:
+    - The interaction does not cross an ecosystem boundary
+  then:
+    - The package may handle it through native terminal runtime mechanics while retaining the ability to translate the same interaction family canonically when needed
 ```
 
 ## Verification

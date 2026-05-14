@@ -73,19 +73,55 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.runtime.handle_canonical_event_server_side
-  given: A user interacts with a `live_ui` screen rendered from canonical IUR
-  when: The interaction crosses the package boundary as canonical event meaning
-  then: The `live_ui` runtime resolves the interaction through its server-authoritative LiveView model and updates rendered output accordingly
+  covers:
+    - live_ui.runtime.server_authoritative_model
+    - live_ui.runtime.liveview_component_execution
+    - live_ui.runtime.widget_component_local_state
+    - live_ui.runtime.hooks_only_where_necessary
+    - live_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - live_ui.runtime.state_and_render_continuity
+    - live_ui.runtime.canonical_navigation_transition_mapping
+    - live_ui.runtime.host_route_resolution_boundary
+  given:
+    - A user interacts with a `live_ui` screen rendered from canonical IUR
+  when:
+    - The interaction crosses the package boundary as canonical event meaning
+  then:
+    - The `live_ui` runtime resolves the interaction through its server-authoritative LiveView model and updates rendered output accordingly
 
 - id: live_ui.runtime_handle_direct_native_event
-  given: A user interacts with a screen built directly with native `live_ui` widgets
-  when: The widget interaction stays inside the package
-  then: The package handles the native event through its LiveView runtime model without requiring canonical IUR as an intermediate step
+  covers:
+    - live_ui.runtime.server_authoritative_model
+    - live_ui.runtime.liveview_component_execution
+    - live_ui.runtime.widget_component_local_state
+    - live_ui.runtime.hooks_only_where_necessary
+    - live_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - live_ui.runtime.state_and_render_continuity
+    - live_ui.runtime.canonical_navigation_transition_mapping
+    - live_ui.runtime.host_route_resolution_boundary
+  given:
+    - A user interacts with a screen built directly with native `live_ui` widgets
+  when:
+    - The widget interaction stays inside the package
+  then:
+    - The package handles the native event through its LiveView runtime model without requiring canonical IUR as an intermediate step
 
 - id: live_ui.runtime.screen_composes_widget_components
-  given: A Phoenix LiveView screen is built directly with `live_ui`
-  when: The screen renders buttons, inputs, overlays, or data widgets
-  then: The screen composes mountable widget component boundaries inside the shared runtime instead of bypassing them with ad hoc HTML fragments
+  covers:
+    - live_ui.runtime.server_authoritative_model
+    - live_ui.runtime.liveview_component_execution
+    - live_ui.runtime.widget_component_local_state
+    - live_ui.runtime.hooks_only_where_necessary
+    - live_ui.runtime.native_and_iur_entrypoints_share_runtime
+    - live_ui.runtime.state_and_render_continuity
+    - live_ui.runtime.canonical_navigation_transition_mapping
+    - live_ui.runtime.host_route_resolution_boundary
+  given:
+    - A Phoenix LiveView screen is built directly with `live_ui`
+  when:
+    - The screen renders buttons, inputs, overlays, or data widgets
+  then:
+    - The screen composes mountable widget component boundaries inside the shared runtime instead of bypassing them with ad hoc HTML fragments
 ```
 
 ## Verification

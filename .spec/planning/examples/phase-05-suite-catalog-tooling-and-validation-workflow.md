@@ -4,7 +4,7 @@ Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
 - `examples/README`
-- `examples/shared`
+- `examples/catalog.tsv`
 - `LiveUi.Tooling`
 - `Mix.Tasks.LiveUi.*`
 - `UnifiedUi.Compiler`
@@ -18,11 +18,11 @@ Back to index: [README](./README.md)
 [x] 5 Phase 5 - Suite Catalog, Tooling, and Validation Workflow
   Implement the suite index, app discovery tooling, preview surfaces, and validation workflows that turn the example apps into a maintainable review surface rather than just a directory of standalone projects.
 
-  [x] 5.1 Section - Root Suite Index and Catalog Discovery
+[x] 5.1 Section - Root Suite Index and Catalog Discovery
     Implement the root suite index and discovery surfaces that let maintainers map widgets to example apps quickly.
 
     [x] 5.1.1 Task - Implement the root example-suite index
-      Provide one authoritative root index that explains the shared support library, common DSL template, and full per-widget app catalog.
+      Provide one authoritative root index that explains the common DSL template contract and full per-widget app catalog.
 
       [x] 5.1.1.1 Subtask - Implement the root `examples/README` as the suite landing page.
       [x] 5.1.1.2 Subtask - Add machine-readable or easily parseable catalog metadata for example app discovery.
@@ -38,11 +38,11 @@ Back to index: [README](./README.md)
       [x] 5.2.1.2 Subtask - Implement preview workflows that surface the shared template and primary widget focus clearly.
       [x] 5.2.1.3 Subtask - Add tests that prove example-app discovery and preview routing work for representative apps from multiple families.
 
-  [x] 5.3 Section - Shared Template and Theme Validation
+[x] 5.3 Section - Shared Template and Theme Validation
     Implement the validation workflows that reject catalog drift and shared-template divergence across the suite.
 
     [x] 5.3.1 Task - Implement suite validation checks
-      Provide validation that the example suite remains complete and consistent with the shared support library contract.
+      Provide validation that the example suite remains complete and consistent with the self-contained app contract.
 
       [x] 5.3.1.1 Subtask - Implement validation that every catalog entry has a corresponding example-app directory.
       [x] 5.3.1.2 Subtask - Implement validation that every example app uses the shared DSL template and shared default theme/style profile.

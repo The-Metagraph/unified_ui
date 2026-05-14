@@ -6,7 +6,6 @@ application suite shall cover.
 ## Related General Specs
 
 - [Example Apps Suite](./package.spec.md)
-- [Examples Demo Application](../examples_demo/package.spec.md)
 - [Example Apps Structure](./structure.spec.md)
 - [Example Apps DSL Template](./dsl_template.spec.md)
 - [Platform Runtimes](../platform_runtimes.spec.md)
@@ -45,11 +44,6 @@ decisions:
   statement: The catalog shall group example applications by widget family or construct family so maintainers can review coverage by feature area rather than only by directory listing.
   priority: must
   stability: stable
-
-- id: repo.examples.catalog.aggregate_demo_traceability
-  statement: The catalog shall identify one aggregate demo application that groups the catalog entries by category and provides a dedicated signal-reactivity overview tab without replacing the per-widget applications.
-  priority: must
-  stability: stable
 ```
 
 ## Catalog
@@ -67,12 +61,6 @@ decisions:
 | `examples/separator/` | `separator` | content |
 | `examples/spacer/` | `spacer` | content |
 | `examples/content/` | `content` | layout/content |
-
-### Aggregate Review Application
-
-| Directory | Primary Subject | Family |
-| --- | --- | --- |
-| `examples/demo/` | `demo` | suite/showcase |
 
 ### Forms and Input
 
@@ -153,9 +141,15 @@ decisions:
 
 ```spec-scenarios
 - id: repo.examples.catalog.review_family_coverage
-  given: A reviewer wants to confirm that the example suite covers every current widget family and display construct named in the catalog
-  when: The reviewer reads the catalog
-  then: The reviewer can see one example application directory for every current subject, grouped by feature family and named after the primary widget or construct
+  covers:
+    - repo.examples.catalog.complete_catalog_subject_coverage
+    - repo.examples.catalog.family_traceability
+  given:
+    - A reviewer wants to confirm that the example suite covers every current widget family and display construct named in the catalog
+  when:
+    - The reviewer reads the catalog
+  then:
+    - The reviewer can see one example application directory for every current subject, grouped by feature family and named after the primary widget or construct
 ```
 
 ## Verification
@@ -168,6 +162,5 @@ decisions:
     - repo.examples.catalog.one_primary_subject_per_app
     - repo.examples.catalog.common_template_continuity
     - repo.examples.catalog.family_traceability
-    - repo.examples.catalog.aggregate_demo_traceability
     - repo.examples.catalog.review_family_coverage
 ```

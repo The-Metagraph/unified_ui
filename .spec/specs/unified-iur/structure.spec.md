@@ -55,9 +55,18 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.structure.maintain_pure_interchange_boundary
-  given: A maintainer adds new canonical constructs to `unified_iur`
-  when: The package structure evolves
-  then: The change lands in pure canonical data-model modules rather than introducing runtime-library or transport-server infrastructure into the package
+  covers:
+    - unified_iur.structure.mix_library_layout
+    - unified_iur.structure.core_and_construct_module_split
+    - unified_iur.structure.normalization_and_conversion_modules
+    - unified_iur.structure.reference_and_introspection_modules
+    - unified_iur.structure.no_long_lived_runtime
+  given:
+    - A maintainer adds new canonical constructs to `unified_iur`
+  when:
+    - The package structure evolves
+  then:
+    - The change lands in pure canonical data-model modules rather than introducing runtime-library or transport-server infrastructure into the package
 ```
 
 ## Verification

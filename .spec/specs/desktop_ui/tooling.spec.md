@@ -58,9 +58,18 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.tooling_compare_targets_and_entrypoints
-  given: A maintainer adds a new widget family, styling attribute, or runtime feature to `desktop_ui`
-  when: The maintainer runs package tooling or reference workflows
-  then: The maintainer can compare direct native rendering, canonical IUR rendering, and target-platform artifact behavior for the same feature area inside the package
+  covers:
+    - desktop_ui.tooling.reference_examples
+    - desktop_ui.tooling.preview_and_inspection
+    - desktop_ui.tooling.validation_workflow
+    - desktop_ui.tooling.platform_build_workflows
+    - desktop_ui.tooling.documentation_surface
+  given:
+    - A maintainer adds a new widget family, styling attribute, or runtime feature to `desktop_ui`
+  when:
+    - The maintainer runs package tooling or reference workflows
+  then:
+    - The maintainer can compare direct native rendering, canonical IUR rendering, and target-platform artifact behavior for the same feature area inside the package
 ```
 
 ## Verification

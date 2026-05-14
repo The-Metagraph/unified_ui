@@ -55,9 +55,18 @@ decisions:
 
 ```spec-scenarios
 - id: unified_iur.core.walk_canonical_tree
-  given: A runtime library receives canonical IUR for a complex screen with nested containers and layered content
-  when: The runtime walks the canonical structure
-  then: It can discover element identity, type, metadata, and nested children through one consistent element model
+  covers:
+    - unified_iur.core.canonical_element_model
+    - unified_iur.core.identity_and_metadata
+    - unified_iur.core.child_relationship_model
+    - unified_iur.core.pure_immutable_values
+    - unified_iur.core.extensible_without_breaking_shape
+  given:
+    - A runtime library receives canonical IUR for a complex screen with nested containers and layered content
+  when:
+    - The runtime walks the canonical structure
+  then:
+    - It can discover element identity, type, metadata, and nested children through one consistent element model
 ```
 
 ## Verification

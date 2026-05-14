@@ -56,14 +56,32 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.transport.translate_boundary_click
-  given: A click or submit interaction on a `live_ui` screen must cross the ecosystem package boundary
-  when: The package emits or consumes that event
-  then: It translates between native LiveView interaction behavior and canonical `Jido.Signal` meaning without exposing renderer-local event details
+  covers:
+    - live_ui.transport.canonical_boundary_events
+    - live_ui.transport.native_liveview_event_model
+    - live_ui.transport.server_authority_preserved
+    - live_ui.transport.no_boundary_leakage
+    - live_ui.transport.direct_native_usage_allowed
+  given:
+    - A click or submit interaction on a `live_ui` screen must cross the ecosystem package boundary
+  when:
+    - The package emits or consumes that event
+  then:
+    - It translates between native LiveView interaction behavior and canonical `Jido.Signal` meaning without exposing renderer-local event details
 
 - id: live_ui.transport_keep_native_events_local
-  given: A direct native `live_ui` interaction remains inside the package runtime
-  when: The interaction does not cross an ecosystem boundary
-  then: The package may handle it through native LiveView mechanics while retaining the ability to translate the same interaction family canonically when needed
+  covers:
+    - live_ui.transport.canonical_boundary_events
+    - live_ui.transport.native_liveview_event_model
+    - live_ui.transport.server_authority_preserved
+    - live_ui.transport.no_boundary_leakage
+    - live_ui.transport.direct_native_usage_allowed
+  given:
+    - A direct native `live_ui` interaction remains inside the package runtime
+  when:
+    - The interaction does not cross an ecosystem boundary
+  then:
+    - The package may handle it through native LiveView mechanics while retaining the ability to translate the same interaction family canonically when needed
 ```
 
 ## Verification

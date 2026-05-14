@@ -67,9 +67,18 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.package.authoring_without_runtime_packages
-  given: A developer adds `packages/unified-ui` to a project without `elm_ui`, `live_ui`, or `desktop_ui`
-  when: The developer authors UI modules and compiles them into canonical IUR
-  then: The package authoring and compilation workflow remains usable without a renderer/runtime package dependency
+  covers:
+    - unified_ui.package.library_identity
+    - unified_ui.package.dsl_boundary_only
+    - unified_ui.package.canonical_iur_dependency
+    - unified_ui.package.standalone_authoring_api
+    - unified_ui.package.traceable_to_root_specs
+  given:
+    - A developer adds `packages/unified-ui` to a project without `elm_ui`, `live_ui`, or `desktop_ui`
+  when:
+    - The developer authors UI modules and compiles them into canonical IUR
+  then:
+    - The package authoring and compilation workflow remains usable without a renderer/runtime package dependency
 ```
 
 ## Verification

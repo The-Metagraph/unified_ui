@@ -7,7 +7,6 @@ example-app suite.
 
 - [Example Apps Suite](./package.spec.md)
 - [Example Apps Catalog](./catalog.spec.md)
-- [Examples Demo Application](../examples_demo/package.spec.md)
 - [Spec System](../spec_system.spec.md)
 
 ```spec-meta
@@ -26,7 +25,7 @@ decisions:
 
 ```spec-requirements
 - id: repo.examples.tooling.index_surface
-  statement: The example suite shall provide a top-level index under `examples/` that explains the common example-shell contract, the suite default theme/style baseline, the supported runtime targets, the default runtime behavior, and the per-widget example-app catalog.
+  statement: The example suite shall provide a top-level index under `examples/` that explains the common example-shell contract, the suite default theme/style baseline, the supported runtime targets, the default runtime behavior, and the focused per-widget example-app catalog.
   priority: must
   stability: stable
 
@@ -49,20 +48,23 @@ decisions:
   statement: Suite tooling shall allow maintainers to map any example application back to its primary widget or construct, family, and shared review metadata.
   priority: must
   stability: stable
-
-- id: repo.examples.tooling.aggregate_demo_discovery
-  statement: The example-suite tooling shall expose the aggregate demo application as the category-oriented review surface and distinguish it from the focused per-widget example applications.
-  priority: must
-  stability: stable
 ```
 
 ## Scenarios
 
 ```spec-scenarios
 - id: repo.examples.tooling.review_example_suite
-  given: A maintainer wants to review the standalone example-app suite after adding or changing a widget
-  when: The maintainer uses the suite index and validation workflow
-  then: The maintainer can find the widget-focused app, run it independently through the chosen maintained runtime target, and verify that it still preserves the common example-shell contract, the suite default theme/style baseline, and the default runtime behavior
+  covers:
+    - repo.examples.tooling.index_surface
+    - repo.examples.tooling.independent_run_surface
+    - repo.examples.tooling.runtime_selection_surface
+    - repo.examples.tooling.shared_validation
+  given:
+    - A maintainer wants to review the standalone example-app suite after adding or changing a widget
+  when:
+    - The maintainer uses the suite index and validation workflow
+  then:
+    - The maintainer can find the widget-focused app, run it independently through the chosen maintained runtime target, and verify that it still preserves the common example-shell contract, the suite default theme/style baseline, and the default runtime behavior
 ```
 
 ## Verification
@@ -76,6 +78,5 @@ decisions:
     - repo.examples.tooling.runtime_selection_surface
     - repo.examples.tooling.shared_validation
     - repo.examples.tooling.catalog_traceability
-    - repo.examples.tooling.aggregate_demo_discovery
     - repo.examples.tooling.review_example_suite
 ```

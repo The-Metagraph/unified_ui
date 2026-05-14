@@ -67,14 +67,36 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.signals.author_form_interaction
-  given: A developer authors a form with change and submit interactions
-  when: The authored module is compiled
-  then: The package produces canonical signal descriptors that runtime libraries can translate without the author naming renderer-local events
+  covers:
+    - unified_ui.signals.canonical_descriptor_shape
+    - unified_ui.signals.authoring_event_semantics
+    - unified_ui.signals.standard_interaction_families
+    - unified_ui.signals.validation_and_introspection
+    - unified_ui.signals.no_runtime_local_event_leakage
+    - unified_ui.signals.navigation_transition_actions
+    - unified_ui.signals.navigation_symbolic_screen_targets
+  given:
+    - A developer authors a form with change and submit interactions
+  when:
+    - The authored module is compiled
+  then:
+    - The package produces canonical signal descriptors that runtime libraries can translate without the author naming renderer-local events
 
 - id: unified_ui.signals.author_navigation_intent
-  given: A developer authors a navigation interaction such as opening a dialog, changing a tab, or transitioning to another screen
-  when: The interaction is declared in the DSL
-  then: The package records canonical event meaning and payload mapping without coupling the author to one renderer runtime
+  covers:
+    - unified_ui.signals.canonical_descriptor_shape
+    - unified_ui.signals.authoring_event_semantics
+    - unified_ui.signals.standard_interaction_families
+    - unified_ui.signals.validation_and_introspection
+    - unified_ui.signals.no_runtime_local_event_leakage
+    - unified_ui.signals.navigation_transition_actions
+    - unified_ui.signals.navigation_symbolic_screen_targets
+  given:
+    - A developer authors a navigation interaction such as opening a dialog, changing a tab, or transitioning to another screen
+  when:
+    - The interaction is declared in the DSL
+  then:
+    - The package records canonical event meaning and payload mapping without coupling the author to one renderer runtime
 ```
 
 ## Verification

@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.iur_renderer.render_canonical_screen
-  given: A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
-  when: `terminal_ui` renders that screen
-  then: The package maps the canonical structure into native terminal widgets while preserving canonical visual and interaction meaning through explicit capability-aware realization
+  covers:
+    - terminal_ui.iur_renderer.accepts_canonical_iur
+    - terminal_ui.iur_renderer.full_construct_coverage
+    - terminal_ui.iur_renderer.deterministic_mapping
+    - terminal_ui.iur_renderer.meaning_preservation
+    - terminal_ui.iur_renderer.native_widget_reuse
+  given:
+    - A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
+  when:
+    - `terminal_ui` renders that screen
+  then:
+    - The package maps the canonical structure into native terminal widgets while preserving canonical visual and interaction meaning through explicit capability-aware realization
 ```
 
 ## Verification

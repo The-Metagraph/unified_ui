@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.tooling_compare_backends_and_entrypoints
-  given: A maintainer adds a new widget family, styling attribute, or runtime feature to `terminal_ui`
-  when: The maintainer runs package tooling or reference workflows
-  then: The maintainer can compare direct native rendering, canonical IUR rendering, and richer versus limited terminal behavior for the same feature area inside the package
+  covers:
+    - terminal_ui.tooling.reference_examples
+    - terminal_ui.tooling.preview_and_inspection
+    - terminal_ui.tooling.validation_workflow
+    - terminal_ui.tooling.backend_compatibility_workflows
+    - terminal_ui.tooling.documentation_surface
+  given:
+    - A maintainer adds a new widget family, styling attribute, or runtime feature to `terminal_ui`
+  when:
+    - The maintainer runs package tooling or reference workflows
+  then:
+    - The maintainer can compare direct native rendering, canonical IUR rendering, and richer versus limited terminal behavior for the same feature area inside the package
 ```
 
 ## Verification

@@ -50,9 +50,17 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.tooling.inspect_example_output
-  given: A maintainer adds a new canonical widget or style attribute to `unified_ui`
-  when: The maintainer runs package tooling or helper workflows
-  then: The maintainer can inspect the updated compiled canonical output and package examples without involving a runtime library
+  covers:
+    - unified_ui.tooling.reference_examples
+    - unified_ui.tooling.compiler_inspection
+    - unified_ui.tooling.authoring_validation_workflow
+    - unified_ui.tooling.documentation_surface
+  given:
+    - A maintainer adds a new canonical widget or style attribute to `unified_ui`
+  when:
+    - The maintainer runs package tooling or helper workflows
+  then:
+    - The maintainer can inspect the updated compiled canonical output and package examples without involving a runtime library
 ```
 
 ## Verification

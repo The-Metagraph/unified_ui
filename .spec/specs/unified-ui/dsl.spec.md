@@ -61,14 +61,34 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.dsl.author_single_screen
-  given: A developer wants to define one canonical screen with widgets, layout, styles, and user interactions
-  when: The developer authors a `UnifiedUi` DSL module
-  then: The module can declare those concerns in one authored surface without embedding runtime-library widget calls
+  covers:
+    - unified_ui.dsl.spark_style_authoring_surface
+    - unified_ui.dsl.widgets_layouts_layers
+    - unified_ui.dsl.styling_and_theming
+    - unified_ui.dsl.interaction_binding
+    - unified_ui.dsl.compile_time_validation
+    - unified_ui.dsl.authoring_extensibility
+  given:
+    - A developer wants to define one canonical screen with widgets, layout, styles, and user interactions
+  when:
+    - The developer authors a `UnifiedUi` DSL module
+  then:
+    - The module can declare those concerns in one authored surface without embedding runtime-library widget calls
 
 - id: unified_ui.dsl.reject_renderer_specific_callbacks
-  given: An authored UI module uses a renderer-specific callback name or renderer-local event payload shape
-  when: The module is compiled by the package DSL
-  then: The authoring surface rejects that declaration because canonical interaction meaning must stay renderer-independent
+  covers:
+    - unified_ui.dsl.spark_style_authoring_surface
+    - unified_ui.dsl.widgets_layouts_layers
+    - unified_ui.dsl.styling_and_theming
+    - unified_ui.dsl.interaction_binding
+    - unified_ui.dsl.compile_time_validation
+    - unified_ui.dsl.authoring_extensibility
+  given:
+    - An authored UI module uses a renderer-specific callback name or renderer-local event payload shape
+  when:
+    - The module is compiled by the package DSL
+  then:
+    - The authoring surface rejects that declaration because canonical interaction meaning must stay renderer-independent
 ```
 
 ## Verification

@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.native_widgets.build_native_terminal_flow
-  given: A terminal application wants to build a keyboard-first workflow, dialog flow, dashboard, or data-heavy screen directly with `terminal_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full native terminal experience without going through `unified_iur`
+  covers:
+    - terminal_ui.native_widgets.direct_native_surface
+    - terminal_ui.native_widgets.covers_canonical_iur_surface
+    - terminal_ui.native_widgets.capability_aware_widget_meaning
+    - terminal_ui.native_widgets.theme_and_style_surface
+    - terminal_ui.native_widgets.interaction_surface
+  given:
+    - A terminal application wants to build a keyboard-first workflow, dialog flow, dashboard, or data-heavy screen directly with `terminal_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full native terminal experience without going through `unified_iur`
 ```
 
 ## Verification

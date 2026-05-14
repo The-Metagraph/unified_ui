@@ -68,9 +68,19 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.package.direct_use_and_iur_use
-  given: A developer wants to use `terminal_ui` directly in a terminal application or render canonical `unified_iur`
-  when: The developer integrates the package
-  then: The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
+  covers:
+    - terminal_ui.package.library_identity
+    - terminal_ui.package.native_runtime_library
+    - terminal_ui.package.iur_renderer_entrypoint
+    - terminal_ui.package.term_ui_runtime_scope
+    - terminal_ui.package.not_dsl_or_iur_owner
+    - terminal_ui.package.traceable_to_root_specs
+  given:
+    - A developer wants to use `terminal_ui` directly in a terminal application or render canonical `unified_iur`
+  when:
+    - The developer integrates the package
+  then:
+    - The package supports both direct native use and canonical IUR rendering without requiring authored DSL modules
 ```
 
 ## Verification

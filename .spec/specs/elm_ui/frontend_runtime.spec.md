@@ -56,9 +56,18 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.frontend_runtime_handle_native_interaction
-  given: A user interacts with a widget rendered by the Elm frontend runtime
-  when: The interaction updates browser-local UI behavior or crosses to the server runtime
-  then: The frontend handles native browser behavior while preserving canonical meaning when boundary translation is required
+  covers:
+    - elm_ui.frontend_runtime.elm_rendering_layer
+    - elm_ui.frontend_runtime.local_state_bounded
+    - elm_ui.frontend_runtime.native_and_iur_entrypoints_share_frontend
+    - elm_ui.frontend_runtime.browser_capabilities
+    - elm_ui.frontend_runtime.canonical_meaning_preserved
+  given:
+    - A user interacts with a widget rendered by the Elm frontend runtime
+  when:
+    - The interaction updates browser-local UI behavior or crosses to the server runtime
+  then:
+    - The frontend handles native browser behavior while preserving canonical meaning when boundary translation is required
 ```
 
 ## Verification

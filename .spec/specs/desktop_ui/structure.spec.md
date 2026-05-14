@@ -72,9 +72,21 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.structure.add_platform_support_without_runtime_drift
-  given: A maintainer improves Windows, macOS, or Linux integration for `desktop_ui`
-  when: The package evolves
-  then: The change lands in platform integration or artifact modules without collapsing shared widget, runtime, or IUR renderer concerns into platform-specific code
+  covers:
+    - desktop_ui.structure.mix_library_layout
+    - desktop_ui.structure.shared_runtime_vs_platform_modules
+    - desktop_ui.structure.sdl3_adapter_modules
+    - desktop_ui.structure.native_widget_module_boundary
+    - desktop_ui.structure.transport_translation_modules
+    - desktop_ui.structure.platform_artifact_modules
+    - desktop_ui.structure.no_dsl_or_iur_authorship
+    - desktop_ui.structure.navigation_modules
+  given:
+    - A maintainer improves Windows, macOS, or Linux integration for `desktop_ui`
+  when:
+    - The package evolves
+  then:
+    - The change lands in platform integration or artifact modules without collapsing shared widget, runtime, or IUR renderer concerns into platform-specific code
 ```
 
 ## Verification

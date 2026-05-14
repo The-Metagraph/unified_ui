@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.native_widgets.build_native_desktop_flow
-  given: A desktop application wants to build a multiwindow flow, dialog workflow, or data-heavy screen directly with `desktop_ui`
-  when: The application uses the package's native widget and style surface
-  then: It can compose a full native desktop experience without going through `unified_iur`
+  covers:
+    - desktop_ui.native_widgets.direct_native_surface
+    - desktop_ui.native_widgets.covers_canonical_iur_surface
+    - desktop_ui.native_widgets.multiplatform_widget_meaning
+    - desktop_ui.native_widgets.theme_and_style_surface
+    - desktop_ui.native_widgets.interaction_surface
+  given:
+    - A desktop application wants to build a multiwindow flow, dialog workflow, or data-heavy screen directly with `desktop_ui`
+  when:
+    - The application uses the package's native widget and style surface
+  then:
+    - It can compose a full native desktop experience without going through `unified_iur`
 ```
 
 ## Verification

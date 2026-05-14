@@ -67,14 +67,36 @@ decisions:
 
 ```spec-scenarios
 - id: unified_ui.widgets.author_modal_flow
-  given: A developer needs a modal interaction flow with layered content, form inputs, button actions, and theme-aware styling
-  when: The flow is authored in `unified_ui`
-  then: The package provides canonical widgets, layer declarations, and styling declarations for the full flow without requiring runtime-library widgets
+  covers:
+    - unified_ui.widgets.foundational_visual_surface
+    - unified_ui.widgets.input_surface
+    - unified_ui.widgets.layout_and_layer_surface
+    - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.style_attribute_surface
+    - unified_ui.widgets.canvas_surface
+    - unified_ui.widgets.iur_surface_parity
+  given:
+    - A developer needs a modal interaction flow with layered content, form inputs, button actions, and theme-aware styling
+  when:
+    - The flow is authored in `unified_ui`
+  then:
+    - The package provides canonical widgets, layer declarations, and styling declarations for the full flow without requiring runtime-library widgets
 
 - id: unified_ui.widgets.author_data_experience
-  given: A developer needs to author a dashboard or data-heavy screen
-  when: The developer combines tables, lists, charts, progress or status widgets, and navigation elements
-  then: The package provides canonical authored constructs for the full experience as one coherent DSL surface
+  covers:
+    - unified_ui.widgets.foundational_visual_surface
+    - unified_ui.widgets.input_surface
+    - unified_ui.widgets.layout_and_layer_surface
+    - unified_ui.widgets.feedback_navigation_data_surface
+    - unified_ui.widgets.style_attribute_surface
+    - unified_ui.widgets.canvas_surface
+    - unified_ui.widgets.iur_surface_parity
+  given:
+    - A developer needs to author a dashboard or data-heavy screen
+  when:
+    - The developer combines tables, lists, charts, progress or status widgets, and navigation elements
+  then:
+    - The package provides canonical authored constructs for the full experience as one coherent DSL surface
 ```
 
 ## Verification

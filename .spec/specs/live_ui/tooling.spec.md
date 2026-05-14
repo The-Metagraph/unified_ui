@@ -57,9 +57,18 @@ decisions:
 
 ```spec-scenarios
 - id: live_ui.tooling_compare_native_and_iur_paths
-  given: A maintainer adds a new widget family or styling attribute to `live_ui`
-  when: The maintainer runs package tooling or reference workflows
-  then: The maintainer can review the aligned focused example for that widget, compare direct native rendering and canonical IUR rendering for the same example identity, and avoid creating a second package-only demo surface
+  covers:
+    - live_ui.tooling.reference_examples
+    - live_ui.tooling.preview_and_inspection
+    - live_ui.tooling.validation_workflow
+    - live_ui.tooling.documentation_surface
+    - live_ui.tooling.no_package_local_demo_workbench
+  given:
+    - A maintainer adds a new widget family or styling attribute to `live_ui`
+  when:
+    - The maintainer runs package tooling or reference workflows
+  then:
+    - The maintainer can review the aligned focused example for that widget, compare direct native rendering and canonical IUR rendering for the same example identity, and avoid creating a second package-only demo surface
 ```
 
 ## Verification

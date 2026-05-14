@@ -68,9 +68,20 @@ decisions:
 
 ```spec-scenarios
 - id: elm_ui.server_runtime_handle_canonical_event
-  given: A user interacts with an `elm_ui` screen rendered from canonical IUR
-  when: The interaction crosses the ecosystem package boundary
-  then: The Phoenix runtime resolves canonical event meaning and updates the authoritative UI representation that the frontend runtime reflects
+  covers:
+    - elm_ui.server_runtime.authoritative_server_representation
+    - elm_ui.server_runtime.coordinate_frontend_rendering
+    - elm_ui.server_runtime.handle_boundary_events
+    - elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime
+    - elm_ui.server_runtime.browser_state_is_bounded
+    - elm_ui.server_runtime.canonical_navigation_transition_mapping
+    - elm_ui.server_runtime.host_route_resolution_boundary
+  given:
+    - A user interacts with an `elm_ui` screen rendered from canonical IUR
+  when:
+    - The interaction crosses the ecosystem package boundary
+  then:
+    - The Phoenix runtime resolves canonical event meaning and updates the authoritative UI representation that the frontend runtime reflects
 ```
 
 ## Verification

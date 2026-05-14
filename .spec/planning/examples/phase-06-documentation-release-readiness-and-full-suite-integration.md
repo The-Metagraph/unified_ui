@@ -4,7 +4,7 @@ Back to index: [README](./README.md)
 
 ## Relevant Shared APIs / Interfaces
 - `examples/README`
-- `examples/shared`
+- `examples/catalog.tsv`
 - `Mix.Tasks.LiveUi.*`
 - `LiveUi.Tooling`
 - `UnifiedUi`
@@ -18,13 +18,13 @@ Back to index: [README](./README.md)
 [x] 6 Phase 6 - Documentation, Release Readiness, and Full Suite Integration
   Implement the final documentation surface, release-readiness checks, and full-suite integration coverage needed to treat the standalone example apps as a durable ecosystem asset.
 
-  [x] 6.1 Section - User-Facing Example Suite Documentation
+[x] 6.1 Section - User-Facing Example Suite Documentation
     Implement the documentation that explains what the example suite is, how the apps are organized, and how to use the shared template and shared theme.
 
-    [x] 6.1.1 Task - Document the suite and shared support library
+    [x] 6.1.1 Task - Document the suite and self-contained app contract
       Provide the user-facing and maintainer-facing documentation needed to understand the example suite structure and common DSL template contract.
 
-      [x] 6.1.1.1 Subtask - Document the example suite root, shared support library, and per-widget app convention.
+      [x] 6.1.1.1 Subtask - Document the example suite root, catalog, and per-widget app convention.
       [x] 6.1.1.2 Subtask - Document the shared DSL template, default theme, and default style profile.
       [x] 6.1.1.3 Subtask - Add tests or checks that prove the documentation surface stays synchronized with the example catalog and suite tooling.
 

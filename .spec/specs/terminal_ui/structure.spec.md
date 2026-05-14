@@ -61,9 +61,19 @@ decisions:
 
 ```spec-scenarios
 - id: terminal_ui.structure.add_terminal_widget_without_architecture_drift
-  given: A maintainer adds a new native `terminal_ui` widget and its canonical IUR mapping
-  when: The package evolves
-  then: The change lands in native widget, runtime adapter, capability, renderer, and transport layers without collapsing those concerns into one undifferentiated module boundary
+  covers:
+    - terminal_ui.structure.mix_library_layout
+    - terminal_ui.structure.term_ui_adapter_boundary
+    - terminal_ui.structure.native_widget_module_boundary
+    - terminal_ui.structure.transport_translation_modules
+    - terminal_ui.structure.capability_and_degradation_modules
+    - terminal_ui.structure.no_dsl_or_iur_authorship
+  given:
+    - A maintainer adds a new native `terminal_ui` widget and its canonical IUR mapping
+  when:
+    - The package evolves
+  then:
+    - The change lands in native widget, runtime adapter, capability, renderer, and transport layers without collapsing those concerns into one undifferentiated module boundary
 ```
 
 ## Verification

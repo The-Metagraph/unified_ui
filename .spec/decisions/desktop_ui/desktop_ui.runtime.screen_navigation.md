@@ -7,6 +7,8 @@ affects:
   - desktop_ui.structure
 ---
 
+<!-- covers: desktop_ui.runtime.screen_navigation_support desktop_ui.runtime.navigation_controller_process desktop_ui.runtime.screen_registry desktop_ui.runtime.navigation_actions desktop_ui.runtime.navigation_event_routing desktop_ui.runtime.modal_stack_independence desktop_ui.structure.navigation_modules -->
+
 # Screen Navigation for DesktopUi
 
 ## Context

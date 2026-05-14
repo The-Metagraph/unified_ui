@@ -56,9 +56,18 @@ decisions:
 
 ```spec-scenarios
 - id: desktop_ui.iur_renderer.render_canonical_screen
-  given: A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
-  when: `desktop_ui` renders that screen
-  then: The package maps the canonical structure into native desktop widgets while preserving canonical visual and interaction meaning across supported desktop targets
+  covers:
+    - desktop_ui.iur_renderer.accepts_canonical_iur
+    - desktop_ui.iur_renderer.full_construct_coverage
+    - desktop_ui.iur_renderer.deterministic_mapping
+    - desktop_ui.iur_renderer.meaning_preservation
+    - desktop_ui.iur_renderer.native_widget_reuse
+  given:
+    - A canonical IUR screen contains layered layouts, styled widgets, and interactive controls
+  when:
+    - `desktop_ui` renders that screen
+  then:
+    - The package maps the canonical structure into native desktop widgets while preserving canonical visual and interaction meaning across supported desktop targets
 ```
 
 ## Verification

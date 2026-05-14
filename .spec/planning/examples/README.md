@@ -22,7 +22,7 @@ The plan aligns to:
 - [LiveUi Tooling](/Users/Pascal/code/unified/.spec/specs/live_ui/tooling.spec.md)
 
 ## Phase Files
-1. [Phase 1 - Shared Support Library and Suite Scaffold](./phase-01-shared-support-library-and-suite-scaffold.md): implement the root `examples/` suite scaffold, the shared support library, the common DSL template, and the first end-to-end example path.
+1. [Phase 1 - Self-Contained Suite Scaffold](./phase-01-self-contained-suite-scaffold.md): implement the root `examples/` suite scaffold, the common app-local DSL template contract, and the first end-to-end example path.
 2. [Phase 2 - Foundational Content and Form Input Example Apps](./phase-02-foundational-content-and-form-input-example-apps.md): implement the foundational content, form, and input example applications that establish the common app shape across the suite.
 3. [Phase 3 - Layout, Navigation, Data, and Feedback Example Apps](./phase-03-layout-navigation-data-and-feedback-example-apps.md): implement the example applications for layout, navigation, data, and feedback constructs while preserving one shared theme and shell.
 4. [Phase 4 - Display, Overlay, and Operational Example Apps](./phase-04-display-overlay-and-operational-example-apps.md): implement the display-system, overlay, and operational example applications together with the more advanced runtime flows they require.
@@ -46,9 +46,10 @@ The plan aligns to:
 
 ## Shared Assumptions and Defaults
 - The example suite lives at the repository root under `examples/` and not under `packages/`.
-- `examples/shared/` is a shared support library used by every example app.
+- There is no repository-owned shared support package and no aggregate demo application.
 - Every example app is a standalone Phoenix LiveView app, packaged as its own Mix project and focused on one primary widget or construct.
-- Every example app uses one shared `unified_ui` DSL template, one shared default theme, and one shared default style profile.
+- Every example app owns its authored modules, runtime entrypoints, theme definitions, and example-shell helpers locally while preserving the common example-shell contract.
+- Every example app uses one common `unified_ui` DSL template contract, one suite default theme, and one suite default style profile.
 - The authored path for every example app is `unified_ui` DSL -> canonical `UnifiedIUR` -> `live_ui` runtime rendering.
 - Every example app should be directly launchable through its own Phoenix runtime entrypoint rather than only through shared preview helpers.
 - The catalog is complete only when every current `live_ui` widget or construct named in the example catalog has its own example app directory.
