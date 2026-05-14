@@ -998,6 +998,9 @@ defmodule UnifiedUi.Compiler.Pipeline do
             common_opts(node, attachments, [:text_safety])
           )
 
+        :list_repeat ->
+          lower_list_repeat(node, context, visited, attachments)
+
         other ->
           generic_element(element_type(node.family), other, node, attachments, %{
             authored: %{
@@ -1057,6 +1060,233 @@ defmodule UnifiedUi.Compiler.Pipeline do
         divider_style: node.divider_style
       )
     )
+  end
+
+  defp lower_list_repeat(node, context, visited, attachments) do
+    template_node = List.first(node.children)
+    template = if(template_node, do: lower_node(template_node, context, visited))
+    binding = Map.get(context.binding_by_id, node.repeat_binding)
+    rows = repeat_rows(binding)
+
+    hydrated_children =
+      rows
+      |> Enum.with_index()
+      |> Enum.map(fn {row, index} ->
+        Element.Child.new(:default, hydrate_repeat_template(template, node, row, index))
+      end)
+
+    opts =
+      node
+      |> common_opts(attachments,
+        repeat_binding: node.repeat_binding,
+        binding_ref: compile_binding_ref_value(node.repeat_binding, context.binding_by_id),
+        row_scope: node.row_scope,
+        row_fields: node.row_fields || [],
+        template_identity: node.template_identity || template_identity(template),
+        identity_strategy: node.identity_strategy,
+        hydrated?: true,
+        row_count: length(rows),
+        template: template_summary(template)
+      )
+      |> Map.put(:children, hydrated_children)
+
+    Widgets.Components.list_repeat(template, opts)
+  end
+
+  defp repeat_rows(%IURBinding{default: rows}) when is_list(rows) do
+    Enum.map(rows, &normalize_repeat_row/1)
+  end
+
+  defp repeat_rows(_binding), do: []
+
+  defp normalize_repeat_row(row) when is_map(row), do: normalize_keyword_tree(row)
+
+  defp normalize_repeat_row(row) when is_list(row) do
+    if Keyword.keyword?(row), do: normalize_keyword_tree(row), else: %{value: row}
+  end
+
+  defp normalize_repeat_row(row), do: %{value: row}
+
+  defp hydrate_repeat_template(nil, _repeat_node, _row, _index), do: nil
+
+  defp hydrate_repeat_template(template, repeat_node, row, index) do
+    identity = repeat_identity_value(repeat_node, template, row, index)
+    hydrate_repeat_element(template, repeat_node, row, index, identity, [])
+  end
+
+  defp hydrate_repeat_element(nil, _repeat_node, _row, _index, _identity, _path), do: nil
+
+  defp hydrate_repeat_element(element, repeat_node, row, index, identity, path) do
+    id = repeat_instance_id(repeat_node, identity, element.id, path)
+
+    children =
+      element.children
+      |> Enum.with_index()
+      |> Enum.map(fn {child, child_index} ->
+        %{
+          child
+          | element:
+              hydrate_repeat_element(
+                child.element,
+                repeat_node,
+                row,
+                index,
+                identity,
+                path ++ [child_index]
+              )
+        }
+      end)
+
+    %{
+      element
+      | id: id,
+        attributes:
+          element.attributes
+          |> project_repeat_attributes(row, repeat_node)
+          |> put_repeat_instance_metadata(repeat_node, row, index)
+          |> retarget_interactions(id, row, repeat_node),
+        children: children
+    }
+  end
+
+  defp repeat_instance_id(repeat_node, identity, nil, path) do
+    path_id =
+      path
+      |> Enum.map_join("_", &to_string/1)
+      |> case do
+        "" -> "item"
+        value -> value
+      end
+
+    repeat_instance_id(repeat_node, identity, path_id, [])
+  end
+
+  defp repeat_instance_id(repeat_node, identity, original_id, _path) do
+    Enum.map_join([repeat_node.id, identity, original_id], ":", &to_string/1)
+  end
+
+  defp repeat_identity_value(%Node{identity_strategy: :index}, _template, _row, index), do: index
+
+  defp repeat_identity_value(%Node{identity_strategy: :stable_hash}, _template, row, _index) do
+    :erlang.phash2(row)
+  end
+
+  defp repeat_identity_value(_repeat_node, template, row, index) do
+    case template_row_identity(template) do
+      nil -> row_value(row, :id) || index
+      field when is_atom(field) or is_binary(field) -> row_value(row, field) || field
+      value -> value
+    end
+  end
+
+  defp template_identity(nil), do: nil
+  defp template_identity(%Element{id: id}), do: id
+
+  defp template_summary(nil), do: nil
+
+  defp template_summary(%Element{} = template) do
+    %{
+      id: template.id,
+      type: template.type,
+      kind: template.kind
+    }
+  end
+
+  defp template_row_identity(nil), do: nil
+
+  defp template_row_identity(%Element{attributes: attributes}) do
+    get_in(attributes, [:row, :row_identity]) ||
+      get_in(attributes, [:artifact, :row_identity])
+  end
+
+  defp project_repeat_attributes(attributes, row, repeat_node) do
+    attributes
+    |> project_repeat_group(:row, row, repeat_node)
+    |> project_repeat_group(:artifact, row, repeat_node)
+    |> project_repeat_group(:callout, row, repeat_node)
+  end
+
+  defp project_repeat_group(attributes, group, row, repeat_node) do
+    case Map.fetch(attributes, group) do
+      {:ok, value} -> Map.put(attributes, group, project_repeat_value(value, row, repeat_node))
+      :error -> attributes
+    end
+  end
+
+  defp project_repeat_value(value, row, repeat_node) when is_map(value) do
+    Map.new(value, fn {key, nested} ->
+      {key, project_repeat_value(nested, row, repeat_node)}
+    end)
+  end
+
+  defp project_repeat_value(value, row, repeat_node) when is_list(value) do
+    Enum.map(value, &project_repeat_value(&1, row, repeat_node))
+  end
+
+  defp project_repeat_value(value, row, repeat_node) when is_atom(value) or is_binary(value) do
+    if repeat_field?(repeat_node, value) do
+      row_value(row, value) || value
+    else
+      value
+    end
+  end
+
+  defp project_repeat_value(value, _row, _repeat_node), do: value
+
+  defp put_repeat_instance_metadata(attributes, repeat_node, row, index) do
+    Map.put(attributes, :repeat_instance, %{
+      source_repeat_id: repeat_node.id,
+      row_scope: repeat_node.row_scope || :row,
+      row_index: index,
+      values: select_repeat_values(row, repeat_node.row_fields || [])
+    })
+  end
+
+  defp retarget_interactions(attributes, id, row, repeat_node) do
+    case Map.fetch(attributes, :interactions) do
+      {:ok, interactions} ->
+        Map.put(
+          attributes,
+          :interactions,
+          Enum.map(interactions, &retarget_interaction(&1, id, row, repeat_node))
+        )
+
+      :error ->
+        attributes
+    end
+  end
+
+  defp retarget_interaction(%Interaction{} = interaction, id, row, repeat_node) do
+    %{
+      interaction
+      | source: Map.put(interaction.source, :element_id, id),
+        payload: project_repeat_value(interaction.payload, row, repeat_node)
+    }
+  end
+
+  defp retarget_interaction(interaction, _id, _row, _repeat_node), do: interaction
+
+  defp repeat_field?(%Node{row_fields: row_fields}, field) do
+    Enum.any?(List.wrap(row_fields), &(to_string(&1) == to_string(field)))
+  end
+
+  defp select_repeat_values(row, row_fields) do
+    row_fields
+    |> List.wrap()
+    |> Enum.reduce(%{}, fn field, acc ->
+      case row_value(row, field) do
+        nil -> acc
+        value -> Map.put(acc, field, value)
+      end
+    end)
+  end
+
+  defp row_value(row, field) when is_atom(field) do
+    Map.get(row, field, Map.get(row, Atom.to_string(field)))
+  end
+
+  defp row_value(row, field) when is_binary(field) do
+    Map.get(row, field)
   end
 
   defp overlay_message_content(node_id, message) do

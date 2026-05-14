@@ -17,6 +17,7 @@ defmodule UnifiedIUR.Widgets.Components do
   # unified_iur.widget_components.interaction_descriptors
   # unified_iur.widget_components.accessibility_and_state_metadata
   # unified_iur.widget_components.text_safety_contract
+  # unified_iur.widget_components.list_repeat_metadata
   # unified_iur.widget_components.runtime_mapping_completeness
   # unified_iur.widgets.expanded_widget_component_catalog
   # unified_iur.widgets.widget_semantics_preserved
@@ -60,6 +61,10 @@ defmodule UnifiedIUR.Widgets.Components do
     :code_block_syntax_highlighted
   ]
 
+  @composition_behavior_kinds [
+    :list_repeat
+  ]
+
   @spec content_identity_kinds() :: [atom()]
   def content_identity_kinds, do: @content_identity_kinds
 
@@ -78,6 +83,9 @@ defmodule UnifiedIUR.Widgets.Components do
   @spec redline_code_kinds() :: [atom()]
   def redline_code_kinds, do: @redline_code_kinds
 
+  @spec composition_behavior_kinds() :: [atom()]
+  def composition_behavior_kinds, do: @composition_behavior_kinds
+
   @spec kinds() :: [atom()]
   def kinds do
     @content_identity_kinds ++
@@ -85,7 +93,8 @@ defmodule UnifiedIUR.Widgets.Components do
       @row_artifact_kinds ++
       @workflow_kinds ++
       @layer_callout_kinds ++
-      @redline_code_kinds
+      @redline_code_kinds ++
+      @composition_behavior_kinds
   end
 
   @spec inline_rich_text_heading(atom(), [keyword() | map()], opts()) :: Element.t()
@@ -458,6 +467,39 @@ defmodule UnifiedIUR.Widgets.Components do
         text_safety: %{content: option(opts, :text_safety, :plain_text)}
       },
       opts
+    )
+  end
+
+  @spec list_repeat(Element.t() | nil, opts()) :: Element.t()
+  def list_repeat(template, opts \\ []) do
+    opts = normalize_opts(opts)
+
+    children =
+      option(
+        opts,
+        :children,
+        if(template, do: [Element.Child.new(:template, template)], else: [])
+      )
+
+    build_component(
+      :list_repeat,
+      :composition_behavior,
+      %{
+        repeat:
+          %{
+            binding_id: option(opts, :repeat_binding),
+            row_scope: option(opts, :row_scope, :row),
+            row_fields: option(opts, :row_fields, []),
+            identity_strategy: option(opts, :identity_strategy, :row_identity),
+            child_slot: option(opts, :child_slot, :default),
+            hydrated?: option(opts, :hydrated?, false),
+            row_count: option(opts, :row_count, 0)
+          }
+          |> maybe_put(:binding_ref, normalize_optional_map(option(opts, :binding_ref)))
+          |> maybe_put(:template_identity, option(opts, :template_identity))
+          |> maybe_put(:template, normalize_optional_map(option(opts, :template)))
+      },
+      Map.put(opts, :children, children)
     )
   end
 

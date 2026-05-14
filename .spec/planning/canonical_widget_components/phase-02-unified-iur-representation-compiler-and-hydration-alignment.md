@@ -71,25 +71,25 @@ Back to index: [README](./README.md)
       [x] 2.2.2.2 Subtask - Preserve payload mapping for selected values, row ids, field values, composer text, and step ids.
       [x] 2.2.2.3 Subtask - Verify descriptors can be transported as Jido.Signal-compatible event meaning.
 
-  [ ] 2.3 Section - List-Repeat Metadata and Hydration
+  [x] 2.3 Section - List-Repeat Metadata and Hydration
     Implement the deterministic row expansion behavior that turns repeat
     composition into concrete child IUR nodes.
 
-    [ ] 2.3.1 Task - Represent repeat metadata before expansion
+    [x] 2.3.1 Task - Represent repeat metadata before expansion
       Keep repeat composition inspectable in canonical IUR before row data is
       applied.
 
-      [ ] 2.3.1.1 Subtask - Represent repeat binding id, template identity, child slot, order, and row-scope binding metadata.
-      [ ] 2.3.1.2 Subtask - Validate repeat metadata against list binding descriptors.
-      [ ] 2.3.1.3 Subtask - Include repeat metadata in export and inspection output without requiring renderer participation.
+      [x] 2.3.1.1 Subtask - Represent repeat binding id, template identity, child slot, order, and row-scope binding metadata.
+      [x] 2.3.1.2 Subtask - Validate repeat metadata against list binding descriptors.
+      [x] 2.3.1.3 Subtask - Include repeat metadata in export and inspection output without requiring renderer participation.
 
-    [ ] 2.3.2 Task - Expand repeated children deterministically
+    [x] 2.3.2 Task - Expand repeated children deterministically
       Hydrate repeated child templates into concrete IUR children before
       runtime rendering.
 
-      [ ] 2.3.2.1 Subtask - Define stable generated ids for row-expanded child instances.
-      [ ] 2.3.2.2 Subtask - Project row-scope binding values into child props or binding states.
-      [ ] 2.3.2.3 Subtask - Preserve child interactions and accessibility metadata for each repeated row.
+      [x] 2.3.2.1 Subtask - Define stable generated ids for row-expanded child instances.
+      [x] 2.3.2.2 Subtask - Project row-scope binding values into child props or binding states.
+      [x] 2.3.2.3 Subtask - Preserve child interactions and accessibility metadata for each repeated row.
 
   [ ] 2.4 Section - Safety, Accessibility, and Validation Fixtures
     Provide shared fixtures and validation rules that prove the IUR contract

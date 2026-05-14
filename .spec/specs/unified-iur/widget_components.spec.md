@@ -75,6 +75,7 @@ decisions:
     - unified_iur.widget_components.interaction_descriptors
     - unified_iur.widget_components.accessibility_and_state_metadata
     - unified_iur.widget_components.text_safety_contract
+    - unified_iur.widget_components.list_repeat_metadata
     - unified_iur.widget_components.runtime_mapping_completeness
   given:
     - UnifiedUi compiles a screen using the expanded widget-component catalog

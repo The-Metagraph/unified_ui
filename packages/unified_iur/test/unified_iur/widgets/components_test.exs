@@ -42,6 +42,7 @@ defmodule UnifiedIUR.Widgets.ComponentsTest do
              :code_block_syntax_highlighted
            ]
 
+    assert Components.composition_behavior_kinds() == [:list_repeat]
     assert Widgets.component_kinds() == Components.kinds()
   end
 
@@ -285,5 +286,42 @@ defmodule UnifiedIUR.Widgets.ComponentsTest do
            }
 
     assert code.attributes.text_safety == %{content: :plain_text}
+  end
+
+  test "represents list repeat metadata and hydrated row children" do
+    template = Components.artifact_row("Template", [], row_identity: :id)
+
+    repeat =
+      Components.list_repeat(template,
+        repeat_binding: :artifact_rows,
+        binding_ref: %{kind: :binding_ref, id: :artifact_rows, path: [:artifacts]},
+        row_scope: :artifact,
+        row_fields: [:id, :title],
+        template_identity: :artifact_template,
+        identity_strategy: :row_identity,
+        hydrated?: true,
+        row_count: 1,
+        template: %{id: :artifact_template, kind: :artifact_row},
+        children: [Components.artifact_row("Hydrated", [], id: "artifact_repeat:a1:artifact")]
+      )
+
+    assert repeat.kind == :list_repeat
+    assert repeat.attributes.component == %{family: :composition_behavior, kind: :list_repeat}
+
+    assert repeat.attributes.repeat == %{
+             binding_id: :artifact_rows,
+             binding_ref: %{kind: :binding_ref, id: :artifact_rows, path: [:artifacts]},
+             row_scope: :artifact,
+             row_fields: [:id, :title],
+             template_identity: :artifact_template,
+             identity_strategy: :row_identity,
+             child_slot: :default,
+             hydrated?: true,
+             row_count: 1,
+             template: %{id: :artifact_template, kind: :artifact_row}
+           }
+
+    assert [%{slot: :default, element: %Element{id: "artifact_repeat:a1:artifact"}}] =
+             repeat.children
   end
 end
