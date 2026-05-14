@@ -52,6 +52,16 @@ defmodule LiveUi.CanonicalNavigationWebRuntimeIntegrationTest do
 
     assert comparison.native.after_top_close.current_modal.modal == :settings_dialog
     assert comparison.canonical.after_top_close.current_modal.modal == :settings_dialog
+    assert comparison.native.after_second_modal.history == comparison.native.after_modal.history
+
+    assert comparison.native.after_top_close.history ==
+             comparison.native.after_second_modal.history
+
+    assert comparison.canonical.after_second_modal.history ==
+             comparison.canonical.after_modal.history
+
+    assert comparison.canonical.after_top_close.history ==
+             comparison.canonical.after_second_modal.history
 
     assert comparison.continuity.same_navigation_target?
     assert comparison.continuity.same_modal_identifier?

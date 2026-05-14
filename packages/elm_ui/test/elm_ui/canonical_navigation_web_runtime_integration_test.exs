@@ -51,6 +51,18 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
     assert comparison.native.after_top_close.navigation.current_modal.modal == :settings_dialog
     assert comparison.canonical.after_top_close.navigation.current_modal.modal == :settings_dialog
 
+    assert comparison.native.after_second_modal.navigation.history ==
+             comparison.native.after_modal.navigation.history
+
+    assert comparison.native.after_top_close.navigation.history ==
+             comparison.native.after_second_modal.navigation.history
+
+    assert comparison.canonical.after_second_modal.navigation.history ==
+             comparison.canonical.after_modal.navigation.history
+
+    assert comparison.canonical.after_top_close.navigation.history ==
+             comparison.canonical.after_second_modal.navigation.history
+
     assert comparison.continuity.same_navigation_target?
     assert comparison.continuity.frontend_coordination?
     assert comparison.continuity.same_modal_identifier?
@@ -72,6 +84,10 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
 
     assert {:ok, runtime_state} =
              ElmUi.Runtime.mount_iur_screen(home_element, runtime_id: "elm-ui-modal-stack")
+
+    for fixture <- [first_modal, second_modal, close_top, close_named] do
+      assert :ok = BoundaryTransport.validate_boundary_fixture(fixture)
+    end
 
     assert {:ok, with_first_modal, _ack} = apply_fixture(runtime_state, first_modal)
     assert {:ok, with_second_modal, ack} = apply_fixture(with_first_modal, second_modal)
@@ -272,16 +288,21 @@ defmodule ElmUi.CanonicalNavigationWebRuntimeIntegrationTest do
   end
 
   defp translation_for_fixture(runtime_state, fixture) do
-    ElmUi.Transport.from_native_event(
-      family: :navigation,
-      intent: fixture.interaction.intent,
-      widget_id: fixture.interaction.source.element_id,
-      screen: runtime_state.screen_id,
-      runtime_id: runtime_state.runtime_id,
-      source_kind: :canonical,
-      boundary_mode: :canonical_boundary,
-      target: fixture.descriptor.target,
-      payload: fixture.signal_data
-    )
+    with {:ok, translation} <-
+           ElmUi.Transport.from_native_event(
+             family: :navigation,
+             intent: fixture.interaction.intent,
+             widget_id: fixture.interaction.source.element_id,
+             screen: runtime_state.screen_id,
+             runtime_id: runtime_state.runtime_id,
+             source_kind: :canonical,
+             boundary_mode: :canonical_boundary,
+             target: fixture.descriptor.target,
+             payload: fixture.signal_data
+           ),
+         {:ok, decoded} <- ElmUi.Transport.from_boundary_signal(translation.signal) do
+      assert decoded.target == fixture.descriptor.target
+      {:ok, translation}
+    end
   end
 end

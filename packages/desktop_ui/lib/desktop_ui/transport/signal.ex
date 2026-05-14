@@ -6,6 +6,7 @@ defmodule DesktopUi.Transport.Signal do
   alias Jido.Signal
   alias DesktopUi.Transport.Error
   alias UnifiedIUR.Interaction
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
 
   @families Interaction.families()
   @local_default_families [:change, :open, :close, :focus]
@@ -26,6 +27,7 @@ defmodule DesktopUi.Transport.Signal do
 
     with :ok <- validate_family(family),
          :ok <- validate_payload(Map.get(normalized, :payload, %{}), :boundary_translation),
+         :ok <- validate_navigation_target(Map.get(normalized, :target, %{})),
          :ok <- maybe_validate_boundary_context(normalized) do
       translation = %{
         boundary: Map.get(normalized, :boundary, :local),
@@ -94,9 +96,11 @@ defmodule DesktopUi.Transport.Signal do
   @spec from_boundary_signal(Signal.t() | map()) :: {:ok, map()} | {:error, Error.t() | term()}
   def from_boundary_signal(%Signal{} = signal) do
     family = extension(signal, :desktop_ui_family)
+    target = normalize_map(extension(signal, :desktop_ui_target, %{}))
 
     with :ok <- validate_family(family),
-         :ok <- validate_payload(signal.data || %{}, :boundary_signal) do
+         :ok <- validate_payload(signal.data || %{}, :boundary_signal),
+         :ok <- validate_navigation_target(target) do
       {:ok,
        %{
          boundary: :boundary,
@@ -109,7 +113,7 @@ defmodule DesktopUi.Transport.Signal do
          widget_id: signal.subject,
          runtime_id: extension(signal, :desktop_ui_runtime_id),
          screen: extension(signal, :desktop_ui_screen, "unknown"),
-         target: normalize_map(extension(signal, :desktop_ui_target, %{})),
+         target: target,
          payload: normalize_map(signal.data || %{}),
          normalized_input: %{},
          local_handling: extension(signal, :desktop_ui_local_handling),
@@ -154,6 +158,39 @@ defmodule DesktopUi.Transport.Signal do
 
   defp validate_payload(payload, surface),
     do: {:error, Error.invalid_payload_mapping(payload, surface)}
+
+  defp validate_navigation_target(target) do
+    target = normalize_map(target)
+    navigation = Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
+
+    leaked_keys = forbidden_navigation_keys(normalize_map(navigation))
+
+    if leaked_keys == [] do
+      :ok
+    else
+      {:error, Error.host_route_syntax(leaked_keys)}
+    end
+  end
+
+  defp forbidden_navigation_keys(navigation) do
+    modal_stack =
+      navigation
+      |> Map.get(:modal_stack, Map.get(navigation, "modal_stack", %{}))
+      |> normalize_map()
+
+    (Map.keys(navigation) ++ Map.keys(modal_stack))
+    |> Enum.filter(&forbidden_navigation_key?/1)
+    |> Enum.uniq()
+  end
+
+  defp forbidden_navigation_key?(key) when is_atom(key),
+    do: key in BoundaryTransport.forbidden_navigation_keys()
+
+  defp forbidden_navigation_key?(key) when is_binary(key) do
+    key in Enum.map(BoundaryTransport.forbidden_navigation_keys(), &Atom.to_string/1)
+  end
+
+  defp forbidden_navigation_key?(_key), do: false
 
   defp maybe_validate_boundary_context(%{boundary: :boundary} = normalized) do
     missing =

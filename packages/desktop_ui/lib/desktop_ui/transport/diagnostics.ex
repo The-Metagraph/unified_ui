@@ -6,6 +6,7 @@ defmodule DesktopUi.Transport.Diagnostics do
   alias Jido.Signal
   alias DesktopUi.Transport.{Error, Normalize}
   alias DesktopUi.Transport.Signal, as: TransportSignal
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
 
   @payload_leak_keys [
     :backend_payload,
@@ -35,7 +36,8 @@ defmodule DesktopUi.Transport.Diagnostics do
   @spec validate_native_event(keyword() | map()) :: :ok | {:error, Error.t()}
   def validate_native_event(attrs) when is_map(attrs) or is_list(attrs) do
     with {:ok, normalized} <- Normalize.normalize(attrs),
-         :ok <- validate_payload(Map.get(normalized, :payload, %{}), :native_event) do
+         :ok <- validate_payload(Map.get(normalized, :payload, %{}), :native_event),
+         :ok <- validate_navigation_target(Map.get(normalized, :target, %{})) do
       if Map.get(normalized, :boundary) == :boundary do
         validate_boundary_context(normalized)
       else
@@ -50,6 +52,7 @@ defmodule DesktopUi.Transport.Diagnostics do
   def validate_translation(%{} = translation) do
     with :ok <- validate_payload(Map.get(translation, :payload, %{}), :translation_payload),
          :ok <- validate_payload(Map.get(translation, :target, %{}), :translation_target),
+         :ok <- validate_navigation_target(Map.get(translation, :target, %{})),
          :ok <- maybe_validate_boundary_signal(translation) do
       if Map.get(translation, :boundary) == :boundary do
         validate_boundary_context(translation)
@@ -110,6 +113,19 @@ defmodule DesktopUi.Transport.Diagnostics do
   defp validate_payload(payload, surface),
     do: {:error, Error.invalid_payload_mapping(payload, surface)}
 
+  defp validate_navigation_target(target) do
+    target = normalize_map(target)
+    navigation = Map.get(target, :navigation) || Map.get(target, "navigation") || %{}
+
+    leaked_keys = forbidden_navigation_keys(normalize_map(navigation))
+
+    if leaked_keys == [] do
+      :ok
+    else
+      {:error, Error.host_route_syntax(leaked_keys)}
+    end
+  end
+
   defp validate_boundary_context(translation) do
     missing =
       []
@@ -144,7 +160,31 @@ defmodule DesktopUi.Transport.Diagnostics do
 
   defp leaked_key?(_key), do: false
 
+  defp forbidden_navigation_keys(navigation) do
+    modal_stack =
+      navigation
+      |> Map.get(:modal_stack, Map.get(navigation, "modal_stack", %{}))
+      |> normalize_map()
+
+    (Map.keys(navigation) ++ Map.keys(modal_stack))
+    |> Enum.filter(&forbidden_navigation_key?/1)
+    |> Enum.uniq()
+  end
+
+  defp forbidden_navigation_key?(key) when is_atom(key),
+    do: key in BoundaryTransport.forbidden_navigation_keys()
+
+  defp forbidden_navigation_key?(key) when is_binary(key) do
+    key in Enum.map(BoundaryTransport.forbidden_navigation_keys(), &Atom.to_string/1)
+  end
+
+  defp forbidden_navigation_key?(_key), do: false
+
   defp maybe_missing(fields, field, nil), do: fields ++ [field]
   defp maybe_missing(fields, field, ""), do: fields ++ [field]
   defp maybe_missing(fields, _field, _value), do: fields
+
+  defp normalize_map(map) when is_map(map), do: Map.new(map)
+  defp normalize_map(list) when is_list(list), do: Enum.into(list, %{})
+  defp normalize_map(_value), do: %{}
 end

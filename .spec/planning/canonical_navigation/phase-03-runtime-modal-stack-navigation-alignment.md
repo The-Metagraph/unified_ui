@@ -23,7 +23,7 @@ Back to index: [README](./README.md)
 - Terminal implementations may degrade stacked modal presentation into panels,
   inline overlays, or bounded screen sections while preserving stack meaning.
 
-[ ] 3 Phase 3 - Runtime Modal Stack Navigation Alignment
+[x] 3 Phase 3 - Runtime Modal Stack Navigation Alignment
   Implement and verify modal stack navigation behavior in each runtime package
   that consumes canonical navigation transitions, keeping stack meaning
   portable while allowing each runtime to realize the experience through its
@@ -111,23 +111,23 @@ Back to index: [README](./README.md)
       [x] 3.4.2.2 Subtask - Update package planning traceability for the new modal stack requirements where package-local manifests are maintained.
       [x] 3.4.2.3 Subtask - Regenerate generated traceability mirrors through the owning Mix tasks rather than hand-editing generated review output.
 
-  [ ] 3.5 Section - Phase 3 Integration Tests
+  [x] 3.5 Section - Phase 3 Integration Tests
     Validate that each runtime consumes canonical modal stack transitions
     consistently and keeps host-specific details outside the canonical
     boundary.
 
-    [ ] 3.5.1 Task - Cross-package modal stack transition scenarios
+    [x] 3.5.1 Task - Cross-package modal stack transition scenarios
       Verify shared fixtures produce the same stack meaning in each runtime
       package even when host realization differs.
 
-      [ ] 3.5.1.1 Subtask - Verify shared modal stack fixtures validate through `UnifiedIUR` and signal transport before runtime package tests consume them.
-      [ ] 3.5.1.2 Subtask - Verify `live_ui`, `elm_ui`, and `desktop_ui` preserve open/open/top-close state transitions without changing screen history.
-      [ ] 3.5.1.3 Subtask - Verify `terminal_ui` preserves stack meaning and reports bounded degradation without requiring browser routes or runtime-local stack ids.
+      [x] 3.5.1.1 Subtask - Verify shared modal stack fixtures validate through `UnifiedIUR` and signal transport before runtime package tests consume them.
+      [x] 3.5.1.2 Subtask - Verify `live_ui`, `elm_ui`, and `desktop_ui` preserve open/open/top-close state transitions without changing screen history.
+      [x] 3.5.1.3 Subtask - Verify `terminal_ui` preserves stack meaning and reports bounded degradation without requiring browser routes or runtime-local stack ids.
 
-    [ ] 3.5.2 Task - Contract hygiene and regression scenarios
+    [x] 3.5.2 Task - Contract hygiene and regression scenarios
       Verify modal stack support does not reopen router leakage or accidental
       structural containment assumptions.
 
-      [ ] 3.5.2.1 Subtask - Verify URL-like targets, host-router names, runtime module references, and modal containment metadata are rejected or ignored according to the canonical contract.
-      [ ] 3.5.2.2 Subtask - Verify targetless `close_modal` remains topmost close in every runtime and targeted `close_modal` remains symbolic where supported.
-      [ ] 3.5.2.3 Subtask - Verify examples, inspection output, and validation workflows expose modal stack state clearly enough for review.
+      [x] 3.5.2.1 Subtask - Verify URL-like targets, host-router names, runtime module references, and modal containment metadata are rejected or ignored according to the canonical contract.
+      [x] 3.5.2.2 Subtask - Verify targetless `close_modal` remains topmost close in every runtime and targeted `close_modal` remains symbolic where supported.
+      [x] 3.5.2.3 Subtask - Verify examples, inspection output, and validation workflows expose modal stack state clearly enough for review.

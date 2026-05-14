@@ -149,6 +149,29 @@ defmodule UnifiedIUR.InteractionsTransportTest do
              })
   end
 
+  test "rejects URL-like targets, host-router names, and runtime module references" do
+    for {key, value} <- [
+          url: "/settings?tab=profile",
+          router: :workspace_router,
+          runtime_module: DesktopUi.Navigation.Controller.MockScreen.Settings
+        ] do
+      assert {:error, {:forbidden_navigation_keys, [^key]}} =
+               Transport.validate_boundary_extensions(%{
+                 unified_iur_boundary: %{
+                   family: :navigation,
+                   intent: :open_settings_screen,
+                   source_context: %{element_id: "settings-link"},
+                   target: %{
+                     navigation:
+                       Map.merge(%{action: :navigate_to, screen: :settings}, %{key => value})
+                   },
+                   metadata: %{}
+                 },
+                 unified_iur_boundary_summary: %{}
+               })
+    end
+  end
+
   test "rejects runtime-local modal stack identifiers crossing the boundary" do
     assert {:error, {:forbidden_navigation_keys, [:stack_id]}} =
              Transport.validate_boundary_extensions(%{

@@ -76,6 +76,16 @@ defmodule TerminalUi.Transport.Error do
     }
   end
 
+  @spec host_route_syntax([atom() | String.t()]) :: t()
+  def host_route_syntax(keys) do
+    %__MODULE__{
+      reason: :host_route_syntax,
+      message:
+        "host-router and runtime-stack syntax must not cross the terminal_ui navigation boundary",
+      details: %{keys: keys}
+    }
+  end
+
   @spec unsupported_backend_mode(term()) :: t()
   def unsupported_backend_mode(mode) do
     %__MODULE__{

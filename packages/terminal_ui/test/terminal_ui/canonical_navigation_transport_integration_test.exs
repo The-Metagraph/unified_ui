@@ -35,6 +35,10 @@ defmodule TerminalUi.CanonicalNavigationTransportIntegrationTest do
     close_top = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
     close_named = BoundaryTransport.boundary_fixture!("modal_stack--close_named_settings")
 
+    for fixture <- [first_modal, second_modal, close_top, close_named] do
+      assert :ok = BoundaryTransport.validate_boundary_fixture(fixture)
+    end
+
     assert {:ok, state} = Runtime.mount_native_screen(screen(), backend_mode: :tty)
 
     assert {:ok, with_first_modal, _route_result} =
@@ -60,9 +64,12 @@ defmodule TerminalUi.CanonicalNavigationTransportIntegrationTest do
 
     assert with_second_modal.navigation.current_modal.modal == :settings_confirm_dialog
     assert with_second_modal.navigation.last_transition.modal_stack.stack_effect == :push_modal
+    refute Map.has_key?(with_second_modal.navigation.last_transition, :route)
+    refute Map.has_key?(with_second_modal.navigation.last_transition.modal_stack, :stack_id)
 
     snapshot = TerminalUi.Inspection.runtime_snapshot(with_second_modal)
     assert snapshot.navigation.current_modal.modal == :settings_confirm_dialog
+    assert snapshot.navigation.modals == with_second_modal.navigation.modals
 
     assert {:ok, after_named_close, _route_result} =
              Runtime.handle_boundary_signal(with_second_modal, boundary_signal(close_named))
@@ -76,6 +83,42 @@ defmodule TerminalUi.CanonicalNavigationTransportIntegrationTest do
 
     assert after_top_close.navigation.modals == []
     assert after_top_close.navigation.current_modal == nil
+  end
+
+  test "terminal transport rejects host routing and runtime stack leakage in navigation targets" do
+    fixture = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+
+    for {key, value} <- [
+          url: "ssh://workspace/settings",
+          router: :terminal_router,
+          runtime_stack_id: "terminal-runtime-stack"
+        ] do
+      assert {:error,
+              %TerminalUi.Transport.Error{reason: :host_route_syntax, details: %{keys: [^key]}}} =
+               Transport.from_interaction(
+                 fixture.interaction,
+                 backend_mode: :tty,
+                 input_family: :key,
+                 widget_id: "confirm-settings-button",
+                 runtime_id: "terminal-ui:workspace",
+                 screen: "workspace",
+                 target: %{
+                   navigation:
+                     Map.merge(
+                       %{
+                         action: :open_modal,
+                         modal: :settings_confirm_dialog,
+                         modal_stack: %{
+                           operation: :push,
+                           target: :symbolic_modal,
+                           stack_effect: :push_modal
+                         }
+                       },
+                       %{key => value}
+                     )
+                 }
+               )
+    end
   end
 
   test "reports missing modal diagnostics without losing canonical transition meaning" do
@@ -105,6 +148,7 @@ defmodule TerminalUi.CanonicalNavigationTransportIntegrationTest do
                payload: fixture.signal_data
              )
 
+    assert :ok = Transport.validate_boundary_signal(translation.signal)
     translation.signal
   end
 

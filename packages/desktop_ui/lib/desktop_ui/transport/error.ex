@@ -75,6 +75,16 @@ defmodule DesktopUi.Transport.Error do
     }
   end
 
+  @spec host_route_syntax([atom() | String.t()]) :: t()
+  def host_route_syntax(keys) do
+    %__MODULE__{
+      reason: :host_route_syntax,
+      message:
+        "host-router and runtime-module syntax must not cross the desktop_ui navigation boundary",
+      details: %{keys: keys}
+    }
+  end
+
   @spec unsupported_platform_target(term()) :: t()
   def unsupported_platform_target(target) do
     %__MODULE__{
