@@ -115,6 +115,31 @@ defmodule DesktopUi.TransportTest do
              )
   end
 
+  test "invalid canonical navigation fields fail at the desktop boundary" do
+    assert {:error,
+            %DesktopUi.Transport.Error{reason: :host_route_syntax, details: %{keys: [:stack_id]}}} =
+             Transport.from_native_event(
+               platform_target: :linux,
+               input_family: :pointer,
+               pointer_action: :click,
+               widget_id: "confirm-settings-button",
+               runtime_id: "desktop-ui:ops",
+               screen: "operations",
+               target: %{
+                 navigation: %{
+                   action: :open_modal,
+                   modal: :settings_confirm_dialog,
+                   modal_stack: %{
+                     operation: :push,
+                     target: :symbolic_modal,
+                     stack_effect: :push_modal,
+                     stack_id: "desktop-runtime-stack"
+                   }
+                 }
+               }
+             )
+  end
+
   test "transport diagnostics validate no-leakage guarantees and boundary signals" do
     assert :ok ==
              Transport.validate_native_event(

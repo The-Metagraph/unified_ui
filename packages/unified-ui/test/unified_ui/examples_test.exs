@@ -174,5 +174,9 @@ defmodule UnifiedUi.ExamplesTest do
                Enum.any?(node.children, &(&1.id == :activity_viewport and &1.kind == :viewport)) and
                Enum.any?(node.children, &(&1.id == :status_canvas and &1.kind == :canvas))
            end)
+
+    assert Enum.any?(themed_workspace.composition, fn node ->
+             node.id == :settings_confirm_dialog and node.kind == :dialog
+           end)
   end
 end

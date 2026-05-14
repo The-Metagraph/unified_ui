@@ -40,6 +40,7 @@ and which upstream package specs are treated as input constraints rather than
 | `ecosystem.signal_transport.elm_ui_bridge` | `4.1.1` | `4.2.1`, `4.2.2`, `4.3.1`, `4.5.1`, `6.2.2` | Direct inherited `elm_ui` transport obligation. |
 | `ecosystem.signal_transport.native_signal_models_allowed` | `4.1.2` | `4.2.2`, `4.5.2` | Inherited local-runtime flexibility guardrail. |
 | `ecosystem.signal_transport.local_state_not_contract` | `1.3.1` | `4.2.2`, `5.2.2`, `4.5.2` | Inherited boundary-contract guardrail. |
+| `ecosystem.signal_transport.modal_stack_transition_meaning` | `4.1.1` | `4.4.1`, `4.5.1`, `3.2.2` | Inherited canonical modal stack transition meaning consumed by elm_ui. |
 ### Referenced Root Requirements Outside `elm_ui` Ownership
 These referenced root requirements are intentionally not mapped to `elm_ui`
 tasks because they govern other runtime packages:
@@ -83,6 +84,9 @@ tasks because they govern other runtime packages:
 | `elm_ui.server_runtime.handle_boundary_events` | `4.2.1` | `4.1.1`, `4.3.1`, `4.5.1` | Direct boundary-event obligation. |
 | `elm_ui.server_runtime.direct_and_iur_entrypoints_share_runtime` | `1.2.1` | `2.3.2`, `3.3.2`, `4.5.2` | Direct runtime-convergence obligation. |
 | `elm_ui.server_runtime.browser_state_is_bounded` | `1.2.1` | `1.3.1`, `4.2.2`, `5.2.2` | Direct server-authority obligation. |
+| `elm_ui.server_runtime.canonical_navigation_transition_mapping` | `4.1.1` | `4.2.1`, `4.5.1`, `4.5.2` | Direct Phoenix-side canonical navigation transition obligation. |
+| `elm_ui.server_runtime.modal_stack_navigation_state` | `3.2.2` | `4.1.1`, `4.4.1`, `4.5.2` | Direct server-authoritative modal stack state obligation. |
+| `elm_ui.server_runtime.host_route_resolution_boundary` | `4.3.1` | `4.2.1`, `4.2.2`, `4.5.1` | Direct host-route boundary obligation for canonical navigation. |
 ### `frontend_runtime.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -153,6 +157,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.interactions.renderer_independent_payload_mapping` | `4.1.1` | `4.3.1`, `4.5.1` | Upstream canonical interaction hygiene constraint. |
 | `unified_iur.interactions.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream canonical interaction scope consumed by `elm_ui`. |
 | `unified_iur.interactions.data_binding_representation` | `2.1.2` | `2.2.1`, `4.2.1`, `4.5.2` | Upstream canonical data-binding input consumed by `elm_ui`. |
+| `unified_iur.interactions.modal_stack_transition_semantics` | `4.1.1` | `3.2.2`, `4.4.1`, `4.5.1` | Upstream canonical modal stack descriptor semantics consumed by `elm_ui`. |
 ### `unified-ui/package.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -169,6 +174,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_ui.signals.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream authored-signal scope consumed by `elm_ui`. |
 | `unified_ui.signals.validation_and_introspection` | `6.2.1` | `4.3.1`, `6.2.2`, `6.3.2` | Upstream inspection expectations reflected in `elm_ui` maintainer tooling. |
 | `unified_ui.signals.no_runtime_local_event_leakage` | `4.3.1` | `1.1.2`, `6.3.1`, `6.5.2` | Upstream authored-signal hygiene guardrail. |
+| `unified_ui.signals.navigation_modal_stack_semantics` | `4.1.1` | `3.2.2`, `4.4.1`, `4.5.1` | Upstream authored modal stack signal semantics consumed by `elm_ui`. |
 ## Scenario Alignment Pattern
 The per-spec scenario clauses are covered through the integration-test sections
 at the end of every phase:

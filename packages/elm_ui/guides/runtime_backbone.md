@@ -23,6 +23,19 @@
 3. `ElmUi.FrontendRuntime` hydrates the payload into browser-facing realization.
 4. Local events stay local when allowed, or cross the boundary through `ElmUi.Transport`.
 
+## Modal Stack Navigation
+
+Canonical modal navigation remains server-authoritative. `open_modal` appends a
+symbolic modal entry with params and metadata to the Phoenix runtime stack.
+Targetless `close_modal` removes the topmost modal, targeted `close_modal`
+removes the matching symbolic modal, and the frontend receives the resulting
+authoritative modal stack in acknowledgement payloads.
+
+Host router state, browser route state, and URL generation are review inputs
+for applications, not fields in the canonical transition contract. Divergence
+between browser-local route state and the server decision is reported as a
+runtime diagnostic.
+
 ## Review Surfaces
 
 - `mix elm_ui.inspect native_styling`

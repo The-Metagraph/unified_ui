@@ -178,6 +178,25 @@ defmodule UnifiedUi.SignalsTest do
 
     assert Signals.local_navigation_fields() == [:binding, :destination]
 
+    assert Signals.navigation_modal_stack_semantics() == %{
+             open_modal: %{
+               operation: :push,
+               target: :symbolic_modal,
+               target_required?: true,
+               named_target_allowed?: true,
+               containment_required?: false,
+               stack_effect: :push_modal
+             },
+             close_modal: %{
+               operation: :close,
+               target: :topmost_modal,
+               target_required?: false,
+               named_target_allowed?: true,
+               containment_required?: false,
+               stack_effect: :close_topmost_or_named_modal
+             }
+           }
+
     assert Signals.navigation_action_contracts() == %{
              navigate_to: %{
                kind: :screen_transition,
@@ -312,6 +331,38 @@ defmodule UnifiedUi.SignalsTest do
                  },
                  payload_mapping: %{tab: :profile}
                }
+             ],
+             navigation_descriptors: [
+               %{
+                 id: :navigate_activity,
+                 kind: :local_destination,
+                 binding: :active_tab,
+                 destination: :activity
+               },
+               %{
+                 id: :open_settings_modal,
+                 kind: :modal_transition,
+                 action: :open_modal,
+                 modal: :settings_dialog,
+                 params: %{tab: :profile},
+                 metadata: %{source: :save_button},
+                 modal_stack: %{
+                   operation: :push,
+                   target: :symbolic_modal,
+                   target_required?: true,
+                   named_target_allowed?: true,
+                   containment_required?: false,
+                   stack_effect: :push_modal
+                 }
+               },
+               %{
+                 id: :open_settings_screen,
+                 kind: :screen_transition,
+                 action: :navigate_to,
+                 screen: :settings,
+                 params: %{tab: :profile},
+                 metadata: %{source: :save_button}
+               }
              ]
            }
   end
@@ -341,6 +392,20 @@ defmodule UnifiedUi.SignalsTest do
 
     assert Signals.navigation_target_kind(%{target_intent: %{action: :go_back}}) ==
              :history_transition
+
+    assert Signals.navigation_descriptor(target_intent: [action: :close_modal]) == %{
+             id: nil,
+             kind: :modal_transition,
+             action: :close_modal,
+             modal_stack: %{
+               operation: :close,
+               target: :topmost_modal,
+               target_required?: false,
+               named_target_allowed?: true,
+               containment_required?: false,
+               stack_effect: :close_topmost_or_named_modal
+             }
+           }
   end
 
   test "attaches authored signal and binding references to composition nodes" do

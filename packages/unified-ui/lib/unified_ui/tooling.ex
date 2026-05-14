@@ -203,7 +203,8 @@ defmodule UnifiedUi.Tooling do
       "related specs: #{inspect(diagnostics.related_specs)}",
       "signal families: #{inspect(diagnostics.signal_coverage.families)}",
       "binding names: #{inspect(diagnostics.signal_coverage.binding_names)}",
-      "navigation target kinds: #{inspect(diagnostics.signal_coverage.interaction_target_kinds)}"
+      "navigation target kinds: #{inspect(diagnostics.signal_coverage.interaction_target_kinds)}",
+      "navigation descriptors: #{inspect(diagnostics.signal_coverage.navigation_descriptors, sort_maps: true)}"
     ]
     |> Enum.join("\n")
   end
@@ -328,6 +329,7 @@ defmodule UnifiedUi.Tooling do
           {interaction.id, Signals.navigation_target_kind(interaction)}
         end)
         |> Enum.into(%{}),
+      navigation_descriptors: signal_catalog.navigation_descriptors,
       navigation_actions: Signals.navigation_actions(),
       navigation_contract: UnifiedUi.Reference.navigation_contract(),
       target_bindings:

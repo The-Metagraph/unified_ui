@@ -64,5 +64,16 @@ defmodule UnifiedIUR.InspectTest do
 
     assert report.target == %{navigation: report.navigation}
     assert "symbolic screen identifiers" in report.semantics
+
+    assert {:ok, stack_report} = Inspect.navigation_fixture("modal_stack--open_confirm_dialog")
+
+    assert stack_report.navigation.modal_stack == %{
+             operation: :push,
+             target: :symbolic_modal,
+             target_required?: true,
+             named_target_allowed?: true,
+             containment_required?: false,
+             stack_effect: :push_modal
+           }
   end
 end

@@ -29,6 +29,12 @@ defmodule UnifiedIUR.ExportTest do
     assert navigation_snapshot =~ "action: :go_back"
     assert navigation_snapshot =~ "kind: :history_transition"
     refute navigation_snapshot =~ "screen:"
+
+    assert {:ok, stacked_modal_export} =
+             Export.navigation_fixture("modal_stack--open_confirm_dialog", :inspection)
+
+    assert stacked_modal_export =~ "modal_stack"
+    assert stacked_modal_export =~ "stack_effect: :push_modal"
   end
 
   test "exports diagnostics and diff reports for maintainers" do

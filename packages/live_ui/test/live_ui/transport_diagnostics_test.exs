@@ -44,6 +44,27 @@ defmodule LiveUi.TransportDiagnosticsTest do
              )
   end
 
+  test "rejects URL-like targets, host-router names, and runtime module references" do
+    for {key, value} <- [
+          url: "https://example.invalid/settings",
+          router: :workspace_router,
+          runtime_module: LiveUi.Runtime
+        ] do
+      assert {:error, %Error{reason: :host_route_syntax, details: %{keys: [^key]}}} =
+               LiveUi.Signals.from_native(
+                 family: :navigation,
+                 intent: :open_settings_screen,
+                 screen: :profile,
+                 element_id: :settings_link,
+                 boundary: :boundary,
+                 target: %{
+                   navigation:
+                     Map.merge(%{action: :navigate_to, screen: :settings}, %{key => value})
+                 }
+               )
+    end
+  end
+
   test "rejects missing canonical context and invalid families" do
     interaction = Interaction.submit(intent: :save_profile, element_id: :profile_form)
 

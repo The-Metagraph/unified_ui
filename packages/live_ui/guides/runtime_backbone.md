@@ -20,6 +20,19 @@ That shared runtime is intentionally server-authoritative:
 - browser hooks are normalized before entering runtime event handling
 - canonical rendering reuses the same runtime host instead of introducing a second renderer stack
 
+## Modal Stack Navigation
+
+Canonical modal navigation is resolved on the LiveView server. `open_modal`
+pushes a symbolic modal entry with params and metadata onto the server-owned
+modal stack. Targetless `close_modal` closes the topmost modal, and targeted
+`close_modal` closes a matching symbolic modal without changing screen history
+or forward state.
+
+Phoenix router lookup and URL generation may still be used by host
+applications, but those values stay outside the canonical navigation descriptor.
+The maintained web navigation comparison example exposes the modal stack in
+native and canonical runtime snapshots for review.
+
 ## Boundary Expectations
 
 `LiveUi` is allowed to keep renderer-local behavior inside the direct native

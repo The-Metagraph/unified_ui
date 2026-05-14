@@ -68,6 +68,9 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
   end
 
   defp native_flow do
+    second_modal_fixture = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top_fixture = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
+
     with {:ok, runtime_state} <-
            LiveUi.Runtime.mount(HomeScreen,
              screen_registry: screen_registry(:native),
@@ -96,9 +99,27 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
                  metadata: %{surface: :workspace}
                )
            ),
-         {:ok, after_replace, replace_translation} <-
+         {:ok, with_second_modal, second_modal_translation} <-
            LiveUi.Runtime.dispatch_native_event(
              with_modal,
+             "navigation:open_settings_confirm_dialog",
+             %{},
+             family: :navigation,
+             intent: :open_settings_confirm_dialog,
+             target: second_modal_fixture.descriptor.target
+           ),
+         {:ok, after_top_close, close_top_translation} <-
+           LiveUi.Runtime.dispatch_native_event(
+             with_second_modal,
+             "navigation:close_top_modal",
+             %{},
+             family: :navigation,
+             intent: :close_top_modal,
+             target: close_top_fixture.descriptor.target
+           ),
+         {:ok, after_replace, replace_translation} <-
+           LiveUi.Runtime.dispatch_native_event(
+             after_top_close,
              "navigation:replace_home_screen",
              %{},
              family: :navigation,
@@ -113,15 +134,21 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
        %{
          after_navigate: runtime_snapshot(after_navigate),
          after_modal: runtime_snapshot(with_modal),
+         after_second_modal: runtime_snapshot(with_second_modal),
+         after_top_close: runtime_snapshot(after_top_close),
          after_replace: runtime_snapshot(after_replace),
          runtime_events: [
            navigate_translation.runtime_event,
            modal_translation.runtime_event,
+           second_modal_translation.runtime_event,
+           close_top_translation.runtime_event,
            replace_translation.runtime_event
          ],
          transition_targets: %{
            navigate: navigate_translation.target.navigation,
            modal: modal_translation.target.navigation,
+           second_modal: second_modal_translation.target.navigation,
+           close_top: close_top_translation.target.navigation,
            replace: replace_translation.target.navigation
          }
        }}
@@ -133,6 +160,11 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
 
     screen_transition = BoundaryTransport.boundary_fixture!("screen_transition--settings_profile")
     modal_transition = BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+
+    second_modal_transition =
+      BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+
+    close_top_transition = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
     replace_transition = BoundaryTransport.boundary_fixture!("replace_transition--home")
 
     with {:ok, runtime_state} <-
@@ -147,22 +179,34 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
          {:ok, modal_signal} <- boundary_signal(modal_transition, :settings),
          {:ok, with_modal, modal_runtime_action} <-
            LiveUi.Runtime.handle_boundary_signal(after_navigate, modal_signal),
+         {:ok, second_modal_signal} <- boundary_signal(second_modal_transition, :settings),
+         {:ok, with_second_modal, second_modal_runtime_action} <-
+           LiveUi.Runtime.handle_boundary_signal(with_modal, second_modal_signal),
+         {:ok, close_top_signal} <- boundary_signal(close_top_transition, :settings),
+         {:ok, after_top_close, close_top_runtime_action} <-
+           LiveUi.Runtime.handle_boundary_signal(with_second_modal, close_top_signal),
          {:ok, replace_signal} <- boundary_signal(replace_transition, :settings),
          {:ok, after_replace, replace_runtime_action} <-
-           LiveUi.Runtime.handle_boundary_signal(with_modal, replace_signal) do
+           LiveUi.Runtime.handle_boundary_signal(after_top_close, replace_signal) do
       {:ok,
        %{
          after_navigate: runtime_snapshot(after_navigate),
          after_modal: runtime_snapshot(with_modal),
+         after_second_modal: runtime_snapshot(with_second_modal),
+         after_top_close: runtime_snapshot(after_top_close),
          after_replace: runtime_snapshot(after_replace),
          runtime_events: [
            navigate_runtime_action.runtime_event,
            modal_runtime_action.runtime_event,
+           second_modal_runtime_action.runtime_event,
+           close_top_runtime_action.runtime_event,
            replace_runtime_action.runtime_event
          ],
          transition_targets: %{
            navigate: navigate_runtime_action.target.navigation,
            modal: modal_runtime_action.target.navigation,
+           second_modal: second_modal_runtime_action.target.navigation,
+           close_top: close_top_runtime_action.target.navigation,
            replace: replace_runtime_action.target.navigation
          }
        }}
@@ -188,6 +232,19 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
       same_modal_identifier?:
         get_in(native, [:after_modal, :current_modal, :modal]) ==
           get_in(canonical, [:after_modal, :current_modal, :modal]),
+      same_second_modal_identifier?:
+        get_in(native, [:after_second_modal, :current_modal, :modal]) ==
+          get_in(canonical, [:after_second_modal, :current_modal, :modal]),
+      top_close_restores_previous_modal?:
+        get_in(native, [:after_top_close, :current_modal, :modal]) ==
+          get_in(native, [:after_modal, :current_modal, :modal]) and
+          get_in(canonical, [:after_top_close, :current_modal, :modal]) ==
+            get_in(canonical, [:after_modal, :current_modal, :modal]),
+      modal_stack_reflected?:
+        length(native.after_second_modal.modal_stack) == 2 and
+          length(canonical.after_second_modal.modal_stack) == 2 and
+          length(native.after_top_close.modal_stack) == 1 and
+          length(canonical.after_top_close.modal_stack) == 1,
       same_replacement_target?:
         native.after_replace.screen_id == :home and canonical.after_replace.screen_id == :home,
       replacement_clears_modal?:
@@ -204,9 +261,13 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
           [
             native.after_navigate.server_authoritative?,
             native.after_modal.server_authoritative?,
+            native.after_second_modal.server_authoritative?,
+            native.after_top_close.server_authoritative?,
             native.after_replace.server_authoritative?,
             canonical.after_navigate.server_authoritative?,
             canonical.after_modal.server_authoritative?,
+            canonical.after_second_modal.server_authoritative?,
+            canonical.after_top_close.server_authoritative?,
             canonical.after_replace.server_authoritative?
           ],
           & &1
@@ -269,6 +330,7 @@ defmodule LiveUi.Examples.WebNavigationTransitionComparison do
       params: state.assigns.navigation_params,
       history: state.assigns.navigation_history,
       forward: state.assigns.navigation_forward,
+      modal_stack: state.assigns.navigation_modal_stack,
       current_modal: state.assigns.current_modal,
       host_route: state.assigns.navigation_host_route,
       server_authoritative?: LiveUi.Runtime.assumptions().server_authoritative?

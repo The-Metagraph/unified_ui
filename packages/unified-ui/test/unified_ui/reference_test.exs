@@ -97,6 +97,24 @@ defmodule UnifiedUi.ReferenceTest do
     assert UnifiedUi.Reference.navigation_contract() == %{
              transition_fields: [:action, :screen, :modal, :params, :metadata],
              local_navigation_fields: [:binding, :destination],
+             modal_stack: %{
+               open_modal: %{
+                 operation: :push,
+                 target: :symbolic_modal,
+                 target_required?: true,
+                 named_target_allowed?: true,
+                 containment_required?: false,
+                 stack_effect: :push_modal
+               },
+               close_modal: %{
+                 operation: :close,
+                 target: :topmost_modal,
+                 target_required?: false,
+                 named_target_allowed?: true,
+                 containment_required?: false,
+                 stack_effect: :close_topmost_or_named_modal
+               }
+             },
              actions: %{
                navigate_to: %{
                  kind: :screen_transition,

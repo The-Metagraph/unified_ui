@@ -40,6 +40,7 @@ and which upstream package specs are treated as input constraints rather than
 | `ecosystem.signal_transport.live_bridge` | `4.2.1` | `4.2.2`, `4.5.1`, `6.2.2` | Direct inherited live_ui transport obligation. |
 | `ecosystem.signal_transport.native_signal_models_allowed` | `4.1.2` | `4.2.2`, `4.5.1` | Inherited local-runtime flexibility guardrail. |
 | `ecosystem.signal_transport.local_state_not_contract` | `1.3.2` | `4.2.2`, `4.5.2`, `5.3.2` | Inherited boundary-contract guardrail. |
+| `ecosystem.signal_transport.modal_stack_transition_meaning` | `4.1.1` | `4.4.1`, `4.5.1`, `14.1.1` | Inherited canonical modal stack transition meaning consumed by live_ui. |
 ### Referenced Root Requirements Outside `live_ui` Ownership
 These referenced root requirements are intentionally not mapped to `live_ui`
 tasks because they govern other runtime packages:
@@ -91,6 +92,9 @@ tasks because they govern other runtime packages:
 | `live_ui.runtime.native_and_iur_entrypoints_share_runtime` | `1.3.1` | `2.3.2`, `3.3.1`, `4.5.2` | Direct runtime-convergence obligation. |
 | `live_ui.runtime.state_and_render_continuity` | `2.3.2` | `3.3.1`, `5.3.2`, `5.5.2` | Direct continuity obligation. |
 | `live_ui.runtime.widget_component_local_state` | `11.2` | `11.2.2` | Phase 11: Widget components may own bounded local UI lifecycle state. |
+| `live_ui.runtime.canonical_navigation_transition_mapping` | `4.1.1` | `4.5.1`, `4.5.2`, `12.4.2` | Direct server-side canonical navigation transition obligation. |
+| `live_ui.runtime.modal_stack_navigation_state` | `14.1.1` | `4.1.1`, `4.4.1`, `4.5.1` | Direct server-authoritative modal stack navigation obligation. |
+| `live_ui.runtime.host_route_resolution_boundary` | `4.3.1` | `4.2.1`, `4.5.1`, `4.5.2` | Direct host-route boundary obligation for canonical navigation. |
 ### `iur_renderer.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -155,6 +159,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.interactions.renderer_independent_payload_mapping` | `4.1.1` | `4.3.1`, `4.5.1` | Upstream canonical interaction hygiene constraint. |
 | `unified_iur.interactions.standard_interaction_families` | `4.1.1` | `2.2.1`, `4.4.1`, `4.5.1` | Upstream canonical interaction scope consumed by live_ui. |
 | `unified_iur.interactions.data_binding_representation` | `2.2.1` | `1.2.2`, `4.2.1`, `4.5.2` | Upstream canonical data-binding input consumed by live_ui. |
+| `unified_iur.interactions.modal_stack_transition_semantics` | `4.1.1` | `4.4.1`, `4.5.1`, `14.1.1` | Upstream canonical modal stack descriptor semantics consumed by live_ui. |
 ### `unified-ui/package.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -171,6 +176,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_ui.signals.standard_interaction_families` | `4.1.1` | `2.2.1`, `4.4.1`, `4.5.1` | Upstream authored-signal scope consumed by live_ui. |
 | `unified_ui.signals.validation_and_introspection` | `6.2.1` | `4.3.1`, `6.3.1`, `6.3.2` | Upstream inspection expectations reflected in live_ui maintainer tooling. |
 | `unified_ui.signals.no_runtime_local_event_leakage` | `4.3.1` | `1.3.2`, `6.4.2`, `6.5.2` | Upstream authored-signal hygiene guardrail. |
+| `unified_ui.signals.navigation_modal_stack_semantics` | `4.1.1` | `4.4.1`, `4.5.1`, `14.1.1` | Upstream authored modal stack signal semantics consumed by live_ui. |
 ## Scenario Alignment Pattern
 The per-spec scenario clauses are covered through the integration-test sections
 at the end of every phase:

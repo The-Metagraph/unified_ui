@@ -126,6 +126,26 @@ defmodule UnifiedUi.Examples.ThemedSignalWorkspace do
         label("Close settings modal")
         interaction_refs([:close_settings_modal])
       end
+
+      button :open_confirm_settings_button do
+        label("Open confirmation modal")
+        interaction_refs([:open_settings_confirmation])
+      end
+    end
+
+    box :settings_confirm_panel do
+      theme_ref(:workspace_dark)
+      style_refs([:panel_shell])
+
+      text :settings_confirm_title do
+        value("Confirm settings")
+        variant(:headline)
+      end
+
+      button :close_top_modal_button do
+        label("Close top modal")
+        interaction_refs([:close_top_modal])
+      end
     end
 
     row :workspace_shell do
@@ -245,9 +265,18 @@ defmodule UnifiedUi.Examples.ThemedSignalWorkspace do
       style_refs([:modal_shell])
     end
 
+    dialog :settings_confirm_dialog do
+      title("Confirm settings")
+      content_ref(:settings_confirm_panel)
+      trigger_ref(:open_confirm_settings_button)
+      visible?(false)
+      theme_ref(:workspace_dark)
+      style_refs([:modal_shell])
+    end
+
     overlay :workspace_overlay do
       base_ref(:workspace_shell)
-      layer_refs([:settings_dialog])
+      layer_refs([:settings_dialog, :settings_confirm_dialog])
       background_fill(:scrim)
 
       style(style_value(emphasis: %{elevation: 3}))
@@ -316,6 +345,30 @@ defmodule UnifiedUi.Examples.ThemedSignalWorkspace do
       source_context(element_id: :open_settings_button, scope: :screen)
       target_intent(action: :open_modal, modal: :settings_dialog, params: %{source: :button})
       payload_mapping(source: :button)
+    end
+
+    interaction do
+      id(:open_settings_confirmation)
+      family(:navigation)
+      intent(:open_settings_confirmation_modal)
+      source_context(element_id: :open_confirm_settings_button, scope: :modal)
+
+      target_intent(
+        action: :open_modal,
+        modal: :settings_confirm_dialog,
+        params: %{from: :settings_dialog}
+      )
+
+      payload_mapping(source: :settings_dialog)
+    end
+
+    interaction do
+      id(:close_top_modal)
+      family(:navigation)
+      intent(:close_top_modal)
+      source_context(element_id: :close_top_modal_button, scope: :modal)
+      target_intent(action: :close_modal, metadata: %{reason: :cancel})
+      payload_mapping(reason: :cancel)
     end
 
     interaction do

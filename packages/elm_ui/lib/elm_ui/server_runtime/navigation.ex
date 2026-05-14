@@ -582,11 +582,7 @@ defmodule ElmUi.ServerRuntime.Navigation do
     target = normalize_map(Map.get(translation, :target, %{}))
     navigation = normalize_map(raw_navigation_descriptor(target) || %{})
 
-    leaked_keys =
-      navigation
-      |> Map.keys()
-      |> Enum.filter(&forbidden_navigation_key?/1)
-      |> Enum.uniq()
+    leaked_keys = forbidden_navigation_keys(navigation)
 
     if leaked_keys == [] do
       :ok
@@ -607,6 +603,17 @@ defmodule ElmUi.ServerRuntime.Navigation do
   end
 
   defp raw_navigation_descriptor(_other), do: nil
+
+  defp forbidden_navigation_keys(navigation) do
+    modal_stack =
+      navigation
+      |> Map.get(:modal_stack, Map.get(navigation, "modal_stack", %{}))
+      |> normalize_map()
+
+    (Map.keys(navigation) ++ Map.keys(modal_stack))
+    |> Enum.filter(&forbidden_navigation_key?/1)
+    |> Enum.uniq()
+  end
 
   defp resolve_candidate(%{registry: registry}, screen_id) do
     case Enum.find(registry, fn {key, _value} -> key_matches?(key, screen_id) end) do
@@ -643,7 +650,9 @@ defmodule ElmUi.ServerRuntime.Navigation do
       action: Map.get(descriptor, :action),
       screen: Map.get(descriptor, :screen),
       modal: Map.get(descriptor, :modal),
-      params: normalize_map(Map.get(descriptor, :params, %{}))
+      params: normalize_map(Map.get(descriptor, :params, %{})),
+      metadata: normalize_map(Map.get(descriptor, :metadata, %{})),
+      modal_stack: normalize_map(Map.get(descriptor, :modal_stack, %{}))
     }
   end
 

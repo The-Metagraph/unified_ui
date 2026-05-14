@@ -169,9 +169,9 @@ defmodule DesktopUi.Navigation do
   @doc """
   Closes the top modal dialog.
   """
-  @spec close_modal(GenServer.server() | atom()) ::
+  @spec close_modal(GenServer.server() | atom(), screen_id() | nil) ::
           {:ok, State.t(), transition()} | {:error, term()}
-  defdelegate close_modal(server), to: Controller
+  def close_modal(server, screen_id \\ nil), do: Controller.close_modal(server, screen_id)
 
   @doc """
   Gets the current navigation state.
@@ -203,4 +203,16 @@ defmodule DesktopUi.Navigation do
   """
   @spec modal_open?(State.t()) :: boolean()
   defdelegate modal_open?(state), to: State, as: :modal_open?
+
+  @doc """
+  Returns the top modal entry for the given state.
+  """
+  @spec top_modal(State.t()) :: {screen_id(), screen_module(), params()} | nil
+  defdelegate top_modal(state), to: State
+
+  @doc """
+  Returns the number of open modals in the given state.
+  """
+  @spec modal_depth(State.t()) :: non_neg_integer()
+  defdelegate modal_depth(state), to: State
 end

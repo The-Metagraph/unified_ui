@@ -10,6 +10,8 @@ defmodule LiveUi.CanonicalNavigationWebRuntimeIntegrationTest do
     navigate_fixture = BoundaryTransport.boundary_fixture!("screen_transition--settings_profile")
     replace_fixture = BoundaryTransport.boundary_fixture!("replace_transition--home")
     modal_fixture = BoundaryTransport.boundary_fixture!("modal_transition--settings_dialog")
+    second_modal_fixture = BoundaryTransport.boundary_fixture!("modal_stack--open_confirm_dialog")
+    close_top_fixture = BoundaryTransport.boundary_fixture!("modal_stack--close_top")
 
     assert {:ok, comparison} = WebNavigationTransitionComparison.compare()
 
@@ -31,8 +33,41 @@ defmodule LiveUi.CanonicalNavigationWebRuntimeIntegrationTest do
     assert modal_summary(comparison.canonical.transition_targets.modal) ==
              modal_summary(modal_fixture.descriptor.target.navigation)
 
+    assert modal_summary(comparison.native.transition_targets.second_modal) ==
+             modal_summary(second_modal_fixture.descriptor.target.navigation)
+
+    assert modal_summary(comparison.canonical.transition_targets.second_modal) ==
+             modal_summary(second_modal_fixture.descriptor.target.navigation)
+
+    assert modal_stack_summary(comparison.native.transition_targets.close_top) ==
+             modal_stack_summary(close_top_fixture.descriptor.target.navigation)
+
+    assert modal_stack_summary(comparison.canonical.transition_targets.close_top) ==
+             modal_stack_summary(close_top_fixture.descriptor.target.navigation)
+
+    assert Enum.map(comparison.native.after_second_modal.modal_stack, & &1.modal) == [
+             :settings_dialog,
+             :settings_confirm_dialog
+           ]
+
+    assert comparison.native.after_top_close.current_modal.modal == :settings_dialog
+    assert comparison.canonical.after_top_close.current_modal.modal == :settings_dialog
+    assert comparison.native.after_second_modal.history == comparison.native.after_modal.history
+
+    assert comparison.native.after_top_close.history ==
+             comparison.native.after_second_modal.history
+
+    assert comparison.canonical.after_second_modal.history ==
+             comparison.canonical.after_modal.history
+
+    assert comparison.canonical.after_top_close.history ==
+             comparison.canonical.after_second_modal.history
+
     assert comparison.continuity.same_navigation_target?
     assert comparison.continuity.same_modal_identifier?
+    assert comparison.continuity.same_second_modal_identifier?
+    assert comparison.continuity.top_close_restores_previous_modal?
+    assert comparison.continuity.modal_stack_reflected?
     assert comparison.continuity.same_replacement_target?
     assert comparison.continuity.history_meaning_preserved?
     assert comparison.continuity.server_authoritative?
@@ -92,6 +127,13 @@ defmodule LiveUi.CanonicalNavigationWebRuntimeIntegrationTest do
       modal: get_value(target, :modal),
       params: normalize_map(get_value(target, :params, %{})),
       metadata: normalize_map(get_value(target, :metadata, %{}))
+    }
+  end
+
+  defp modal_stack_summary(target) do
+    %{
+      action: get_value(target, :action),
+      modal_stack: normalize_map(get_value(target, :modal_stack, %{}))
     }
   end
 

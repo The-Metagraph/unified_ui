@@ -21,7 +21,8 @@
       "ecosystem.signal_transport.dsl_event_bindings",
       "ecosystem.signal_transport.live_bridge",
       "ecosystem.signal_transport.native_signal_models_allowed",
-      "ecosystem.signal_transport.local_state_not_contract"
+      "ecosystem.signal_transport.local_state_not_contract",
+      "ecosystem.signal_transport.modal_stack_transition_meaning"
     ],
     "upstream_requirement_ids": [
       "unified_iur.widgets.input_and_navigation",
@@ -46,6 +47,7 @@
       "unified_iur.interactions.renderer_independent_payload_mapping",
       "unified_iur.interactions.standard_interaction_families",
       "unified_iur.interactions.data_binding_representation",
+      "unified_iur.interactions.modal_stack_transition_semantics",
       "unified_ui.package.library_identity",
       "unified_ui.package.dsl_boundary_only",
       "unified_ui.package.canonical_iur_dependency",
@@ -55,7 +57,8 @@
       "unified_ui.signals.authoring_event_semantics",
       "unified_ui.signals.standard_interaction_families",
       "unified_ui.signals.validation_and_introspection",
-      "unified_ui.signals.no_runtime_local_event_leakage"
+      "unified_ui.signals.no_runtime_local_event_leakage",
+      "unified_ui.signals.navigation_modal_stack_semantics"
     ],
     "non_applicable_requirement_ids": [
       "ecosystem.platform_runtimes.elm_ui_runtime_split",
@@ -294,6 +297,20 @@
         "5.3.2"
       ],
       "ownership_note": "Inherited boundary-contract guardrail."
+    },
+    {
+      "requirement_id": "ecosystem.signal_transport.modal_stack_transition_meaning",
+      "scope": "inherited",
+      "source_file": ".spec/specs/signal_transport.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.4.1",
+        "4.5.1",
+        "14.1.1"
+      ],
+      "ownership_note": "Inherited canonical modal stack transition meaning consumed by live_ui."
     },
     {
       "requirement_id": "live_ui.package.library_identity",
@@ -705,6 +722,48 @@
         "11.2.2"
       ],
       "ownership_note": "Phase 11: Widget components may own bounded local UI lifecycle state."
+    },
+    {
+      "requirement_id": "live_ui.runtime.canonical_navigation_transition_mapping",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.5.1",
+        "4.5.2",
+        "12.4.2"
+      ],
+      "ownership_note": "Direct server-side canonical navigation transition obligation."
+    },
+    {
+      "requirement_id": "live_ui.runtime.modal_stack_navigation_state",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "14.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.1.1",
+        "4.4.1",
+        "4.5.1"
+      ],
+      "ownership_note": "Direct server-authoritative modal stack navigation obligation."
+    },
+    {
+      "requirement_id": "live_ui.runtime.host_route_resolution_boundary",
+      "scope": "direct",
+      "source_file": ".spec/specs/live_ui/runtime.spec.md",
+      "primary_plan_refs": [
+        "4.3.1"
+      ],
+      "supporting_plan_refs": [
+        "4.2.1",
+        "4.5.1",
+        "4.5.2"
+      ],
+      "ownership_note": "Direct host-route boundary obligation for canonical navigation."
     },
     {
       "requirement_id": "live_ui.iur_renderer.accepts_canonical_iur",
@@ -1233,6 +1292,20 @@
       "ownership_note": "Upstream canonical data-binding input consumed by live_ui."
     },
     {
+      "requirement_id": "unified_iur.interactions.modal_stack_transition_semantics",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-iur/interactions.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.4.1",
+        "4.5.1",
+        "14.1.1"
+      ],
+      "ownership_note": "Upstream canonical modal stack descriptor semantics consumed by live_ui."
+    },
+    {
       "requirement_id": "unified_ui.package.library_identity",
       "scope": "upstream_constraint",
       "source_file": ".spec/specs/unified-ui/package.spec.md",
@@ -1360,6 +1433,20 @@
         "6.5.2"
       ],
       "ownership_note": "Upstream authored-signal hygiene guardrail."
+    },
+    {
+      "requirement_id": "unified_ui.signals.navigation_modal_stack_semantics",
+      "scope": "upstream_constraint",
+      "source_file": ".spec/specs/unified-ui/signals.spec.md",
+      "primary_plan_refs": [
+        "4.1.1"
+      ],
+      "supporting_plan_refs": [
+        "4.4.1",
+        "4.5.1",
+        "14.1.1"
+      ],
+      "ownership_note": "Upstream authored modal stack signal semantics consumed by live_ui."
     }
   ]
 }

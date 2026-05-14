@@ -136,12 +136,14 @@ defmodule UnifiedUi.Reference do
   @spec navigation_contract() :: %{
           transition_fields: [atom()],
           local_navigation_fields: [atom()],
+          modal_stack: %{Signal.navigation_transition_action() => Signal.modal_stack_semantics()},
           actions: %{Signal.navigation_transition_action() => Signal.navigation_action_contract()}
         }
   def navigation_contract do
     %{
       transition_fields: Signal.navigation_transition_fields(),
       local_navigation_fields: Signal.local_navigation_fields(),
+      modal_stack: Signal.navigation_modal_stack_semantics(),
       actions: Signal.navigation_action_contracts()
     }
   end

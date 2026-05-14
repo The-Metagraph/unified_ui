@@ -71,6 +71,31 @@ defmodule TerminalUi.TransportDiagnosticsTest do
              })
   end
 
+  test "transport validation rejects canonical navigation host details" do
+    assert {:error,
+            %TerminalUi.Transport.Error{
+              reason: :host_route_syntax,
+              details: %{keys: [:runtime_module]}
+            }} =
+             Transport.from_native_event(
+               backend_mode: :raw,
+               input_family: :key,
+               key: "enter",
+               family: :navigation,
+               intent: :open_settings_screen,
+               widget_id: "settings-link",
+               runtime_id: "terminal-ui:ops",
+               screen: "operations",
+               target: %{
+                 navigation: %{
+                   action: :navigate_to,
+                   screen: :settings,
+                   runtime_module: TerminalUi.Runtime
+                 }
+               }
+             )
+  end
+
   test "reference and summary surfaces expose transport-focused contract summaries" do
     reference = TerminalUi.reference()
     summary = TerminalUi.info()

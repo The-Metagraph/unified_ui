@@ -1,6 +1,7 @@
 defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
   use ExUnit.Case, async: true
 
+  alias UnifiedIUR.Interactions.Transport, as: BoundaryTransport
   alias UnifiedUi.{Compiler, Export, Signals, Tooling}
 
   defmodule CanonicalNavigationScreen do
@@ -201,6 +202,110 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
              open_settings_modal: :modal_transition,
              close_settings_modal: :modal_transition
            }
+
+    assert summary.navigation_descriptors == [
+             %{
+               id: :close_settings_modal,
+               kind: :modal_transition,
+               action: :close_modal,
+               modal: :settings_dialog,
+               metadata: %{reason: :done},
+               modal_stack: %{
+                 operation: :close,
+                 target: :topmost_modal,
+                 target_required?: false,
+                 named_target_allowed?: true,
+                 containment_required?: false,
+                 stack_effect: :close_topmost_or_named_modal
+               }
+             },
+             %{
+               id: :go_back_history,
+               kind: :history_transition,
+               action: :go_back,
+               metadata: %{source: :header}
+             },
+             %{
+               id: :go_forward_history,
+               kind: :history_transition,
+               action: :go_forward,
+               metadata: %{source: :header}
+             },
+             %{
+               id: :navigate_activity,
+               kind: :local_destination,
+               binding: :active_tab,
+               destination: :activity
+             },
+             %{
+               id: :open_settings_modal,
+               kind: :modal_transition,
+               action: :open_modal,
+               modal: :settings_dialog,
+               params: %{source: :button},
+               modal_stack: %{
+                 operation: :push,
+                 target: :symbolic_modal,
+                 target_required?: true,
+                 named_target_allowed?: true,
+                 containment_required?: false,
+                 stack_effect: :push_modal
+               }
+             },
+             %{
+               id: :open_settings_screen,
+               kind: :screen_transition,
+               action: :navigate_to,
+               screen: :settings,
+               params: %{tab: :profile}
+             },
+             %{
+               id: :replace_with_home,
+               kind: :replace_transition,
+               action: :replace_with,
+               screen: :home,
+               params: %{source: :launcher}
+             }
+           ]
+  end
+
+  test "accepts targetless top-modal close descriptors" do
+    assert [{module, _bytecode}] =
+             compile_module("""
+             identity do
+               id(:targetless_close_screen)
+             end
+
+             composition do
+               root(:targetless_close_root)
+               mode(:screen)
+             end
+
+             signals do
+               interaction do
+                 id(:close_top_modal)
+                 family(:navigation)
+                 intent(:close_top_modal)
+                 target_intent(action: :close_modal)
+               end
+             end
+             """)
+
+    assert [interaction] = Signals.interactions(module)
+
+    assert Signals.navigation_descriptor(interaction) == %{
+             id: :close_top_modal,
+             kind: :modal_transition,
+             action: :close_modal,
+             modal_stack: %{
+               operation: :close,
+               target: :topmost_modal,
+               target_required?: false,
+               named_target_allowed?: true,
+               containment_required?: false,
+               stack_effect: :close_topmost_or_named_modal
+             }
+           }
   end
 
   test "rejects host-specific navigation leakage and malformed authored target shapes" do
@@ -253,6 +358,75 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert_compile_dsl_error(
       """
       identity do
+        id(:route_helper_navigation_screen)
+      end
+
+      composition do
+        root(:route_helper_navigation_root)
+        mode(:screen)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :navigate_to, screen: :settings, route_helper: :settings_path)
+        end
+      end
+      """,
+      "canonical navigation must not declare host-route key :route_helper"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:unsupported_navigation_action_screen)
+      end
+
+      composition do
+        root(:unsupported_navigation_action_root)
+        mode(:screen)
+      end
+
+      signals do
+        interaction do
+          id(:push_settings)
+          family(:navigation)
+          intent(:push_settings)
+          target_intent(action: :push_screen, screen: :settings)
+        end
+      end
+      """,
+      "unsupported navigation action :push_screen"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
+        id(:missing_modal_target_screen)
+      end
+
+      composition do
+        root(:missing_modal_target_root)
+        mode(:screen)
+      end
+
+      signals do
+        interaction do
+          id(:open_settings)
+          family(:navigation)
+          intent(:open_settings)
+          target_intent(action: :open_modal)
+        end
+      end
+      """,
+      "navigation action :open_modal requires fields [:modal]"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
         id(:url_navigation_screen)
       end
 
@@ -299,6 +473,29 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert_compile_dsl_error(
       """
       identity do
+        id(:modal_url_navigation_screen)
+      end
+
+      composition do
+        root(:modal_url_navigation_root)
+        mode(:screen)
+      end
+
+      signals do
+        interaction do
+          id(:close_modal)
+          family(:navigation)
+          intent(:close_modal)
+          target_intent(action: :close_modal, modal: "/settings")
+        end
+      end
+      """,
+      "navigation modal must be a symbolic identifier and must not use URL or path syntax"
+    )
+
+    assert_compile_dsl_error(
+      """
+      identity do
         id(:ambiguous_local_navigation_screen)
       end
 
@@ -325,6 +522,7 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert {:ok, rendered_signals_again} = Export.module(CanonicalNavigationScreen, :signals)
 
     assert rendered_signals == rendered_signals_again
+    assert rendered_signals =~ "navigation_descriptors"
     assert rendered_signals =~ "navigate_activity"
     assert rendered_signals =~ "destination: :activity"
     assert rendered_signals =~ "action: :navigate_to"
@@ -347,16 +545,33 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
 
     assert report.signal_coverage.interaction_target_kinds[:open_settings] == :modal_transition
 
+    assert report.signal_coverage.interaction_target_kinds[:open_settings_confirmation] ==
+             :modal_transition
+
+    assert report.signal_coverage.interaction_target_kinds[:close_top_modal] ==
+             :modal_transition
+
     assert report.signal_coverage.interaction_target_kinds[:close_settings_modal] ==
              :modal_transition
+
+    assert Enum.find(report.signal_coverage.navigation_descriptors, &(&1.id == :open_settings))
+           |> Map.fetch!(:modal_stack)
+           |> Map.fetch!(:stack_effect) == :push_modal
+
+    assert Enum.find(report.signal_coverage.navigation_descriptors, &(&1.id == :close_top_modal))
+           |> Map.fetch!(:modal_stack)
+           |> Map.fetch!(:target) == :topmost_modal
 
     assert example_signals =~ "open_settings_screen"
     assert example_signals =~ "screen: :settings"
     assert example_signals =~ "navigate_activity"
     assert example_signals =~ "destination: :activity"
     assert example_signals =~ "open_settings"
+    assert example_signals =~ "open_settings_confirmation"
+    assert example_signals =~ "close_top_modal"
     assert example_signals =~ "close_settings_modal"
     assert example_signals =~ "modal: :settings_dialog"
+    assert example_signals =~ "modal: :settings_confirm_dialog"
   end
 
   test "keeps the user guidance aligned with canonical screen-transition authoring" do
@@ -368,13 +583,65 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
     assert guide =~ "Use `binding` plus `destination`"
     assert guide =~ "Use `action` plus `screen`"
     assert guide =~ "Use `action` plus `modal`"
+    assert guide =~ "targetless `close_modal` closes the"
     assert guide =~ "target_intent(binding: :active_tab, destination: :activity)"
 
     assert guide =~
              "target_intent(action: :navigate_to, screen: :settings, params: %{tab: :profile})"
 
     assert guide =~ "target_intent(action: :open_modal, modal: :settings_dialog"
+    assert guide =~ "target_intent(action: :close_modal, metadata: %{reason: :cancel})"
+    assert guide =~ "Focus trapping, backdrop behavior, and terminal degradation are runtime"
     refute guide =~ "target_intent(binding: :active_tab, route: :activity)"
+  end
+
+  test "maintained stacked-modal example compiles into portable navigation descriptors" do
+    assert {:ok, result} = Compiler.compile(UnifiedUi.Examples.ThemedSignalWorkspace)
+    assert {:ok, snapshot} = Export.example(:themed_signal_workspace, :snapshot)
+
+    targets =
+      Map.new(result.interactions, fn interaction ->
+        {interaction.intent, interaction.target}
+      end)
+
+    assert targets[:open_settings_confirmation_modal] == %{
+             navigation: %{
+               action: :open_modal,
+               kind: :modal_transition,
+               modal_stack: modal_stack_push(),
+               modal: :settings_confirm_dialog,
+               params: %{from: :settings_dialog}
+             }
+           }
+
+    assert targets[:close_top_modal] == %{
+             navigation: %{
+               action: :close_modal,
+               kind: :modal_transition,
+               modal_stack: modal_stack_close(),
+               metadata: %{reason: :cancel}
+             }
+           }
+
+    open_interaction =
+      Enum.find(result.interactions, &(&1.intent == :open_settings_confirmation_modal))
+
+    close_interaction = Enum.find(result.interactions, &(&1.intent == :close_top_modal))
+
+    open_extensions = BoundaryTransport.boundary_extensions(open_interaction)
+    close_extensions = BoundaryTransport.boundary_extensions(close_interaction)
+
+    assert :ok = BoundaryTransport.validate_boundary_extensions(open_extensions)
+    assert :ok = BoundaryTransport.validate_boundary_extensions(close_extensions)
+    assert open_extensions.unified_iur_boundary_summary.modal_stack_effect == :push_modal
+
+    assert close_extensions.unified_iur_boundary_summary.modal_stack_effect ==
+             :close_topmost_or_named_modal
+
+    assert close_extensions.unified_iur_boundary_summary.targetless?
+
+    refute snapshot =~ "route_helper"
+    refute snapshot =~ "stack_id"
   end
 
   test "compiles canonical navigation screens into stable IUR descriptors and deterministic review exports" do
@@ -412,6 +679,7 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
              navigation: %{
                action: :close_modal,
                kind: :modal_transition,
+               modal_stack: modal_stack_close(),
                metadata: %{reason: :done},
                modal: :settings_dialog
              }
@@ -419,6 +687,28 @@ defmodule UnifiedUi.CanonicalNavigationIntegrationTest do
 
     refute first_snapshot =~ "route:"
     refute first_snapshot =~ "\"/settings\""
+  end
+
+  defp modal_stack_push do
+    %{
+      operation: :push,
+      target: :symbolic_modal,
+      target_required?: true,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :push_modal
+    }
+  end
+
+  defp modal_stack_close do
+    %{
+      operation: :close,
+      target: :topmost_modal,
+      target_required?: false,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :close_topmost_or_named_modal
+    }
   end
 
   defp compile_module(body) do

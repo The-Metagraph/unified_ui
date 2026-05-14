@@ -34,6 +34,19 @@ degradation arrive in later phases.
 - `TerminalUi.Transport` keeps local terminal inputs and canonical boundary
   signal translation explicit under one package boundary.
 
+## Modal Stack Navigation
+
+Canonical modal transitions preserve stack meaning even when terminal
+presentation degrades. `open_modal` records symbolic modal entries with params,
+metadata, and backend-specific degradation metadata. Targetless `close_modal`
+removes the topmost modal and restores the previous modal or underlying screen
+state without requiring browser routes, runtime-local stack ids, or structural
+modal containment.
+
+Rich backends report overlay presentation, while TTY-compatible backends report
+bounded inline overlay presentation. Both paths expose the same canonical stack
+state through runtime inspection.
+
 Use the additional guides for task-oriented detail:
 
 - `guides/native_runtime_and_examples.md`

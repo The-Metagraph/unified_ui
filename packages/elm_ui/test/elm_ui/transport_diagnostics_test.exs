@@ -47,6 +47,28 @@ defmodule ElmUi.TransportDiagnosticsTest do
              )
   end
 
+  test "rejects URL-like targets, host-router names, and runtime module references" do
+    for {key, value} <- [
+          url: "https://example.invalid/settings",
+          router: :workspace_router,
+          runtime_module: ElmUi.Runtime
+        ] do
+      assert {:error, %Error{reason: :host_route_syntax, details: %{keys: [^key]}}} =
+               ElmUi.Signals.from_native_event(
+                 family: :navigation,
+                 intent: :open_settings_screen,
+                 boundary: :boundary,
+                 screen: "settings",
+                 runtime_id: "settings-runtime",
+                 widget_id: :settings_link,
+                 target: %{
+                   navigation:
+                     Map.merge(%{action: :navigate_to, screen: :settings}, %{key => value})
+                 }
+               )
+    end
+  end
+
   test "rejects missing canonical context and invalid families" do
     assert {:error, %Error{reason: :missing_boundary_context}} =
              ElmUi.Signals.from_native_event(

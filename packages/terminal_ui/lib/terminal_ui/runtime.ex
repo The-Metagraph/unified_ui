@@ -18,7 +18,7 @@ defmodule TerminalUi.Runtime do
     StyleResolver
   }
 
-  alias UnifiedIUR.Element
+  alias UnifiedIUR.{Element, Interaction}
 
   @type validation_state :: :foundational_realization_ready | :advanced_runtime_ready
 
@@ -56,6 +56,7 @@ defmodule TerminalUi.Runtime do
       :native_style_surface,
       :shared_theme_model,
       :canonical_boundary_events,
+      :modal_stack_navigation,
       :normalized_terminal_inputs,
       :shared_event_routing,
       :focus_traversal,
@@ -152,6 +153,8 @@ defmodule TerminalUi.Runtime do
       runtime_state
       | focus: apply_focus(runtime_state.focus, translation, route_result.route),
         event_loop: EventLoop.record_route(runtime_state.event_loop, route_result),
+        navigation:
+          apply_navigation(runtime_state.navigation, translation, runtime_state.backend_mode),
         event_log: runtime_state.event_log ++ [event_log_entry(route_result)]
     }
   end
@@ -169,6 +172,133 @@ defmodule TerminalUi.Runtime do
   end
 
   defp apply_focus(focus, _translation, _route), do: focus
+
+  defp apply_navigation(
+         navigation,
+         %{family: :navigation, target: target} = translation,
+         backend_mode
+       ) do
+    case Interaction.navigation_descriptor(target) do
+      nil ->
+        normalize_navigation(navigation)
+
+      descriptor ->
+        apply_navigation_descriptor(
+          normalize_navigation(navigation),
+          descriptor,
+          translation,
+          backend_mode
+        )
+    end
+  end
+
+  defp apply_navigation(navigation, _translation, _backend_mode),
+    do: normalize_navigation(navigation)
+
+  defp apply_navigation_descriptor(navigation, descriptor, translation, backend_mode) do
+    action = Map.get(descriptor, :action)
+    transition = transition_summary(translation, descriptor, backend_mode)
+
+    case action do
+      action when action in [:open_modal, "open_modal"] ->
+        modal_entry = %{
+          modal: Map.get(descriptor, :modal),
+          params: normalize_map(Map.get(descriptor, :params, %{})),
+          metadata: normalize_map(Map.get(descriptor, :metadata, %{})),
+          degradation: modal_degradation(backend_mode)
+        }
+
+        modals = navigation.modals ++ [modal_entry]
+
+        %{
+          navigation
+          | modals: modals,
+            current_modal: List.last(modals),
+            last_transition: transition
+        }
+
+      action when action in [:close_modal, "close_modal"] ->
+        case close_modal_stack(navigation.modals, Map.get(descriptor, :modal)) do
+          {:ok, modals} ->
+            %{
+              navigation
+              | modals: modals,
+                current_modal: List.last(modals),
+                last_transition: transition
+            }
+
+          {:error, diagnostic} ->
+            %{
+              navigation
+              | last_transition: transition,
+                diagnostics: navigation.diagnostics ++ [diagnostic]
+            }
+        end
+
+      _other ->
+        %{navigation | last_transition: transition}
+    end
+  end
+
+  defp normalize_navigation(nil) do
+    %{
+      modals: [],
+      current_modal: nil,
+      last_transition: nil,
+      diagnostics: []
+    }
+  end
+
+  defp normalize_navigation(navigation) when is_map(navigation) do
+    %{
+      modals: Map.get(navigation, :modals, []),
+      current_modal: Map.get(navigation, :current_modal),
+      last_transition: Map.get(navigation, :last_transition),
+      diagnostics: Map.get(navigation, :diagnostics, [])
+    }
+  end
+
+  defp close_modal_stack([], modal_id) do
+    {:error, %{reason: :missing_modal, modal: modal_id, action: :close_modal}}
+  end
+
+  defp close_modal_stack(modals, nil), do: {:ok, Enum.drop(modals, -1)}
+
+  defp close_modal_stack(modals, modal_id) do
+    {kept, removed?} =
+      modals
+      |> Enum.reverse()
+      |> Enum.reduce({[], false}, fn modal, {acc, removed?} ->
+        if not removed? and Map.get(modal, :modal) == modal_id do
+          {acc, true}
+        else
+          {[modal | acc], removed?}
+        end
+      end)
+
+    if removed? do
+      {:ok, kept}
+    else
+      {:error, %{reason: :missing_modal, modal: modal_id, action: :close_modal}}
+    end
+  end
+
+  defp transition_summary(translation, descriptor, backend_mode) do
+    %{
+      family: Map.get(translation, :family, :navigation),
+      intent: Map.get(translation, :intent),
+      action: Map.get(descriptor, :action),
+      screen: Map.get(descriptor, :screen),
+      modal: Map.get(descriptor, :modal),
+      params: normalize_map(Map.get(descriptor, :params, %{})),
+      metadata: normalize_map(Map.get(descriptor, :metadata, %{})),
+      modal_stack: normalize_map(Map.get(descriptor, :modal_stack, %{})),
+      degradation: modal_degradation(backend_mode)
+    }
+  end
+
+  defp modal_degradation(:tty), do: %{presentation: :inline_overlay, bounded?: true}
+  defp modal_degradation(_backend_mode), do: %{presentation: :overlay, bounded?: true}
 
   defp event_log_entry(route_result) do
     translation = route_result.translation

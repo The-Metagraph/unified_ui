@@ -27,6 +27,17 @@ defmodule UnifiedUi.Signal do
           optional_fields: [atom()]
         }
 
+  @type modal_stack_semantics :: %{
+          operation: :push | :close,
+          target: :symbolic_modal | :topmost_modal,
+          target_required?: boolean(),
+          named_target_allowed?: boolean(),
+          containment_required?: false,
+          stack_effect: :push_modal | :close_topmost_or_named_modal
+        }
+
+  @type navigation_descriptor :: map()
+
   @type family ::
           :click
           | :change
@@ -87,6 +98,24 @@ defmodule UnifiedUi.Signal do
   @navigation_actions Keyword.keys(@navigation_action_contracts)
   @navigation_transition_fields [:action, :screen, :modal, :params, :metadata]
   @local_navigation_fields [:binding, :destination]
+  @navigation_modal_stack_semantics [
+    open_modal: %{
+      operation: :push,
+      target: :symbolic_modal,
+      target_required?: true,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :push_modal
+    },
+    close_modal: %{
+      operation: :close,
+      target: :topmost_modal,
+      target_required?: false,
+      named_target_allowed?: true,
+      containment_required?: false,
+      stack_effect: :close_topmost_or_named_modal
+    }
+  ]
 
   defstruct __identifier__: nil,
             id: nil,
@@ -116,6 +145,11 @@ defmodule UnifiedUi.Signal do
   @spec local_navigation_fields() :: [atom()]
   def local_navigation_fields, do: @local_navigation_fields
 
+  @spec navigation_modal_stack_semantics() :: %{
+          navigation_transition_action() => modal_stack_semantics()
+        }
+  def navigation_modal_stack_semantics, do: Map.new(@navigation_modal_stack_semantics)
+
   @spec navigation_target_kind(t() | keyword() | map()) :: navigation_target_kind()
   def navigation_target_kind(%__MODULE__{target_intent: target_intent}),
     do: do_navigation_target_kind(target_intent)
@@ -128,6 +162,23 @@ defmodule UnifiedUi.Signal do
 
   def navigation_target_kind(target_intent) when is_map(target_intent),
     do: do_navigation_target_kind(target_intent)
+
+  @spec navigation_descriptor(t() | keyword() | map()) :: navigation_descriptor()
+  def navigation_descriptor(signal) do
+    signal = new(signal)
+    target_intent = signal.target_intent
+    action = fetch(target_intent, :action)
+
+    %{id: signal.id, kind: navigation_target_kind(signal)}
+    |> maybe_put(:action, action)
+    |> maybe_put(:screen, fetch(target_intent, :screen))
+    |> maybe_put(:modal, fetch(target_intent, :modal))
+    |> maybe_put(:params, fetch(target_intent, :params))
+    |> maybe_put(:metadata, fetch(target_intent, :metadata))
+    |> maybe_put(:binding, fetch(target_intent, :binding))
+    |> maybe_put(:destination, fetch(target_intent, :destination))
+    |> maybe_put(:modal_stack, navigation_modal_stack_semantics()[action])
+  end
 
   @spec new(keyword() | map() | t()) :: t()
   def new(%__MODULE__{} = signal), do: normalize(signal)
@@ -234,4 +285,8 @@ defmodule UnifiedUi.Signal do
   defp fetch(source, key, default \\ nil) do
     Map.get(source, key, Map.get(source, Atom.to_string(key), default))
   end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, _key, value) when value in [%{}, []], do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 end

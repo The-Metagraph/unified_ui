@@ -41,6 +41,7 @@ and which upstream package specs are treated as input constraints rather than
 | `ecosystem.signal_transport.desktop_translation` | `4.2.1` | `4.2.2`, `4.5.1`, `6.2.2` | Direct inherited desktop_ui transport obligation. |
 | `ecosystem.signal_transport.native_signal_models_allowed` | `4.1.2` | `4.2.2`, `4.5.2` | Inherited local-runtime flexibility guardrail. |
 | `ecosystem.signal_transport.local_state_not_contract` | `1.2.1` | `4.2.2`, `5.4.2` | Inherited boundary-contract guardrail for local desktop runtime state. |
+| `ecosystem.signal_transport.modal_stack_transition_meaning` | `4.1.1` | `4.5.1`, `12.1.2`, `12.6.3` | Inherited canonical modal stack transition meaning consumed by desktop_ui. |
 ### Referenced Root Requirements Outside `desktop_ui` Ownership
 These referenced root requirements are intentionally not mapped to `desktop_ui`
 tasks because they govern other runtime packages:
@@ -68,6 +69,7 @@ tasks because they govern other runtime packages:
 | `desktop_ui.structure.transport_translation_modules` | `1.1.2` | `4.1.1`, `4.2.1` | Direct transport-structure obligation. |
 | `desktop_ui.structure.platform_artifact_modules` | `5.3.1` | `5.3.2`, `6.3.1` | Direct artifact-module boundary obligation. |
 | `desktop_ui.structure.no_dsl_or_iur_authorship` | `1.1.2` | `6.4.2` | Direct desktop_ui boundary obligation. |
+| `desktop_ui.structure.navigation_modules` | `12.1.1` | `12.2.1`, `12.3.1`, `12.3.2` | Direct navigation module boundary obligation. |
 ### `native_widgets.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -85,6 +87,13 @@ tasks because they govern other runtime packages:
 | `desktop_ui.runtime.window_lifecycle_and_input` | `1.2.2` | `1.5.3.1`, `4.1.2`, `4.2.2`, `5.5.2`, `10.3.1`, `10.3.2` | Direct runtime lifecycle and input obligation. |
 | `desktop_ui.runtime.interactive_visible_execution` | `10.3.1` | `10.3.2`, `10.4.1`, `10.5.1` | Direct interactive visible-window execution obligation. |
 | `desktop_ui.runtime.platform_variation_bounded` | `1.3.2` | `5.2.2`, `5.3.2` | Direct bounded-platform-variation obligation. |
+| `desktop_ui.runtime.screen_navigation_support` | `12.1.1` | `12.5.1`, `12.6.1` | Direct screen navigation runtime obligation. |
+| `desktop_ui.runtime.navigation_controller_process` | `12.1.1` | `12.1.2`, `12.6.1` | Direct navigation controller process obligation. |
+| `desktop_ui.runtime.screen_registry` | `12.2.1` | `12.2.2`, `12.6.2` | Direct screen registry obligation. |
+| `desktop_ui.runtime.navigation_actions` | `12.3.1` | `12.1.2`, `12.6.3` | Direct navigation action surface obligation. |
+| `desktop_ui.runtime.navigation_event_routing` | `12.3.2` | `12.3.3`, `12.6.3` | Direct navigation event routing obligation. |
+| `desktop_ui.runtime.modal_stack_independence` | `12.1.2` | `12.4.3`, `12.6.1`, `12.6.5` | Direct independent modal stack obligation. |
+| `desktop_ui.runtime.stacked_modal_navigation` | `12.1.2` | `12.5.1`, `12.6.1`, `12.6.5` | Direct stacked modal navigation obligation. |
 ### `sdl3_runtime_rendering.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -171,6 +180,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_iur.interactions.renderer_independent_payload_mapping` | `4.1.1` | `4.3.1`, `4.5.1` | Upstream canonical interaction hygiene constraint. |
 | `unified_iur.interactions.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream canonical interaction scope consumed by desktop_ui. |
 | `unified_iur.interactions.data_binding_representation` | `2.1.2` | `2.2.1`, `4.2.1`, `4.5.2` | Upstream canonical data-binding input consumed by desktop_ui. |
+| `unified_iur.interactions.modal_stack_transition_semantics` | `4.1.1` | `4.5.1`, `12.1.2`, `12.6.3` | Upstream canonical modal stack descriptor semantics consumed by desktop_ui. |
 ### `unified-ui/package.spec.md`
 | Requirement ID | Primary plan coverage | Supporting coverage | Ownership note |
 | --- | --- | --- | --- |
@@ -187,6 +197,7 @@ deliberate task coverage to preserve compatibility.
 | `unified_ui.signals.standard_interaction_families` | `4.1.1` | `2.1.2`, `4.4.1`, `4.5.1` | Upstream authored-signal scope consumed by desktop_ui. |
 | `unified_ui.signals.validation_and_introspection` | `6.2.1` | `4.3.1`, `6.2.2`, `6.3.2` | Upstream inspection expectations reflected in desktop_ui tooling. |
 | `unified_ui.signals.no_runtime_local_event_leakage` | `4.3.1` | `1.2.1`, `6.4.2`, `6.5.2` | Upstream authored-signal hygiene guardrail. |
+| `unified_ui.signals.navigation_modal_stack_semantics` | `4.1.1` | `4.5.1`, `12.1.2`, `12.6.3` | Upstream authored modal stack signal semantics consumed by desktop_ui. |
 ## Scenario Alignment Pattern
 The per-spec scenario clauses are covered through the integration-test sections
 at the end of every phase:

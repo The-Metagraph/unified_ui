@@ -33,9 +33,21 @@ defmodule UnifiedUi.Signals do
     Signal.local_navigation_fields()
   end
 
+  @spec navigation_modal_stack_semantics() :: %{
+          Signal.navigation_transition_action() => Signal.modal_stack_semantics()
+        }
+  def navigation_modal_stack_semantics do
+    Signal.navigation_modal_stack_semantics()
+  end
+
   @spec navigation_target_kind(Signal.t() | map() | keyword()) :: Signal.navigation_target_kind()
   def navigation_target_kind(signal) do
     Signal.navigation_target_kind(signal)
+  end
+
+  @spec navigation_descriptor(Signal.t() | map() | keyword()) :: Signal.navigation_descriptor()
+  def navigation_descriptor(signal) do
+    Signal.navigation_descriptor(signal)
   end
 
   @spec bindings(module()) :: [Binding.t()]
@@ -52,6 +64,15 @@ defmodule UnifiedUi.Signals do
     |> Enum.filter(&match?(%Signal{}, &1))
   end
 
+  @spec navigation_descriptors(module()) :: [Signal.navigation_descriptor()]
+  def navigation_descriptors(module) when is_atom(module) do
+    module
+    |> interactions()
+    |> Enum.filter(&(&1.family == :navigation))
+    |> Enum.map(&Signal.navigation_descriptor/1)
+    |> Enum.sort_by(&Map.get(&1, :id))
+  end
+
   @spec module_summary(module()) :: map()
   def module_summary(module) when is_atom(module) do
     %{
@@ -60,7 +81,8 @@ defmodule UnifiedUi.Signals do
       mode: Extension.get_opt(module, [:signals], :mode, :canonical),
       families: families(),
       bindings: Enum.map(bindings(module), &Binding.summary/1),
-      interactions: Enum.map(interactions(module), &Signal.summary/1)
+      interactions: Enum.map(interactions(module), &Signal.summary/1),
+      navigation_descriptors: navigation_descriptors(module)
     }
   end
 end
