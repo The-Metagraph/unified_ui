@@ -34,6 +34,8 @@ defmodule UnifiedUi.Compiler.Pipeline do
           compiled_themes: [Theme.t()],
           compiled_theme_by_id: %{optional(atom()) => Theme.t()},
           theme_style_by_id: %{optional(atom()) => Style.t()},
+          css_style_by_id: %{optional(atom()) => map()},
+          css_diagnostics: [map()],
           binding_by_id: %{optional(atom()) => UnifiedIUR.Binding.t()},
           interaction_by_id: %{optional(atom()) => UnifiedIUR.Interaction.t()},
           authored_ids: [atom()]
@@ -42,6 +44,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
   @spec run(module(), keyword() | map()) :: Result.t()
   def run(module, _opts \\ []) when is_atom(module) do
     context = build_context(module)
+    css_translation = UnifiedUi.Css.translate_module(module)
     theme_bundle = compile_themes(context.authored_themes)
     compiled_themes = theme_bundle.themes
     compiled_theme_by_id = theme_bundle.by_id
@@ -55,6 +58,8 @@ defmodule UnifiedUi.Compiler.Pipeline do
       |> Map.put(:compiled_themes, compiled_themes)
       |> Map.put(:compiled_theme_by_id, compiled_theme_by_id)
       |> Map.put(:theme_style_by_id, theme_bundle.style_by_id)
+      |> Map.put(:css_style_by_id, css_translation.styles_by_node)
+      |> Map.put(:css_diagnostics, css_translation.diagnostics)
       |> Map.put(:binding_by_id, binding_by_id)
       |> Map.put(:interaction_by_id, interaction_by_id)
 
@@ -82,7 +87,8 @@ defmodule UnifiedUi.Compiler.Pipeline do
         authored_ids: context.authored_ids,
         binding_by_id: binding_by_id,
         interaction_by_id: interaction_by_id,
-        theme_by_id: compiled_theme_by_id
+        theme_by_id: compiled_theme_by_id,
+        css_diagnostics: css_translation.diagnostics
       }
     }
   end
@@ -113,6 +119,8 @@ defmodule UnifiedUi.Compiler.Pipeline do
       compiled_themes: [],
       compiled_theme_by_id: %{},
       theme_style_by_id: %{},
+      css_style_by_id: %{},
+      css_diagnostics: [],
       binding_by_id: %{},
       interaction_by_id: %{},
       authored_ids: top_level_nodes |> flatten_nodes() |> Enum.map(& &1.id) |> Enum.sort()
@@ -1516,13 +1524,27 @@ defmodule UnifiedUi.Compiler.Pipeline do
       |> Enum.reduce(%Style{}, &Style.merge(&2, &1))
 
     local_style = lower_style(node.style, compiled_theme)
+    css_style = node |> css_style_for_node(context) |> lower_style(compiled_theme)
 
     resolved =
       base_style
       |> Style.merge(style_ref_style)
+      |> Style.merge(css_style)
       |> Style.merge(local_style)
 
     if resolved == %Style{}, do: nil, else: resolved
+  end
+
+  defp css_style_for_node(node, context) do
+    case Map.get(context.css_style_by_id, node.id) do
+      nil ->
+        nil
+
+      %{default: default, states: states} ->
+        Enum.reduce(states, default, fn {state, state_style}, style ->
+          UnifiedUi.Style.put_state_variant(style, state, state_style)
+        end)
+    end
   end
 
   defp common_opts(node, attachments, extra \\ []) do

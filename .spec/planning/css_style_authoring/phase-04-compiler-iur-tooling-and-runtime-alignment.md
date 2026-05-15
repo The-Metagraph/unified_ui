@@ -28,27 +28,27 @@ Back to index: [README](./README.md)
   Integrate CSS-derived styles into deterministic compiler output, canonical
   IUR representation, author tooling, examples, and runtime realization checks.
 
-  [ ] 4.1 Section - Compiler Pass Integration and Deterministic Output
+  [x] 4.1 Section - Compiler Pass Integration and Deterministic Output
     Place CSS parsing, matching, cascade, and declaration lowering into the
     compiler pipeline without destabilizing existing style and theme behavior.
 
-    [ ] 4.1.1 Task - Integrate CSS lowering into the compiler pipeline
+    [x] 4.1.1 Task - Integrate CSS lowering into the compiler pipeline
       Choose the compiler pass boundaries and data flow for CSS-derived style
       output.
 
-      [ ] 4.1.1.1 Subtask - Insert CSS parser, selector matching, cascade, and declaration translation before final canonical IUR style attachment emission.
-      [ ] 4.1.1.2 Subtask - Ensure CSS-derived style data participates in the documented style precedence model.
-      [ ] 4.1.1.3 Subtask - Preserve deterministic output for equivalent authored modules, including generated node identities and source-order ties.
-      [ ] 4.1.1.4 Subtask - Keep renderer-specific CSS output out of the `unified_ui` compiler.
+      [x] 4.1.1.1 Subtask - Insert CSS parser, selector matching, cascade, and declaration translation before final canonical IUR style attachment emission.
+      [x] 4.1.1.2 Subtask - Ensure CSS-derived style data participates in the documented style precedence model.
+      [x] 4.1.1.3 Subtask - Preserve deterministic output for equivalent authored modules, including generated node identities and source-order ties.
+      [x] 4.1.1.4 Subtask - Keep renderer-specific CSS output out of the `unified_ui` compiler.
 
-    [ ] 4.1.2 Task - Preserve existing style and theme compatibility
+    [x] 4.1.2 Task - Preserve existing style and theme compatibility
       Verify CSS authoring is additive and does not break existing explicit
       style, theme, variant, and class behavior.
 
-      [ ] 4.1.2.1 Subtask - Maintain current theme defaults, component variants, style references, local style values, and direct widget prop behavior.
-      [ ] 4.1.2.2 Subtask - Ensure current authored `class` behavior remains available for runtime hooks and selector metadata.
-      [ ] 4.1.2.3 Subtask - Add migration guidance that positions CSS blocks as optional authoring input rather than a replacement for canonical style APIs.
-      [ ] 4.1.2.4 Subtask - Verify existing compiler fixtures and examples remain stable unless they intentionally add CSS blocks.
+      [x] 4.1.2.1 Subtask - Maintain current theme defaults, component variants, style references, local style values, and direct widget prop behavior.
+      [x] 4.1.2.2 Subtask - Ensure current authored `class` behavior remains available for runtime hooks and selector metadata.
+      [x] 4.1.2.3 Subtask - Add migration guidance that positions CSS blocks as optional authoring input rather than a replacement for canonical style APIs.
+      [x] 4.1.2.4 Subtask - Verify existing compiler fixtures and examples remain stable unless they intentionally add CSS blocks.
 
   [ ] 4.2 Section - UnifiedIUR Representation and Provenance
     Represent CSS-derived results as canonical style and theme data while
