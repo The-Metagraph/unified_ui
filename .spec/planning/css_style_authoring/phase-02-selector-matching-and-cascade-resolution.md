@@ -69,27 +69,27 @@ Back to index: [README](./README.md)
       [x] 2.2.2.3 Subtask - Emit diagnostics for supported selectors that match no authored nodes when configured to do so by tooling or validation mode.
       [x] 2.2.2.4 Subtask - Keep selector match ordering deterministic by node traversal order and CSS source order.
 
-  [ ] 2.3 Section - Cascade, Specificity, and Style Source Precedence
+  [x] 2.3 Section - Cascade, Specificity, and Style Source Precedence
     Resolve competing CSS-derived declarations using CSS ordering rules and
     then merge them into the existing canonical style precedence model.
 
-    [ ] 2.3.1 Task - Implement specificity and CSS source order
+    [x] 2.3.1 Task - Implement specificity and CSS source order
       Apply CSS-style cascade behavior for the supported selector and
       declaration subset.
 
-      [ ] 2.3.1.1 Subtask - Compute selector specificity for supported id, class, pseudo-class, and kind selectors.
-      [ ] 2.3.1.2 Subtask - Resolve conflicts by specificity and source order within the CSS-derived style source.
-      [ ] 2.3.1.3 Subtask - Decide how `!important` is represented, ignored, or diagnosed in the canonical style model.
-      [ ] 2.3.1.4 Subtask - Preserve deterministic conflict provenance for inspection output.
+      [x] 2.3.1.1 Subtask - Compute selector specificity for supported id, class, pseudo-class, and kind selectors.
+      [x] 2.3.1.2 Subtask - Resolve conflicts by specificity and source order within the CSS-derived style source.
+      [x] 2.3.1.3 Subtask - Decide how `!important` is represented, ignored, or diagnosed in the canonical style model.
+      [x] 2.3.1.4 Subtask - Preserve deterministic conflict provenance for inspection output.
 
-    [ ] 2.3.2 Task - Merge CSS-derived results with canonical style sources
+    [x] 2.3.2 Task - Merge CSS-derived results with canonical style sources
       Integrate CSS-derived styles with themes, component styles, `style_refs`,
       local `style` values, and direct widget props.
 
-      [ ] 2.3.2.1 Subtask - Implement precedence where theme defaults and referenced component styles are weaker than CSS-derived rules.
-      [ ] 2.3.2.2 Subtask - Preserve explicit local style declarations as stronger than CSS-derived rules.
-      [ ] 2.3.2.3 Subtask - Define how CSS-derived state-scoped rules merge with existing variant and state style declarations.
-      [ ] 2.3.2.4 Subtask - Emit diagnostics or provenance for overwritten CSS-derived declarations when inspection needs to explain final style values.
+      [x] 2.3.2.1 Subtask - Implement precedence where theme defaults and referenced component styles are weaker than CSS-derived rules.
+      [x] 2.3.2.2 Subtask - Preserve explicit local style declarations as stronger than CSS-derived rules.
+      [x] 2.3.2.3 Subtask - Define how CSS-derived state-scoped rules merge with existing variant and state style declarations.
+      [x] 2.3.2.4 Subtask - Emit diagnostics or provenance for overwritten CSS-derived declarations when inspection needs to explain final style values.
 
   [ ] 2.4 Section - Phase 2 Integration Tests
     Validate selector matching, ignored-selector behavior, specificity,

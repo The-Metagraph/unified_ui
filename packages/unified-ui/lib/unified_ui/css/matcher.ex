@@ -18,6 +18,7 @@ defmodule UnifiedUi.Css.Matcher do
 
   @type match_result :: %{
           block_id: atom() | nil,
+          block_order: non_neg_integer() | nil,
           rule_order: non_neg_integer(),
           selector: Selector.selector(),
           selector_text: String.t(),
@@ -97,6 +98,7 @@ defmodule UnifiedUi.Css.Matcher do
           Enum.map(node_matches, fn indexed_node ->
             %{
               block_id: parsed.block_id,
+              block_order: parsed.source_order,
               rule_order: rule.source_order,
               selector: selector,
               selector_text: selector.raw,

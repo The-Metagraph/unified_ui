@@ -7,7 +7,7 @@ defmodule UnifiedUi.Css do
   """
 
   alias Spark.Dsl.Extension
-  alias UnifiedUi.Css.{Matcher, Parser}
+  alias UnifiedUi.Css.{Cascade, Matcher, Parser}
   alias UnifiedUi.Css.Stylesheet
 
   @spec stylesheets(module()) :: [Stylesheet.t()]
@@ -80,6 +80,13 @@ defmodule UnifiedUi.Css do
     module
     |> UnifiedUi.Info.composition_nodes()
     |> Matcher.match(parse_module(module), opts)
+  end
+
+  @spec cascade_module(module(), keyword() | map()) :: map()
+  def cascade_module(module, opts \\ []) when is_atom(module) do
+    module
+    |> match_module(opts)
+    |> Cascade.resolve()
   end
 
   defp parsed_summary(parsed_stylesheets) do
