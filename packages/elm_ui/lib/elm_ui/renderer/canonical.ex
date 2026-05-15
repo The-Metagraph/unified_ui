@@ -1576,14 +1576,23 @@ defmodule ElmUi.Renderer.Canonical do
   defp translate_style_attachment(style) when style == %{}, do: %{}
 
   defp translate_style_attachment(style) do
-    style = normalize_map(style)
+    style = UnifiedIUR.Style.new(style)
     text = normalize_map(map_get(style, :text, %{}))
     visibility = normalize_map(map_get(style, :visibility, %{}))
     emphasis = normalize_map(map_get(style, :emphasis, %{}))
+    border = normalize_map(map_get(style, :border, %{}))
     state_variants = normalize_map(map_get(style, :state_variants, %{}))
 
     translated =
       %{}
+      |> maybe_put(:foreground, portable_color(map_get(style, :foreground)))
+      |> maybe_put(:background, portable_color(map_get(style, :background)))
+      |> maybe_put(:border_color, portable_color(map_get(style, :border_color)))
+      |> maybe_put(:spacing, compact_map(normalize_map(map_get(style, :spacing, %{}))))
+      |> maybe_put(:sizing, compact_map(normalize_map(map_get(style, :sizing, %{}))))
+      |> maybe_put(:alignment, compact_map(normalize_map(map_get(style, :alignment, %{}))))
+      |> maybe_put(:border, if(border == %{}, do: nil, else: border))
+      |> maybe_put(:text, text_attrs(text))
       |> maybe_put(:tone, map_get(emphasis, :tone))
       |> maybe_put(:visibility, if(map_get(visibility, :hidden?) == true, do: :hidden, else: nil))
       |> maybe_put(:emphasis, text_emphasis(text))
@@ -1637,6 +1646,35 @@ defmodule ElmUi.Renderer.Canonical do
       true -> nil
     end
   end
+
+  defp text_attrs(text) do
+    text
+    |> Enum.filter(fn
+      {_key, true} -> true
+      _other -> false
+    end)
+    |> Map.new()
+    |> case do
+      attrs when attrs == %{} -> nil
+      attrs -> attrs
+    end
+  end
+
+  defp portable_color(nil), do: nil
+  defp portable_color(%{mode: :named, name: name}), do: name
+  defp portable_color(%{"mode" => :named, "name" => name}), do: name
+  defp portable_color(%{mode: :indexed, index: index}), do: {:indexed, index}
+  defp portable_color(%{"mode" => :indexed, "index" => index}), do: {:indexed, index}
+
+  defp portable_color(%{mode: :rgb, red: red, green: green, blue: blue}) do
+    "#" <> Base.encode16(<<red, green, blue>>, case: :lower)
+  end
+
+  defp portable_color(%{"mode" => :rgb, "red" => red, "green" => green, "blue" => blue}) do
+    "#" <> Base.encode16(<<red, green, blue>>, case: :lower)
+  end
+
+  defp portable_color(value), do: value
 
   defp content_text(%Element{} = element, default \\ nil) do
     first_present([group_attr(element, :content, :text), attr(element, :content)], default)

@@ -6,6 +6,7 @@ defmodule TerminalUi.Renderer.Mapper do
   alias TerminalUi.Renderer.Error
   alias UnifiedIUR.{Binding, Element, Interaction}
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Style, as: CanonicalStyle
 
   @component_kinds UnifiedIUR.Widgets.Components.kinds()
   @component_kind_values @component_kinds ++ Enum.map(@component_kinds, &Atom.to_string/1)
@@ -1232,6 +1233,8 @@ defmodule TerminalUi.Renderer.Mapper do
   end
 
   defp base_opts(element) do
+    canonical_styles = canonical_styles(element)
+
     []
     |> maybe_put(:label, label_text(element, nil))
     |> maybe_put(:description, description(element))
@@ -1248,19 +1251,45 @@ defmodule TerminalUi.Renderer.Mapper do
       :semantic_role,
       first_present([group_attr(element, :style, :semantic_role), attr(element, :semantic_role)])
     )
-    |> maybe_put(:fg, first_present([group_attr(element, :style, :fg), attr(element, :fg)]))
-    |> maybe_put(:bg, first_present([group_attr(element, :style, :bg), attr(element, :bg)]))
+    |> maybe_put(
+      :fg,
+      first_present([
+        group_attr(element, :style, :fg),
+        attr(element, :fg),
+        Map.get(canonical_styles, :fg)
+      ])
+    )
+    |> maybe_put(
+      :bg,
+      first_present([
+        group_attr(element, :style, :bg),
+        attr(element, :bg),
+        Map.get(canonical_styles, :bg)
+      ])
+    )
     |> maybe_put(
       :attrs,
-      first_present([group_attr(element, :style, :attrs), attr(element, :attrs)])
+      first_present([
+        group_attr(element, :style, :attrs),
+        attr(element, :attrs),
+        Map.get(canonical_styles, :attrs)
+      ])
     )
     |> maybe_put(
       :border,
-      first_present([group_attr(element, :style, :border), attr(element, :border)])
+      first_present([
+        Map.get(canonical_styles, :border),
+        group_attr(element, :style, :border),
+        attr(element, :border)
+      ])
     )
     |> maybe_put(
       :padding,
-      first_present([group_attr(element, :style, :padding), attr(element, :padding)])
+      first_present([
+        Map.get(canonical_styles, :padding),
+        group_attr(element, :style, :padding),
+        attr(element, :padding)
+      ])
     )
     |> maybe_put(
       :theme_tokens,
@@ -1271,10 +1300,111 @@ defmodule TerminalUi.Renderer.Mapper do
       first_present([group_attr(element, :style, :style_refs), attr(element, :style_refs)])
     )
     |> maybe_put(
+      :state_variants,
+      first_present([
+        Map.get(canonical_styles, :state_variants),
+        group_attr(element, :style, :state_variants),
+        attr(element, :state_variants)
+      ])
+    )
+    |> maybe_put(
       :degradation,
       first_present([group_attr(element, :style, :degradation), attr(element, :degradation)])
     )
   end
+
+  defp canonical_styles(%Element{} = element) do
+    element
+    |> attr(:styles)
+    |> normalize_style_map()
+    |> Map.merge(translate_style_attachment(attr(element, :style)))
+    |> TerminalUi.Style.normalize()
+  end
+
+  defp translate_style_attachment(nil), do: %{}
+
+  defp translate_style_attachment(style) do
+    style = CanonicalStyle.new(style)
+    text = normalize_nested_map(style.text)
+    border = normalize_nested_map(style.border)
+
+    %{}
+    |> maybe_put(:fg, portable_color(style.foreground))
+    |> maybe_put(:bg, portable_color(style.background))
+    |> maybe_put(:attrs, text_attrs(text))
+    |> maybe_put(:border, border_style(border, style.border_color))
+    |> maybe_put(:padding, padding_style(style.spacing))
+    |> maybe_put(:semantic_role, map_get(style.emphasis, :role))
+    |> maybe_put(:intensity, map_get(style.emphasis, :intensity))
+    |> maybe_put(:state_variants, translate_state_variants(style.state_variants))
+  end
+
+  defp translate_state_variants(variants) when variants == %{}, do: nil
+
+  defp translate_state_variants(variants) do
+    variants
+    |> Map.new(fn {state, style} -> {normalize_key(state), translate_style_attachment(style)} end)
+    |> Enum.reject(fn {_state, styles} -> styles == %{} end)
+    |> Map.new()
+    |> case do
+      state_styles when state_styles == %{} -> nil
+      state_styles -> state_styles
+    end
+  end
+
+  defp border_style(border, color) do
+    border
+    |> maybe_put(:color, portable_color(color))
+    |> case do
+      values when values == %{} -> nil
+      values -> values
+    end
+  end
+
+  defp padding_style(spacing) do
+    spacing = normalize_nested_map(spacing)
+
+    spacing
+    |> Map.take([:padding, :padding_top, :padding_right, :padding_bottom, :padding_left])
+    |> case do
+      values when values == %{} -> nil
+      values -> values
+    end
+  end
+
+  defp text_attrs(text) do
+    text
+    |> Enum.reduce([], fn
+      {:bold?, true}, attrs -> [:bold | attrs]
+      {:dim?, true}, attrs -> [:dim | attrs]
+      {:italic?, true}, attrs -> [:italic | attrs]
+      {:underline?, true}, attrs -> [:underline | attrs]
+      {:blink?, true}, attrs -> [:blink | attrs]
+      {:reverse?, true}, attrs -> [:reverse | attrs]
+      _other, attrs -> attrs
+    end)
+    |> Enum.reverse()
+    |> case do
+      [] -> nil
+      attrs -> attrs
+    end
+  end
+
+  defp portable_color(nil), do: nil
+  defp portable_color(%{mode: :named, name: name}), do: name
+  defp portable_color(%{"mode" => :named, "name" => name}), do: name
+  defp portable_color(%{mode: :indexed, index: index}), do: {:indexed, index}
+  defp portable_color(%{"mode" => :indexed, "index" => index}), do: {:indexed, index}
+
+  defp portable_color(%{mode: :rgb, red: red, green: green, blue: blue}) do
+    "#" <> Base.encode16(<<red, green, blue>>, case: :lower)
+  end
+
+  defp portable_color(%{"mode" => :rgb, "red" => red, "green" => green, "blue" => blue}) do
+    "#" <> Base.encode16(<<red, green, blue>>, case: :lower)
+  end
+
+  defp portable_color(value), do: value
 
   defp binding_name(element) do
     case first_binding(element) do
@@ -1501,6 +1631,12 @@ defmodule TerminalUi.Renderer.Mapper do
   defp first_present(values, default \\ nil) do
     Enum.find(values, default, &(not is_nil(&1)))
   end
+
+  defp normalize_style_map(nil), do: %{}
+  defp normalize_style_map(styles) when is_map(styles), do: normalize_nested_map(styles)
+
+  defp normalize_style_map(styles) when is_list(styles),
+    do: styles |> Map.new() |> normalize_nested_map()
 
   defp maybe_put(opts, _key, nil), do: opts
   defp maybe_put(opts, key, value) when is_list(opts), do: Keyword.put(opts, key, value)

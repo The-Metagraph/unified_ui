@@ -3,6 +3,7 @@ defmodule DesktopUi.RendererTest do
 
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Style
 
   test "renderer maps foundational canonical widgets and layouts into native desktop widgets" do
     element =
@@ -46,6 +47,42 @@ defmodule DesktopUi.RendererTest do
     assert Enum.at(widget.children, 2).bindings.current == :section
     assert Enum.at(widget.children, 3).events.click.intent == :save_workspace
     assert DesktopUi.Renderer.validation_state() == :advanced_mapper_ready
+  end
+
+  test "renderer realizes CSS-derived canonical style without parsing authored CSS" do
+    element =
+      Element.new(:widget, :text,
+        id: "css-copy",
+        attributes: %{
+          content: "CSS-derived",
+          style:
+            Style.new(%{
+              foreground: "#2563eb",
+              background: "#eff6ff",
+              border_color: "#1d4ed8",
+              text: %{underline?: true},
+              spacing: %{padding_top: "4px"},
+              state_variants: %{focused: %{foreground: "#ffffff"}},
+              extra: %{
+                css: %{
+                  properties: ["color"],
+                  declarations: [%{selector: "#css-copy", property: "color"}]
+                }
+              }
+            })
+        }
+      )
+
+    assert {:ok, widget} = DesktopUi.Renderer.render(element)
+
+    assert widget.styles.fg == "#2563eb"
+    assert widget.styles.bg == "#eff6ff"
+    assert widget.styles.border == %{color: "#1d4ed8"}
+    assert widget.styles.attrs == [:underline]
+    assert widget.styles.padding == %{padding_top: "4px"}
+    assert widget.styles.state_variants.focused.fg == "#ffffff"
+    refute Map.has_key?(widget.styles, :css)
+    refute inspect(widget.styles) =~ "declarations"
   end
 
   test "renderer maps advanced canonical widgets, display systems, and layers into native desktop widgets" do
