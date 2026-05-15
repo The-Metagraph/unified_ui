@@ -49,28 +49,28 @@ Back to index: [README](./README.md)
       [x] 3.1.2.3 Subtask - Add diagnostics that point authors to canonical layout DSL constructs when CSS declarations are not the right authoring surface.
       [x] 3.1.2.4 Subtask - Keep translated layout-adjacent declarations deterministic across renderer targets.
 
-  [ ] 3.2 Section - Value Normalization and Shorthand Expansion
+  [x] 3.2 Section - Value Normalization and Shorthand Expansion
     Normalize CSS values into canonical value types and expand supported
     shorthands without carrying parser-specific tokens into later compiler
     passes.
 
-    [ ] 3.2.1 Task - Normalize colors, units, keywords, and functions
+    [x] 3.2.1 Task - Normalize colors, units, keywords, and functions
       Translate supported value forms into canonical values and ignore values
       that cannot be represented portably.
 
-      [ ] 3.2.1.1 Subtask - Normalize CSS named colors, hex colors, `rgb()`, `rgba()`, and supported semantic token references into canonical color values.
-      [ ] 3.2.1.2 Subtask - Normalize supported lengths, percentages, zero values, and unitless values into canonical unit structures.
-      [ ] 3.2.1.3 Subtask - Normalize supported keywords such as `none`, `solid`, `bold`, `italic`, and canonical state keywords.
-      [ ] 3.2.1.4 Subtask - Ignore unsupported functions, calculations, variables, and external-resource values with diagnostics.
+      [x] 3.2.1.1 Subtask - Normalize CSS named colors, hex colors, `rgb()`, `rgba()`, and supported semantic token references into canonical color values.
+      [x] 3.2.1.2 Subtask - Normalize supported lengths, percentages, zero values, and unitless values into canonical unit structures.
+      [x] 3.2.1.3 Subtask - Normalize supported keywords such as `none`, `solid`, `bold`, `italic`, and canonical state keywords.
+      [x] 3.2.1.4 Subtask - Ignore unsupported functions, calculations, variables, and external-resource values with diagnostics.
 
-    [ ] 3.2.2 Task - Expand supported shorthands
+    [x] 3.2.2 Task - Expand supported shorthands
       Support high-value shorthand declarations only when expansion is
       unambiguous and every expanded field has canonical meaning.
 
-      [ ] 3.2.2.1 Subtask - Expand supported box shorthands such as padding, margin, border width, border color, and border radius.
-      [ ] 3.2.2.2 Subtask - Expand supported text decoration and font shorthands only where canonical style fields can represent the result.
-      [ ] 3.2.2.3 Subtask - Emit diagnostics for partially supported shorthands rather than applying incomplete or misleading style output.
-      [ ] 3.2.2.4 Subtask - Ensure longhand declarations override shorthand-derived values according to cascade result ordering.
+      [x] 3.2.2.1 Subtask - Expand supported box shorthands such as padding, margin, border width, border color, and border radius.
+      [x] 3.2.2.2 Subtask - Expand supported text decoration and font shorthands only where canonical style fields can represent the result.
+      [x] 3.2.2.3 Subtask - Emit diagnostics for partially supported shorthands rather than applying incomplete or misleading style output.
+      [x] 3.2.2.4 Subtask - Ensure longhand declarations override shorthand-derived values according to cascade result ordering.
 
   [ ] 3.3 Section - State, Variant, Safety, and Unsupported Feature Handling
     Preserve portable CSS-derived style meaning while preventing unsupported or
