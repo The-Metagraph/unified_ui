@@ -24,7 +24,7 @@ Back to index: [README](./README.md)
 - Examples should demonstrate CSS authoring and canonical output without
   implying full browser CSS coverage.
 
-[ ] 4 Phase 4 - Compiler, IUR, Tooling, and Runtime Alignment
+[x] 4 Phase 4 - Compiler, IUR, Tooling, and Runtime Alignment
   Integrate CSS-derived styles into deterministic compiler output, canonical
   IUR representation, author tooling, examples, and runtime realization checks.
 
@@ -94,24 +94,24 @@ Back to index: [README](./README.md)
       [x] 4.3.2.3 Subtask - Document terminal and desktop degradation expectations for style concepts that cannot be visually identical to browser CSS.
       [x] 4.3.2.4 Subtask - Ensure runtime-specific stylesheet loading remains a runtime concern and is not required by canonical CSS block lowering.
 
-  [ ] 4.4 Section - Phase 4 Integration Tests
+  [x] 4.4 Section - Phase 4 Integration Tests
     Validate end-to-end CSS authoring from DSL input through canonical IUR and
     runtime-facing realization checks.
 
-    [ ] 4.4.1 Task - End-to-end compiler and IUR scenarios
+    [x] 4.4.1 Task - End-to-end compiler and IUR scenarios
       Verify CSS stylesheet blocks produce deterministic canonical output and
       diagnostics through the full compiler path.
 
-      [ ] 4.4.1.1 Subtask - Verify a CSS-authored module compiles into canonical IUR style attachments with no raw CSS runtime field.
-      [ ] 4.4.1.2 Subtask - Verify CSS-derived style values merge correctly with theme defaults, style references, local styles, variants, and direct props.
-      [ ] 4.4.1.3 Subtask - Verify inspection explains source block, selector, declaration, cascade reason, and ignored constructs for representative CSS-derived values.
-      [ ] 4.4.1.4 Subtask - Verify canonical IUR validation accepts CSS-derived canonical style data and rejects required raw CSS interchange data.
+      [x] 4.4.1.1 Subtask - Verify a CSS-authored module compiles into canonical IUR style attachments with no raw CSS runtime field.
+      [x] 4.4.1.2 Subtask - Verify CSS-derived style values merge correctly with theme defaults, style references, local styles, variants, and direct props.
+      [x] 4.4.1.3 Subtask - Verify inspection explains source block, selector, declaration, cascade reason, and ignored constructs for representative CSS-derived values.
+      [x] 4.4.1.4 Subtask - Verify canonical IUR validation accepts CSS-derived canonical style data and rejects required raw CSS interchange data.
 
-    [ ] 4.4.2 Task - Tooling and runtime boundary scenarios
+    [x] 4.4.2 Task - Tooling and runtime boundary scenarios
       Verify author tooling and runtime renderers observe the canonical
       boundary established by the ADR and specs.
 
-      [ ] 4.4.2.1 Subtask - Verify inspect/export/validate commands report CSS authoring summaries and diagnostics deterministically.
-      [ ] 4.4.2.2 Subtask - Verify maintained examples demonstrate supported selectors, supported declarations, ignored unsupported CSS, and the semantic-equivalence caveat.
-      [ ] 4.4.2.3 Subtask - Verify `live_ui` renders representative CSS-derived canonical style output through native style realization without needing the authored CSS block.
-      [ ] 4.4.2.4 Subtask - Verify cross-runtime parity checks compare canonical style meaning and documented degradation rather than raw CSS output.
+      [x] 4.4.2.1 Subtask - Verify inspect/export/validate commands report CSS authoring summaries and diagnostics deterministically.
+      [x] 4.4.2.2 Subtask - Verify maintained examples demonstrate supported selectors, supported declarations, ignored unsupported CSS, and the semantic-equivalence caveat.
+      [x] 4.4.2.3 Subtask - Verify `live_ui` renders representative CSS-derived canonical style output through native style realization without needing the authored CSS block.
+      [x] 4.4.2.4 Subtask - Verify cross-runtime parity checks compare canonical style meaning and documented degradation rather than raw CSS output.
