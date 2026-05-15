@@ -22,7 +22,7 @@ Back to index: [README](./README.md)
 - Cascade behavior is deterministic and reviewable across equivalent authored
   modules.
 
-[ ] 2 Phase 2 - Selector Matching and Cascade Resolution
+[x] 2 Phase 2 - Selector Matching and Cascade Resolution
   Implement the supported selector subset, authored-node matching, specificity,
   source order, and canonical style precedence behavior for CSS-derived rules.
 
@@ -91,25 +91,25 @@ Back to index: [README](./README.md)
       [x] 2.3.2.3 Subtask - Define how CSS-derived state-scoped rules merge with existing variant and state style declarations.
       [x] 2.3.2.4 Subtask - Emit diagnostics or provenance for overwritten CSS-derived declarations when inspection needs to explain final style values.
 
-  [ ] 2.4 Section - Phase 2 Integration Tests
+  [x] 2.4 Section - Phase 2 Integration Tests
     Validate selector matching, ignored-selector behavior, specificity,
     source-order resolution, and source precedence before declaration
     translation is expanded.
 
-    [ ] 2.4.1 Task - Selector matching scenarios
+    [x] 2.4.1 Task - Selector matching scenarios
       Verify supported selectors target the expected authored nodes and
       unsupported selectors are ignored deterministically.
 
-      [ ] 2.4.1.1 Subtask - Verify `#id`, `.class`, kind, selector-list, and supported structural selectors match the expected authored nodes.
-      [ ] 2.4.1.2 Subtask - Verify supported state pseudo-classes produce state-scoped match output.
-      [ ] 2.4.1.3 Subtask - Verify unsupported pseudo-elements, browser-only selectors, and unsupported combinators are ignored with diagnostics.
-      [ ] 2.4.1.4 Subtask - Verify no-match selector diagnostics are deterministic when enabled.
+      [x] 2.4.1.1 Subtask - Verify `#id`, `.class`, kind, selector-list, and supported structural selectors match the expected authored nodes.
+      [x] 2.4.1.2 Subtask - Verify supported state pseudo-classes produce state-scoped match output.
+      [x] 2.4.1.3 Subtask - Verify unsupported pseudo-elements, browser-only selectors, and unsupported combinators are ignored with diagnostics.
+      [x] 2.4.1.4 Subtask - Verify no-match selector diagnostics are deterministic when enabled.
 
-    [ ] 2.4.2 Task - Cascade and precedence scenarios
+    [x] 2.4.2 Task - Cascade and precedence scenarios
       Verify CSS-derived conflicts and canonical style-source conflicts resolve
       predictably.
 
-      [ ] 2.4.2.1 Subtask - Verify specificity outranks source order for supported selectors.
-      [ ] 2.4.2.2 Subtask - Verify later source order wins when specificity ties.
-      [ ] 2.4.2.3 Subtask - Verify CSS-derived rules outrank theme defaults and component style references.
-      [ ] 2.4.2.4 Subtask - Verify explicit local style declarations outrank CSS-derived rules.
+      [x] 2.4.2.1 Subtask - Verify specificity outranks source order for supported selectors.
+      [x] 2.4.2.2 Subtask - Verify later source order wins when specificity ties.
+      [x] 2.4.2.3 Subtask - Verify CSS-derived rules outrank theme defaults and component style references.
+      [x] 2.4.2.4 Subtask - Verify explicit local style declarations outrank CSS-derived rules.
