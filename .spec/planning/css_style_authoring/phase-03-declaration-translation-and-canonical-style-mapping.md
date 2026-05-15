@@ -27,27 +27,27 @@ Back to index: [README](./README.md)
   state-scoped rules into canonical style concepts while preserving diagnostics
   for ignored or unsafe CSS features.
 
-  [ ] 3.1 Section - Property Coverage and Canonical Mapping
+  [x] 3.1 Section - Property Coverage and Canonical Mapping
     Define a reviewed property map from CSS declaration names to canonical style
     fields so support expands deliberately and remains renderer-independent.
 
-    [ ] 3.1.1 Task - Map foundational visual properties
+    [x] 3.1.1 Task - Map foundational visual properties
       Implement mappings for common color, text, spacing, border, radius, and
       opacity properties that correspond to canonical style concepts.
 
-      [ ] 3.1.1.1 Subtask - Map `color`, `background-color`, and supported border colors to canonical named, indexed, RGB, or semantic color values.
-      [ ] 3.1.1.2 Subtask - Map supported font weight, font style, text decoration, and opacity declarations to canonical style attributes.
-      [ ] 3.1.1.3 Subtask - Map supported spacing, gap, padding, margin, border width, and radius declarations where canonical layout and style models can represent them.
-      [ ] 3.1.1.4 Subtask - Ignore unsupported visual properties with declaration-level diagnostics.
+      [x] 3.1.1.1 Subtask - Map `color`, `background-color`, and supported border colors to canonical named, indexed, RGB, or semantic color values.
+      [x] 3.1.1.2 Subtask - Map supported font weight, font style, text decoration, and opacity declarations to canonical style attributes.
+      [x] 3.1.1.3 Subtask - Map supported spacing, gap, padding, margin, border width, and radius declarations where canonical layout and style models can represent them.
+      [x] 3.1.1.4 Subtask - Ignore unsupported visual properties with declaration-level diagnostics.
 
-    [ ] 3.1.2 Task - Map layout and display-adjacent properties conservatively
+    [x] 3.1.2 Task - Map layout and display-adjacent properties conservatively
       Translate only layout-related CSS that has a clear canonical equivalent
       and leave browser layout models outside the initial canonical contract.
 
-      [ ] 3.1.2.1 Subtask - Identify which dimensions, alignment, overflow, and display declarations map to existing canonical layout or display-system fields.
-      [ ] 3.1.2.2 Subtask - Ignore CSS layout systems without canonical representation, such as unrestricted flex, grid, container-query, and position behavior.
-      [ ] 3.1.2.3 Subtask - Add diagnostics that point authors to canonical layout DSL constructs when CSS declarations are not the right authoring surface.
-      [ ] 3.1.2.4 Subtask - Keep translated layout-adjacent declarations deterministic across renderer targets.
+      [x] 3.1.2.1 Subtask - Identify which dimensions, alignment, overflow, and display declarations map to existing canonical layout or display-system fields.
+      [x] 3.1.2.2 Subtask - Ignore CSS layout systems without canonical representation, such as unrestricted flex, grid, container-query, and position behavior.
+      [x] 3.1.2.3 Subtask - Add diagnostics that point authors to canonical layout DSL constructs when CSS declarations are not the right authoring surface.
+      [x] 3.1.2.4 Subtask - Keep translated layout-adjacent declarations deterministic across renderer targets.
 
   [ ] 3.2 Section - Value Normalization and Shorthand Expansion
     Normalize CSS values into canonical value types and expand supported
