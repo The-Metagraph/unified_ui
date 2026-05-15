@@ -19,6 +19,7 @@ surface:
   - .spec/specs/unified-ui/theming.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.css_style_authoring
 ```
 
 ## Requirements
@@ -53,6 +54,16 @@ decisions:
   statement: `unified_iur` shall represent theme-level defaults together with local style inheritance, merging, and override behavior so renderers can reconstruct effective widget styling.
   priority: must
   stability: stable
+
+- id: unified_iur.theming.css_derived_style_representation
+  statement: `unified_iur` shall represent style results that originated from authored CSS stylesheet blocks as ordinary canonical style and theme data, optionally retaining renderer-independent provenance or diagnostics metadata for tooling.
+  priority: must
+  stability: stable
+
+- id: unified_iur.theming.css_not_raw_interchange
+  statement: `unified_iur` shall not require runtime libraries to consume raw authored CSS, and unsupported or renderer-specific CSS constructs shall not become canonical styling obligations unless they have explicit canonical representations.
+  priority: must
+  stability: stable
 ```
 
 ## Verification
@@ -67,4 +78,6 @@ decisions:
     - unified_iur.theming.semantic_roles
     - unified_iur.theming.component_variants
     - unified_iur.theming.inheritance_and_overrides
+    - unified_iur.theming.css_derived_style_representation
+    - unified_iur.theming.css_not_raw_interchange
 ```

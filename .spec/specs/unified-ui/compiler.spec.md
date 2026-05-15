@@ -23,6 +23,7 @@ decisions:
   - repo.ecosystem.contract_model
   - repo.ecosystem.canonical_navigation_boundary
   - repo.ecosystem.canonical_widget_component_expansion
+  - repo.ecosystem.css_style_authoring
 ```
 
 ## Requirements
@@ -77,6 +78,16 @@ decisions:
   statement: The compiler shall lower expanded widget-component selection, row activation, step navigation, submit, change, send, panel dismiss, and inline action intents into renderer-independent `UnifiedIUR.Interaction` descriptors with portable payload mappings.
   priority: must
   stability: stable
+
+- id: unified_ui.compiler.css_stylesheet_lowering
+  statement: The compiler shall lower supported CSS stylesheet rules into deterministic canonical style and theme attachments on affected canonical IUR nodes before emitting `unified_iur` output.
+  priority: must
+  stability: stable
+
+- id: unified_ui.compiler.css_lowering_diagnostics
+  statement: The compiler and inspection surface shall expose deterministic diagnostics or provenance for CSS parse recovery, unsupported CSS constructs, selector matching, cascade resolution, and declarations ignored during canonical style lowering.
+  priority: must
+  stability: stable
 ```
 
 ## Scenarios
@@ -94,6 +105,8 @@ decisions:
     - unified_ui.compiler.navigation_modal_stack_lowering
     - unified_ui.compiler.widget_component_lowering
     - unified_ui.compiler.widget_component_interaction_lowering
+    - unified_ui.compiler.css_stylesheet_lowering
+    - unified_ui.compiler.css_lowering_diagnostics
   given:
     - A developer authors a screen module with widgets, layout, style, theme, and interaction declarations
   when:
@@ -113,6 +126,8 @@ decisions:
     - unified_ui.compiler.navigation_modal_stack_lowering
     - unified_ui.compiler.widget_component_lowering
     - unified_ui.compiler.widget_component_interaction_lowering
+    - unified_ui.compiler.css_stylesheet_lowering
+    - unified_ui.compiler.css_lowering_diagnostics
   given:
     - A developer needs to understand what canonical output a DSL module produces
   when:
@@ -154,6 +169,8 @@ decisions:
     - unified_ui.compiler.navigation_modal_stack_lowering
     - unified_ui.compiler.widget_component_lowering
     - unified_ui.compiler.widget_component_interaction_lowering
+    - unified_ui.compiler.css_stylesheet_lowering
+    - unified_ui.compiler.css_lowering_diagnostics
     - unified_ui.compiler.compile_screen_to_iur
     - unified_ui.compiler.inspect_compiled_artifact
     - unified_ui.compiler.compile_stacked_modal_navigation

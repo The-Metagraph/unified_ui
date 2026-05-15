@@ -13,6 +13,7 @@ surface:
   - .spec/specs/dsl_iur_symbiosis.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.css_style_authoring
 ```
 
 ## Requirements
@@ -47,6 +48,11 @@ decisions:
   statement: Introducing or changing canonical DSL surface that affects rendering semantics shall be accompanied by the corresponding `unified_iur` representation change, and vice versa when the IUR addition is intended for canonical DSL authoring.
   priority: must
   stability: stable
+
+- id: ecosystem.dsl_iur_symbiosis.css_blocks_lower_to_canonical_style
+  statement: CSS stylesheet blocks authored in `unified_ui` shall lower into canonical `unified_iur` style and theme data, diagnostics, or both, and shall not establish raw CSS as an alternate canonical interchange contract.
+  priority: must
+  stability: stable
 ```
 
 ## Exceptions
@@ -73,4 +79,5 @@ decisions:
     - ecosystem.dsl_iur_symbiosis.layering_and_theming_stay_in_dsl
     - ecosystem.dsl_iur_symbiosis.dsl_compiles_to_iur
     - ecosystem.dsl_iur_symbiosis.bilateral_change_rule
+    - ecosystem.dsl_iur_symbiosis.css_blocks_lower_to_canonical_style
 ```
