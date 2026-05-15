@@ -1,11 +1,12 @@
 defmodule UnifiedUi.Dsl.Entities.Theme do
   @moduledoc false
 
+  alias UnifiedUi.Css.Stylesheet
   alias UnifiedUi.Theme
 
   @spec entities() :: [Spark.Dsl.Entity.t()]
   def entities do
-    [theme_entity()]
+    [theme_entity(), css_entity()]
   end
 
   defp theme_entity do
@@ -85,6 +86,21 @@ defmodule UnifiedUi.Dsl.Entities.Theme do
         style: [type: :any, required: false],
         token_refs: [type: {:list, :any}, required: false, default: []],
         inherit?: [type: :boolean, required: false, default: true],
+        summary: [type: :string, required: false]
+      ]
+    }
+  end
+
+  defp css_entity do
+    %Spark.Dsl.Entity{
+      name: :css,
+      target: Stylesheet,
+      args: [:id],
+      identifier: :id,
+      schema: [
+        id: [type: :atom, required: true],
+        source: [type: :string, required: true],
+        authored_ref: [type: {:list, :atom}, required: false],
         summary: [type: :string, required: false]
       ]
     }

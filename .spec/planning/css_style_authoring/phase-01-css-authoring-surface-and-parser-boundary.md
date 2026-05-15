@@ -29,27 +29,27 @@ Back to index: [README](./README.md)
   and recoverable diagnostics needed before selector matching or style lowering
   can be implemented.
 
-  [ ] 1.1 Section - Authored CSS Block Shape
+  [x] 1.1 Section - Authored CSS Block Shape
     Establish the DSL syntax and source metadata for authored CSS stylesheet
     blocks while keeping existing style and theme authoring intact.
 
-    [ ] 1.1.1 Task - Define CSS block placement and identity
+    [x] 1.1.1 Task - Define CSS block placement and identity
       Specify where CSS blocks may appear and how they are named, ordered, and
       associated with authored modules or fragments.
 
-      [ ] 1.1.1.1 Subtask - Define whether the primary authoring surface is a top-level `css` block, a theming-section entry, or both.
-      [ ] 1.1.1.2 Subtask - Define source names, optional block ids, and deterministic ordering for multiple CSS blocks in one authored module.
-      [ ] 1.1.1.3 Subtask - Define how CSS blocks compose with existing theme definitions, `style_refs`, local `style` values, and widget props.
-      [ ] 1.1.1.4 Subtask - Reject CSS block placement that would make style meaning depend on renderer-specific module loading.
+      [x] 1.1.1.1 Subtask - Define whether the primary authoring surface is a top-level `css` block, a theming-section entry, or both.
+      [x] 1.1.1.2 Subtask - Define source names, optional block ids, and deterministic ordering for multiple CSS blocks in one authored module.
+      [x] 1.1.1.3 Subtask - Define how CSS blocks compose with existing theme definitions, `style_refs`, local `style` values, and widget props.
+      [x] 1.1.1.4 Subtask - Reject CSS block placement that would make style meaning depend on renderer-specific module loading.
 
-    [ ] 1.1.2 Task - Define portable class and identity authoring
+    [x] 1.1.2 Task - Define portable class and identity authoring
       Clarify how CSS selectors can target authored nodes without treating
       browser class attributes as the only canonical selector mechanism.
 
-      [ ] 1.1.2.1 Subtask - Define the canonical source of selector identity for `#id` rules using authored stable node identity.
-      [ ] 1.1.2.2 Subtask - Define class metadata normalization for `.class` selectors, including whitespace handling and deterministic class ordering.
-      [ ] 1.1.2.3 Subtask - Document that authored `class` values are portable selector metadata and optional runtime hooks, not automatic stylesheet loading.
-      [ ] 1.1.2.4 Subtask - Preserve current explicit style and theme props while adding CSS block authoring as an additional style source.
+      [x] 1.1.2.1 Subtask - Define the canonical source of selector identity for `#id` rules using authored stable node identity.
+      [x] 1.1.2.2 Subtask - Define class metadata normalization for `.class` selectors, including whitespace handling and deterministic class ordering.
+      [x] 1.1.2.3 Subtask - Document that authored `class` values are portable selector metadata and optional runtime hooks, not automatic stylesheet loading.
+      [x] 1.1.2.4 Subtask - Preserve current explicit style and theme props while adding CSS block authoring as an additional style source.
 
   [ ] 1.2 Section - CSS Parser Adapter and Syntax Recovery
     Introduce a parser boundary that accepts real CSS stylesheet text and
