@@ -1,7 +1,7 @@
 defmodule UnifiedUi.CssAuthoringTest do
   use ExUnit.Case, async: true
 
-  alias UnifiedUi.{Css, Info}
+  alias UnifiedUi.{Compiler, Css, Info, Tooling}
 
   defmodule CssAuthoredWorkspace do
     use UnifiedUi.Dsl
@@ -112,5 +112,30 @@ defmodule UnifiedUi.CssAuthoringTest do
 
     assert Enum.map(parsed.diagnostics, & &1.kind) == [:parse_recovery, :ignored_at_rule]
     assert Enum.any?(parsed.rules, &(&1.selector_text == ".valid"))
+  end
+
+  test "exposes CSS parser summaries through compiler inspection" do
+    report = Compiler.inspection(CssAuthoredWorkspace)
+    rendered = Compiler.render_inspection(CssAuthoredWorkspace)
+
+    assert report.listing.css.summary == %{
+             parser: :csserpent,
+             block_count: 2,
+             rule_count: 3,
+             declaration_count: 3,
+             ignored_count: 0,
+             diagnostic_count: 0
+           }
+
+    assert rendered =~ "css blocks: 2"
+    assert rendered =~ "css rules: 3"
+    assert rendered =~ "css diagnostics: 0"
+  end
+
+  test "exposes CSS diagnostics through module diagnostics" do
+    diagnostics = Tooling.module_diagnostics(CssAuthoredWorkspace)
+
+    assert diagnostics.status == :ok
+    assert diagnostics.css_diagnostics == []
   end
 end

@@ -73,26 +73,26 @@ Back to index: [README](./README.md)
       [x] 1.2.2.3 Subtask - Normalize unsupported at-rules into ignored diagnostic entries rather than dropping them silently.
       [x] 1.2.2.4 Subtask - Ensure comments and insignificant whitespace do not affect deterministic parser output.
 
-  [ ] 1.3 Section - Authoring Diagnostics and Inspection
+  [x] 1.3 Section - Authoring Diagnostics and Inspection
     Make CSS block behavior visible to authors before any canonical style
     lowering changes runtime output.
 
-    [ ] 1.3.1 Task - Add CSS authoring diagnostics
+    [x] 1.3.1 Task - Add CSS authoring diagnostics
       Define the diagnostic categories and severity rules for parse recovery
       and ignored CSS constructs.
 
-      [ ] 1.3.1.1 Subtask - Add diagnostics for parser recovery, malformed declaration values, ignored at-rules, ignored selectors, and ignored properties.
-      [ ] 1.3.1.2 Subtask - Distinguish fatal parser failures from recoverable CSS issues that can continue through style lowering.
-      [ ] 1.3.1.3 Subtask - Include source block id, selector text, declaration name, and source span where available.
-      [ ] 1.3.1.4 Subtask - Keep diagnostic ordering deterministic across equivalent authored modules.
+      [x] 1.3.1.1 Subtask - Add diagnostics for parser recovery, malformed declaration values, ignored at-rules, ignored selectors, and ignored properties.
+      [x] 1.3.1.2 Subtask - Distinguish fatal parser failures from recoverable CSS issues that can continue through style lowering.
+      [x] 1.3.1.3 Subtask - Include source block id, selector text, declaration name, and source span where available.
+      [x] 1.3.1.4 Subtask - Keep diagnostic ordering deterministic across equivalent authored modules.
 
-    [ ] 1.3.2 Task - Expose parsed CSS inspection output
+    [x] 1.3.2 Task - Expose parsed CSS inspection output
       Let developers inspect CSS blocks and parser diagnostics without running
       a renderer or relying on runtime stylesheet output.
 
-      [ ] 1.3.2.1 Subtask - Extend inspection output to list authored CSS blocks, normalized rule count, declaration count, ignored construct count, and recoverable parse diagnostics.
-      [ ] 1.3.2.2 Subtask - Extend export output with deterministic CSS block metadata suitable for review diffs.
-      [ ] 1.3.2.3 Subtask - Add examples that show valid CSS, recoverable parser issues, and ignored unsupported at-rules.
+      [x] 1.3.2.1 Subtask - Extend inspection output to list authored CSS blocks, normalized rule count, declaration count, ignored construct count, and recoverable parse diagnostics.
+      [x] 1.3.2.2 Subtask - Extend export output with deterministic CSS block metadata suitable for review diffs.
+      [x] 1.3.2.3 Subtask - Add examples that show valid CSS, recoverable parser issues, and ignored unsupported at-rules.
 
   [ ] 1.4 Section - Phase 1 Integration Tests
     Validate authored CSS block parsing, ordering, diagnostics, and inspection

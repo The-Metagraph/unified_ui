@@ -26,10 +26,17 @@ defmodule UnifiedUi.Css do
   @spec module_summary(module()) :: map()
   def module_summary(module) when is_atom(module) do
     stylesheets = stylesheets(module)
+    parsed = Parser.parse_all(stylesheets)
+    parse_summary = parsed_summary(parsed)
 
     %{
       count: length(stylesheets),
-      blocks: Enum.map(stylesheets, &Stylesheet.summary/1)
+      blocks: Enum.map(stylesheets, &Stylesheet.summary/1),
+      parser: parse_summary.parser,
+      rule_count: parse_summary.rule_count,
+      declaration_count: parse_summary.declaration_count,
+      ignored_count: parse_summary.ignored_count,
+      diagnostic_count: parse_summary.diagnostic_count
     }
   end
 
@@ -38,6 +45,51 @@ defmodule UnifiedUi.Css do
     module
     |> stylesheets()
     |> Parser.parse_all()
+  end
+
+  @spec inspection(module()) :: map()
+  def inspection(module) when is_atom(module) do
+    parsed = parse_module(module)
+    summary = parsed_summary(parsed)
+
+    %{
+      summary: summary,
+      blocks:
+        Enum.map(parsed, fn block ->
+          %{
+            id: block.block_id,
+            source_order: block.source_order,
+            parser: block.parser,
+            summary: block.summary,
+            diagnostics: block.diagnostics
+          }
+        end),
+      diagnostics: diagnostics(parsed)
+    }
+  end
+
+  @spec diagnostics(module() | [Parser.parsed_stylesheet()]) :: [Parser.diagnostic()]
+  def diagnostics(module) when is_atom(module), do: module |> parse_module() |> diagnostics()
+
+  def diagnostics(parsed_stylesheets) when is_list(parsed_stylesheets) do
+    Enum.flat_map(parsed_stylesheets, & &1.diagnostics)
+  end
+
+  defp parsed_summary(parsed_stylesheets) do
+    %{
+      parser: :csserpent,
+      block_count: length(parsed_stylesheets),
+      rule_count: sum_summary(parsed_stylesheets, :rule_count),
+      declaration_count: sum_summary(parsed_stylesheets, :declaration_count),
+      ignored_count: sum_summary(parsed_stylesheets, :ignored_count),
+      diagnostic_count: sum_summary(parsed_stylesheets, :diagnostic_count)
+    }
+  end
+
+  defp sum_summary(parsed_stylesheets, key) do
+    Enum.reduce(parsed_stylesheets, 0, fn parsed, total ->
+      total + Map.get(parsed.summary, key, 0)
+    end)
   end
 
   @spec normalize_classes(String.t() | nil, [String.t()] | nil) :: [String.t()]
