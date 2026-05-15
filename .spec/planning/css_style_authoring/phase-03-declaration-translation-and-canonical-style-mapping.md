@@ -72,27 +72,27 @@ Back to index: [README](./README.md)
       [x] 3.2.2.3 Subtask - Emit diagnostics for partially supported shorthands rather than applying incomplete or misleading style output.
       [x] 3.2.2.4 Subtask - Ensure longhand declarations override shorthand-derived values according to cascade result ordering.
 
-  [ ] 3.3 Section - State, Variant, Safety, and Unsupported Feature Handling
+  [x] 3.3 Section - State, Variant, Safety, and Unsupported Feature Handling
     Preserve portable CSS-derived style meaning while preventing unsupported or
     unsafe browser-specific features from entering the canonical contract.
 
-    [ ] 3.3.1 Task - Lower state-scoped declarations
+    [x] 3.3.1 Task - Lower state-scoped declarations
       Convert rules matched through supported pseudo-classes into canonical
       state or variant style data.
 
-      [ ] 3.3.1.1 Subtask - Map supported state pseudo-class matches into canonical focused, disabled, selected, active-like, or emphasis-oriented state styles.
-      [ ] 3.3.1.2 Subtask - Define how state-scoped CSS-derived styles merge with existing component variants and state styles.
-      [ ] 3.3.1.3 Subtask - Preserve state-style provenance for inspection output.
-      [ ] 3.3.1.4 Subtask - Ignore state selectors that have no canonical state representation with diagnostics.
+      [x] 3.3.1.1 Subtask - Map supported state pseudo-class matches into canonical focused, disabled, selected, active-like, or emphasis-oriented state styles.
+      [x] 3.3.1.2 Subtask - Define how state-scoped CSS-derived styles merge with existing component variants and state styles.
+      [x] 3.3.1.3 Subtask - Preserve state-style provenance for inspection output.
+      [x] 3.3.1.4 Subtask - Ignore state selectors that have no canonical state representation with diagnostics.
 
-    [ ] 3.3.2 Task - Enforce unsupported and unsafe feature policy
+    [x] 3.3.2 Task - Enforce unsupported and unsafe feature policy
       Keep CSS lowering loss-tolerant and safe by ignoring concepts that have no
       canonical style meaning or safe asset boundary.
 
-      [ ] 3.3.2.1 Subtask - Ignore `@import`, external `url()` resources, remote fonts, animations, transitions, custom property definitions, and browser-only effects unless a later canonical contract supports them.
-      [ ] 3.3.2.2 Subtask - Emit diagnostics that distinguish unsupported property, unsupported value, unsupported unit, unsafe external resource, and ignored at-rule cases.
-      [ ] 3.3.2.3 Subtask - Ensure ignored declarations do not affect cascade resolution for supported declarations.
-      [ ] 3.3.2.4 Subtask - Keep unsupported-feature diagnostics stable enough for tests and review tooling.
+      [x] 3.3.2.1 Subtask - Ignore `@import`, external `url()` resources, remote fonts, animations, transitions, custom property definitions, and browser-only effects unless a later canonical contract supports them.
+      [x] 3.3.2.2 Subtask - Emit diagnostics that distinguish unsupported property, unsupported value, unsupported unit, unsafe external resource, and ignored at-rule cases.
+      [x] 3.3.2.3 Subtask - Ensure ignored declarations do not affect cascade resolution for supported declarations.
+      [x] 3.3.2.4 Subtask - Keep unsupported-feature diagnostics stable enough for tests and review tooling.
 
   [ ] 3.4 Section - Phase 3 Integration Tests
     Validate declaration translation, value normalization, shorthand behavior,

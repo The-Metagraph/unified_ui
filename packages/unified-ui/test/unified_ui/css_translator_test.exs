@@ -16,6 +16,7 @@ defmodule UnifiedUi.CssTranslatorTest do
       css :visuals do
         source("""
         #panel {
+          --local-color: red;
           color: #fff;
           background-color: rgb(0, 0, 0);
           border-color: #808080;
@@ -31,6 +32,9 @@ defmodule UnifiedUi.CssTranslatorTest do
           border-radius: 4px 8px;
           border-style: solid;
           transform: rotate(10deg);
+          background-image: url("remote.png");
+          width: calc(100% - 1rem);
+          height: calc(100% - 1rem);
         }
 
         button:disabled { opacity: 0.4; }
@@ -92,9 +96,11 @@ defmodule UnifiedUi.CssTranslatorTest do
 
     assert translated.styles_by_node.save.states.disabled.visibility == %{opacity: 0.4}
 
-    assert Enum.any?(translated.diagnostics, fn diagnostic ->
-             diagnostic.kind == :unsupported_property and
-               diagnostic.source.property == "transform"
-           end)
+    diagnostic_kinds = Enum.map(translated.diagnostics, & &1.kind)
+
+    assert :unsupported_property in diagnostic_kinds
+    assert :unsafe_external_resource in diagnostic_kinds
+    assert :unsupported_function in diagnostic_kinds
+    assert :unsupported_custom_property in diagnostic_kinds
   end
 end

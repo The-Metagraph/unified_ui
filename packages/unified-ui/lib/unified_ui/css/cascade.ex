@@ -80,10 +80,18 @@ defmodule UnifiedUi.Css.Cascade do
 
   defp compare_tuple(entry) do
     {
+      if(unsafe_for_cascade?(entry), do: 0, else: 1),
       if(entry.important?, do: 1, else: 0),
       entry.specificity,
       entry.order
     }
+  end
+
+  defp unsafe_for_cascade?(entry) do
+    value = to_string(entry.value) |> String.downcase()
+
+    String.contains?(value, "url(") or String.contains?(value, "calc(") or
+      String.contains?(value, "var(")
   end
 
   defp conflict(winner, loser, reason) do

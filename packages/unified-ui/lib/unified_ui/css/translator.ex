@@ -53,23 +53,39 @@ defmodule UnifiedUi.Css.Translator do
     end)
   end
 
-  defp apply_declaration(style, %{property: "color", value: value}) do
+  defp apply_declaration(style, declaration) do
+    cond do
+      unsafe_value?(declaration.value) ->
+        unsafe_declaration(declaration)
+
+      unsupported_function_value?(declaration.value) ->
+        unsupported_function_declaration(declaration)
+
+      custom_property?(declaration.property) ->
+        unsupported_custom_property(declaration)
+
+      true ->
+        apply_supported_declaration(style, declaration)
+    end
+  end
+
+  defp apply_supported_declaration(style, %{property: "color", value: value}) do
     {:ok, Style.merge(style, %{foreground: normalize_color(value)})}
   end
 
-  defp apply_declaration(style, %{property: "background-color", value: value}) do
+  defp apply_supported_declaration(style, %{property: "background-color", value: value}) do
     {:ok, Style.merge(style, %{background: normalize_color(value)})}
   end
 
-  defp apply_declaration(style, %{property: "border-color", value: value}) do
+  defp apply_supported_declaration(style, %{property: "border-color", value: value}) do
     {:ok, Style.merge(style, %{border_color: normalize_color(value)})}
   end
 
-  defp apply_declaration(style, %{property: "font-weight", value: value}) do
+  defp apply_supported_declaration(style, %{property: "font-weight", value: value}) do
     {:ok, Style.merge(style, %{typography: %{font_weight: normalize_font_weight(value)}})}
   end
 
-  defp apply_declaration(style, %{property: "font-style", value: value}) do
+  defp apply_supported_declaration(style, %{property: "font-style", value: value}) do
     if String.downcase(value) == "italic" do
       {:ok, Style.merge(style, %{typography: %{italic?: true}})}
     else
@@ -77,7 +93,7 @@ defmodule UnifiedUi.Css.Translator do
     end
   end
 
-  defp apply_declaration(style, %{property: "text-decoration", value: value}) do
+  defp apply_supported_declaration(style, %{property: "text-decoration", value: value}) do
     values = value |> String.downcase() |> String.split(~r/\s+/, trim: true)
 
     decoration =
@@ -92,16 +108,16 @@ defmodule UnifiedUi.Css.Translator do
     end
   end
 
-  defp apply_declaration(style, %{property: "opacity", value: value}) do
+  defp apply_supported_declaration(style, %{property: "opacity", value: value}) do
     {:ok, Style.merge(style, %{visibility: %{opacity: normalize_number(value)}})}
   end
 
-  defp apply_declaration(style, %{property: property, value: value})
+  defp apply_supported_declaration(style, %{property: property, value: value})
        when property in ["padding", "margin"] do
     {:ok, Style.merge(style, %{spacing: expand_box_shorthand(property, value)})}
   end
 
-  defp apply_declaration(style, %{property: property, value: value})
+  defp apply_supported_declaration(style, %{property: property, value: value})
        when property in [
               "padding-top",
               "padding-right",
@@ -116,35 +132,35 @@ defmodule UnifiedUi.Css.Translator do
     {:ok, Style.merge(style, %{spacing: %{css_key(property) => normalize_length(value)}})}
   end
 
-  defp apply_declaration(style, %{property: property, value: value})
+  defp apply_supported_declaration(style, %{property: property, value: value})
        when property in ["width", "height", "min-width", "min-height", "max-width", "max-height"] do
     {:ok, Style.merge(style, %{sizing: %{css_key(property) => normalize_length(value)}})}
   end
 
-  defp apply_declaration(style, %{property: "text-align", value: value}) do
+  defp apply_supported_declaration(style, %{property: "text-align", value: value}) do
     {:ok, Style.merge(style, %{alignment: %{text_align: normalize_keyword(value)}})}
   end
 
-  defp apply_declaration(style, %{property: "border-width", value: value}) do
+  defp apply_supported_declaration(style, %{property: "border-width", value: value}) do
     {:ok, Style.merge(style, %{border: %{width: normalize_box_value(value)}})}
   end
 
-  defp apply_declaration(style, %{property: "border-radius", value: value}) do
+  defp apply_supported_declaration(style, %{property: "border-radius", value: value}) do
     {:ok, Style.merge(style, %{border: %{radius: normalize_box_value(value)}})}
   end
 
-  defp apply_declaration(style, %{property: "border-style", value: value}) do
+  defp apply_supported_declaration(style, %{property: "border-style", value: value}) do
     {:ok, Style.merge(style, %{border: %{style: normalize_keyword(value)}})}
   end
 
-  defp apply_declaration(style, %{property: "font", value: value}) do
+  defp apply_supported_declaration(style, %{property: "font", value: value}) do
     case normalize_font_shorthand(value) do
       %{} = font when map_size(font) > 0 -> {:ok, Style.merge(style, %{typography: font})}
       _other -> ignored_declaration(value, "font")
     end
   end
 
-  defp apply_declaration(_style, declaration) do
+  defp apply_supported_declaration(_style, declaration) do
     {:ignored,
      %{
        kind: :unsupported_property,
@@ -333,6 +349,64 @@ defmodule UnifiedUi.Css.Translator do
        message: "Ignored unsupported CSS value #{inspect(value)} for #{property}",
        source: %{property: property, value: value}
      }}
+  end
+
+  defp unsafe_value?(value) when is_binary(value) do
+    value |> String.downcase() |> String.contains?("url(")
+  end
+
+  defp unsafe_value?(_value), do: false
+
+  defp unsupported_function_value?(value) when is_binary(value) do
+    lowered = String.downcase(value)
+    String.contains?(lowered, "calc(") or String.contains?(lowered, "var(")
+  end
+
+  defp unsupported_function_value?(_value), do: false
+
+  defp custom_property?(property) when is_binary(property),
+    do: String.starts_with?(property, "--")
+
+  defp custom_property?(_property), do: false
+
+  defp unsafe_declaration(declaration) do
+    {:ignored,
+     %{
+       kind: :unsafe_external_resource,
+       severity: :warning,
+       message: "Ignored CSS declaration with unsafe external resource value",
+       source: declaration_source(declaration)
+     }}
+  end
+
+  defp unsupported_function_declaration(declaration) do
+    {:ignored,
+     %{
+       kind: :unsupported_function,
+       severity: :warning,
+       message: "Ignored CSS declaration with unsupported function value",
+       source: declaration_source(declaration)
+     }}
+  end
+
+  defp unsupported_custom_property(declaration) do
+    {:ignored,
+     %{
+       kind: :unsupported_custom_property,
+       severity: :warning,
+       message: "Ignored unsupported CSS custom property",
+       source: declaration_source(declaration)
+     }}
+  end
+
+  defp declaration_source(declaration) do
+    %{
+      node_id: declaration.node_id,
+      state: declaration.state,
+      selector: declaration.selector_text,
+      property: declaration.property,
+      value: declaration.value
+    }
   end
 
   defp maybe_put(map, _key, nil), do: map
