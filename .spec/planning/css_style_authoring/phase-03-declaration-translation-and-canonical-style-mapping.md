@@ -22,7 +22,7 @@ Back to index: [README](./README.md)
 - External resources such as `url()` are ignored until a safe canonical asset
   contract exists.
 
-[ ] 3 Phase 3 - Declaration Translation and Canonical Style Mapping
+[x] 3 Phase 3 - Declaration Translation and Canonical Style Mapping
   Translate supported CSS declarations, values, units, shorthands, and
   state-scoped rules into canonical style concepts while preserving diagnostics
   for ignored or unsafe CSS features.
@@ -94,25 +94,25 @@ Back to index: [README](./README.md)
       [x] 3.3.2.3 Subtask - Ensure ignored declarations do not affect cascade resolution for supported declarations.
       [x] 3.3.2.4 Subtask - Keep unsupported-feature diagnostics stable enough for tests and review tooling.
 
-  [ ] 3.4 Section - Phase 3 Integration Tests
+  [x] 3.4 Section - Phase 3 Integration Tests
     Validate declaration translation, value normalization, shorthand behavior,
     state-style lowering, and unsupported-feature diagnostics against canonical
     style output.
 
-    [ ] 3.4.1 Task - Supported declaration translation scenarios
+    [x] 3.4.1 Task - Supported declaration translation scenarios
       Verify common CSS declarations produce the expected canonical style and
       theme data.
 
-      [ ] 3.4.1.1 Subtask - Verify colors, text attributes, opacity, spacing, border, and radius declarations lower into canonical style fields.
-      [ ] 3.4.1.2 Subtask - Verify supported values normalize consistently across equivalent CSS spellings.
-      [ ] 3.4.1.3 Subtask - Verify supported shorthands expand deterministically and respect longhand override behavior.
-      [ ] 3.4.1.4 Subtask - Verify state pseudo-class rules lower into canonical state-scoped style data.
+      [x] 3.4.1.1 Subtask - Verify colors, text attributes, opacity, spacing, border, and radius declarations lower into canonical style fields.
+      [x] 3.4.1.2 Subtask - Verify supported values normalize consistently across equivalent CSS spellings.
+      [x] 3.4.1.3 Subtask - Verify supported shorthands expand deterministically and respect longhand override behavior.
+      [x] 3.4.1.4 Subtask - Verify state pseudo-class rules lower into canonical state-scoped style data.
 
-    [ ] 3.4.2 Task - Unsupported and unsafe declaration scenarios
+    [x] 3.4.2 Task - Unsupported and unsafe declaration scenarios
       Verify unsupported CSS remains loss-tolerant and visible through
       diagnostics without becoming raw runtime CSS.
 
-      [ ] 3.4.2.1 Subtask - Verify unsupported properties and unsupported values are ignored with declaration-level diagnostics.
-      [ ] 3.4.2.2 Subtask - Verify unsafe external-resource values such as `url()` are ignored with safety diagnostics.
-      [ ] 3.4.2.3 Subtask - Verify unsupported shorthands do not partially mutate canonical style output.
-      [ ] 3.4.2.4 Subtask - Verify ignored declarations do not affect supported declaration cascade results.
+      [x] 3.4.2.1 Subtask - Verify unsupported properties and unsupported values are ignored with declaration-level diagnostics.
+      [x] 3.4.2.2 Subtask - Verify unsafe external-resource values such as `url()` are ignored with safety diagnostics.
+      [x] 3.4.2.3 Subtask - Verify unsupported shorthands do not partially mutate canonical style output.
+      [x] 3.4.2.4 Subtask - Verify ignored declarations do not affect supported declaration cascade results.
