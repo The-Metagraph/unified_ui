@@ -26,27 +26,27 @@ Back to index: [README](./README.md)
   Implement the supported selector subset, authored-node matching, specificity,
   source order, and canonical style precedence behavior for CSS-derived rules.
 
-  [ ] 2.1 Section - Supported Selector Model
+  [x] 2.1 Section - Supported Selector Model
     Define the exact selector subset that can participate in canonical style
     lowering and the diagnostics used when selectors are ignored.
 
-    [ ] 2.1.1 Task - Define simple selectors and combinations
+    [x] 2.1.1 Task - Define simple selectors and combinations
       Establish the portable selector forms that can be matched against the
       authored DSL tree without requiring browser DOM semantics.
 
-      [ ] 2.1.1.1 Subtask - Support `#id` selectors against authored stable node identity.
-      [ ] 2.1.1.2 Subtask - Support `.class` selectors against normalized portable class metadata.
-      [ ] 2.1.1.3 Subtask - Support widget and component kind selectors using canonical authored kind names.
-      [ ] 2.1.1.4 Subtask - Support comma-separated selector lists while preserving per-selector diagnostics and source order.
+      [x] 2.1.1.1 Subtask - Support `#id` selectors against authored stable node identity.
+      [x] 2.1.1.2 Subtask - Support `.class` selectors against normalized portable class metadata.
+      [x] 2.1.1.3 Subtask - Support widget and component kind selectors using canonical authored kind names.
+      [x] 2.1.1.4 Subtask - Support comma-separated selector lists while preserving per-selector diagnostics and source order.
 
-    [ ] 2.1.2 Task - Define structural and state selector boundaries
+    [x] 2.1.2 Task - Define structural and state selector boundaries
       Add only the structural and pseudo-class behavior that has portable
       canonical meaning across the ecosystem.
 
-      [ ] 2.1.2.1 Subtask - Decide whether descendant and child combinators are supported in the initial implementation.
-      [ ] 2.1.2.2 Subtask - Map supported pseudo-classes such as focused, disabled, selected, and active-like canonical states to state-scoped style variants.
-      [ ] 2.1.2.3 Subtask - Ignore unsupported pseudo-classes and pseudo-elements with diagnostics.
-      [ ] 2.1.2.4 Subtask - Ignore selectors that depend on browser DOM structure unavailable in authored canonical nodes.
+      [x] 2.1.2.1 Subtask - Decide whether descendant and child combinators are supported in the initial implementation.
+      [x] 2.1.2.2 Subtask - Map supported pseudo-classes such as focused, disabled, selected, and active-like canonical states to state-scoped style variants.
+      [x] 2.1.2.3 Subtask - Ignore unsupported pseudo-classes and pseudo-elements with diagnostics.
+      [x] 2.1.2.4 Subtask - Ignore selectors that depend on browser DOM structure unavailable in authored canonical nodes.
 
   [ ] 2.2 Section - Authored-Node Matching Engine
     Implement deterministic selector matching against the authored DSL tree
