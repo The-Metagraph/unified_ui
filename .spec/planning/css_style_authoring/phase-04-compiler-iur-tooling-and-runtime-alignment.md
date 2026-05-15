@@ -50,27 +50,27 @@ Back to index: [README](./README.md)
       [x] 4.1.2.3 Subtask - Add migration guidance that positions CSS blocks as optional authoring input rather than a replacement for canonical style APIs.
       [x] 4.1.2.4 Subtask - Verify existing compiler fixtures and examples remain stable unless they intentionally add CSS blocks.
 
-  [ ] 4.2 Section - UnifiedIUR Representation and Provenance
+  [x] 4.2 Section - UnifiedIUR Representation and Provenance
     Represent CSS-derived results as canonical style and theme data while
     preserving optional provenance for debugging and inspection.
 
-    [ ] 4.2.1 Task - Add or confirm canonical style attachment support
+    [x] 4.2.1 Task - Add or confirm canonical style attachment support
       Ensure IUR elements and theme structures can carry the effective style
       values produced by CSS lowering.
 
-      [ ] 4.2.1.1 Subtask - Confirm existing IUR style and theme structures can represent the supported CSS declaration map.
-      [ ] 4.2.1.2 Subtask - Add canonical style fields only when the style concept is portable and needed beyond CSS authoring.
-      [ ] 4.2.1.3 Subtask - Avoid adding raw CSS text as a required IUR field or renderer input.
-      [ ] 4.2.1.4 Subtask - Preserve renderer-independent diagnostics or provenance metadata only where tooling needs to explain CSS-derived output.
+      [x] 4.2.1.1 Subtask - Confirm existing IUR style and theme structures can represent the supported CSS declaration map.
+      [x] 4.2.1.2 Subtask - Add canonical style fields only when the style concept is portable and needed beyond CSS authoring.
+      [x] 4.2.1.3 Subtask - Avoid adding raw CSS text as a required IUR field or renderer input.
+      [x] 4.2.1.4 Subtask - Preserve renderer-independent diagnostics or provenance metadata only where tooling needs to explain CSS-derived output.
 
-    [ ] 4.2.2 Task - Align IUR normalization and inspection
+    [x] 4.2.2 Task - Align IUR normalization and inspection
       Make CSS-derived style data deterministic, inspectable, and safe for
       runtime renderer consumption.
 
-      [ ] 4.2.2.1 Subtask - Normalize CSS-derived style maps with the same ordering and value normalization rules as hand-authored canonical styles.
-      [ ] 4.2.2.2 Subtask - Expose provenance that can identify source block, selector, declaration, and cascade reason for selected style values.
-      [ ] 4.2.2.3 Subtask - Ensure IUR inspection shows canonical style data as canonical data, not as browser CSS.
-      [ ] 4.2.2.4 Subtask - Ensure IUR validation rejects raw CSS interchange fields outside optional tooling metadata.
+      [x] 4.2.2.1 Subtask - Normalize CSS-derived style maps with the same ordering and value normalization rules as hand-authored canonical styles.
+      [x] 4.2.2.2 Subtask - Expose provenance that can identify source block, selector, declaration, and cascade reason for selected style values.
+      [x] 4.2.2.3 Subtask - Ensure IUR inspection shows canonical style data as canonical data, not as browser CSS.
+      [x] 4.2.2.4 Subtask - Ensure IUR validation rejects raw CSS interchange fields outside optional tooling metadata.
 
   [ ] 4.3 Section - Tooling, Examples, Documentation, and Runtime Alignment
     Complete the author-facing and runtime-facing surfaces needed to make CSS

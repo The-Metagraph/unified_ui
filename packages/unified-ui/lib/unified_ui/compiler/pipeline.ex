@@ -1626,6 +1626,7 @@ defmodule UnifiedUi.Compiler.Pipeline do
           |> maybe_put(:variant, style.variant)
           |> maybe_put(:tone, style.tone)
           |> maybe_put(:component, style.component)
+          |> maybe_put(:css, Map.get(style.metadata, :css))
       })
       |> Style.merge(token_style)
 

@@ -56,9 +56,12 @@ defmodule UnifiedUi.CssCompilerIntegrationTest do
 
     assert panel.attributes.style.foreground == %{mode: :named, name: :blue}
     assert panel.attributes.style.background == %{mode: :named, name: :white}
+    assert panel.attributes.style.extra.css.properties == ["background-color", "color"]
+    refute Map.has_key?(panel.attributes.style.extra.css, :source)
 
     assert button.attributes.style.foreground == %{mode: :named, name: :red}
     assert button.attributes.style.state_variants.disabled.visibility == %{opacity: 0.4}
+    assert button.attributes.style.state_variants.disabled.extra.css.properties == ["opacity"]
   end
 
   test "compiler trace carries CSS diagnostics for inspection follow-up" do

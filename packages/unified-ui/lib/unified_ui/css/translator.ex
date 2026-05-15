@@ -49,7 +49,10 @@ defmodule UnifiedUi.Css.Translator do
       end
     end)
     |> then(fn {style, diagnostics} ->
-      %{style: style, diagnostics: Enum.reverse(diagnostics)}
+      %{
+        style: Style.merge(style, %{metadata: css_metadata(declarations)}),
+        diagnostics: Enum.reverse(diagnostics)
+      }
     end)
   end
 
@@ -196,6 +199,28 @@ defmodule UnifiedUi.Css.Translator do
       end)
 
     {styles, diagnostics}
+  end
+
+  defp css_metadata(declarations) do
+    entries =
+      declarations
+      |> Map.values()
+      |> Enum.sort_by(&{&1.property, &1.selector_text, &1.order})
+      |> Enum.map(fn declaration ->
+        %{
+          property: declaration.property,
+          selector: declaration.selector_text,
+          specificity: declaration.specificity,
+          order: declaration.order,
+          important?: declaration.important?
+        }
+      end)
+
+    if entries == [] do
+      %{}
+    else
+      %{css: %{properties: Enum.map(entries, & &1.property), declarations: entries}}
+    end
   end
 
   defp normalize_font_weight(value) do
