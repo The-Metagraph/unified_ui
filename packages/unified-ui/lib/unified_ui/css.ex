@@ -7,6 +7,7 @@ defmodule UnifiedUi.Css do
   """
 
   alias Spark.Dsl.Extension
+  alias UnifiedUi.Css.Parser
   alias UnifiedUi.Css.Stylesheet
 
   @spec stylesheets(module()) :: [Stylesheet.t()]
@@ -30,6 +31,13 @@ defmodule UnifiedUi.Css do
       count: length(stylesheets),
       blocks: Enum.map(stylesheets, &Stylesheet.summary/1)
     }
+  end
+
+  @spec parse_module(module()) :: [Parser.parsed_stylesheet()]
+  def parse_module(module) when is_atom(module) do
+    module
+    |> stylesheets()
+    |> Parser.parse_all()
   end
 
   @spec normalize_classes(String.t() | nil, [String.t()] | nil) :: [String.t()]

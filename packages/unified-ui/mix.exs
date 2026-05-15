@@ -26,6 +26,7 @@ defmodule UnifiedUi.MixProject do
   defp deps do
     [
       {:spark, path: "../../vendor/spark", override: true},
+      {:csserpent, "~> 0.5.1"},
       {:unified_iur, path: "../unified_iur"}
     ]
   end

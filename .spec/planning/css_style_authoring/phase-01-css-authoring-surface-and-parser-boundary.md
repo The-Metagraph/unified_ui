@@ -51,27 +51,27 @@ Back to index: [README](./README.md)
       [x] 1.1.2.3 Subtask - Document that authored `class` values are portable selector metadata and optional runtime hooks, not automatic stylesheet loading.
       [x] 1.1.2.4 Subtask - Preserve current explicit style and theme props while adding CSS block authoring as an additional style source.
 
-  [ ] 1.2 Section - CSS Parser Adapter and Syntax Recovery
+  [x] 1.2 Section - CSS Parser Adapter and Syntax Recovery
     Introduce a parser boundary that accepts real CSS stylesheet text and
     normalizes parser output into an internal shape used by later phases.
 
-    [ ] 1.2.1 Task - Select and isolate the CSS parser strategy
+    [x] 1.2.1 Task - Select and isolate the CSS parser strategy
       Evaluate parser options and hide the selected implementation behind a
       small adapter so the DSL and compiler do not depend on parser-specific
       data structures.
 
-      [ ] 1.2.1.1 Subtask - Evaluate available Elixir, Erlang, NIF, or port-based CSS parser options against CSS Syntax stylesheet parsing and recovery needs.
-      [ ] 1.2.1.2 Subtask - Define the parser adapter input and output contract, including source spans, rule order, declaration order, and recoverable error reporting.
-      [ ] 1.2.1.3 Subtask - Add a fallback parser-selection decision record if no dependency satisfies the required CSS Syntax-compatible behavior.
+      [x] 1.2.1.1 Subtask - Evaluate available Elixir, Erlang, NIF, or port-based CSS parser options against CSS Syntax stylesheet parsing and recovery needs.
+      [x] 1.2.1.2 Subtask - Define the parser adapter input and output contract, including source spans, rule order, declaration order, and recoverable error reporting.
+      [x] 1.2.1.3 Subtask - Add a fallback parser-selection decision record if no dependency satisfies the required CSS Syntax-compatible behavior.
 
-    [ ] 1.2.2 Task - Normalize parsed stylesheet rules
+    [x] 1.2.2 Task - Normalize parsed stylesheet rules
       Convert parser output into a deterministic internal representation that
       later phases can match, cascade, translate, and inspect.
 
-      [ ] 1.2.2.1 Subtask - Normalize style rules, selector lists, declaration names, declaration values, importance flags, source spans, and source order.
-      [ ] 1.2.2.2 Subtask - Preserve recoverable parser diagnostics with enough source context for author-facing messages.
-      [ ] 1.2.2.3 Subtask - Normalize unsupported at-rules into ignored diagnostic entries rather than dropping them silently.
-      [ ] 1.2.2.4 Subtask - Ensure comments and insignificant whitespace do not affect deterministic parser output.
+      [x] 1.2.2.1 Subtask - Normalize style rules, selector lists, declaration names, declaration values, importance flags, source spans, and source order.
+      [x] 1.2.2.2 Subtask - Preserve recoverable parser diagnostics with enough source context for author-facing messages.
+      [x] 1.2.2.3 Subtask - Normalize unsupported at-rules into ignored diagnostic entries rather than dropping them silently.
+      [x] 1.2.2.4 Subtask - Ensure comments and insignificant whitespace do not affect deterministic parser output.
 
   [ ] 1.3 Section - Authoring Diagnostics and Inspection
     Make CSS block behavior visible to authors before any canonical style

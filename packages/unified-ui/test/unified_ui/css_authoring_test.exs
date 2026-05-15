@@ -69,4 +69,48 @@ defmodule UnifiedUi.CssAuthoringTest do
     assert cta.class == "cta primary portable-action"
     assert cta.classes == ["cta", "primary", "portable-action"]
   end
+
+  test "parses CSS blocks through the parser adapter" do
+    parsed = Css.parse_module(CssAuthoredWorkspace)
+
+    assert [
+             %{
+               parser: :csserpent,
+               block_id: :workspace_styles,
+               summary: %{rule_count: 2, declaration_count: 2, diagnostic_count: 0},
+               rules: first_rules
+             },
+             %{
+               parser: :csserpent,
+               block_id: :overrides,
+               summary: %{rule_count: 1, declaration_count: 1, diagnostic_count: 0}
+             }
+           ] = parsed
+
+    assert Enum.map(first_rules, & &1.selector_text) == ["#shell", ".hero-card"]
+
+    assert hd(first_rules).declarations == [
+             %{property: "color", value: "white", important?: false, source_order: 0}
+           ]
+  end
+
+  test "reports parser recovery and ignored at-rule diagnostics" do
+    stylesheet =
+      UnifiedUi.Css.Stylesheet.new(
+        id: :diagnostic_styles,
+        source: """
+        @import url("remote.css");
+        .valid { color: white; }
+        .broken { background: black;
+        """
+      )
+
+    parsed = UnifiedUi.Css.Parser.parse(stylesheet)
+
+    assert %{rule_count: 1, declaration_count: 1, diagnostic_count: 2, ignored_count: 1} =
+             parsed.summary
+
+    assert Enum.map(parsed.diagnostics, & &1.kind) == [:parse_recovery, :ignored_at_rule]
+    assert Enum.any?(parsed.rules, &(&1.selector_text == ".valid"))
+  end
 end
