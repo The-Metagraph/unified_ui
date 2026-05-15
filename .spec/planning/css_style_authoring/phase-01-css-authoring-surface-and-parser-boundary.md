@@ -24,7 +24,7 @@ Back to index: [README](./README.md)
 - Parser recovery diagnostics are surfaced without treating every recoverable
   CSS syntax issue as a fatal DSL error.
 
-[ ] 1 Phase 1 - CSS Authoring Surface and Parser Boundary
+[x] 1 Phase 1 - CSS Authoring Surface and Parser Boundary
   Define the authored CSS stylesheet block, parser adapter, source-order model,
   and recoverable diagnostics needed before selector matching or style lowering
   can be implemented.
@@ -94,24 +94,24 @@ Back to index: [README](./README.md)
       [x] 1.3.2.2 Subtask - Extend export output with deterministic CSS block metadata suitable for review diffs.
       [x] 1.3.2.3 Subtask - Add examples that show valid CSS, recoverable parser issues, and ignored unsupported at-rules.
 
-  [ ] 1.4 Section - Phase 1 Integration Tests
+  [x] 1.4 Section - Phase 1 Integration Tests
     Validate authored CSS block parsing, ordering, diagnostics, and inspection
     before selector matching and canonical style lowering are introduced.
 
-    [ ] 1.4.1 Task - CSS block authoring scenarios
+    [x] 1.4.1 Task - CSS block authoring scenarios
       Verify the DSL accepts valid CSS stylesheet blocks and preserves
       deterministic source metadata.
 
-      [ ] 1.4.1.1 Subtask - Verify a module with one CSS block parses valid selector and declaration syntax successfully.
-      [ ] 1.4.1.2 Subtask - Verify a module with multiple CSS blocks preserves deterministic block and rule source order.
-      [ ] 1.4.1.3 Subtask - Verify CSS block authoring composes with existing style, theme, and widget declarations without changing their public syntax.
-      [ ] 1.4.1.4 Subtask - Verify malformed block placement fails with an actionable DSL diagnostic.
+      [x] 1.4.1.1 Subtask - Verify a module with one CSS block parses valid selector and declaration syntax successfully.
+      [x] 1.4.1.2 Subtask - Verify a module with multiple CSS blocks preserves deterministic block and rule source order.
+      [x] 1.4.1.3 Subtask - Verify CSS block authoring composes with existing style, theme, and widget declarations without changing their public syntax.
+      [x] 1.4.1.4 Subtask - Verify malformed block placement fails with an actionable DSL diagnostic.
 
-    [ ] 1.4.2 Task - Parser recovery and inspection scenarios
+    [x] 1.4.2 Task - Parser recovery and inspection scenarios
       Verify CSS parser recovery and inspection output are deterministic and
       useful before lowering is implemented.
 
-      [ ] 1.4.2.1 Subtask - Verify recoverable CSS syntax errors produce diagnostics while preserving later valid rules.
-      [ ] 1.4.2.2 Subtask - Verify unsupported at-rules are represented as ignored diagnostics with source context.
-      [ ] 1.4.2.3 Subtask - Verify comments and whitespace do not change normalized parser output.
-      [ ] 1.4.2.4 Subtask - Verify inspection and export output list CSS block metadata and diagnostics in deterministic order.
+      [x] 1.4.2.1 Subtask - Verify recoverable CSS syntax errors produce diagnostics while preserving later valid rules.
+      [x] 1.4.2.2 Subtask - Verify unsupported at-rules are represented as ignored diagnostics with source context.
+      [x] 1.4.2.3 Subtask - Verify comments and whitespace do not change normalized parser output.
+      [x] 1.4.2.4 Subtask - Verify inspection and export output list CSS block metadata and diagnostics in deterministic order.
