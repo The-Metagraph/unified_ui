@@ -7,6 +7,8 @@ defmodule UnifiedUi.Dsl.EntitySchema do
     authored_ref: [type: {:list, :atom}, required: false],
     annotations: [type: :keyword_list, required: false, default: []],
     tags: [type: {:list, :atom}, required: false, default: []],
+    class: [type: :string, required: false],
+    classes: [type: {:list, :string}, required: false, default: []],
     variant: [type: :atom, required: false],
     tone: [type: :atom, required: false],
     theme_ref: [type: :atom, required: false],

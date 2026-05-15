@@ -4,7 +4,7 @@ defmodule UnifiedUi.Tooling do
   and release review workflows.
   """
 
-  alias UnifiedUi.{Compiler, Examples, Export, Info, Signals, WidgetComponents}
+  alias UnifiedUi.{Compiler, Css, Examples, Export, Info, Signals, WidgetComponents}
 
   @shared_specs [
     ".spec/specs/architecture.spec.md",
@@ -174,6 +174,7 @@ defmodule UnifiedUi.Tooling do
           related_examples: Enum.map(report.related_examples, & &1.id),
           related_specs: report.related_specs,
           summary: report.compiler.summary,
+          css_diagnostics: Css.diagnostics(module),
           signal_coverage: report.signal_coverage
         }
 
@@ -250,6 +251,7 @@ defmodule UnifiedUi.Tooling do
       "construct families: #{inspect(diagnostics.construct_families)}",
       "related examples: #{inspect(diagnostics.related_examples)}",
       "related specs: #{inspect(diagnostics.related_specs)}",
+      "css diagnostics: #{inspect(diagnostics.css_diagnostics)}",
       "signal families: #{inspect(diagnostics.signal_coverage.families)}",
       "binding names: #{inspect(diagnostics.signal_coverage.binding_names)}",
       "navigation target kinds: #{inspect(diagnostics.signal_coverage.interaction_target_kinds)}",

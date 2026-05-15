@@ -75,6 +75,15 @@ defmodule UnifiedUi.InfoTest do
                default_target: :session,
                mode: :canonical
              },
+             css: %{
+               count: 0,
+               blocks: [],
+               parser: :csserpent,
+               rule_count: 0,
+               declaration_count: 0,
+               ignored_count: 0,
+               diagnostic_count: 0
+             },
              theme_catalog: %{
                default_theme: :workspace,
                inherit?: false,

@@ -30,4 +30,12 @@ defmodule UnifiedUi.DocumentationTest do
              "guides/maintainer_workflows.md"
            ]
   end
+
+  test "documents CSS block caveats in styling guidance" do
+    styling_doc = File.read!("docs/user/styling-and-themes.md")
+
+    assert styling_doc =~ "CSS stylesheet blocks"
+    assert styling_doc =~ "does not imply full browser CSS semantic equivalence"
+    assert styling_doc =~ "raw runtime CSS"
+  end
 end

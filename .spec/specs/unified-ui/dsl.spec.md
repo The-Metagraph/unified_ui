@@ -21,6 +21,7 @@ surface:
   - .spec/specs/unified-ui/dsl.spec.md
 decisions:
   - repo.ecosystem.contract_model
+  - repo.ecosystem.css_style_authoring
 ```
 
 ## Requirements
@@ -53,6 +54,16 @@ decisions:
 
 - id: unified_ui.dsl.authoring_extensibility
   statement: The DSL shall be extensible in a way that allows new canonical widgets, layouts, style attributes, and interaction descriptors to be added without changing the authored module model for existing users.
+  priority: must
+  stability: stable
+
+- id: unified_ui.dsl.css_stylesheet_blocks
+  statement: The DSL shall support authored CSS stylesheet blocks as a styling and theming authoring surface that accepts CSS stylesheet text for canonical style lowering.
+  priority: must
+  stability: stable
+
+- id: unified_ui.dsl.css_authoring_diagnostics
+  statement: DSL validation shall report CSS parse recovery, ignored unsupported selectors, ignored unsupported at-rules, and ignored unsupported declarations without requiring recoverable CSS authoring issues to invalidate the entire authored module.
   priority: must
   stability: stable
 ```
@@ -89,6 +100,21 @@ decisions:
     - The module is compiled by the package DSL
   then:
     - The authoring surface rejects that declaration because canonical interaction meaning must stay renderer-independent
+
+- id: unified_ui.dsl.author_css_stylesheet_block
+  covers:
+    - unified_ui.dsl.spark_style_authoring_surface
+    - unified_ui.dsl.styling_and_theming
+    - unified_ui.dsl.compile_time_validation
+    - unified_ui.dsl.authoring_extensibility
+    - unified_ui.dsl.css_stylesheet_blocks
+    - unified_ui.dsl.css_authoring_diagnostics
+  given:
+    - A developer wants to style authored widgets with familiar CSS selector and declaration syntax
+  when:
+    - The developer authors a CSS stylesheet block inside a `UnifiedUi` DSL module
+  then:
+    - The DSL accepts the stylesheet as authoring input and reports any recoverable unsupported CSS concepts as diagnostics for canonical style lowering
 ```
 
 ## Verification
@@ -103,6 +129,9 @@ decisions:
     - unified_ui.dsl.interaction_binding
     - unified_ui.dsl.compile_time_validation
     - unified_ui.dsl.authoring_extensibility
+    - unified_ui.dsl.css_stylesheet_blocks
+    - unified_ui.dsl.css_authoring_diagnostics
     - unified_ui.dsl.author_single_screen
     - unified_ui.dsl.reject_renderer_specific_callbacks
+    - unified_ui.dsl.author_css_stylesheet_block
 ```

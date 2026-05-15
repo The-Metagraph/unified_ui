@@ -139,6 +139,41 @@ box :activity_feed do
 end
 ```
 
+## CSS Stylesheet Blocks
+
+CSS stylesheet blocks are optional authoring input inside the `themes` section.
+They are parsed, matched against authored nodes, resolved through cascade rules,
+and lowered into canonical style data before `UnifiedIUR` output is emitted.
+
+```elixir
+themes do
+  css :workspace_styles do
+    source("""
+    #activity_feed {
+      background-color: #0f172a;
+      padding: 12px 16px;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+    }
+    """)
+  end
+end
+```
+
+Selectors can target stable authored ids, portable classes, widget or component
+kinds, supported descendant and child relationships, and supported state
+pseudo-classes such as `:disabled`, `:focus`, `:selected`, and `:active`.
+
+The `class` and `classes` widget attributes are portable selector metadata and
+optional runtime hooks. They do not load a runtime stylesheet by themselves.
+
+Accepted CSS syntax does not imply full browser CSS semantic equivalence.
+Unsupported selectors, at-rules, properties, values, units, functions, and
+unsafe external resources are ignored with diagnostics instead of being emitted
+as raw runtime CSS.
+
 ## Supported Style Attribute Families
 
 The canonical style model currently groups attributes into:
@@ -192,8 +227,11 @@ Supported component states currently include:
 - Put reusable styling in `themes`.
 - Use `style_refs` when multiple widgets should share the same component style.
 - Use local `style(...)` for focused per-node overrides.
+- Use CSS blocks when selector-oriented authoring is clearer than repeating
+  equivalent canonical style maps.
 - Prefer semantic roles and tokens over hard-coded color repetition.
-- Keep styling canonical; do not author runtime-specific CSS or renderer-local options here.
+- Keep styling canonical; do not rely on runtime-specific CSS or renderer-local
+  options here.
 
 For a full cross-cutting example, inspect
 `UnifiedUi.Examples.ThemedSignalWorkspace`.

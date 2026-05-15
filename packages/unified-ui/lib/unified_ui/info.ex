@@ -4,6 +4,7 @@ defmodule UnifiedUi.Info do
   """
 
   alias Spark.Dsl.Extension
+  alias UnifiedUi.Css
   alias UnifiedUi.Dsl.Node
   alias UnifiedUi.Examples
   alias UnifiedUi.Reference
@@ -54,6 +55,7 @@ defmodule UnifiedUi.Info do
       identity: section_options(module, :identity),
       composition: section_options(module, :composition),
       themes: section_options(module, :themes),
+      css: Css.module_summary(module),
       signals: section_options(module, :signals),
       theme_catalog: Theme.module_summary(module),
       signal_catalog: Signals.module_summary(module),

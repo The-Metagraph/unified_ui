@@ -5,7 +5,7 @@ defmodule UnifiedUi.Compiler.Result do
 
   alias UnifiedIUR.{Binding, Element, Interaction, Theme}
   alias UnifiedIUR.Tree
-  alias UnifiedUi.Info
+  alias UnifiedUi.{Css, Info}
 
   @type t :: %__MODULE__{
           module: module(),
@@ -75,6 +75,7 @@ defmodule UnifiedUi.Compiler.Result do
         style_ref_ids: authored_style_ref_ids(authored_nodes),
         themed_element_ids: authored_themed_node_ids(authored_nodes)
       },
+      css: Css.inspection(result.module),
       bindings: %{
         names: result.bindings |> Enum.map(& &1.name) |> sort_terms(),
         paths: result.bindings |> Enum.map(& &1.path) |> Enum.uniq() |> Enum.sort(),
