@@ -7,6 +7,7 @@ defmodule DesktopUi.Renderer.Mapper do
   alias DesktopUi.Widget
   alias UnifiedIUR.Element
   alias UnifiedIUR.Element.Child
+  alias UnifiedIUR.Style, as: CanonicalStyle
 
   @component_kinds UnifiedIUR.Widgets.Components.kinds()
   @component_kind_values @component_kinds ++ Enum.map(@component_kinds, &Atom.to_string/1)
@@ -1274,12 +1275,106 @@ defmodule DesktopUi.Renderer.Mapper do
 
   defp base_opts(element) do
     [
-      styles: normalize_styles(attr(element, :styles)),
+      styles: canonical_styles(element),
       metadata: metadata_opts(element),
       disabled:
         first_present([attr(element, :disabled), metadata_attr(element, :disabled)], false)
     ]
   end
+
+  defp canonical_styles(%Element{} = element) do
+    element
+    |> attr(:styles)
+    |> normalize_styles()
+    |> Map.new()
+    |> Map.merge(translate_style_attachment(attr(element, :style)))
+    |> DesktopUi.Style.normalize()
+  end
+
+  defp translate_style_attachment(nil), do: %{}
+
+  defp translate_style_attachment(style) do
+    style = CanonicalStyle.new(style)
+    text = normalize_nested_map(style.text)
+    border = normalize_nested_map(style.border)
+
+    %{}
+    |> maybe_put(:fg, portable_color(style.foreground))
+    |> maybe_put(:bg, portable_color(style.background))
+    |> maybe_put(:attrs, text_attrs(text))
+    |> maybe_put(:border, border_style(border, style.border_color))
+    |> maybe_put(:padding, padding_style(style.spacing))
+    |> maybe_put(:tone, map_get(style.emphasis, :tone))
+    |> maybe_put(:semantic_role, map_get(style.emphasis, :role))
+    |> maybe_put(:state_variants, translate_state_variants(style.state_variants))
+  end
+
+  defp translate_state_variants(variants) when variants == %{}, do: nil
+
+  defp translate_state_variants(variants) do
+    variants
+    |> Map.new(fn {state, style} ->
+      {normalize_key(state), translate_style_attachment(style)}
+    end)
+    |> Enum.reject(fn {_state, styles} -> styles == %{} end)
+    |> Map.new()
+    |> case do
+      state_styles when state_styles == %{} -> nil
+      state_styles -> state_styles
+    end
+  end
+
+  defp border_style(border, color) do
+    border
+    |> maybe_put(:color, portable_color(color))
+    |> case do
+      values when values == %{} -> nil
+      values -> values
+    end
+  end
+
+  defp padding_style(spacing) do
+    spacing = normalize_nested_map(spacing)
+
+    spacing
+    |> Map.take([:padding, :padding_top, :padding_right, :padding_bottom, :padding_left])
+    |> case do
+      values when values == %{} -> nil
+      values -> values
+    end
+  end
+
+  defp text_attrs(text) do
+    text
+    |> Enum.reduce([], fn
+      {:bold?, true}, attrs -> [:bold | attrs]
+      {:italic?, true}, attrs -> [:italic | attrs]
+      {:underline?, true}, attrs -> [:underline | attrs]
+      {:strikethrough?, true}, attrs -> [:strikethrough | attrs]
+      _other, attrs -> attrs
+    end)
+    |> Enum.reverse()
+    |> case do
+      [] -> nil
+      attrs -> attrs
+    end
+  end
+
+  defp portable_color(nil), do: nil
+  defp portable_color(%{mode: :named, name: name}), do: name
+  defp portable_color(%{"mode" => :named, "name" => name}), do: name
+  defp portable_color(%{mode: :indexed, index: index}), do: {:indexed, index}
+  defp portable_color(%{"mode" => :indexed, "index" => index}), do: {:indexed, index}
+
+  defp portable_color(%{mode: :rgb, red: red, green: green, blue: blue}) do
+    "#" <> Base.encode16(<<red, green, blue>>, case: :lower)
+  end
+
+  defp portable_color(%{"mode" => :rgb, "red" => red, "green" => green, "blue" => blue}) do
+    "#" <> Base.encode16(<<red, green, blue>>, case: :lower)
+  end
+
+  defp portable_color(value), do: value
 
   defp metadata_opts(element) do
     [
@@ -1448,6 +1543,9 @@ defmodule DesktopUi.Renderer.Mapper do
   defp normalize_styles(nil), do: []
   defp normalize_styles(styles) when is_map(styles), do: Map.to_list(styles)
   defp normalize_styles(styles) when is_list(styles), do: styles
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
 
   defp placeholder_child(id, role) do
     Widget.new(:spacer, id: "#{id}-#{role}-placeholder")

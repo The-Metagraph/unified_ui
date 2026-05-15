@@ -28,8 +28,10 @@ defmodule ElmUi.FrontendRuntime.StyleRealization do
       css_vars:
         %{}
         |> maybe_put_var("--ui-tone", Map.get(resolved, :tone))
+        |> maybe_put_var("--ui-foreground", Map.get(resolved, :foreground))
         |> maybe_put_var("--ui-surface", Map.get(resolved, :surface))
         |> maybe_put_var("--ui-background", Map.get(resolved, :background))
+        |> maybe_put_var("--ui-border-color", Map.get(resolved, :border_color))
         |> maybe_put_var("--ui-border", Map.get(resolved, :border))
         |> maybe_put_var("--ui-emphasis", Map.get(resolved, :emphasis))
         |> maybe_put_var("--ui-typography", Map.get(resolved, :typography)),

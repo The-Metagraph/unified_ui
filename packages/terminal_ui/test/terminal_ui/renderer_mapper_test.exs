@@ -3,6 +3,7 @@ defmodule TerminalUi.RendererMapperTest do
 
   alias TerminalUi.Renderer
   alias UnifiedIUR.{Binding, Canvas, Element, Forms, Interaction, Layer, Layout}
+  alias UnifiedIUR.Style
   alias UnifiedIUR.Widgets.{Advanced, Data, Feedback, Foundational, Input, Navigation}
 
   test "canonical foundational screens map into the native widget surface" do
@@ -39,6 +40,42 @@ defmodule TerminalUi.RendererMapperTest do
     assert Enum.at(widget.children, 1).bindings == %{value: :query}
     assert Enum.at(widget.children, 2).events == %{keypress: %{intent: :save_workspace}}
     assert Enum.at(widget.children, 3).bindings == %{current: :active_section}
+  end
+
+  test "canonical renderer realizes CSS-derived style without parsing authored CSS" do
+    element =
+      Element.new(:widget, :text,
+        id: "css-copy",
+        attributes: %{
+          content: "CSS-derived",
+          style:
+            Style.new(%{
+              foreground: "#2563eb",
+              background: "#eff6ff",
+              border_color: "#1d4ed8",
+              text: %{underline?: true},
+              spacing: %{padding_top: "4px"},
+              state_variants: %{focused: %{foreground: "#ffffff"}},
+              extra: %{
+                css: %{
+                  properties: ["color"],
+                  declarations: [%{selector: "#css-copy", property: "color"}]
+                }
+              }
+            })
+        }
+      )
+
+    assert {:ok, widget} = Renderer.render(element)
+
+    assert widget.styles.fg == "#2563eb"
+    assert widget.styles.bg == "#eff6ff"
+    assert widget.styles.border == %{color: "#1d4ed8"}
+    assert widget.styles.attrs == [:underline]
+    assert widget.styles.padding == %{padding_top: "4px"}
+    assert widget.styles.state_variants.focused.fg == "#ffffff"
+    refute Map.has_key?(widget.styles, :css)
+    refute inspect(widget.styles) =~ "declarations"
   end
 
   test "canonical screens mount through the same runtime realization model as native screens" do

@@ -18,12 +18,17 @@ defmodule ElmUi.Style do
     :typography,
     :tone,
     :color_role,
+    :foreground,
     :size,
     :spacing,
+    :sizing,
     :align,
+    :alignment,
     :surface,
     :background,
+    :border_color,
     :border,
+    :text,
     :visibility,
     :emphasis
   ]
