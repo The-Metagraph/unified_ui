@@ -48,26 +48,26 @@ Back to index: [README](./README.md)
       [x] 2.1.2.3 Subtask - Ignore unsupported pseudo-classes and pseudo-elements with diagnostics.
       [x] 2.1.2.4 Subtask - Ignore selectors that depend on browser DOM structure unavailable in authored canonical nodes.
 
-  [ ] 2.2 Section - Authored-Node Matching Engine
+  [x] 2.2 Section - Authored-Node Matching Engine
     Implement deterministic selector matching against the authored DSL tree
     before style data is lowered into canonical IUR nodes.
 
-    [ ] 2.2.1 Task - Build canonical selector match inputs
+    [x] 2.2.1 Task - Build canonical selector match inputs
       Derive the node metadata needed for selector matching from authored
       widgets, layouts, layers, classes, identity, and state declarations.
 
-      [ ] 2.2.1.1 Subtask - Build a traversal index for authored node identity, parentage, component kind, classes, and authored state declarations.
-      [ ] 2.2.1.2 Subtask - Preserve node source metadata so selector-match diagnostics can point to authored targets.
-      [ ] 2.2.1.3 Subtask - Ensure generated or compiler-expanded nodes have deterministic selector-match identities when they are eligible for CSS-derived styling.
+      [x] 2.2.1.1 Subtask - Build a traversal index for authored node identity, parentage, component kind, classes, and authored state declarations.
+      [x] 2.2.1.2 Subtask - Preserve node source metadata so selector-match diagnostics can point to authored targets.
+      [x] 2.2.1.3 Subtask - Ensure generated or compiler-expanded nodes have deterministic selector-match identities when they are eligible for CSS-derived styling.
 
-    [ ] 2.2.2 Task - Implement selector matching and ignored-selector diagnostics
+    [x] 2.2.2 Task - Implement selector matching and ignored-selector diagnostics
       Match supported selector forms exactly and reject unsupported forms
       without guessing or silently applying broad rules.
 
-      [ ] 2.2.2.1 Subtask - Match ids, classes, kind selectors, selector lists, and supported structural selectors against the traversal index.
-      [ ] 2.2.2.2 Subtask - Emit diagnostics for selectors that are syntactically valid CSS but unsupported by canonical selector semantics.
-      [ ] 2.2.2.3 Subtask - Emit diagnostics for supported selectors that match no authored nodes when configured to do so by tooling or validation mode.
-      [ ] 2.2.2.4 Subtask - Keep selector match ordering deterministic by node traversal order and CSS source order.
+      [x] 2.2.2.1 Subtask - Match ids, classes, kind selectors, selector lists, and supported structural selectors against the traversal index.
+      [x] 2.2.2.2 Subtask - Emit diagnostics for selectors that are syntactically valid CSS but unsupported by canonical selector semantics.
+      [x] 2.2.2.3 Subtask - Emit diagnostics for supported selectors that match no authored nodes when configured to do so by tooling or validation mode.
+      [x] 2.2.2.4 Subtask - Keep selector match ordering deterministic by node traversal order and CSS source order.
 
   [ ] 2.3 Section - Cascade, Specificity, and Style Source Precedence
     Resolve competing CSS-derived declarations using CSS ordering rules and

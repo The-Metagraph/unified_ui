@@ -7,7 +7,7 @@ defmodule UnifiedUi.Css do
   """
 
   alias Spark.Dsl.Extension
-  alias UnifiedUi.Css.Parser
+  alias UnifiedUi.Css.{Matcher, Parser}
   alias UnifiedUi.Css.Stylesheet
 
   @spec stylesheets(module()) :: [Stylesheet.t()]
@@ -73,6 +73,13 @@ defmodule UnifiedUi.Css do
 
   def diagnostics(parsed_stylesheets) when is_list(parsed_stylesheets) do
     Enum.flat_map(parsed_stylesheets, & &1.diagnostics)
+  end
+
+  @spec match_module(module(), keyword() | map()) :: map()
+  def match_module(module, opts \\ []) when is_atom(module) do
+    module
+    |> UnifiedUi.Info.composition_nodes()
+    |> Matcher.match(parse_module(module), opts)
   end
 
   defp parsed_summary(parsed_stylesheets) do
