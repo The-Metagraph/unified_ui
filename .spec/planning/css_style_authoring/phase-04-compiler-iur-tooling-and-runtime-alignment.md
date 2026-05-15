@@ -72,27 +72,27 @@ Back to index: [README](./README.md)
       [x] 4.2.2.3 Subtask - Ensure IUR inspection shows canonical style data as canonical data, not as browser CSS.
       [x] 4.2.2.4 Subtask - Ensure IUR validation rejects raw CSS interchange fields outside optional tooling metadata.
 
-  [ ] 4.3 Section - Tooling, Examples, Documentation, and Runtime Alignment
+  [x] 4.3 Section - Tooling, Examples, Documentation, and Runtime Alignment
     Complete the author-facing and runtime-facing surfaces needed to make CSS
     style authoring understandable and portable.
 
-    [ ] 4.3.1 Task - Update tooling and examples
+    [x] 4.3.1 Task - Update tooling and examples
       Document and demonstrate CSS authoring, canonical lowering, diagnostics,
       and caveats through maintained examples and inspect/export tools.
 
-      [ ] 4.3.1.1 Subtask - Add examples showing CSS class, id, kind, and state selectors lowering into canonical style data.
-      [ ] 4.3.1.2 Subtask - Add examples showing unsupported CSS ignored with diagnostics and without raw CSS passthrough.
-      [ ] 4.3.1.3 Subtask - Update `mix unified_ui.inspect`, `mix unified_ui.export`, and validation output to surface CSS block summaries and lowering diagnostics.
-      [ ] 4.3.1.4 Subtask - Update documentation to state the caveat that accepted CSS syntax does not mean full browser CSS semantic equivalence.
+      [x] 4.3.1.1 Subtask - Add examples showing CSS class, id, kind, and state selectors lowering into canonical style data.
+      [x] 4.3.1.2 Subtask - Add examples showing unsupported CSS ignored with diagnostics and without raw CSS passthrough.
+      [x] 4.3.1.3 Subtask - Update `mix unified_ui.inspect`, `mix unified_ui.export`, and validation output to surface CSS block summaries and lowering diagnostics.
+      [x] 4.3.1.4 Subtask - Update documentation to state the caveat that accepted CSS syntax does not mean full browser CSS semantic equivalence.
 
-    [ ] 4.3.2 Task - Verify runtime renderer realization boundaries
+    [x] 4.3.2 Task - Verify runtime renderer realization boundaries
       Check that runtimes consume the resulting canonical style data through
       their existing native rendering boundaries.
 
-      [ ] 4.3.2.1 Subtask - Verify `live_ui` realizes CSS-derived canonical style values through its native style and class mechanisms without requiring authored CSS blocks at render time.
-      [ ] 4.3.2.2 Subtask - Define parity checks for `elm_ui`, `desktop_ui`, and `terminal_ui` based on canonical style values rather than raw CSS.
-      [ ] 4.3.2.3 Subtask - Document terminal and desktop degradation expectations for style concepts that cannot be visually identical to browser CSS.
-      [ ] 4.3.2.4 Subtask - Ensure runtime-specific stylesheet loading remains a runtime concern and is not required by canonical CSS block lowering.
+      [x] 4.3.2.1 Subtask - Verify `live_ui` realizes CSS-derived canonical style values through its native style and class mechanisms without requiring authored CSS blocks at render time.
+      [x] 4.3.2.2 Subtask - Define parity checks for `elm_ui`, `desktop_ui`, and `terminal_ui` based on canonical style values rather than raw CSS.
+      [x] 4.3.2.3 Subtask - Document terminal and desktop degradation expectations for style concepts that cannot be visually identical to browser CSS.
+      [x] 4.3.2.4 Subtask - Ensure runtime-specific stylesheet loading remains a runtime concern and is not required by canonical CSS block lowering.
 
   [ ] 4.4 Section - Phase 4 Integration Tests
     Validate end-to-end CSS authoring from DSL input through canonical IUR and

@@ -180,6 +180,29 @@ defmodule LiveUi.RendererStyleTest do
     assert html =~ "--live-ui-foreground: #f97316"
   end
 
+  test "renderer realizes CSS-derived canonical style without authored CSS input" do
+    element =
+      Foundational.text("CSS-derived",
+        id: "css-derived-copy",
+        style: %{
+          foreground: "#2563eb",
+          extra: %{
+            css: %{
+              properties: ["color"],
+              declarations: [%{property: "color", selector: "#css-derived-copy"}]
+            }
+          }
+        }
+      )
+
+    html = render_component(&LiveUi.Renderer.render/1, %{element: element})
+
+    assert html =~ "data-live-ui-widget=\"text\""
+    assert html =~ "--live-ui-foreground: #2563eb"
+    refute html =~ "css-derived-copy {"
+    refute html =~ "declarations"
+  end
+
   test "renderer lowers canonical layout geometry into the same browser-visible attrs as native layout primitives" do
     element =
       UnifiedIUR.Layout.grid(
