@@ -15,6 +15,7 @@ defmodule UnifiedUi.WidgetComponents do
           | :layer_shell_and_callout
           | :redline_and_code
           | :composition_behavior
+          | :operator_shell
 
   @type component :: %{
           required(:kind) => atom(),
@@ -25,7 +26,7 @@ defmodule UnifiedUi.WidgetComponents do
         }
 
   @type source :: %{
-          required(:system) => :ash_ui,
+          required(:system) => :ash_ui | :ariston_ui | :unified_ui,
           required(:pr) => pos_integer(),
           required(:name) => atom()
         }
@@ -45,7 +46,8 @@ defmodule UnifiedUi.WidgetComponents do
     :workflow_progress_and_status,
     :layer_shell_and_callout,
     :redline_and_code,
-    :composition_behavior
+    :composition_behavior,
+    :operator_shell
   ]
 
   @components [
