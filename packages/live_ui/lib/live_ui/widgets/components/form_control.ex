@@ -102,6 +102,55 @@ defmodule LiveUi.Widgets.Components.RuntimeFormShell do
   end
 end
 
+defmodule LiveUi.Widgets.Components.ModeNav do
+  @moduledoc """
+  Native navigation control for switching application modes with labeled items and shortcuts.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :mode_nav,
+    assigns: [:items, :aria_label, :nav_attrs],
+    events: [:navigation]
+
+  LiveUi.Component.common_attrs()
+  attr(:items, :list, default: [])
+  attr(:aria_label, :string, default: nil)
+  attr(:nav_attrs, :map, default: %{})
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :component_attrs,
+        Support.component_attrs(assigns, :mode_nav, :form_control)
+      )
+
+    ~H"""
+    <nav
+      id={@id}
+      role="navigation"
+      aria-label={@aria_label}
+      class={@class}
+      {@component_attrs}
+      {@nav_attrs}
+    >
+      <button
+        :for={item <- @items}
+        type="button"
+        aria-current={if Support.fetch(item, :current?, false), do: "page", else: "false"}
+        data-live-ui-nav-value={Support.text(Support.fetch(item, :value))}
+        data-live-ui-nav-shortcut={Support.text(Support.fetch(item, :shortcut))}
+        {Support.attrs(item)}
+      ><%= Support.label(item) %></button>
+    </nav>
+    """
+  end
+end
+
 defmodule LiveUi.Widgets.Components.ChatComposer do
   @moduledoc """
   Native chat composer with message text and tool slots.

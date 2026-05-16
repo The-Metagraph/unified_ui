@@ -210,6 +210,239 @@ defmodule LiveUi.Widgets.Components.CodeBlockSyntaxHighlighted do
   end
 end
 
+defmodule LiveUi.Widgets.Components.TopStrip do
+  @moduledoc """
+  Native top shell strip with brand identity, context, theme controls, and mode navigation.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :top_strip,
+    slots: [:inner_block],
+    assigns: [:brand, :context, :theme, :pane_open]
+
+  LiveUi.Component.common_attrs()
+  attr(:brand, :string, default: "")
+  attr(:context, :string, default: "")
+  attr(:theme, :string, default: "light")
+  attr(:pane_open, :boolean, default: false)
+  slot(:inner_block)
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :component_attrs,
+        Support.component_attrs(assigns, :top_strip, :layer_callout, %{
+          "data-live-ui-shell-position" => "top",
+          "data-live-ui-theme" => assigns.theme,
+          "data-live-ui-pane-open" => assigns.pane_open
+        })
+      )
+
+    ~H"""
+    <header id={@id} class={@class} {@component_attrs}>
+      <span :if={@brand != ""} data-live-ui-strip-brand><%= @brand %></span>
+      <span :if={@context != ""} data-live-ui-strip-context><%= @context %></span>
+      <div data-live-ui-strip-nav><%= render_slot(@inner_block) %></div>
+    </header>
+    """
+  end
+end
+
+defmodule LiveUi.Widgets.Components.SidebarShell do
+  @moduledoc """
+  Native side navigation shell with collapsible state and section children.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :sidebar_shell,
+    slots: [:inner_block],
+    assigns: [:collapsed]
+
+  LiveUi.Component.common_attrs()
+  attr(:collapsed, :boolean, default: false)
+  slot(:inner_block)
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :component_attrs,
+        Support.component_attrs(assigns, :sidebar_shell, :layer_callout, %{
+          "data-live-ui-shell-position" => "side",
+          "data-live-ui-collapsed" => assigns.collapsed
+        })
+      )
+
+    ~H"""
+    <nav id={@id} class={@class} aria-hidden={if @collapsed, do: "true", else: "false"} {@component_attrs}>
+      <%= render_slot(@inner_block) %>
+    </nav>
+    """
+  end
+end
+
+defmodule LiveUi.Widgets.Components.SidebarSection do
+  @moduledoc """
+  Native labeled section group inside a sidebar shell with optional action and item children.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :sidebar_section,
+    slots: [:inner_block],
+    assigns: [:label, :action_glyph, :action_label, :action_attrs]
+
+  LiveUi.Component.common_attrs()
+  attr(:label, :string, required: true)
+  attr(:action_glyph, :string, default: nil)
+  attr(:action_label, :string, default: nil)
+  attr(:action_attrs, :map, default: %{})
+  slot(:inner_block)
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :component_attrs,
+        Support.component_attrs(assigns, :sidebar_section, :layer_callout)
+      )
+
+    ~H"""
+    <section id={@id} class={@class} data-live-ui-shell-section="" {@component_attrs}>
+      <header data-live-ui-section-header="">
+        <span><%= @label %></span>
+        <button
+          :if={@action_label}
+          type="button"
+          data-live-ui-section-action=""
+          aria-label={@action_label}
+          {@action_attrs}
+        ><%= if @action_glyph, do: @action_glyph, else: @action_label %></button>
+      </header>
+      <ul data-live-ui-section-items=""><%= render_slot(@inner_block) %></ul>
+    </section>
+    """
+  end
+end
+
+defmodule LiveUi.Widgets.Components.SidebarItem do
+  @moduledoc """
+  Native navigable sidebar item with selected state, intent, and optional badge children.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :sidebar_item,
+    slots: [:inner_block],
+    assigns: [:label, :selected, :item_attrs]
+
+  LiveUi.Component.common_attrs()
+  attr(:label, :string, required: true)
+  attr(:selected, :boolean, default: false)
+  attr(:item_attrs, :map, default: %{})
+  slot(:inner_block)
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :component_attrs,
+        Support.component_attrs(assigns, :sidebar_item, :layer_callout, %{
+          "data-live-ui-selected" => assigns.selected
+        })
+      )
+
+    ~H"""
+    <li id={@id} class={@class} data-live-ui-shell-item="" {@component_attrs}>
+      <button
+        type="button"
+        aria-current={if @selected, do: "page", else: "false"}
+        {@item_attrs}
+      >
+        <span><%= @label %></span>
+        <%= render_slot(@inner_block) %>
+      </button>
+    </li>
+    """
+  end
+end
+
+defmodule LiveUi.Widgets.Components.CommandPalette do
+  @moduledoc """
+  Native keyboard-driven command palette overlay with open state, filterable items, and children.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :command_palette,
+    slots: [:inner_block],
+    assigns: [:open, :items, :filter_attrs, :select_attrs],
+    events: [:filter, :select]
+
+  LiveUi.Component.common_attrs()
+  attr(:open, :boolean, default: false)
+  attr(:items, :list, default: [])
+  attr(:filter_attrs, :map, default: %{})
+  attr(:select_attrs, :map, default: %{})
+  slot(:inner_block)
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assign(
+        assigns,
+        :component_attrs,
+        Support.component_attrs(assigns, :command_palette, :layer_callout, %{
+          "data-live-ui-palette-open" => assigns.open
+        })
+      )
+
+    ~H"""
+    <aside
+      id={@id}
+      role="dialog"
+      aria-modal="true"
+      aria-hidden={if @open, do: "false", else: "true"}
+      class={@class}
+      {@component_attrs}
+    >
+      <input
+        type="search"
+        data-live-ui-palette-input=""
+        aria-label="Command filter"
+        {@filter_attrs}
+      />
+      <ul data-live-ui-palette-items="">
+        <li
+          :for={item <- @items}
+          data-live-ui-palette-item={Support.text(Support.fetch(item, :id))}
+          data-live-ui-palette-active={Support.fetch(item, :active, false)}
+          {Map.merge(@select_attrs, Support.attrs(item))}
+        ><%= Support.label(item) %></li>
+      </ul>
+      <%= render_slot(@inner_block) %>
+    </aside>
+    """
+  end
+end
+
 defmodule LiveUi.Widgets.Components.ListRepeat do
   @moduledoc """
   Native wrapper for already-hydrated list-repeat child output.
