@@ -19,7 +19,8 @@ defmodule ElmUi.Widgets.Components do
   @form_control_kinds [
     :segmented_button_group,
     :runtime_form_shell,
-    :chat_composer
+    :chat_composer,
+    :mode_nav
   ]
 
   @row_artifact_kinds [
@@ -31,13 +32,19 @@ defmodule ElmUi.Widgets.Components do
     :pipeline_stepper_horizontal,
     :segmented_progress_bar,
     :workflow_stage_list_vertical,
-    :meter_thin
+    :meter_thin,
+    :unread_badge
   ]
 
   @layer_callout_kinds [
     :sticky_frosted_header,
     :slide_over_panel,
-    :event_callout
+    :event_callout,
+    :top_strip,
+    :sidebar_shell,
+    :sidebar_section,
+    :sidebar_item,
+    :command_palette
   ]
 
   @redline_code_kinds [
@@ -67,6 +74,13 @@ defmodule ElmUi.Widgets.Components do
     sticky_frosted_header: :layer_callout,
     slide_over_panel: :layer_callout,
     event_callout: :layer_callout,
+    top_strip: :layer_callout,
+    sidebar_shell: :layer_callout,
+    sidebar_section: :layer_callout,
+    sidebar_item: :layer_callout,
+    command_palette: :layer_callout,
+    mode_nav: :form_control,
+    unread_badge: :workflow_progress,
     redline_inline: :redline_code,
     code_block_syntax_highlighted: :redline_code,
     list_repeat: :composition_behavior
@@ -587,6 +601,162 @@ defmodule ElmUi.Widgets.Components do
       },
       children,
       opts
+    )
+  end
+
+  @spec mode_nav(String.t() | atom(), [keyword() | map()], keyword() | map()) :: ElmUi.Widget.t()
+  def mode_nav(id, items, opts \\ []) when is_list(items) do
+    opts = options(opts)
+
+    component_widget(
+      :mode_nav,
+      id,
+      %{
+        navigation:
+          %{items: normalize_maps(items)}
+          |> maybe_put(:aria_label, Builder.option(opts, :aria_label))
+          |> maybe_put(:navigation_intent, Builder.option(opts, :navigation_intent))
+      },
+      [],
+      opts,
+      on_navigate: :navigation
+    )
+  end
+
+  @spec unread_badge(String.t() | atom(), non_neg_integer(), keyword() | map()) ::
+          ElmUi.Widget.t()
+  def unread_badge(id, count, opts \\ []) when is_integer(count) and count >= 0 do
+    opts = options(opts)
+
+    component_widget(
+      :unread_badge,
+      id,
+      %{
+        status: %{
+          count: count,
+          threshold: Builder.option(opts, :threshold, 99)
+        }
+      },
+      [],
+      opts
+    )
+  end
+
+  @spec top_strip(
+          String.t() | atom(),
+          [ElmUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: ElmUi.Widget.t()
+  def top_strip(id, children \\ [], opts \\ []) when is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :top_strip,
+      id,
+      %{
+        shell: %{
+          position: :top,
+          brand: Builder.option(opts, :brand, ""),
+          context: Builder.option(opts, :context, ""),
+          theme: Builder.option(opts, :theme, :light),
+          pane_open?: Builder.option(opts, :pane_open?, false)
+        }
+      },
+      children,
+      opts
+    )
+  end
+
+  @spec sidebar_shell(
+          String.t() | atom(),
+          [ElmUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: ElmUi.Widget.t()
+  def sidebar_shell(id, children \\ [], opts \\ []) when is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :sidebar_shell,
+      id,
+      %{shell: %{position: :side, collapsed?: Builder.option(opts, :collapsed?, false)}},
+      children,
+      opts
+    )
+  end
+
+  @spec sidebar_section(
+          String.t() | atom(),
+          String.t(),
+          [ElmUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: ElmUi.Widget.t()
+  def sidebar_section(id, label, children \\ [], opts \\ [])
+      when is_binary(label) and is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :sidebar_section,
+      id,
+      %{
+        section:
+          %{label: label}
+          |> maybe_put(:action_glyph, Builder.option(opts, :action_glyph))
+          |> maybe_put(:action_label, Builder.option(opts, :action_label))
+          |> maybe_put(:action_intent, Builder.option(opts, :action_intent))
+      },
+      children,
+      opts
+    )
+  end
+
+  @spec sidebar_item(
+          String.t() | atom(),
+          String.t(),
+          [ElmUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: ElmUi.Widget.t()
+  def sidebar_item(id, label, children \\ [], opts \\ [])
+      when is_binary(label) and is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :sidebar_item,
+      id,
+      %{
+        item:
+          %{label: label, selected?: Builder.option(opts, :selected?, false)}
+          |> maybe_put(:item_intent, Builder.option(opts, :item_intent))
+      },
+      children,
+      opts,
+      on_select: :selection,
+      on_click: :click
+    )
+  end
+
+  @spec command_palette(
+          String.t() | atom(),
+          [keyword() | map()],
+          [ElmUi.Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: ElmUi.Widget.t()
+  def command_palette(id, items \\ [], children \\ [], opts \\ [])
+      when is_list(items) and is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :command_palette,
+      id,
+      %{
+        palette:
+          %{open?: Builder.option(opts, :open?, false), items: normalize_maps(items)}
+          |> maybe_put(:filter_intent, Builder.option(opts, :filter_intent))
+          |> maybe_put(:select_intent, Builder.option(opts, :select_intent))
+      },
+      children,
+      opts,
+      on_filter: :filter,
+      on_select: :select
     )
   end
 

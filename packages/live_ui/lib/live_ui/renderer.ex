@@ -580,7 +580,7 @@ defmodule LiveUi.Renderer do
 
   def render(
         %{
-          element: %Element{kind: :command_palette, attributes: %{command_palette: _}} = _element
+          element: %Element{kind: :command_palette, attributes: %{command_palette: _}}
         } = assigns
       ) do
     assigns =

@@ -8,7 +8,7 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
 
   @moduletag :phase_eleven
 
-  @iur_widget_count 77
+  @iur_widget_count 83
 
   @all_iur_kinds MapSet.new([
                    # Foundational (13)
@@ -77,7 +77,7 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
                    :stack,
                    # Container (1)
                    :window,
-                   # Canonical widget components (20)
+                   # Canonical widget components (27)
                    :inline_rich_text_heading,
                    :disclosure,
                    :kicker,
@@ -86,15 +86,22 @@ defmodule DesktopUi.PhaseElevenIntegrationTest do
                    :segmented_button_group,
                    :runtime_form_shell,
                    :chat_composer,
+                   :mode_nav,
                    :list_item_multi_column,
                    :artifact_row,
                    :pipeline_stepper_horizontal,
                    :segmented_progress_bar,
                    :workflow_stage_list_vertical,
                    :meter_thin,
+                   :unread_badge,
                    :sticky_frosted_header,
                    :slide_over_panel,
                    :event_callout,
+                   :top_strip,
+                   :sidebar_shell,
+                   :sidebar_section,
+                   :sidebar_item,
+                   :command_palette,
                    :redline_inline,
                    :code_block_syntax_highlighted,
                    :list_repeat
