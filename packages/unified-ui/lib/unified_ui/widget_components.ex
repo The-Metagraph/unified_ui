@@ -166,6 +166,52 @@ defmodule UnifiedUi.WidgetComponents do
       summary:
         "Composition behavior that repeats a child template over rows from a list binding.",
       aliases: [:ui_relationship_repeat, :repeat]
+    },
+    %{
+      kind: :top_strip,
+      family: :layer_shell_and_callout,
+      summary:
+        "Top shell strip with brand, context, theme controls, and mode navigation children.",
+      aliases: []
+    },
+    %{
+      kind: :mode_nav,
+      family: :form_control_and_composer,
+      summary:
+        "Navigation control for switching application modes with labeled items and shortcuts.",
+      aliases: []
+    },
+    %{
+      kind: :sidebar_shell,
+      family: :layer_shell_and_callout,
+      summary: "Side navigation shell with collapsible state and sidebar section children.",
+      aliases: []
+    },
+    %{
+      kind: :sidebar_section,
+      family: :layer_shell_and_callout,
+      summary:
+        "Labeled section group inside a sidebar shell with optional action and item children.",
+      aliases: []
+    },
+    %{
+      kind: :sidebar_item,
+      family: :layer_shell_and_callout,
+      summary: "Navigable sidebar item with selected state, intent, and optional badge children.",
+      aliases: []
+    },
+    %{
+      kind: :unread_badge,
+      family: :workflow_progress_and_status,
+      summary: "Compact unread count badge with threshold capping.",
+      aliases: []
+    },
+    %{
+      kind: :command_palette,
+      family: :layer_shell_and_callout,
+      summary:
+        "Keyboard-driven command palette overlay with open state, filterable items, and children.",
+      aliases: []
     }
   ]
 

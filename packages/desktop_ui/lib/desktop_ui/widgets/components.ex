@@ -16,7 +16,8 @@ defmodule DesktopUi.Widgets.Components do
   @form_control_kinds [
     :segmented_button_group,
     :runtime_form_shell,
-    :chat_composer
+    :chat_composer,
+    :mode_nav
   ]
 
   @row_artifact_kinds [:list_item_multi_column, :artifact_row]
@@ -25,13 +26,19 @@ defmodule DesktopUi.Widgets.Components do
     :pipeline_stepper_horizontal,
     :segmented_progress_bar,
     :workflow_stage_list_vertical,
-    :meter_thin
+    :meter_thin,
+    :unread_badge
   ]
 
   @layer_callout_kinds [
     :sticky_frosted_header,
     :slide_over_panel,
-    :event_callout
+    :event_callout,
+    :top_strip,
+    :sidebar_shell,
+    :sidebar_section,
+    :sidebar_item,
+    :command_palette
   ]
 
   @redline_code_kinds [:redline_inline, :code_block_syntax_highlighted]
@@ -55,6 +62,13 @@ defmodule DesktopUi.Widgets.Components do
     sticky_frosted_header: :layer_callout,
     slide_over_panel: :layer_callout,
     event_callout: :layer_callout,
+    top_strip: :layer_callout,
+    sidebar_shell: :layer_callout,
+    sidebar_section: :layer_callout,
+    sidebar_item: :layer_callout,
+    command_palette: :layer_callout,
+    mode_nav: :form_control,
+    unread_badge: :workflow_progress,
     redline_inline: :redline_code,
     code_block_syntax_highlighted: :redline_code,
     list_repeat: :composition_behavior
@@ -70,7 +84,10 @@ defmodule DesktopUi.Widgets.Components do
     :pipeline_stepper_horizontal,
     :workflow_stage_list_vertical,
     :slide_over_panel,
-    :event_callout
+    :event_callout,
+    :mode_nav,
+    :sidebar_item,
+    :command_palette
   ]
 
   @kinds @content_identity_kinds ++
@@ -529,6 +546,150 @@ defmodule DesktopUi.Widgets.Components do
       },
       children,
       opts
+    )
+  end
+
+  @spec mode_nav(String.t() | atom(), [keyword() | map()], keyword() | map()) :: Widget.t()
+  def mode_nav(id, items, opts \\ []) when is_list(items) do
+    opts = options(opts)
+
+    component_widget(
+      :mode_nav,
+      id,
+      %{
+        navigation:
+          %{items: normalize_maps(items)}
+          |> maybe_put(:aria_label, option(opts, :aria_label))
+          |> maybe_put(:navigation_intent, option(opts, :navigation_intent))
+      },
+      [],
+      opts,
+      on_navigate: :navigation
+    )
+  end
+
+  @spec unread_badge(String.t() | atom(), non_neg_integer(), keyword() | map()) :: Widget.t()
+  def unread_badge(id, count, opts \\ []) when is_integer(count) and count >= 0 do
+    opts = options(opts)
+
+    component_widget(
+      :unread_badge,
+      id,
+      %{status: %{count: count, threshold: option(opts, :threshold, 99)}},
+      [],
+      opts
+    )
+  end
+
+  @spec top_strip(String.t() | atom(), [Widget.t() | map() | keyword()], keyword() | map()) ::
+          Widget.t()
+  def top_strip(id, children \\ [], opts \\ []) when is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :top_strip,
+      id,
+      %{
+        shell: %{
+          position: :top,
+          brand: option(opts, :brand, ""),
+          context: option(opts, :context, ""),
+          theme: option(opts, :theme, :light),
+          pane_open?: option(opts, :pane_open?, false)
+        }
+      },
+      children,
+      opts
+    )
+  end
+
+  @spec sidebar_shell(String.t() | atom(), [Widget.t() | map() | keyword()], keyword() | map()) ::
+          Widget.t()
+  def sidebar_shell(id, children \\ [], opts \\ []) when is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :sidebar_shell,
+      id,
+      %{shell: %{position: :side, collapsed?: option(opts, :collapsed?, false)}},
+      children,
+      opts
+    )
+  end
+
+  @spec sidebar_section(
+          String.t() | atom(),
+          String.t(),
+          [Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: Widget.t()
+  def sidebar_section(id, label, children \\ [], opts \\ [])
+      when is_binary(label) and is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :sidebar_section,
+      id,
+      %{
+        section:
+          %{label: label}
+          |> maybe_put(:action_glyph, option(opts, :action_glyph))
+          |> maybe_put(:action_label, option(opts, :action_label))
+          |> maybe_put(:action_intent, option(opts, :action_intent))
+      },
+      children,
+      opts
+    )
+  end
+
+  @spec sidebar_item(
+          String.t() | atom(),
+          String.t(),
+          [Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: Widget.t()
+  def sidebar_item(id, label, children \\ [], opts \\ [])
+      when is_binary(label) and is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :sidebar_item,
+      id,
+      %{
+        item:
+          %{label: label, selected?: option(opts, :selected?, false)}
+          |> maybe_put(:item_intent, option(opts, :item_intent))
+      },
+      children,
+      opts,
+      on_select: :selection,
+      on_click: :click
+    )
+  end
+
+  @spec command_palette(
+          String.t() | atom(),
+          [keyword() | map()],
+          [Widget.t() | map() | keyword()],
+          keyword() | map()
+        ) :: Widget.t()
+  def command_palette(id, items \\ [], children \\ [], opts \\ [])
+      when is_list(items) and is_list(children) do
+    opts = options(opts)
+
+    component_widget(
+      :command_palette,
+      id,
+      %{
+        palette:
+          %{open?: option(opts, :open?, false), items: normalize_maps(items)}
+          |> maybe_put(:filter_intent, option(opts, :filter_intent))
+          |> maybe_put(:select_intent, option(opts, :select_intent))
+      },
+      children,
+      opts,
+      on_filter: :filter,
+      on_select: :select
     )
   end
 

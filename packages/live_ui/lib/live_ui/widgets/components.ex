@@ -32,7 +32,8 @@ defmodule LiveUi.Widgets.Components do
   @form_control_modules [
     LiveUi.Widgets.Components.SegmentedButtonGroup,
     LiveUi.Widgets.Components.RuntimeFormShell,
-    LiveUi.Widgets.Components.ChatComposer
+    LiveUi.Widgets.Components.ChatComposer,
+    LiveUi.Widgets.Components.ModeNav
   ]
 
   @row_artifact_modules [
@@ -44,13 +45,19 @@ defmodule LiveUi.Widgets.Components do
     LiveUi.Widgets.Components.PipelineStepperHorizontal,
     LiveUi.Widgets.Components.SegmentedProgressBar,
     LiveUi.Widgets.Components.WorkflowStageListVertical,
-    LiveUi.Widgets.Components.MeterThin
+    LiveUi.Widgets.Components.MeterThin,
+    LiveUi.Widgets.Components.UnreadBadge
   ]
 
   @layer_callout_modules [
     LiveUi.Widgets.Components.StickyFrostedHeader,
     LiveUi.Widgets.Components.SlideOverPanel,
-    LiveUi.Widgets.Components.EventCallout
+    LiveUi.Widgets.Components.EventCallout,
+    LiveUi.Widgets.Components.TopStrip,
+    LiveUi.Widgets.Components.SidebarShell,
+    LiveUi.Widgets.Components.SidebarSection,
+    LiveUi.Widgets.Components.SidebarItem,
+    LiveUi.Widgets.Components.CommandPalette
   ]
 
   @redline_code_modules [
@@ -231,6 +238,62 @@ defmodule LiveUi.Widgets.Components do
       assigns: [:repeat],
       slots: [:inner_block],
       events: [],
+      local_state_keys: []
+    },
+    mode_nav: %{
+      module: LiveUi.Widgets.Components.ModeNav,
+      family: :form_control,
+      assigns: [:items, :aria_label, :nav_attrs],
+      slots: [],
+      events: [:navigation],
+      local_state_keys: []
+    },
+    unread_badge: %{
+      module: LiveUi.Widgets.Components.UnreadBadge,
+      family: :workflow_progress,
+      assigns: [:count, :threshold],
+      slots: [],
+      events: [],
+      local_state_keys: []
+    },
+    top_strip: %{
+      module: LiveUi.Widgets.Components.TopStrip,
+      family: :layer_callout,
+      assigns: [:brand, :context, :theme, :pane_open],
+      slots: [:inner_block],
+      events: [],
+      local_state_keys: []
+    },
+    sidebar_shell: %{
+      module: LiveUi.Widgets.Components.SidebarShell,
+      family: :layer_callout,
+      assigns: [:collapsed],
+      slots: [:inner_block],
+      events: [],
+      local_state_keys: []
+    },
+    sidebar_section: %{
+      module: LiveUi.Widgets.Components.SidebarSection,
+      family: :layer_callout,
+      assigns: [:label, :action_glyph, :action_label, :action_attrs],
+      slots: [:inner_block],
+      events: [],
+      local_state_keys: []
+    },
+    sidebar_item: %{
+      module: LiveUi.Widgets.Components.SidebarItem,
+      family: :layer_callout,
+      assigns: [:label, :selected, :item_attrs],
+      slots: [:inner_block],
+      events: [],
+      local_state_keys: []
+    },
+    command_palette: %{
+      module: LiveUi.Widgets.Components.CommandPalette,
+      family: :layer_callout,
+      assigns: [:open, :items, :filter_attrs, :select_attrs],
+      slots: [:inner_block],
+      events: [:filter, :select],
       local_state_keys: []
     }
   }

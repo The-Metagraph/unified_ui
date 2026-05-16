@@ -578,7 +578,11 @@ defmodule LiveUi.Renderer do
     """
   end
 
-  def render(%{element: %Element{kind: :command_palette}} = assigns) do
+  def render(
+        %{
+          element: %Element{kind: :command_palette, attributes: %{command_palette: _}}
+        } = assigns
+      ) do
     assigns =
       assigns
       |> assign(
@@ -1477,6 +1481,172 @@ defmodule LiveUi.Renderer do
         <.render element={child} event_target={@event_target} />
       <% end %>
     </LiveUi.Widgets.Components.ListRepeat.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :top_strip}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
+    ~H"""
+    <LiveUi.Widgets.Components.TopStrip.component
+      id={element_id(@element, "top-strip")}
+      brand={string_value(get_in(@element.attributes, [:shell, :brand]), "")}
+      context={string_value(get_in(@element.attributes, [:shell, :context]), "")}
+      theme={string_value(get_in(@element.attributes, [:shell, :theme]), "light")}
+      pane_open={boolean_default(get_in(@element.attributes, [:shell, :pane_open?]), false)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.TopStrip.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :mode_nav}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :nav_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.ModeNav.component
+      id={element_id(@element, "mode-nav")}
+      items={get_in(@element.attributes, [:navigation, :items]) || []}
+      aria_label={string_optional(get_in(@element.attributes, [:navigation, :aria_label]))}
+      nav_attrs={@nav_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(%{element: %Element{kind: :sidebar_shell}} = assigns) do
+    assigns = assign(assigns, :style_attrs, style_rest(assigns.element))
+
+    ~H"""
+    <LiveUi.Widgets.Components.SidebarShell.component
+      id={element_id(@element, "sidebar-shell")}
+      collapsed={boolean_default(get_in(@element.attributes, [:shell, :collapsed?]), false)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+      {@style_attrs}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.SidebarShell.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :sidebar_section}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :action_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.SidebarSection.component
+      id={element_id(@element, "sidebar-section")}
+      label={string_value(get_in(@element.attributes, [:section, :label]), "")}
+      action_glyph={string_optional(get_in(@element.attributes, [:section, :action_glyph]))}
+      action_label={string_optional(get_in(@element.attributes, [:section, :action_label]))}
+      action_attrs={@action_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.SidebarSection.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :sidebar_item}} = assigns) do
+    assigns =
+      assign(
+        assigns,
+        :item_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.SidebarItem.component
+      id={element_id(@element, "sidebar-item")}
+      label={string_value(get_in(@element.attributes, [:item, :label]), "")}
+      selected={boolean_default(get_in(@element.attributes, [:item, :selected?]), false)}
+      item_attrs={@item_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.SidebarItem.component>
+    """
+  end
+
+  def render(%{element: %Element{kind: :unread_badge}} = assigns) do
+    ~H"""
+    <LiveUi.Widgets.Components.UnreadBadge.component
+      id={element_id(@element, "unread-badge")}
+      count={integer_value(get_in(@element.attributes, [:status, :count]), 0)}
+      threshold={integer_value(get_in(@element.attributes, [:status, :threshold]), 99)}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    />
+    """
+  end
+
+  def render(
+        %{element: %Element{kind: :command_palette, attributes: %{component: %{family: _}}}} =
+          assigns
+      ) do
+    assigns =
+      assigns
+      |> assign(
+        :filter_attrs,
+        direct_change_interaction_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+      |> assign(
+        :select_attrs,
+        interaction_event_attrs(assigns.element, Map.get(assigns, :event_target))
+      )
+
+    ~H"""
+    <LiveUi.Widgets.Components.CommandPalette.component
+      id={element_id(@element, "command-palette")}
+      open={boolean_default(get_in(@element.attributes, [:palette, :open?]), false)}
+      items={get_in(@element.attributes, [:palette, :items]) || []}
+      filter_attrs={@filter_attrs}
+      select_attrs={@select_attrs}
+      tone={style_tone(@element)}
+      variant={theme_variant(@element)}
+      state={style_state(@element)}
+      class={style_class(@element)}
+    >
+      <%= for child <- child_elements(@element) do %>
+        <.render element={child} event_target={@event_target} />
+      <% end %>
+    </LiveUi.Widgets.Components.CommandPalette.component>
     """
   end
 

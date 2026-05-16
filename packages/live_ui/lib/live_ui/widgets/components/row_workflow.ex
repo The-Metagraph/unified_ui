@@ -295,3 +295,47 @@ defmodule LiveUi.Widgets.Components.MeterThin do
     """
   end
 end
+
+defmodule LiveUi.Widgets.Components.UnreadBadge do
+  @moduledoc """
+  Native compact unread count badge with threshold capping and hidden-when-zero behavior.
+  """
+
+  alias LiveUi.Widgets.Components.Support
+
+  use LiveUi.Component,
+    family: :components,
+    name: :unread_badge,
+    assigns: [:count, :threshold]
+
+  LiveUi.Component.common_attrs()
+  attr(:count, :integer, default: 0)
+  attr(:threshold, :integer, default: 99)
+
+  @impl true
+  def render(assigns) do
+    assigns =
+      assigns
+      |> assign(:display_count, display_count(assigns.count, assigns.threshold))
+      |> assign(
+        :component_attrs,
+        Support.component_attrs(assigns, :unread_badge, :workflow_progress, %{
+          "data-live-ui-unread-count" => assigns.count
+        })
+      )
+
+    ~H"""
+    <span
+      :if={@count > 0}
+      id={@id}
+      role="status"
+      aria-label={"#{@count} unread"}
+      class={@class}
+      {@component_attrs}
+    ><%= @display_count %></span>
+    """
+  end
+
+  defp display_count(count, threshold) when count > threshold, do: "#{threshold}+"
+  defp display_count(count, _threshold), do: to_string(count)
+end
