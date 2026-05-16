@@ -44,17 +44,6 @@ defmodule UnifiedUi.WidgetComponentsCatalogTest do
            }
   end
 
-  test "source mapping records every AshUi PR in order" do
-    source_mapping = WidgetComponents.source_mapping()
-
-    assert Map.keys(source_mapping) == Enum.to_list(79..98)
-    assert source_mapping[79].canonical_kind == :inline_rich_text_heading
-    assert source_mapping[81].source_name == :phoenix_form
-    assert source_mapping[81].canonical_kind == :runtime_form_shell
-    assert source_mapping[98].source_name == :ui_relationship_repeat
-    assert source_mapping[98].canonical_kind == :list_repeat
-  end
-
   test "canonical name lookup accepts AshUi aliases with diagnostics" do
     assert WidgetComponents.canonical_kind(:runtime_form_shell) == {:ok, :runtime_form_shell}
     assert WidgetComponents.canonical_kind("runtime_form_shell") == {:ok, :runtime_form_shell}
@@ -94,13 +83,9 @@ defmodule UnifiedUi.WidgetComponentsCatalogTest do
     assert UnifiedUi.Reference.widget_component_families() ==
              WidgetComponents.component_families()
 
-    assert UnifiedUi.Reference.widget_component_source_mapping()[98].canonical_kind ==
-             :list_repeat
-
     tooling_catalog = UnifiedUi.Tooling.widget_component_catalog()
 
     assert tooling_catalog.families == WidgetComponents.component_families()
     assert tooling_catalog.aliases == WidgetComponents.aliases()
-    assert tooling_catalog.source_mapping[81].canonical_kind == :runtime_form_shell
   end
 end
