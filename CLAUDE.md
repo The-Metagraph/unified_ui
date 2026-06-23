@@ -1,126 +1,107 @@
-# CLAUDE.md
+# unified_ui
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Spec-Led monorepo for the **unified UI ecosystem**: an authored DSL (`unified_ui`) lowers to a canonical intermediate representation (`unified_iur`), which several runtime libraries (`live_ui`, `elm_ui`, `desktop_ui`, `terminal_ui`) render natively or via the IUR. Canonical plan + contract live in [`.spec/specs/architecture.spec.md`](.spec/specs/architecture.spec.md).
+
+<!-- Last reviewed 2026-06-22 - link live state, do not inline status. -->
+
+## Quick start
+
+The root `mix.exs` is thin (spec tooling + lint only). Real implementation lives in package-local Mix projects under `packages/`. Build and test per package.
+
+```bash
+# Per package (packages/*/):
+cd packages/live_ui
+mix deps.get
+mix compile --warnings-as-errors
+mix test
+mix test test/path/to/specific_test.exs          # single file
+mix test test/path/to/specific_test.exs:42        # single test by line
+
+# Lint (Credo + Dialyzer wired at the repo root; Credo also per package):
+mix format --check-formatted
+mix credo --strict
+mix dialyzer
+
+# Spec-led workflow (repo root):
+mix spec.plan            # generate/update .spec/state.json
+mix spec.verify --debug  # verify all spec requirements
+mix spec.check           # strict verification (fails on warnings)
+mix spec.diffcheck       # run when code/docs/tests changed
+mix spec.report          # coverage + weak-spot summaries
+```
+
+**The real quality gate** (mirrors `.githooks/pre-commit`, run from repo root):
+
+```bash
+mix format --check-formatted && mix compile --warnings-as-errors && mix credo --strict && mix dialyzer
+```
+
+Then `mix spec.check` and `mix spec.diffcheck` when specs/code/docs/tests moved.
 
 ## Architecture
 
-This is a unified UI ecosystem monorepo organized around a **Spec Led Development** workflow. The architecture follows a three-layer pipeline:
+Three-layer pipeline, authored once and rendered many ways:
 
-1. **`unified_ui`** (DSL layer) - Authored DSL surface using Spark. Authors describe widgets, layouts, theming, and signals. The compiler lowers authored modules into canonical `UnifiedIUR`.
+- **`packages/unified-ui`** (app `:unified_ui`, namespace `UnifiedUi`) — the *only* authored DSL boundary. Uses Spark (vendored at `vendor/spark`) for sectioned authoring across identity, composition, theming, signals. Compiles authored modules into canonical `UnifiedIUR` — never renderer-specific output.
+- **`packages/unified_iur`** (app `:unified_iur`, namespace `UnifiedIUR`) — pure, renderer-independent canonical IR: widgets, layout, layers, style, theming, bindings, interactions. The portable cross-package boundary.
+- **Runtime libraries** — `live_ui` (Phoenix LiveView), `elm_ui` (Phoenix + Elm), `desktop_ui` (SDL3-oriented), `terminal_ui` (capability-aware TUI). Each is a first-class native widget library *and* an IUR renderer. Loading IUR is one entry point, not the only one.
 
-2. **`unified_iur`** (IUR layer) - Pure Elixir library defining the canonical intermediate representation. This is the portable boundary between DSL output and runtime libraries. Owns core element model, construct families (widgets, layouts, forms, layers), styling, theming, and interaction descriptors.
+Common flow: `UnifiedUi` DSL → `UnifiedIUR` → `LiveUi` (or another runtime).
 
-3. **Runtime libraries** - Each runtime library (`live_ui`, `elm_ui`, `desktop_ui`, `terminal_ui`) exposes both native widget surfaces usable independently AND a renderer that loads canonical IUR through native widgets. Runtime libraries translate between canonical `Jido.Signal` events and their local signal models.
+Non-obvious dirs:
+- `.spec/` — current-truth contract layer (specs, governance, ADRs, conformance evidence, planning manifests). See Pointers.
+- `examples/<widget_name>/` — self-contained standalone example apps; `examples/catalog.tsv` is the machine-readable catalog. No shared example-support package.
+- `vendor/spark` — vendored Spark DSL toolkit (path-dep of `unified-ui`).
 
-**Key principle**: Runtime libraries are not IUR-only shells; they are first-class native UI libraries. Loading IUR is one renderer entry point, not the only way to use them.
+## Dependencies & boundaries (MANDATORY)
 
-## Common Commands
+**Upstream (consumed):** nothing from the Metagraph tree — this is a self-contained UI ecosystem. Internal seam: every runtime library path-deps `unified_iur` (`{:unified_iur, path: "../unified_iur"}`); `unified-ui` path-deps `unified_iur` + vendored `spark`. `live_ui`/`elm_ui` pull `jido_signal ~> 2.0`, `phoenix`, `phoenix_live_view`.
 
-### Root (repository)
+**Downstream (consumes this):** `ash_ui` (sibling, `TheMetagraph/ash_ui`) vendors these packages internally; `ariston-ui` declares only `:ash_ui` and gets `unified_ui`/`live_ui` transitively. Ariston-specific widgets that don't generalize stay in `ariston-ui`, not here.
 
-```bash
-# Spec-led development workflow
-mix spec.plan          # Generate/update .spec/state.json
-mix spec.verify        # Verify all spec requirements
-mix spec.check         # Strict verification (fails on warnings)
-mix spec.diffcheck     # Run when code/docs/tests changed
-mix spec.report        # Coverage and weak-spot summaries
-```
+**Contracts at each seam:**
+- **IUR is the canonical interchange + rendering boundary.** Renderer packages consume `UnifiedIUR` and must NOT require authored DSL modules once IUR is available. Runtime-native structs must not leak into canonical core values.
+- **`Jido.Signal` is the shared transport contract** — cross-package UI interaction meaning uses `Jido.Signal` with CloudEvents-compatible semantics. Runtimes translate between canonical signals and their local signal models.
+- **DSL is the single authored boundary** — `unified_ui` is the only place widgets/layouts/theming/signals are authored.
 
-### Testing in packages
+## Hard rules (reverted if violated)
 
-```bash
-# From any package directory (packages/*/):
-mix test               # Run package tests
-mix test test/specific_test.exs  # Run single test file
+- `unified_ui` is the ONLY authored DSL boundary; `unified_iur` is the ONLY cross-package canonical interchange/rendering boundary.
+- Runtime-native widget, runtime, styling, and local-signal responsibilities must NOT be moved into `unified_ui` or `unified_iur`. The runtimes are not IUR-only shells.
+- When you change canonical `unified_ui` or `unified_iur` surface, the specs move with the code **in the same change set** (governed by the `*_change_contract.spec.md` files under `.spec/specs/governance/contracts/`).
+- Do NOT create a branch-local proposal layer under `.spec/`. Authored subject specs are current truth; Git history / PRs are the change timeline.
+- Do NOT hand-edit generated `.spec/state.json` or `.spec/planning/*/spec-traceability.md` — regenerate via the owning Mix tasks.
+- Conformance evidence (`.spec/conformance/`) is separate from governance subjects; do not embed one into the other.
 
-# Linting
-mix format             # Format code
-mix credo              # Lint with Credo
-```
+## Conventions
 
-### `unified_ui` package
+- Branch `claude/<topic>` (Claude) or `codex/<topic>` (Codex). One reviewable arc per PR.
+- Commit subject is descriptive; body explains WHY (the diff shows WHAT).
+- Spec-led deltas ride WITH the code: update `.spec/specs/**/*.spec.md` first, ADRs (`.spec/decisions/`) only for durable cross-cutting policy, conformance evidence separately.
+- Prefer targeted package-local tests over broad repo-wide runs.
+- Packages target Elixir `~> 1.19`; older runtimes fail before compilation.
 
-```bash
-cd packages/unified-ui
-mix unified_ui.inspect --example foundational_screen
-mix unified_ui.export --example themed_signal_workspace --format snapshot
-mix unified_ui.validate
-```
+## Claude Code specifics
 
-### `unified_iur` package
+- **Skills:** `specled` (spec workspace work — read specs, ADRs, phased plans), `widget` (designing/adding/reviewing widgets across AshUI / UnifiedUi / IUR / Live UI / Elm UI / Desktop UI, and the canonical-vs-`custom:*` decision).
+- **Co-maintained repo** (Pascal/pcharbon70 as architect): be respectful of existing `.spec/` and README conventions. Substrate gaps become roadmap, not asks. Public-framework discipline applies (breaking-change care, release notes).
+- Package-local tooling for inspection/preview/export:
+  - `unified-ui`: `mix unified_ui.{inspect,export,validate}`
+  - `unified_iur`: `mix unified_iur.{inspect,export,validate}`
+  - `live_ui`: `mix live_ui.{inspect,export,preview,validate}`
+  - `examples/<widget>`: `mix example.start` (documented example uses `--port 4100`), `--target-package desktop_ui|elm_ui|terminal_ui`
 
-```bash
-cd packages/unified_iur
-mix unified_iur.inspect FIXTURE_ID --format report
-mix unified_iur.export FIXTURE_ID --format fixture
-mix unified_iur.validate --strict
-```
+## Gotchas
 
-### `live_ui` package
+- Three name spellings: repo dir `unified_ui` (underscore), DSL package dir `unified-ui` (hyphen), module/app `unified_ui` (underscore again). The hyphenated package dir is the lone outlier.
+- Root `mix.exs` app is `:unified` and only carries `spec_led_ex` + `credo` + `dialyxir` — it is NOT where the UI code compiles. `cd` into a `packages/*` dir for real work.
+- Spark is vendored at `vendor/spark` and `override: true`-d by `unified-ui`; don't expect it from Hex.
+- `.spec/` is **current-truth only** — use Git history for the change timeline, not branch-local notes.
 
-```bash
-cd packages/live_ui
-mix live_ui.demo [home|EXAMPLE_ID] [--format summary|html|report]
-mix live_ui.demo --serve        # Launch browser demo at http://127.0.0.1:4040
-mix live_ui.preview EXAMPLE_ID
-mix live_ui.inspect EXAMPLE_ID
-mix live_ui.export EXAMPLE_ID
-mix live_ui.validate --strict
-```
+## Pointers (live, NOT inlined)
 
-### Examples suite
-
-```bash
-cd examples/button
-mix example.start              # Serves at http://127.0.0.1:5000
-mix example.start --target-package desktop_ui
-mix example.start --target-package elm_ui
-mix example.start --target-package terminal_ui
-mix test
-```
-
-## Spec Led Development
-
-The `.spec/` workspace contains authored subject specs, governance contracts, and ADRs. This is **current-truth only** - use Git history for change timeline.
-
-- `.spec/specs/**/*.spec.md` - Authored subject specs with `spec-meta`, `spec-requirements`, `spec-verification`, `spec-scenarios`, and `spec-exceptions` blocks
-- `.spec/specs/governance/` - Repository-wide governance contracts
-- `.spec/decisions/` - Durable ADRs for cross-cutting policy
-- `.spec/conformance/*/manifest.json` - Machine-readable implementation evidence
-- `.spec/planning/*/spec-traceability.json` - Plan coverage manifests
-
-**Workflow after making changes:**
-1. Update relevant `.spec/specs/**/*.spec.md` files
-2. Add or revise ADRs only for cross-cutting durable policy
-3. Run `mix spec.verify --debug`
-4. Run `mix spec.check`
-5. Run `mix spec.diffcheck` when code/docs/tests changed
-
-**Verification kinds:** Prefer `source_file`, `test_file`, `guide_file`, `readme_file`, `workflow_file`, or `command`. Use `covers:` markers in source files only when they remain stable.
-
-## Package Structure
-
-- `packages/unified-ui/` - DSL authoring surface and compiler
-- `packages/unified_iur/` - Canonical IUR data structures and validation
-- `packages/live_ui/` - Phoenix LiveView runtime library with native widgets and IUR renderer
-- `packages/elm_ui/` - Elm-based runtime library
-- `packages/desktop_ui/` - Desktop-native runtime library
-- `packages/terminal_ui/` - Terminal UI runtime library
-- `examples/` - Standalone Phoenix LiveView example apps demonstrating each widget/construct
-
-## Key Architecture Decisions
-
-- **DSL is the single authored boundary** - runtime libraries consume IUR, not authored modules
-- **IUR is the cross-package rendering boundary** - renderer packages must not require authored DSL modules once IUR is available
-- **Jido.Signal is the shared transport contract** - cross-package UI interactions use CloudEvents-compatible events
-- **Governance is separate from conformance** - policy lives in `.spec/specs/governance/`, evidence in `.spec/conformance/`
-
-## References
-
-- [Spec System](.spec/specs/spec_system.spec.md) - Workspace contract
-- [Ecosystem Architecture](.spec/specs/architecture.spec.md) - High-level architecture
-- [Governance Layer](.spec/specs/governance/governance_layer.spec.md) - Governance contracts
-- [LiveUi README](packages/live_ui/README.md) - Runtime details
-- [UnifiedUi README](packages/unified-ui/README.md) - DSL and compiler details
-- [Examples README](examples/README.md) - Example suite catalog
+- Canonical architecture/contract: [`.spec/specs/architecture.spec.md`](.spec/specs/architecture.spec.md), [`.spec/specs/dsl_iur_symbiosis.spec.md`](.spec/specs/dsl_iur_symbiosis.spec.md), [`.spec/specs/platform_runtimes.spec.md`](.spec/specs/platform_runtimes.spec.md), [`.spec/specs/signal_transport.spec.md`](.spec/specs/signal_transport.spec.md)
+- Spec workspace rules: [`.spec/AGENTS.md`](.spec/AGENTS.md), [`.spec/README.md`](.spec/README.md)
+- Governance contracts: [`.spec/specs/governance/`](.spec/specs/governance/)
+- Open work: `gh pr list --repo The-Metagraph/unified_ui`
+- Workspace conventions (umbrella): [`../CLAUDE.md`](../CLAUDE.md)
