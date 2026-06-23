@@ -38,30 +38,16 @@ Plus `mix spec.check` and `mix spec.diffcheck` when specs/code/docs/tests change
 
 ## Layout
 
-- `packages/unified-ui/` (app `:unified_ui`) — authored DSL + compiler. Hyphen in dir name; underscore everywhere else.
-- `packages/unified_iur/` (app `:unified_iur`) — canonical IR.
-- `packages/{live_ui,elm_ui,desktop_ui,terminal_ui}/` — runtime libraries (native + IUR renderer).
-- `.spec/` — current-truth contract layer (specs, governance, ADRs, conformance, planning). Read `.spec/AGENTS.md` before editing.
-- `examples/<widget>/` — standalone apps; `examples/catalog.tsv` is the catalog. `vendor/spark` — vendored DSL toolkit.
+- `packages/unified-ui/` (app `:unified_ui`) authored DSL + compiler (hyphen dir, underscore elsewhere); `packages/unified_iur/` (app `:unified_iur`) canonical IR; `packages/{live_ui,elm_ui,desktop_ui,terminal_ui}/` runtime libraries (native + IUR renderer).
+- `.spec/` current-truth contract layer (read `.spec/AGENTS.md` before editing); `examples/<widget>/` standalone apps (`examples/catalog.tsv` = catalog); `vendor/spark` vendored DSL toolkit.
 
-## Dependencies & boundaries (MANDATORY)
+## Boundaries (MANDATORY — see CLAUDE.md for rationale)
 
-- **Upstream:** none from the Metagraph tree. Internal: runtimes path-dep `{:unified_iur, path: "../unified_iur"}`; `unified-ui` path-deps `unified_iur` + vendored `spark`.
-- **Downstream:** `ash_ui` vendors these packages; `ariston-ui` declares only `:ash_ui` and gets these transitively. Ariston-specific widgets stay in `ariston-ui`.
-- **IUR is the cross-package interchange/rendering boundary** — renderers consume `UnifiedIUR`, must NOT require authored DSL modules; runtime-native structs must not leak into canonical values.
-- **`Jido.Signal` (CloudEvents-compatible) is the cross-package transport contract.**
-
-## Conventions / boundaries
-
-- `unified_ui` = the only authored DSL boundary; `unified_iur` = the only canonical interchange boundary. Do NOT move runtime-native widget/styling/signal responsibilities into them.
-- Canonical surface changes: specs move WITH code in the same change set (`.spec/specs/governance/contracts/*_change_contract.spec.md`).
-- Do NOT add a branch-local proposal layer under `.spec/`; don't hand-edit generated `.spec/state.json` or planning mirrors.
-- Branch `codex/<topic>`; commit trailer `Co-Authored-By: Codex`; one reviewable arc per PR; commit body = WHY.
-
-## Codex
-
-- Review / self-check with `codex exec --profile deep-review`. Sandbox + approval per `~/.codex/config.toml`. Never read, echo, or commit secrets.
-- Co-maintained repo (Pascal/jallum as architect): respect existing `.spec/`/README conventions.
+- `unified_ui` = only authored DSL boundary; `unified_iur` = only cross-package interchange/rendering boundary. Renderers consume `UnifiedIUR`, must NOT require DSL modules; runtime-native structs/responsibilities must not leak into canonical values. `Jido.Signal` (CloudEvents) = cross-package transport contract.
+- Deps: nothing from the Metagraph tree upstream; runtimes path-dep `{:unified_iur, path: "../unified_iur"}`, `unified-ui` path-deps `unified_iur` + vendored `spark`. Downstream `ash_ui` vendors these; `ariston-ui` gets them transitively.
+- Canonical surface changes: specs move WITH code in the same change set (`.spec/specs/governance/contracts/*_change_contract.spec.md`). No branch-local proposal layer under `.spec/`; don't hand-edit generated `.spec/state.json` or planning mirrors.
+- Branch `codex/<topic>`; one reviewable arc per PR; commit body = WHY. Review with `codex exec --profile deep-review` (sandbox/approval per `~/.codex/config.toml`); never read, echo, or commit secrets.
+- Co-maintained repo (Pascal/pcharbon70 as architect): respect existing `.spec/`/README conventions.
 
 ## Pointers
 

@@ -84,12 +84,12 @@ Non-obvious dirs:
 ## Claude Code specifics
 
 - **Skills:** `specled` (spec workspace work — read specs, ADRs, phased plans), `widget` (designing/adding/reviewing widgets across AshUI / UnifiedUi / IUR / Live UI / Elm UI / Desktop UI, and the canonical-vs-`custom:*` decision).
-- **Co-maintained repo** (Pascal/jallum as architect): be respectful of existing `.spec/` and README conventions. Substrate gaps become roadmap, not asks. Public-framework discipline applies (breaking-change care, release notes).
+- **Co-maintained repo** (Pascal/pcharbon70 as architect): be respectful of existing `.spec/` and README conventions. Substrate gaps become roadmap, not asks. Public-framework discipline applies (breaking-change care, release notes).
 - Package-local tooling for inspection/preview/export:
   - `unified-ui`: `mix unified_ui.{inspect,export,validate}`
   - `unified_iur`: `mix unified_iur.{inspect,export,validate}`
-  - `live_ui`: `mix live_ui.{demo,preview,inspect,export,validate}` (`mix live_ui.demo --serve` → http://127.0.0.1:4040)
-  - `examples/<widget>`: `mix example.start` (→ http://127.0.0.1:5000), `--target-package desktop_ui|elm_ui|terminal_ui`
+  - `live_ui`: `mix live_ui.{inspect,export,preview,validate}`
+  - `examples/<widget>`: `mix example.start` (documented example uses `--port 4100`), `--target-package desktop_ui|elm_ui|terminal_ui`
 
 ## Gotchas
 
